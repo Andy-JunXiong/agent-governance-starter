@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "name": "deployment-decision",
+  "version": "1.0",
+  "purpose": "Recommend whether a candidate build should enter production.",
+  "capability_kind": "evaluation_judge",
+  "task_type": "deployment_decision",
+  "triggers": ["A candidate build completes verification"],
+  "not_for": ["Executing a deployment"],
+  "contracts": {
+    "input_schema": "schemas/deployment.input.json",
+    "output_schema": "schemas/deployment.output.json"
+  },
+  "called_by": ["checks/deployment.py"],
+  "owner": "Release engineering",
+  "risk_level": "critical",
+  "human_review": {"required": false, "stages": []},
+  "model_route": {"mode": "fixed", "route_ref": "routes/release-judge"},
+  "evaluation": {"readiness": "needs_seed_cases", "evidence_refs": []},
+  "provenance": {"origin": "authored", "source_refs": ["docs/release-policy.md"]}
+}

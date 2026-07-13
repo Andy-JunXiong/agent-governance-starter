@@ -1,0 +1,253 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/prompt-capability-v1.json",
+  "title": "Prompt Capability Manifest",
+  "description": "Portable governance metadata for a prompt-backed product, operator-guidance, or evaluation capability.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "name",
+    "version",
+    "purpose",
+    "capability_kind",
+    "task_type",
+    "triggers",
+    "not_for",
+    "contracts",
+    "called_by",
+    "owner",
+    "risk_level",
+    "human_review",
+    "model_route",
+    "evaluation",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^v?[0-9]+(?:\\.[0-9]+){0,2}(?:[-+][0-9A-Za-z.-]+)?$"
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 10
+    },
+    "capability_kind": {
+      "enum": [
+        "product_runtime",
+        "operator_guidance",
+        "evaluation_judge"
+      ]
+    },
+    "task_type": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[_-][a-z0-9]+)*$"
+    },
+    "triggers": {
+      "$ref": "#/$defs/nonEmptyUniqueStrings"
+    },
+    "not_for": {
+      "$ref": "#/$defs/uniqueStrings"
+    },
+    "contracts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_schema", "output_schema"],
+      "properties": {
+        "input_schema": {
+          "description": "Repository-root-relative JSON Schema path, optionally followed by a JSON Pointer fragment.",
+          "$ref": "#/$defs/schemaReference"
+        },
+        "output_schema": {
+          "description": "Repository-root-relative JSON Schema path, optionally followed by a JSON Pointer fragment.",
+          "$ref": "#/$defs/schemaReference"
+        }
+      }
+    },
+    "called_by": {
+      "description": "Repository-root-relative caller file paths. Use an empty array when no caller is yet declared.",
+      "$ref": "#/$defs/uniqueStrings"
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 1
+    },
+    "risk_level": {
+      "enum": ["low", "medium", "high", "critical"]
+    },
+    "human_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "stages"],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "stages": {
+          "$ref": "#/$defs/uniqueStrings"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 10
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "required": {"const": true}
+            },
+            "required": ["required"]
+          },
+          "then": {
+            "required": ["reason"],
+            "properties": {
+              "stages": {"minItems": 1}
+            }
+          },
+          "else": {
+            "properties": {
+              "stages": {"maxItems": 0}
+            }
+          }
+        }
+      ]
+    },
+    "model_route": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+      "properties": {
+        "mode": {
+          "enum": ["fixed", "dynamic", "not_applicable"]
+        },
+        "route_ref": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {"enum": ["fixed", "dynamic"]}
+            },
+            "required": ["mode"]
+          },
+          "then": {
+            "required": ["route_ref"]
+          },
+          "else": {
+            "not": {
+              "required": ["route_ref"]
+            }
+          }
+        }
+      ]
+    },
+    "evaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["readiness", "evidence_refs"],
+      "properties": {
+        "readiness": {
+          "enum": [
+            "not_configured",
+            "schema_only",
+            "needs_seed_cases",
+            "baseline_ready",
+            "regression_ready"
+          ]
+        },
+        "evidence_refs": {
+          "description": "Repository-root-relative files or directories containing evaluation evidence.",
+          "$ref": "#/$defs/uniqueStrings"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "readiness": {
+                "enum": ["baseline_ready", "regression_ready"]
+              }
+            },
+            "required": ["readiness"]
+          },
+          "then": {
+            "properties": {
+              "evidence_refs": {"minItems": 1}
+            }
+          }
+        }
+      ]
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["origin", "source_refs"],
+      "properties": {
+        "origin": {
+          "enum": ["authored", "extracted", "generated"]
+        },
+        "source_refs": {
+          "description": "Repository-root-relative source file paths used to implement the capability.",
+          "$ref": "#/$defs/nonEmptyUniqueStrings"
+        },
+        "source_hash": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "risk_level": {"enum": ["high", "critical"]}
+        },
+        "required": ["risk_level"]
+      },
+      "then": {
+        "properties": {
+          "human_review": {
+            "properties": {
+              "required": {"const": true}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "uniqueStrings": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "nonEmptyUniqueStrings": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "schemaReference": {
+      "type": "string",
+      "pattern": "^[^\\s]+\\.json(?:#.*)?$"
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "name": "summarize-release-notes",
+  "version": "1.0.0",
+  "purpose": "Summarize approved release notes for a product user.",
+  "capability_kind": "product_runtime",
+  "task_type": "release_summary",
+  "triggers": [
+    "A user asks for a summary of approved release notes"
+  ],
+  "not_for": [
+    "Drafting release notes from unreviewed commits"
+  ],
+  "contracts": {
+    "input_schema": "schemas/release-summary.input.json",
+    "output_schema": "schemas/release-summary.output.json"
+  },
+  "called_by": [
+    "src/product/release_notes.py"
+  ],
+  "owner": "Product platform team",
+  "risk_level": "low",
+  "human_review": {
+    "required": false,
+    "stages": []
+  },
+  "model_route": {
+    "mode": "dynamic",
+    "route_ref": "routes/low-cost-text"
+  },
+  "evaluation": {
+    "readiness": "schema_only",
+    "evidence_refs": []
+  },
+  "provenance": {
+    "origin": "authored",
+    "source_refs": [
+      "src/product/release_notes.py"
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "name": "example-capability",
+  "version": "0.1.0",
+  "purpose": "Describe the user-visible outcome this prompt capability produces.",
+  "capability_kind": "product_runtime",
+  "task_type": "example_task",
+  "triggers": [
+    "A caller requests the documented example outcome"
+  ],
+  "not_for": [
+    "Tasks outside the documented capability boundary"
+  ],
+  "contracts": {
+    "input_schema": "prompt-governance/schemas/example-capability.input.schema.json",
+    "output_schema": "prompt-governance/schemas/example-capability.output.schema.json"
+  },
+  "called_by": [],
+  "owner": "Owning team or maintainer",
+  "risk_level": "medium",
+  "human_review": {
+    "required": false,
+    "stages": []
+  },
+  "model_route": {
+    "mode": "dynamic",
+    "route_ref": "routes/example-capability"
+  },
+  "evaluation": {
+    "readiness": "needs_seed_cases",
+    "evidence_refs": []
+  },
+  "provenance": {
+    "origin": "authored",
+    "source_refs": [
+      "prompt-governance/sources/example-capability.md"
+    ]
+  }
+}

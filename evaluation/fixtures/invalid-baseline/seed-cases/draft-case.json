@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "case_id": "draft-case",
+  "capability_name": "example-capability",
+  "input": {"request": "Draft input"},
+  "expected_properties": {"placeholder": true},
+  "source": {
+    "source_type": "hand_constructed",
+    "reference": "unreviewed draft",
+    "sanitized": true
+  },
+  "review_status": "draft"
+}

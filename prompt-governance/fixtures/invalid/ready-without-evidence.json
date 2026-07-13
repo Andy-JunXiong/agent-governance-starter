@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "name": "answer-quality-judge",
+  "version": "1.0.0",
+  "purpose": "Score answer quality against a maintained evaluation rubric.",
+  "capability_kind": "evaluation_judge",
+  "task_type": "answer_quality",
+  "triggers": ["An answer is selected for regression evaluation"],
+  "not_for": [],
+  "contracts": {
+    "input_schema": "schemas/answer.input.json",
+    "output_schema": "schemas/score.output.json"
+  },
+  "called_by": ["evaluation/regression.py"],
+  "owner": "AI quality team",
+  "risk_level": "medium",
+  "human_review": {"required": false, "stages": []},
+  "model_route": {"mode": "dynamic", "route_ref": "routes/evaluation"},
+  "evaluation": {"readiness": "regression_ready", "evidence_refs": []},
+  "provenance": {"origin": "authored", "source_refs": ["evaluation/rubric.md"]}
+}

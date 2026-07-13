@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "capability_name": "example-capability",
+  "declared_readiness": "baseline_ready",
+  "cases": {
+    "seed": ["seed-cases/basic-request.json"],
+    "golden": ["golden-examples/approved-response.json"],
+    "failure": ["failure-cases/unsupported-claim.json"]
+  },
+  "baseline": {
+    "human_approved": true,
+    "reviewer": "Evaluation owner",
+    "evidence_refs": ["reviews/example-baseline.md"]
+  },
+  "regression": {"threshold_configured": false, "minimum_pass_rate": null}
+}

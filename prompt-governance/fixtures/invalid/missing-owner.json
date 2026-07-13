@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "name": "operator-help",
+  "version": "1.0",
+  "purpose": "Explain a visible workflow to an authenticated operator.",
+  "capability_kind": "operator_guidance",
+  "task_type": "operator_help",
+  "triggers": ["An operator asks how a workflow works"],
+  "not_for": [],
+  "contracts": {
+    "input_schema": "schemas/operator-help.input.json",
+    "output_schema": "schemas/operator-help.output.json"
+  },
+  "called_by": ["src/operator/help.py"],
+  "risk_level": "medium",
+  "human_review": {"required": false, "stages": []},
+  "model_route": {"mode": "dynamic", "route_ref": "routes/operator-help"},
+  "evaluation": {"readiness": "not_configured", "evidence_refs": []},
+  "provenance": {"origin": "authored", "source_refs": ["src/operator/help.py"]}
+}

@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "capability_name": "example-capability",
+  "declared_readiness": "baseline_ready",
+  "cases": {
+    "seed": ["seed-cases/draft-case.json"],
+    "golden": ["golden-examples/unapproved-example.json"],
+    "failure": []
+  },
+  "baseline": {"human_approved": false, "evidence_refs": []},
+  "regression": {"threshold_configured": false, "minimum_pass_rate": null}
+}

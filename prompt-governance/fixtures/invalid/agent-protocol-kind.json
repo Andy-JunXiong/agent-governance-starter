@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "name": "incident-response",
+  "version": "v1",
+  "purpose": "Tell a coding agent how to respond to an operational incident.",
+  "capability_kind": "agent_protocol",
+  "task_type": "incident_response",
+  "triggers": ["A production alert is received"],
+  "not_for": [],
+  "contracts": {
+    "input_schema": "schemas/incident.input.json",
+    "output_schema": "schemas/incident.output.json"
+  },
+  "called_by": ["AGENTS.md"],
+  "owner": "Platform team",
+  "risk_level": "high",
+  "human_review": {
+    "required": true,
+    "stages": ["incident_closeout"],
+    "reason": "Operational incidents require accountable human closeout."
+  },
+  "model_route": {"mode": "not_applicable"},
+  "evaluation": {"readiness": "schema_only", "evidence_refs": []},
+  "provenance": {"origin": "authored", "source_refs": ["AGENTS.md"]}
+}

@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "case_id": "basic-request",
+  "capability_name": "example-capability",
+  "input": {"request": "Summarize the approved material."},
+  "expected_properties": {"must_be_concise": true, "must_use_supplied_context": true},
+  "source": {
+    "source_type": "hand_constructed",
+    "reference": "evaluation design workshop",
+    "sanitized": true
+  },
+  "review_status": "reviewed"
+}

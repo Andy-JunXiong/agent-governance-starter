@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "name": "safety-policy-judge",
+  "version": "v2",
+  "purpose": "Evaluate whether generated answers satisfy the documented safety policy.",
+  "capability_kind": "evaluation_judge",
+  "task_type": "policy_evaluation",
+  "triggers": [
+    "A governed capability produces a candidate answer"
+  ],
+  "not_for": [
+    "Making autonomous deployment decisions"
+  ],
+  "contracts": {
+    "input_schema": "schemas/policy-judge.input.json",
+    "output_schema": "schemas/policy-judge.output.json"
+  },
+  "called_by": [
+    "evaluation/run_policy_suite.py"
+  ],
+  "owner": "AI quality team",
+  "risk_level": "high",
+  "human_review": {
+    "required": true,
+    "stages": [
+      "baseline_approval",
+      "regression_review"
+    ],
+    "reason": "Judge changes can alter which model outputs are accepted."
+  },
+  "model_route": {
+    "mode": "fixed",
+    "route_ref": "routes/policy-judge-v2"
+  },
+  "evaluation": {
+    "readiness": "baseline_ready",
+    "evidence_refs": [
+      "evaluation/baselines/safety-policy-judge-v2.json"
+    ]
+  },
+  "provenance": {
+    "origin": "extracted",
+    "source_refs": [
+      "docs/decisions/002-policy-judge.md"
+    ],
+    "source_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  }
+}

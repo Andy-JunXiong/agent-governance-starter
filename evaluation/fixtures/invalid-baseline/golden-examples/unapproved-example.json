@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "case_id": "unapproved-example",
+  "capability_name": "example-capability",
+  "input": {"request": "Example input"},
+  "expected_output": {"answer": "Example output"},
+  "source": {
+    "source_type": "hand_constructed",
+    "reference": "unreviewed draft",
+    "sanitized": true
+  },
+  "approval": {
+    "status": "approved",
+    "reviewer": "",
+    "rationale": "Too short"
+  }
+}

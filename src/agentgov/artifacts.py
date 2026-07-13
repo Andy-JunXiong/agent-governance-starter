@@ -1,0 +1,411 @@
+"""Repository-local prompt capability artifacts and source drift checks."""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import re
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Mapping
+
+from agentgov.capability import load_capability_manifest, validate_capability_manifest
+
+
+ARTIFACT_VERSION = "1.0"
+_HASH_RE = re.compile(r"^sha256:[0-9a-f]{64}$")
+_ARTIFACT_FIELDS = {
+    "artifact_version",
+    "capability_name",
+    "capability_version",
+    "manifest_path",
+    "manifest_hash",
+    "source_refs",
+    "source_hash",
+}
+
+
+class ArtifactPolicyError(Exception):
+    """Raised when an artifact action violates a deterministic safety contract."""
+
+
+class ArtifactConflictError(Exception):
+    """Raised when export would overwrite generated files without permission."""
+
+
+@dataclass(frozen=True)
+class ArtifactExport:
+    directory: Path
+    files: tuple[Path, ...]
+    capability_name: str
+    source_hash: str
+
+
+@dataclass(frozen=True)
+class ArtifactCheckResult:
+    directory: Path
+    passed: bool
+    messages: tuple[str, ...]
+
+
+def _repository_root(path: Path) -> Path:
+    if path.is_symlink():
+        raise ArtifactPolicyError(f"repository root must not be a symbolic link: {path}")
+    if not path.exists():
+        raise FileNotFoundError(path)
+    if not path.is_dir():
+        raise ValueError(f"repository root is not a directory: {path}")
+    return path.resolve()
+
+
+def _resolve_inside(root: Path, path: Path, *, label: str) -> Path:
+    candidate = path if path.is_absolute() else root / path
+    resolved = candidate.resolve(strict=False)
+    try:
+        resolved.relative_to(root)
+    except ValueError as exc:
+        raise ArtifactPolicyError(f"{label} must stay within repository root: {path}") from exc
+
+    cursor = candidate
+    while True:
+        if cursor.is_symlink():
+            raise ArtifactPolicyError(f"{label} must not use a symbolic link: {path}")
+        if cursor.resolve(strict=False) == root:
+            break
+        if cursor.parent == cursor:
+            break
+        cursor = cursor.parent
+    return resolved
+
+
+def _canonical_manifest_hash(manifest: Mapping[str, Any]) -> str:
+    payload = json.dumps(
+        manifest,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return "sha256:" + hashlib.sha256(payload).hexdigest()
+
+
+def _source_file_path(root: Path, source_ref: str) -> Path:
+    path_text = source_ref.split("#", 1)[0]
+    if not path_text or "://" in path_text:
+        raise ArtifactPolicyError(
+            f"source reference must be a repository-relative file path: {source_ref}"
+        )
+    path = Path(path_text)
+    if path.is_absolute() or path.drive:
+        raise ArtifactPolicyError(
+            f"source reference must be relative to repository root: {source_ref}"
+        )
+    resolved = _resolve_inside(root, path, label="source reference")
+    if not resolved.exists():
+        raise ArtifactPolicyError(f"source reference does not exist: {source_ref}")
+    if not resolved.is_file():
+        raise ArtifactPolicyError(f"source reference is not a file: {source_ref}")
+    return resolved
+
+
+def compute_source_hash(root: Path, source_refs: list[str]) -> str:
+    """Hash path identities and bytes for a deterministic set of source files."""
+
+    digest = hashlib.sha256()
+    for source_ref in sorted(source_refs):
+        source_path = _source_file_path(root, source_ref)
+        digest.update(source_ref.replace("\\", "/").encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(source_path.read_bytes())
+        digest.update(b"\0")
+    return "sha256:" + digest.hexdigest()
+
+
+def _artifact_state(
+    *,
+    manifest: Mapping[str, Any],
+    manifest_path: Path,
+    root: Path,
+    source_hash: str,
+) -> dict[str, Any]:
+    return {
+        "artifact_version": ARTIFACT_VERSION,
+        "capability_name": manifest["name"],
+        "capability_version": manifest["version"],
+        "manifest_path": manifest_path.relative_to(root).as_posix(),
+        "manifest_hash": _canonical_manifest_hash(manifest),
+        "source_refs": list(manifest["provenance"]["source_refs"]),
+        "source_hash": source_hash,
+    }
+
+
+def _bullets(values: list[str], *, fallback: str = "- None declared") -> str:
+    return "\n".join(f"- {value}" for value in values) if values else fallback
+
+
+def render_capability_markdown(
+    manifest: Mapping[str, Any],
+    state: Mapping[str, Any],
+) -> str:
+    """Render a deterministic review artifact without timestamps or source content."""
+
+    human_review = manifest["human_review"]
+    model_route = manifest["model_route"]
+    evaluation = manifest["evaluation"]
+    provenance = manifest["provenance"]
+    review_required = "yes" if human_review["required"] else "no"
+    lines = [
+        f"# Capability artifact: {manifest['name']}",
+        "",
+        "> Generated by `agentgov export capability`. Do not edit this file",
+        "> directly; update the manifest or source and export again.",
+        "",
+        "## Purpose",
+        "",
+        str(manifest["purpose"]),
+        "",
+        "## Capability contract",
+        "",
+        f"- Version: `{manifest['version']}`",
+        f"- Kind: `{manifest['capability_kind']}`",
+        f"- Task type: `{manifest['task_type']}`",
+        f"- Owner: {manifest['owner']}",
+        f"- Risk level: `{manifest['risk_level']}`",
+        f"- Input schema: `{manifest['contracts']['input_schema']}`",
+        f"- Output schema: `{manifest['contracts']['output_schema']}`",
+        "",
+        "## Triggers",
+        "",
+        _bullets(list(manifest["triggers"])),
+        "",
+        "## Do not use for",
+        "",
+        _bullets(list(manifest["not_for"])),
+        "",
+        "## Callers",
+        "",
+        _bullets(list(manifest["called_by"])),
+        "",
+        "## Human review",
+        "",
+        f"- Required: `{review_required}`",
+        "- Stages:",
+        _bullets(list(human_review["stages"]), fallback="  - None declared"),
+    ]
+    if human_review.get("reason"):
+        lines.append(f"- Reason: {human_review['reason']}")
+    lines.extend(
+        [
+            "",
+            "## Model route",
+            "",
+            f"- Mode: `{model_route['mode']}`",
+        ]
+    )
+    if model_route.get("route_ref"):
+        lines.append(f"- Route reference: `{model_route['route_ref']}`")
+    lines.extend(
+        [
+            "",
+            "## Evaluation readiness",
+            "",
+            f"- Readiness: `{evaluation['readiness']}`",
+            "- Evidence references:",
+            _bullets(list(evaluation["evidence_refs"]), fallback="  - None declared"),
+            "",
+            "## Provenance",
+            "",
+            f"- Origin: `{provenance['origin']}`",
+            f"- Manifest: `{state['manifest_path']}`",
+            "- Source references:",
+            _bullets(list(state["source_refs"])),
+            f"- Manifest hash: `{state['manifest_hash']}`",
+            f"- Computed source hash: `{state['source_hash']}`",
+            "",
+            "## Scope limitations",
+            "",
+            "- Source content is not copied into this artifact.",
+            "- Hash agreement detects change; it does not prove prompt quality.",
+            "- Declared paths, call sites, and schemas still require repository review.",
+            "",
+        ]
+    )
+    return "\n".join(lines)
+
+
+def _load_valid_manifest(path: Path) -> Mapping[str, Any]:
+    manifest = load_capability_manifest(path)
+    errors = validate_capability_manifest(manifest)
+    if errors:
+        raise ArtifactPolicyError("invalid capability manifest: " + "; ".join(errors))
+    return manifest
+
+
+def export_capability_artifact(
+    manifest_path: Path,
+    *,
+    repository: Path,
+    output: Path = Path("prompt-governance/artifacts"),
+    replace: bool = False,
+) -> ArtifactExport:
+    """Create two generated files inside a declared repository root."""
+
+    root = _repository_root(repository)
+    safe_manifest_path = _resolve_inside(root, manifest_path, label="manifest path")
+    if not safe_manifest_path.exists():
+        raise FileNotFoundError(safe_manifest_path)
+    if not safe_manifest_path.is_file():
+        raise ValueError(f"manifest path is not a file: {manifest_path}")
+    manifest = _load_valid_manifest(safe_manifest_path)
+
+    source_refs = list(manifest["provenance"]["source_refs"])
+    source_hash = compute_source_hash(root, source_refs)
+    declared_hash = manifest["provenance"].get("source_hash")
+    if declared_hash is not None and declared_hash != source_hash:
+        raise ArtifactPolicyError(
+            "declared provenance.source_hash does not match current repository sources"
+        )
+
+    output_root = _resolve_inside(root, output, label="artifact output")
+    artifact_dir = _resolve_inside(
+        root,
+        output_root / str(manifest["name"]),
+        label="artifact directory",
+    )
+    if artifact_dir.exists() and not artifact_dir.is_dir():
+        raise ArtifactConflictError(f"artifact path is not a directory: {artifact_dir}")
+
+    markdown_path = artifact_dir / "CAPABILITY.md"
+    state_path = artifact_dir / "artifact.json"
+    generated_paths = (markdown_path, state_path)
+    existing = [path for path in generated_paths if path.exists() or path.is_symlink()]
+    if existing and not replace:
+        raise ArtifactConflictError(
+            "generated artifact already exists; pass --replace to update: "
+            + ", ".join(str(path) for path in existing)
+        )
+    if any(path.is_symlink() for path in generated_paths):
+        raise ArtifactPolicyError("generated artifact files must not be symbolic links")
+
+    state = _artifact_state(
+        manifest=manifest,
+        manifest_path=safe_manifest_path,
+        root=root,
+        source_hash=source_hash,
+    )
+    markdown = render_capability_markdown(manifest, state)
+    artifact_json = json.dumps(state, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+
+    artifact_dir.mkdir(parents=True, exist_ok=True)
+    markdown_path.write_text(markdown, encoding="utf-8", newline="\n")
+    state_path.write_text(artifact_json, encoding="utf-8", newline="\n")
+    return ArtifactExport(
+        directory=artifact_dir,
+        files=generated_paths,
+        capability_name=str(manifest["name"]),
+        source_hash=source_hash,
+    )
+
+
+def _artifact_contract_errors(payload: Any) -> list[str]:
+    if not isinstance(payload, Mapping):
+        return ["artifact.json root must be an object"]
+    errors: list[str] = []
+    missing = sorted(_ARTIFACT_FIELDS - set(payload))
+    extra = sorted(set(payload) - _ARTIFACT_FIELDS)
+    if missing:
+        errors.append("artifact.json is missing field(s): " + ", ".join(missing))
+    if extra:
+        errors.append("artifact.json has unsupported field(s): " + ", ".join(extra))
+    if payload.get("artifact_version") != ARTIFACT_VERSION:
+        errors.append(f"artifact_version must equal {ARTIFACT_VERSION!r}")
+    for field in ("capability_name", "capability_version", "manifest_path"):
+        if not isinstance(payload.get(field), str) or not payload.get(field):
+            errors.append(f"{field} must be a non-empty string")
+    for field in ("manifest_hash", "source_hash"):
+        if not isinstance(payload.get(field), str) or not _HASH_RE.fullmatch(payload[field]):
+            errors.append(f"{field} must be a lowercase sha256 digest")
+    refs = payload.get("source_refs")
+    if not isinstance(refs, list) or not refs or any(
+        not isinstance(item, str) or not item for item in refs
+    ):
+        errors.append("source_refs must be a non-empty array of strings")
+    return errors
+
+
+def check_capability_artifact(
+    artifact_directory: Path,
+    *,
+    repository: Path,
+) -> ArtifactCheckResult:
+    """Check manifest and source drift without changing repository files."""
+
+    root = _repository_root(repository)
+    artifact_dir = _resolve_inside(root, artifact_directory, label="artifact directory")
+    if not artifact_dir.exists():
+        raise FileNotFoundError(artifact_dir)
+    if not artifact_dir.is_dir():
+        raise ValueError(f"artifact path is not a directory: {artifact_directory}")
+
+    state_path = _resolve_inside(root, artifact_dir / "artifact.json", label="artifact state")
+    markdown_path = _resolve_inside(
+        root,
+        artifact_dir / "CAPABILITY.md",
+        label="artifact markdown",
+    )
+    if not state_path.is_file():
+        return ArtifactCheckResult(artifact_dir, False, ("artifact.json is missing",))
+
+    payload = json.loads(state_path.read_text(encoding="utf-8"))
+    contract_errors = _artifact_contract_errors(payload)
+    if contract_errors:
+        return ArtifactCheckResult(artifact_dir, False, tuple(contract_errors))
+
+    manifest_path = _resolve_inside(
+        root,
+        Path(payload["manifest_path"]),
+        label="recorded manifest path",
+    )
+    if not manifest_path.is_file():
+        return ArtifactCheckResult(artifact_dir, False, ("recorded manifest is missing",))
+
+    manifest = _load_valid_manifest(manifest_path)
+    messages: list[str] = []
+    current_manifest_hash = _canonical_manifest_hash(manifest)
+    if payload["manifest_hash"] != current_manifest_hash:
+        messages.append("manifest drift detected")
+
+    current_refs = list(manifest["provenance"]["source_refs"])
+    if payload["source_refs"] != current_refs:
+        messages.append("source reference drift detected")
+    current_source_hash = compute_source_hash(root, current_refs)
+    if payload["source_hash"] != current_source_hash:
+        messages.append("source drift detected")
+    declared_hash = manifest["provenance"].get("source_hash")
+    if declared_hash is not None and declared_hash != current_source_hash:
+        messages.append("declared provenance.source_hash is stale")
+    if payload["capability_name"] != manifest["name"]:
+        messages.append("capability name drift detected")
+    if payload["capability_version"] != manifest["version"]:
+        messages.append("capability version drift detected")
+
+    if not messages:
+        if not markdown_path.is_file():
+            messages.append("CAPABILITY.md is missing")
+        else:
+            expected_state = _artifact_state(
+                manifest=manifest,
+                manifest_path=manifest_path,
+                root=root,
+                source_hash=current_source_hash,
+            )
+            expected_markdown = render_capability_markdown(manifest, expected_state)
+            if markdown_path.read_text(encoding="utf-8") != expected_markdown:
+                messages.append("generated Markdown drift detected")
+
+    if messages:
+        return ArtifactCheckResult(artifact_dir, False, tuple(messages))
+    return ArtifactCheckResult(
+        artifact_dir,
+        True,
+        ("manifest, source hash, and generated Markdown are current",),
+    )

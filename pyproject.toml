@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agent-governance-starter"
+version = "0.1.0.dev0"
+description = "Repo-native governance for AI-assisted software development"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [
+  { name = "Andy" },
+]
+dependencies = []
+
+[project.scripts]
+agentgov = "agentgov.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.data-files]
+"share/agent-governance-starter/templates" = [
+  "templates/*.template.md",
+  "templates/*.template.json",
+]
+"share/agent-governance-starter/evaluation" = [
+  "evaluation/readiness-policy.md",
+]
+"share/agent-governance-starter/evaluation/schemas" = [
+  "evaluation/schemas/*.schema.json",
+]
+"share/agent-governance-starter/agent-skills" = [
+  "agent-skills/README.md",
+]
+"share/agent-governance-starter/agent-skills/context-first-review" = [
+  "agent-skills/context-first-review/SKILL.md",
+]
+"share/agent-governance-starter/agent-skills/development-slice" = [
+  "agent-skills/development-slice/SKILL.md",
+]
+"share/agent-governance-starter/agent-skills/incident-attribution" = [
+  "agent-skills/incident-attribution/SKILL.md",
+]
+"share/agent-governance-starter/agent-skills/incident-response" = [
+  "agent-skills/incident-response/SKILL.md",
+]
