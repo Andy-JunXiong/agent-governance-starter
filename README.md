@@ -4,6 +4,12 @@ A reference implementation for repository-native capability, evidence, and human
 
 [![CI](https://github.com/Andy-JunXiong/agent-governance-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/Andy-JunXiong/agent-governance-starter/actions/workflows/ci.yml)
 
+![Agent Governance CLI detecting incomplete evidence, source drift, and a human-review advisory](docs/assets/agentgov-demo.svg)
+
+_Actual output from a sanitized synthetic repository: its capability contract
+is valid, evaluation evidence remains incomplete, and a later source change
+invalidates the generated review artifact._
+
 ## The problem
 
 AI-assisted repositories may contain prompts, agent instructions, capability
@@ -20,6 +26,15 @@ often disconnected. A reviewer still needs to answer:
 Agent Governance Starter Kit connects those questions through repository-local
 contracts and deterministic checks without pretending that static analysis can
 replace accountable human review.
+
+## Why this matters
+
+| Without explicit contracts | With Agent Governance Starter Kit |
+|---|---|
+| Prompt, source, test, and review relationships remain implicit. | A manifest connects sources, callers, contracts, evidence, and review metadata. |
+| A source change after review is easy to miss. | Artifact hashes report deterministic source drift. |
+| Missing evaluation cases can be mistaken for readiness. | `needs_seed_cases` remains an explicit `WARN`. |
+| A successful command can be mistaken for approval. | Human approval remains an external boundary. |
 
 ## What this project demonstrates
 
@@ -55,8 +70,14 @@ replace accountable human review.
 
 ## Thirty-second demo
 
-After installing the package, paste this PowerShell block into a directory
-where `governed-demo` does not already exist:
+After cloning the repository, install the package locally:
+
+```powershell
+python -m pip install --no-deps .
+```
+
+Then paste this PowerShell block into a directory where `governed-demo` does
+not already exist:
 
 ```powershell
 $Project = Join-Path $PWD "governed-demo"
@@ -68,6 +89,16 @@ agentgov report repository $Project --output "$Project/governance-report.md"
 The demo initializes a clean repository, runs the repository contract, and
 writes a report. A successful run does not resolve the reported placeholders
 or grant authority to merge, publish, release, or deploy.
+
+### How to read the result
+
+- `PASS` — a deterministic contract is satisfied.
+- `WARN` — a valid, non-blocking configuration or evidence state is incomplete.
+- `FAIL` — a deterministic requirement is broken or a reviewed artifact is stale.
+- `ADVISORY` — accountable human judgment is still required.
+
+These findings describe repository state. They do not authorize merge,
+publication, release, or deployment.
 
 ## Example findings
 

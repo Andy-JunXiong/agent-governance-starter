@@ -17,7 +17,10 @@ REPORT_STATUSES = (
 )
 SCOPE_LIMITATIONS = (
     "No governance coverage percentage or weighted score is calculated.",
-    "Referenced schema and call-site paths are not yet checked for existence.",
+    (
+        "Reference checks establish existence and structural readability, not "
+        "semantic compatibility or runtime reachability."
+    ),
     "Architecture quality and human-approval correctness remain review judgments.",
 )
 

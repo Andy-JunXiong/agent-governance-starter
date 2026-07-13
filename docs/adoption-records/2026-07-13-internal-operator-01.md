@@ -1,4 +1,7 @@
-# Human adoption pilot record
+# Internal adoption rehearsal record
+
+> **Evidence status:** Invalid as human adoption evidence. This assisted
+> internal rehearsal records product learning, not independent user validation.
 
 ## Session
 
@@ -10,7 +13,7 @@
 - Python version: 3.13.7
 - Starter-kit version or commit: 0.1.0.dev0, current uncommitted working tree
 - Isolated installation method: locally built wheel installed in a temporary venv
-- Pilot target was new and non-sensitive: yes
+- Rehearsal target was new and non-sensitive: yes
 
 ## Timing
 
@@ -60,8 +63,8 @@
 - Facilitator interventions, including exact timing and reason: before the
   command run, the participant asked how to run it; the facilitator explained
   using the activated VS Code PowerShell terminal and pasting the command block.
-- Product friction: the pilot handoff did not make the paste-and-run interaction
-  sufficiently obvious. More importantly, successful command completion was
+- Product friction: the rehearsal handoff did not make the paste-and-run
+  interaction sufficiently obvious. More importantly, successful command completion was
   mistaken for governance completion; the report did not make the remaining
   human decisions, warning meaning, and authority boundary sufficiently clear
   to this participant.

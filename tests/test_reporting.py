@@ -56,6 +56,15 @@ class MarkdownReportTests(unittest.TestCase):
             "Treat merge, publish, release, and deploy as separate human-controlled",
             markdown,
         )
+        self.assertIn(
+            "Reference checks establish existence and structural readability, "
+            "not semantic compatibility or runtime reachability.",
+            markdown,
+        )
+        self.assertNotIn(
+            "Referenced schema and call-site paths are not yet checked for existence.",
+            markdown,
+        )
         self.assertNotIn("Governance Coverage:", markdown)
         self.assertNotRegex(markdown, r"\b\d+%")
 

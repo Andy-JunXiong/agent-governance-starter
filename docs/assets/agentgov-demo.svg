@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="650" viewBox="0 0 1440 650" role="img" aria-labelledby="title description">
+  <title id="title">Agent Governance Starter Kit repository check</title>
+  <desc id="description">A real synthetic repository check showing passing contracts, incomplete evaluation evidence, source drift, and a human-review advisory.</desc>
+  <rect width="1440" height="650" rx="14" fill="#0d1117"/>
+  <rect x="0.5" y="0.5" width="1439" height="649" rx="13.5" fill="none" stroke="#30363d"/>
+  <circle cx="28" cy="28" r="7" fill="#ff5f56"/>
+  <circle cx="52" cy="28" r="7" fill="#ffbd2e"/>
+  <circle cx="76" cy="28" r="7" fill="#27c93f"/>
+  <text x="720" y="34" fill="#8b949e" font-family="ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', monospace" font-size="14" text-anchor="middle">agentgov — synthetic repository</text>
+  <line x1="0" y1="55" x2="1440" y2="55" stroke="#30363d"/>
+  <g font-family="ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', monospace" font-size="14">
+    <text x="24" y="84" fill="#c9d1d9">$ python -m agentgov check repository .</text>
+    <text x="24" y="116" fill="#3fb950">PASS required:constitution: AGENTS.md exists</text>
+    <text x="24" y="144" fill="#3fb950">PASS required:adr-template: docs/adr/TEMPLATE.md exists</text>
+    <text x="24" y="172" fill="#3fb950">PASS required:invariants: docs/adr/INVARIANTS.md exists</text>
+    <text x="24" y="200" fill="#d29922">WARN governance:placeholders: 47 unresolved governance placeholder(s) remain</text>
+    <text x="24" y="228" fill="#3fb950">PASS capability:prompt-governance/capabilities/example-capability.json: prompt-governance/capabilities/example-capability.json satisfies the capability contract</text>
+    <text x="24" y="256" fill="#3fb950">PASS references:example-capability:contracts: input and output contract schemas are readable JSON objects</text>
+    <text x="24" y="284" fill="#3fb950">PASS references:example-capability:callers: no caller files are declared</text>
+    <text x="24" y="312" fill="#3fb950">PASS references:example-capability:sources: all provenance source files exist</text>
+    <text x="24" y="340" fill="#d29922">WARN references:example-capability:evaluation: no evaluation evidence is declared for needs_seed_cases readiness</text>
+    <text x="24" y="368" fill="#d29922">WARN evaluation:evaluation/example-capability: needs_seed_cases: declared readiness needs_seed_cases is valid but incomplete</text>
+    <text x="24" y="396" fill="#3fb950">PASS agent-skill:context-first-review: SKILL.md satisfies the agent-skill contract</text>
+    <text x="24" y="424" fill="#3fb950">PASS agent-skill:development-slice: SKILL.md satisfies the agent-skill contract</text>
+    <text x="24" y="452" fill="#3fb950">PASS agent-skill:incident-attribution: SKILL.md satisfies the agent-skill contract</text>
+    <text x="24" y="480" fill="#3fb950">PASS agent-skill:incident-response: SKILL.md satisfies the agent-skill contract</text>
+    <text x="24" y="508" fill="#f85149">FAIL artifact:example-capability: prompt-governance/artifacts/example-capability: source drift detected</text>
+    <text x="24" y="536" fill="#a371f7">ADVISORY governance:human-review: confirm that approval and escalation boundaries match the repository's real risks</text>
+    <text x="24" y="574" fill="#58a6ff" font-weight="700">SUMMARY PASS=11 WARN=3 FAIL=1 ADVISORY=1</text>
+    <text x="24" y="614" fill="#8b949e">Exit code: 1 — the report is still available for review.</text>
+  </g>
+</svg>

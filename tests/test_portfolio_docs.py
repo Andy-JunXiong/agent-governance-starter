@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 README = ROOT / "README.md"
 CASE_STUDY = ROOT / "docs/case-study.md"
+DEMO_ASSET = ROOT / "docs/assets/agentgov-demo.svg"
 
 
 class PortfolioDocumentationTests(unittest.TestCase):
@@ -20,6 +21,7 @@ class PortfolioDocumentationTests(unittest.TestCase):
         self.assertTrue(text.startswith(expected_opening))
         for heading in (
             "## The problem",
+            "## Why this matters",
             "## What this project demonstrates",
             "## What makes the design different",
             "## Thirty-second demo",
@@ -31,15 +33,58 @@ class PortfolioDocumentationTests(unittest.TestCase):
             self.assertIn(heading, text)
         self.assertLess(text.index("## The problem"), text.index("## Repository layout"))
 
+    def test_readme_demo_visual_uses_real_sanitized_cli_output(self) -> None:
+        text = README.read_text(encoding="utf-8")
+
+        self.assertIn(
+            "![Agent Governance CLI detecting incomplete evidence, source drift, "
+            "and a human-review advisory](docs/assets/agentgov-demo.svg)",
+            text,
+        )
+        self.assertTrue(DEMO_ASSET.is_file())
+
+        asset = DEMO_ASSET.read_text(encoding="utf-8")
+        for finding in (
+            "WARN evaluation:evaluation/example-capability:",
+            "FAIL artifact:example-capability:",
+            "ADVISORY governance:human-review:",
+            "SUMMARY PASS=11 WARN=3 FAIL=1 ADVISORY=1",
+        ):
+            self.assertIn(finding, asset)
+        self.assertNotIn("payment-summary", asset)
+        self.assertNotIn("C:\\Users", asset)
+        self.assertNotRegex(asset, r"\b\d+%")
+
+    def test_readme_explains_value_and_finding_semantics(self) -> None:
+        text = README.read_text(encoding="utf-8")
+
+        for phrase in (
+            "| Without explicit contracts | With Agent Governance Starter Kit |",
+            "Artifact hashes report deterministic source drift.",
+            "Human approval remains an external boundary.",
+            "### How to read the result",
+            "`PASS` — a deterministic contract is satisfied.",
+            "`WARN` — a valid, non-blocking configuration or evidence state is incomplete.",
+            "`FAIL` — a deterministic requirement is broken or a reviewed artifact is stale.",
+            "`ADVISORY` — accountable human judgment is still required.",
+            "They do not authorize merge,\npublication, release, or deployment.",
+        ):
+            self.assertIn(phrase, text)
+
     def test_readme_demo_findings_and_mermaid_match_implemented_contracts(self) -> None:
         text = README.read_text(encoding="utf-8")
 
         for command in (
+            "python -m pip install --no-deps .",
             'agentgov init $Project --project-name "Portfolio Demo"',
             "agentgov check repository $Project",
             'agentgov report repository $Project --output "$Project/governance-report.md"',
         ):
             self.assertIn(command, text)
+        self.assertLess(
+            text.index("python -m pip install --no-deps ."),
+            text.index('agentgov init $Project --project-name "Portfolio Demo"'),
+        )
         for finding in (
             "PASS capability:prompt-governance/capabilities/example-capability.json:",
             "WARN evaluation:evaluation/example-capability: needs_seed_cases:",

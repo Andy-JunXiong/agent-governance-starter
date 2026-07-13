@@ -94,7 +94,7 @@ aggregation, reporting, and CLI exit behavior. CI installs the package and runs
 the suite on Ubuntu and Windows with Python 3.11, 3.12, and 3.13.
 
 An isolated wheel rehearsal verified the complete clean-repository workflow.
-The first internal human-adoption pilot did not establish the ten-minute claim:
+An internal usability rehearsal did not establish the ten-minute adoption claim:
 timing evidence was missing and the participant needed help interpreting the
 remaining human decisions. That result was preserved rather than rewritten as
 a pass, and it directly informed clearer initialization and report guidance.

@@ -93,6 +93,15 @@ class JsonReportContractTests(unittest.TestCase):
         self.assertNotIn("timestamp", payload)
         self.assertNotIn("score", payload)
         self.assertNotIn("coverage_percentage", payload)
+        self.assertIn(
+            "Reference checks establish existence and structural readability, "
+            "not semantic compatibility or runtime reachability.",
+            payload["scope_limitations"],
+        )
+        self.assertNotIn(
+            "Referenced schema and call-site paths are not yet checked for existence.",
+            payload["scope_limitations"],
+        )
 
     def test_json_rendering_is_deterministic(self) -> None:
         report = RepositoryReport(
