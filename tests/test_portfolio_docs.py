@@ -96,9 +96,44 @@ class PortfolioDocumentationTests(unittest.TestCase):
         mermaid = re.search(r"```mermaid\n(.*?)```", text, flags=re.DOTALL)
         self.assertIsNotNone(mermaid)
         diagram = mermaid.group(1)
-        self.assertTrue(diagram.startswith("flowchart TD\n"))
-        for edge in ("CLI", "A --> B", "B --> C", "C --> D", "D --> E", "E --> F", "F --> G"):
+        self.assertTrue(diagram.startswith("flowchart TB\n"))
+        for label in (
+            "Repository-local contracts and evidence",
+            "agentgov governance operations",
+            "Review and integration surfaces",
+            "Separate explicit write command",
+            "Read-only drift detection",
+            "Ordered RepositoryReport",
+            "Not included in v0.1",
+        ):
+            self.assertIn(label, diagram)
+        for edge in (
+            "SOURCES --> VALIDATE",
+            "CAPABILITY --> EXPORT",
+            "SOURCES --> EXPORT",
+            "EXPORT --> ARTIFACT",
+            "ARTIFACT --> DRIFT",
+            "VALIDATE --> FINDINGS",
+            "DRIFT --> FINDINGS",
+            "FINDINGS --> TERMINAL",
+            "FINDINGS --> MARKDOWN",
+            "FINDINGS --> JSON",
+            "JSON -.-> FUTURE",
+            'HUMAN -->|"Separate explicit authority"| TRANSITION',
+        ):
             self.assertIn(edge, diagram)
+        self.assertNotIn("Reject · Escalate", diagram)
+        self.assertNotIn("A --> B", diagram)
+        self.assertIn(
+            "Artifact\nexport is a separate explicit write command, not a stage "
+            "inside repository\nchecking.",
+            text,
+        )
+        self.assertIn(
+            "merge, publication, release,\nand deployment remain separate "
+            "human-authorized actions.",
+            text,
+        )
 
     def test_prominent_local_navigation_targets_exist(self) -> None:
         required_paths = (

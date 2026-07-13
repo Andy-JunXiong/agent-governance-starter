@@ -115,19 +115,89 @@ ADVISORY governance:human-review: confirm that approval and escalation boundarie
 ## Architecture
 
 ```mermaid
-flowchart TD
-    CLI[agentgov CLI<br/>repository-native] --> A[Capability Manifest]
-    A --> B[Repository References]
-    B --> C[Evaluation Readiness]
-    C --> D[Reviewable Artifact]
-    D --> E[Source Drift Check]
-    E --> F[Repository Report]
-    F --> G[Human Review<br/>outside the automated checker]
+flowchart TB
+    subgraph REPO["1. Repository-local contracts and evidence"]
+        direction LR
+        CONSTITUTION["Constitution & architecture memory<br/>AGENTS.md · ADRs · INVARIANTS.md"]
+        PROTOCOLS["Agent protocols<br/>SKILL.md"]
+        CAPABILITY["Capability manifest<br/>Owner · Risk · Contracts · Provenance"]
+        EVALUATION["Evaluation bundle<br/>Readiness · Cases · Evidence"]
+        SOURCES["Implementation references<br/>Sources · Callers · Schemas"]
+        ARTIFACT["Generated review artifact<br/>Manifest snapshot · Source hashes"]
+    end
+
+    subgraph CORE["2. agentgov governance operations"]
+        direction LR
+        VALIDATE["Validate repository contracts<br/>Read-only deterministic checks"]
+        EXPORT["Export capability artifact<br/>Separate explicit write command"]
+        DRIFT["Check artifact integrity<br/>Read-only drift detection"]
+        FINDINGS["Aggregate repository findings<br/>Ordered RepositoryReport"]
+    end
+
+    subgraph SURFACES["3. Review and integration surfaces"]
+        direction LR
+        TERMINAL["Terminal output<br/>Immediate feedback"]
+        MARKDOWN["Markdown report<br/>Human-readable review"]
+        JSON["JSON v1.0<br/>Machine-readable contract"]
+    end
+
+    HUMAN["4. Accountable human review<br/>Resolve or defer gaps · Record judgment"]
+    TRANSITION["High-risk transition<br/>Merge · Publish · Release · Deploy"]
+    FUTURE["Future consumers<br/>Web UI · API · CI integration<br/>Not included in v0.1"]
+
+    CONSTITUTION --> VALIDATE
+    PROTOCOLS --> VALIDATE
+    CAPABILITY --> VALIDATE
+    EVALUATION --> VALIDATE
+    SOURCES --> VALIDATE
+
+    CAPABILITY --> EXPORT
+    SOURCES --> EXPORT
+    EXPORT --> ARTIFACT
+
+    ARTIFACT --> DRIFT
+    CAPABILITY --> DRIFT
+    SOURCES --> DRIFT
+
+    VALIDATE --> FINDINGS
+    DRIFT --> FINDINGS
+
+    FINDINGS --> TERMINAL
+    FINDINGS --> MARKDOWN
+    FINDINGS --> JSON
+
+    TERMINAL --> HUMAN
+    MARKDOWN --> HUMAN
+    JSON --> HUMAN
+    JSON -.-> FUTURE
+
+    HUMAN -->|"Separate explicit authority"| TRANSITION
+
+    classDef repo fill:#f6f8fa,stroke:#57606a,color:#24292f,stroke-width:1px;
+    classDef core fill:#ddf4ff,stroke:#0969da,color:#0a3069,stroke-width:2px;
+    classDef surface fill:#dafbe1,stroke:#1a7f37,color:#116329,stroke-width:1px;
+    classDef human fill:#fff8c5,stroke:#9a6700,color:#633c01,stroke-width:2px;
+    classDef external fill:#ffebe9,stroke:#cf222e,color:#82071e,stroke-width:2px;
+    classDef future fill:#f6f8fa,stroke:#8c959f,color:#57606a,stroke-dasharray:5 5;
+
+    class CONSTITUTION,PROTOCOLS,CAPABILITY,EVALUATION,SOURCES,ARTIFACT repo;
+    class VALIDATE,EXPORT,DRIFT,FINDINGS core;
+    class TERMINAL,MARKDOWN,JSON surface;
+    class HUMAN human;
+    class TRANSITION external;
+    class FUTURE future;
 ```
 
-The CLI reads and writes repository-local files. It can establish structural,
-reference, readiness, and drift facts; the final approval judgment remains
-outside the automated checker.
+`agentgov` treats repository files as the source of truth. Its read-only
+repository check validates declared contracts, checks artifact integrity and
+drift, and aggregates the results into one ordered findings model. Terminal,
+Markdown, and JSON are different views of the same repository state. Artifact
+export is a separate explicit write command, not a stage inside repository
+checking.
+
+The checker can establish structural, reference, readiness, and integrity
+facts. It cannot approve high-risk transitions: merge, publication, release,
+and deployment remain separate human-authorized actions.
 
 ## Project status and non-goals
 
