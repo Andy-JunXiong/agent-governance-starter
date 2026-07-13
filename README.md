@@ -1,5 +1,7 @@
 # Agent Governance Starter Kit
 
+[![CI](https://github.com/Andy-JunXiong/agent-governance-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/Andy-JunXiong/agent-governance-starter/actions/workflows/ci.yml)
+
 A lightweight, repo-native governance framework for AI-assisted software
 development.
 
