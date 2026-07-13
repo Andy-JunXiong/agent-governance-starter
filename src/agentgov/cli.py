@@ -27,7 +27,8 @@ from agentgov.references import (
 from agentgov.reporting import (
     ReportConflictError,
     render_repository_report,
-    write_markdown_report,
+    render_repository_report_json,
+    write_report,
 )
 
 
@@ -251,8 +252,32 @@ def _init_project(target: Path, *, project_name: str, dry_run: bool) -> int:
 
     if report.dry_run:
         print(f"PASS init dry-run: {report.target}")
+        print(
+            "NEXT init dry-run: rerun without --dry-run to create and review "
+            "the scaffold"
+        )
     else:
         print(f"PASS init: {report.target}")
+        print(
+            "NEXT init: review "
+            f"{report.target / 'AGENTS.md'} and replace or explicitly defer "
+            "governance placeholders"
+        )
+        print(
+            "NEXT init: run "
+            f"`agentgov check repository \"{report.target}\"` after adapting "
+            "the scaffold"
+        )
+    if report.dry_run:
+        print(
+            "NOTE init dry-run: preview completion does not mean governance is "
+            "complete and does not authorize merge, publish, release, or deploy"
+        )
+    else:
+        print(
+            "NOTE init: successful initialization does not mean governance is "
+            "complete and does not authorize merge, publish, release, or deploy"
+        )
     return EXIT_PASS
 
 
@@ -285,12 +310,24 @@ def _check_repository(path: Path) -> int:
     return EXIT_FAIL if report.has_failures else EXIT_PASS
 
 
-def _report_repository(path: Path, *, output: Path | None) -> int:
+def _report_repository(
+    path: Path,
+    *,
+    output: Path | None,
+    report_format: str,
+) -> int:
     try:
         report = check_repository(path)
-        content = render_repository_report(report)
+        renderers = {
+            "markdown": render_repository_report,
+            "json": render_repository_report_json,
+        }
+        content = renderers[report_format](report)
     except FileNotFoundError:
         print(f"ERROR report: repository path not found: {path}", file=sys.stderr)
+        return EXIT_ERROR
+    except KeyError:
+        print(f"ERROR report: unsupported format: {report_format}", file=sys.stderr)
         return EXIT_ERROR
     except ValueError as exc:
         print(f"ERROR report: {exc}", file=sys.stderr)
@@ -303,7 +340,7 @@ def _report_repository(path: Path, *, output: Path | None) -> int:
         print(content, end="")
     else:
         try:
-            write_markdown_report(output, content)
+            write_report(output, content)
         except ReportConflictError as exc:
             print(f"FAIL report: {exc}")
             return EXIT_FAIL
@@ -311,6 +348,20 @@ def _report_repository(path: Path, *, output: Path | None) -> int:
             print(f"ERROR report: cannot write {output}: {exc}", file=sys.stderr)
             return EXIT_ERROR
         print(f"REPORT {output}")
+        if report_format == "markdown":
+            print(
+                "NEXT report: open the report and review "
+                "`Human decisions still required`"
+            )
+        else:
+            print(
+                "NEXT report: consume the versioned JSON contract and review "
+                "its known gaps and recommended actions"
+            )
+        print(
+            "NOTE report: report generation does not authorize merge, publish, "
+            "release, or deploy"
+        )
 
     return EXIT_FAIL if report.has_failures else EXIT_PASS
 
@@ -481,7 +532,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     report_parser = commands.add_parser(
         "report",
-        help="Render governance findings as a Markdown report.",
+        help="Render governance findings as a Markdown or JSON report.",
     )
     report_targets = report_parser.add_subparsers(dest="report_target", required=True)
     report_repository_parser = report_targets.add_parser(
@@ -498,10 +549,21 @@ def build_parser() -> argparse.ArgumentParser:
     report_repository_parser.add_argument(
         "--output",
         type=Path,
-        help="Write a new Markdown file instead of printing to standard output.",
+        help="Write a new report file instead of printing to standard output.",
+    )
+    report_repository_parser.add_argument(
+        "--format",
+        dest="report_format",
+        choices=("markdown", "json"),
+        default="markdown",
+        help="Report serialization format (default: markdown).",
     )
     report_repository_parser.set_defaults(
-        handler=lambda args: _report_repository(args.path, output=args.output)
+        handler=lambda args: _report_repository(
+            args.path,
+            output=args.output,
+            report_format=args.report_format,
+        )
     )
 
     return parser

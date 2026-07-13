@@ -10,7 +10,8 @@ rules.
   modes, approval gates, validation, and escalation.
 - `ADR.template.md`: durable architecture-decision record with an admission
   gate, ownership boundary, consequences, and implementation follow-up.
-- `INVARIANTS.template.md`: enforceable architecture-constraint register.
+- `INVARIANTS.template.md`: architecture-constraint register with explicit
+  authority, enforcement-point, and verification metadata.
 - `prompt-capability.template.json`: contract-valid starting manifest for a
   governed prompt capability.
 - `example-capability.*.schema.template.json`: minimal repository-local input

@@ -104,6 +104,11 @@ class CleanRepositoryAdoptionTests(unittest.TestCase):
         self.assertIn("`governance:placeholders`", report)
         self.assertIn("`references:example-capability:evaluation`", report)
         self.assertIn("`evaluation:evaluation/example-capability`", report)
+        self.assertIn("## How to interpret this report", report)
+        self.assertIn("## Human decisions still required", report)
+        self.assertIn("the checks ran; it does not mean governance is complete", report)
+        self.assertIn("does not mean governance is complete", report)
+        self.assertIn("does not authorize merge, publish, release, or deploy", report)
         self.assertNotRegex(report, r"\b\d+%")
 
 
