@@ -31,6 +31,8 @@ class MarkdownReportTests(unittest.TestCase):
         for heading in (
             "# Agent Governance Report",
             "## Summary",
+            "## How to interpret this report",
+            "## Human decisions still required",
             "## Findings",
             "## Known gaps",
             "## Recommended actions",
@@ -41,6 +43,19 @@ class MarkdownReportTests(unittest.TestCase):
         self.assertIn("| WARN | 4 |", markdown)
         self.assertIn("| ADVISORY | 1 |", markdown)
         self.assertIn("`artifacts:directory`", markdown)
+        self.assertIn("the checks ran; it does not mean governance is complete", markdown)
+        self.assertIn(
+            "This report does not authorize merge, publish, release, or deploy",
+            markdown,
+        )
+        self.assertIn(
+            "Complete or explicitly defer each WARN finding:",
+            markdown,
+        )
+        self.assertIn(
+            "Treat merge, publish, release, and deploy as separate human-controlled",
+            markdown,
+        )
         self.assertNotIn("Governance Coverage:", markdown)
         self.assertNotRegex(markdown, r"\b\d+%")
 
@@ -72,6 +87,7 @@ class MarkdownReportTests(unittest.TestCase):
 
         self.assertIn("| FAIL | `artifact:example-capability` |", markdown)
         self.assertIn("source drift detected", markdown)
+        self.assertIn("Resolve each FAIL finding before claiming a pass:", markdown)
 
 
 class ReportCliTests(unittest.TestCase):
@@ -102,7 +118,13 @@ class ReportCliTests(unittest.TestCase):
             content = output.read_text(encoding="utf-8")
 
         self.assertEqual(exit_code, EXIT_PASS)
-        self.assertEqual(stdout, f"REPORT {output}\n")
+        self.assertTrue(stdout.startswith(f"REPORT {output}\n"))
+        self.assertIn("NEXT report: open the report", stdout)
+        self.assertIn("Human decisions still required", stdout)
+        self.assertIn(
+            "does not authorize merge, publish, release, or deploy",
+            stdout,
+        )
         self.assertTrue(content.startswith("# Agent Governance Report\n"))
         self.assertEqual(stderr, "")
 
@@ -148,7 +170,12 @@ class ReportCliTests(unittest.TestCase):
             content = output.read_text(encoding="utf-8")
 
         self.assertEqual(exit_code, EXIT_FAIL)
-        self.assertEqual(stdout, f"REPORT {output}\n")
+        self.assertTrue(stdout.startswith(f"REPORT {output}\n"))
+        self.assertIn("NEXT report: open the report", stdout)
+        self.assertIn(
+            "does not authorize merge, publish, release, or deploy",
+            stdout,
+        )
         self.assertIn("| FAIL | 3 |", content)
         self.assertEqual(stderr, "")
 

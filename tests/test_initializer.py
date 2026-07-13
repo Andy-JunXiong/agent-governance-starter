@@ -162,6 +162,8 @@ class InitCliTests(unittest.TestCase):
             self.assertIn("PLAN AGENTS.md", stdout)
             self.assertIn("WARN init:", stdout)
             self.assertIn("PASS init dry-run:", stdout)
+            self.assertIn("NEXT init dry-run:", stdout)
+            self.assertIn("does not authorize merge, publish, release, or deploy", stdout)
             self.assertEqual(stderr, "")
 
     def test_cli_init_writes_files_and_reports_unresolved_placeholders(self) -> None:
@@ -177,6 +179,10 @@ class InitCliTests(unittest.TestCase):
             self.assertIn("CREATE AGENTS.md", stdout)
             self.assertIn("WARN init:", stdout)
             self.assertIn("PASS init:", stdout)
+            self.assertIn("NEXT init: review", stdout)
+            self.assertIn("agentgov check repository", stdout)
+            self.assertIn("does not mean governance is complete", stdout)
+            self.assertIn("does not authorize merge, publish, release, or deploy", stdout)
             self.assertEqual(stderr, "")
 
     def test_cli_refuses_non_empty_target_as_policy_failure(self) -> None:

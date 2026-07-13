@@ -82,13 +82,15 @@ monitoring platforms are integrations, not part of the v0.1 core.
 
 ## Finding semantics
 
-The initial reporting model uses:
+The v0.1 CLI reporting model emits:
 
 - `PASS`: a required, deterministic condition is satisfied;
 - `WARN`: a deterministic gap exists but policy does not make it blocking;
 - `FAIL`: a required, deterministic condition is not satisfied;
-- `ADVISORY`: human judgment is required before assigning compliance;
-- `NOT_APPLICABLE`: the control does not apply to this repository.
+- `ADVISORY`: human judgment is required before assigning compliance.
+
+`NOT_APPLICABLE` is reserved as a possible future control-applicability state;
+the current CLI does not emit it.
 
 The project will not calculate a single governance coverage percentage until
 control applicability, weighting, and evidence rules are specified and tested.
@@ -103,3 +105,16 @@ Understand -> Admit -> Design -> Implement -> Verify
 Not every repository needs every stage at the same maturity. Reports should
 show readiness and missing evidence rather than treating unconfigured controls
 as successful.
+
+## Report integration boundary
+
+One repository check produces one ordered findings model. Terminal output,
+Markdown, and JSON serialize that same model; integrations must not reconstruct
+governance meaning by parsing Markdown. The versioned JSON contract is defined
+by [the repository report schema](../schemas/repository-report.schema.json).
+
+Contract version `1.0` exposes repository identity, status counts, findings,
+known gaps, recommended actions, and scope limitations. It intentionally omits
+timestamps, scores, and governance coverage percentages. Consuming the JSON
+does not turn deterministic file-presence checks into quality judgments and
+does not grant approval to merge, publish, release, or deploy.
