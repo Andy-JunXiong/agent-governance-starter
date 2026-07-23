@@ -112,7 +112,10 @@ def _validate_project_name(project_name: str) -> str:
     return normalized
 
 
-def _build_files(project_name: str) -> tuple[InitFile, ...]:
+def build_scaffold_files(project_name: str) -> tuple[InitFile, ...]:
+    """Build the reviewed scaffold files without writing them."""
+
+    project_name = _validate_project_name(project_name)
     asset_root = _asset_root()
     files: list[InitFile] = []
     for asset_path, output_path in _ASSET_OUTPUTS.items():
@@ -139,9 +142,8 @@ def initialize_project(
 ) -> InitReport:
     """Plan or write a governance scaffold without overwriting existing files."""
 
-    normalized_name = _validate_project_name(project_name)
     _assert_safe_target(target)
-    files = _build_files(normalized_name)
+    files = build_scaffold_files(project_name)
     placeholders = tuple(
         sorted(
             {

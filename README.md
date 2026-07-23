@@ -10,6 +10,11 @@ _Actual output from a sanitized synthetic repository: its capability contract
 is valid, evaluation evidence remains incomplete, and a later source change
 invalidates the generated review artifact._
 
+[Open the product explainer](docs/index.html) for the visual introduction, then
+[view the self-contained HTML governance report](docs/demo-governance-report.html)
+to see how the same findings become a reviewer work surface. Both open without
+a server or external network request.
+
 ## The problem
 
 AI-assisted repositories may contain prompts, agent instructions, capability
@@ -235,6 +240,18 @@ The first usable release contains:
 
 ## Project navigation
 
+- [Web quickstart](docs/quickstart.html) provides a copyable PowerShell and
+  Bash/zsh adoption path.
+- [中文 Web 快速开始](docs/quickstart.zh-CN.html) provides the equivalent
+  browser-friendly Chinese path.
+- [中文快速开始](docs/quickstart.zh-CN.md) provides a concise installation,
+  inspection, adoption, and validation workflow for Chinese-speaking users.
+- [Existing repository adoption](docs/existing-repository-adoption.md) provides
+  the complete inspect, dry-run, create-missing-only, and validation workflow.
+- [Generated files guide](docs/generated-files-guide.md) explains the human
+  decisions required in each scaffold area.
+- [Troubleshooting](docs/troubleshooting.md) covers installation, conflicts,
+  findings, reports, artifacts, and exit codes.
 - [Case study](docs/case-study.md) explains the product decisions, trust
   boundary, implementation, validation, and current limitations.
 - [Governance model](docs/governance-model.md) defines the conceptual chain and
@@ -319,6 +336,44 @@ To measure the human bootstrap experience, follow the
 result with the
 [human adoption record template](docs/human-adoption-record.template.md).
 Automated duration must not be reported as human adoption evidence.
+
+## Existing-repository inspection
+
+Inspect an existing repository before deciding how to adopt the starter kit:
+
+```powershell
+agentgov inspect path/to/existing-repository
+agentgov inspect path/to/existing-repository --format json
+```
+
+The command is read-only. It reports which core governance paths already exist,
+which are missing, and whether common repository instruction files such as
+`CLAUDE.md` or `.github/copilot-instructions.md` were discovered. It does not
+read, reconcile, copy, or judge those instruction files. The resulting adoption
+plan keeps each missing path as a deliberate human-reviewed change; successful
+inspection does not mean governance is complete. Missing paths are non-blocking
+adoption information. A path with the wrong type or a symbolic link is a
+deterministic `CONFLICT` and returns exit code `1`; operational errors return
+`2`. JSON contract version `1.0` is defined by
+[`schemas/adoption-report.schema.json`](schemas/adoption-report.schema.json).
+
+After reviewing the inspection result, preview a safe existing-repository
+adoption:
+
+```powershell
+agentgov adopt path/to/existing-repository --project-name "Example Project" --dry-run
+```
+
+The plan lists files that would be created and existing files that would be
+preserved. Rerunning without `--dry-run` creates only missing scaffold files
+after a complete conflict preflight. Existing regular files are never
+overwritten, and symbolic links or path-type conflicts stop adoption. The
+command does not reconcile existing instruction text and does not run Git
+commands. Continue with the
+[existing repository adoption guide](docs/existing-repository-adoption.md),
+then use the [generated files guide](docs/generated-files-guide.md) to adapt the
+scaffold. Common failures are covered by
+[troubleshooting](docs/troubleshooting.md).
 
 ## Capability check
 
@@ -455,6 +510,18 @@ Use JSON when another local tool needs a stable machine-readable contract:
 agentgov report repository . --format json
 agentgov report repository . --format json --output governance-report.json
 ```
+
+Use the self-contained HTML report when a first-time user or reviewer needs a
+visual explanation of the findings and human-review boundary:
+
+```powershell
+agentgov report repository . --format html --output governance-report.html
+```
+
+The HTML file opens locally without a server. It contains inline styling and a
+small status filter, embeds the same machine-readable report document, makes no
+external network requests, and does not provide approval or repository-write
+controls.
 
 Both formats are serialized from the same repository findings and contain
 summary counts, findings, known gaps, recommended actions, and scope

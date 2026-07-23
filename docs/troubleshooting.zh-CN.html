@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="排查 Agent Governance 的安装、接入、检查结果和报告问题。"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'"><title>故障排查 · Agent Governance</title><link rel="stylesheet" href="guide.css"></head>
+<body><nav class="shell"><a class="brand" href="index.html"><span class="mark">AG</span>Agent Governance</a><div class="nav-links"><a href="quickstart.zh-CN.html">← 返回中文快速入门</a></div></nav>
+<header class="shell"><span class="eyebrow">修改前先诊断</span><h1>故障排查</h1><p class="lead">先判断问题属于安装、仓库状态、确定性失败，还是自动化无法作出的决定。</p></header>
+<main class="shell">
+<section><h2>找不到 <code>agentgov</code></h2><p>通常是命令被安装到另一个 Python 环境，或者脚本目录不在 PATH 中。</p><pre><code>python -m pip install .
+python -m agentgov --help</code></pre><p>如果模块命令可运行而 <code>agentgov</code> 不可运行，请使用模块形式，或修正当前环境的 PATH。</p></section>
+<section><h2><code>adopt</code> 报告 CONFLICT</h2><p>不要强制写入。检查报告中的路径，确认它是目录、普通文件还是符号链接。</p><pre><code>agentgov inspect path/to/repository
+
+CONFLICT docs/adr — 预期为目录，但发现普通文件</code></pre><p>重命名或有计划地迁移冲突路径，重新运行 <code>inspect</code>，然后再次预览接入。</p></section>
+<section><h2>接入后仍然存在 WARN</h2><p>WARN 不一定是程序错误。它表示一个有效状态被如实标记为尚未完成。</p><div class="states"><div class="state"><strong>governance:placeholders</strong>替换占位符，或记录负责人和明确延期。</div><div class="state"><strong>evaluation:needs_seed_cases</strong>添加已审阅案例；证据尚不存在时保留警告。</div><div class="state"><strong>artifacts:directory</strong>项目准备跟踪漂移后，再导出已审阅能力制品。</div></div></section>
+<section><h2>出现 FAIL</h2><p>FAIL 表示确定性契约被违反。修正报告指出的文件或引用；不要削弱检查器或删除测试。</p><pre><code>FAIL references:refund-reply:contracts
+发现：输出 Schema 路径不存在
+下一步：修正清单路径或恢复 Schema</code></pre></section>
+<section><h2>ADVISORY 不能被自动“修复”</h2><p>ADVISORY 表示静态分析范围之外的判断。例如，CLI 可以确认已经声明人工审阅阶段，却不能决定该阶段是否足以应对仓库真实的退款风险。</p><p>请在 ADR 或其他仓库自有记录中写明责任人、决定、理由和后续工作。</p></section>
+<section><h2>HTML 报告看起来过时</h2><p>报告是静态快照。仓库事实变化后需要重新生成。输出命令拒绝覆盖已有文件，因此请选择新路径，或在确认后处理旧的生成报告。</p><pre><code>agentgov report repository . --format html --output governance-report-new.html</code></pre></section>
+<section class="checklist"><h2>以下情况需要升级给人处理</h2><ol><li>无法确定正确的指令权威关系。</li><li>修复方案会改变审批或部署边界。</li><li>证据包含尚未脱敏的私有数据或生产衍生数据。</li><li>有人试图隐藏警告，而不是如实解决或延期。</li></ol></section>
+<div class="next"><a class="button dark" href="quickstart.zh-CN.html">← 返回中文快速入门</a><a class="button" href="demo-governance-report.zh-CN.html">查看示例报告 →</a></div>
+</main><footer class="shell">Agent Governance Starter Kit · 故障排查</footer></body></html>

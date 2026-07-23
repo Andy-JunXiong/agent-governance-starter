@@ -1,0 +1,1204 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="A local Python CLI and repository file standard for reviewable AI-assisted software development."
+    />
+    <meta name="theme-color" content="#fbfaf6" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; style-src 'unsafe-inline'"
+    />
+    <title>Agent Governance — Reviewable AI-assisted repositories</title>
+    <style>
+      :root {
+        --ink: #16131d;
+        --muted: #655f70;
+        --paper: #fbfaf6;
+        --card: #fff;
+        --line: #ded9e7;
+        --purple: #7157ff;
+        --purple-text: #5f42e6;
+        --lime: #dfff79;
+        --blue: #b8d9ff;
+        --rose: #ffb5c0;
+        --pass: #197852;
+        --warn: #a35d00;
+        --fail: #c43843;
+        --advisory: #6d4fc0;
+        --sans:
+          "Segoe UI Variable Text", "Segoe UI", Roboto, "Helvetica Neue", Arial,
+          "PingFang SC", "Microsoft YaHei", sans-serif;
+        --mono:
+          "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono",
+          monospace;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font: 16px/1.58 var(--sans);
+        font-kerning: normal;
+        text-rendering: optimizeLegibility;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+      .shell {
+        width: min(1180px, calc(100% - 34px));
+        margin: auto;
+      }
+      nav {
+        height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--line);
+      }
+      .brand {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        font-weight: 700;
+      }
+      .mark {
+        width: 30px;
+        height: 30px;
+        border-radius: 9px;
+        background: var(--ink);
+        color: white;
+        display: grid;
+        place-items: center;
+        font-size: 11px;
+      }
+      .links {
+        display: flex;
+        gap: 25px;
+        align-items: center;
+        color: #514b5b;
+      }
+      .links a:hover {
+        color: var(--purple-text);
+      }
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        padding: 12px 18px;
+        font-weight: 700;
+        border: 1px solid var(--ink);
+        transition:
+          transform 0.15s ease,
+          box-shadow 0.15s ease;
+      }
+      .button.dark {
+        background: var(--ink);
+        color: white;
+      }
+      .button.light {
+        background: white;
+      }
+      .button:hover {
+        transform: translateY(-1px);
+      }
+      a:focus-visible,
+      .button:focus-visible {
+        outline: 3px solid var(--purple);
+        outline-offset: 4px;
+      }
+      header {
+        padding: 78px 0 62px;
+      }
+      .hero {
+        display: grid;
+        grid-template-columns: 0.92fr 1.08fr;
+        gap: 54px;
+        align-items: center;
+      }
+      .pill {
+        display: inline-flex;
+        background: #eeeaff;
+        color: #5036dd;
+        padding: 7px 11px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+      }
+      h1 {
+        font-size: clamp(48px, 7vw, 82px);
+        font-weight: 700;
+        line-height: 1.02;
+        letter-spacing: -0.04em;
+        margin: 18px 0 25px;
+        text-wrap: balance;
+      }
+      .hero p {
+        font-size: 19px;
+        line-height: 1.55;
+        color: var(--muted);
+        max-width: 650px;
+      }
+      .actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 28px;
+      }
+      .sample-note {
+        max-width: 610px;
+        margin: 12px 0 0;
+        color: #716b7a;
+        font-size: 13px;
+        line-height: 1.55;
+      }
+      .trust {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-top: 27px;
+        color: #716b7a;
+        font-size: 13px;
+      }
+      .trust span:before {
+        content: "";
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--pass);
+        margin-right: 7px;
+      }
+      .product {
+        margin: 0;
+        position: relative;
+        background: #17131f;
+        border-radius: 25px;
+        padding: 13px;
+        box-shadow: 0 28px 70px #33226327;
+        transform: rotate(1deg);
+      }
+      .illustrative {
+        position: absolute;
+        z-index: 1;
+        top: -13px;
+        right: 22px;
+        padding: 6px 9px;
+        border-radius: 999px;
+        background: var(--lime);
+        color: #27320d;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+      }
+      .window {
+        background: #f7f6f2;
+        border-radius: 17px;
+        overflow: hidden;
+      }
+      .windowbar {
+        height: 43px;
+        background: white;
+        border-bottom: 1px solid #e7e2ec;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0 15px;
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #d5d0db;
+      }
+      .window-title {
+        margin-left: 9px;
+        font-size: 12px;
+        color: #746d7c;
+      }
+      .dashboard {
+        padding: 20px;
+      }
+      .dashboard-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+      }
+      .dashboard h3 {
+        font-size: 18px;
+        margin: 0;
+      }
+      .repo {
+        font: 12px/1.5 var(--mono);
+        color: #777080;
+      }
+      .status-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        margin: 16px 0;
+      }
+      .status {
+        background: white;
+        border: 1px solid #e4dfea;
+        border-radius: 11px;
+        padding: 11px;
+      }
+      .status span {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+      }
+      .status strong {
+        display: block;
+        font-size: 22px;
+      }
+      .status.pass span {
+        color: var(--pass);
+      }
+      .status.warn span {
+        color: var(--warn);
+      }
+      .status.fail span {
+        color: var(--fail);
+      }
+      .status.advisory span {
+        color: var(--advisory);
+      }
+      .task {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 10px;
+        align-items: center;
+        background: white;
+        border: 1px solid #e5e0e9;
+        border-radius: 11px;
+        padding: 11px;
+        margin-top: 8px;
+      }
+      .badge {
+        border-radius: 999px;
+        padding: 4px 7px;
+        font-size: 10px;
+        font-weight: 700;
+      }
+      .badge.warn {
+        background: #fff0cf;
+        color: var(--warn);
+      }
+      .badge.advisory {
+        background: #eee6ff;
+        color: var(--advisory);
+      }
+      .task b {
+        font-size: 12px;
+      }
+      .task small {
+        display: block;
+        font-size: 11px;
+        color: #827b89;
+      }
+      .owner {
+        font-size: 10px;
+        color: #756e7c;
+      }
+      .human-note {
+        margin-top: 13px;
+        padding: 10px;
+        border-radius: 10px;
+        background: #fff0f1;
+        color: #a12a35;
+        font-size: 11px;
+        font-weight: 700;
+      }
+      section {
+        padding: 78px 0;
+      }
+      .kicker {
+        color: var(--purple-text);
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.11em;
+      }
+      .section-head {
+        max-width: 780px;
+        margin-bottom: 34px;
+      }
+      .section-head h2 {
+        font-size: clamp(35px, 5vw, 56px);
+        font-weight: 700;
+        line-height: 1.08;
+        letter-spacing: -0.03em;
+        margin: 10px 0 17px;
+        text-wrap: balance;
+      }
+      .section-head p {
+        font-size: 17px;
+        color: var(--muted);
+      }
+      .proof {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+      }
+      .proof article {
+        border: 1px solid var(--line);
+        border-radius: 19px;
+        padding: 25px;
+        background: var(--card);
+      }
+      .proof .num {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--purple-text);
+      }
+      .proof h3 {
+        font-size: 18px;
+        margin: 10px 0 7px;
+      }
+      .proof p {
+        color: var(--muted);
+        margin: 0;
+      }
+      .principle {
+        display: grid;
+        grid-template-columns: 0.8fr 1.2fr;
+        gap: 32px;
+        align-items: center;
+        padding: 42px;
+        border-radius: 28px;
+        background: #191520;
+        color: white;
+      }
+      .principle h2 {
+        margin: 10px 0 14px;
+        font-size: clamp(36px, 5vw, 56px);
+        line-height: 1.05;
+        letter-spacing: -0.04em;
+      }
+      .principle-copy p {
+        margin: 0;
+        color: #c8c1cf;
+      }
+      .taxonomy {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      .taxonomy article {
+        padding: 17px;
+        border: 1px solid #ffffff1d;
+        border-radius: 14px;
+        background: #ffffff0b;
+      }
+      .taxonomy strong {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 12px;
+        letter-spacing: 0.06em;
+      }
+      .taxonomy p {
+        margin: 0;
+        color: #d9d2e0;
+        font-size: 13px;
+      }
+      .taxonomy .pass strong { color: #92e2bd; }
+      .taxonomy .warn strong { color: #ffd28a; }
+      .taxonomy .fail strong { color: #ffafb3; }
+      .taxonomy .advisory strong { color: #cbbcff; }
+      .case-wrap {
+        background: #191520;
+        color: white;
+        border-radius: 30px;
+        padding: 42px;
+      }
+      .case-wrap .kicker {
+        color: #b9aaff;
+      }
+      .case-wrap h2 {
+        font-size: 40px;
+        font-weight: 700;
+        line-height: 1.12;
+        letter-spacing: -0.025em;
+        margin: 10px 0;
+      }
+      .case-wrap > p {
+        color: #c8c1cf;
+        max-width: 790px;
+      }
+      .compare {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-top: 25px;
+      }
+      .compare article {
+        background: #ffffff0b;
+        border: 1px solid #ffffff1d;
+        border-radius: 17px;
+        padding: 24px;
+      }
+      .compare h3 {
+        margin: 0 0 13px;
+      }
+      .compare ul {
+        padding-left: 19px;
+        color: #ded7e5;
+      }
+      .before h3 {
+        color: var(--rose);
+      }
+      .after h3 {
+        color: var(--lime);
+      }
+      .files {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+      }
+      .file {
+        min-height: 190px;
+        border-radius: 18px;
+        padding: 20px;
+        border: 1px solid #d8d2df;
+        background: white;
+        display: flex;
+        flex-direction: column;
+      }
+      .file:nth-child(1) {
+        background: #f2eeff;
+      }
+      .file:nth-child(2) {
+        background: #e9f3ff;
+      }
+      .file:nth-child(3) {
+        background: #f4ffd2;
+      }
+      .file:nth-child(4) {
+        background: #fff0f2;
+      }
+      .file code {
+        font: 700 12px/1.5 var(--mono);
+      }
+      .file h3 {
+        font-size: 17px;
+        margin: 18px 0 6px;
+      }
+      .file p {
+        font-size: 13px;
+        color: #625b6c;
+        margin: auto 0 0;
+      }
+      .flow {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 9px;
+      }
+      .flow article {
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 18px;
+        min-height: 135px;
+      }
+      .flow b {
+        display: block;
+        color: var(--purple-text);
+        font-size: 10px;
+        margin-bottom: 22px;
+      }
+      .flow h3 {
+        font-size: 15px;
+        margin: 0 0 5px;
+      }
+      .flow p {
+        font-size: 12px;
+        color: var(--muted);
+        margin: 0;
+      }
+      .code {
+        background: #17131f;
+        color: #f2eff8;
+        padding: 18px 20px;
+        border-radius: 14px;
+        margin-top: 16px;
+        overflow: auto;
+      }
+      .code code {
+        display: block;
+        font: 600 13px/1.9 var(--mono);
+        letter-spacing: 0;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+      .architecture {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr auto 1fr;
+        align-items: stretch;
+        gap: 10px;
+      }
+      .architecture div:not(.arrow) {
+        border-radius: 18px;
+        padding: 25px;
+        background: white;
+        border: 1px solid var(--line);
+      }
+      .architecture h3 {
+        margin: 0 0 9px;
+      }
+      .architecture p {
+        color: var(--muted);
+        margin: 0;
+      }
+      .arrow {
+        display: grid;
+        place-items: center;
+        color: var(--purple);
+        font-size: 25px;
+      }
+      .evidence {
+        display: grid;
+        grid-template-columns: 0.8fr 1.2fr;
+        gap: 28px;
+        align-items: center;
+      }
+      .terminal {
+        margin: 0;
+        background: #17131f;
+        color: #f2eff8;
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 24px 55px #33226320;
+      }
+      .terminal figcaption {
+        margin-bottom: 14px;
+        color: #b9aaff;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .terminal pre {
+        margin: 0;
+        overflow: auto;
+        font: 13px/1.7 var(--mono);
+        white-space: pre;
+      }
+      .terminal .prompt {
+        color: #b9aaff;
+      }
+      .terminal .pass {
+        color: #9fe3bd;
+      }
+      .terminal .warn {
+        color: #ffd28a;
+      }
+      .terminal .review {
+        color: #cbbcff;
+      }
+      .proof-links {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 22px;
+      }
+      .roles {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+      }
+      .roles article {
+        border-radius: 19px;
+        padding: 26px;
+      }
+      .roles article:nth-child(1) {
+        background: var(--blue);
+      }
+      .roles article:nth-child(2) {
+        background: #ebe5ff;
+      }
+      .roles article:nth-child(3) {
+        background: var(--lime);
+      }
+      .roles h3 {
+        font-size: 22px;
+        margin: 0 0 9px;
+      }
+      .roles p {
+        margin: 0;
+        color: #514b59;
+      }
+      .cta {
+        background: var(--purple);
+        color: white;
+        border-radius: 30px;
+        padding: 55px;
+        text-align: center;
+      }
+      .cta h2 {
+        font-size: clamp(38px, 6vw, 64px);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.035em;
+        margin: 0 auto 18px;
+        max-width: 800px;
+        text-wrap: balance;
+      }
+      .cta p {
+        color: #fff;
+        opacity: 0.94;
+        font-size: 17px;
+      }
+      .cta .button {
+        margin-top: 12px;
+        background: white;
+        color: #261b63;
+        border-color: white;
+      }
+      footer {
+        padding: 40px 0;
+        color: #746e7c;
+        font-size: 12px;
+      }
+      .footer-row {
+        display: flex;
+        gap: 20px;
+        justify-content: space-between;
+        border-top: 1px solid var(--line);
+        padding-top: 25px;
+      }
+      .footer-links {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .footer-links a {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      @media (max-width: 900px) {
+        .hero,
+        .evidence {
+          grid-template-columns: 1fr;
+        }
+        .product {
+          transform: none;
+        }
+        .files {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .flow {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      @media (max-width: 720px) {
+        .links a:not(.button) {
+          display: none;
+        }
+        .proof,
+        .compare,
+        .roles,
+        .architecture,
+        .principle {
+          grid-template-columns: 1fr;
+        }
+        .architecture .arrow {
+          transform: rotate(90deg);
+        }
+        .files,
+        .flow,
+        .taxonomy {
+          grid-template-columns: 1fr 1fr;
+        }
+        .actions {
+          flex-direction: column;
+        }
+        .button {
+          width: 100%;
+        }
+        .case-wrap,
+        .cta {
+          padding: 28px;
+        }
+        .footer-row {
+          flex-direction: column;
+        }
+      }
+      @media (max-width: 470px) {
+        .files,
+        .flow {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        .button {
+          transition: none;
+        }
+        .button:hover {
+          transform: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="shell">
+      <a class="brand" href="#top"
+        ><span class="mark">AG</span>Agent Governance</a
+      >
+      <div class="links">
+        <a href="#example">Example</a><a href="#how">How it works</a
+        ><a href="#evidence">Evidence</a><a href="#adopt">Adopt</a
+        ><a
+          class="button dark"
+          href="https://github.com/Andy-JunXiong/agent-governance-starter"
+          >View on GitHub</a
+        >
+      </div>
+    </nav>
+    <header id="top">
+      <div class="shell hero">
+        <div>
+          <span class="pill">v0.1 technical preview</span>
+          <h1>Make AI-assisted repositories reviewable by default.</h1>
+          <p>
+            A local Python CLI and repository file standard that connects agent
+            instructions, capability ownership, evaluation evidence and source
+            drift—while high-risk decisions remain human-controlled.
+          </p>
+          <div class="actions">
+            <a
+              class="button dark"
+              href="https://github.com/Andy-JunXiong/agent-governance-starter"
+              >View on GitHub</a
+            ><a class="button light" href="demo-governance-report.html"
+              >See what the CLI finds</a
+            >
+          </div>
+          <p class="sample-note">
+            Opens a generated report that explains PASS, WARN, FAIL and
+            ADVISORY findings, required follow-up and decisions that still need
+            a human.
+          </p>
+          <div class="trust">
+            <span>Local and read only by default</span
+            ><span>Zero runtime dependencies</span
+            ><span>No autonomous approval</span>
+          </div>
+        </div>
+        <figure class="product">
+          <span class="illustrative">Illustrative example</span>
+          <figcaption class="sr-only">
+            Example governance dashboard showing deterministic findings and a
+            human-review decision.
+          </figcaption>
+          <div class="window">
+            <div class="windowbar">
+              <i class="dot"></i><i class="dot"></i><i class="dot"></i
+              ><span class="window-title">governance-report.html</span>
+            </div>
+            <div class="dashboard">
+              <div class="dashboard-top">
+                <div>
+                  <h3>Refund service</h3>
+                  <span class="repo">repository / customer-ops</span>
+                </div>
+                <span class="badge advisory">HUMAN REVIEW</span>
+              </div>
+              <div class="status-grid">
+                <div class="status pass">
+                  <span>PASS</span><strong>12</strong>
+                </div>
+                <div class="status warn">
+                  <span>WARN</span><strong>3</strong>
+                </div>
+                <div class="status fail">
+                  <span>FAIL</span><strong>0</strong>
+                </div>
+                <div class="status advisory">
+                  <span>ADVISORY</span><strong>1</strong>
+                </div>
+              </div>
+              <div class="task">
+                <span class="badge warn">WARN</span>
+                <div>
+                  <b>Evaluation needs seed cases</b
+                  ><small>Evidence is honestly incomplete</small>
+                </div>
+                <span class="owner">Owner: CX Ops</span>
+              </div>
+              <div class="task">
+                <span class="badge advisory">REVIEW</span>
+                <div>
+                  <b>Confirm refund approval boundary</b
+                  ><small>Static checks cannot make this judgment</small>
+                </div>
+                <span class="owner">Human decision</span>
+              </div>
+              <div class="human-note">
+                Passing checks do not authorize merge, publish, release or
+                deploy.
+              </div>
+            </div>
+          </div>
+        </figure>
+      </div>
+    </header>
+    <main>
+      <section>
+        <div class="shell">
+          <div class="section-head">
+            <span class="kicker">Why it exists</span>
+            <h2>AI moves quickly. Responsibility often does not.</h2>
+            <p>
+              A prompt can change production behavior without making ownership,
+              evidence or approval boundaries visible to the reviewer.
+            </p>
+          </div>
+          <div class="proof">
+            <article>
+              <span class="num">01</span>
+              <h3>What capability changed?</h3>
+              <p>
+                Connect the prompt, implementation, schemas, callers and
+                accountable owner.
+              </p>
+            </article>
+            <article>
+              <span class="num">02</span>
+              <h3>What evidence supports it?</h3>
+              <p>
+                Keep incomplete evaluation evidence honest instead of
+                manufacturing a pass.
+              </p>
+            </article>
+            <article>
+              <span class="num">03</span>
+              <h3>Who still must decide?</h3>
+              <p>
+                Separate deterministic failures from judgments only an
+                accountable human can make.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="shell principle">
+          <div class="principle-copy">
+            <span class="kicker">The core principle</span>
+            <h2>No governance score. On purpose.</h2>
+            <p>
+              A single percentage would hide whether a repository has a broken
+              contract, incomplete evidence or an unresolved human decision.
+              Agent Governance reports each state separately and refuses
+              precision it cannot justify.
+            </p>
+          </div>
+          <div class="taxonomy">
+            <article class="pass">
+              <strong>PASS · FACT SATISFIED</strong>
+              <p>A deterministic contract passed. This is not approval.</p>
+            </article>
+            <article class="warn">
+              <strong>WARN · HONESTLY INCOMPLETE</strong>
+              <p>Configuration or evidence still needs work or an owner.</p>
+            </article>
+            <article class="fail">
+              <strong>FAIL · CONTRACT VIOLATED</strong>
+              <p>A deterministic requirement is broken and must be fixed.</p>
+            </article>
+            <article class="advisory">
+              <strong>ADVISORY · HUMAN JUDGMENT</strong>
+              <p>
+                Static analysis cannot decide. An accountable person must.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section id="example">
+        <div class="shell case-wrap">
+          <span class="kicker">Concrete example</span>
+          <h2>An AI drafts customer refund replies.</h2>
+          <p>
+            The task affects money and customer expectations. A prompt alone
+            cannot show who owns it, what was tested or whether an older review
+            is still current.
+          </p>
+          <div class="compare">
+            <article class="before">
+              <h3>Before governance</h3>
+              <ul>
+                <li>Prompt hidden inside application code</li>
+                <li>No named owner or risk level</li>
+                <li>No reviewed case for an unapproved refund</li>
+                <li>Prompt changes silently invalidate old review</li>
+              </ul>
+            </article>
+            <article class="after">
+              <h3>With Agent Governance</h3>
+              <ul>
+                <li>Capability manifest connects purpose, owner and source</li>
+                <li>High risk requires an explicit human-review stage</li>
+                <li>Evaluation records expected and prohibited behavior</li>
+                <li>Source hashes detect changes after review</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section id="how">
+        <div class="shell">
+          <div class="section-head">
+            <span class="kicker">What gets added</span>
+            <h2>Small files make the invisible contract reviewable.</h2>
+            <p>
+              Each repository artifact answers one practical question. None is
+              treated as proof on its own.
+            </p>
+          </div>
+          <div class="files">
+            <article class="file">
+              <code>AGENTS.md</code>
+              <h3>Operating rules</h3>
+              <p>What an agent may change, must verify and must escalate.</p>
+            </article>
+            <article class="file">
+              <code>capability.json</code>
+              <h3>Capability identity</h3>
+              <p>Purpose, owner, risk, contracts and provenance.</p>
+            </article>
+            <article class="file">
+              <code>evaluation/</code>
+              <h3>Evidence state</h3>
+              <p>Reviewed cases, known failures and honest readiness.</p>
+            </article>
+            <article class="file">
+              <code>SKILL.md</code>
+              <h3>Working protocol</h3>
+              <p>Triggers, workflow, stop conditions and handoff.</p>
+            </article>
+            <article class="file">
+              <code>artifact.json</code>
+              <h3>Review snapshot</h3>
+              <p>Manifest and source hashes for drift detection.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="shell">
+          <div class="section-head">
+            <span class="kicker">How it is built</span>
+            <h2>Plain files and deterministic checks. No hidden AI judge.</h2>
+          </div>
+          <div class="architecture">
+            <div>
+              <h3>Repository files</h3>
+              <p>
+                Markdown, JSON schemas, evidence and source references remain
+                the truth.
+              </p>
+            </div>
+            <div class="arrow">&rarr;</div>
+            <div>
+              <h3>Python CLI</h3>
+              <p>
+                Checks structure, references, readiness and source drift
+                locally.
+              </p>
+            </div>
+            <div class="arrow">&rarr;</div>
+            <div>
+              <h3>Review surfaces</h3>
+              <p>
+                Terminal, Markdown, JSON and HTML explain the same findings.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="evidence">
+        <div class="shell evidence">
+          <div>
+            <span class="kicker">Real project evidence</span>
+            <h2>Inspect the implementation, not just the promise.</h2>
+            <p>
+              The repository includes the CLI source, JSON schemas,
+              fixture-based tests, CI workflow, MIT license and a generated HTML
+              report. The output shown here comes from included validation
+              fixtures.
+            </p>
+            <div class="proof-links">
+              <a
+                class="button dark"
+                href="https://github.com/Andy-JunXiong/agent-governance-starter/blob/main/README.md"
+                >README on GitHub ↗</a
+              ><a class="button light" href="quickstart.html">Quickstart</a
+              ><a
+                class="button light"
+                href="quickstart.zh-CN.html"
+                hreflang="zh-CN"
+                lang="zh-CN"
+                >中文快速入门</a
+              ><a
+                class="button light"
+                href="https://github.com/Andy-JunXiong/agent-governance-starter/blob/main/LICENSE"
+                >MIT License ↗</a
+              >
+            </div>
+          </div>
+          <figure class="terminal">
+            <figcaption>Actual fixture validation output</figcaption>
+            <pre><span class="prompt">$ agentgov check capability \
+  prompt-governance/fixtures/valid/runtime-low-risk.json</span>
+<span class="pass">PASS</span> capability: runtime-low-risk.json
+
+<span class="prompt">$ agentgov check evaluation \
+  evaluation/fixtures/needs-seed-cases</span>
+<span class="warn">WARN</span> evaluation:needs_seed_cases
+  declared readiness needs_seed_cases is valid but incomplete</pre>
+          </figure>
+        </div>
+      </section>
+      <section id="adopt">
+        <div class="shell">
+          <div class="section-head">
+            <span class="kicker">Safe adoption</span>
+            <h2>Preview first. Create only what is missing.</h2>
+            <p>
+              Existing files remain untouched. Vendor-specific instructions are
+              discovered but never automatically merged.
+            </p>
+          </div>
+          <div class="flow">
+            <article>
+              <b>STEP 01</b>
+              <h3>Install</h3>
+              <p>Install this cloned repository locally.</p>
+            </article>
+            <article>
+              <b>STEP 02</b>
+              <h3>Inspect</h3>
+              <p>Inventory the repository without writing.</p>
+            </article>
+            <article>
+              <b>STEP 03</b>
+              <h3>Dry run</h3>
+              <p>Review every CREATE and PRESERVE action.</p>
+            </article>
+            <article>
+              <b>STEP 04</b>
+              <h3>Adopt</h3>
+              <p>Create only missing governance files.</p>
+            </article>
+            <article>
+              <b>STEP 05</b>
+              <h3>Check</h3>
+              <p>Validate contracts, evidence and drift.</p>
+            </article>
+            <article>
+              <b>STEP 06</b>
+              <h3>Decide</h3>
+              <p>Record the judgments that remain human.</p>
+            </article>
+          </div>
+          <div class="code">
+            <code
+              >python -m pip install . agentgov inspect . agentgov adopt .
+              --project-name "My Project" --dry-run</code
+            >
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="shell">
+          <div class="section-head">
+            <span class="kicker">Who it helps</span>
+            <h2>One repository state. Three practical answers.</h2>
+          </div>
+          <div class="roles">
+            <article>
+              <h3>Developer</h3>
+              <p>
+                Know the allowed scope, required checks and stop conditions
+                before changing code.
+              </p>
+            </article>
+            <article>
+              <h3>Reviewer</h3>
+              <p>
+                See ownership, risk, evidence readiness and whether reviewed
+                sources drifted.
+              </p>
+            </article>
+            <article>
+              <h3>Team lead or CI</h3>
+              <p>
+                Block deterministic failures while leaving semantic judgment
+                with accountable people.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="shell cta">
+          <h2>See the repository through a reviewer's eyes.</h2>
+          <p>
+            Open a sanitized sample generated from the same finding model used
+            by the CLI.
+          </p>
+          <a class="button" href="demo-governance-report.html"
+            >Explore sample findings</a
+          >
+        </div>
+      </section>
+    </main>
+    <footer class="shell">
+      <div class="footer-row">
+        <span>Agent Governance Starter Kit · v0.1 technical preview</span
+        ><span class="footer-links"
+          ><a href="https://github.com/Andy-JunXiong/agent-governance-starter"
+            >GitHub</a
+          ><a
+            href="https://github.com/Andy-JunXiong/agent-governance-starter/blob/main/README.md"
+            >README on GitHub ↗</a
+          ><a href="quickstart.html">Quickstart</a
+          ><a href="quickstart.zh-CN.html" hreflang="zh-CN">中文快速入门</a
+          ><a
+            href="https://github.com/Andy-JunXiong/agent-governance-starter/blob/main/LICENSE"
+            >MIT License ↗</a
+          ></span
+        >
+      </div>
+    </footer>
+  </body>
+</html>

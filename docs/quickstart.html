@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Install and adopt Agent Governance in a new or existing repository.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'">
+  <title>Quickstart — Agent Governance Starter Kit</title>
+  <link rel="stylesheet" href="guide.css">
+</head>
+<body>
+  <nav class="shell">
+    <a class="brand" href="index.html"><span class="mark">AG</span>Agent Governance Starter Kit</a>
+    <div class="nav-links">
+      <a href="index.html">← Back to home</a>
+      <a href="https://github.com/Andy-JunXiong/agent-governance-starter/blob/main/README.md">README on GitHub ↗</a>
+      <span class="language-switch" aria-label="Language"><a href="quickstart.html" lang="en" aria-current="page">EN</a><a href="quickstart.zh-CN.html" lang="zh-CN" hreflang="zh-CN">中文</a></span>
+    </div>
+  </nav>
+  <header class="shell">
+    <span class="eyebrow">10-minute adoption path</span>
+    <h1>Quickstart</h1>
+    <p class="lead">Inspect first, preview every write, create only missing governance files, then review what automation cannot decide.</p>
+  </header>
+  <main class="shell">
+    <section class="emphasis">
+      <h2>Before you start</h2>
+      <p>Use Python 3.11 or newer from a source checkout. A passing static check means a declared deterministic contract ran successfully; it does not authorize merge, release or deployment.</p>
+    </section>
+    <section>
+      <h2>1. Install</h2>
+      <p>The package currently declares zero runtime dependencies.</p>
+      <pre><code>python -m pip install .
+agentgov --help</code></pre>
+      <h3>Run without installing</h3>
+      <div class="platforms">
+        <div><strong>PowerShell</strong><pre><code>$env:PYTHONPATH = "src"
+python -m agentgov --help</code></pre></div>
+        <div><strong>Bash / zsh</strong><pre><code>PYTHONPATH=src python -m agentgov --help</code></pre></div>
+      </div>
+    </section>
+    <section>
+      <h2>2. Adopt an existing repository</h2>
+      <pre><code>agentgov inspect path/to/project
+agentgov adopt path/to/project --project-name "My Project" --dry-run
+agentgov adopt path/to/project --project-name "My Project"</code></pre>
+      <div class="states">
+        <div class="state"><strong>PRESENT</strong>Preserve and review the existing governance path.</div>
+        <div class="state"><strong>MISSING</strong>Decide whether the adoption plan should create it.</div>
+        <div class="state"><strong>DISCOVERED</strong>Review another tool's repository instructions manually.</div>
+        <div class="state"><strong>CONFLICT</strong>Resolve the path type or symbolic-link conflict first.</div>
+      </div>
+      <p>The CLI does not overwrite regular files, merge CLAUDE.md or vendor instructions, or run Git commands.</p>
+    </section>
+    <section>
+      <h2>3. Start a new repository</h2>
+      <div class="platforms">
+        <div><strong>PowerShell</strong><pre><code>$Project = Join-Path $PWD "governed-project"
+agentgov init $Project --project-name "My Project"
+agentgov check repository $Project</code></pre></div>
+        <div><strong>Bash / zsh</strong><pre><code>PROJECT="$PWD/governed-project"
+agentgov init "$PROJECT" --project-name "My Project"
+agentgov check repository "$PROJECT"</code></pre></div>
+      </div>
+    </section>
+    <section>
+      <h2>4. Check and generate a report</h2>
+      <div class="platforms">
+        <div><strong>PowerShell</strong><pre><code>agentgov check repository path/to/project
+agentgov report repository path/to/project `
+  --format html `
+  --output path/to/project/governance-report.html</code></pre></div>
+        <div><strong>Bash / zsh</strong><pre><code>agentgov check repository path/to/project
+agentgov report repository path/to/project \
+  --format html \
+  --output path/to/project/governance-report.html</code></pre></div>
+      </div>
+    </section>
+    <section class="checklist">
+      <h2>5. Human work still required</h2>
+      <ol><li>Replace or explicitly defer placeholders.</li><li>Resolve authority relationships among instruction files.</li><li>Declare real capability ownership, risk and human-review stages.</li><li>Add reviewed evaluation evidence.</li><li>Record accountable decisions for ADVISORY findings.</li></ol>
+    </section>
+    <section>
+      <h2>Continue reading</h2>
+      <div class="states">
+        <a class="state" href="existing-repository-adoption.html"><strong>Existing repository adoption</strong>Inspect, preview, and adopt governance safely.</a>
+        <a class="state" href="generated-files-guide.html"><strong>Generated files guide</strong>Understand and complete each governance artifact.</a>
+        <a class="state" href="troubleshooting.html"><strong>Troubleshooting</strong>Resolve installation, conflict, WARN, and ADVISORY cases.</a>
+        <a class="state" href="demo-governance-report.html"><strong>Explore a sample report</strong>See findings, actions, and human-review boundaries.</a>
+      </div>
+    </section>
+  </main>
+  <footer class="shell">Agent Governance Starter Kit · Local · Repository-native · Human-controlled</footer>
+</body>
+</html>

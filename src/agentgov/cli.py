@@ -8,6 +8,13 @@ import sys
 from pathlib import Path
 from typing import Sequence
 
+from agentgov.adoption import (
+    AdoptionConflictError,
+    AdoptionState,
+    adopt_existing_repository,
+    inspect_adoption,
+    render_adoption_report_json,
+)
 from agentgov.agent_skills import check_agent_skills
 from agentgov.artifacts import (
     ArtifactConflictError,
@@ -17,6 +24,7 @@ from agentgov.artifacts import (
 )
 from agentgov.capability import load_capability_manifest, validate_capability_manifest
 from agentgov.initializer import InitConflictError, initialize_project
+from agentgov.html_reporting import render_repository_report_html
 from agentgov.evaluation import EvaluationStatus, check_evaluation_bundle
 from agentgov.repository import FindingStatus, check_repository
 from agentgov.references import (
@@ -35,6 +43,78 @@ from agentgov.reporting import (
 EXIT_PASS = 0
 EXIT_FAIL = 1
 EXIT_ERROR = 2
+
+
+def _adopt_repository(
+    path: Path,
+    *,
+    project_name: str,
+    dry_run: bool,
+) -> int:
+    try:
+        report = adopt_existing_repository(
+            path,
+            project_name=project_name,
+            dry_run=dry_run,
+        )
+    except FileNotFoundError:
+        print(f"ERROR adopt: repository path not found: {path}", file=sys.stderr)
+        return EXIT_ERROR
+    except AdoptionConflictError as exc:
+        print(f"FAIL adopt: {exc}")
+        return EXIT_FAIL
+    except ValueError as exc:
+        print(f"ERROR adopt: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except (OSError, UnicodeError) as exc:
+        print(f"ERROR adopt: cannot prepare scaffold: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    action = "PLAN" if dry_run else "CREATE"
+    for generated_file in report.planned_files:
+        print(f"{action} {generated_file.relative_path.as_posix()}")
+    for relative_path in report.preserved_files:
+        print(f"PRESERVE {relative_path.as_posix()}")
+    print(
+        f"SUMMARY CREATE={len(report.planned_files)} "
+        f"PRESERVE={len(report.preserved_files)}"
+    )
+    if dry_run:
+        print("NOTE adopt dry-run: no repository files were created or modified")
+        print("NEXT adopt dry-run: review the plan, then rerun without --dry-run")
+    else:
+        print("NEXT adopt: review every created file and resolve governance placeholders")
+        print(f"NEXT adopt: run `agentgov check repository \"{path}\"`")
+    print("NOTE adopt: adoption does not authorize merge, publish, release, or deploy")
+    return EXIT_PASS
+
+
+def _inspect_repository(path: Path, *, output_format: str) -> int:
+    try:
+        report = inspect_adoption(path)
+    except FileNotFoundError:
+        print(f"ERROR inspect: repository path not found: {path}", file=sys.stderr)
+        return EXIT_ERROR
+    except ValueError as exc:
+        print(f"ERROR inspect: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except OSError as exc:
+        print(f"ERROR inspect: cannot inspect {path}: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    if output_format == "json":
+        print(render_adoption_report_json(report), end="")
+    else:
+        for item in report.items:
+            print(f"{item.state.value} {item.check_id}: {item.message}")
+        summary = " ".join(
+            f"{state.value}={report.count(state)}" for state in AdoptionState
+        )
+        print(f"SUMMARY {summary}")
+        for recommendation in report.recommendations:
+            print(f"NEXT inspect: {recommendation}")
+        print("NOTE inspect: no repository files were created or modified")
+    return EXIT_FAIL if report.has_conflicts else EXIT_PASS
 
 
 def _check_capability(path: Path) -> int:
@@ -321,6 +401,7 @@ def _report_repository(
         renderers = {
             "markdown": render_repository_report,
             "json": render_repository_report_json,
+            "html": render_repository_report_html,
         }
         content = renderers[report_format](report)
     except FileNotFoundError:
@@ -348,7 +429,7 @@ def _report_repository(
             print(f"ERROR report: cannot write {output}: {exc}", file=sys.stderr)
             return EXIT_ERROR
         print(f"REPORT {output}")
-        if report_format == "markdown":
+        if report_format in {"markdown", "html"}:
             print(
                 "NEXT report: open the report and review "
                 "`Human decisions still required`"
@@ -372,6 +453,60 @@ def build_parser() -> argparse.ArgumentParser:
         description="Check repository-native AI governance contracts.",
     )
     commands = parser.add_subparsers(dest="command", required=True)
+
+    inspect_parser = commands.add_parser(
+        "inspect",
+        help="Inspect an existing repository and print a read-only governance adoption plan.",
+    )
+    inspect_parser.add_argument(
+        "path",
+        nargs="?",
+        type=Path,
+        default=Path("."),
+        help="Existing repository directory to inspect (default: current directory).",
+    )
+    inspect_parser.add_argument(
+        "--format",
+        dest="inspect_format",
+        choices=("text", "json"),
+        default="text",
+        help="Inspection serialization format (default: text).",
+    )
+    inspect_parser.set_defaults(
+        handler=lambda args: _inspect_repository(
+            args.path,
+            output_format=args.inspect_format,
+        )
+    )
+
+    adopt_parser = commands.add_parser(
+        "adopt",
+        help="Create only missing governance scaffold files in an existing repository.",
+    )
+    adopt_parser.add_argument(
+        "path",
+        nargs="?",
+        type=Path,
+        default=Path("."),
+        help="Existing repository directory to adopt into (default: current directory).",
+    )
+    adopt_parser.add_argument(
+        "--project-name",
+        required=True,
+        help="Human-readable project name used in newly created documents.",
+    )
+    adopt_parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Show planned and preserved files without writing.",
+    )
+    adopt_parser.set_defaults(
+        handler=lambda args: _adopt_repository(
+            args.path,
+            project_name=args.project_name,
+            dry_run=args.dry_run,
+        )
+    )
 
     init_parser = commands.add_parser(
         "init",
@@ -532,7 +667,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     report_parser = commands.add_parser(
         "report",
-        help="Render governance findings as a Markdown or JSON report.",
+        help="Render governance findings as a Markdown, JSON, or HTML report.",
     )
     report_targets = report_parser.add_subparsers(dest="report_target", required=True)
     report_repository_parser = report_targets.add_parser(
@@ -554,7 +689,7 @@ def build_parser() -> argparse.ArgumentParser:
     report_repository_parser.add_argument(
         "--format",
         dest="report_format",
-        choices=("markdown", "json"),
+        choices=("markdown", "json", "html"),
         default="markdown",
         help="Report serialization format (default: markdown).",
     )

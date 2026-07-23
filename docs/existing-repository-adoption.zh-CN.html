@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="在已有仓库中安全检查、预演并接入 Agent Governance。"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'"><title>已有仓库接入指南 · Agent Governance</title><link rel="stylesheet" href="guide.css"></head>
+<body>
+<nav class="shell"><a class="brand" href="index.html"><span class="mark">AG</span>Agent Governance</a><div class="nav-links"><a href="quickstart.zh-CN.html">← 返回中文快速入门</a></div></nav>
+<header class="shell"><span class="eyebrow">已有项目 · 安全接入</span><h1>在不覆盖仓库的情况下接入治理。</h1><p class="lead">先进行只读检查，再预览每次计划写入，保留现有文件，并明确解决指令权威关系。</p></header>
+<main class="shell">
+<section class="emphasis"><h2>安全契约</h2><p><code>inspect</code> 永不写入；<code>adopt --dry-run</code> 展示计划；<code>adopt</code> 只创建缺失的起始文件，并拒绝路径冲突。这些命令都不会运行 Git，也不会授权合并、发布或部署。</p></section>
+<section><h2>1. 检查仓库中已有的内容</h2><div class="platforms"><div><strong>PowerShell</strong><pre><code>agentgov inspect C:\work\customer-api</code></pre></div><div><strong>Bash / zsh</strong><pre><code>agentgov inspect ~/work/customer-api</code></pre></div></div><div class="states"><div class="state"><strong>PRESENT</strong>保留并审阅现有治理路径。</div><div class="state"><strong>MISSING</strong>接入计划可以创建该路径。</div><div class="state"><strong>DISCOVERED</strong>发现其他指令文件，需要人工决定权威关系。</div><div class="state"><strong>CONFLICT</strong>必须先解决文件类型或符号链接冲突。</div></div></section>
+<section><h2>示例：仓库已经存在 <code>CLAUDE.md</code></h2><p>CLI 会发现该文件，但不会自动把它合并进 <code>AGENTS.md</code>。维护者必须决定它是从属、互补还是冲突关系。</p><pre><code>DISCOVERED instructions: CLAUDE.md
+MISSING    governance: AGENTS.md
+NEXT       接入前决定指令权威关系</code></pre><p>这里不会自动重写，因为指令优先级属于项目决策。</p></section>
+<section><h2>2. 先预览，再创建</h2><pre><code>agentgov adopt path/to/repository --project-name "Customer API" --dry-run
+agentgov adopt path/to/repository --project-name "Customer API"</code></pre><p>移除 <code>--dry-run</code> 前，审阅每一条 <code>CREATE</code> 和 <code>PRESERVE</code>。如果计划出现 <code>CONFLICT</code>，应停止并修正路径，不要强制写入。</p></section>
+<section class="checklist"><h2>3. 让脚手架反映真实情况</h2><ol><li>替换占位符，或记录负责人和明确延期。</li><li>在 <code>AGENTS.md</code> 中说明指令优先级。</li><li>声明真实的能力负责人、风险、调用方和人工审阅阶段。</li><li>只添加真实存在的证据；缺少证据时保持 <code>needs_seed_cases</code>。</li><li>运行 <code>agentgov check repository</code>，审阅每个 WARN、FAIL 和 ADVISORY。</li></ol></section>
+<section><h2>验证结果示例</h2><pre><code>PASS required:constitution — AGENTS.md 已存在
+WARN governance:placeholders — 仍有未解决的占位符
+ADVISORY governance:human-review — 确认审批边界</code></pre><p>PASS 只确认确定性事实；WARN 需要完成或明确延期；ADVISORY 需要责任人作出决定。</p></section>
+<div class="next"><a class="button dark" href="quickstart.zh-CN.html">← 返回中文快速入门</a><a class="button" href="generated-files-guide.zh-CN.html">下一步：填写生成文件 →</a></div>
+</main><footer class="shell">Agent Governance Starter Kit · 已有仓库接入指南</footer>
+</body></html>

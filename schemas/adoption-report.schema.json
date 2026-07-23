@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/agent-governance-starter/adoption-report.schema.json",
+  "title": "Agent Governance Adoption Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "repository",
+    "mode",
+    "summary",
+    "items",
+    "recommended_steps",
+    "human_decisions",
+    "authority_boundary"
+  ],
+  "properties": {
+    "contract_version": { "const": "1.0" },
+    "repository": { "type": "string", "minLength": 1 },
+    "mode": { "const": "read_only" },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["PRESENT", "MISSING", "DISCOVERED", "CONFLICT"],
+      "properties": {
+        "PRESENT": { "type": "integer", "minimum": 0 },
+        "MISSING": { "type": "integer", "minimum": 0 },
+        "DISCOVERED": { "type": "integer", "minimum": 0 },
+        "CONFLICT": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["state", "check_id", "path", "message", "classification"],
+        "properties": {
+          "state": { "enum": ["PRESENT", "MISSING", "DISCOVERED", "CONFLICT"] },
+          "check_id": { "type": "string", "minLength": 1 },
+          "path": { "type": "string", "minLength": 1 },
+          "message": { "type": "string", "minLength": 1 },
+          "classification": { "const": "deterministic" }
+        }
+      }
+    },
+    "recommended_steps": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "human_decisions": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "authority_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inspection_modifies_repository",
+        "authorizes_merge_publish_release_or_deploy"
+      ],
+      "properties": {
+        "inspection_modifies_repository": { "const": false },
+        "authorizes_merge_publish_release_or_deploy": { "const": false }
+      }
+    }
+  }
+}

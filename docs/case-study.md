@@ -113,9 +113,11 @@ pilots, and observed repeat use rather than a uniqueness claim.
 
 ## Current limitations
 
-- Initialization supports only new or empty target directories.
-- The CLI does not discover or reconcile existing vendor-specific instruction
-  files.
+- Initialization supports only new or empty target directories. Existing
+  repositories have read-only inspection and explicit create-missing-only
+  adoption, but policy reconciliation remains manual.
+- The CLI discovers a small documented set of existing instruction paths but
+  does not read, reconcile, or judge their policy content.
 - Static checks cannot judge semantic policy quality, architecture quality, or
   model-output quality.
 - The project is not a runtime security boundary, compliance certification, or

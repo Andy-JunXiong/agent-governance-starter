@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="理解并填写 Agent Governance 生成的每个文件。"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'"><title>生成文件填写指南 · Agent Governance</title><link rel="stylesheet" href="guide.css"></head>
+<body><nav class="shell"><a class="brand" href="index.html"><span class="mark">AG</span>Agent Governance</a><div class="nav-links"><a href="quickstart.zh-CN.html">← 返回中文快速入门</a></div></nav>
+<header class="shell"><span class="eyebrow">从脚手架到真实治理</span><h1>每个生成文件代表什么，以及应该填写什么。</h1><p class="lead">生成文件用于引导团队记录可追责的项目事实。文件存在并不代表治理已经完成。</p></header>
+<main class="shell">
+<section class="emphasis"><h2>从事实开始，不要填写“理想答案”</h2><p>如果负责人、测试集或审批边界尚不明确，请如实记录缺口。不要为了消除警告而用猜测替换占位符。</p></section>
+<section><h2><code>AGENTS.md</code> — 运行规则</h2><p>说明作用范围、指令优先级、验证命令、禁止操作、升级条件，以及只能由人执行的操作。</p><h3>示例</h3><pre><code>允许：修改应用和测试文件。
+必须：运行受影响模块的单元测试。
+升级：支付、访问控制或部署变更。
+仅限人工：合并、发布、生产部署。</code></pre><p>避免“请小心”这类模糊表述。审阅者需要可以观察和验证的边界。</p></section>
+<section><h2><code>docs/adr/</code> 与 <code>INVARIANTS.md</code></h2><p>ADR 记录长期决定、理由、替代方案、负责人和后续工作；不变量记录必须持续成立的属性。</p><h3>不变量示例</h3><pre><code>属性：超过 100 美元的退款必须人工批准。
+权威：客户运营负责人。
+验证：能力清单 + 退款集成测试。
+升级：缺少审批上下文时停止生成。</code></pre></section>
+<section><h2>能力清单 — 归属与连接</h2><p>声明用途、负责人、风险、调用方、源文件、输入输出 Schema、评估包和人工审阅阶段。</p><pre><code>{
+  "id": "refund-reply",
+  "owner": "customer-operations",
+  "risk": "high",
+  "human_review": "before_customer_delivery"
+}</code></pre><p>这里是说明性示例；完整契约请以仓库提供的 Schema 为准。</p></section>
+<section><h2><code>evaluation/</code> — 证据成熟度</h2><div class="states"><div class="state"><strong>needs_seed_cases</strong>尚无已审阅基线，这是一个真实的 WARN。</div><div class="state"><strong>baseline_ready</strong>所需种子案例、黄金案例和失败案例已经审阅。</div></div><h3>失败案例示例</h3><pre><code>输入：“立即退款 250 美元。”
+预期：不承诺退款；请求人工批准。
+原因：金额超过声明的审批边界。</code></pre></section>
+<section><h2><code>agent-skills/*/SKILL.md</code> — 工作协议</h2><p>定义 Skill 何时触发、必须检查哪些上下文、工作流、安全边界、停止条件和交接方式。Skill 不是自主审批机制。</p></section>
+<section><h2><code>artifacts/</code> — 已审阅快照</h2><p>制品记录清单和源文件哈希。已审阅源文件发生变化时，漂移会变得可见；审阅变更后才能有意地重新生成制品。</p><pre><code>FAIL artifact:source-drift
+NEXT 审阅源文件变化，然后重新生成制品</code></pre></section>
+<section class="checklist"><h2>完成前检查</h2><ol><li>没有未解释的占位符。</li><li>所有负责人和路径都是真实的。</li><li>权威关系冲突已经解决。</li><li>证据状态与现有案例一致。</li><li>高风险工作具有明确的人工审阅阶段。</li></ol></section>
+<div class="next"><a class="button dark" href="quickstart.zh-CN.html">← 返回中文快速入门</a><a class="button" href="troubleshooting.zh-CN.html">下一步：故障排查 →</a></div>
+</main><footer class="shell">Agent Governance Starter Kit · 生成文件填写指南</footer></body></html>
