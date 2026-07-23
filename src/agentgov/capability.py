@@ -1,4 +1,4 @@
-"""Zero-dependency validation for the v0.1 prompt capability manifest."""
+"""Zero-dependency validation for legacy prompt and canonical AI capabilities."""
 
 from __future__ import annotations
 
@@ -13,6 +13,28 @@ CAPABILITY_KINDS = {
     "product_runtime",
     "operator_guidance",
     "evaluation_judge",
+}
+CAPABILITY_TYPES = {
+    "decision_support",
+    "evaluation_judge",
+    "ml_inference",
+    "operator_guidance",
+    "content_generation",
+    "data_transformation",
+}
+IMPLEMENTATION_MODES = {"deterministic", "model", "prompt", "hybrid"}
+DECISION_AUTHORITIES = {
+    "inform",
+    "recommend",
+    "assess_claim",
+    "publish_bounded_output",
+    "execute_bounded_action",
+}
+AUTONOMY_LEVELS = {
+    "advisory_only",
+    "human_approval_required",
+    "deterministic_gate",
+    "bounded_autonomous",
 }
 RISK_LEVELS = {"low", "medium", "high", "critical"}
 MODEL_ROUTE_MODES = {"fixed", "dynamic", "not_applicable"}
@@ -42,6 +64,25 @@ _TOP_LEVEL_FIELDS = {
     "model_route",
     "evaluation",
     "provenance",
+    "capability_type",
+    "implementation_mode",
+    "decision_authority",
+    "autonomy_level",
+}
+_COMMON_REQUIRED_FIELDS = _TOP_LEVEL_FIELDS - {
+    "capability_kind",
+    "model_route",
+    "capability_type",
+    "implementation_mode",
+    "decision_authority",
+    "autonomy_level",
+}
+_LEGACY_FIELDS = {"capability_kind", "model_route"}
+_CANONICAL_FIELDS = {
+    "capability_type",
+    "implementation_mode",
+    "decision_authority",
+    "autonomy_level",
 }
 _NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 _VERSION_RE = re.compile(r"^v?[0-9]+(?:\.[0-9]+){0,2}(?:[-+][0-9A-Za-z.-]+)?$")
@@ -109,10 +150,22 @@ def validate_capability_manifest(manifest: Mapping[str, Any]) -> list[str]:
     """Return deterministic contract violations for one capability manifest."""
 
     errors: list[str] = []
+    uses_legacy = bool(set(manifest) & _LEGACY_FIELDS)
+    uses_canonical = bool(set(manifest) & _CANONICAL_FIELDS)
+    if uses_legacy and uses_canonical:
+        errors.append(
+            "$ must use either legacy capability_kind/model_route fields or "
+            "canonical AI capability fields, not both"
+        )
+    required = _COMMON_REQUIRED_FIELDS | (
+        _LEGACY_FIELDS if uses_legacy and not uses_canonical else _CANONICAL_FIELDS
+    )
+    if not uses_legacy and not uses_canonical:
+        required |= _CANONICAL_FIELDS
     _check_fields(
         manifest,
         path="$",
-        required=_TOP_LEVEL_FIELDS,
+        required=required,
         allowed=_TOP_LEVEL_FIELDS,
         errors=errors,
     )
@@ -129,7 +182,33 @@ def validate_capability_manifest(manifest: Mapping[str, Any]) -> list[str]:
         errors.append("$.version must be a supported numeric version")
 
     _string(manifest.get("purpose"), "$.purpose", errors, minimum=10)
-    _enum(manifest.get("capability_kind"), "$.capability_kind", CAPABILITY_KINDS, errors)
+    if uses_legacy and not uses_canonical:
+        _enum(manifest.get("capability_kind"), "$.capability_kind", CAPABILITY_KINDS, errors)
+    else:
+        _enum(
+            manifest.get("capability_type"),
+            "$.capability_type",
+            CAPABILITY_TYPES,
+            errors,
+        )
+        implementation_mode = _enum(
+            manifest.get("implementation_mode"),
+            "$.implementation_mode",
+            IMPLEMENTATION_MODES,
+            errors,
+        )
+        _enum(
+            manifest.get("decision_authority"),
+            "$.decision_authority",
+            DECISION_AUTHORITIES,
+            errors,
+        )
+        _enum(
+            manifest.get("autonomy_level"),
+            "$.autonomy_level",
+            AUTONOMY_LEVELS,
+            errors,
+        )
 
     task_type = _string(manifest.get("task_type"), "$.task_type", errors)
     if task_type and not _TASK_TYPE_RE.fullmatch(task_type):
@@ -169,7 +248,9 @@ def validate_capability_manifest(manifest: Mapping[str, Any]) -> list[str]:
         if risk_level in {"high", "critical"} and review_required is not True:
             errors.append("$.human_review.required must be true for high or critical risk")
 
-    model_route = _object(manifest.get("model_route"), "$.model_route", errors)
+    model_route = None
+    if uses_legacy and not uses_canonical:
+        model_route = _object(manifest.get("model_route"), "$.model_route", errors)
     if model_route is not None:
         required = {"mode"}
         allowed = required | {"route_ref"}
@@ -180,6 +261,17 @@ def validate_capability_manifest(manifest: Mapping[str, Any]) -> list[str]:
             _string(route_ref, "$.model_route.route_ref", errors)
         elif mode == "not_applicable" and route_ref is not None:
             errors.append("$.model_route.route_ref is not allowed when mode is not_applicable")
+
+    if (
+        not uses_legacy
+        and manifest.get("autonomy_level") == "bounded_autonomous"
+        and manifest.get("decision_authority") == "execute_bounded_action"
+        and risk_level in {"high", "critical"}
+    ):
+        errors.append(
+            "$.autonomy_level bounded_autonomous execution is not allowed for "
+            "high or critical risk"
+        )
 
     evaluation = _object(manifest.get("evaluation"), "$.evaluation", errors)
     if evaluation is not None:

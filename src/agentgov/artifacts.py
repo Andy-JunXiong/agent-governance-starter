@@ -149,7 +149,7 @@ def render_capability_markdown(
     """Render a deterministic review artifact without timestamps or source content."""
 
     human_review = manifest["human_review"]
-    model_route = manifest["model_route"]
+    model_route = manifest.get("model_route")
     evaluation = manifest["evaluation"]
     provenance = manifest["provenance"]
     review_required = "yes" if human_review["required"] else "no"
@@ -166,7 +166,11 @@ def render_capability_markdown(
         "## Capability contract",
         "",
         f"- Version: `{manifest['version']}`",
-        f"- Kind: `{manifest['capability_kind']}`",
+        (
+            f"- Kind: `{manifest['capability_kind']}`"
+            if "capability_kind" in manifest
+            else f"- Capability type: `{manifest['capability_type']}`"
+        ),
         f"- Task type: `{manifest['task_type']}`",
         f"- Owner: {manifest['owner']}",
         f"- Risk level: `{manifest['risk_level']}`",
@@ -193,16 +197,25 @@ def render_capability_markdown(
     ]
     if human_review.get("reason"):
         lines.append(f"- Reason: {human_review['reason']}")
-    lines.extend(
-        [
-            "",
-            "## Model route",
-            "",
-            f"- Mode: `{model_route['mode']}`",
-        ]
-    )
-    if model_route.get("route_ref"):
-        lines.append(f"- Route reference: `{model_route['route_ref']}`")
+    if model_route is not None:
+        lines.extend(
+            [
+                "",
+                "## Model route",
+                "",
+                f"- Mode: `{model_route['mode']}`",
+            ]
+        )
+        if model_route.get("route_ref"):
+            lines.append(f"- Route reference: `{model_route['route_ref']}`")
+    else:
+        lines.extend(
+            [
+                f"- Implementation mode: `{manifest['implementation_mode']}`",
+                f"- Decision authority: `{manifest['decision_authority']}`",
+                f"- Autonomy level: `{manifest['autonomy_level']}`",
+            ]
+        )
     lines.extend(
         [
             "",
@@ -244,10 +257,21 @@ def export_capability_artifact(
     manifest_path: Path,
     *,
     repository: Path,
-    output: Path = Path("prompt-governance/artifacts"),
+    output: Path | None = None,
     replace: bool = False,
 ) -> ArtifactExport:
     """Create two generated files inside a declared repository root."""
+
+    if output is None:
+        try:
+            relative_manifest = manifest_path.resolve().relative_to(repository.resolve())
+        except ValueError:
+            relative_manifest = manifest_path
+        output = (
+            Path("prompt-governance/artifacts")
+            if "prompt-governance" in relative_manifest.parts
+            else Path("governance/artifacts")
+        )
 
     root = _repository_root(repository)
     safe_manifest_path = _resolve_inside(root, manifest_path, label="manifest path")

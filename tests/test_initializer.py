@@ -18,10 +18,11 @@ EXPECTED_OUTPUTS = {
     Path("AGENTS.md"),
     Path("docs/adr/TEMPLATE.md"),
     Path("docs/adr/INVARIANTS.md"),
-    Path("prompt-governance/capabilities/example-capability.json"),
-    Path("prompt-governance/schemas/example-capability.input.schema.json"),
-    Path("prompt-governance/schemas/example-capability.output.schema.json"),
-    Path("prompt-governance/sources/example-capability.md"),
+    Path("governance/capability.schema.json"),
+    Path("governance/capabilities/example-capability.json"),
+    Path("governance/contracts/example-capability.input.schema.json"),
+    Path("governance/contracts/example-capability.output.schema.json"),
+    Path("governance/evidence/example-capability.md"),
     Path("evaluation/example-capability/evaluation-manifest.json"),
     Path("evaluation/readiness-policy.md"),
     Path("evaluation/schemas/evaluation-manifest.schema.json"),
@@ -68,7 +69,7 @@ class InitializerTests(unittest.TestCase):
             agents_text = (target / "AGENTS.md").read_text(encoding="utf-8")
             self.assertIn("# AGENTS.md - Demo Project", agents_text)
             self.assertNotIn("{{PROJECT_NAME}}", agents_text)
-            capability_path = target / "prompt-governance/capabilities/example-capability.json"
+            capability_path = target / "governance/capabilities/example-capability.json"
             self.assertEqual(
                 validate_capability_manifest(load_capability_manifest(capability_path)),
                 [],
@@ -80,7 +81,7 @@ class InitializerTests(unittest.TestCase):
             self.assertEqual(evaluation_result.readiness, "needs_seed_cases")
             self.assertFalse(check_agent_skills(target / "agent-skills").has_failures)
             prompt_source = (
-                target / "prompt-governance/sources/example-capability.md"
+                target / "governance/evidence/example-capability.md"
             ).read_text(encoding="utf-8")
             self.assertNotIn("{{", prompt_source)
             self.assertIn("Demo Project", prompt_source)
@@ -120,6 +121,7 @@ class InitializerTests(unittest.TestCase):
         self.assertIn("share/agent-governance-starter/templates", data_files)
         self.assertIn("share/agent-governance-starter/evaluation", data_files)
         self.assertIn("share/agent-governance-starter/evaluation/schemas", data_files)
+        self.assertIn("share/agent-governance-starter/governance", data_files)
         self.assertIn("share/agent-governance-starter/agent-skills", data_files)
         self.assertIn(
             "share/agent-governance-starter/agent-skills/context-first-review",

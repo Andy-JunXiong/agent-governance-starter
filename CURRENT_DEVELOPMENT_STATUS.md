@@ -1,0 +1,304 @@
+# Agent Governance Starter Kit Current Development Status
+
+Last updated: 2026-07-23
+
+## Purpose
+
+This is the practical day-to-day status document for the repository.
+
+Use it to answer:
+
+1. What was completed today?
+2. What is implemented but not yet committed or released?
+3. What validation passed?
+4. What remains for the next session?
+
+Top-level sequencing belongs in
+[`DEVELOPMENT_PLAN.md`](DEVELOPMENT_PLAN.md). Durable decisions belong in
+`docs/adr/`.
+
+## Daily Update Rule
+
+At the end of each development day, update:
+
+- `Last updated`;
+- `Current State`;
+- `In Progress / Partial`;
+- `Next Up`;
+- `Today Log`;
+- `DEVELOPMENT_PLAN.md` only when the top-level plan changes.
+
+Record agent-run validation separately from user-reported or manual validation.
+Do not describe unrun tests, releases, commits, or deployments as completed.
+
+## Current State
+
+Version:
+
+- package remains `0.1.0.dev0`;
+- no commit, push, tag, publish, release, or deployment was performed today.
+
+Working tree:
+
+- contains the Evaluation Evidence Bridge changes;
+- contains the AI Capability and canonical `governance/` migration changes;
+- contains documentation, ADR, fixture, and test updates;
+- contains this development plan and daily status file.
+
+Current product boundary:
+
+- repository-native governance contracts and deterministic checks;
+- explicit separation between deterministic findings and advisory judgment;
+- external human authority for merge, publish, release, and deployment;
+- no runtime enforcement or governance coverage percentage.
+
+## Completed Today
+
+### 1. GPT and Claude Recommendation Review
+
+Completed:
+
+- reviewed both external recommendation sets against the current repository;
+- identified the shared direction: move from prompt-specific governance toward
+  cross-domain AI capability governance;
+- retained the boundary against runtime enforcement, universal evaluation, and
+  unsupported coverage scoring;
+- corrected the proposed `evaluated_rejected` readiness design by separating
+  evidence readiness from evaluation outcome;
+- recorded a phased implementation order instead of treating all proposals as
+  one oversized P0 change.
+
+### 2. Evaluation Evidence Bridge
+
+Implemented:
+
+- optional evaluation decision outcomes:
+  - `pending`;
+  - `accepted`;
+  - `accepted_with_conditions`;
+  - `rejected`;
+- review reason, reviewer, review date, and evidence references;
+- baseline-relative regression thresholds with:
+  - baseline reference;
+  - metric;
+  - higher/lower direction;
+  - minimum improvement;
+- compatibility with existing pass-rate thresholds;
+- optional `baseline.reviewed_at`;
+- strict validation when new fields are declared;
+- a complete `regression_ready` but `rejected` fixture.
+
+Important semantic boundary:
+
+- readiness describes evidence configuration;
+- decision describes the reviewed outcome;
+- neither one authorizes production release.
+
+Documentation:
+
+- added ADR-0001;
+- updated evaluation policy, README, and examples.
+
+Agent-run validation:
+
+- evaluation tests: 15 passed;
+- rejected fixture CLI check passed;
+- `git diff --check` passed.
+
+### 3. AI Capability Generalization
+
+Implemented canonical fields:
+
+- `capability_type`;
+- `implementation_mode`;
+- `decision_authority`;
+- `autonomy_level`.
+
+Supported implementation modes:
+
+- deterministic;
+- model;
+- prompt;
+- hybrid.
+
+Compatibility:
+
+- complete legacy `capability_kind` plus `model_route` manifests remain
+  readable;
+- legacy and canonical field families cannot be mixed in one manifest;
+- high/critical-risk bounded autonomous execution is rejected;
+- `model_route` is no longer a universal requirement for canonical
+  capabilities.
+
+Documentation:
+
+- added canonical `governance/capability.schema.json`;
+- added ADR-0002;
+- updated README, governance model, templates, checks guide, and generated-file
+  guide.
+
+Agent-run validation:
+
+- capability contract tests: 7 passed;
+- template tests: 8 passed;
+- portfolio documentation tests: 6 passed;
+- user documentation tests: 6 passed.
+
+### 4. Canonical Repository Layout
+
+New scaffold layout:
+
+```text
+governance/
+  capability.schema.json
+  capabilities/
+  contracts/
+  evidence/
+  artifacts/
+```
+
+Implemented:
+
+- initializer writes the canonical layout;
+- adoption inspection recommends canonical paths;
+- artifact export defaults to `governance/artifacts/`;
+- legacy manifests retain the legacy artifact default;
+- repository checks read either layout;
+- legacy layout produces a migration WARN;
+- simultaneous `governance/` and `prompt-governance/` layouts produce a
+  deterministic FAIL.
+
+Agent-run validation:
+
+- adoption inspection tests: 13 passed;
+- temporary-directory smoke test passed for:
+  - canonical initialization;
+  - canonical capability validation;
+  - repository validation;
+  - dual-layout conflict detection;
+- `git diff --check` passed.
+
+## In Progress / Partial
+
+### Full Test Baseline
+
+Current machine result:
+
+- default `python` is Python 3.9.7;
+- the package declares Python 3.11 or newer;
+- existing tests require `tomllib`;
+- existing artifact code uses `Path.write_text(newline=...)`, unavailable in
+  Python 3.9.
+
+Impact:
+
+- relevant targeted tests and smoke tests passed;
+- the complete suite cannot be treated as a valid release baseline on the
+  current interpreter;
+- no unrelated tests were weakened or deleted.
+
+Required follow-up:
+
+- run the complete suite under Python 3.11, 3.12, or 3.13;
+- investigate only failures reproduced on a supported interpreter.
+
+### Legacy Migration Documentation
+
+Implemented:
+
+- compatibility behavior is documented in ADR-0002 and primary guidance.
+
+Still needed before `0.1.0`:
+
+- a dedicated migration guide;
+- explicit steps for moving contracts, evidence, manifests, and artifacts;
+- guidance for resolving a dual-layout conflict;
+- a statement of the future legacy-removal policy.
+
+## Next Up
+
+### P0 — Governance Inventory
+
+Next session should implement:
+
+- `governance/inventory.json`;
+- inventory JSON Schema;
+- zero-dependency validator;
+- manifest-to-inventory closure checks;
+- explicit exclusions with reasons;
+- owner and identity consistency;
+- safe repository-relative references;
+- pass/WARN/FAIL/not-configured fixtures;
+- initializer and documentation updates.
+
+Do not call this automatic capability discovery or publish a coverage
+percentage.
+
+### After Inventory
+
+In order:
+
+1. orphan evaluation and artifact checks;
+2. control mapping;
+3. explicit capability dependencies;
+4. cross-domain pilot;
+5. consumer CI workflow;
+6. evidence freshness policy;
+7. report metadata and diff.
+
+See [`DEVELOPMENT_PLAN.md`](DEVELOPMENT_PLAN.md) for acceptance criteria and
+later phases.
+
+## Today Log
+
+### 2026-07-23
+
+Work performed:
+
+- read and evaluated the GPT architecture recommendations;
+- read and evaluated the Claude schema recommendations;
+- produced a combined design assessment;
+- implemented the Evaluation Evidence Bridge;
+- implemented AI Capability generalization;
+- migrated new scaffolds to canonical `governance/`;
+- retained bounded legacy compatibility;
+- added deterministic dual-layout conflict detection;
+- added ADR-0001 and ADR-0002;
+- added new fixtures and tests;
+- updated project and user documentation;
+- created the top-level development plan and this daily status file.
+
+Validation performed:
+
+- evaluation: 15 tests passed;
+- capability: 7 tests passed;
+- templates: 8 tests passed;
+- adoption inspection: 13 tests passed;
+- portfolio docs: 6 tests passed;
+- user docs: 6 tests passed;
+- canonical initialization/repository smoke test passed;
+- dual-layout conflict smoke test passed;
+- `git diff --check` passed.
+
+Validation not completed:
+
+- complete supported-interpreter test suite, because Python 3.11+ is not
+  available through the current default interpreter.
+
+User/manual validation:
+
+- no user-reported test result has been recorded yet;
+- no release or deployment validation is applicable to today's repository-only
+  work.
+
+Git state:
+
+- changes remain uncommitted;
+- nothing was staged, committed, pushed, tagged, published, or released.
+
+Recommended first action tomorrow:
+
+1. use Python 3.11+ and run the complete baseline suite;
+2. review any supported-interpreter failures;
+3. begin the Governance Inventory vertical slice;
+4. stop before control mapping until inventory semantics and fixtures pass.

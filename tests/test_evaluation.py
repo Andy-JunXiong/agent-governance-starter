@@ -90,6 +90,57 @@ class EvaluationBundleTests(unittest.TestCase):
             any("threshold_configured must be true" in message for message in result.messages)
         )
 
+    def test_regression_ready_accepts_baseline_comparison_threshold(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            bundle = Path(temp_dir) / "bundle"
+            shutil.copytree(FIXTURES / "baseline-ready", bundle)
+            manifest_path = bundle / "evaluation-manifest.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["declared_readiness"] = "regression_ready"
+            manifest["regression"] = {
+                "threshold_configured": True,
+                "minimum_pass_rate": None,
+                "baseline_comparison": {
+                    "baseline_ref": "reviews/example-baseline.md",
+                    "metric": "wape",
+                    "direction": "lower_is_better",
+                    "minimum_improvement": 0.05,
+                },
+            }
+            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+            result = check_evaluation_bundle(bundle)
+
+        self.assertIs(result.status, EvaluationStatus.PASS)
+
+    def test_completed_rejection_requires_evidence(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            bundle = Path(temp_dir) / "bundle"
+            shutil.copytree(FIXTURES / "baseline-ready", bundle)
+            manifest_path = bundle / "evaluation-manifest.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["decision"] = {
+                "outcome": "rejected",
+                "reason": "Candidate did not outperform the declared baseline.",
+                "reviewer": "Model owner",
+                "reviewed_at": "2026-07-23",
+                "evidence_refs": [],
+            }
+            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+            result = check_evaluation_bundle(bundle)
+
+        self.assertIs(result.status, EvaluationStatus.FAIL)
+        self.assertTrue(
+            any("must not be empty" in message for message in result.messages)
+        )
+
+    def test_evidence_ready_rejected_fixture_passes(self) -> None:
+        result = check_evaluation_bundle(FIXTURES / "regression-ready-rejected")
+
+        self.assertIs(result.status, EvaluationStatus.PASS)
+        self.assertEqual(result.readiness, "regression_ready")
+
     def test_production_derived_case_must_be_sanitized(self) -> None:
         with TemporaryDirectory() as temp_dir:
             bundle = Path(temp_dir) / "bundle"

@@ -13,16 +13,19 @@ _ASSET_OUTPUTS = {
     Path("templates/ADR.template.md"): Path("docs/adr/TEMPLATE.md"),
     Path("templates/INVARIANTS.template.md"): Path("docs/adr/INVARIANTS.md"),
     Path("templates/prompt-capability.template.json"): Path(
-        "prompt-governance/capabilities/example-capability.json"
+        "governance/capabilities/example-capability.json"
+    ),
+    Path("governance/capability.schema.json"): Path(
+        "governance/capability.schema.json"
     ),
     Path("templates/example-capability.input.schema.template.json"): Path(
-        "prompt-governance/schemas/example-capability.input.schema.json"
+        "governance/contracts/example-capability.input.schema.json"
     ),
     Path("templates/example-capability.output.schema.template.json"): Path(
-        "prompt-governance/schemas/example-capability.output.schema.json"
+        "governance/contracts/example-capability.output.schema.json"
     ),
     Path("templates/prompt-source.template.md"): Path(
-        "prompt-governance/sources/example-capability.md"
+        "governance/evidence/example-capability.md"
     ),
     Path("templates/evaluation-manifest.template.json"): Path(
         "evaluation/example-capability/evaluation-manifest.json"

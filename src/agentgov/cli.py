@@ -560,8 +560,11 @@ def build_parser() -> argparse.ArgumentParser:
     export_capability_parser.add_argument(
         "--output",
         type=Path,
-        default=Path("prompt-governance/artifacts"),
-        help="Output root inside the repository.",
+        default=None,
+        help=(
+            "Output root inside the repository. Defaults to governance/artifacts "
+            "or the legacy prompt-governance/artifacts for a legacy manifest."
+        ),
     )
     export_capability_parser.add_argument(
         "--replace",

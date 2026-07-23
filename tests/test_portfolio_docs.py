@@ -86,7 +86,7 @@ class PortfolioDocumentationTests(unittest.TestCase):
             text.index('agentgov init $Project --project-name "Portfolio Demo"'),
         )
         for finding in (
-            "PASS capability:prompt-governance/capabilities/example-capability.json:",
+            "PASS capability:governance/capabilities/example-capability.json:",
             "WARN evaluation:evaluation/example-capability: needs_seed_cases:",
             "FAIL artifact:example-capability:",
             "ADVISORY governance:human-review:",
@@ -143,8 +143,7 @@ class PortfolioDocumentationTests(unittest.TestCase):
             "docs/ai-radar-extraction-map.md",
             "src/agentgov/cli.py",
             "tests",
-            "prompt-governance/capability.schema.json",
-            "prompt-governance/fixtures/valid/runtime-low-risk.json",
+            "governance/capability.schema.json",
             "evaluation/schemas/evaluation-manifest.schema.json",
             "schemas/repository-report.schema.json",
         )

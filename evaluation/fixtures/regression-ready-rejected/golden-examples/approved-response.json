@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "case_id": "approved-response",
+  "capability_name": "example-capability",
+  "input": {"request": "Summarize the approved material."},
+  "expected_output": {"summary": "A concise summary grounded in the supplied material."},
+  "source": {
+    "source_type": "hand_constructed",
+    "reference": "evaluation design workshop",
+    "sanitized": true
+  },
+  "approval": {
+    "status": "approved",
+    "reviewer": "Evaluation owner",
+    "rationale": "The response demonstrates the intended grounded behavior."
+  }
+}

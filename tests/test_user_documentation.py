@@ -57,10 +57,10 @@ class UserDocumentationTests(unittest.TestCase):
             "## AGENTS.md",
             "## docs/adr/TEMPLATE.md",
             "## docs/adr/INVARIANTS.md",
-            "## prompt-governance/capabilities",
+            "## governance/capabilities",
             "## evaluation",
             "## agent-skills",
-            "## prompt-governance/artifacts",
+            "## governance/artifacts",
         ):
             self.assertIn(heading, text)
         self.assertIn("does not execute models or judge model-output quality", text)

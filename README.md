@@ -111,9 +111,9 @@ These examples use identifiers and semantics emitted by the current
 implementation:
 
 ```text
-PASS capability:prompt-governance/capabilities/example-capability.json: prompt-governance/capabilities/example-capability.json satisfies the capability contract
+PASS capability:governance/capabilities/example-capability.json: governance/capabilities/example-capability.json satisfies the capability contract
 WARN evaluation:evaluation/example-capability: needs_seed_cases: declared readiness needs_seed_cases is valid but incomplete
-FAIL artifact:example-capability: prompt-governance/artifacts/example-capability: source drift detected
+FAIL artifact:example-capability: governance/artifacts/example-capability: source drift detected
 ADVISORY governance:human-review: confirm that approval and escalation boundaries match the repository's real risks
 ```
 
@@ -224,7 +224,7 @@ system, or runtime enforcement service.
   presented as a passing benchmark.
 - **Portable:** templates describe reusable contracts rather than one
   project's infrastructure or business rules.
-- **Reviewable:** governance decisions, prompt metadata, checks, and reports
+- **Reviewable:** governance decisions, capability metadata, checks, and reports
   are inspectable artifacts.
 
 ## v0.1 scope
@@ -232,7 +232,8 @@ system, or runtime enforcement service.
 The first usable release contains:
 
 1. project constitution, ADR, invariant, and agent-protocol templates;
-2. a prompt-capability metadata schema;
+2. an AI-capability metadata schema for deterministic, model, prompt, and
+   hybrid implementations;
 3. evaluation-readiness guidance;
 4. a small set of deterministic repository checks;
 5. deterministic Markdown and JSON v1.0 governance reports;
@@ -264,8 +265,8 @@ The first usable release contains:
   behavior.
 - [Automated tests](tests) cover contracts, failure behavior, artifacts,
   adoption, reports, and CI assumptions.
-- [Capability schema](prompt-governance/capability.schema.json) and a
-  [valid capability fixture](prompt-governance/fixtures/valid/runtime-low-risk.json)
+- [AI capability schema](governance/capability.schema.json) and the generated
+  canonical capability template
   show the machine-readable contract.
 - [Evaluation manifest schema](evaluation/schemas/evaluation-manifest.schema.json)
   defines the supported readiness states and evidence metadata.
@@ -280,7 +281,8 @@ agent-governance-starter/
 |-- checks/             # Deterministic governance checks
 |-- docs/               # Methodology and reference material
 |-- evaluation/         # Evaluation-readiness contracts
-|-- prompt-governance/  # Prompt-capability schemas and examples
+|-- governance/         # AI capabilities, contracts, evidence, and artifacts
+|-- prompt-governance/  # Legacy compatibility fixtures
 |-- schemas/            # Versioned machine-readable report contracts
 |-- src/agentgov/       # Python CLI and governance checks
 |-- templates/          # Repository governance templates
@@ -306,12 +308,12 @@ exists. The CLI prints the next review step after initialization.
 ```powershell
 $Project = Join-Path $PWD "governed-example"
 agentgov init $Project --project-name "Example Project"
-agentgov check capability "$Project/prompt-governance/capabilities/example-capability.json"
-agentgov check references "$Project/prompt-governance/capabilities/example-capability.json" --repository $Project
+agentgov check capability "$Project/governance/capabilities/example-capability.json"
+agentgov check references "$Project/governance/capabilities/example-capability.json" --repository $Project
 agentgov check evaluation "$Project/evaluation/example-capability"
 agentgov check agent-skills "$Project/agent-skills"
-agentgov export capability "$Project/prompt-governance/capabilities/example-capability.json" --repository $Project
-agentgov check artifact "$Project/prompt-governance/artifacts/example-capability" --repository $Project
+agentgov export capability "$Project/governance/capabilities/example-capability.json" --repository $Project
+agentgov check artifact "$Project/governance/artifacts/example-capability" --repository $Project
 agentgov check repository $Project
 agentgov report repository $Project --output "$Project/governance-report.md"
 ```
@@ -416,7 +418,7 @@ not treated as filesystem paths.
 ## Templates
 
 The [template set](templates/README.md) includes a repository constitution, ADR
-record, invariant register, and contract-valid prompt-capability starting
+record, invariant register, and contract-valid AI-capability starting
 manifest. Markdown placeholders are explicit and must be reviewed before use.
 
 Preview initialization without writing:
@@ -456,7 +458,7 @@ $env:PYTHONPATH = "src"
 python -m agentgov check repository path/to/project
 ```
 
-The command checks required governance files, unresolved placeholders, prompt
+The command checks required governance files, unresolved placeholders, AI
 capability manifests, their repository-local references, discovered evaluation
 bundles, agent protocols, and configured capability artifacts. Missing artifacts remain a non-blocking
 `WARN`; malformed or stale configured artifacts are `FAIL`. It emits `PASS`,
@@ -472,12 +474,12 @@ review artifacts:
 
 ```powershell
 $env:PYTHONPATH = "src"
-python -m agentgov export capability prompt-governance/capabilities/example.json `
+python -m agentgov export capability governance/capabilities/example.json `
   --repository .
 ```
 
 The default output is
-`prompt-governance/artifacts/<capability-name>/CAPABILITY.md` plus
+`governance/artifacts/<capability-name>/CAPABILITY.md` plus
 `artifact.json`. Export hashes canonical manifest content and the declared
 repository-relative source files. It never copies source content and refuses
 to overwrite generated files unless `--replace` is explicit.
@@ -486,7 +488,7 @@ Check for manifest, source, or generated-file drift with:
 
 ```powershell
 python -m agentgov check artifact `
-  prompt-governance/artifacts/<capability-name> --repository .
+  governance/artifacts/<capability-name> --repository .
 ```
 
 Both manifest, sources, and output must stay inside the declared repository
@@ -547,6 +549,14 @@ The check distinguishes honest early-stage readiness (`WARN`) from supported
 baseline/regression readiness (`PASS`) and unsupported maturity claims
 (`FAIL`). It validates evidence structure and review metadata, not model quality
 or benchmark performance.
+
+Readiness is not an acceptance or release decision. The optional evaluation
+`decision` records a reviewed outcome separately, so a candidate can have
+complete regression evidence and still be honestly `rejected`. Regression
+thresholds support either a case pass rate or a relative comparison with a
+named baseline. See the
+[`regression-ready-rejected` fixture](evaluation/fixtures/regression-ready-rejected)
+for a complete example.
 
 ## Reference implementation
 

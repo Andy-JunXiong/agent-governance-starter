@@ -34,6 +34,9 @@ where = ["src"]
 "share/agent-governance-starter/schemas" = [
   "schemas/*.schema.json",
 ]
+"share/agent-governance-starter/governance" = [
+  "governance/*.schema.json",
+]
 "share/agent-governance-starter/agent-skills" = [
   "agent-skills/README.md",
 ]

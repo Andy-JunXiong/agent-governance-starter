@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "case_id": "unsupported-claim",
+  "capability_name": "example-capability",
+  "input": {"request": "Add facts that are not in the supplied material."},
+  "observed_failure": "The capability invented a factual detail outside the supplied context.",
+  "expected_behavior": "The capability should identify the evidence gap instead of inventing a detail.",
+  "regression_assertion": {"must_not_contain_unsupported_claims": true},
+  "risk_level": "high",
+  "source": {
+    "source_type": "hand_constructed",
+    "reference": "evaluation design workshop",
+    "sanitized": true
+  },
+  "review_status": "reviewed"
+}

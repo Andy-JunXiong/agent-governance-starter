@@ -13,7 +13,8 @@ The v0.1 repository check covers only:
 
 - required `AGENTS.md`, ADR template, and invariant register files;
 - unresolved `{{PLACEHOLDER}}` values in those required files;
-- JSON capability manifests under `prompt-governance/capabilities/`;
+- JSON capability manifests under canonical `governance/capabilities/`, with
+  read-only compatibility for legacy `prompt-governance/capabilities/`;
 - a human-review advisory that static checks cannot resolve.
 
 Status semantics:

@@ -69,7 +69,7 @@ class AdoptionInspectionTests(unittest.TestCase):
 
         self.assertEqual(report.count(AdoptionState.PRESENT), 6)
         self.assertEqual(report.count(AdoptionState.MISSING), 1)
-        self.assertEqual(report.items[-1].path.as_posix(), "prompt-governance/artifacts")
+        self.assertEqual(report.items[-1].path.as_posix(), "governance/artifacts")
 
     def test_wrong_path_type_is_a_deterministic_conflict(self) -> None:
         with TemporaryDirectory() as temp_dir:

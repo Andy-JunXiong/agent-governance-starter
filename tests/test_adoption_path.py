@@ -20,11 +20,11 @@ class CleanRepositoryAdoptionTests(unittest.TestCase):
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir) / "adopted-project"
             capability = (
-                root / "prompt-governance/capabilities/example-capability.json"
+                root / "governance/capabilities/example-capability.json"
             )
             evaluation = root / "evaluation/example-capability"
             artifact = (
-                root / "prompt-governance/artifacts/example-capability"
+                root / "governance/artifacts/example-capability"
             )
             report_path = root / "governance-report.md"
 

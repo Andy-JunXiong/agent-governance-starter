@@ -27,6 +27,12 @@ Schemas live under `schemas/`:
 See [the readiness policy](readiness-policy.md) for the evidence required by
 each label.
 
+Readiness and outcome are deliberately separate. Use `declared_readiness` for
+evidence maturity and the optional `decision` object for a reviewed `accepted`,
+`accepted_with_conditions`, or `rejected` outcome. The
+[`regression-ready-rejected`](fixtures/regression-ready-rejected) fixture shows
+complete evidence for a candidate that did not outperform its named baseline.
+
 ## Check command
 
 ```powershell
@@ -40,5 +46,7 @@ agentgov check evaluation path/to/evaluation-bundle
   exit `1`.
 - Path and read errors return `2`.
 
-The checker validates configuration and evidence shape. It does not run a model
-or determine whether outputs are semantically correct.
+Regression thresholds may be a case pass rate or a relative comparison against
+a named baseline. The checker validates configuration and evidence shape. It
+does not run a model, calculate metrics, determine whether outputs are
+semantically correct, or authorize release.

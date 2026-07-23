@@ -2,8 +2,11 @@
   "schema_version": "1.0",
   "name": "example-capability",
   "version": "0.1.0",
-  "purpose": "Describe the user-visible outcome this prompt capability produces.",
-  "capability_kind": "product_runtime",
+  "purpose": "Describe the user-visible outcome this governed AI capability produces.",
+  "capability_type": "decision_support",
+  "implementation_mode": "hybrid",
+  "decision_authority": "recommend",
+  "autonomy_level": "human_approval_required",
   "task_type": "example_task",
   "triggers": [
     "A caller requests the documented example outcome"
@@ -12,8 +15,8 @@
     "Tasks outside the documented capability boundary"
   ],
   "contracts": {
-    "input_schema": "prompt-governance/schemas/example-capability.input.schema.json",
-    "output_schema": "prompt-governance/schemas/example-capability.output.schema.json"
+    "input_schema": "governance/contracts/example-capability.input.schema.json",
+    "output_schema": "governance/contracts/example-capability.output.schema.json"
   },
   "called_by": [],
   "owner": "Owning team or maintainer",
@@ -22,10 +25,6 @@
     "required": false,
     "stages": []
   },
-  "model_route": {
-    "mode": "dynamic",
-    "route_ref": "routes/example-capability"
-  },
   "evaluation": {
     "readiness": "needs_seed_cases",
     "evidence_refs": []
@@ -33,7 +32,7 @@
   "provenance": {
     "origin": "authored",
     "source_refs": [
-      "prompt-governance/sources/example-capability.md"
+      "governance/evidence/example-capability.md"
     ]
   }
 }

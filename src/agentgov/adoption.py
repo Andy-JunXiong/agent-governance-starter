@@ -57,10 +57,10 @@ _GOVERNANCE_PATHS = (
     ("constitution", Path("AGENTS.md"), "file"),
     ("adr-template", Path("docs/adr/TEMPLATE.md"), "file"),
     ("invariants", Path("docs/adr/INVARIANTS.md"), "file"),
-    ("capabilities", Path("prompt-governance/capabilities"), "directory"),
+    ("capabilities", Path("governance/capabilities"), "directory"),
     ("evaluation", Path("evaluation"), "directory"),
     ("agent-skills", Path("agent-skills"), "directory"),
-    ("artifacts", Path("prompt-governance/artifacts"), "directory"),
+    ("artifacts", Path("governance/artifacts"), "directory"),
 )
 
 _INSTRUCTION_PATHS = (

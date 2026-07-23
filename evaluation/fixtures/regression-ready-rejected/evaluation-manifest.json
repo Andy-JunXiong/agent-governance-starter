@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "capability_name": "example-capability",
+  "declared_readiness": "regression_ready",
+  "cases": {
+    "seed": ["seed-cases/basic-request.json"],
+    "golden": ["golden-examples/approved-response.json"],
+    "failure": ["failure-cases/unsupported-claim.json"]
+  },
+  "baseline": {
+    "human_approved": true,
+    "reviewer": "Evaluation owner",
+    "reviewed_at": "2026-07-23",
+    "evidence_refs": ["reviews/model-comparison.md"]
+  },
+  "regression": {
+    "threshold_configured": true,
+    "minimum_pass_rate": null,
+    "baseline_comparison": {
+      "baseline_ref": "reviews/model-comparison.md",
+      "metric": "wape",
+      "direction": "lower_is_better",
+      "minimum_improvement": 0.05
+    }
+  },
+  "decision": {
+    "outcome": "rejected",
+    "reason": "The candidate did not achieve the required improvement over the baseline.",
+    "reviewer": "Model owner",
+    "reviewed_at": "2026-07-23",
+    "evidence_refs": ["reviews/model-comparison.md"]
+  }
+}

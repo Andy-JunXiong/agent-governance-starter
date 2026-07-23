@@ -24,6 +24,55 @@ def run_cli(*args: str) -> tuple[int, str, str]:
 
 
 class RepositoryCheckTests(unittest.TestCase):
+    def test_legacy_layout_is_supported_with_migration_warning(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir) / "project"
+            initialize_project(root, project_name="Legacy Layout")
+            (root / "governance").rename(root / "prompt-governance")
+            legacy = root / "prompt-governance"
+            (legacy / "contracts").rename(legacy / "schemas")
+            (legacy / "evidence").rename(legacy / "sources")
+            manifest_path = legacy / "capabilities/example-capability.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["contracts"]["input_schema"] = (
+                "prompt-governance/schemas/example-capability.input.schema.json"
+            )
+            manifest["contracts"]["output_schema"] = (
+                "prompt-governance/schemas/example-capability.output.schema.json"
+            )
+            manifest["provenance"]["source_refs"] = [
+                "prompt-governance/sources/example-capability.md"
+            ]
+            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+            report = check_repository(root)
+
+        self.assertFalse(report.has_failures)
+        self.assertTrue(
+            any(
+                finding.check_id == "governance:layout"
+                and finding.status is FindingStatus.WARN
+                for finding in report.findings
+            )
+        )
+
+    def test_dual_layout_is_a_deterministic_conflict(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir) / "project"
+            initialize_project(root, project_name="Dual Layout")
+            (root / "prompt-governance").mkdir()
+
+            report = check_repository(root)
+
+        self.assertTrue(report.has_failures)
+        self.assertTrue(
+            any(
+                finding.check_id == "governance:layout"
+                and finding.status is FindingStatus.FAIL
+                for finding in report.findings
+            )
+        )
+
     def test_initialized_repository_has_warn_and_advisory_but_no_fail(self) -> None:
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir) / "project"
@@ -99,7 +148,7 @@ class RepositoryCheckTests(unittest.TestCase):
             root = Path(temp_dir) / "project"
             initialize_project(root, project_name="Invalid Capability Project")
             capability_path = (
-                root / "prompt-governance/capabilities/example-capability.json"
+                root / "governance/capabilities/example-capability.json"
             )
             capability = json.loads(capability_path.read_text(encoding="utf-8"))
             capability["risk_level"] = "critical"
@@ -119,7 +168,7 @@ class RepositoryCheckTests(unittest.TestCase):
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir) / "project"
             initialize_project(root, project_name="Broken Reference Project")
-            schema = root / "prompt-governance/schemas/example-capability.input.schema.json"
+            schema = root / "governance/contracts/example-capability.input.schema.json"
             schema.unlink()
 
             report = check_repository(root)
@@ -155,7 +204,7 @@ class RepositoryCheckTests(unittest.TestCase):
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir) / "project"
             initialize_project(root, project_name="Artifact Project")
-            manifest = root / "prompt-governance/capabilities/example-capability.json"
+            manifest = root / "governance/capabilities/example-capability.json"
             export_capability_artifact(manifest, repository=root)
 
             report = check_repository(root)
@@ -175,8 +224,8 @@ class RepositoryCheckTests(unittest.TestCase):
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir) / "project"
             initialize_project(root, project_name="Drift Project")
-            source = root / "prompt-governance/sources/example-capability.md"
-            manifest = root / "prompt-governance/capabilities/example-capability.json"
+            source = root / "governance/evidence/example-capability.md"
+            manifest = root / "governance/capabilities/example-capability.json"
             export_capability_artifact(manifest, repository=root)
             source.write_text("PROMPT = 'changed'\n", encoding="utf-8")
 
@@ -195,7 +244,7 @@ class RepositoryCheckTests(unittest.TestCase):
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir) / "project"
             initialize_project(root, project_name="Malformed Artifact Project")
-            artifact_dir = root / "prompt-governance/artifacts/example-capability"
+            artifact_dir = root / "governance/artifacts/example-capability"
             artifact_dir.mkdir(parents=True)
             (artifact_dir / "artifact.json").write_text("{broken", encoding="utf-8")
 
@@ -214,12 +263,12 @@ class RepositoryCheckTests(unittest.TestCase):
             root = Path(temp_dir) / "project"
             initialize_project(root, project_name="Partial Artifact Project")
             first_manifest = (
-                root / "prompt-governance/capabilities/example-capability.json"
+                root / "governance/capabilities/example-capability.json"
             )
             export_capability_artifact(first_manifest, repository=root)
             second = json.loads(first_manifest.read_text(encoding="utf-8"))
             second["name"] = "second-capability"
-            (root / "prompt-governance/capabilities/second-capability.json").write_text(
+            (root / "governance/capabilities/second-capability.json").write_text(
                 json.dumps(second),
                 encoding="utf-8",
             )

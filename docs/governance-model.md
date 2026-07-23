@@ -16,7 +16,7 @@ The starter kit uses the following governance chain:
 Constitution
   -> Architecture Memory
   -> Agent Operating Protocols
-  -> Prompt Capability Governance
+  -> AI Capability Governance
   -> Reviewable Artifacts
   -> Evaluation and Policy Checks
   -> Human Approval
@@ -47,9 +47,10 @@ required context, checks, stop conditions, and expected output.
 
 ### Prompt capability governance
 
-Treats a prompt-backed behavior as a versioned capability with an identity,
-purpose, input/output contract, call sites, risk classification, model route,
-human-review requirement, provenance, and evaluation readiness.
+Treats deterministic, model, prompt, or hybrid behavior as a versioned
+capability with identity, purpose, input/output contracts, call sites, risk,
+implementation mode, decision authority, autonomy, human-review requirements,
+provenance, and evaluation readiness.
 
 ### Reviewable artifacts
 

@@ -33,6 +33,14 @@ _CASE_TYPES = {
 }
 _SOURCE_TYPES = {"hand_constructed", "production_derived", "external"}
 _RISK_LEVELS = {"low", "medium", "high", "critical"}
+_DECISION_OUTCOMES = {
+    "pending",
+    "accepted",
+    "accepted_with_conditions",
+    "rejected",
+}
+_METRIC_DIRECTIONS = {"higher_is_better", "lower_is_better"}
+_DATE_RE = re.compile(r"^\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])$")
 
 
 def _check_fields(
@@ -101,8 +109,15 @@ def _validate_manifest(manifest: Mapping[str, Any]) -> tuple[str, dict[str, list
         "cases",
         "baseline",
         "regression",
+        "decision",
     }
-    _check_fields(manifest, path="$", required=fields, allowed=fields, errors=errors)
+    _check_fields(
+        manifest,
+        path="$",
+        required=fields - {"decision"},
+        allowed=fields,
+        errors=errors,
+    )
     if manifest.get("schema_version") != "1.0":
         errors.append("$.schema_version must equal '1.0'")
     capability_name = _string(manifest.get("capability_name"), "$.capability_name", errors) or ""
@@ -126,7 +141,7 @@ def _validate_manifest(manifest: Mapping[str, Any]) -> tuple[str, dict[str, list
     baseline = _mapping(manifest.get("baseline"), "$.baseline", errors)
     if baseline is not None:
         required = {"human_approved", "evidence_refs"}
-        allowed = required | {"reviewer"}
+        allowed = required | {"reviewer", "reviewed_at"}
         _check_fields(baseline, path="$.baseline", required=required, allowed=allowed, errors=errors)
         approved = baseline.get("human_approved")
         if not isinstance(approved, bool):
@@ -140,11 +155,23 @@ def _validate_manifest(manifest: Mapping[str, Any]) -> tuple[str, dict[str, list
             _string(baseline.get("reviewer"), "$.baseline.reviewer", errors)
             if evidence_refs == []:
                 errors.append("$.baseline.evidence_refs must not be empty for declared readiness")
+        reviewed_at = baseline.get("reviewed_at")
+        if reviewed_at is not None:
+            reviewed_at = _string(reviewed_at, "$.baseline.reviewed_at", errors)
+            if reviewed_at and not _DATE_RE.fullmatch(reviewed_at):
+                errors.append("$.baseline.reviewed_at must use YYYY-MM-DD")
 
     regression = _mapping(manifest.get("regression"), "$.regression", errors)
     if regression is not None:
-        fields = {"threshold_configured", "minimum_pass_rate"}
-        _check_fields(regression, path="$.regression", required=fields, allowed=fields, errors=errors)
+        required = {"threshold_configured", "minimum_pass_rate"}
+        allowed = required | {"baseline_comparison"}
+        _check_fields(
+            regression,
+            path="$.regression",
+            required=required,
+            allowed=allowed,
+            errors=errors,
+        )
         configured = regression.get("threshold_configured")
         if not isinstance(configured, bool):
             errors.append("$.regression.threshold_configured must be a boolean")
@@ -155,11 +182,103 @@ def _validate_manifest(manifest: Mapping[str, Any]) -> tuple[str, dict[str, list
             or not 0 <= pass_rate <= 1
         ):
             errors.append("$.regression.minimum_pass_rate must be null or a number from 0 to 1")
+        comparison = regression.get("baseline_comparison")
+        if comparison is not None:
+            comparison = _mapping(
+                comparison, "$.regression.baseline_comparison", errors
+            )
+        if comparison is not None:
+            comparison_fields = {
+                "baseline_ref",
+                "metric",
+                "direction",
+                "minimum_improvement",
+            }
+            _check_fields(
+                comparison,
+                path="$.regression.baseline_comparison",
+                required=comparison_fields,
+                allowed=comparison_fields,
+                errors=errors,
+            )
+            _string(
+                comparison.get("baseline_ref"),
+                "$.regression.baseline_comparison.baseline_ref",
+                errors,
+            )
+            metric = _string(
+                comparison.get("metric"),
+                "$.regression.baseline_comparison.metric",
+                errors,
+            )
+            if metric and not re.fullmatch(r"^[a-z0-9]+(?:[_-][a-z0-9]+)*$", metric):
+                errors.append(
+                    "$.regression.baseline_comparison.metric must use lowercase words"
+                )
+            direction = comparison.get("direction")
+            if direction not in _METRIC_DIRECTIONS:
+                errors.append(
+                    "$.regression.baseline_comparison.direction must be one of "
+                    f"{sorted(_METRIC_DIRECTIONS)}"
+                )
+            improvement = comparison.get("minimum_improvement")
+            if (
+                isinstance(improvement, bool)
+                or not isinstance(improvement, (int, float))
+                or improvement < 0
+            ):
+                errors.append(
+                    "$.regression.baseline_comparison.minimum_improvement "
+                    "must be a non-negative number"
+                )
         if readiness == "regression_ready":
             if configured is not True:
                 errors.append("$.regression.threshold_configured must be true for regression_ready")
-            if isinstance(pass_rate, bool) or not isinstance(pass_rate, (int, float)):
-                errors.append("$.regression.minimum_pass_rate must be numeric for regression_ready")
+            numeric_pass_rate = (
+                not isinstance(pass_rate, bool) and isinstance(pass_rate, (int, float))
+            )
+            has_comparison = comparison is not None
+            if numeric_pass_rate == has_comparison:
+                errors.append(
+                    "$.regression must configure exactly one of numeric "
+                    "minimum_pass_rate or baseline_comparison for regression_ready"
+                )
+
+    decision = manifest.get("decision")
+    if decision is not None:
+        decision = _mapping(decision, "$.decision", errors)
+    if decision is not None:
+        decision_fields = {
+            "outcome",
+            "reason",
+            "reviewer",
+            "reviewed_at",
+            "evidence_refs",
+        }
+        _check_fields(
+            decision,
+            path="$.decision",
+            required=decision_fields,
+            allowed=decision_fields,
+            errors=errors,
+        )
+        outcome = decision.get("outcome")
+        if outcome not in _DECISION_OUTCOMES:
+            errors.append(f"$.decision.outcome must be one of {sorted(_DECISION_OUTCOMES)}")
+        _string(decision.get("reason"), "$.decision.reason", errors, minimum=10)
+        _string(decision.get("reviewer"), "$.decision.reviewer", errors)
+        reviewed_at = _string(
+            decision.get("reviewed_at"), "$.decision.reviewed_at", errors
+        )
+        if reviewed_at and not _DATE_RE.fullmatch(reviewed_at):
+            errors.append("$.decision.reviewed_at must use YYYY-MM-DD")
+        decision_evidence = _string_list(
+            decision.get("evidence_refs"), "$.decision.evidence_refs", errors
+        )
+        if outcome != "pending" and decision_evidence == []:
+            errors.append(
+                "$.decision.evidence_refs must not be empty for a completed decision"
+            )
 
     return str(readiness), case_refs, errors
 

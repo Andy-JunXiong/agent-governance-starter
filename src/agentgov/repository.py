@@ -52,10 +52,38 @@ _REQUIRED_FILES = {
     "required:invariants": Path("docs/adr/INVARIANTS.md"),
 }
 _PLACEHOLDER_RE = re.compile(r"\{\{[A-Z][A-Z0-9_-]*\}\}")
-_CAPABILITY_DIRECTORY = Path("prompt-governance/capabilities")
+_CAPABILITY_DIRECTORY = Path("governance/capabilities")
+_LEGACY_CAPABILITY_DIRECTORY = Path("prompt-governance/capabilities")
 _EVALUATION_DIRECTORY = Path("evaluation")
 _AGENT_SKILLS_DIRECTORY = Path("agent-skills")
-_ARTIFACT_DIRECTORY = Path("prompt-governance/artifacts")
+_ARTIFACT_DIRECTORY = Path("governance/artifacts")
+_LEGACY_ARTIFACT_DIRECTORY = Path("prompt-governance/artifacts")
+
+
+def _configured_path(root: Path, canonical: Path, legacy: Path) -> Path:
+    """Prefer the canonical layout while retaining read-only legacy support."""
+
+    return canonical if (root / canonical).exists() else legacy
+
+
+def _check_layout(root: Path) -> Finding | None:
+    canonical = root / "governance"
+    legacy = root / "prompt-governance"
+    if canonical.exists() and legacy.exists():
+        return Finding(
+            FindingStatus.FAIL,
+            "governance:layout",
+            "governance/ and prompt-governance/ must not both be configured; "
+            "complete an explicit migration to one layout",
+        )
+    if legacy.exists():
+        return Finding(
+            FindingStatus.WARN,
+            "governance:layout",
+            "prompt-governance/ is a supported legacy layout; migrate explicitly "
+            "to canonical governance/",
+        )
+    return None
 
 
 def _check_required_files(root: Path) -> tuple[list[Finding], list[Path]]:
@@ -116,13 +144,16 @@ def _check_placeholders(root: Path, files: list[Path]) -> Finding:
 
 
 def _check_capabilities(root: Path) -> list[Finding]:
-    capability_root = root / _CAPABILITY_DIRECTORY
+    capability_directory = _configured_path(
+        root, _CAPABILITY_DIRECTORY, _LEGACY_CAPABILITY_DIRECTORY
+    )
+    capability_root = root / capability_directory
     if capability_root.is_symlink():
         return [
             Finding(
                 FindingStatus.FAIL,
                 "capabilities:directory",
-                f"{_CAPABILITY_DIRECTORY.as_posix()} must not be a symbolic link",
+                f"{capability_directory.as_posix()} must not be a symbolic link",
             )
         ]
     if not capability_root.exists():
@@ -138,7 +169,7 @@ def _check_capabilities(root: Path) -> list[Finding]:
             Finding(
                 FindingStatus.FAIL,
                 "capabilities:directory",
-                f"{_CAPABILITY_DIRECTORY.as_posix()} is not a directory",
+                f"{capability_directory.as_posix()} is not a directory",
             )
         ]
 
@@ -148,7 +179,7 @@ def _check_capabilities(root: Path) -> list[Finding]:
             Finding(
                 FindingStatus.WARN,
                 "capabilities:manifests",
-                "no prompt capability manifests found",
+                "no AI capability manifests found",
             )
         ]
 
@@ -284,7 +315,9 @@ def _check_agent_skill_protocols(root: Path) -> list[Finding]:
 
 
 def _valid_capability_names(root: Path) -> set[str]:
-    capability_root = root / _CAPABILITY_DIRECTORY
+    capability_root = root / _configured_path(
+        root, _CAPABILITY_DIRECTORY, _LEGACY_CAPABILITY_DIRECTORY
+    )
     if not capability_root.is_dir() or capability_root.is_symlink():
         return set()
 
@@ -302,14 +335,17 @@ def _valid_capability_names(root: Path) -> set[str]:
 
 
 def _check_capability_artifacts(root: Path) -> list[Finding]:
-    artifacts_root = root / _ARTIFACT_DIRECTORY
+    artifact_directory = _configured_path(
+        root, _ARTIFACT_DIRECTORY, _LEGACY_ARTIFACT_DIRECTORY
+    )
+    artifacts_root = root / artifact_directory
     capability_names = _valid_capability_names(root)
     if artifacts_root.is_symlink():
         return [
             Finding(
                 FindingStatus.FAIL,
                 "artifacts:directory",
-                f"{_ARTIFACT_DIRECTORY.as_posix()} must not be a symbolic link",
+                f"{artifact_directory.as_posix()} must not be a symbolic link",
             )
         ]
     if not artifacts_root.exists():
@@ -325,7 +361,7 @@ def _check_capability_artifacts(root: Path) -> list[Finding]:
             Finding(
                 FindingStatus.FAIL,
                 "artifacts:directory",
-                f"{_ARTIFACT_DIRECTORY.as_posix()} is not a directory",
+                f"{artifact_directory.as_posix()} is not a directory",
             )
         ]
 
@@ -383,7 +419,9 @@ def _check_capability_artifacts(root: Path) -> list[Finding]:
 
 
 def _check_reference_integrity(root: Path) -> list[Finding]:
-    capability_root = root / _CAPABILITY_DIRECTORY
+    capability_root = root / _configured_path(
+        root, _CAPABILITY_DIRECTORY, _LEGACY_CAPABILITY_DIRECTORY
+    )
     if not capability_root.is_dir() or capability_root.is_symlink():
         return []
 
@@ -437,6 +475,9 @@ def check_repository(root: Path) -> RepositoryReport:
         raise ValueError(f"repository path is not a directory: {root}")
 
     findings, readable_files = _check_required_files(root)
+    layout_finding = _check_layout(root)
+    if layout_finding is not None:
+        findings.append(layout_finding)
     findings.append(_check_placeholders(root, readable_files))
     findings.extend(_check_capabilities(root))
     findings.extend(_check_reference_integrity(root))

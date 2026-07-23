@@ -41,6 +41,7 @@
       "properties": {
         "human_approved": {"type": "boolean"},
         "reviewer": {"type": "string", "minLength": 1},
+        "reviewed_at": {"type": "string", "format": "date"},
         "evidence_refs": {"$ref": "#/$defs/fileReferences"}
       }
     },
@@ -50,7 +51,37 @@
       "required": ["threshold_configured", "minimum_pass_rate"],
       "properties": {
         "threshold_configured": {"type": "boolean"},
-        "minimum_pass_rate": {"type": ["number", "null"], "minimum": 0, "maximum": 1}
+        "minimum_pass_rate": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "baseline_comparison": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "baseline_ref",
+            "metric",
+            "direction",
+            "minimum_improvement"
+          ],
+          "properties": {
+            "baseline_ref": {"type": "string", "pattern": "^[^\\s]+$"},
+            "metric": {"type": "string", "pattern": "^[a-z0-9]+(?:[_-][a-z0-9]+)*$"},
+            "direction": {"enum": ["higher_is_better", "lower_is_better"]},
+            "minimum_improvement": {"type": "number", "minimum": 0}
+          }
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "reason", "reviewer", "reviewed_at", "evidence_refs"],
+      "properties": {
+        "outcome": {
+          "enum": ["pending", "accepted", "accepted_with_conditions", "rejected"]
+        },
+        "reason": {"type": "string", "minLength": 10},
+        "reviewer": {"type": "string", "minLength": 1},
+        "reviewed_at": {"type": "string", "format": "date"},
+        "evidence_refs": {"$ref": "#/$defs/fileReferences"}
       }
     }
   },
@@ -81,9 +112,37 @@
         "properties": {
           "regression": {
             "properties": {
-              "threshold_configured": {"const": true},
-              "minimum_pass_rate": {"type": "number"}
-            }
+              "threshold_configured": {"const": true}
+            },
+            "oneOf": [
+              {
+                "properties": {"minimum_pass_rate": {"type": "number"}},
+                "not": {"required": ["baseline_comparison"]}
+              },
+              {
+                "properties": {"minimum_pass_rate": {"type": "null"}},
+                "required": ["baseline_comparison"]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "decision": {
+            "properties": {"outcome": {"const": "pending"}},
+            "required": ["outcome"]
+          }
+        },
+        "required": ["decision"]
+      },
+      "then": {},
+      "else": {
+        "properties": {
+          "decision": {
+            "properties": {"evidence_refs": {"minItems": 1}}
           }
         }
       }

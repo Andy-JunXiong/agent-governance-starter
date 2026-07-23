@@ -13,7 +13,8 @@ rules.
 - `INVARIANTS.template.md`: architecture-constraint register with explicit
   authority, enforcement-point, and verification metadata.
 - `prompt-capability.template.json`: contract-valid starting manifest for a
-  governed prompt capability.
+  governed AI capability implemented by deterministic logic, a model, a
+  prompt, or a hybrid.
 - `example-capability.*.schema.template.json`: minimal repository-local input
   and output contracts referenced by the example capability.
 - `prompt-source.template.md`: explicit prompt-source placeholder referenced

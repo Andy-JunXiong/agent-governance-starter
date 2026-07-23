@@ -14,7 +14,7 @@ Use the template for consequential and durable decisions. Record context, option
 
 Record properties that must remain true, their scope, responsible owner, enforcement mechanism, verification command, and exception authority. Only claim deterministic enforcement when an actual deterministic check exists.
 
-## prompt-governance/capabilities
+## governance/capabilities
 
 Replace the example manifest with one bounded capability at a time. Confirm:
 
@@ -27,11 +27,11 @@ Replace the example manifest with one bounded capability at a time. Confirm:
 
 Do not use a capability manifest as proof that the implementation is correct.
 
-## prompt-governance/schemas
+## governance/contracts
 
 Describe the structural input and output contract. Keep objects strict where appropriate, avoid undocumented fields, and version breaking changes. Schema validity does not establish semantic quality.
 
-## prompt-governance/sources
+## governance/evidence
 
 Keep the actual repository source authoritative. Generated review artifacts contain hashes and references, not copied private source content. Never add credentials, production data, or secret-like examples.
 
@@ -45,12 +45,12 @@ The starter validates readiness structure; it does not execute models or judge m
 
 Adapt protocols only when their triggers, non-use conditions, workflow, safety boundaries, escalation, and handoff contract remain explicit. Keep them portable and free from credentials or project-specific infrastructure unless the repository deliberately owns that specialization.
 
-## prompt-governance/artifacts
+## governance/artifacts
 
 Create artifacts with the explicit export command after reviewing a valid capability:
 
 ```powershell
-agentgov export capability prompt-governance/capabilities/example.json --repository .
+agentgov export capability governance/capabilities/example.json --repository .
 ```
 
 Artifacts are deterministic review snapshots. A matching hash proves declared content has not changed; it does not prove that the content is correct or approved.
