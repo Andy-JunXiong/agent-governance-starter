@@ -194,12 +194,14 @@ Acceptance signals:
 
 ### Slice 2 — Orphan Evidence Checks
 
+Completed on 2026-07-24.
+
 Goal:
 
 Detect declared evaluation and artifact directories that cannot be connected
 to the governed inventory.
 
-Planned checks:
+Implemented checks:
 
 - manifest not listed in inventory;
 - inventory item without manifest;
@@ -419,17 +421,17 @@ Do not build these from hypothetical taxonomies alone.
 
 ## Next Recommended Starting Point
 
-Start with Orphan Evidence Checks as one vertical slice:
+Start with Control Mapping as one vertical slice:
 
-1. connect evaluation bundles to declared inventory capabilities;
-2. connect configured artifacts to declared inventory capabilities;
-3. fail deterministic orphan references;
-4. keep optional evidence as WARN or not applicable;
-5. add fixture-based tests;
-6. update repository reports and documentation.
+1. define the minimal control declaration schema;
+2. link every control declaration to an Inventory capability;
+3. distinguish deterministic enforcement from advisory review;
+4. make applicability, ownership, verification, and exceptions explicit;
+5. add passing, failing, warning, and not-applicable fixtures;
+6. do not calculate a coverage percentage.
 
-Stop before control mapping unless orphan behavior and finding semantics are
-fully validated.
+Stop before capability dependency propagation or risk profiles unless control
+semantics and applicability rules are fully validated.
 
 ## Validation Baseline
 

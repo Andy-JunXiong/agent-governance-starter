@@ -460,6 +460,11 @@ prove that every real AI capability was discovered or declared. See the
 [Governance Inventory guide](docs/governance-inventory.md) for the contract and
 finding semantics.
 
+When that Inventory passes, configured evaluation bundles and review artifacts
+must name a listed capability through their own `capability_name` contract
+field. Unknown names are deterministic orphan failures; directory names are
+not used to infer identity. Missing optional evidence remains non-blocking.
+
 Check an initialized repository with:
 
 ```powershell
@@ -468,9 +473,9 @@ python -m agentgov check repository path/to/project
 ```
 
 The command checks required governance files, unresolved placeholders, AI
-capability manifests, inventory closure, repository-local references,
-discovered evaluation bundles, agent protocols, and configured capability
-artifacts. Missing artifacts remain a non-blocking
+capability manifests, inventory and evidence closure, repository-local
+references, discovered evaluation bundles, agent protocols, and configured
+capability artifacts. Missing artifacts remain a non-blocking
 `WARN`; malformed or stale configured artifacts are `FAIL`. It emits `PASS`,
 `WARN`, `FAIL`, and `ADVISORY`
 findings plus a deterministic summary. WARN and ADVISORY findings are

@@ -64,4 +64,7 @@ leaving broken paths.
 
 Initialization also creates `governance/inventory.json`. Its example capability
 is `provisional`, and its empty exclusions array makes no unsupported claim
-about repository paths.
+about repository paths. The generated evaluation manifest and any exported
+review artifact declare that same capability through their own
+`capability_name`; the repository check uses those contract claims, not
+directory names, for Inventory evidence closure.

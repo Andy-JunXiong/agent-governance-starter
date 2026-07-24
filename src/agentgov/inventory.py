@@ -36,6 +36,7 @@ class InventoryReport:
     status: InventoryStatus
     messages: tuple[str, ...]
     configured: bool
+    capability_names: tuple[str, ...] = ()
 
 
 def _mapping(value: Any, path: str, errors: list[str]) -> Mapping[str, Any] | None:
@@ -386,4 +387,5 @@ def check_inventory(repository: Path) -> InventoryReport:
             f"{len(document['exclusions'])} exclusion(s)",
         ),
         True,
+        tuple(sorted(str(item["name"]) for item in document["capabilities"])),
     )

@@ -27,8 +27,11 @@ Repository Inventory and evidence closure:
 
 - Governance Inventory contract and zero-dependency validator implemented;
 - canonical manifest, owner, identity, exclusion, and safe-path closure;
+- evaluation and artifact contract claims close to Inventory declarations
+  without filename inference;
+- deterministic orphan failures with legacy-compatible non-cascading behavior;
 - explicit completeness advisory without automatic discovery claims;
-- next slice: orphan evaluation and artifact checks.
+- next slice: control mapping.
 
 ## Known gaps
 
@@ -42,11 +45,12 @@ Repository Inventory and evidence closure:
 
 Latest local validation on 2026-07-24:
 
-- Python 3.11.9: 175 tests passed; one Windows symbolic-link test skipped
+- Python 3.11.9: 183 tests passed; one Windows symbolic-link test skipped
   because the current user lacks link-creation privilege.
 - Repository self-check: 14 PASS, 2 WARN, 0 FAIL, 2 ADVISORY.
 - Isolated wheel rehearsal: build, install, initialize, Inventory asset
-  presence, and repository check passed with zero deterministic failures.
+  presence, evidence closure confirmation, and repository check passed with
+  zero deterministic failures.
 - `git diff --check`: passed.
 
 The authoritative local baseline is:

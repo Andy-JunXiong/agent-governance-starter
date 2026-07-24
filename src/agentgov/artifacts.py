@@ -46,6 +46,7 @@ class ArtifactCheckResult:
     directory: Path
     passed: bool
     messages: tuple[str, ...]
+    capability_name: str | None = None
 
 
 def _repository_root(path: Path) -> Path:
@@ -382,9 +383,21 @@ def check_capability_artifact(
         return ArtifactCheckResult(artifact_dir, False, ("artifact.json is missing",))
 
     payload = json.loads(state_path.read_text(encoding="utf-8"))
+    declared_capability = (
+        payload.get("capability_name")
+        if isinstance(payload, Mapping)
+        and isinstance(payload.get("capability_name"), str)
+        and payload.get("capability_name")
+        else None
+    )
     contract_errors = _artifact_contract_errors(payload)
     if contract_errors:
-        return ArtifactCheckResult(artifact_dir, False, tuple(contract_errors))
+        return ArtifactCheckResult(
+            artifact_dir,
+            False,
+            tuple(contract_errors),
+            declared_capability,
+        )
 
     manifest_path = _resolve_inside(
         root,
@@ -392,7 +405,12 @@ def check_capability_artifact(
         label="recorded manifest path",
     )
     if not manifest_path.is_file():
-        return ArtifactCheckResult(artifact_dir, False, ("recorded manifest is missing",))
+        return ArtifactCheckResult(
+            artifact_dir,
+            False,
+            ("recorded manifest is missing",),
+            declared_capability,
+        )
 
     manifest = _load_valid_manifest(manifest_path)
     messages: list[str] = []
@@ -429,9 +447,15 @@ def check_capability_artifact(
                 messages.append("generated Markdown drift detected")
 
     if messages:
-        return ArtifactCheckResult(artifact_dir, False, tuple(messages))
+        return ArtifactCheckResult(
+            artifact_dir,
+            False,
+            tuple(messages),
+            declared_capability,
+        )
     return ArtifactCheckResult(
         artifact_dir,
         True,
         ("manifest, source hash, and generated Markdown are current",),
+        declared_capability,
     )
