@@ -28,6 +28,15 @@
       <p>Open a terminal at the root of the repository you want to govern and activate that repository's Python environment. Use Python 3.11 or newer. A passing static check means a declared deterministic contract ran successfully; it does not authorize merge, release or deployment.</p>
     </section>
     <section>
+      <h2>Guided onboarding development preview</h2>
+      <p>The current development build also provides a state-dependent path. It has passed an isolated automated Windows rehearsal, but it has not yet completed a fresh uncoached human pilot and therefore does not replace the primary steps below.</p>
+      <pre><code>agentgov doctor .
+agentgov onboard . --project-name "My Project" --dry-run
+agentgov onboard . --project-name "My Project"
+agentgov next .</code></pre>
+      <p><code>doctor</code> and <code>next</code> are read-only. Interactive <code>onboard</code> writes only after exact <code>ADOPT</code> from a real terminal, runs the first repository check, and never treats redirected or non-interactive input as write authority.</p>
+    </section>
+    <section>
       <h2>1. Install</h2>
       <p>Run these commands from the repository you want to govern. They install the current development package into the active Python environment without copying the starter source tree into your repository.</p>
       <pre><code>python --version

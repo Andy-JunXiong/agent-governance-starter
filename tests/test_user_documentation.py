@@ -10,6 +10,10 @@ QUICKSTART_ZH_WEB = ROOT / "docs/quickstart.zh-CN.html"
 ADOPTION_GUIDE = ROOT / "docs/existing-repository-adoption.md"
 GENERATED_FILES_GUIDE = ROOT / "docs/generated-files-guide.md"
 TROUBLESHOOTING = ROOT / "docs/troubleshooting.md"
+ISOLATED_EXECUTION_ADR = (
+    ROOT / "docs/adr/0004-use-isolated-tool-execution-for-onboarding.md"
+)
+ISOLATED_EXECUTION_REHEARSAL = ROOT / "docs/isolated-tool-execution-rehearsal.md"
 GUIDE_SCRIPT = ROOT / "docs/guide.js"
 GUIDE_STYLE = ROOT / "docs/guide.css"
 
@@ -86,6 +90,35 @@ class UserDocumentationTests(unittest.TestCase):
         self.assertIn("python -m agentgov check repository .", text)
         self.assertIn("is not valid syntax", text)
 
+    def test_isolated_execution_decision_preserves_environment_boundaries(
+        self,
+    ) -> None:
+        decision = ISOLATED_EXECUTION_ADR.read_text(encoding="utf-8")
+        rehearsal = ISOLATED_EXECUTION_REHEARSAL.read_text(encoding="utf-8")
+
+        for command in (
+            'pipx install "git+https://github.com/'
+            'Andy-JunXiong/agent-governance-starter.git@main"',
+            "pipx upgrade agent-governance-starter",
+            "pipx uninstall agent-governance-starter",
+        ):
+            self.assertIn(command, decision)
+        self.assertIn("not a stable\nrelease pin", decision)
+        self.assertIn("Repairing, replacing, or activating a target project's `.venv`", decision)
+        self.assertIn("must not install the adopting project's dependencies", decision)
+
+        for command in (
+            "agentgov inspect <deep-target>",
+            "--dry-run",
+            "agentgov check repository <deep-target>",
+        ):
+            self.assertIn(command, rehearsal)
+        self.assertIn("PASS=14 WARN=4 FAIL=0 ADVISORY=4", rehearsal)
+        self.assertIn(
+            "No commit, push, tag, package publication, release, or deployment",
+            rehearsal,
+        )
+
     def test_web_guides_are_bilingual_rich_and_return_to_quickstart(self) -> None:
         pairs = (
             ("existing-repository-adoption.html", "existing-repository-adoption.zh-CN.html"),
@@ -122,6 +155,26 @@ class UserDocumentationTests(unittest.TestCase):
             self.assertNotIn("\nagentgov --help", content)
             self.assertIn("Do not clone", english)
             self.assertIn("不要把 starter clone", chinese)
+
+    def test_web_quickstarts_label_guided_onboarding_as_development_preview(
+        self,
+    ) -> None:
+        english = QUICKSTART_WEB.read_text(encoding="utf-8")
+        chinese = QUICKSTART_ZH_WEB.read_text(encoding="utf-8")
+
+        for content in (english, chinese):
+            for command in (
+                "agentgov doctor .",
+                'agentgov onboard . --project-name "My Project" --dry-run',
+                'agentgov onboard . --project-name "My Project"',
+                "agentgov next .",
+            ):
+                self.assertIn(command, content)
+            self.assertIn("ADOPT", content)
+        self.assertIn("development preview", english)
+        self.assertIn("does not replace the primary steps", english)
+        self.assertIn("开发预览", chinese)
+        self.assertIn("暂不替换", chinese)
 
     def test_web_guides_add_accessible_copy_controls_to_code_blocks(self) -> None:
         guide_pages = (

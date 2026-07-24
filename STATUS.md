@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-07-24
+Last verified: 2026-07-25
 
 ## Current state
 
@@ -44,38 +44,88 @@ Pre-pilot repository governance foundation:
 
 ## Remaining TODOs
 
-- [ ] Tomorrow: design and test a low-friction installation path that keeps
-  AgentGov independent from the adopting repository's Python environment.
-  The happy path should not require cloning the starter into the target,
-  repairing the target's `.venv`, or installing the target's development
-  dependencies.
-- [ ] Design guided onboarding so a first-time user can complete the safe path
-  without an AgentGov expert beside them. Evaluate `agentgov doctor .`,
-  `agentgov onboard .`, and `agentgov next .` as explicit, testable command
-  contracts rather than adding more prose to the Quickstart.
+- [x] Design and test a low-friction installation path that keeps AgentGov
+  independent from the adopting repository's Python environment. ADR-0004
+  selects persistent isolated tool execution through pipx for v0.1; the
+  Windows rehearsal covered Git install, inspect, dry-run, adopt, repository
+  check, upgrade, and uninstall without using the target `.venv`.
+- [ ] Complete guided onboarding so a first-time user can finish the safe path
+  without an AgentGov expert beside them. ADR-0005 now defines the bounded
+  `doctor`, `onboard`, and `next` interaction contracts, and the first
+  read-only `agentgov doctor .` slice is implemented.
+  `agentgov onboard . --dry-run` now combines diagnosis, exact target
+  disclosure, create/preserve preview, and strict non-interactive write denial.
+  Interactive onboarding now accepts only exact `ADOPT` from a real terminal,
+  revalidates the complete reviewed plan before writing, and creates only the
+  files shown in that plan. `agentgov next .` now selects one read-only action
+  using fixed conflict, adoption, FAIL, WARN, ADVISORY, and complete
+  precedence. An isolated automated deep-path Windows rehearsal now covers the
+  complete installed sequence and corrected `onboard` to run the first
+  repository check automatically. Remaining work is a fresh uncoached human
+  pilot.
 - [ ] Convert the Taxi adoption notes into a completed cross-domain pilot
   record, including timing, assistance required, unresolved release-gate
   findings, and final maintainer decisions.
-- [ ] Decide whether the supported one-command experience should use an
-  isolated tool installer, an ephemeral runner, or a small bootstrap command;
-  verify it on Windows and document uninstall/update behavior before making it
-  the primary Quickstart.
+- [x] Decide whether the supported one-command experience should use an
+  isolated tool installer, an ephemeral runner, or a small bootstrap command.
+  The isolated installer is selected; the primary Quickstart still waits for
+  a reviewed release tag instead of presenting Git `main` as a stable pin.
 
 ## Known gaps
 
 - Taxi supplied initial cross-domain adoption evidence, but the pilot record
   and maintainer decisions are not complete.
-- Installation still depends on a usable Python interpreter. The current
-  GitHub-install workaround avoids a nested clone and Windows build-path
-  failure, but it is not yet the intended final onboarding experience.
-- Static HTML explains the workflow but cannot adapt to repository state.
-  First-time adoption still requires too much interpretation of MISSING, WARN,
-  ADVISORY, dry-run, scaffold completion, and required human decisions.
+- Installation still depends on Python 3.11 or newer and pipx. Isolated
+  execution is verified, but the stable Quickstart install command still
+  depends on a reviewed version tag.
+- Static HTML remains reference material and cannot adapt to repository state.
+  The bilingual Quickstarts now label guided onboarding as a development
+  preview; the primary path remains unchanged until an uncoached human pilot.
 - Dependency risk propagation and repository profiles are not implemented.
 - Legacy removal release remains undecided.
 - A successful check does not prove semantic governance sufficiency.
 
 ## Validation
+
+Isolated execution validation on 2026-07-25:
+
+- Windows, Python 3.12.10, and pipx 1.11.1;
+- public Git install into a pipx-managed environment;
+- deep-path inspect, dry-run, create-missing-only adoption, and repository
+  check completed with `PASS=14 WARN=4 FAIL=0 ADVISORY=4`;
+- the unrelated target `.venv` was not used or modified;
+- upgrade and uninstall behavior completed successfully.
+
+Guided onboarding validation on 2026-07-25:
+
+- ADR-0005 fixes read-only defaults, non-interactive write denial, target
+  disclosure, and human authority boundaries;
+- `agentgov doctor .` reports interpreter support, Git context, Windows path
+  risk, project `.venv` signals, and governance adoption state;
+- text and strict JSON v1.0 results preserve deterministic versus advisory
+  classification and stable exit semantics;
+- fixture tests cover healthy, unconfigured, conflict, stale `.venv`, old
+  Python, deep Windows path, no-write, JSON, and missing-path behavior.
+- `agentgov onboard . --dry-run` produces text or strict JSON v1.0 plans,
+  preserves existing files and blocks conflicts;
+- non-interactive onboarding previews explicitly set `write_authorized` to
+  false and leave repository files, project environments, and Git state
+  unchanged.
+- redirected input, EOF, cancellation, lowercase or alternative confirmation,
+  and `--non-interactive` execution cannot authorize writes;
+- exact interactive `ADOPT` applies only the reviewed plan using exclusive
+  file creation after a complete conflict preflight; existing files are never
+  overwritten.
+- `agentgov next .` returns exactly one deterministic-work,
+  incomplete-evidence, human-judgment, or complete action with its source
+  finding and blocking semantics;
+- text and strict JSON v1.0 next-action results never execute the selected
+  command or authorize repository, Git, or release changes.
+- installed deep-path rehearsal completed doctor, preview, confirmed creation,
+  automatic first check, and next-action selection while leaving the target
+  `.venv` empty;
+- the bilingual HTML Quickstarts expose this sequence only as a development
+  preview until a fresh uncoached human pilot is recorded.
 
 Latest local validation on 2026-07-24:
 

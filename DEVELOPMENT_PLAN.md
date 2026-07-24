@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Development Plan
 
-Last updated: 2026-07-24
+Last updated: 2026-07-25
 
 ## Purpose
 
@@ -351,7 +351,9 @@ and remaining release-boundary findings are recorded.
 
 ### Low-friction tool execution
 
-Next P1 priority.
+Completed on 2026-07-25 for the v0.1 execution-model decision and Windows
+rehearsal. ADR-0004 selects pipx-managed persistent isolation. A stable
+Quickstart pin remains gated on a reviewed release tag.
 
 Goal:
 
@@ -436,11 +438,13 @@ Acceptance signals:
 
 Implementation order:
 
-1. write a short ADR and interaction/result contracts;
-2. implement the read-only `doctor` vertical slice;
-3. implement `onboard --dry-run` without write authority;
-4. add explicit interactive confirmation and create-missing-only adoption;
-5. implement finding-to-action mapping for `next`;
+1. write a short ADR and interaction/result contracts (completed 2026-07-25);
+2. implement the read-only `doctor` vertical slice (completed 2026-07-25);
+3. implement `onboard --dry-run` without write authority (completed
+   2026-07-25);
+4. add explicit interactive confirmation and create-missing-only adoption
+   (completed 2026-07-25);
+5. implement finding-to-action mapping for `next` (completed 2026-07-25);
 6. test a fresh Taxi adoption without live coaching;
 7. update Quickstart only from verified pilot evidence.
 
@@ -563,16 +567,13 @@ Do not build these from hypothetical taxonomies alone.
 
 ## Next Recommended Starting Point
 
-Use the first Taxi adoption evidence to remove installation friction before
-asking another user to repeat the pilot:
+Use the verified isolated execution path as the base for guided onboarding:
 
-1. evaluate isolated and ephemeral Python tool execution options;
-2. define the guided-onboarding ADR and testable interaction contracts;
-3. implement the smallest read-only `doctor` slice;
-4. select the smallest zero-runtime-dependency execution approach;
-5. test the guided path on Windows from a realistically deep target path;
-6. update the primary Quickstart only after that path succeeds;
-7. finish the Taxi pilot record and maintainer decisions separately.
+1. keep the primary stable Quickstart pin gated on a reviewed release tag;
+2. test the guided path from the same realistically deep Windows target shape
+   (automated installed-package rehearsal completed 2026-07-25; uncoached
+   human pilot remains);
+3. finish the Taxi pilot record and maintainer decisions separately.
 
 Do not begin dependency risk propagation, repository profiles, governance
 scoring, or taxonomy expansion before pilot evidence justifies the change.

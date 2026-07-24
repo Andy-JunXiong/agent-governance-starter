@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/agent-governance-starter/next-action.schema.json",
+  "title": "Agent Governance Next Action",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "repository",
+    "mode",
+    "interaction",
+    "action",
+    "authority_boundary"
+  ],
+  "properties": {
+    "contract_version": { "const": "1.0" },
+    "repository": { "type": "string", "minLength": 1 },
+    "mode": { "const": "read_only" },
+    "interaction": { "enum": ["no_prompt", "non_interactive"] },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "title",
+        "reason",
+        "command",
+        "source_check_id",
+        "blocking"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "deterministic_work",
+            "incomplete_evidence",
+            "human_judgment",
+            "complete"
+          ]
+        },
+        "title": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 },
+        "command": { "type": ["string", "null"] },
+        "source_check_id": { "type": ["string", "null"] },
+        "blocking": { "type": "boolean" }
+      }
+    },
+    "authority_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action_executed",
+        "modifies_repository",
+        "authorizes_git_or_release_operations"
+      ],
+      "properties": {
+        "action_executed": { "const": false },
+        "modifies_repository": { "const": false },
+        "authorizes_git_or_release_operations": { "const": false }
+      }
+    }
+  }
+}

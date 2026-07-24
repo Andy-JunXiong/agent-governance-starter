@@ -23,7 +23,20 @@ from agentgov.artifacts import (
     export_capability_artifact,
 )
 from agentgov.capability import load_capability_manifest, validate_capability_manifest
+from agentgov.doctor import (
+    DoctorStatus,
+    diagnose_repository,
+    render_doctor_report_json,
+)
 from agentgov.initializer import InitConflictError, initialize_project
+from agentgov.onboarding import (
+    OnboardingConflictError,
+    apply_onboarding_plan,
+    plan_onboarding,
+    render_onboarding_plan_json,
+    request_onboarding_confirmation,
+)
+from agentgov.next_action import render_next_action_json, select_next_action
 from agentgov.html_reporting import render_repository_report_html
 from agentgov.evaluation import EvaluationStatus, check_evaluation_bundle
 from agentgov.repository import FindingStatus, check_repository
@@ -43,6 +56,198 @@ from agentgov.reporting import (
 EXIT_PASS = 0
 EXIT_FAIL = 1
 EXIT_ERROR = 2
+
+
+def _next_repository(
+    path: Path,
+    *,
+    output_format: str,
+    non_interactive: bool,
+) -> int:
+    try:
+        action = select_next_action(path)
+    except FileNotFoundError:
+        print(f"ERROR next: repository path not found: {path}", file=sys.stderr)
+        return EXIT_ERROR
+    except ValueError as exc:
+        print(f"ERROR next: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except (OSError, UnicodeError) as exc:
+        print(f"ERROR next: cannot inspect {path}: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    if output_format == "json":
+        print(
+            render_next_action_json(
+                action,
+                non_interactive=non_interactive,
+            ),
+            end="",
+        )
+    else:
+        print(f"TARGET next: {action.root}")
+        print(f"ACTION {action.kind.value}: {action.title}")
+        if action.source_check_id is not None:
+            print(f"SOURCE {action.source_check_id}")
+        print(f"REASON {action.reason}")
+        if action.command is not None:
+            print(f"COMMAND {action.command}")
+        print(f"BLOCKING {'yes' if action.blocking else 'no'}")
+        print("NOTE next: this command selected but did not execute the action")
+        print("NOTE next: no Git, merge, publish, release, or deploy action is authorized")
+    return EXIT_FAIL if action.blocking else EXIT_PASS
+
+
+def _onboard_repository(
+    path: Path,
+    *,
+    project_name: str,
+    dry_run: bool,
+    output_format: str,
+    non_interactive: bool,
+) -> int:
+    if not dry_run and non_interactive:
+        print(
+            "ERROR onboard: --non-interactive never authorizes writes; "
+            "add --dry-run",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    if not dry_run and output_format == "json":
+        print(
+            "ERROR onboard: interactive adoption requires text output",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+
+    try:
+        plan = plan_onboarding(path, project_name=project_name)
+    except FileNotFoundError:
+        print(f"ERROR onboard: repository path not found: {path}", file=sys.stderr)
+        return EXIT_ERROR
+    except AdoptionConflictError as exc:
+        print(f"FAIL onboard: {exc}")
+        print("NOTE onboard dry-run: no repository files were created or modified")
+        return EXIT_FAIL
+    except ValueError as exc:
+        print(f"ERROR onboard: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except (OSError, UnicodeError) as exc:
+        print(f"ERROR onboard: cannot prepare preview: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    if output_format == "json":
+        print(
+            render_onboarding_plan_json(
+                plan,
+                non_interactive=non_interactive,
+            ),
+            end="",
+        )
+    else:
+        print(f"TARGET onboard: {plan.root}")
+        for finding in plan.diagnosis.findings:
+            print(f"{finding.status.value} {finding.check_id}: {finding.message}")
+        for generated_file in plan.adoption.planned_files:
+            print(f"PLAN {generated_file.relative_path.as_posix()}")
+        for relative_path in plan.adoption.preserved_files:
+            print(f"PRESERVE {relative_path.as_posix()}")
+        print(
+            f"SUMMARY CREATE={len(plan.adoption.planned_files)} "
+            f"PRESERVE={len(plan.adoption.preserved_files)}"
+        )
+        if dry_run:
+            print("NEXT onboard: review the exact target and every planned file")
+            print(
+                "NOTE onboard dry-run: no repository files, project environments, "
+                "or Git state were modified"
+            )
+            print("NOTE onboard dry-run: this preview does not authorize a later write")
+
+    if plan.diagnosis.has_failures:
+        return EXIT_FAIL
+    if dry_run:
+        return EXIT_PASS
+    if not plan.adoption.planned_files:
+        print("PASS onboard: no missing scaffold files require creation")
+        print("NEXT onboard: run `agentgov check repository`")
+        return EXIT_PASS
+
+    try:
+        confirmed = request_onboarding_confirmation(
+            plan,
+            decision_reader=input,
+            is_interactive_terminal=sys.stdin.isatty(),
+        )
+    except EOFError:
+        confirmed = False
+    if not confirmed:
+        print("CANCELLED onboard: explicit terminal confirmation was not received")
+        print("NOTE onboard: no repository files were created or modified")
+        return EXIT_PASS
+
+    try:
+        result = apply_onboarding_plan(plan)
+    except OnboardingConflictError as exc:
+        print(f"FAIL onboard: {exc}")
+        return EXIT_FAIL
+    except (OSError, UnicodeError) as exc:
+        print(f"ERROR onboard: cannot create reviewed files: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    for relative_path in result.created_files:
+        print(f"CREATE {relative_path.as_posix()}")
+    print(
+        f"PASS onboard: created {len(result.created_files)} reviewed file(s); "
+        f"preserved {len(result.preserved_files)} existing file(s)"
+    )
+    print("NOTE onboard: adoption does not authorize Git, merge, publish, release, or deploy")
+    print("CHECK onboard: running the first read-only repository check")
+    check_exit = _check_repository(result.root)
+    print("NEXT onboard: run `agentgov next` to select one smallest useful action")
+    return check_exit
+
+
+def _doctor_repository(
+    path: Path,
+    *,
+    output_format: str,
+    non_interactive: bool,
+) -> int:
+    try:
+        report = diagnose_repository(path)
+    except FileNotFoundError:
+        print(f"ERROR doctor: repository path not found: {path}", file=sys.stderr)
+        return EXIT_ERROR
+    except ValueError as exc:
+        print(f"ERROR doctor: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except OSError as exc:
+        print(f"ERROR doctor: cannot diagnose {path}: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    if output_format == "json":
+        print(
+            render_doctor_report_json(
+                report,
+                non_interactive=non_interactive,
+            ),
+            end="",
+        )
+    else:
+        print(f"TARGET doctor: {report.root}")
+        print(
+            f"RUNTIME doctor: Python {report.python_version} at "
+            f"{report.python_executable}"
+        )
+        for finding in report.findings:
+            print(f"{finding.status.value} {finding.check_id}: {finding.message}")
+        summary = " ".join(
+            f"{status.value}={report.count(status)}" for status in DoctorStatus
+        )
+        print(f"SUMMARY {summary}")
+        print("NOTE doctor: no repository files or project environments were modified")
+    return EXIT_FAIL if report.has_failures else EXIT_PASS
 
 
 def _adopt_repository(
@@ -453,6 +658,111 @@ def build_parser() -> argparse.ArgumentParser:
         description="Check repository-native AI governance contracts.",
     )
     commands = parser.add_subparsers(dest="command", required=True)
+
+    doctor_parser = commands.add_parser(
+        "doctor",
+        help="Diagnose onboarding prerequisites without modifying the repository.",
+    )
+    doctor_parser.add_argument(
+        "path",
+        nargs="?",
+        type=Path,
+        default=Path("."),
+        help="Repository directory to diagnose (default: current directory).",
+    )
+    doctor_parser.add_argument(
+        "--format",
+        dest="doctor_format",
+        choices=("text", "json"),
+        default="text",
+        help="Diagnosis serialization format (default: text).",
+    )
+    doctor_parser.add_argument(
+        "--non-interactive",
+        action="store_true",
+        help="Declare automation mode; doctor remains read-only and never prompts.",
+    )
+    doctor_parser.set_defaults(
+        handler=lambda args: _doctor_repository(
+            args.path,
+            output_format=args.doctor_format,
+            non_interactive=args.non_interactive,
+        )
+    )
+
+    onboard_parser = commands.add_parser(
+        "onboard",
+        help="Preview guided create-missing-only onboarding without writing.",
+    )
+    onboard_parser.add_argument(
+        "path",
+        nargs="?",
+        type=Path,
+        default=Path("."),
+        help="Repository directory to preview (default: current directory).",
+    )
+    onboard_parser.add_argument(
+        "--project-name",
+        required=True,
+        help="Human-readable project name used only to build the preview.",
+    )
+    onboard_parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Preview onboarding without requesting write confirmation.",
+    )
+    onboard_parser.add_argument(
+        "--format",
+        dest="onboard_format",
+        choices=("text", "json"),
+        default="text",
+        help="Preview serialization format (default: text).",
+    )
+    onboard_parser.add_argument(
+        "--non-interactive",
+        action="store_true",
+        help="Declare automation mode; it never grants write authority.",
+    )
+    onboard_parser.set_defaults(
+        handler=lambda args: _onboard_repository(
+            args.path,
+            project_name=args.project_name,
+            dry_run=args.dry_run,
+            output_format=args.onboard_format,
+            non_interactive=args.non_interactive,
+        )
+    )
+
+    next_parser = commands.add_parser(
+        "next",
+        help="Select one smallest useful next action without executing it.",
+    )
+    next_parser.add_argument(
+        "path",
+        nargs="?",
+        type=Path,
+        default=Path("."),
+        help="Repository directory to inspect (default: current directory).",
+    )
+    next_parser.add_argument(
+        "--format",
+        dest="next_format",
+        choices=("text", "json"),
+        default="text",
+        help="Action serialization format (default: text).",
+    )
+    next_parser.add_argument(
+        "--non-interactive",
+        action="store_true",
+        help="Declare automation mode; next remains read-only and never prompts.",
+    )
+    next_parser.set_defaults(
+        handler=lambda args: _next_repository(
+            args.path,
+            output_format=args.next_format,
+            non_interactive=args.non_interactive,
+        )
+    )
 
     inspect_parser = commands.add_parser(
         "inspect",

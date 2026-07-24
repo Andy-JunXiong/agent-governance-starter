@@ -106,6 +106,15 @@ python -m agentgov report repository path/to/project \
         </a>
       </div>
     </section>
+    <section>
+      <h2>引导式接入开发预览</h2>
+      <p>当前开发版本还提供按仓库状态引导的流程。它已通过隔离的 Windows 自动化演练，但尚未完成一次全新的无现场指导真人试用，因此暂不替换下面的主流程。</p>
+      <pre><code>agentgov doctor .
+agentgov onboard . --project-name "My Project" --dry-run
+agentgov onboard . --project-name "My Project"
+agentgov next .</code></pre>
+      <p><code>doctor</code> 和 <code>next</code> 始终只读。交互式 <code>onboard</code> 仅接受真实终端中精确输入的 <code>ADOPT</code>，随后自动运行首次仓库检查；重定向输入和非交互模式都不能授予写权限。</p>
+    </section>
   </main>
   <footer class="shell">Agent Governance Starter Kit · 本地运行 · 仓库原生 · 人工控制</footer>
   <script src="guide.js" defer></script>
