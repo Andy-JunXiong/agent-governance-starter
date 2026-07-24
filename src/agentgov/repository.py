@@ -12,6 +12,12 @@ from agentgov.agent_skills import check_agent_skills
 from agentgov.artifacts import ArtifactPolicyError, check_capability_artifact
 from agentgov.capability import load_capability_manifest, validate_capability_manifest
 from agentgov.controls import ControlStatus, check_control_mapping
+from agentgov.dependencies import (
+    DependencyStatus,
+    check_dependency_declaration,
+    find_dependency_cycles,
+    readiness_meets,
+)
 from agentgov.evaluation import EvaluationStatus, check_evaluation_bundle
 from agentgov.inventory import InventoryReport, InventoryStatus, check_inventory
 from agentgov.references import (
@@ -57,6 +63,7 @@ _PLACEHOLDER_RE = re.compile(r"\{\{[A-Z][A-Z0-9_-]*\}\}")
 _CAPABILITY_DIRECTORY = Path("governance/capabilities")
 _LEGACY_CAPABILITY_DIRECTORY = Path("prompt-governance/capabilities")
 _CONTROL_DIRECTORY = Path("governance/controls")
+_DEPENDENCY_DIRECTORY = Path("governance/dependencies")
 _EVALUATION_DIRECTORY = Path("evaluation")
 _AGENT_SKILLS_DIRECTORY = Path("agent-skills")
 _ARTIFACT_DIRECTORY = Path("governance/artifacts")
@@ -472,6 +479,170 @@ def _check_control_mappings(
     return findings
 
 
+def _check_capability_dependencies(
+    root: Path,
+    inventory: InventoryReport,
+) -> list[Finding]:
+    dependencies_root = root / _DEPENDENCY_DIRECTORY
+    if dependencies_root.is_symlink():
+        return [
+            Finding(
+                FindingStatus.FAIL,
+                "dependencies:directory",
+                "governance/dependencies must not be a symbolic link",
+            )
+        ]
+    if not dependencies_root.exists():
+        return [
+            Finding(
+                FindingStatus.WARN,
+                "dependencies:directory",
+                "capability dependencies are not configured",
+            )
+        ]
+    if not dependencies_root.is_dir():
+        return [
+            Finding(
+                FindingStatus.FAIL,
+                "dependencies:directory",
+                "governance/dependencies is not a directory",
+            )
+        ]
+
+    declaration_paths = sorted(dependencies_root.rglob("*.json"))
+    if not declaration_paths:
+        return [
+            Finding(
+                FindingStatus.WARN,
+                "dependencies:directory",
+                "no capability dependency declarations are configured",
+            )
+        ]
+
+    inventory_names = (
+        set(inventory.capability_names)
+        if inventory.configured and inventory.status is InventoryStatus.PASS
+        else None
+    )
+    readiness_by_name = dict(inventory.capability_readiness)
+    findings: list[Finding] = []
+    claimed_names: set[str] = set()
+    adjacency: dict[str, set[str]] = {}
+    claims_complete = True
+
+    for declaration_path in declaration_paths:
+        relative_path = declaration_path.relative_to(root).as_posix()
+        report = check_dependency_declaration(root, declaration_path)
+        status = (
+            FindingStatus.PASS
+            if report.status is DependencyStatus.PASS
+            else FindingStatus.FAIL
+        )
+        messages = list(report.messages)
+        if report.capability_name is None:
+            claims_complete = False
+        else:
+            claimed_names.add(report.capability_name)
+
+        endpoints_valid = report.status is DependencyStatus.PASS
+        if (
+            inventory_names is not None
+            and report.capability_name is not None
+        ):
+            if report.capability_name in inventory_names:
+                messages.append(
+                    f"capability {report.capability_name!r} is declared in "
+                    "governance/inventory.json"
+                )
+            else:
+                status = FindingStatus.FAIL
+                claims_complete = False
+                endpoints_valid = False
+                messages.append(
+                    f"orphan dependency declaration names capability "
+                    f"{report.capability_name!r}, which is not listed in "
+                    "governance/inventory.json"
+                )
+
+            if report.status is DependencyStatus.PASS:
+                for edge in report.dependencies:
+                    if edge.capability not in inventory_names:
+                        status = FindingStatus.FAIL
+                        endpoints_valid = False
+                        messages.append(
+                            f"dependency endpoint {edge.capability!r} is not "
+                            "listed in governance/inventory.json"
+                        )
+                        continue
+                    if edge.minimum_readiness is None:
+                        continue
+                    actual = readiness_by_name[edge.capability]
+                    if readiness_meets(actual, edge.minimum_readiness):
+                        messages.append(
+                            f"dependency {edge.capability!r} readiness "
+                            f"{actual!r} meets explicit minimum "
+                            f"{edge.minimum_readiness!r}"
+                        )
+                    else:
+                        status = FindingStatus.FAIL
+                        messages.append(
+                            f"dependency {edge.capability!r} readiness "
+                            f"{actual!r} does not meet explicit minimum "
+                            f"{edge.minimum_readiness!r}"
+                        )
+
+        if (
+            endpoints_valid
+            and report.capability_name is not None
+        ):
+            adjacency.setdefault(report.capability_name, set()).update(
+                edge.capability for edge in report.dependencies
+            )
+
+        findings.append(
+            Finding(
+                status,
+                f"dependency:{relative_path}",
+                "; ".join(messages),
+            )
+        )
+
+    if inventory_names is not None and claims_complete:
+        for capability_name in sorted(inventory_names - claimed_names):
+            findings.append(
+                Finding(
+                    FindingStatus.WARN,
+                    f"dependencies:missing:{capability_name}",
+                    f"Inventory capability {capability_name!r} has no configured "
+                    "dependency declaration",
+                )
+            )
+
+    for cycle in find_dependency_cycles(adjacency):
+        cycle_id = ",".join(cycle)
+        findings.append(
+            Finding(
+                FindingStatus.FAIL,
+                f"dependencies:cycle:{cycle_id}",
+                "capability dependency cycle detected among: "
+                + ", ".join(cycle),
+            )
+        )
+
+    if not any(
+        finding.status is FindingStatus.FAIL for finding in findings
+    ):
+        findings.append(
+            Finding(
+                FindingStatus.ADVISORY,
+                "dependencies:completeness",
+                "explicit dependency declarations cannot prove that every "
+                "real runtime or organizational dependency was discovered",
+            )
+        )
+    return findings
+
+
 def _check_agent_skill_protocols(root: Path) -> list[Finding]:
     skills_root = root / _AGENT_SKILLS_DIRECTORY
     if not skills_root.exists():
@@ -700,6 +871,7 @@ def check_repository(root: Path) -> RepositoryReport:
     findings.extend(_check_capabilities(root))
     findings.extend(_check_governance_inventory(inventory_report))
     findings.extend(_check_control_mappings(root, inventory_report))
+    findings.extend(_check_capability_dependencies(root, inventory_report))
     findings.extend(_check_reference_integrity(root))
     findings.extend(_check_evaluations(root, inventory_report))
     findings.extend(_check_agent_skill_protocols(root))

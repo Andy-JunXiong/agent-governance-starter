@@ -23,7 +23,7 @@ Last verified: 2026-07-24
 
 ## Current milestone
 
-Repository Inventory, evidence closure, and control mapping:
+Pre-pilot repository governance foundation:
 
 - Governance Inventory contract and zero-dependency validator implemented;
 - canonical manifest, owner, identity, exclusion, and safe-path closure;
@@ -34,13 +34,28 @@ Repository Inventory, evidence closure, and control mapping:
   mode, ownership, exception authority, and safe evidence references;
 - deterministic control identity and reference checks paired with an explicit
   effectiveness advisory;
-- explicit completeness advisory without automatic discovery claims;
-- next slice: capability dependencies.
+- strict capability dependency declarations with Inventory-linked endpoints,
+  deterministic self-dependency and cycle rejection, and optional explicit
+  readiness floors;
+- readiness differences remain non-blocking when no minimum is declared;
+- explicit completeness advisories without automatic discovery claims;
+- implementation and local validation are complete; PR review, CI, and
+  human-controlled integration remain.
+
+## Remaining TODOs
+
+- [ ] Review the Capability Dependencies PR and the full supported CI matrix.
+- [ ] Resolve any deterministic CI failures without weakening tests or policy.
+- [ ] Obtain explicit human approval before marking the PR ready or merging.
+- [ ] After merge, synchronize local `main` and record the final merge and CI
+  state here.
+- [ ] Schedule Taxi or another cross-domain pilot separately; do not include it
+  in this upgrade.
 
 ## Known gaps
 
 - No completed cross-domain pilot.
-- Capability dependency contracts remain planned rather than implemented.
+- Dependency risk propagation and repository profiles are not implemented.
 - Legacy removal release remains undecided.
 - A successful check does not prove semantic governance sufficiency.
 
@@ -48,12 +63,12 @@ Repository Inventory, evidence closure, and control mapping:
 
 Latest local validation on 2026-07-24:
 
-- Python 3.11.9: 194 tests passed; one Windows symbolic-link test skipped
+- Python 3.11.9: 210 tests passed; one Windows symbolic-link test skipped
   because the current user lacks link-creation privilege.
-- Repository self-check: 15 PASS, 2 WARN, 0 FAIL, 3 ADVISORY.
-- Isolated wheel rehearsal: build, install, initialize, Control Mapping asset
-  presence, control PASS, effectiveness ADVISORY, and repository check passed
-  with zero deterministic failures.
+- Repository self-check: 16 PASS, 2 WARN, 0 FAIL, 4 ADVISORY.
+- Isolated wheel rehearsal: build, install, initialize, Capability
+  Dependencies schema and declaration presence, dependency PASS, completeness
+  ADVISORY, and repository check passed with zero deterministic failures.
 - `git diff --check`: passed.
 
 The authoritative local baseline is:

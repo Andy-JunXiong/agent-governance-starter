@@ -1,0 +1,11 @@
+{
+  "contract": "agentgov.capability-dependencies",
+  "schema_version": "1.0",
+  "capability_name": "downstream-capability",
+  "depends_on": [
+    {
+      "capability": "upstream-capability",
+      "minimum_readiness": "baseline_ready"
+    }
+  ]
+}

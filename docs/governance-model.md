@@ -52,6 +52,12 @@ capability with identity, purpose, input/output contracts, call sites, risk,
 implementation mode, decision authority, autonomy, human-review requirements,
 provenance, and evaluation readiness.
 
+Governance Inventory is the identity authority for configured capability
+control mappings, evidence claims, and explicit capability dependencies.
+Dependency declarations validate graph identity and cycles. Readiness is
+ordered only for an edge that deliberately declares `minimum_readiness`; no
+threshold is inferred from different readiness labels.
+
 ### Reviewable artifacts
 
 Expose capability metadata, schemas, examples, failure cases, source hashes,
@@ -99,6 +105,10 @@ the rationale is semantically justified.
 The project does not calculate a single governance coverage percentage.
 Control applicability is explicit, but a documented denominator, weighting
 model, and semantic evidence rules have not been defined.
+
+Dependency completeness is also advisory. A valid acyclic graph proves only
+that declared edges are internally consistent; it does not prove that every
+runtime or organizational relationship was discovered.
 
 ## Controlled-upgrade loop
 

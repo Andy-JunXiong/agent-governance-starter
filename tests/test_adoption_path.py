@@ -74,7 +74,7 @@ class CleanRepositoryAdoptionTests(unittest.TestCase):
                 ),
                 (
                     ("check", "repository", str(root)),
-                    "SUMMARY PASS=14 WARN=3 FAIL=0 ADVISORY=3",
+                    "SUMMARY PASS=15 WARN=3 FAIL=0 ADVISORY=4",
                 ),
                 (
                     (
@@ -97,10 +97,10 @@ class CleanRepositoryAdoptionTests(unittest.TestCase):
 
             report = report_path.read_text(encoding="utf-8")
 
-        self.assertIn("| PASS | 14 |", report)
+        self.assertIn("| PASS | 15 |", report)
         self.assertIn("| WARN | 3 |", report)
         self.assertIn("| FAIL | 0 |", report)
-        self.assertIn("| ADVISORY | 3 |", report)
+        self.assertIn("| ADVISORY | 4 |", report)
         self.assertIn("`inventory:completeness`", report)
         self.assertIn("`controls:effectiveness`", report)
         self.assertIn("`governance:placeholders`", report)

@@ -21,6 +21,8 @@ rules.
 - `control-mapping.template.json`: one explicit human-procedural starter
   control linked to readable repository references without claiming
   effectiveness.
+- `capability-dependencies.template.json`: an honest empty dependency
+  declaration that does not invent upstream capabilities or readiness floors.
 - `example-capability.*.schema.template.json`: minimal repository-local input
   and output contracts referenced by the example capability.
 - `prompt-source.template.md`: explicit prompt-source placeholder referenced
@@ -77,3 +79,10 @@ Initialization also creates
 references, owner, and exception authority to the real repository. A
 structurally valid mapping still emits an effectiveness advisory because
 static checks cannot establish control sufficiency.
+
+Initialization also creates
+`governance/dependencies/example-capability.json`. Its empty `depends_on` array
+is valid. Add only known Inventory capability edges, and add
+`minimum_readiness` only when the owning team has deliberately established a
+floor. Static checks reject self-dependencies, cycles, orphan endpoints, and
+unmet explicit floors while keeping completeness advisory.
