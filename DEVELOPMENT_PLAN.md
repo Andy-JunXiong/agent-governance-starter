@@ -262,12 +262,20 @@ Advisory boundary:
 
 ### Slice 4 — Capability Dependencies
 
+Completed on 2026-07-24.
+
 Goal:
 
 Represent explicit capability-to-capability dependencies without assuming that
 all pipelines share one readiness model.
 
-Initial design:
+Canonical path:
+
+```text
+governance/dependencies/<capability-name>.json
+```
+
+Implemented design:
 
 ```json
 {
@@ -283,12 +291,21 @@ Initial design:
 Deterministic checks:
 
 - referenced capabilities exist;
+- declaration owners and endpoints close to Governance Inventory;
 - self-dependencies fail;
 - cycles fail;
 - explicitly declared minimum readiness is satisfied.
 
 Do not automatically fail merely because downstream and upstream readiness
 labels differ when no minimum was declared.
+
+Advisory boundary:
+
+- an empty dependency array is a valid explicit declaration;
+- static checks cannot prove that every runtime or organizational dependency
+  was discovered;
+- dependency declarations do not enable automatic risk propagation or runtime
+  orchestration.
 
 ## P1 — Pilot and Adoption Experience
 
@@ -426,17 +443,18 @@ Do not build these from hypothetical taxonomies alone.
 
 ## Next Recommended Starting Point
 
-Start with Capability Dependencies as one vertical slice:
+Complete the human-controlled integration of this pre-pilot upgrade:
 
-1. define an explicit dependency declaration contract;
-2. link every dependency endpoint to an Inventory capability;
-3. reject self-dependencies and deterministic cycles;
-4. enforce minimum readiness only when explicitly declared;
-5. add passing, failing, warning, and not-configured fixtures;
-6. keep readiness mismatch non-blocking when no minimum was declared.
+1. review the Capability Dependencies pull request and its complete supported
+   CI matrix;
+2. resolve any deterministic CI failure without weakening tests or policy;
+3. obtain explicit human approval before marking the PR ready or merging it;
+4. after merge, synchronize local `main` and record the final merge and CI
+   state in `STATUS.md`.
 
-Stop before risk propagation or profiles unless dependency identity, cycle,
-and minimum-readiness semantics are fully validated.
+Stop after integration closure. Risk propagation, repository profiles, and
+the Taxi or another cross-domain pilot remain separate, explicitly scheduled
+workstreams.
 
 ## Validation Baseline
 

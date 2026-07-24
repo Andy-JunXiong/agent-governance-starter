@@ -37,6 +37,7 @@ class InventoryReport:
     messages: tuple[str, ...]
     configured: bool
     capability_names: tuple[str, ...] = ()
+    capability_readiness: tuple[tuple[str, str], ...] = ()
 
 
 def _mapping(value: Any, path: str, errors: list[str]) -> Mapping[str, Any] | None:
@@ -278,6 +279,7 @@ def check_inventory(repository: Path) -> InventoryReport:
         )
 
     listed_manifests: set[str] = set()
+    capability_readiness: dict[str, str] = {}
     for item in document["capabilities"]:
         reference = str(item["manifest"])
         try:
@@ -339,6 +341,11 @@ def check_inventory(repository: Path) -> InventoryReport:
                 f"inventory owner {item['owner']!r} does not match manifest "
                 f"owner {manifest.get('owner')!r}: {reference}"
             )
+        evaluation = manifest.get("evaluation")
+        if isinstance(evaluation, Mapping):
+            readiness = evaluation.get("readiness")
+            if isinstance(readiness, str):
+                capability_readiness[str(item["name"])] = readiness
 
     capability_root = root / _CAPABILITY_DIRECTORY
     if capability_root.is_symlink():
@@ -388,4 +395,5 @@ def check_inventory(repository: Path) -> InventoryReport:
         ),
         True,
         tuple(sorted(str(item["name"]) for item in document["capabilities"])),
+        tuple(sorted(capability_readiness.items())),
     )

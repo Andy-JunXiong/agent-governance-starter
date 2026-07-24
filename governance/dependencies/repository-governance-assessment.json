@@ -1,0 +1,6 @@
+{
+  "contract": "agentgov.capability-dependencies",
+  "schema_version": "1.0",
+  "capability_name": "repository-governance-assessment",
+  "depends_on": []
+}

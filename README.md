@@ -49,6 +49,8 @@ replace accountable human review.
   accountable owners, governance status, and reasoned exclusions;
 - strict capability control mappings with explicit applicability, enforcement
   mode, ownership, exception authority, and readable evidence references;
+- explicit capability dependency declarations with Inventory closure, cycle
+  detection, and optional minimum-readiness floors;
 - validation of repository-local schemas, callers, sources, and evaluation
   evidence references;
 - explicit evaluation-readiness states that distinguish incomplete evidence
@@ -261,6 +263,9 @@ The first usable release contains:
   boundary, implementation, validation, and current limitations.
 - [Governance model](docs/governance-model.md) defines the conceptual chain and
   finding semantics.
+- [Capability Dependencies](docs/capability-dependencies.md) defines explicit
+  Inventory-linked dependency edges, cycle checks, and optional readiness
+  floors.
 - [v0.1 adoption rehearsal](docs/v0.1-adoption-rehearsal.md) records the
   isolated installed-package workflow and observed output.
 - [AI Radar extraction map](docs/ai-radar-extraction-map.md) documents what was
@@ -474,6 +479,13 @@ applicable controls to readable implementation and verification references.
 Deterministic validation is paired with an effectiveness `ADVISORY`; it does
 not certify semantic sufficiency or calculate control coverage.
 
+Generated projects also include an empty
+[Capability Dependencies](docs/capability-dependencies.md) declaration.
+Configured edges must connect Inventory capabilities; self-dependencies,
+cycles, orphan endpoints, and unmet explicitly declared readiness floors are
+deterministic failures. A readiness difference remains non-blocking when an
+edge does not declare `minimum_readiness`, and completeness remains advisory.
+
 Check an initialized repository with:
 
 ```powershell
@@ -482,9 +494,10 @@ python -m agentgov check repository path/to/project
 ```
 
 The command checks required governance files, unresolved placeholders, AI
-capability manifests, inventory, control and evidence closure, repository-local
-references, discovered evaluation bundles, agent protocols, and configured
-capability artifacts. Missing artifacts remain a non-blocking
+capability manifests, inventory, control mappings, explicit capability
+dependencies, evidence closure, repository-local references, discovered
+evaluation bundles, agent protocols, and configured capability artifacts.
+Missing artifacts remain a non-blocking
 `WARN`; malformed or stale configured artifacts are `FAIL`. It emits `PASS`,
 `WARN`, `FAIL`, and `ADVISORY`
 findings plus a deterministic summary. WARN and ADVISORY findings are

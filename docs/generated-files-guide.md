@@ -27,6 +27,27 @@ Replace the example manifest with one bounded capability at a time. Confirm:
 
 Do not use a capability manifest as proof that the implementation is correct.
 
+## governance/inventory.json
+
+Keep one accountable declaration for every canonical capability manifest and
+record exclusions only when a real repository path and reason exist. Inventory
+closure validates declared identity, ownership, and paths; it cannot prove
+that every real capability was discovered.
+
+## governance/controls
+
+Adapt each capability's control objectives, applicability, enforcement mode,
+evidence references, owner, and exception authority. A structurally valid
+mapping does not prove that the control is effective or sufficient.
+
+## governance/dependencies
+
+Keep one declaration per Inventory capability. An empty `depends_on` array is
+valid and preferable to an invented relationship. Add only known capability
+edges; use `minimum_readiness` only when the owning team has deliberately set
+that floor. The checker rejects orphan endpoints, self-dependencies, cycles,
+and unmet explicit floors, but dependency completeness remains advisory.
+
 ## governance/contracts
 
 Describe the structural input and output contract. Keep objects strict where appropriate, avoid undocumented fields, and version breaking changes. Schema validity does not establish semantic quality.
