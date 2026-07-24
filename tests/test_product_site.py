@@ -61,7 +61,11 @@ class ProductSiteTests(unittest.TestCase):
         self.assertNotIn("Open live governance report", content)
         self.assertNotIn('role="img"', content)
         self.assertIn('<figcaption class="sr-only">', content)
-        self.assertIn("python -m pip install .", content)
+        self.assertIn(
+            'python -m pip install "git+https://github.com/'
+            'Andy-JunXiong/agent-governance-starter.git@main"',
+            content,
+        )
         self.assertNotIn("python -m pip install --no-deps .", content)
         self.assertIn("See what the CLI finds", content)
         self.assertIn("PASS, WARN, FAIL and", content)
@@ -71,7 +75,7 @@ class ProductSiteTests(unittest.TestCase):
         quickstart = quickstart_html.read_text(encoding="utf-8")
         self.assertIn('lang="zh-CN"', quickstart)
         self.assertIn("10 分钟接入路径", quickstart)
-        self.assertIn("agentgov inspect path/to/project", quickstart)
+        self.assertIn("python -m agentgov inspect .", quickstart)
         self.assertIn('href="quickstart.html" lang="en"', quickstart)
         self.assertIn(
             'href="quickstart.zh-CN.html" lang="zh-CN" aria-current="page"',

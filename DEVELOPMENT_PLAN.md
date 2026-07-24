@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Development Plan
 
-Last updated: 2026-07-23
+Last updated: 2026-07-24
 
 ## Purpose
 
@@ -332,6 +332,51 @@ Pilot outputs:
 - ten-minute adoption friction record;
 - explicit decision on whether profiles are justified.
 
+Initial Taxi evidence on 2026-07-24:
+
+- direct adoption exposed a Windows wheel build failure when the starter was
+  cloned inside an already deeply nested target repository;
+- direct installation from GitHub succeeded without vendoring the starter;
+- `python -m agentgov` was more reliable than depending on a scripts directory
+  being present on `PATH`;
+- the correct repository check is
+  `python -m agentgov check repository .`;
+- a stale target-project virtual environment was unrelated to governance
+  adoption and should not become a prerequisite for using AgentGov;
+- the generated scaffold required real project adaptation after `adopt`;
+  `FAIL=0` alone did not mean governance was complete.
+
+The pilot is not complete until its timing, assistance, maintainer decisions,
+and remaining release-boundary findings are recorded.
+
+### Low-friction tool execution
+
+Next P1 priority.
+
+Goal:
+
+Run AgentGov without coupling installation to the adopting repository's
+virtual environment or requiring the starter source tree inside that
+repository.
+
+Acceptance signals:
+
+- a Windows user can install or invoke the tool with one copyable command;
+- the same interpreter runs all AgentGov subcommands;
+- a broken project `.venv` does not block read-only inspection or adoption;
+- the workflow does not install the adopting project's dependencies;
+- update and uninstall behavior is documented;
+- an isolated Windows pilot validates install, `inspect`, dry-run, `adopt`, and
+  `check repository` from a realistically deep repository path.
+
+Stop conditions:
+
+- do not silently modify or replace the target project's environment;
+- do not vendor the starter repository;
+- do not require Docker, Node, or project-specific runtime dependencies;
+- do not describe a workaround as the final supported experience until the
+  full path is tested.
+
 ### Profile-based adoption
 
 Candidate profiles:
@@ -443,17 +488,14 @@ Do not build these from hypothetical taxonomies alone.
 
 ## Next Recommended Starting Point
 
-Begin the cross-domain pilot as a separate workstream. The pre-pilot
-repository-governance upgrade was integrated on 2026-07-24 after Capability
-Dependencies PR #8 and the complete supported CI matrix passed.
+Use the first Taxi adoption evidence to remove installation friction before
+asking another user to repeat the pilot:
 
-Use Taxi or another real repository as an adversarial adopter:
-
-1. select two or three real capabilities;
-2. attempt to express only facts and evidence that actually exist;
-3. record contract-expression failures and temporary workarounds;
-4. defer contract changes until the pilot has supplied enough evidence to
-   review them together.
+1. evaluate isolated and ephemeral Python tool execution options;
+2. select the smallest zero-runtime-dependency approach;
+3. test the complete path on Windows from a realistically deep target path;
+4. update the primary Quickstart only after that path succeeds;
+5. finish the Taxi pilot record and maintainer decisions separately.
 
 Do not begin dependency risk propagation, repository profiles, governance
 scoring, or taxonomy expansion before pilot evidence justifies the change.

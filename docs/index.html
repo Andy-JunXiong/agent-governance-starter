@@ -1119,7 +1119,7 @@
             <article>
               <b>STEP 01</b>
               <h3>Install</h3>
-              <p>Install this cloned repository locally.</p>
+              <p>Install from GitHub into the target repository's environment.</p>
             </article>
             <article>
               <b>STEP 02</b>
@@ -1149,8 +1149,9 @@
           </div>
           <div class="code">
             <code
-              >python -m pip install . agentgov inspect . agentgov adopt .
-              --project-name "My Project" --dry-run</code
+              >python -m pip install "git+https://github.com/Andy-JunXiong/agent-governance-starter.git@main"
+              python -m agentgov inspect . python -m agentgov adopt . --project-name
+              "My Project" --dry-run</code
             >
           </div>
         </div>

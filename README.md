@@ -101,12 +101,14 @@ invalidates the generated review artifact._
 
 ## Runnable CLI example
 
-Clone the repository and install the local package:
+Install the current development package into the active Python environment.
+This does not copy the starter source tree into the repository you want to
+govern:
 
-```text
-git clone https://github.com/Andy-JunXiong/agent-governance-starter.git
-cd agent-governance-starter
-python -m pip install .
+```powershell
+python --version
+python -m pip install "git+https://github.com/Andy-JunXiong/agent-governance-starter.git@main"
+python -m agentgov --help
 ```
 
 Create a synthetic governed repository, inspect it, and write a review report.
@@ -115,18 +117,18 @@ PowerShell:
 
 ```powershell
 $Project = Join-Path $PWD "governed-demo"
-agentgov init $Project --project-name "Portfolio Demo"
-agentgov check repository $Project
-agentgov report repository $Project --output "$Project/governance-report.md"
+python -m agentgov init $Project --project-name "Portfolio Demo"
+python -m agentgov check repository $Project
+python -m agentgov report repository $Project --output "$Project/governance-report.md"
 ```
 
 Bash or zsh:
 
 ```bash
 project="$PWD/governed-demo"
-agentgov init "$project" --project-name "Portfolio Demo"
-agentgov check repository "$project"
-agentgov report repository "$project" --output "$project/governance-report.md"
+python -m agentgov init "$project" --project-name "Portfolio Demo"
+python -m agentgov check repository "$project"
+python -m agentgov report repository "$project" --output "$project/governance-report.md"
 ```
 
 The demo initializes a clean repository, runs the repository contract, and

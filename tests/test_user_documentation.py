@@ -10,6 +10,8 @@ QUICKSTART_ZH_WEB = ROOT / "docs/quickstart.zh-CN.html"
 ADOPTION_GUIDE = ROOT / "docs/existing-repository-adoption.md"
 GENERATED_FILES_GUIDE = ROOT / "docs/generated-files-guide.md"
 TROUBLESHOOTING = ROOT / "docs/troubleshooting.md"
+GUIDE_SCRIPT = ROOT / "docs/guide.js"
+GUIDE_STYLE = ROOT / "docs/guide.css"
 
 
 class UserDocumentationTests(unittest.TestCase):
@@ -69,6 +71,9 @@ class UserDocumentationTests(unittest.TestCase):
     def test_troubleshooting_distinguishes_findings_and_exit_codes(self) -> None:
         text = TROUBLESHOOTING.read_text(encoding="utf-8")
         for heading in (
+            "## Windows wheel build fails with `No such file or directory`",
+            "## The virtual environment points to a missing Python",
+            "## `check` says `invalid choice: '.'`",
             "## `inspect` reports `MISSING`",
             "## `inspect` or `adopt` reports `CONFLICT`",
             "## Repository check returns WARN",
@@ -78,6 +83,8 @@ class UserDocumentationTests(unittest.TestCase):
         ):
             self.assertIn(heading, text)
         self.assertIn("No exit code grants approval", text)
+        self.assertIn("python -m agentgov check repository .", text)
+        self.assertIn("is not valid syntax", text)
 
     def test_web_guides_are_bilingual_rich_and_return_to_quickstart(self) -> None:
         pairs = (
@@ -93,8 +100,55 @@ class UserDocumentationTests(unittest.TestCase):
                 self.assertIn('href="quickstart.zh-CN.html"', chinese)
                 self.assertIn("<pre><code>", english)
                 self.assertIn("<pre><code>", chinese)
-                self.assertGreaterEqual(english.count("<section"), 5)
-                self.assertGreaterEqual(chinese.count("<section"), 5)
+            self.assertGreaterEqual(english.count("<section"), 5)
+            self.assertGreaterEqual(chinese.count("<section"), 5)
+
+    def test_web_quickstarts_use_one_python_environment_from_repository_root(
+        self,
+    ) -> None:
+        english = QUICKSTART_WEB.read_text(encoding="utf-8")
+        chinese = QUICKSTART_ZH_WEB.read_text(encoding="utf-8")
+
+        for content in (english, chinese):
+            self.assertIn(
+                'python -m pip install "git+https://github.com/'
+                'Andy-JunXiong/agent-governance-starter.git@main"',
+                content,
+            )
+            self.assertIn("python --version", content)
+            self.assertIn("python -m agentgov --help", content)
+            self.assertIn("python -m agentgov inspect .", content)
+            self.assertIn("python -m agentgov check repository .", content)
+            self.assertNotIn("\nagentgov --help", content)
+            self.assertIn("Do not clone", english)
+            self.assertIn("不要把 starter clone", chinese)
+
+    def test_web_guides_add_accessible_copy_controls_to_code_blocks(self) -> None:
+        guide_pages = (
+            "quickstart.html",
+            "quickstart.zh-CN.html",
+            "existing-repository-adoption.html",
+            "existing-repository-adoption.zh-CN.html",
+            "generated-files-guide.html",
+            "generated-files-guide.zh-CN.html",
+            "troubleshooting.html",
+            "troubleshooting.zh-CN.html",
+        )
+        for name in guide_pages:
+            with self.subTest(page=name):
+                content = (ROOT / "docs" / name).read_text(encoding="utf-8")
+                self.assertIn("script-src 'self'", content)
+                self.assertIn('<script src="guide.js" defer></script>', content)
+                self.assertIn("<pre><code>", content)
+
+        script = GUIDE_SCRIPT.read_text(encoding="utf-8")
+        style = GUIDE_STYLE.read_text(encoding="utf-8")
+        self.assertIn('document.querySelectorAll("pre > code")', script)
+        self.assertIn("navigator.clipboard.writeText", script)
+        self.assertIn('document.execCommand("copy")', script)
+        self.assertIn('button.setAttribute("aria-label"', script)
+        self.assertIn("复制失败", script)
+        self.assertIn(".copy-code:focus-visible", style)
 
 
 if __name__ == "__main__":

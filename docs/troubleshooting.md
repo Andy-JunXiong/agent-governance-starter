@@ -2,12 +2,41 @@
 
 ## `agentgov` is not recognized
 
-Confirm that the intended Python environment is activated and reinstall the local package:
+Confirm that the intended Python environment is activated and install through that interpreter:
 
 ```powershell
-python -m pip install --no-deps .
-agentgov --help
+python --version
+python -m pip install "git+https://github.com/Andy-JunXiong/agent-governance-starter.git@main"
+python -m agentgov --help
 ```
+
+Prefer `python -m agentgov` throughout the guides. It avoids relying on the environment's scripts directory being present on `PATH`.
+
+## Windows wheel build fails with `No such file or directory`
+
+This can happen when the starter is cloned inside an already deeply nested target repository and pip's temporary wheel path exceeds the effective Windows path limit. Return to the target repository root and install directly from GitHub instead:
+
+```powershell
+Set-Location ..
+python -m pip install "git+https://github.com/Andy-JunXiong/agent-governance-starter.git@main"
+python -m agentgov --help
+```
+
+The starter clone is not part of the governed project and should not be committed there. Do not delete it until you have confirmed the exact path and that it contains no work you need.
+
+## The virtual environment points to a missing Python
+
+If activation or test commands mention a Python version that is no longer installed, the environment is stale. Inspect the project's declared Python version and dependency files before recreating it. Do not use a different system Python as proof that the project's tests pass.
+
+## `check` says `invalid choice: '.'`
+
+`check` requires a check target before the repository path. Use:
+
+```powershell
+python -m agentgov check repository .
+```
+
+`python -m agentgov check . --format text` is not valid syntax. Formatting belongs to `report`, not `check`.
 
 From a source checkout, use:
 
@@ -27,8 +56,8 @@ PYTHONPATH=src python -m agentgov --help
 This is intentional. `init` only supports a new or empty target. For an existing repository, use:
 
 ```powershell
-agentgov inspect path/to/repository
-agentgov adopt path/to/repository --project-name "Example Project" --dry-run
+python -m agentgov inspect path/to/repository
+python -m agentgov adopt path/to/repository --project-name "Example Project" --dry-run
 ```
 
 ## `inspect` reports `MISSING`

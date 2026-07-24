@@ -1,10 +1,16 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="排查 Agent Governance 的安装、接入、检查结果和报告问题。"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'"><title>故障排查 · Agent Governance</title><link rel="stylesheet" href="guide.css"></head>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="排查 Agent Governance 的安装、接入、检查结果和报告问题。"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'"><title>故障排查 · Agent Governance</title><link rel="stylesheet" href="guide.css"></head>
 <body><nav class="shell"><a class="brand" href="index.html"><span class="mark">AG</span>Agent Governance</a><div class="nav-links"><a href="quickstart.zh-CN.html">← 返回中文快速入门</a></div></nav>
 <header class="shell"><span class="eyebrow">修改前先诊断</span><h1>故障排查</h1><p class="lead">先判断问题属于安装、仓库状态、确定性失败，还是自动化无法作出的决定。</p></header>
 <main class="shell">
-<section><h2>找不到 <code>agentgov</code></h2><p>通常是命令被安装到另一个 Python 环境，或者脚本目录不在 PATH 中。</p><pre><code>python -m pip install .
-python -m agentgov --help</code></pre><p>如果模块命令可运行而 <code>agentgov</code> 不可运行，请使用模块形式，或修正当前环境的 PATH。</p></section>
+<section><h2>找不到 <code>agentgov</code></h2><p>通常是命令被安装到另一个 Python 环境，或者脚本目录不在 PATH 中。请通过当前解释器安装并调用。</p><pre><code>python --version
+python -m pip install "git+https://github.com/Andy-JunXiong/agent-governance-starter.git@main"
+python -m agentgov --help</code></pre><p>整个流程优先使用 <code>python -m agentgov</code>，确保命令使用同一个 Python 环境。</p></section>
+<section><h2>Windows 构建 wheel 时出现 <code>No such file or directory</code></h2><p>如果把 starter 克隆在路径已经很深的目标仓库内部，pip 的临时构建路径可能超过 Windows 的有效路径限制。返回目标仓库根目录，直接从 GitHub 安装。</p><pre><code>Set-Location ..
+python -m pip install "git+https://github.com/Andy-JunXiong/agent-governance-starter.git@main"
+python -m agentgov --help</code></pre><p>不要提交嵌套的 starter clone。删除前必须确认准确路径，并确认其中没有需要保留的工作。</p></section>
+<section><h2>虚拟环境指向不存在的 Python</h2><p>这说明环境已经失效。重建前先核对仓库声明的 Python 版本和依赖文件。用另一个系统 Python 成功运行 CLI，不能证明项目测试环境有效。</p></section>
+<section><h2><code>check</code> 报告 <code>invalid choice: '.'</code></h2><p>必须先写检查类型，再写路径；格式选项属于 <code>report</code>，不属于 <code>check</code>。</p><pre><code>python -m agentgov check repository .</code></pre></section>
 <section><h2><code>adopt</code> 报告 CONFLICT</h2><p>不要强制写入。检查报告中的路径，确认它是目录、普通文件还是符号链接。</p><pre><code>agentgov inspect path/to/repository
 
 CONFLICT docs/adr — 预期为目录，但发现普通文件</code></pre><p>重命名或有计划地迁移冲突路径，重新运行 <code>inspect</code>，然后再次预览接入。</p></section>
@@ -16,4 +22,4 @@ CONFLICT docs/adr — 预期为目录，但发现普通文件</code></pre><p>重
 <section><h2>HTML 报告看起来过时</h2><p>报告是静态快照。仓库事实变化后需要重新生成。输出命令拒绝覆盖已有文件，因此请选择新路径，或在确认后处理旧的生成报告。</p><pre><code>agentgov report repository . --format html --output governance-report-new.html</code></pre></section>
 <section class="checklist"><h2>以下情况需要升级给人处理</h2><ol><li>无法确定正确的指令权威关系。</li><li>修复方案会改变审批或部署边界。</li><li>证据包含尚未脱敏的私有数据或生产衍生数据。</li><li>有人试图隐藏警告，而不是如实解决或延期。</li></ol></section>
 <div class="next"><a class="button dark" href="quickstart.zh-CN.html">← 返回中文快速入门</a><a class="button" href="demo-governance-report.zh-CN.html">查看示例报告 →</a></div>
-</main><footer class="shell">Agent Governance Starter Kit · 故障排查</footer></body></html>
+</main><footer class="shell">Agent Governance Starter Kit · 故障排查</footer><script src="guide.js" defer></script></body></html>

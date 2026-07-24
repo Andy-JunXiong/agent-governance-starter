@@ -81,16 +81,21 @@ class PortfolioDocumentationTests(unittest.TestCase):
         text = README.read_text(encoding="utf-8")
 
         for command in (
-            "python -m pip install .",
-            'agentgov init $Project --project-name "Portfolio Demo"',
-            "agentgov check repository $Project",
-            'agentgov report repository $Project --output "$Project/governance-report.md"',
-            'agentgov init "$project" --project-name "Portfolio Demo"',
+            'python -m pip install "git+https://github.com/'
+            'Andy-JunXiong/agent-governance-starter.git@main"',
+            "python -m agentgov --help",
+            'python -m agentgov init $Project --project-name "Portfolio Demo"',
+            "python -m agentgov check repository $Project",
+            'python -m agentgov report repository $Project '
+            '--output "$Project/governance-report.md"',
+            'python -m agentgov init "$project" --project-name "Portfolio Demo"',
         ):
             self.assertIn(command, text)
         self.assertLess(
-            text.index("python -m pip install ."),
-            text.index('agentgov init $Project --project-name "Portfolio Demo"'),
+            text.index('python -m pip install "git+https://github.com/'),
+            text.index(
+                'python -m agentgov init $Project --project-name "Portfolio Demo"'
+            ),
         )
         for finding in (
             "PASS capability:governance/capabilities/example-capability.json:",

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Install and adopt Agent Governance in a new or existing repository.">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'">
   <title>Quickstart — Agent Governance Starter Kit</title>
   <link rel="stylesheet" href="guide.css">
 </head>
@@ -25,14 +25,16 @@
   <main class="shell">
     <section class="emphasis">
       <h2>Before you start</h2>
-      <p>Use Python 3.11 or newer from a source checkout. A passing static check means a declared deterministic contract ran successfully; it does not authorize merge, release or deployment.</p>
+      <p>Open a terminal at the root of the repository you want to govern and activate that repository's Python environment. Use Python 3.11 or newer. A passing static check means a declared deterministic contract ran successfully; it does not authorize merge, release or deployment.</p>
     </section>
     <section>
       <h2>1. Install</h2>
-      <p>The package currently declares zero runtime dependencies.</p>
-      <pre><code>python -m pip install .
-agentgov --help</code></pre>
+      <p>Run these commands from the repository you want to govern. They install the current development package into the active Python environment without copying the starter source tree into your repository.</p>
+      <pre><code>python --version
+python -m pip install "git+https://github.com/Andy-JunXiong/agent-governance-starter.git@main"
+python -m agentgov --help</code></pre>
       <h3>Run without installing</h3>
+      <p>For starter-kit development, clone it into a separate, short path. Then run one of these alternatives from that clone's root, where the <code>src</code> directory exists. Do not clone the starter inside the repository being governed.</p>
       <div class="platforms">
         <div><strong>PowerShell</strong><pre><code>$env:PYTHONPATH = "src"
 python -m agentgov --help</code></pre></div>
@@ -41,9 +43,11 @@ python -m agentgov --help</code></pre></div>
     </section>
     <section>
       <h2>2. Adopt an existing repository</h2>
-      <pre><code>agentgov inspect path/to/project
-agentgov adopt path/to/project --project-name "My Project" --dry-run
-agentgov adopt path/to/project --project-name "My Project"</code></pre>
+      <p>If your terminal is already at the target repository root, use <code>.</code>. Run one command at a time and review its output before continuing.</p>
+      <pre><code>python -m agentgov inspect .
+python -m agentgov adopt . --project-name "My Project" --dry-run
+python -m agentgov adopt . --project-name "My Project"
+python -m agentgov check repository .</code></pre>
       <div class="states">
         <div class="state"><strong>PRESENT</strong>Preserve and review the existing governance path.</div>
         <div class="state"><strong>MISSING</strong>Decide whether the adoption plan should create it.</div>
@@ -51,27 +55,28 @@ agentgov adopt path/to/project --project-name "My Project"</code></pre>
         <div class="state"><strong>CONFLICT</strong>Resolve the path type or symbolic-link conflict first.</div>
       </div>
       <p>The CLI does not overwrite regular files, merge CLAUDE.md or vendor instructions, or run Git commands.</p>
+      <p><strong>Expected first check:</strong> a newly adopted repository can report PASS with WARN and ADVISORY findings. Placeholders, draft seed cases, missing artifacts and human approval boundaries still require project-specific review. <code>FAIL=0</code> does not mean adoption is complete.</p>
     </section>
     <section>
       <h2>3. Start a new repository</h2>
       <div class="platforms">
         <div><strong>PowerShell</strong><pre><code>$Project = Join-Path $PWD "governed-project"
-agentgov init $Project --project-name "My Project"
-agentgov check repository $Project</code></pre></div>
+python -m agentgov init $Project --project-name "My Project"
+python -m agentgov check repository $Project</code></pre></div>
         <div><strong>Bash / zsh</strong><pre><code>PROJECT="$PWD/governed-project"
-agentgov init "$PROJECT" --project-name "My Project"
-agentgov check repository "$PROJECT"</code></pre></div>
+python -m agentgov init "$PROJECT" --project-name "My Project"
+python -m agentgov check repository "$PROJECT"</code></pre></div>
       </div>
     </section>
     <section>
       <h2>4. Check and generate a report</h2>
       <div class="platforms">
-        <div><strong>PowerShell</strong><pre><code>agentgov check repository path/to/project
-agentgov report repository path/to/project `
+        <div><strong>PowerShell</strong><pre><code>python -m agentgov check repository path/to/project
+python -m agentgov report repository path/to/project `
   --format html `
   --output path/to/project/governance-report.html</code></pre></div>
-        <div><strong>Bash / zsh</strong><pre><code>agentgov check repository path/to/project
-agentgov report repository path/to/project \
+        <div><strong>Bash / zsh</strong><pre><code>python -m agentgov check repository path/to/project
+python -m agentgov report repository path/to/project \
   --format html \
   --output path/to/project/governance-report.html</code></pre></div>
       </div>
@@ -91,5 +96,6 @@ agentgov report repository path/to/project \
     </section>
   </main>
   <footer class="shell">Agent Governance Starter Kit · Local · Repository-native · Human-controlled</footer>
+  <script src="guide.js" defer></script>
 </body>
 </html>

@@ -1,10 +1,16 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Troubleshoot Agent Governance installation, adoption, findings, and reports."><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'"><title>Troubleshooting · Agent Governance</title><link rel="stylesheet" href="guide.css"></head>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Troubleshoot Agent Governance installation, adoption, findings, and reports."><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'"><title>Troubleshooting · Agent Governance</title><link rel="stylesheet" href="guide.css"></head>
 <body><nav class="shell"><a class="brand" href="index.html"><span class="mark">AG</span>Agent Governance</a><div class="nav-links"><a href="quickstart.html">← Back to quickstart</a></div></nav>
 <header class="shell"><span class="eyebrow">Diagnose before changing</span><h1>Troubleshooting</h1><p class="lead">Identify whether the problem is installation, repository state, a deterministic failure, or a decision that automation cannot make.</p></header>
 <main class="shell">
-<section><h2><code>agentgov</code> is not found</h2><p>The command is usually installed into a different Python environment or its scripts directory is not on PATH.</p><pre><code>python -m pip install .
-python -m agentgov --help</code></pre><p>If the module command works but <code>agentgov</code> does not, use the module form or correct the environment PATH.</p></section>
+<section><h2><code>agentgov</code> is not found</h2><p>The command is usually installed into a different Python environment or its scripts directory is not on PATH. Install and invoke it through the active interpreter.</p><pre><code>python --version
+python -m pip install "git+https://github.com/Andy-JunXiong/agent-governance-starter.git@main"
+python -m agentgov --help</code></pre><p>Prefer <code>python -m agentgov</code> throughout the workflow so the command uses the same Python environment.</p></section>
+<section><h2>Windows wheel build fails with <code>No such file or directory</code></h2><p>A starter clone nested inside a deeply located target repository can exceed the effective Windows build path limit. Return to the target repository root and install directly from GitHub.</p><pre><code>Set-Location ..
+python -m pip install "git+https://github.com/Andy-JunXiong/agent-governance-starter.git@main"
+python -m agentgov --help</code></pre><p>Do not commit the nested starter clone. Confirm its exact path and contents before removing it.</p></section>
+<section><h2>The virtual environment points to a missing Python</h2><p>The environment is stale. Check the repository's declared Python version and dependency files before recreating it. A successful CLI run through another system Python does not prove the project's test environment works.</p></section>
+<section><h2><code>check</code> says <code>invalid choice: '.'</code></h2><p>The check target must come before the path. Formatting options belong to <code>report</code>, not <code>check</code>.</p><pre><code>python -m agentgov check repository .</code></pre></section>
 <section><h2><code>adopt</code> reports CONFLICT</h2><p>Do not force the write. Inspect the named path and determine whether it is a directory, ordinary file, or symbolic link.</p><pre><code>agentgov inspect path/to/repository
 
 CONFLICT docs/adr — expected directory, found file</code></pre><p>Rename or deliberately migrate the conflicting path, rerun <code>inspect</code>, and only then preview adoption again.</p></section>
@@ -16,4 +22,4 @@ Next: correct the manifest path or restore the schema</code></pre></section>
 <section><h2>The HTML report looks stale</h2><p>The report is a static snapshot. Regenerate it after repository facts change. Output refuses to overwrite an existing file, so choose a new path or deliberately remove the old generated report first.</p><pre><code>agentgov report repository . --format html --output governance-report-new.html</code></pre></section>
 <section class="checklist"><h2>Escalate when</h2><ol><li>The correct authority relationship is unclear.</li><li>A proposed fix changes approval or deployment boundaries.</li><li>Evidence contains private or production-derived data that is not sanitized.</li><li>A warning would be hidden instead of honestly resolved or deferred.</li></ol></section>
 <div class="next"><a class="button dark" href="quickstart.html">← Back to quickstart</a><a class="button" href="demo-governance-report.html">Explore sample report →</a></div>
-</main><footer class="shell">Agent Governance Starter Kit · Troubleshooting</footer></body></html>
+</main><footer class="shell">Agent Governance Starter Kit · Troubleshooting</footer><script src="guide.js" defer></script></body></html>
