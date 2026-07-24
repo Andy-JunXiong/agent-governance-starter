@@ -10,6 +10,7 @@ from agentgov.capability import load_capability_manifest, validate_capability_ma
 from agentgov.cli import EXIT_ERROR, EXIT_FAIL, EXIT_PASS, main
 from agentgov.evaluation import EvaluationStatus, check_evaluation_bundle
 from agentgov.initializer import InitConflictError, initialize_project
+from agentgov.inventory import InventoryStatus, check_inventory
 from agentgov.references import ReferenceStatus, check_capability_references
 
 
@@ -19,6 +20,8 @@ EXPECTED_OUTPUTS = {
     Path("docs/adr/TEMPLATE.md"),
     Path("docs/adr/INVARIANTS.md"),
     Path("governance/capability.schema.json"),
+    Path("governance/inventory.schema.json"),
+    Path("governance/inventory.json"),
     Path("governance/capabilities/example-capability.json"),
     Path("governance/contracts/example-capability.input.schema.json"),
     Path("governance/contracts/example-capability.output.schema.json"),
@@ -92,6 +95,8 @@ class InitializerTests(unittest.TestCase):
             self.assertFalse(reference_report.has_failures)
             self.assertEqual(reference_report.count(ReferenceStatus.PASS), 3)
             self.assertEqual(reference_report.count(ReferenceStatus.WARN), 1)
+            inventory_report = check_inventory(target)
+            self.assertIs(inventory_report.status, InventoryStatus.PASS)
 
     def test_non_empty_target_is_rejected_without_overwriting(self) -> None:
         with TemporaryDirectory() as temp_dir:

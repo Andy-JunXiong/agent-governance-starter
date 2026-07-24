@@ -15,6 +15,9 @@ rules.
 - `prompt-capability.template.json`: contract-valid starting manifest for a
   governed AI capability implemented by deterministic logic, a model, a
   prompt, or a hybrid.
+- `governance-inventory.template.json`: honest repository declaration linking
+  the example capability to its accountable owner without claiming automatic
+  discovery.
 - `example-capability.*.schema.template.json`: minimal repository-local input
   and output contracts referenced by the example capability.
 - `prompt-source.template.md`: explicit prompt-source placeholder referenced
@@ -58,3 +61,7 @@ readiness is `needs_seed_cases`, so repository checks report WARN until real
 reviewed evidence is added. The example capability's required schema and source
 references exist immediately; replace their placeholder content rather than
 leaving broken paths.
+
+Initialization also creates `governance/inventory.json`. Its example capability
+is `provisional`, and its empty exclusions array makes no unsupported claim
+about repository paths.

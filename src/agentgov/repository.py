@@ -12,6 +12,7 @@ from agentgov.agent_skills import check_agent_skills
 from agentgov.artifacts import ArtifactPolicyError, check_capability_artifact
 from agentgov.capability import load_capability_manifest, validate_capability_manifest
 from agentgov.evaluation import EvaluationStatus, check_evaluation_bundle
+from agentgov.inventory import InventoryStatus, check_inventory
 from agentgov.references import (
     ReferencePolicyError,
     ReferenceStatus,
@@ -298,6 +299,32 @@ def _check_evaluations(root: Path) -> list[Finding]:
     return findings
 
 
+def _check_governance_inventory(root: Path) -> list[Finding]:
+    status_map = {
+        InventoryStatus.PASS: FindingStatus.PASS,
+        InventoryStatus.WARN: FindingStatus.WARN,
+        InventoryStatus.FAIL: FindingStatus.FAIL,
+    }
+    report = check_inventory(root)
+    findings = [
+        Finding(
+            status_map[report.status],
+            "inventory:governance/inventory.json",
+            "; ".join(report.messages),
+        )
+    ]
+    if report.configured and report.status is InventoryStatus.PASS:
+        findings.append(
+            Finding(
+                FindingStatus.ADVISORY,
+                "inventory:completeness",
+                "inventory closure validates owner declarations; it cannot prove "
+                "that every real AI capability was discovered or declared",
+            )
+        )
+    return findings
+
+
 def _check_agent_skill_protocols(root: Path) -> list[Finding]:
     skills_root = root / _AGENT_SKILLS_DIRECTORY
     if not skills_root.exists():
@@ -490,6 +517,7 @@ def check_repository(root: Path) -> RepositoryReport:
         findings.append(layout_finding)
     findings.append(_check_placeholders(root, readable_files))
     findings.extend(_check_capabilities(root))
+    findings.extend(_check_governance_inventory(root))
     findings.extend(_check_reference_integrity(root))
     findings.extend(_check_evaluations(root))
     findings.extend(_check_agent_skill_protocols(root))

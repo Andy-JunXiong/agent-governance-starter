@@ -152,6 +152,8 @@ owners.
 
 ### Slice 1 — Governance Inventory
 
+Completed on 2026-07-24.
+
 Planned canonical file:
 
 ```text
@@ -415,18 +417,18 @@ Do not build these from hypothetical taxonomies alone.
 - no unresolved deterministic failures;
 - explicit human approval for version change, tag, and release.
 
-## Tomorrow's Recommended Starting Point
+## Next Recommended Starting Point
 
-Start with Governance Inventory as one vertical slice:
+Start with Orphan Evidence Checks as one vertical slice:
 
-1. write the inventory schema;
-2. add zero-dependency validation;
-3. add repository closure checks;
-4. add pass/WARN/FAIL/not-configured fixtures;
-5. update initializer and documentation;
-6. run targeted tests under Python 3.11 or newer.
+1. connect evaluation bundles to declared inventory capabilities;
+2. connect configured artifacts to declared inventory capabilities;
+3. fail deterministic orphan references;
+4. keep optional evidence as WARN or not applicable;
+5. add fixture-based tests;
+6. update repository reports and documentation.
 
-Stop before control mapping unless inventory behavior and finding semantics are
+Stop before control mapping unless orphan behavior and finding semantics are
 fully validated.
 
 ## Validation Baseline

@@ -1,0 +1,18 @@
+{
+  "contract": "agentgov.governance-inventory",
+  "schema_version": "1.0",
+  "capabilities": [
+    {
+      "name": "example-capability",
+      "manifest": "governance/capabilities/example-capability.json",
+      "owner": "Example owner",
+      "governance_status": "provisional"
+    }
+  ],
+  "exclusions": [
+    {
+      "path": "docs/examples",
+      "reason": "Documentation examples do not execute as repository capabilities."
+    }
+  ]
+}
