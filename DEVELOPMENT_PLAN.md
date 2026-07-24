@@ -443,18 +443,20 @@ Do not build these from hypothetical taxonomies alone.
 
 ## Next Recommended Starting Point
 
-Complete the human-controlled integration of this pre-pilot upgrade:
+Begin the cross-domain pilot as a separate workstream. The pre-pilot
+repository-governance upgrade was integrated on 2026-07-24 after Capability
+Dependencies PR #8 and the complete supported CI matrix passed.
 
-1. review the Capability Dependencies pull request and its complete supported
-   CI matrix;
-2. resolve any deterministic CI failure without weakening tests or policy;
-3. obtain explicit human approval before marking the PR ready or merging it;
-4. after merge, synchronize local `main` and record the final merge and CI
-   state in `STATUS.md`.
+Use Taxi or another real repository as an adversarial adopter:
 
-Stop after integration closure. Risk propagation, repository profiles, and
-the Taxi or another cross-domain pilot remain separate, explicitly scheduled
-workstreams.
+1. select two or three real capabilities;
+2. attempt to express only facts and evidence that actually exist;
+3. record contract-expression failures and temporary workarounds;
+4. defer contract changes until the pilot has supplied enough evidence to
+   review them together.
+
+Do not begin dependency risk propagation, repository profiles, governance
+scoring, or taxonomy expansion before pilot evidence justifies the change.
 
 ## Validation Baseline
 

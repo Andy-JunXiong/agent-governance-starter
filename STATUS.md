@@ -39,16 +39,11 @@ Pre-pilot repository governance foundation:
   readiness floors;
 - readiness differences remain non-blocking when no minimum is declared;
 - explicit completeness advisories without automatic discovery claims;
-- implementation and local validation are complete; PR review, CI, and
-  human-controlled integration remain.
+- implementation, review, supported CI, and human-controlled integration are
+  complete on `main`.
 
 ## Remaining TODOs
 
-- [ ] Review the Capability Dependencies PR and the full supported CI matrix.
-- [ ] Resolve any deterministic CI failures without weakening tests or policy.
-- [ ] Obtain explicit human approval before marking the PR ready or merging.
-- [ ] After merge, synchronize local `main` and record the final merge and CI
-  state here.
 - [ ] Schedule Taxi or another cross-domain pilot separately; do not include it
   in this upgrade.
 
@@ -70,6 +65,15 @@ Latest local validation on 2026-07-24:
   Dependencies schema and declaration presence, dependency PASS, completeness
   ADVISORY, and repository check passed with zero deterministic failures.
 - `git diff --check`: passed.
+
+Integration closure on 2026-07-24:
+
+- Capability Dependencies PR #8 merged to `main` as commit `9007fce`.
+- All six pull-request CI jobs passed on Ubuntu and Windows for Python 3.11,
+  3.12, and 3.13.
+- The post-merge `main` CI run passed.
+- Local `main` is synchronized with `origin/main`; no deterministic CI failure
+  remains.
 
 The authoritative local baseline is:
 
