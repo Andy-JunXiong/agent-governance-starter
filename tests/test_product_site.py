@@ -38,6 +38,9 @@ class ProductSiteTests(unittest.TestCase):
         self.assertNotIn("script-src 'unsafe-inline'", content)
         self.assertIn("prefers-reduced-motion", content)
         self.assertIn(":focus-visible", content)
+        self.assertIn("position: sticky", content)
+        self.assertIn("background: var(--navy)", content)
+        self.assertIn('<div class="shell nav-inner">', content)
         self.assertIn(
             "https://github.com/Andy-JunXiong/agent-governance-starter/blob/main/LICENSE",
             content,

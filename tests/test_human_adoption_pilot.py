@@ -70,7 +70,7 @@ class HumanAdoptionPilotContractTests(unittest.TestCase):
 
         self.assertIn("docs/human-adoption-pilot.md", text)
         self.assertIn("docs/human-adoption-record.template.md", text)
-        self.assertIn("python -m pip install --no-deps .", text)
+        self.assertIn("python -m pip install .", text)
         self.assertIn("paste the block into the\nterminal and press Enter", text)
         self.assertIn("does not mean governance is\ncomplete", text)
         self.assertIn(

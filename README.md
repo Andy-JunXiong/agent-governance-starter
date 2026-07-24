@@ -1,8 +1,50 @@
 # Agent Governance Starter Kit
 
-A reference implementation for repository-native capability, evidence, and human-review contracts in AI-assisted software development.
+**Make AI-assisted repositories reviewable by default.**
+
+A lightweight, repository-native governance framework that connects AI
+capabilities, implementation evidence, deterministic checks, and accountable
+human decisions.
 
 [![CI](https://github.com/Andy-JunXiong/agent-governance-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/Andy-JunXiong/agent-governance-starter/actions/workflows/ci.yml)
+
+[Explore the product](docs/index.html) ·
+[Open the sample governance report](docs/demo-governance-report.html) ·
+[Run the quickstart](#runnable-cli-example) ·
+[Inspect the architecture](#detailed-architecture)
+
+## Why this exists
+
+AI-assisted repositories accumulate agent instructions, capability
+declarations, implementation references, evaluation evidence, and approval
+rules. Those files can all exist while reviewers still cannot answer:
+
+- What AI capability is actually present?
+- Who owns it, and what decisions may it influence?
+- Which implementation and evidence support its claims?
+- Did reviewed sources change afterward?
+- Which findings are deterministic, and which still require human judgment?
+
+Agent Governance Starter Kit turns those disconnected claims into explicit
+repository contracts. It checks what can be checked deterministically and
+keeps semantic judgment, merge, publication, release, and deployment under
+separate human authority.
+
+## Architecture at a glance
+
+```mermaid
+flowchart LR
+    DECLARE["Declare<br/>Policy · Capability · Owner · Risk"]
+    CONNECT["Connect<br/>Implementation · Contracts · Evidence"]
+    VERIFY["Verify<br/>References · Readiness · Drift"]
+    FINDINGS["Report<br/>PASS · WARN · FAIL · ADVISORY"]
+    HUMAN["Decide<br/>Accountable human authority"]
+
+    DECLARE --> CONNECT --> VERIFY --> FINDINGS --> HUMAN
+```
+
+The CLI verifies declared repository facts. It does not run the AI capability,
+judge output quality, calculate a governance score, or approve high-risk work.
 
 ![Agent Governance CLI detecting incomplete evidence, source drift, and a human-review advisory](docs/assets/agentgov-demo.svg)
 
@@ -10,29 +52,7 @@ _Actual output from a sanitized synthetic repository: its capability contract
 is valid, evaluation evidence remains incomplete, and a later source change
 invalidates the generated review artifact._
 
-[Open the product explainer](docs/index.html) for the visual introduction, then
-[view the self-contained HTML governance report](docs/demo-governance-report.html)
-to see how the same findings become a reviewer work surface. Both open without
-a server or external network request.
-
-## The problem
-
-AI-assisted repositories may contain prompts, agent instructions, capability
-definitions, evaluation evidence, and approval rules, but those artifacts are
-often disconnected. A reviewer still needs to answer:
-
-- What capability is being introduced?
-- Which repository sources define that capability?
-- What validation evidence currently supports it?
-- Has the source changed since the evidence or review artifact was produced?
-- Is a finding deterministic, or does it require human judgment?
-- Which high-risk transitions remain under human control?
-
-Agent Governance Starter Kit connects those questions through repository-local
-contracts and deterministic checks without pretending that static analysis can
-replace accountable human review.
-
-## Why this matters
+## What makes it different
 
 | Without explicit contracts | With Agent Governance Starter Kit |
 |---|---|
@@ -65,7 +85,7 @@ replace accountable human review.
 - automated tests and cross-platform CI on Windows and Ubuntu for Python
   3.11, 3.12, and 3.13.
 
-## What makes the design different
+## Scope boundaries
 
 - This is not a general configuration-quality linter, and it does not score
   AGENTS.md or CLAUDE.md writing quality.
@@ -79,16 +99,19 @@ replace accountable human review.
 - Missing evidence remains an incomplete readiness state instead of becoming a
   misleading pass or unsupported governance percentage.
 
-## Thirty-second demo
+## Runnable CLI example
 
-After cloning the repository, install the package locally:
+Clone the repository and install the local package:
 
-```powershell
-python -m pip install --no-deps .
+```text
+git clone https://github.com/Andy-JunXiong/agent-governance-starter.git
+cd agent-governance-starter
+python -m pip install .
 ```
 
-Then paste this PowerShell block into a directory where `governed-demo` does
-not already exist:
+Create a synthetic governed repository, inspect it, and write a review report.
+
+PowerShell:
 
 ```powershell
 $Project = Join-Path $PWD "governed-demo"
@@ -97,9 +120,23 @@ agentgov check repository $Project
 agentgov report repository $Project --output "$Project/governance-report.md"
 ```
 
+Bash or zsh:
+
+```bash
+project="$PWD/governed-demo"
+agentgov init "$project" --project-name "Portfolio Demo"
+agentgov check repository "$project"
+agentgov report repository "$project" --output "$project/governance-report.md"
+```
+
 The demo initializes a clean repository, runs the repository contract, and
-writes a report. A successful run does not resolve the reported placeholders
-or grant authority to merge, publish, release, or deploy.
+writes `governance-report.md`. It intentionally retains honest `WARN` and
+`ADVISORY` findings: a successful run proves the checks executed, not that
+governance is complete.
+
+For capability, reference, evaluation, agent-skill, artifact, and repository
+checks in one sequence, continue to the
+[complete clean-repository walkthrough](#clean-repository-adoption-path).
 
 ### How to read the result
 
@@ -123,7 +160,7 @@ FAIL artifact:example-capability: governance/artifacts/example-capability: sourc
 ADVISORY governance:human-review: confirm that approval and escalation boundaries match the repository's real risks
 ```
 
-## Architecture
+## Detailed architecture
 
 ```mermaid
 flowchart TB

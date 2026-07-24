@@ -7,7 +7,7 @@
       name="description"
       content="A local Python CLI and repository file standard for reviewable AI-assisted software development."
     />
-    <meta name="theme-color" content="#fbfaf6" />
+    <meta name="theme-color" content="#10223f" />
     <meta
       http-equiv="Content-Security-Policy"
       content="default-src 'none'; style-src 'unsafe-inline'"
@@ -29,6 +29,7 @@
         --warn: #a35d00;
         --fail: #c43843;
         --advisory: #6d4fc0;
+        --navy: #10223f;
         --sans:
           "Segoe UI Variable Text", "Segoe UI", Roboto, "Helvetica Neue", Arial,
           "PingFang SC", "Microsoft YaHei", sans-serif;
@@ -70,11 +71,18 @@
         margin: auto;
       }
       nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
         height: 72px;
+        background: var(--navy);
+        color: white;
+      }
+      .nav-inner {
+        height: 100%;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        border-bottom: 1px solid var(--line);
       }
       .brand {
         display: flex;
@@ -86,8 +94,9 @@
         width: 30px;
         height: 30px;
         border-radius: 9px;
-        background: var(--ink);
-        color: white;
+        border: 1px solid #7fa6e9;
+        background: transparent;
+        color: #c8d9ff;
         display: grid;
         place-items: center;
         font-size: 11px;
@@ -96,10 +105,15 @@
         display: flex;
         gap: 25px;
         align-items: center;
-        color: #514b5b;
+        color: #d8e2f1;
       }
       .links a:hover {
-        color: var(--purple-text);
+        color: white;
+      }
+      nav .button.dark {
+        border-color: white;
+        background: white;
+        color: var(--navy);
       }
       .button {
         display: inline-flex;
@@ -130,6 +144,7 @@
       }
       header {
         padding: 78px 0 62px;
+        scroll-margin-top: 72px;
       }
       .hero {
         display: grid;
@@ -768,18 +783,20 @@
     </style>
   </head>
   <body>
-    <nav class="shell">
-      <a class="brand" href="#top"
-        ><span class="mark">AG</span>Agent Governance</a
-      >
-      <div class="links">
-        <a href="#example">Example</a><a href="#how">How it works</a
-        ><a href="#evidence">Evidence</a><a href="#adopt">Adopt</a
-        ><a
-          class="button dark"
-          href="https://github.com/Andy-JunXiong/agent-governance-starter"
-          >View on GitHub</a
+    <nav>
+      <div class="shell nav-inner">
+        <a class="brand" href="#top"
+          ><span class="mark">AG</span>Agent Governance</a
         >
+        <div class="links">
+          <a href="#example">Example</a><a href="#how">How it works</a
+          ><a href="#evidence">Evidence</a><a href="#adopt">Adopt</a
+          ><a
+            class="button dark"
+            href="https://github.com/Andy-JunXiong/agent-governance-starter"
+            >View on GitHub</a
+          >
+        </div>
       </div>
     </nav>
     <header id="top">

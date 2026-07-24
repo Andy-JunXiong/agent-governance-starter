@@ -14,24 +14,30 @@ class PortfolioDocumentationTests(unittest.TestCase):
         text = README.read_text(encoding="utf-8")
         expected_opening = (
             "# Agent Governance Starter Kit\n\n"
-            "A reference implementation for repository-native capability, evidence, "
-            "and human-review contracts in AI-assisted software development."
+            "**Make AI-assisted repositories reviewable by default.**"
         )
 
         self.assertTrue(text.startswith(expected_opening))
         for heading in (
-            "## The problem",
-            "## Why this matters",
+            "## Why this exists",
+            "## Architecture at a glance",
+            "## What makes it different",
             "## What this project demonstrates",
-            "## What makes the design different",
-            "## Thirty-second demo",
+            "## Scope boundaries",
+            "## Runnable CLI example",
             "## Example findings",
-            "## Architecture",
+            "## Detailed architecture",
             "## Project status and non-goals",
             "## Project navigation",
         ):
             self.assertIn(heading, text)
-        self.assertLess(text.index("## The problem"), text.index("## Repository layout"))
+        self.assertLess(
+            text.index("## Why this exists"), text.index("## Repository layout")
+        )
+        self.assertLess(
+            text.index("## Architecture at a glance"),
+            text.index("![Agent Governance CLI"),
+        )
 
     def test_readme_demo_visual_uses_real_sanitized_cli_output(self) -> None:
         text = README.read_text(encoding="utf-8")
@@ -75,14 +81,15 @@ class PortfolioDocumentationTests(unittest.TestCase):
         text = README.read_text(encoding="utf-8")
 
         for command in (
-            "python -m pip install --no-deps .",
+            "python -m pip install .",
             'agentgov init $Project --project-name "Portfolio Demo"',
             "agentgov check repository $Project",
             'agentgov report repository $Project --output "$Project/governance-report.md"',
+            'agentgov init "$project" --project-name "Portfolio Demo"',
         ):
             self.assertIn(command, text)
         self.assertLess(
-            text.index("python -m pip install --no-deps ."),
+            text.index("python -m pip install ."),
             text.index('agentgov init $Project --project-name "Portfolio Demo"'),
         )
         for finding in (
@@ -93,9 +100,17 @@ class PortfolioDocumentationTests(unittest.TestCase):
         ):
             self.assertIn(finding, text)
 
-        mermaid = re.search(r"```mermaid\n(.*?)```", text, flags=re.DOTALL)
-        self.assertIsNotNone(mermaid)
-        diagram = mermaid.group(1)
+        diagrams = re.findall(r"```mermaid\n(.*?)```", text, flags=re.DOTALL)
+        self.assertEqual(len(diagrams), 2)
+        overview, diagram = diagrams
+        for label in (
+            "Policy · Capability · Owner · Risk",
+            "Implementation · Contracts · Evidence",
+            "References · Readiness · Drift",
+            "PASS · WARN · FAIL · ADVISORY",
+            "Accountable human authority",
+        ):
+            self.assertIn(label, overview)
         self.assertTrue(diagram.startswith("flowchart TB\n"))
         for label in (
             "Repository-local contracts and evidence",
