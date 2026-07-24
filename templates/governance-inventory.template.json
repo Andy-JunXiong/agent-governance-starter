@@ -1,0 +1,13 @@
+{
+  "contract": "agentgov.governance-inventory",
+  "schema_version": "1.0",
+  "capabilities": [
+    {
+      "name": "example-capability",
+      "manifest": "governance/capabilities/example-capability.json",
+      "owner": "Owning team or maintainer",
+      "governance_status": "provisional"
+    }
+  ],
+  "exclusions": []
+}

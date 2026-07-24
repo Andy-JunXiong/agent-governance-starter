@@ -1,0 +1,13 @@
+{
+  "contract": "agentgov.governance-inventory",
+  "schema_version": "1.0",
+  "capabilities": [
+    {
+      "name": "repository-governance-assessment",
+      "manifest": "governance/capabilities/repository-governance-assessment.json",
+      "owner": "Repository maintainers",
+      "governance_status": "active"
+    }
+  ],
+  "exclusions": []
+}

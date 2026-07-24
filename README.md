@@ -45,6 +45,8 @@ replace accountable human review.
 
 - strict capability manifests with ownership, risk, contracts, provenance, and
   human-review metadata;
+- explicit repository inventory closure connecting canonical manifests,
+  accountable owners, governance status, and reasoned exclusions;
 - validation of repository-local schemas, callers, sources, and evaluation
   evidence references;
 - explicit evaluation-readiness states that distinguish incomplete evidence
@@ -451,6 +453,13 @@ response; they contain no project-specific runtime or cloud dependency.
 
 ## Repository check
 
+The generated `governance/inventory.json` declares the repository's governed
+canonical capabilities and explicit exclusions. Inventory closure is
+deterministic, while completeness remains an `ADVISORY`: the checker cannot
+prove that every real AI capability was discovered or declared. See the
+[Governance Inventory guide](docs/governance-inventory.md) for the contract and
+finding semantics.
+
 Check an initialized repository with:
 
 ```powershell
@@ -459,8 +468,9 @@ python -m agentgov check repository path/to/project
 ```
 
 The command checks required governance files, unresolved placeholders, AI
-capability manifests, their repository-local references, discovered evaluation
-bundles, agent protocols, and configured capability artifacts. Missing artifacts remain a non-blocking
+capability manifests, inventory closure, repository-local references,
+discovered evaluation bundles, agent protocols, and configured capability
+artifacts. Missing artifacts remain a non-blocking
 `WARN`; malformed or stale configured artifacts are `FAIL`. It emits `PASS`,
 `WARN`, `FAIL`, and `ADVISORY`
 findings plus a deterministic summary. WARN and ADVISORY findings are
