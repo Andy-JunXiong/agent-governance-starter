@@ -24,6 +24,9 @@
     "provenance"
   ],
   "properties": {
+    "contract": {
+      "const": "agentgov.prompt-capability"
+    },
     "schema_version": {
       "const": "1.0"
     },

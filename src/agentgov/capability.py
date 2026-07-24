@@ -9,6 +9,8 @@ from typing import Any, Mapping
 
 
 SCHEMA_VERSION = "1.0"
+CANONICAL_CONTRACT = "agentgov.ai-capability"
+LEGACY_CONTRACT = "agentgov.prompt-capability"
 CAPABILITY_KINDS = {
     "product_runtime",
     "operator_guidance",
@@ -48,6 +50,7 @@ EVALUATION_READINESS = {
 PROVENANCE_ORIGINS = {"authored", "extracted", "generated"}
 
 _TOP_LEVEL_FIELDS = {
+    "contract",
     "schema_version",
     "name",
     "version",
@@ -70,6 +73,7 @@ _TOP_LEVEL_FIELDS = {
     "autonomy_level",
 }
 _COMMON_REQUIRED_FIELDS = _TOP_LEVEL_FIELDS - {
+    "contract",
     "capability_kind",
     "model_route",
     "capability_type",
@@ -152,6 +156,7 @@ def validate_capability_manifest(manifest: Mapping[str, Any]) -> list[str]:
     errors: list[str] = []
     uses_legacy = bool(set(manifest) & _LEGACY_FIELDS)
     uses_canonical = bool(set(manifest) & _CANONICAL_FIELDS)
+    contract = manifest.get("contract")
     if uses_legacy and uses_canonical:
         errors.append(
             "$ must use either legacy capability_kind/model_route fields or "
@@ -160,6 +165,8 @@ def validate_capability_manifest(manifest: Mapping[str, Any]) -> list[str]:
     required = _COMMON_REQUIRED_FIELDS | (
         _LEGACY_FIELDS if uses_legacy and not uses_canonical else _CANONICAL_FIELDS
     )
+    if not uses_legacy or uses_canonical:
+        required.add("contract")
     if not uses_legacy and not uses_canonical:
         required |= _CANONICAL_FIELDS
     _check_fields(
@@ -172,6 +179,24 @@ def validate_capability_manifest(manifest: Mapping[str, Any]) -> list[str]:
 
     if manifest.get("schema_version") != SCHEMA_VERSION:
         errors.append(f"$.schema_version must equal {SCHEMA_VERSION!r}")
+    if contract is not None and contract not in {
+        CANONICAL_CONTRACT,
+        LEGACY_CONTRACT,
+    }:
+        errors.append(
+            "$.contract must equal "
+            f"{CANONICAL_CONTRACT!r} or {LEGACY_CONTRACT!r}"
+        )
+    if uses_legacy and not uses_canonical and contract == CANONICAL_CONTRACT:
+        errors.append(
+            f"$.contract {CANONICAL_CONTRACT!r} is incompatible with legacy "
+            "capability_kind/model_route fields"
+        )
+    if (not uses_legacy or uses_canonical) and contract == LEGACY_CONTRACT:
+        errors.append(
+            f"$.contract {LEGACY_CONTRACT!r} is incompatible with canonical "
+            "AI capability fields"
+        )
 
     name = _string(manifest.get("name"), "$.name", errors)
     if name and not _NAME_RE.fullmatch(name):

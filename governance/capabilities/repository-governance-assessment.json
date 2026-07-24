@@ -1,0 +1,48 @@
+{
+  "contract": "agentgov.ai-capability",
+  "schema_version": "1.0",
+  "name": "repository-governance-assessment",
+  "version": "0.1.0",
+  "purpose": "Assess declared repository governance contracts and report deterministic gaps without granting transition authority.",
+  "capability_type": "decision_support",
+  "implementation_mode": "deterministic",
+  "decision_authority": "assess_claim",
+  "autonomy_level": "deterministic_gate",
+  "task_type": "repository_governance_assessment",
+  "triggers": [
+    "A maintainer or CI workflow requests a repository governance check"
+  ],
+  "not_for": [
+    "Approving merge, publication, release, or deployment",
+    "Proving semantic governance sufficiency"
+  ],
+  "contracts": {
+    "input_schema": "governance/contracts/repository-governance-assessment.input.schema.json",
+    "output_schema": "schemas/repository-report.schema.json"
+  },
+  "called_by": [
+    "src/agentgov/cli.py",
+    ".github/workflows/ci.yml"
+  ],
+  "owner": "Repository maintainers",
+  "risk_level": "medium",
+  "human_review": {
+    "required": false,
+    "stages": []
+  },
+  "evaluation": {
+    "readiness": "baseline_ready",
+    "evidence_refs": [
+      "tests/test_repository.py",
+      "tests/test_report_json.py",
+      "tests/test_ci_contract.py"
+    ]
+  },
+  "provenance": {
+    "origin": "authored",
+    "source_refs": [
+      "src/agentgov/repository.py",
+      "src/agentgov/reporting.py"
+    ]
+  }
+}

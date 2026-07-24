@@ -6,6 +6,7 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
+    "contract",
     "schema_version",
     "name",
     "version",
@@ -26,6 +27,7 @@
     "provenance"
   ],
   "properties": {
+    "contract": {"const": "agentgov.ai-capability"},
     "schema_version": {"const": "1.0"},
     "name": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
     "version": {

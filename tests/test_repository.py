@@ -60,7 +60,7 @@ class RepositoryCheckTests(unittest.TestCase):
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir) / "project"
             initialize_project(root, project_name="Dual Layout")
-            (root / "prompt-governance").mkdir()
+            (root / "prompt-governance/capabilities").mkdir(parents=True)
 
             report = check_repository(root)
 
@@ -72,6 +72,39 @@ class RepositoryCheckTests(unittest.TestCase):
                 for finding in report.findings
             )
         )
+
+    def test_legacy_distribution_assets_do_not_create_a_dual_layout(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir) / "project"
+            initialize_project(root, project_name="Compatibility Assets")
+            (root / "prompt-governance/fixtures").mkdir(parents=True)
+            (root / "prompt-governance/capability.schema.json").write_text(
+                "{}\n",
+                encoding="utf-8",
+            )
+
+            report = check_repository(root)
+
+        self.assertFalse(
+            any(finding.check_id == "governance:layout" for finding in report.findings)
+        )
+
+    def test_evaluation_fixtures_are_not_treated_as_configured_bundles(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir) / "project"
+            initialize_project(root, project_name="Evaluation Fixtures")
+            configured = root / "evaluation/example-capability"
+            configured.rename(root / "evaluation/fixtures")
+
+            report = check_repository(root)
+
+        evaluation_finding = next(
+            finding
+            for finding in report.findings
+            if finding.check_id == "evaluation:bundles"
+        )
+        self.assertIs(evaluation_finding.status, FindingStatus.WARN)
+        self.assertIn("no evaluation bundles", evaluation_finding.message)
 
     def test_initialized_repository_has_warn_and_advisory_but_no_fail(self) -> None:
         with TemporaryDirectory() as temp_dir:

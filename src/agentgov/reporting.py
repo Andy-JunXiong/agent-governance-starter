@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from agentgov import __version__
 from agentgov.repository import Finding, FindingStatus, RepositoryReport
 
 
@@ -63,6 +64,10 @@ def repository_report_document(report: RepositoryReport) -> dict[str, object]:
     gaps = _known_gaps(report)
     return {
         "schema_version": REPORT_SCHEMA_VERSION,
+        "tool": {
+            "name": "agentgov",
+            "version": __version__,
+        },
         "repository": str(report.root),
         "summary": {
             status.value.lower(): report.count(status) for status in REPORT_STATUSES

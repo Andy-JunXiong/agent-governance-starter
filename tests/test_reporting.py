@@ -87,8 +87,8 @@ class MarkdownReportTests(unittest.TestCase):
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir) / "project"
             initialize_project(root, project_name="Artifact Drift Report")
-            source = root / "prompt-governance/sources/example-capability.md"
-            manifest = root / "prompt-governance/capabilities/example-capability.json"
+            source = root / "governance/evidence/example-capability.md"
+            manifest = root / "governance/capabilities/example-capability.json"
             export_capability_artifact(manifest, repository=root)
             source.write_text("PROMPT = 'after'\n", encoding="utf-8")
 

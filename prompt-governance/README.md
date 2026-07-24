@@ -1,4 +1,12 @@
-# Prompt capability governance
+# Legacy Prompt Capability compatibility
+
+This directory documents the bounded, read-only compatibility surface for
+repositories created before the canonical `governance/` layout. New
+repositories and new manifests must use `governance/` and the
+`agentgov.ai-capability` contract identity.
+
+Legacy support does not authorize automatic migration. See
+[`docs/adr/0003-identify-capability-contracts-and-bound-legacy-support.md`](../docs/adr/0003-identify-capability-contracts-and-bound-legacy-support.md).
 
 `capability.schema.json` defines the v0.1 manifest for governed prompt-backed
 capabilities.

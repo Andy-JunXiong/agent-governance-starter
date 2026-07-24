@@ -69,14 +69,20 @@ def _configured_path(root: Path, canonical: Path, legacy: Path) -> Path:
 def _check_layout(root: Path) -> Finding | None:
     canonical = root / "governance"
     legacy = root / "prompt-governance"
-    if canonical.exists() and legacy.exists():
+    canonical_configured = any(
+        (canonical / child).exists() for child in ("capabilities", "artifacts")
+    )
+    legacy_configured = any(
+        (legacy / child).exists() for child in ("capabilities", "artifacts")
+    )
+    if canonical_configured and legacy_configured:
         return Finding(
             FindingStatus.FAIL,
             "governance:layout",
             "governance/ and prompt-governance/ must not both be configured; "
             "complete an explicit migration to one layout",
         )
-    if legacy.exists():
+    if legacy_configured:
         return Finding(
             FindingStatus.WARN,
             "governance:layout",
@@ -258,7 +264,11 @@ def _check_evaluations(root: Path) -> list[Finding]:
             )
         ]
 
-    manifest_paths = sorted(evaluation_root.rglob("evaluation-manifest.json"))
+    manifest_paths = sorted(
+        path
+        for path in evaluation_root.rglob("evaluation-manifest.json")
+        if "fixtures" not in path.relative_to(evaluation_root).parts
+    )
     if not manifest_paths:
         return [
             Finding(

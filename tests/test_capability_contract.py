@@ -3,6 +3,8 @@ import unittest
 from pathlib import Path
 
 from agentgov.capability import (
+    CANONICAL_CONTRACT,
+    LEGACY_CONTRACT,
     CAPABILITY_KINDS,
     CAPABILITY_TYPES,
     IMPLEMENTATION_MODES,
@@ -30,6 +32,8 @@ class CapabilityContractTests(unittest.TestCase):
 
         self.assertEqual(schema["$schema"], "https://json-schema.org/draft/2020-12/schema")
         self.assertFalse(schema["additionalProperties"])
+        self.assertEqual(schema["properties"]["contract"]["const"], CANONICAL_CONTRACT)
+        self.assertIn("contract", schema["required"])
         self.assertEqual(schema["properties"]["schema_version"]["const"], SCHEMA_VERSION)
         self.assertEqual(set(schema["properties"]["capability_type"]["enum"]), CAPABILITY_TYPES)
         self.assertEqual(
@@ -112,6 +116,7 @@ class CapabilityContractTests(unittest.TestCase):
         self.assertNotIn("capability_kind", manifest)
         self.assertNotIn("model_route", manifest)
         self.assertEqual(manifest["implementation_mode"], "hybrid")
+        self.assertEqual(manifest["contract"], CANONICAL_CONTRACT)
 
     def test_legacy_and_canonical_field_families_cannot_be_mixed(self) -> None:
         manifest = dict(
@@ -129,6 +134,38 @@ class CapabilityContractTests(unittest.TestCase):
         errors = validate_capability_manifest(manifest)
 
         self.assertTrue(any("not both" in error for error in errors))
+
+    def test_canonical_manifest_requires_explicit_contract_identity(self) -> None:
+        manifest = dict(
+            load_capability_manifest(ROOT / "templates/prompt-capability.template.json")
+        )
+        del manifest["contract"]
+
+        errors = validate_capability_manifest(manifest)
+
+        self.assertIn("$.contract is required", errors)
+
+    def test_contract_identity_must_match_the_field_family(self) -> None:
+        canonical = dict(
+            load_capability_manifest(ROOT / "templates/prompt-capability.template.json")
+        )
+        canonical["contract"] = LEGACY_CONTRACT
+        legacy = dict(
+            load_capability_manifest(VALID_FIXTURES / "runtime-low-risk.json")
+        )
+        legacy["contract"] = CANONICAL_CONTRACT
+
+        canonical_errors = validate_capability_manifest(canonical)
+        legacy_errors = validate_capability_manifest(legacy)
+
+        self.assertTrue(any("incompatible with canonical" in item for item in canonical_errors))
+        self.assertTrue(any("incompatible with legacy" in item for item in legacy_errors))
+
+    def test_legacy_manifest_without_contract_remains_readable(self) -> None:
+        manifest = load_capability_manifest(VALID_FIXTURES / "runtime-low-risk.json")
+
+        self.assertNotIn("contract", manifest)
+        self.assertEqual(validate_capability_manifest(manifest), [])
 
 
 if __name__ == "__main__":
