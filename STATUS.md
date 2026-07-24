@@ -49,6 +49,10 @@ Pre-pilot repository governance foundation:
   The happy path should not require cloning the starter into the target,
   repairing the target's `.venv`, or installing the target's development
   dependencies.
+- [ ] Design guided onboarding so a first-time user can complete the safe path
+  without an AgentGov expert beside them. Evaluate `agentgov doctor .`,
+  `agentgov onboard .`, and `agentgov next .` as explicit, testable command
+  contracts rather than adding more prose to the Quickstart.
 - [ ] Convert the Taxi adoption notes into a completed cross-domain pilot
   record, including timing, assistance required, unresolved release-gate
   findings, and final maintainer decisions.
@@ -64,6 +68,9 @@ Pre-pilot repository governance foundation:
 - Installation still depends on a usable Python interpreter. The current
   GitHub-install workaround avoids a nested clone and Windows build-path
   failure, but it is not yet the intended final onboarding experience.
+- Static HTML explains the workflow but cannot adapt to repository state.
+  First-time adoption still requires too much interpretation of MISSING, WARN,
+  ADVISORY, dry-run, scaffold completion, and required human decisions.
 - Dependency risk propagation and repository profiles are not implemented.
 - Legacy removal release remains undecided.
 - A successful check does not prove semantic governance sufficiency.

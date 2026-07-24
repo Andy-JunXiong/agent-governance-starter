@@ -377,6 +377,81 @@ Stop conditions:
 - do not describe a workaround as the final supported experience until the
   full path is tested.
 
+### Guided onboarding
+
+Develop alongside low-friction tool execution. The primary onboarding
+experience should guide a user from environment diagnosis through the first
+honest repository check without requiring a governance expert beside them.
+Static HTML remains reference material and a review surface; it should not be
+the only source of state-dependent help.
+
+Candidate commands:
+
+```text
+agentgov doctor .
+agentgov onboard .
+agentgov next .
+```
+
+Intended responsibilities:
+
+- `doctor` performs read-only checks of the selected path, usable Python
+  interpreter, Git repository context, Windows path risk, and existing
+  governance state. It explains whether a detected project-environment problem
+  actually blocks AgentGov.
+- `onboard` sequences inspect, result explanation, adoption preview, explicit
+  write confirmation, create-missing-only adoption, and the first repository
+  check.
+- `next` maps current findings to the smallest useful next action and explains
+  whether it is deterministic work, incomplete evidence, or a human judgment.
+
+Interaction contract:
+
+- default to read-only until the user explicitly confirms a planned write;
+- show the exact target repository before confirmation;
+- explain `MISSING`, `WARN`, `FAIL`, and `ADVISORY` in context;
+- distinguish scaffold creation from completed project adaptation;
+- never repair or replace the target project's virtual environment;
+- never install target-project dependencies;
+- never commit, push, merge, publish, release, deploy, or increase evaluation
+  readiness automatically;
+- provide `--non-interactive` behavior with stable exit codes for automation;
+- make prompts and decisions injectable so fixture-based tests do not depend
+  on a real terminal.
+
+Acceptance signals:
+
+- a first-time Windows user can complete install, diagnosis, inspect, preview,
+  adopt, first check, and understand the next action without external
+  assistance;
+- cancellation at every confirmation leaves repository files unchanged;
+- conflict, missing path, stale project environment, incomplete scaffold,
+  deterministic failure, and advisory-only states have fixture-based tests;
+- redirected input and non-interactive execution cannot accidentally authorize
+  writes;
+- a fresh Taxi rehearsal records timing, questions, wrong turns, assistance
+  required, and final understanding;
+- the primary Quickstart becomes shorter because it delegates adaptive guidance
+  to the CLI rather than duplicating every branch in HTML.
+
+Implementation order:
+
+1. write a short ADR and interaction/result contracts;
+2. implement the read-only `doctor` vertical slice;
+3. implement `onboard --dry-run` without write authority;
+4. add explicit interactive confirmation and create-missing-only adoption;
+5. implement finding-to-action mapping for `next`;
+6. test a fresh Taxi adoption without live coaching;
+7. update Quickstart only from verified pilot evidence.
+
+Stop conditions:
+
+- do not build an open-ended chatbot into the CLI;
+- do not use an LLM to decide deterministic repository state;
+- do not hide findings to make the workflow appear simpler;
+- stop and request human judgment whenever ownership, authority, release, or
+  deployment boundaries are unresolved.
+
 ### Profile-based adoption
 
 Candidate profiles:
@@ -492,10 +567,12 @@ Use the first Taxi adoption evidence to remove installation friction before
 asking another user to repeat the pilot:
 
 1. evaluate isolated and ephemeral Python tool execution options;
-2. select the smallest zero-runtime-dependency approach;
-3. test the complete path on Windows from a realistically deep target path;
-4. update the primary Quickstart only after that path succeeds;
-5. finish the Taxi pilot record and maintainer decisions separately.
+2. define the guided-onboarding ADR and testable interaction contracts;
+3. implement the smallest read-only `doctor` slice;
+4. select the smallest zero-runtime-dependency execution approach;
+5. test the guided path on Windows from a realistically deep target path;
+6. update the primary Quickstart only after that path succeeds;
+7. finish the Taxi pilot record and maintainer decisions separately.
 
 Do not begin dependency risk propagation, repository profiles, governance
 scoring, or taxonomy expansion before pilot evidence justifies the change.
