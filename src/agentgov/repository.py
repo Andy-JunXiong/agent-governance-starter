@@ -12,7 +12,7 @@ from agentgov.agent_skills import check_agent_skills
 from agentgov.artifacts import ArtifactPolicyError, check_capability_artifact
 from agentgov.capability import load_capability_manifest, validate_capability_manifest
 from agentgov.evaluation import EvaluationStatus, check_evaluation_bundle
-from agentgov.inventory import InventoryStatus, check_inventory
+from agentgov.inventory import InventoryReport, InventoryStatus, check_inventory
 from agentgov.references import (
     ReferencePolicyError,
     ReferenceStatus,
@@ -238,7 +238,10 @@ def _check_capabilities(root: Path) -> list[Finding]:
     return findings
 
 
-def _check_evaluations(root: Path) -> list[Finding]:
+def _check_evaluations(
+    root: Path,
+    inventory: InventoryReport,
+) -> list[Finding]:
     evaluation_root = root / _EVALUATION_DIRECTORY
     if evaluation_root.is_symlink():
         return [
@@ -284,28 +287,47 @@ def _check_evaluations(root: Path) -> list[Finding]:
         EvaluationStatus.WARN: FindingStatus.WARN,
         EvaluationStatus.FAIL: FindingStatus.FAIL,
     }
+    inventory_names = (
+        set(inventory.capability_names)
+        if inventory.configured and inventory.status is InventoryStatus.PASS
+        else None
+    )
     findings: list[Finding] = []
     for manifest_path in manifest_paths:
         bundle = manifest_path.parent
         relative_bundle = bundle.relative_to(root).as_posix()
         result = check_evaluation_bundle(bundle)
+        status = status_map[result.status]
+        messages = list(result.messages)
+        if inventory_names is not None and result.capability_name is not None:
+            if result.capability_name in inventory_names:
+                messages.append(
+                    f"capability {result.capability_name!r} is declared in "
+                    "governance/inventory.json"
+                )
+            else:
+                status = FindingStatus.FAIL
+                messages.append(
+                    f"orphan evaluation declares capability "
+                    f"{result.capability_name!r}, which is not listed in "
+                    "governance/inventory.json"
+                )
         findings.append(
             Finding(
-                status_map[result.status],
+                status,
                 f"evaluation:{relative_bundle}",
-                f"{result.readiness}: {'; '.join(result.messages)}",
+                f"{result.readiness}: {'; '.join(messages)}",
             )
         )
     return findings
 
 
-def _check_governance_inventory(root: Path) -> list[Finding]:
+def _check_governance_inventory(report: InventoryReport) -> list[Finding]:
     status_map = {
         InventoryStatus.PASS: FindingStatus.PASS,
         InventoryStatus.WARN: FindingStatus.WARN,
         InventoryStatus.FAIL: FindingStatus.FAIL,
     }
-    report = check_inventory(root)
     findings = [
         Finding(
             status_map[report.status],
@@ -371,12 +393,20 @@ def _valid_capability_names(root: Path) -> set[str]:
     return names
 
 
-def _check_capability_artifacts(root: Path) -> list[Finding]:
+def _check_capability_artifacts(
+    root: Path,
+    inventory: InventoryReport,
+) -> list[Finding]:
     artifact_directory = _configured_path(
         root, _ARTIFACT_DIRECTORY, _LEGACY_ARTIFACT_DIRECTORY
     )
     artifacts_root = root / artifact_directory
     capability_names = _valid_capability_names(root)
+    inventory_names = (
+        set(inventory.capability_names)
+        if inventory.configured and inventory.status is InventoryStatus.PASS
+        else None
+    )
     if artifacts_root.is_symlink():
         return [
             Finding(
@@ -417,8 +447,8 @@ def _check_capability_artifacts(root: Path) -> list[Finding]:
 
     findings: list[Finding] = []
     configured_names: set[str] = set()
+    artifact_claims_complete = True
     for artifact_dir in artifact_directories:
-        configured_names.add(artifact_dir.name)
         relative_dir = artifact_dir.relative_to(root).as_posix()
         check_id = f"artifact:{artifact_dir.name}"
         try:
@@ -431,27 +461,52 @@ def _check_capability_artifacts(root: Path) -> list[Finding]:
                     f"invalid artifact JSON at line {exc.lineno}, column {exc.colno}: {exc.msg}",
                 )
             )
+            artifact_claims_complete = False
             continue
         except (ArtifactPolicyError, ValueError, OSError, UnicodeError) as exc:
             findings.append(Finding(FindingStatus.FAIL, check_id, str(exc)))
+            artifact_claims_complete = False
             continue
 
+        status = FindingStatus.PASS if result.passed else FindingStatus.FAIL
+        messages = list(result.messages)
+        if result.capability_name is None:
+            artifact_claims_complete = False
+        else:
+            configured_names.add(result.capability_name)
+            if result.capability_name not in capability_names:
+                artifact_claims_complete = False
+            if inventory_names is not None:
+                if result.capability_name in inventory_names:
+                    messages.append(
+                        f"capability {result.capability_name!r} is declared in "
+                        "governance/inventory.json"
+                    )
+                else:
+                    status = FindingStatus.FAIL
+                    artifact_claims_complete = False
+                    messages.append(
+                        f"orphan artifact declares capability "
+                        f"{result.capability_name!r}, which is not listed in "
+                        "governance/inventory.json"
+                    )
         findings.append(
             Finding(
-                FindingStatus.PASS if result.passed else FindingStatus.FAIL,
+                status,
                 check_id,
-                f"{relative_dir}: {'; '.join(result.messages)}",
+                f"{relative_dir}: {'; '.join(messages)}",
             )
         )
 
-    for name in sorted(capability_names - configured_names):
-        findings.append(
-            Finding(
-                FindingStatus.WARN,
-                f"artifact:{name}",
-                f"valid capability {name!r} has no configured review artifact",
+    if artifact_claims_complete:
+        for name in sorted(capability_names - configured_names):
+            findings.append(
+                Finding(
+                    FindingStatus.WARN,
+                    f"artifact:{name}",
+                    f"valid capability {name!r} has no configured review artifact",
+                )
             )
-        )
     return findings
 
 
@@ -512,16 +567,17 @@ def check_repository(root: Path) -> RepositoryReport:
         raise ValueError(f"repository path is not a directory: {root}")
 
     findings, readable_files = _check_required_files(root)
+    inventory_report = check_inventory(root)
     layout_finding = _check_layout(root)
     if layout_finding is not None:
         findings.append(layout_finding)
     findings.append(_check_placeholders(root, readable_files))
     findings.extend(_check_capabilities(root))
-    findings.extend(_check_governance_inventory(root))
+    findings.extend(_check_governance_inventory(inventory_report))
     findings.extend(_check_reference_integrity(root))
-    findings.extend(_check_evaluations(root))
+    findings.extend(_check_evaluations(root, inventory_report))
     findings.extend(_check_agent_skill_protocols(root))
-    findings.extend(_check_capability_artifacts(root))
+    findings.extend(_check_capability_artifacts(root, inventory_report))
     findings.append(
         Finding(
             FindingStatus.ADVISORY,

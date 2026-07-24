@@ -52,6 +52,24 @@ Missing `governance/inventory.json` is a non-blocking `WARN` so repositories
 created before this contract remain readable. A configured but inconsistent
 inventory is a deterministic `FAIL`.
 
+## Evidence closure
+
+When the Inventory itself passes, the repository check connects configured
+evidence to declared capabilities using contract fields:
+
+- evaluation bundles use `evaluation-manifest.json.capability_name`;
+- generated review artifacts use `artifact.json.capability_name`.
+
+A contract that names a capability absent from the Inventory is an orphan and
+produces a deterministic `FAIL`. A matching directory name is never treated as
+proof of identity.
+
+Missing optional evaluation evidence or review artifacts retains its existing
+`WARN` or not-applicable behavior. If the Inventory is missing, evidence
+closure is not enforced so pre-Inventory repositories remain readable. If the
+Inventory is invalid, its own deterministic failure is reported without
+cascading orphan claims from an unreliable declaration set.
+
 ## Advisory boundary
 
 A passing inventory establishes consistency only for owner declarations. It
@@ -91,4 +109,6 @@ agentgov check repository .
 Review both:
 
 - `inventory:governance/inventory.json`, which reports deterministic closure;
+- configured evaluation and artifact findings, which report their declared
+  capability connection or an orphan failure;
 - `inventory:completeness`, which preserves the human judgment boundary.

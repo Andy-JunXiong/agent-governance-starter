@@ -23,6 +23,7 @@ class EvaluationResult:
     status: EvaluationStatus
     readiness: str
     messages: tuple[str, ...]
+    capability_name: str | None = None
 
 
 _NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
@@ -413,6 +414,11 @@ def check_evaluation_bundle(bundle: Path) -> EvaluationResult:
 
     readiness, case_refs, errors = _validate_manifest(payload)
     capability_name = payload.get("capability_name")
+    declared_capability = (
+        capability_name
+        if isinstance(capability_name, str) and _NAME_RE.fullmatch(capability_name)
+        else None
+    )
     counts = {case_type: 0 for case_type in _CASE_TYPES}
     seen_case_ids: set[str] = set()
     for case_type, references in case_refs.items():
@@ -454,15 +460,22 @@ def check_evaluation_bundle(bundle: Path) -> EvaluationResult:
                 )
 
     if errors:
-        return EvaluationResult(EvaluationStatus.FAIL, readiness, tuple(errors))
+        return EvaluationResult(
+            EvaluationStatus.FAIL,
+            readiness,
+            tuple(errors),
+            declared_capability,
+        )
     if readiness in {"not_configured", "schema_only", "needs_seed_cases"}:
         return EvaluationResult(
             EvaluationStatus.WARN,
             readiness,
             (f"declared readiness {readiness} is valid but incomplete",),
+            declared_capability,
         )
     return EvaluationResult(
         EvaluationStatus.PASS,
         readiness,
         (f"evidence supports declared readiness {readiness}",),
+        declared_capability,
     )
