@@ -1,4 +1,4 @@
-"""Repository-local prompt capability artifacts and source drift checks."""
+"""Repository-local AI capability artifacts and source drift checks."""
 
 from __future__ import annotations
 
@@ -320,8 +320,10 @@ def export_capability_artifact(
     artifact_json = json.dumps(state, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
 
     artifact_dir.mkdir(parents=True, exist_ok=True)
-    markdown_path.write_text(markdown, encoding="utf-8", newline="\n")
-    state_path.write_text(artifact_json, encoding="utf-8", newline="\n")
+    with markdown_path.open("w", encoding="utf-8", newline="\n") as output:
+        output.write(markdown)
+    with state_path.open("w", encoding="utf-8", newline="\n") as output:
+        output.write(artifact_json)
     return ArtifactExport(
         directory=artifact_dir,
         files=generated_paths,

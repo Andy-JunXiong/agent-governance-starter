@@ -45,7 +45,7 @@ Provide scenario-specific development and operations procedures. They remain
 separate from product runtime prompts and should state triggers, non-triggers,
 required context, checks, stop conditions, and expected output.
 
-### Prompt capability governance
+### AI capability governance
 
 Treats deterministic, model, prompt, or hybrid behavior as a versioned
 capability with identity, purpose, input/output contracts, call sites, risk,

@@ -24,7 +24,7 @@ def run_cli(*args: str) -> tuple[int, str, str]:
 def initialized_repository(parent: Path) -> tuple[Path, Path]:
     root = parent / "project"
     initialize_project(root, project_name="Reference Project")
-    manifest = root / "prompt-governance/capabilities/example-capability.json"
+    manifest = root / "governance/capabilities/example-capability.json"
     return root, manifest
 
 
@@ -54,7 +54,7 @@ class CapabilityReferenceTests(unittest.TestCase):
     def test_missing_required_schema_fails(self) -> None:
         with TemporaryDirectory() as temp_dir:
             root, manifest = initialized_repository(Path(temp_dir))
-            (root / "prompt-governance/schemas/example-capability.input.schema.json").unlink()
+            (root / "governance/contracts/example-capability.input.schema.json").unlink()
 
             report = check_capability_references(manifest, repository=root)
 
@@ -69,7 +69,7 @@ class CapabilityReferenceTests(unittest.TestCase):
     def test_invalid_schema_json_fails(self) -> None:
         with TemporaryDirectory() as temp_dir:
             root, manifest = initialized_repository(Path(temp_dir))
-            schema = root / "prompt-governance/schemas/example-capability.output.schema.json"
+            schema = root / "governance/contracts/example-capability.output.schema.json"
             schema.write_text("{broken", encoding="utf-8")
 
             report = check_capability_references(manifest, repository=root)
@@ -85,7 +85,7 @@ class CapabilityReferenceTests(unittest.TestCase):
     def test_non_utf8_schema_fails_as_reference_integrity(self) -> None:
         with TemporaryDirectory() as temp_dir:
             root, manifest = initialized_repository(Path(temp_dir))
-            schema = root / "prompt-governance/schemas/example-capability.output.schema.json"
+            schema = root / "governance/contracts/example-capability.output.schema.json"
             schema.write_bytes(b"\xff\xfe")
 
             report = check_capability_references(manifest, repository=root)
@@ -141,8 +141,8 @@ class CapabilityReferenceTests(unittest.TestCase):
     def test_symbolic_link_source_is_rejected_when_supported(self) -> None:
         with TemporaryDirectory() as temp_dir:
             root, manifest = initialized_repository(Path(temp_dir))
-            link = root / "prompt-governance/sources/linked-source.md"
-            target = root / "prompt-governance/sources/example-capability.md"
+            link = root / "governance/evidence/linked-source.md"
+            target = root / "governance/evidence/example-capability.md"
             try:
                 link.symlink_to(target)
             except OSError as exc:
@@ -150,7 +150,7 @@ class CapabilityReferenceTests(unittest.TestCase):
             update_manifest(
                 manifest,
                 lambda payload: payload["provenance"].__setitem__(
-                    "source_refs", ["prompt-governance/sources/linked-source.md"]
+                    "source_refs", ["governance/evidence/linked-source.md"]
                 ),
             )
 
@@ -213,7 +213,7 @@ class CapabilityReferenceTests(unittest.TestCase):
                 manifest,
                 lambda payload: payload["contracts"].__setitem__(
                     "input_schema",
-                    "prompt-governance/schemas/example-capability.input.schema.json#/$defs/input",
+                    "governance/contracts/example-capability.input.schema.json#/$defs/input",
                 ),
             )
 
@@ -248,7 +248,7 @@ class CapabilityReferenceCliTests(unittest.TestCase):
     def test_broken_required_reference_returns_fail(self) -> None:
         with TemporaryDirectory() as temp_dir:
             root, manifest = initialized_repository(Path(temp_dir))
-            (root / "prompt-governance/sources/example-capability.md").unlink()
+            (root / "governance/evidence/example-capability.md").unlink()
 
             exit_code, stdout, stderr = run_cli(
                 "check",

@@ -14,7 +14,8 @@ Use it to answer:
 4. What evidence is required before a version is considered stable?
 
 Daily execution details belong in
-[`CURRENT_DEVELOPMENT_STATUS.md`](CURRENT_DEVELOPMENT_STATUS.md). Durable
+[`STATUS.md`](STATUS.md). Historical daily records live under
+`docs/development-log/`. Durable
 architecture decisions belong in `docs/adr/`.
 
 ## Product Direction
@@ -103,6 +104,40 @@ Completed on 2026-07-23:
 - ADR-0001 and ADR-0002 recorded the durable decisions.
 
 ## Current P0 Track
+
+### Pre-pilot credibility hardening
+
+Goal:
+
+Make the starter's own contracts, status, reports, and CI internally
+consistent before adding repository inventory or beginning an external pilot.
+
+In scope:
+
+- explicit canonical capability contract identity;
+- bounded read-only legacy compatibility and lifecycle documentation;
+- truthful current status separated from historical development logs;
+- AI Capability terminology on current product surfaces;
+- report schema version separated from tool producer version;
+- one truthful repository capability manifest;
+- repository self-check and report artifact in CI.
+
+Acceptance signals:
+
+- canonical manifests cannot omit or contradict their contract identity;
+- legacy manifests without identity remain readable with the existing
+  layout-level migration warning;
+- the repository's status does not describe committed work as uncommitted;
+- JSON reports identify the producing agentgov version;
+- the repository runs its own governance check in CI;
+- the complete unit-test suite and `git diff --check` pass.
+
+Stop conditions:
+
+- do not add Taxi-specific contracts or policy;
+- do not implement inventory, controls, dependency propagation, or profiles in
+  this slice;
+- do not weaken a deterministic failure to make self-check pass.
 
 ### Repository Inventory and Control Evidence
 
@@ -248,7 +283,9 @@ labels differ when no minimum was declared.
 
 ## P1 — Pilot and Adoption Experience
 
-Begin after the P0 inventory/control chain is complete.
+Begin as a separate workstream after pre-pilot credibility hardening is
+complete. The pilot may use a thin spike before inventory/control contracts
+are frozen so real expression gaps can inform their design.
 
 ### Cross-domain pilot
 
@@ -407,7 +444,8 @@ interpreter is not a release baseline.
 ## Documentation Rule
 
 - `DEVELOPMENT_PLAN.md` owns top-level direction and sequencing.
-- `CURRENT_DEVELOPMENT_STATUS.md` owns current execution and daily logs.
+- `STATUS.md` owns concise current state; dated files under
+  `docs/development-log/` preserve historical execution records.
 - `docs/adr/` owns durable architecture decisions.
 - Other `docs/` files own detailed guidance, pilots, migrations, and reports.
 - Update this plan only when priorities, scope, or acceptance criteria change.

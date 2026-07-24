@@ -17,6 +17,16 @@ class CiWorkflowContractTests(unittest.TestCase):
             self.assertIn(f'- "{version}"', workflow)
         self.assertIn("python -m pip install --no-deps .", workflow)
         self.assertIn("python -m unittest discover -s tests -v", workflow)
+        self.assertIn("agentgov check repository .", workflow)
+        self.assertIn(
+            "agentgov report repository . --format json --output governance-report.json",
+            workflow,
+        )
+        self.assertIn(
+            "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+            workflow,
+        )
+        self.assertIn("if: always()", workflow)
 
     def test_ci_uses_pinned_official_actions_and_read_only_permissions(self) -> None:
         workflow = CI_WORKFLOW.read_text(encoding="utf-8")

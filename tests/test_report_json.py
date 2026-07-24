@@ -7,6 +7,7 @@ from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
 from agentgov.cli import EXIT_ERROR, EXIT_FAIL, EXIT_PASS, main
+from agentgov import __version__
 from agentgov.initializer import initialize_project
 from agentgov.reporting import (
     REPORT_SCHEMA_VERSION,
@@ -64,6 +65,7 @@ class JsonReportContractTests(unittest.TestCase):
             set(payload),
             {
                 "schema_version",
+                "tool",
                 "repository",
                 "summary",
                 "findings",
@@ -73,6 +75,10 @@ class JsonReportContractTests(unittest.TestCase):
             },
         )
         self.assertEqual(payload["schema_version"], REPORT_SCHEMA_VERSION)
+        self.assertEqual(
+            payload["tool"],
+            {"name": "agentgov", "version": __version__},
+        )
         self.assertEqual(payload["repository"], "example")
         self.assertEqual(
             payload["summary"],
@@ -254,6 +260,7 @@ class JsonReportContractTests(unittest.TestCase):
             set(schema["required"]),
             {
                 "schema_version",
+                "tool",
                 "repository",
                 "summary",
                 "findings",

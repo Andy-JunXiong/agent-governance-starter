@@ -544,7 +544,7 @@ def build_parser() -> argparse.ArgumentParser:
     export_targets = export_parser.add_subparsers(dest="export_target", required=True)
     export_capability_parser = export_targets.add_parser(
         "capability",
-        help="Export one prompt capability as deterministic review artifacts.",
+        help="Export one AI capability as deterministic review artifacts.",
     )
     export_capability_parser.add_argument(
         "manifest",
@@ -585,7 +585,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     capability_parser = check_targets.add_parser(
         "capability",
-        help="Validate one prompt capability manifest.",
+        help="Validate one AI capability manifest.",
     )
     capability_parser.add_argument("manifest", type=Path, help="Path to a capability JSON file.")
     capability_parser.set_defaults(handler=lambda args: _check_capability(args.manifest))

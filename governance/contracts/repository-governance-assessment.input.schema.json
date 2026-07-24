@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Repository governance assessment input",
+  "description": "Repository-root location supplied to the deterministic governance checker.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["repository"],
+  "properties": {
+    "repository": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}
