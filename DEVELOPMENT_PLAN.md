@@ -218,7 +218,9 @@ Acceptance signals:
 
 ### Slice 3 — Control Mapping
 
-Planned canonical path:
+Completed on 2026-07-24.
+
+Canonical path:
 
 ```text
 governance/controls/<capability-name>.json
@@ -229,13 +231,15 @@ Minimum control contract:
 - capability name;
 - control ID;
 - objective;
-- enforcement mode;
+- applicability;
+- enforcement mode for applicable controls;
 - implementation references;
 - verification references;
 - owner;
-- exception authority.
+- exception authority;
+- rationale for not-applicable controls.
 
-Initial enforcement modes:
+Supported enforcement modes:
 
 - `deterministic`;
 - `platform_enforced`;
@@ -248,7 +252,8 @@ Deterministic checks:
 - referenced capability exists;
 - implementation and verification references are safe and readable;
 - owner and exception authority are present;
-- enforcement mode is supported.
+- applicable enforcement mode is supported;
+- not-applicable controls have a rationale and no enforcement evidence fields.
 
 Advisory boundary:
 
@@ -421,17 +426,17 @@ Do not build these from hypothetical taxonomies alone.
 
 ## Next Recommended Starting Point
 
-Start with Control Mapping as one vertical slice:
+Start with Capability Dependencies as one vertical slice:
 
-1. define the minimal control declaration schema;
-2. link every control declaration to an Inventory capability;
-3. distinguish deterministic enforcement from advisory review;
-4. make applicability, ownership, verification, and exceptions explicit;
-5. add passing, failing, warning, and not-applicable fixtures;
-6. do not calculate a coverage percentage.
+1. define an explicit dependency declaration contract;
+2. link every dependency endpoint to an Inventory capability;
+3. reject self-dependencies and deterministic cycles;
+4. enforce minimum readiness only when explicitly declared;
+5. add passing, failing, warning, and not-configured fixtures;
+6. keep readiness mismatch non-blocking when no minimum was declared.
 
-Stop before capability dependency propagation or risk profiles unless control
-semantics and applicability rules are fully validated.
+Stop before risk propagation or profiles unless dependency identity, cycle,
+and minimum-readiness semantics are fully validated.
 
 ## Validation Baseline
 

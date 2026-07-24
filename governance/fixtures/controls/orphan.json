@@ -1,0 +1,21 @@
+{
+  "contract": "agentgov.control-mapping",
+  "schema_version": "1.0",
+  "capability_name": "unlisted-capability",
+  "controls": [
+    {
+      "control_id": "orphan-human-review",
+      "objective": "Preserve explicit human authority for an unlisted capability.",
+      "applicability": "applicable",
+      "enforcement_mode": "human_procedural",
+      "implementation_refs": [
+        "AGENTS.md"
+      ],
+      "verification_refs": [
+        "docs/adr/INVARIANTS.md"
+      ],
+      "owner": "Example owner",
+      "exception_authority": "Named repository maintainer"
+    }
+  ]
+}

@@ -39,10 +39,11 @@ class MarkdownReportTests(unittest.TestCase):
             "## Scope limitations",
         ):
             self.assertIn(heading, markdown)
-        self.assertIn("| PASS | 12 |", markdown)
+        self.assertIn("| PASS | 13 |", markdown)
         self.assertIn("| WARN | 4 |", markdown)
-        self.assertIn("| ADVISORY | 2 |", markdown)
+        self.assertIn("| ADVISORY | 3 |", markdown)
         self.assertIn("`inventory:completeness`", markdown)
+        self.assertIn("`controls:effectiveness`", markdown)
         self.assertIn("`artifacts:directory`", markdown)
         self.assertIn("the checks ran; it does not mean governance is complete", markdown)
         self.assertIn(

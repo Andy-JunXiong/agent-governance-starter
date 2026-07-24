@@ -18,6 +18,9 @@ rules.
 - `governance-inventory.template.json`: honest repository declaration linking
   the example capability to its accountable owner without claiming automatic
   discovery.
+- `control-mapping.template.json`: one explicit human-procedural starter
+  control linked to readable repository references without claiming
+  effectiveness.
 - `example-capability.*.schema.template.json`: minimal repository-local input
   and output contracts referenced by the example capability.
 - `prompt-source.template.md`: explicit prompt-source placeholder referenced
@@ -68,3 +71,9 @@ about repository paths. The generated evaluation manifest and any exported
 review artifact declare that same capability through their own
 `capability_name`; the repository check uses those contract claims, not
 directory names, for Inventory evidence closure.
+
+Initialization also creates
+`governance/controls/example-capability.json`. Adapt its objective, mode,
+references, owner, and exception authority to the real repository. A
+structurally valid mapping still emits an effectiveness advisory because
+static checks cannot establish control sufficiency.

@@ -90,11 +90,15 @@ The v0.1 CLI reporting model emits:
 - `FAIL`: a required, deterministic condition is not satisfied;
 - `ADVISORY`: human judgment is required before assigning compliance.
 
-`NOT_APPLICABLE` is reserved as a possible future control-applicability state;
-the current CLI does not emit it.
+The repository report does not emit a separate `NOT_APPLICABLE` finding
+status. Capability control mappings can declare
+`applicability: not_applicable` with a required rationale; deterministic
+validation of that declaration produces a mapping `PASS`, not evidence that
+the rationale is semantically justified.
 
-The project will not calculate a single governance coverage percentage until
-control applicability, weighting, and evidence rules are specified and tested.
+The project does not calculate a single governance coverage percentage.
+Control applicability is explicit, but a documented denominator, weighting
+model, and semantic evidence rules have not been defined.
 
 ## Controlled-upgrade loop
 

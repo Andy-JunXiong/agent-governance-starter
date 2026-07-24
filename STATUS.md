@@ -23,21 +23,24 @@ Last verified: 2026-07-24
 
 ## Current milestone
 
-Repository Inventory and evidence closure:
+Repository Inventory, evidence closure, and control mapping:
 
 - Governance Inventory contract and zero-dependency validator implemented;
 - canonical manifest, owner, identity, exclusion, and safe-path closure;
 - evaluation and artifact contract claims close to Inventory declarations
   without filename inference;
 - deterministic orphan failures with legacy-compatible non-cascading behavior;
+- strict capability control mappings with explicit applicability, enforcement
+  mode, ownership, exception authority, and safe evidence references;
+- deterministic control identity and reference checks paired with an explicit
+  effectiveness advisory;
 - explicit completeness advisory without automatic discovery claims;
-- next slice: control mapping.
+- next slice: capability dependencies.
 
 ## Known gaps
 
 - No completed cross-domain pilot.
-- Control mapping and capability dependency contracts remain planned rather
-  than implemented.
+- Capability dependency contracts remain planned rather than implemented.
 - Legacy removal release remains undecided.
 - A successful check does not prove semantic governance sufficiency.
 
@@ -45,12 +48,12 @@ Repository Inventory and evidence closure:
 
 Latest local validation on 2026-07-24:
 
-- Python 3.11.9: 183 tests passed; one Windows symbolic-link test skipped
+- Python 3.11.9: 194 tests passed; one Windows symbolic-link test skipped
   because the current user lacks link-creation privilege.
-- Repository self-check: 14 PASS, 2 WARN, 0 FAIL, 2 ADVISORY.
-- Isolated wheel rehearsal: build, install, initialize, Inventory asset
-  presence, evidence closure confirmation, and repository check passed with
-  zero deterministic failures.
+- Repository self-check: 15 PASS, 2 WARN, 0 FAIL, 3 ADVISORY.
+- Isolated wheel rehearsal: build, install, initialize, Control Mapping asset
+  presence, control PASS, effectiveness ADVISORY, and repository check passed
+  with zero deterministic failures.
 - `git diff --check`: passed.
 
 The authoritative local baseline is:
