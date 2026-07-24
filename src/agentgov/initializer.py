@@ -21,8 +21,14 @@ _ASSET_OUTPUTS = {
     Path("governance/inventory.schema.json"): Path(
         "governance/inventory.schema.json"
     ),
+    Path("governance/control-mapping.schema.json"): Path(
+        "governance/control-mapping.schema.json"
+    ),
     Path("templates/governance-inventory.template.json"): Path(
         "governance/inventory.json"
+    ),
+    Path("templates/control-mapping.template.json"): Path(
+        "governance/controls/example-capability.json"
     ),
     Path("templates/example-capability.input.schema.template.json"): Path(
         "governance/contracts/example-capability.input.schema.json"

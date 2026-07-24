@@ -11,6 +11,7 @@ from pathlib import Path
 from agentgov.agent_skills import check_agent_skills
 from agentgov.artifacts import ArtifactPolicyError, check_capability_artifact
 from agentgov.capability import load_capability_manifest, validate_capability_manifest
+from agentgov.controls import ControlStatus, check_control_mapping
 from agentgov.evaluation import EvaluationStatus, check_evaluation_bundle
 from agentgov.inventory import InventoryReport, InventoryStatus, check_inventory
 from agentgov.references import (
@@ -55,6 +56,7 @@ _REQUIRED_FILES = {
 _PLACEHOLDER_RE = re.compile(r"\{\{[A-Z][A-Z0-9_-]*\}\}")
 _CAPABILITY_DIRECTORY = Path("governance/capabilities")
 _LEGACY_CAPABILITY_DIRECTORY = Path("prompt-governance/capabilities")
+_CONTROL_DIRECTORY = Path("governance/controls")
 _EVALUATION_DIRECTORY = Path("evaluation")
 _AGENT_SKILLS_DIRECTORY = Path("agent-skills")
 _ARTIFACT_DIRECTORY = Path("governance/artifacts")
@@ -347,6 +349,129 @@ def _check_governance_inventory(report: InventoryReport) -> list[Finding]:
     return findings
 
 
+def _check_control_mappings(
+    root: Path,
+    inventory: InventoryReport,
+) -> list[Finding]:
+    controls_root = root / _CONTROL_DIRECTORY
+    if controls_root.is_symlink():
+        return [
+            Finding(
+                FindingStatus.FAIL,
+                "controls:directory",
+                "governance/controls must not be a symbolic link",
+            )
+        ]
+    if not controls_root.exists():
+        return [
+            Finding(
+                FindingStatus.WARN,
+                "controls:directory",
+                "capability control mappings are not configured",
+            )
+        ]
+    if not controls_root.is_dir():
+        return [
+            Finding(
+                FindingStatus.FAIL,
+                "controls:directory",
+                "governance/controls is not a directory",
+            )
+        ]
+
+    mapping_paths = sorted(controls_root.rglob("*.json"))
+    if not mapping_paths:
+        return [
+            Finding(
+                FindingStatus.WARN,
+                "controls:directory",
+                "no capability control mappings are configured",
+            )
+        ]
+
+    inventory_names = (
+        set(inventory.capability_names)
+        if inventory.configured and inventory.status is InventoryStatus.PASS
+        else None
+    )
+    findings: list[Finding] = []
+    claimed_names: set[str] = set()
+    control_locations: dict[str, list[str]] = {}
+    claims_complete = True
+    for mapping_path in mapping_paths:
+        relative_path = mapping_path.relative_to(root).as_posix()
+        report = check_control_mapping(root, mapping_path)
+        status = (
+            FindingStatus.PASS
+            if report.status is ControlStatus.PASS
+            else FindingStatus.FAIL
+        )
+        messages = list(report.messages)
+        if report.capability_name is None:
+            claims_complete = False
+        else:
+            claimed_names.add(report.capability_name)
+            if inventory_names is not None:
+                if report.capability_name in inventory_names:
+                    messages.append(
+                        f"capability {report.capability_name!r} is declared in "
+                        "governance/inventory.json"
+                    )
+                else:
+                    status = FindingStatus.FAIL
+                    claims_complete = False
+                    messages.append(
+                        f"orphan control mapping declares capability "
+                        f"{report.capability_name!r}, which is not listed in "
+                        "governance/inventory.json"
+                    )
+        if report.status is ControlStatus.PASS:
+            for control_id in report.control_ids:
+                control_locations.setdefault(control_id, []).append(relative_path)
+        findings.append(
+            Finding(
+                status,
+                f"control:{relative_path}",
+                "; ".join(messages),
+            )
+        )
+
+    for control_id, locations in sorted(control_locations.items()):
+        if len(locations) > 1:
+            findings.append(
+                Finding(
+                    FindingStatus.FAIL,
+                    f"controls:control-id:{control_id}",
+                    f"control ID {control_id!r} is declared in multiple mappings: "
+                    + ", ".join(locations),
+                )
+            )
+
+    if inventory_names is not None and claims_complete:
+        for capability_name in sorted(inventory_names - claimed_names):
+            findings.append(
+                Finding(
+                    FindingStatus.WARN,
+                    f"controls:missing:{capability_name}",
+                    f"Inventory capability {capability_name!r} has no configured "
+                    "control mapping",
+                )
+            )
+
+    if not any(
+        finding.status is FindingStatus.FAIL for finding in findings
+    ):
+        findings.append(
+            Finding(
+                FindingStatus.ADVISORY,
+                "controls:effectiveness",
+                "control declarations and readable references do not prove "
+                "control effectiveness, applicability, or exception quality",
+            )
+        )
+    return findings
+
+
 def _check_agent_skill_protocols(root: Path) -> list[Finding]:
     skills_root = root / _AGENT_SKILLS_DIRECTORY
     if not skills_root.exists():
@@ -574,6 +699,7 @@ def check_repository(root: Path) -> RepositoryReport:
     findings.append(_check_placeholders(root, readable_files))
     findings.extend(_check_capabilities(root))
     findings.extend(_check_governance_inventory(inventory_report))
+    findings.extend(_check_control_mappings(root, inventory_report))
     findings.extend(_check_reference_integrity(root))
     findings.extend(_check_evaluations(root, inventory_report))
     findings.extend(_check_agent_skill_protocols(root))

@@ -1,0 +1,15 @@
+{
+  "contract": "agentgov.control-mapping",
+  "schema_version": "1.0",
+  "capability_name": "example-capability",
+  "controls": [
+    {
+      "control_id": "runtime-model-routing",
+      "objective": "Govern runtime selection between multiple hosted model providers.",
+      "applicability": "not_applicable",
+      "owner": "Example owner",
+      "exception_authority": "Named repository maintainer",
+      "rationale": "The example capability has no runtime model route or hosted provider."
+    }
+  ]
+}

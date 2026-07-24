@@ -1,0 +1,21 @@
+{
+  "contract": "agentgov.control-mapping",
+  "schema_version": "1.0",
+  "capability_name": "example-capability",
+  "controls": [
+    {
+      "control_id": "human-review-boundary",
+      "objective": "Preserve explicit human authority for governed repository transitions.",
+      "applicability": "applicable",
+      "enforcement_mode": "human_procedural",
+      "implementation_refs": [
+        "AGENTS.md"
+      ],
+      "verification_refs": [
+        "docs/adr/INVARIANTS.md"
+      ],
+      "owner": "Owning team or maintainer",
+      "exception_authority": "Named repository maintainer"
+    }
+  ]
+}

@@ -329,7 +329,8 @@ class RepositoryCliTests(unittest.TestCase):
         self.assertIn("WARN governance:placeholders:", stdout)
         self.assertIn("WARN artifacts:directory:", stdout)
         self.assertIn("ADVISORY governance:human-review:", stdout)
-        self.assertIn("SUMMARY PASS=12 WARN=4 FAIL=0 ADVISORY=2", stdout)
+        self.assertIn("ADVISORY controls:effectiveness:", stdout)
+        self.assertIn("SUMMARY PASS=13 WARN=4 FAIL=0 ADVISORY=3", stdout)
         self.assertEqual(stderr, "")
 
     def test_missing_required_files_return_fail(self) -> None:

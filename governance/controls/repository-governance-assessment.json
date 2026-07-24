@@ -1,0 +1,35 @@
+{
+  "contract": "agentgov.control-mapping",
+  "schema_version": "1.0",
+  "capability_name": "repository-governance-assessment",
+  "controls": [
+    {
+      "control_id": "deterministic-contract-validation",
+      "objective": "Fail configured repository governance contracts that violate deterministic requirements.",
+      "applicability": "applicable",
+      "enforcement_mode": "deterministic",
+      "implementation_refs": [
+        "src/agentgov/repository.py"
+      ],
+      "verification_refs": [
+        "tests/test_repository.py"
+      ],
+      "owner": "Repository maintainers",
+      "exception_authority": "Repository maintainers"
+    },
+    {
+      "control_id": "human-transition-authority",
+      "objective": "Keep merge, publication, release, and deployment as explicit human-authorized actions.",
+      "applicability": "applicable",
+      "enforcement_mode": "human_procedural",
+      "implementation_refs": [
+        "AGENTS.md"
+      ],
+      "verification_refs": [
+        "tests/test_reporting.py"
+      ],
+      "owner": "Repository maintainers",
+      "exception_authority": "Repository maintainers"
+    }
+  ]
+}

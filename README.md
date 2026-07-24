@@ -47,6 +47,8 @@ replace accountable human review.
   human-review metadata;
 - explicit repository inventory closure connecting canonical manifests,
   accountable owners, governance status, and reasoned exclusions;
+- strict capability control mappings with explicit applicability, enforcement
+  mode, ownership, exception authority, and readable evidence references;
 - validation of repository-local schemas, callers, sources, and evaluation
   evidence references;
 - explicit evaluation-readiness states that distinguish incomplete evidence
@@ -465,6 +467,13 @@ must name a listed capability through their own `capability_name` contract
 field. Unknown names are deterministic orphan failures; directory names are
 not used to infer identity. Missing optional evidence remains non-blocking.
 
+Generated projects also include a starter
+[Capability Control Mapping](docs/control-mapping.md). Configured mappings must
+name an Inventory capability, use globally unique control IDs, and connect
+applicable controls to readable implementation and verification references.
+Deterministic validation is paired with an effectiveness `ADVISORY`; it does
+not certify semantic sufficiency or calculate control coverage.
+
 Check an initialized repository with:
 
 ```powershell
@@ -473,7 +482,7 @@ python -m agentgov check repository path/to/project
 ```
 
 The command checks required governance files, unresolved placeholders, AI
-capability manifests, inventory and evidence closure, repository-local
+capability manifests, inventory, control and evidence closure, repository-local
 references, discovered evaluation bundles, agent protocols, and configured
 capability artifacts. Missing artifacts remain a non-blocking
 `WARN`; malformed or stale configured artifacts are `FAIL`. It emits `PASS`,

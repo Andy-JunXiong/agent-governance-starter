@@ -8,6 +8,7 @@ from tempfile import TemporaryDirectory
 from agentgov.agent_skills import check_agent_skills
 from agentgov.capability import load_capability_manifest, validate_capability_manifest
 from agentgov.cli import EXIT_ERROR, EXIT_FAIL, EXIT_PASS, main
+from agentgov.controls import ControlStatus, check_control_mapping
 from agentgov.evaluation import EvaluationStatus, check_evaluation_bundle
 from agentgov.initializer import InitConflictError, initialize_project
 from agentgov.inventory import InventoryStatus, check_inventory
@@ -20,9 +21,11 @@ EXPECTED_OUTPUTS = {
     Path("docs/adr/TEMPLATE.md"),
     Path("docs/adr/INVARIANTS.md"),
     Path("governance/capability.schema.json"),
+    Path("governance/control-mapping.schema.json"),
     Path("governance/inventory.schema.json"),
     Path("governance/inventory.json"),
     Path("governance/capabilities/example-capability.json"),
+    Path("governance/controls/example-capability.json"),
     Path("governance/contracts/example-capability.input.schema.json"),
     Path("governance/contracts/example-capability.output.schema.json"),
     Path("governance/evidence/example-capability.md"),
@@ -97,6 +100,11 @@ class InitializerTests(unittest.TestCase):
             self.assertEqual(reference_report.count(ReferenceStatus.WARN), 1)
             inventory_report = check_inventory(target)
             self.assertIs(inventory_report.status, InventoryStatus.PASS)
+            control_report = check_control_mapping(
+                target,
+                target / "governance/controls/example-capability.json",
+            )
+            self.assertIs(control_report.status, ControlStatus.PASS)
 
     def test_non_empty_target_is_rejected_without_overwriting(self) -> None:
         with TemporaryDirectory() as temp_dir:
