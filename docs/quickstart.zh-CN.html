@@ -28,7 +28,7 @@
       <pre><code>agentgov update .
 # 只读检查：
 agentgov update --check .</code></pre>
-      <p>主命令会报告版本和仓库兼容性、预览精确且有边界的变化、只请求一次准确的 <code>UPDATE</code> 确认、应用变化并自动复检。只读命令永不写入。在具备受审的稳定分发源之前，工具自身的自动安装保持禁用。</p>
+      <p>主命令会发现最新稳定 GitHub Release、报告版本和仓库兼容性、只请求一次准确的 <code>UPDATE</code> 确认、校验 wheel 的 SHA-256、更新 pipx、启动新版工具、应用有边界的仓库变化并自动复检。只读命令永不写入。</p>
       <p>进度按 <code>CHECK</code>、<code>PLAN</code>、<code>APPLY</code> 和 <code>VALIDATE</code> 展示。最终状态明确区分 <code>SUCCESS</code>、<code>CANCELLED</code>、<code>BLOCKED</code>、<code>INTERRUPTED</code>、<code>PARTIAL</code> 和 <code>ERROR</code>。如果中断或验证失败前已经创建文件，CLI 会列出该文件并提供一条 <code>RECOVERY</code> 恢复命令。</p>
     </section>
     <section class="emphasis">
@@ -39,9 +39,9 @@ agentgov update --check .</code></pre>
       <h2>1. 安装</h2>
       <p>请从需要治理的仓库运行以下命令。它们会把当前开发版本安装到已激活的 Python 环境，而不会把 starter 源码复制进被治理仓库。</p>
       <pre><code>python --version
-python -m pip install "git+https://github.com/Andy-JunXiong/agent-governance-starter.git@main"
+pipx install "https://github.com/Andy-JunXiong/agent-governance-starter/releases/download/v0.1.0/agent_governance_starter-0.1.0-py3-none-any.whl"
 agentgov --version
-python -m agentgov --help</code></pre>
+agentgov --help</code></pre>
       <h3>不安装直接运行</h3>
       <p>如果要开发 starter kit，请把它克隆到独立且较短的路径，再从包含 <code>src</code> 目录的 clone 根目录运行以下其中一种命令。不要把 starter clone 到被治理仓库内部。</p>
       <div class="platforms">

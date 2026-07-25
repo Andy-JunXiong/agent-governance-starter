@@ -24,10 +24,11 @@
     "release": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["channel", "manifest_source"],
+      "required": ["channel", "manifest_source", "artifact"],
       "properties": {
         "channel": {"enum": ["development", "release-candidate", "stable"]},
-        "manifest_source": {"type": "string"}
+        "manifest_source": {"type": "string"},
+        "artifact": {"type": ["object", "null"]}
       }
     },
     "repository": {

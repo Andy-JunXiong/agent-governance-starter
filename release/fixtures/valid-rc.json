@@ -2,10 +2,10 @@
   "contract": "agentgov.release-manifest",
   "schema_version": "1.0",
   "distribution_name": "agent-governance-starter",
-  "tool_version": "0.1.0rc2",
+  "tool_version": "0.2.0rc2",
   "channel": "release-candidate",
   "supported_from": [
-    "0.1.0rc1"
+    "0.2.0rc1"
   ],
   "readable_layout_versions": [
     "1.0",
@@ -16,5 +16,6 @@
   "declared_migrations": [
     "inventory-1.0-to-1.1"
   ],
-  "release_notes_url": "https://example.invalid/agentgov/releases/0.1.0rc2"
+  "release_notes_url": "https://example.invalid/agentgov/releases/0.2.0rc2",
+  "artifact": null
 }

@@ -24,12 +24,15 @@ _FIELDS = {
     "repository_changes_declared",
     "declared_migrations",
     "release_notes_url",
+    "artifact",
 }
 _VERSION_RE = re.compile(
     r"^[0-9]+\.[0-9]+\.[0-9]+(?:(?:a|b|rc)[0-9]+|\.dev[0-9]+)?$"
 )
 _LAYOUT_VERSION_RE = re.compile(r"^[0-9]+\.[0-9]+$")
 _MIGRATION_ID_RE = re.compile(r"^[a-z0-9]+(?:[.-][a-z0-9]+)*$")
+_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+_WHEEL_RE = re.compile(r"^agent_governance_starter-[A-Za-z0-9_.]+-py3-none-any\.whl$")
 
 
 def _string_list(
@@ -133,6 +136,42 @@ def validate_release_manifest(document: Mapping[str, Any]) -> list[str]:
         "https://"
     ):
         errors.append("$.release_notes_url must be an https URL")
+
+    artifact = document.get("artifact")
+    if artifact is not None:
+        if not isinstance(artifact, Mapping):
+            errors.append("$.artifact must be null or an object")
+        else:
+            fields = {"filename", "url", "sha256", "install_method"}
+            for field in sorted(fields - set(artifact)):
+                errors.append(f"$.artifact.{field} is required")
+            for field in sorted(set(artifact) - fields):
+                errors.append(f"$.artifact.{field} is not allowed")
+            filename = artifact.get("filename")
+            if not isinstance(filename, str) or not _WHEEL_RE.fullmatch(filename):
+                errors.append("$.artifact.filename must be an AgentGov universal wheel")
+            url = artifact.get("url")
+            if (
+                not isinstance(url, str)
+                or not url.startswith(
+                    "https://github.com/Andy-JunXiong/"
+                    "agent-governance-starter/releases/download/"
+                )
+                or not isinstance(filename, str)
+                or not url.endswith("/" + filename)
+            ):
+                errors.append(
+                    "$.artifact.url must be the matching fixed-tag GitHub Release asset"
+                )
+            sha256 = artifact.get("sha256")
+            if not isinstance(sha256, str) or not _SHA256_RE.fullmatch(sha256):
+                errors.append(
+                    "$.artifact.sha256 must be 64 lowercase hexadecimal characters"
+                )
+            if artifact.get("install_method") != "pipx":
+                errors.append("$.artifact.install_method must equal 'pipx'")
+    if channel == "stable" and artifact is None:
+        errors.append("$.artifact is required for stable releases")
     return errors
 
 

@@ -41,16 +41,16 @@ agentgov next .</code></pre>
       <pre><code>agentgov update .
 # Read-only alternative:
 agentgov update --check .</code></pre>
-      <p>The primary command reports versions and repository compatibility, previews the exact bounded change, requests one exact <code>UPDATE</code> confirmation, applies it, and reruns validation. The check alternative never writes. Automatic tool installation remains disabled until a reviewed stable distribution source exists.</p>
+      <p>The primary command discovers the latest stable GitHub Release, reports versions and repository compatibility, requests one exact <code>UPDATE</code> confirmation, verifies the wheel SHA-256, updates pipx, relaunches the new tool, applies the bounded repository change, and reruns validation. The check alternative never writes.</p>
       <p>Progress is labeled <code>CHECK</code>, <code>PLAN</code>, <code>APPLY</code>, and <code>VALIDATE</code>. Final states distinguish <code>SUCCESS</code>, <code>CANCELLED</code>, <code>BLOCKED</code>, <code>INTERRUPTED</code>, <code>PARTIAL</code>, and <code>ERROR</code>. If a file was created before interruption or failed validation, the CLI lists it and prints one <code>RECOVERY</code> command.</p>
     </section>
     <section>
       <h2>1. Install</h2>
-      <p>Run these commands from the repository you want to govern. They install the current development package into the active Python environment without copying the starter source tree into your repository.</p>
+      <p>Run these commands from the repository you want to govern. They install the current package without copying the starter source tree into your repository.</p>
       <pre><code>python --version
-python -m pip install "git+https://github.com/Andy-JunXiong/agent-governance-starter.git@main"
+pipx install "https://github.com/Andy-JunXiong/agent-governance-starter/releases/download/v0.1.0/agent_governance_starter-0.1.0-py3-none-any.whl"
 agentgov --version
-python -m agentgov --help</code></pre>
+agentgov --help</code></pre>
       <h3>Run without installing</h3>
       <p>For starter-kit development, clone it into a separate, short path. Then run one of these alternatives from that clone's root, where the <code>src</code> directory exists. Do not clone the starter inside the repository being governed.</p>
       <div class="platforms">

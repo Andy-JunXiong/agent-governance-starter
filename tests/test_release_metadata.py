@@ -44,6 +44,23 @@ class ReleaseManifestTests(unittest.TestCase):
         self.assertNotIn("write_authorized", document)
         self.assertNotIn("authorized_by", document)
 
+    def test_stable_manifest_requires_fixed_release_asset_and_digest(self) -> None:
+        document = dict(load_release_manifest(VALID))
+        document["tool_version"] = "0.1.0"
+        document["channel"] = "stable"
+        document["artifact"] = {
+            "filename": "agent_governance_starter-0.1.0-py3-none-any.whl",
+            "url": (
+                "https://github.com/Andy-JunXiong/agent-governance-starter/"
+                "releases/download/v0.1.0/"
+                "agent_governance_starter-0.1.0-py3-none-any.whl"
+            ),
+            "sha256": "a" * 64,
+            "install_method": "pipx",
+        }
+
+        self.assertEqual(validate_release_manifest(document), [])
+
     def test_invalid_manifest_rejects_channel_version_and_false_compatibility(
         self,
     ) -> None:

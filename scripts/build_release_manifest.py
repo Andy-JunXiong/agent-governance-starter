@@ -1,0 +1,55 @@
+"""Generate a deterministic stable release manifest for one built wheel."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+from pathlib import Path
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("wheel", type=Path)
+    parser.add_argument("output", type=Path)
+    parser.add_argument("--version", required=True)
+    args = parser.parse_args()
+
+    filename = args.wheel.name
+    digest = hashlib.sha256(args.wheel.read_bytes()).hexdigest()
+    tag = f"v{args.version}"
+    document = {
+        "contract": "agentgov.release-manifest",
+        "schema_version": "1.0",
+        "distribution_name": "agent-governance-starter",
+        "tool_version": args.version,
+        "channel": "stable",
+        "supported_from": ["0.1.0.dev0"],
+        "readable_layout_versions": ["1.0"],
+        "target_layout_version": "1.0",
+        "repository_changes_declared": False,
+        "declared_migrations": [],
+        "release_notes_url": (
+            "https://github.com/Andy-JunXiong/"
+            f"agent-governance-starter/releases/tag/{tag}"
+        ),
+        "artifact": {
+            "filename": filename,
+            "url": (
+                "https://github.com/Andy-JunXiong/agent-governance-starter/"
+                f"releases/download/{tag}/{filename}"
+            ),
+            "sha256": digest,
+            "install_method": "pipx",
+        },
+    }
+    args.output.write_text(
+        json.dumps(document, indent=2) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

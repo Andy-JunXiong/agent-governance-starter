@@ -256,7 +256,7 @@ class UpdateCheckCliTests(unittest.TestCase):
             self.assertFalse((root / "governance/contract.json").exists())
 
         self.assertEqual(exit_code, EXIT_FAIL)
-        self.assertIn("no reviewed stable installation source", stdout)
+        self.assertIn("stable artifact metadata is missing", stdout)
         self.assertEqual(stderr, "")
 
     def test_keyboard_interrupt_during_confirmation_reports_zero_write_recovery(
@@ -321,6 +321,48 @@ class UpdateCheckCliTests(unittest.TestCase):
         self.assertIn("PARTIAL UPDATE_VALIDATION", stdout)
         self.assertIn("CREATED governance/contract.json", stdout)
         self.assertIn("RECOVERY agentgov check repository", stdout)
+        self.assertEqual(stderr, "")
+
+    def test_verified_tool_update_installs_then_relaunches_new_process(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            manifest = json.loads(CURRENT.read_text(encoding="utf-8"))
+            manifest.update({"tool_version": "0.1.1", "channel": "stable"})
+            manifest["artifact"] = {
+                "filename": "agent_governance_starter-0.1.1-py3-none-any.whl",
+                "url": (
+                    "https://github.com/Andy-JunXiong/agent-governance-starter/"
+                    "releases/download/v0.1.1/"
+                    "agent_governance_starter-0.1.1-py3-none-any.whl"
+                ),
+                "sha256": "a" * 64,
+                "install_method": "pipx",
+            }
+            manifest_path = root / "stable.json"
+            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+            terminal = TerminalInput("UPDATE\n")
+            executable = Path("agentgov-new.exe")
+            with patch("sys.stdin", terminal), patch(
+                "agentgov.cli.download_verified_wheel"
+            ) as download, patch(
+                "agentgov.cli.install_wheel_with_pipx",
+                return_value=executable,
+            ) as install, patch(
+                "agentgov.cli.relaunch_updated_agentgov",
+                return_value=EXIT_PASS,
+            ) as relaunch:
+                exit_code, stdout, stderr = run_cli(
+                    "update", str(root), "--manifest", str(manifest_path)
+                )
+
+        self.assertEqual(exit_code, EXIT_PASS)
+        download.assert_called_once()
+        install.assert_called_once()
+        relaunch.assert_called_once()
+        self.assertIn("[3/6] DOWNLOAD", stdout)
+        self.assertIn("[4/6] VERIFY", stdout)
+        self.assertIn("[5/6] INSTALL", stdout)
+        self.assertIn("[6/6] RELAUNCH", stdout)
         self.assertEqual(stderr, "")
 
 

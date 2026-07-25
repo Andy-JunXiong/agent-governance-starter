@@ -9,5 +9,6 @@
   "target_layout_version": "1.0",
   "repository_changes_declared": false,
   "declared_migrations": [],
-  "release_notes_url": "https://github.com/Andy-JunXiong/agent-governance-starter"
+  "release_notes_url": "https://github.com/Andy-JunXiong/agent-governance-starter",
+  "artifact": null
 }

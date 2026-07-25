@@ -161,15 +161,16 @@ class UserDocumentationTests(unittest.TestCase):
 
         for content in (english, chinese):
             self.assertIn(
-                'python -m pip install "git+https://github.com/'
-                'Andy-JunXiong/agent-governance-starter.git@main"',
+                'pipx install "https://github.com/Andy-JunXiong/'
+                "agent-governance-starter/releases/download/v0.1.0/"
+                'agent_governance_starter-0.1.0-py3-none-any.whl"',
                 content,
             )
             self.assertIn("python --version", content)
             self.assertIn("python -m agentgov --help", content)
             self.assertIn("python -m agentgov inspect .", content)
             self.assertIn("python -m agentgov check repository .", content)
-            self.assertNotIn("\nagentgov --help", content)
+            self.assertIn("\nagentgov --help", content)
             self.assertIn("Do not clone", english)
             self.assertIn("不要把 starter clone", chinese)
 

@@ -101,15 +101,15 @@ invalidates the generated review artifact._
 
 ## Runnable CLI example
 
-Install the current development package into the active Python environment.
+Install the current package into an isolated pipx environment.
 This does not copy the starter source tree into the repository you want to
 govern:
 
 ```powershell
 python --version
-python -m pip install "git+https://github.com/Andy-JunXiong/agent-governance-starter.git@main"
+pipx install "https://github.com/Andy-JunXiong/agent-governance-starter/releases/download/v0.1.0/agent_governance_starter-0.1.0-py3-none-any.whl"
 agentgov --version
-python -m agentgov --help
+agentgov --help
 ```
 
 For an existing installation, use one command to check the tool and repository,
@@ -126,13 +126,13 @@ Use `--check` for a strictly read-only CI or diagnostic result:
 agentgov update --check .
 ```
 
-The development slice compares against the reviewed release manifest bundled
-with the tool. It can create a missing `governance/contract.json`, preserves a
-current contract, and blocks unsupported layout migrations. Redirected input,
-JSON mode, and non-interactive mode never authorize writes. `agentgov refresh`
-remains available as an advanced repository-only preview/apply command.
-Automatic tool installation still requires a reviewed stable Release or PyPI
-source and is not simulated from mutable development metadata.
+The updater discovers the latest stable GitHub Release manifest, downloads the
+fixed-tag wheel into a temporary directory, verifies its SHA-256, upgrades the
+pipx environment, verifies the installed version, and relaunches the new
+`agentgov` process before repository refresh. Mutable branch files are never
+used as installation metadata. Redirected input, JSON mode, and non-interactive
+mode never authorize writes. `agentgov refresh` remains available as an
+advanced repository-only preview/apply command.
 
 Interactive update output uses explicit terminal states:
 
@@ -288,7 +288,7 @@ and deployment remain separate human-authorized actions.
 
 ## Project status and non-goals
 
-**Status: Experimental (`0.1.0.dev0`).** The project is suitable for evaluation
+**Status: Experimental (`0.1.0`).** The project is suitable for evaluation
 and repository-level pilots. It is not a compliance certification, a runtime
 security boundary, or authorization for autonomous merge, publication, or
 deployment.

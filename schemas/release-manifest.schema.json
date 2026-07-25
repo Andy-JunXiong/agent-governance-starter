@@ -16,7 +16,8 @@
     "target_layout_version",
     "repository_changes_declared",
     "declared_migrations",
-    "release_notes_url"
+    "release_notes_url",
+    "artifact"
   ],
   "properties": {
     "contract": { "const": "agentgov.release-manifest" },
@@ -62,6 +63,27 @@
     "release_notes_url": {
       "type": "string",
       "pattern": "^https://"
+    },
+    "artifact": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["filename", "url", "sha256", "install_method"],
+      "properties": {
+        "filename": {
+          "type": "string",
+          "pattern": "^agent_governance_starter-[A-Za-z0-9_.]+-py3-none-any\\.whl$"
+        },
+        "url": {
+          "type": "string",
+          "pattern": "^https://github\\.com/Andy-JunXiong/agent-governance-starter/releases/download/"
+        },
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "install_method": {"const": "pipx"}
+      }
     }
-  }
+  },
+  "allOf": [{
+    "if": {"properties": {"channel": {"const": "stable"}}},
+    "then": {"properties": {"artifact": {"type": "object"}}}
+  }]
 }

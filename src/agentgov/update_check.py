@@ -39,6 +39,7 @@ class UpdateCheck:
     tool_update_available: bool
     repository_refresh_required: bool
     shadowed_by_project_venv: bool
+    artifact: Mapping[str, str] | None
 
 
 def _asset_root() -> Path:
@@ -130,9 +131,13 @@ def check_for_updates(
     readable_layouts = manifest["readable_layout_versions"]
     target = manifest["target_layout_version"]
     executable = Path(sys.executable).resolve()
-    command = shutil.which("agentgov")
-    if command:
-        executable = Path(command).resolve()
+    invoked = Path(sys.argv[0])
+    if invoked.name.lower() in {"agentgov", "agentgov.exe"} and invoked.exists():
+        executable = invoked.resolve()
+    else:
+        command = shutil.which("agentgov")
+        if command:
+            executable = Path(command).resolve()
     project_venv = (resolved / ".venv").resolve()
     shadowed = executable == project_venv / "Scripts/agentgov.exe" or project_venv in executable.parents
     executable_text = str(executable).lower()
@@ -147,6 +152,12 @@ def check_for_updates(
         else ("project-venv" if shadowed else "unknown")
     )
     available = str(manifest["tool_version"])
+    raw_artifact = manifest.get("artifact")
+    artifact = (
+        {str(key): str(value) for key, value in raw_artifact.items()}
+        if isinstance(raw_artifact, Mapping)
+        else None
+    )
     return UpdateCheck(
         repository=resolved,
         executable=executable,
@@ -163,6 +174,7 @@ def check_for_updates(
         ),
         repository_refresh_required=layout != target,
         shadowed_by_project_venv=shadowed,
+        artifact=artifact,
     )
 
 
@@ -181,6 +193,7 @@ def render_update_check_json(report: UpdateCheck) -> str:
         "release": {
             "channel": report.channel,
             "manifest_source": str(report.manifest_source),
+            "artifact": dict(report.artifact) if report.artifact else None,
         },
         "repository": {
             "path": str(report.repository),

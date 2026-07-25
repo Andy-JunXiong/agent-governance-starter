@@ -15,5 +15,6 @@
   "declared_migrations": [
     "inventory-1.0-to-1.1"
   ],
-  "release_notes_url": "release-notes.md"
+  "release_notes_url": "release-notes.md",
+  "artifact": null
 }

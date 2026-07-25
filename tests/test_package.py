@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 class PackageTests(unittest.TestCase):
     def test_package_exposes_development_version(self) -> None:
-        self.assertEqual(__version__, "0.1.0.dev0")
+        self.assertEqual(__version__, "0.1.0")
 
     def test_package_metadata_uses_the_runtime_version_as_its_single_source(
         self,

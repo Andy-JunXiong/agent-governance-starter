@@ -24,8 +24,10 @@ The distributed schema is
 Future RC publishing should attach a reviewed manifest conforming to this
 contract rather than derive compatibility claims from free-form release text.
 
-`current.json` is the reviewed manifest bundled with the installed tool. The
-read-only `agentgov update --check .` command uses it by default; a downloaded
-candidate can be evaluated explicitly with `--manifest`. The bounded refresh
-workflow may create a missing repository-version anchor; software installation
-and non-anchor layout migrations remain outside the implemented slice.
+`current.json` is the reviewed compatibility baseline bundled with the tool.
+The normal update path discovers `release-manifest.json` from the latest stable
+GitHub Release; `--manifest` remains an explicit offline/test override. The
+stable manifest names a fixed-tag wheel asset and its SHA-256. The tag-triggered
+release workflow runs tests, builds the wheel, generates the manifest after the
+wheel exists, validates it, and publishes both assets. Non-anchor layout
+migrations remain outside the implemented slice.

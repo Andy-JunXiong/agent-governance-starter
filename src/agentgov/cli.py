@@ -4,7 +4,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import secrets
 import sys
+from tempfile import TemporaryDirectory
 from pathlib import Path
 from typing import Sequence
 
@@ -63,6 +66,13 @@ from agentgov.reporting import (
     render_repository_report,
     render_repository_report_json,
     write_report,
+)
+from agentgov.software_update import (
+    SoftwareUpdateError,
+    download_release_manifest,
+    download_verified_wheel,
+    install_wheel_with_pipx,
+    relaunch_updated_agentgov,
 )
 from agentgov.update_check import (
     check_for_updates,
@@ -138,7 +148,35 @@ def _update_repository(
     manifest: Path | None,
     output_format: str,
     non_interactive: bool,
+    resume_after_tool_update: str | None,
 ) -> int:
+    if resume_after_tool_update is not None and (
+        not secrets.compare_digest(
+            resume_after_tool_update,
+            os.environ.get("AGENTGOV_UPDATE_RESUME_TOKEN", ""),
+        )
+    ):
+        print("ERROR UPDATE_RESUME: invalid internal continuation token", file=sys.stderr)
+        return EXIT_ERROR
+    if manifest is None:
+        if output_format == "text":
+            print("[0/6] DISCOVER latest stable release")
+        try:
+            with TemporaryDirectory() as temp_dir:
+                downloaded_manifest = Path(temp_dir) / "release-manifest.json"
+                download_release_manifest(downloaded_manifest)
+                return _update_repository(
+                    path,
+                    check_only=check_only,
+                    manifest=downloaded_manifest,
+                    output_format=output_format,
+                    non_interactive=non_interactive,
+                    resume_after_tool_update=resume_after_tool_update,
+                )
+        except SoftwareUpdateError as exc:
+            print(f"ERROR UPDATE_NETWORK: {exc}", file=sys.stderr)
+            print("RECOVERY agentgov update .")
+            return EXIT_ERROR
     if not check_only and non_interactive:
         print(
             "ERROR update: --non-interactive never authorizes writes; add --check",
@@ -207,13 +245,9 @@ def _update_repository(
         )
     )
 
-    if update.tool_update_available:
-        print(
-            "BLOCKED UPDATE_INSTALL_SOURCE: a newer tool is declared, but no reviewed stable "
-            "installation source is available in the release contract"
-        )
+    if update.tool_update_available and update.artifact is None:
+        print("BLOCKED UPDATE_INSTALL_SOURCE: stable artifact metadata is missing")
         print("NOTE update: no tool or repository files were modified")
-        print("RECOVERY publish or select a reviewed stable release manifest")
         return EXIT_FAIL
     if not update.readable or plan.has_conflicts:
         print(
@@ -224,32 +258,60 @@ def _update_repository(
         print("RECOVERY agentgov refresh . --dry-run")
         return EXIT_FAIL
     create_count = plan.count(RefreshAction.CREATE)
-    if create_count == 0:
+    change_count = create_count + int(update.tool_update_available)
+    if change_count == 0:
         print("SUCCESS UPDATE_CURRENT: tool and repository contract are current")
         return EXIT_PASS
 
-    try:
-        confirmed = request_update_confirmation(
-            repository=update.repository,
-            change_count=create_count,
-            decision_reader=input,
-            is_interactive_terminal=sys.stdin.isatty(),
-        )
-    except KeyboardInterrupt:
-        print("\nINTERRUPTED UPDATE_INTERRUPTED: confirmation stopped before writes")
-        print("NOTE update: no tool, repository files, or Git state were modified")
-        print("RECOVERY agentgov update .")
-        return EXIT_ERROR
-    except EOFError:
-        confirmed = False
-    if not confirmed:
-        print(
-            "CANCELLED UPDATE_NOT_CONFIRMED: exact interactive UPDATE "
-            "confirmation was not received"
-        )
-        print("NOTE update: no tool, repository files, or Git state were modified")
-        print("RECOVERY agentgov update .")
-        return EXIT_PASS
+    if resume_after_tool_update is None:
+        try:
+            confirmed = request_update_confirmation(
+                repository=update.repository,
+                change_count=change_count,
+                decision_reader=input,
+                is_interactive_terminal=sys.stdin.isatty(),
+            )
+        except KeyboardInterrupt:
+            print("\nINTERRUPTED UPDATE_INTERRUPTED: confirmation stopped before writes")
+            print("NOTE update: no tool, repository files, or Git state were modified")
+            print("RECOVERY agentgov update .")
+            return EXIT_ERROR
+        except EOFError:
+            confirmed = False
+        if not confirmed:
+            print(
+                "CANCELLED UPDATE_NOT_CONFIRMED: exact interactive UPDATE "
+                "confirmation was not received"
+            )
+            print("NOTE update: no tool, repository files, or Git state were modified")
+            print("RECOVERY agentgov update .")
+            return EXIT_PASS
+
+    if update.tool_update_available:
+        assert update.artifact is not None
+        print("[3/6] DOWNLOAD stable AgentGov wheel")
+        try:
+            with TemporaryDirectory() as temp_dir:
+                wheel = Path(temp_dir) / update.artifact["filename"]
+                download_verified_wheel(update.artifact, wheel)
+                print("[4/6] VERIFY SHA-256 matched release manifest")
+                print("[5/6] INSTALL verified wheel with pipx")
+                executable = install_wheel_with_pipx(
+                    wheel,
+                    expected_version=update.available_version,
+                )
+                print("[6/6] RELAUNCH updated AgentGov")
+                token = secrets.token_urlsafe(32)
+                return relaunch_updated_agentgov(
+                    executable,
+                    repository=update.repository,
+                    manifest=update.manifest_source,
+                    resume_token=token,
+                )
+        except SoftwareUpdateError as exc:
+            print(f"ERROR UPDATE_INSTALL: {exc}", file=sys.stderr)
+            print("RECOVERY agentgov update .")
+            return EXIT_ERROR
 
     print("[3/4] APPLY reviewed repository changes")
     try:
@@ -1092,7 +1154,12 @@ def build_parser() -> argparse.ArgumentParser:
             manifest=args.manifest,
             output_format=args.update_format,
             non_interactive=args.non_interactive,
+            resume_after_tool_update=args.resume_after_tool_update,
         )
+    )
+    update_parser.add_argument(
+        "--resume-after-tool-update",
+        help=argparse.SUPPRESS,
     )
 
     refresh_parser = commands.add_parser(

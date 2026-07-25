@@ -81,9 +81,10 @@ class PortfolioDocumentationTests(unittest.TestCase):
         text = README.read_text(encoding="utf-8")
 
         for command in (
-            'python -m pip install "git+https://github.com/'
-            'Andy-JunXiong/agent-governance-starter.git@main"',
-            "python -m agentgov --help",
+            'pipx install "https://github.com/Andy-JunXiong/'
+            "agent-governance-starter/releases/download/v0.1.0/"
+            'agent_governance_starter-0.1.0-py3-none-any.whl"',
+            "agentgov --help",
             'python -m agentgov init $Project --project-name "Portfolio Demo"',
             "python -m agentgov check repository $Project",
             'python -m agentgov report repository $Project '
@@ -92,7 +93,7 @@ class PortfolioDocumentationTests(unittest.TestCase):
         ):
             self.assertIn(command, text)
         self.assertLess(
-            text.index('python -m pip install "git+https://github.com/'),
+            text.index('pipx install "https://github.com/'),
             text.index(
                 'python -m agentgov init $Project --project-name "Portfolio Demo"'
             ),
