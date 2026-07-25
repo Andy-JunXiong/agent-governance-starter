@@ -9,6 +9,7 @@
 ```powershell
 python --version
 python -m pip install "git+https://github.com/Andy-JunXiong/agent-governance-starter.git@main"
+agentgov --version
 python -m agentgov --help
 ```
 

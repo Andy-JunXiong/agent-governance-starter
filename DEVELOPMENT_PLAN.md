@@ -79,6 +79,10 @@ Status: `0.1.0.dev0`, experimental.
 
 Implemented foundations:
 
+- one package-version source shared by build metadata, structured producer
+  metadata, and `agentgov --version`;
+- a strict local release-manifest contract and validator for future RC
+  compatibility metadata, without update or migration authority;
 - safe initialization of new or empty repositories;
 - create-missing-only adoption for existing repositories;
 - read-only repository inspection and checks;

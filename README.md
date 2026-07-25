@@ -108,6 +108,7 @@ govern:
 ```powershell
 python --version
 python -m pip install "git+https://github.com/Andy-JunXiong/agent-governance-starter.git@main"
+agentgov --version
 python -m agentgov --help
 ```
 
@@ -313,6 +314,8 @@ The first usable release contains:
   behavior.
 - [Automated tests](tests) cover contracts, failure behavior, artifacts,
   adoption, reports, and CI assumptions.
+- [Release metadata](release/README.md) defines the machine-readable RC
+  compatibility input required before implementing network update checks.
 - [AI capability schema](governance/capability.schema.json) and the generated
   canonical capability template
   show the machine-readable contract.
@@ -382,9 +385,13 @@ package rehearsal is documented in
 [the v0.1 adoption rehearsal](docs/v0.1-adoption-rehearsal.md).
 
 To measure the human bootstrap experience, follow the
-[ten-minute human adoption pilot](docs/human-adoption-pilot.md) and preserve the
+[fresh uncoached guided-onboarding pilot](docs/human-adoption-pilot.md) and preserve the
 result with the
 [human adoption record template](docs/human-adoption-record.template.md).
+Give a fresh participant only the
+[uncoached onboarding handout](docs/uncoached-onboarding-handout.md), the
+repository URL, and a non-sensitive test repository; do not give them the
+facilitator protocol during the session.
 Automated duration must not be reported as human adoption evidence.
 
 ## Existing-repository inspection

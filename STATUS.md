@@ -15,6 +15,11 @@ Last verified: 2026-07-25
 ## Stable foundations
 
 - Installable, zero-runtime-dependency Python CLI.
+- Package metadata and `agentgov --version` derive from the single runtime
+  version declared by `agentgov.__version__`.
+- Strict release-manifest schema, fixtures, and
+  `agentgov check release-manifest` validation establish local RC compatibility
+  metadata without performing network, installer, or repository-write actions.
 - Deterministic repository, capability, reference, evaluation, agent-skill,
   and artifact-drift checks.
 - Explicit `PASS`, `WARN`, `FAIL`, and `ADVISORY` semantics.
@@ -63,6 +68,9 @@ Pre-pilot repository governance foundation:
   complete installed sequence and corrected `onboard` to run the first
   repository check automatically. Remaining work is a fresh uncoached human
   pilot.
+  The facilitator protocol, participant-only handout, and observation record
+  now exercise the current `doctor` → `onboard` → `next` path; a fresh human
+  session is still required.
 - [ ] Convert the Taxi adoption notes into a completed cross-domain pilot
   record, including timing, assistance required, unresolved release-gate
   findings, and final maintainer decisions.

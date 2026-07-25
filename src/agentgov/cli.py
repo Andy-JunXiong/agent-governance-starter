@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 from typing import Sequence
 
+from agentgov import __version__
 from agentgov.adoption import (
     AdoptionConflictError,
     AdoptionState,
@@ -44,6 +45,10 @@ from agentgov.references import (
     ReferencePolicyError,
     ReferenceStatus,
     check_capability_references,
+)
+from agentgov.release_metadata import (
+    load_release_manifest,
+    validate_release_manifest,
 )
 from agentgov.reporting import (
     ReportConflictError,
@@ -358,6 +363,38 @@ def _check_capability(path: Path) -> int:
     return EXIT_PASS
 
 
+def _check_release_manifest(path: Path) -> int:
+    try:
+        document = load_release_manifest(path)
+    except FileNotFoundError:
+        print(f"ERROR release-manifest: file not found: {path}", file=sys.stderr)
+        return EXIT_ERROR
+    except json.JSONDecodeError as exc:
+        print(
+            "ERROR release-manifest: invalid JSON: "
+            f"line {exc.lineno}, column {exc.colno}: {exc.msg}",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    except TypeError as exc:
+        print(f"ERROR release-manifest: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except (OSError, UnicodeError) as exc:
+        print(
+            f"ERROR release-manifest: cannot read {path}: {exc}",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+
+    errors = validate_release_manifest(document)
+    if errors:
+        for error in errors:
+            print(f"FAIL release-manifest: {error}")
+        return EXIT_FAIL
+    print(f"PASS release-manifest: {path} satisfies the release manifest contract")
+    return EXIT_PASS
+
+
 def _check_evaluation(path: Path) -> int:
     try:
         result = check_evaluation_bundle(path)
@@ -657,6 +694,11 @@ def build_parser() -> argparse.ArgumentParser:
         prog="agentgov",
         description="Check repository-native AI governance contracts.",
     )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"%(prog)s {__version__}",
+    )
     commands = parser.add_subparsers(dest="command", required=True)
 
     doctor_parser = commands.add_parser(
@@ -902,6 +944,19 @@ def build_parser() -> argparse.ArgumentParser:
     )
     capability_parser.add_argument("manifest", type=Path, help="Path to a capability JSON file.")
     capability_parser.set_defaults(handler=lambda args: _check_capability(args.manifest))
+
+    release_manifest_parser = check_targets.add_parser(
+        "release-manifest",
+        help="Validate machine-readable AgentGov release and compatibility metadata.",
+    )
+    release_manifest_parser.add_argument(
+        "manifest",
+        type=Path,
+        help="Path to an AgentGov release manifest JSON file.",
+    )
+    release_manifest_parser.set_defaults(
+        handler=lambda args: _check_release_manifest(args.manifest)
+    )
 
     evaluation_parser = check_targets.add_parser(
         "evaluation",

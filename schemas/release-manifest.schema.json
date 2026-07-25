@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/agent-governance-starter/release-manifest.schema.json",
+  "title": "AgentGov Release Manifest",
+  "description": "Machine-readable release and repository-compatibility metadata. It does not authorize software installation or repository migration.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "schema_version",
+    "distribution_name",
+    "tool_version",
+    "channel",
+    "supported_from",
+    "readable_layout_versions",
+    "target_layout_version",
+    "repository_changes_declared",
+    "declared_migrations",
+    "release_notes_url"
+  ],
+  "properties": {
+    "contract": { "const": "agentgov.release-manifest" },
+    "schema_version": { "const": "1.0" },
+    "distribution_name": { "const": "agent-governance-starter" },
+    "tool_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:(?:a|b|rc)[0-9]+|\\.dev[0-9]+)?$"
+    },
+    "channel": {
+      "enum": ["development", "release-candidate", "stable"]
+    },
+    "supported_from": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:(?:a|b|rc)[0-9]+|\\.dev[0-9]+)?$"
+      }
+    },
+    "readable_layout_versions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[0-9]+\\.[0-9]+$"
+      }
+    },
+    "target_layout_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$"
+    },
+    "repository_changes_declared": { "type": "boolean" },
+    "declared_migrations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)*$"
+      }
+    },
+    "release_notes_url": {
+      "type": "string",
+      "pattern": "^https://"
+    }
+  }
+}
