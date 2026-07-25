@@ -75,14 +75,19 @@ No check result authorizes merge, publish, release, or deploy.
 
 ## Current State
 
-Status: `0.1.0.dev0`, experimental.
+Status: `0.1.0`, experimental stable GitHub Release.
 
 Implemented foundations:
 
 - one package-version source shared by build metadata, structured producer
   metadata, and `agentgov --version`;
 - a strict local release-manifest contract and validator for future RC
-  compatibility metadata, without update or migration authority;
+  compatibility metadata;
+- verified stable-release discovery, bounded download, SHA-256 validation,
+  pipx upgrade, new-process continuation, and repository refresh through
+  `agentgov update .`;
+- tag-triggered publication of an immutable release manifest and universal
+  wheel through GitHub Releases;
 - safe initialization of new or empty repositories;
 - create-missing-only adoption for existing repositories;
 - read-only repository inspection and checks;
@@ -356,8 +361,9 @@ and remaining release-boundary findings are recorded.
 ### Low-friction tool execution
 
 Completed on 2026-07-25 for the v0.1 execution-model decision and Windows
-rehearsal. ADR-0004 selects pipx-managed persistent isolation. A stable
-Quickstart pin remains gated on a reviewed release tag.
+rehearsal. ADR-0004 selects pipx-managed persistent isolation. The reviewed
+`v0.1.0` GitHub Release now supplies the stable Quickstart pin and the
+machine-readable update channel.
 
 Goal:
 
@@ -562,22 +568,37 @@ Do not build these from hypothetical taxonomies alone.
 
 ### `0.1.0`
 
-- one real cross-domain pilot completed;
-- adoption and migration documentation corrected from pilot evidence;
-- consumer CI workflow;
-- complete Python 3.11+ validation;
-- no unresolved deterministic failures;
-- explicit human approval for version change, tag, and release.
+Released on 2026-07-25.
+
+Delivered:
+
+- pipx-isolated installation and update lifecycle;
+- guided diagnosis, onboarding, inspection, and next-action commands;
+- immutable GitHub Release manifest with fixed-tag wheel URL and SHA-256;
+- one-command verified software update followed by bounded repository refresh;
+- explicit interruption, failure, partial-update, and recovery reporting;
+- complete local suite with 302 tests passing and one platform-limited skip;
+- successful human-authorized `v0.1.0` tag and GitHub Release.
+
+Carried forward after the release:
+
+- complete the fresh uncoached human adoption pilot;
+- finish the Taxi cross-domain pilot record and maintainer decisions;
+- add a reusable consumer CI workflow;
+- verify the supported operating-system and Python matrix continuously in CI.
 
 ## Next Recommended Starting Point
 
-Use the verified isolated execution path as the base for guided onboarding:
+Use the published `v0.1.0` path for the next evidence cycle:
 
-1. keep the primary stable Quickstart pin gated on a reviewed release tag;
-2. test the guided path from the same realistically deep Windows target shape
-   (automated installed-package rehearsal completed 2026-07-25; uncoached
-   human pilot remains);
-3. finish the Taxi pilot record and maintainer decisions separately.
+1. run a fresh uncoached human pilot using only the public Release install and
+   `agentgov update .` experience;
+2. finish the Taxi pilot record, including timing, assistance, unresolved
+   findings, and maintainer decisions;
+3. design the reusable consumer CI workflow from the stable update and report
+   contracts;
+4. decide whether PyPI adds enough user value beyond the verified GitHub
+   Release channel.
 
 Do not begin dependency risk propagation, repository profiles, governance
 scoring, or taxonomy expansion before pilot evidence justifies the change.

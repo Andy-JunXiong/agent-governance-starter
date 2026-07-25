@@ -4,7 +4,7 @@ Last verified: 2026-07-25
 
 ## Current state
 
-- Version: `0.1.0.dev0`.
+- Version: `0.1.0`; stable GitHub Release published.
 - Maturity: experimental and suitable for repository-level evaluation.
 - Canonical capability layout: `governance/`.
 - Legacy `prompt-governance/` input remains a bounded, read-only compatibility
@@ -18,8 +18,12 @@ Last verified: 2026-07-25
 - Package metadata and `agentgov --version` derive from the single runtime
   version declared by `agentgov.__version__`.
 - Strict release-manifest schema, fixtures, and
-  `agentgov check release-manifest` validation establish local RC compatibility
-  metadata without performing network, installer, or repository-write actions.
+  `agentgov check release-manifest` validation.
+- Verified one-command update flow: stable-release discovery, bounded temporary
+  download, SHA-256 verification, pipx upgrade, new-process relaunch,
+  repository refresh, explicit terminal states, and recovery guidance.
+- Tag-triggered GitHub Release workflow publishes the universal wheel and its
+  immutable machine-readable manifest.
 - Deterministic repository, capability, reference, evaluation, agent-skill,
   and artifact-drift checks.
 - Explicit `PASS`, `WARN`, `FAIL`, and `ADVISORY` semantics.
@@ -76,16 +80,20 @@ Pre-pilot repository governance foundation:
   findings, and final maintainer decisions.
 - [x] Decide whether the supported one-command experience should use an
   isolated tool installer, an ephemeral runner, or a small bootstrap command.
-  The isolated installer is selected; the primary Quickstart still waits for
-  a reviewed release tag instead of presenting Git `main` as a stable pin.
+  The isolated installer is selected and the primary Quickstart now pins the
+  reviewed `v0.1.0` Release wheel instead of mutable Git `main`.
+- [x] Publish the first stable software-update channel. `agentgov update .`
+  discovers the latest stable manifest, verifies the fixed-tag wheel digest,
+  upgrades the pipx environment, relaunches the updated executable, and
+  continues the bounded repository refresh.
 
 ## Known gaps
 
 - Taxi supplied initial cross-domain adoption evidence, but the pilot record
   and maintainer decisions are not complete.
-- Installation still depends on Python 3.11 or newer and pipx. Isolated
-  execution is verified, but the stable Quickstart install command still
-  depends on a reviewed version tag.
+- Installation still depends on Python 3.11 or newer and pipx. GitHub Release
+  is the current stable distribution channel; PyPI publication is not yet
+  configured.
 - Static HTML remains reference material and cannot adapt to repository state.
   The bilingual Quickstarts now label guided onboarding as a development
   preview; the primary path remains unchanged until an uncoached human pilot.
@@ -138,6 +146,22 @@ Guided onboarding validation on 2026-07-25:
   `.venv` empty;
 - the bilingual HTML Quickstarts expose this sequence only as a development
   preview until a fresh uncoached human pilot is recorded.
+
+Stable update and release validation on 2026-07-25:
+
+- 302 unit tests passed on Python 3.12; one platform-limited symbolic-link test
+  was skipped;
+- the final universal wheel built successfully;
+- GitHub Actions release run `30157093313` completed successfully;
+- GitHub Release `v0.1.0` published the wheel and
+  `release-manifest.json`;
+- the public `latest/download/release-manifest.json` endpoint resolved to
+  `0.1.0`;
+- the downloaded wheel SHA-256 independently matched
+  `1e22d736a8701377f8ab7f15bf4ea5a34c80ae0ae944ce84973da6925ffbb18f`;
+- `agentgov update --check .` used the public discovery path, reported
+  installed and available version `0.1.0`, required no repository refresh,
+  modified nothing, and exited `0`.
 
 Latest local validation on 2026-07-24:
 
