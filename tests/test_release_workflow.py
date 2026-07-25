@@ -26,6 +26,7 @@ class ReleaseWorkflowTests(unittest.TestCase):
         text = WORKFLOW.read_text(encoding="utf-8")
 
         self.assertIn("permissions:\n  contents: write", text)
+        self.assertIn("env:\n  PYTHONPATH: src", text)
         self.assertIn("python -m unittest discover -s tests -v", text)
         self.assertIn("python -m build --wheel", text)
         self.assertIn("scripts/build_release_manifest.py", text)
