@@ -69,6 +69,18 @@ def select_report_next_action(root: Path, report: RepositoryReport) -> NextActio
 
     warning = _first_finding(report, FindingStatus.WARN)
     if warning is not None:
+        if warning.check_id.startswith("evaluation:"):
+            relative_bundle = warning.check_id.removeprefix("evaluation:")
+            bundle = resolved / Path(relative_bundle)
+            return NextAction(
+                resolved,
+                ActionKind.INCOMPLETE_EVIDENCE,
+                "Review the first incomplete evaluation evidence item",
+                warning.message,
+                f'agentgov check evaluation "{bundle}"',
+                warning.check_id,
+                False,
+            )
         return NextAction(
             resolved,
             ActionKind.INCOMPLETE_EVIDENCE,

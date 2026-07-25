@@ -112,6 +112,30 @@ agentgov --version
 python -m agentgov --help
 ```
 
+Check the installed tool and repository contract without downloading,
+installing, or modifying anything:
+
+```powershell
+agentgov update --check .
+```
+
+The development slice compares against the reviewed release manifest bundled
+with the tool. A future stable channel can supply a reviewed candidate with
+`--manifest`; automatic tool installation and non-anchor layout migrations are
+not yet implemented.
+
+Preview the bounded repository-side refresh separately:
+
+```powershell
+agentgov refresh . --dry-run
+```
+
+The current slice can plan creation of a missing
+`governance/contract.json`; it preserves a current contract and blocks
+unsupported layout migrations. Rerun without `--dry-run` to review the same
+plan and type exact `REFRESH` in an interactive terminal. Redirected input,
+JSON mode, and non-interactive mode never authorize the write.
+
 Create a synthetic governed repository, inspect it, and write a review report.
 
 PowerShell:
@@ -314,8 +338,8 @@ The first usable release contains:
   behavior.
 - [Automated tests](tests) cover contracts, failure behavior, artifacts,
   adoption, reports, and CI assumptions.
-- [Release metadata](release/README.md) defines the machine-readable RC
-  compatibility input required before implementing network update checks.
+- [Release metadata](release/README.md) defines the machine-readable
+  compatibility input consumed by the read-only update check.
 - [AI capability schema](governance/capability.schema.json) and the generated
   canonical capability template
   show the machine-readable contract.

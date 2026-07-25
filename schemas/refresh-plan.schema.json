@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/agent-governance-starter/refresh-plan.schema.json",
+  "title": "AgentGov Refresh Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract_version", "mode", "repository", "target_layout_version", "summary", "items", "authority_boundary"],
+  "properties": {
+    "contract_version": {"const": "1.0"},
+    "mode": {"const": "dry_run"},
+    "repository": {"type": "string"},
+    "target_layout_version": {"type": "string"},
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["CREATE", "PRESERVE", "CONFLICT"],
+      "properties": {
+        "CREATE": {"type": "integer", "minimum": 0},
+        "PRESERVE": {"type": "integer", "minimum": 0},
+        "CONFLICT": {"type": "integer", "minimum": 0}
+      }
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["action", "path", "reason", "content"],
+        "properties": {
+          "action": {"enum": ["CREATE", "PRESERVE", "CONFLICT"]},
+          "path": {"type": "string"},
+          "reason": {"type": "string"},
+          "content": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "authority_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository_modified", "git_state_modified", "apply_authorized"],
+      "properties": {
+        "repository_modified": {"const": false},
+        "git_state_modified": {"const": false},
+        "apply_authorized": {"const": false}
+      }
+    }
+  }
+}

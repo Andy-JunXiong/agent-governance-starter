@@ -37,6 +37,12 @@ agentgov next .</code></pre>
       <p><code>doctor</code> and <code>next</code> are read-only. Interactive <code>onboard</code> writes only after exact <code>ADOPT</code> from a real terminal, runs the first repository check, and never treats redirected or non-interactive input as write authority.</p>
     </section>
     <section>
+      <h2>Read-only update check</h2>
+      <pre><code>agentgov update --check .
+agentgov refresh . --dry-run</code></pre>
+      <p>The first command reports versions, executable environment, project-venv shadowing, and repository contract compatibility. The second previews an exact repository-contract change. Rerun <code>agentgov refresh .</code> only after review; it writes solely after exact <code>REFRESH</code> confirmation from an interactive terminal. Neither command downloads software.</p>
+    </section>
+    <section>
       <h2>1. Install</h2>
       <p>Run these commands from the repository you want to govern. They install the current development package into the active Python environment without copying the starter source tree into your repository.</p>
       <pre><code>python --version

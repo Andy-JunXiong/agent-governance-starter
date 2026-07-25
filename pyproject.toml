@@ -37,6 +37,9 @@ where = ["src"]
 "share/agent-governance-starter/schemas" = [
   "schemas/*.schema.json",
 ]
+"share/agent-governance-starter/release" = [
+  "release/current.json",
+]
 "share/agent-governance-starter/governance" = [
   "governance/*.schema.json",
 ]

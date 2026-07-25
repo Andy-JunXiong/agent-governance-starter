@@ -17,6 +17,7 @@ from agentgov.release_metadata import (
 ROOT = Path(__file__).resolve().parents[1]
 VALID = ROOT / "release/fixtures/valid-rc.json"
 INVALID = ROOT / "release/fixtures/invalid-contract.json"
+CURRENT = ROOT / "release/current.json"
 
 
 def run_cli(*args: str) -> tuple[int, str, str]:
@@ -28,6 +29,9 @@ def run_cli(*args: str) -> tuple[int, str, str]:
 
 
 class ReleaseManifestTests(unittest.TestCase):
+    def test_bundled_current_manifest_is_valid(self) -> None:
+        self.assertEqual(validate_release_manifest(load_release_manifest(CURRENT)), [])
+
     def test_valid_rc_manifest_declares_compatibility_without_authority(self) -> None:
         document = load_release_manifest(VALID)
 

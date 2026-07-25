@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/agent-governance-starter/update-check.schema.json",
+  "title": "AgentGov Update Check",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract_version", "mode", "tool", "release", "repository", "authority_boundary"],
+  "properties": {
+    "contract_version": {"const": "1.0"},
+    "mode": {"const": "read_only"},
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["installed_version", "available_version", "update_available", "executable", "environment", "shadowed_by_project_venv"],
+      "properties": {
+        "installed_version": {"type": "string"},
+        "available_version": {"type": "string"},
+        "update_available": {"type": "boolean"},
+        "executable": {"type": "string"},
+        "environment": {"enum": ["pipx", "project-venv", "unknown"]},
+        "shadowed_by_project_venv": {"type": "boolean"}
+      }
+    },
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["channel", "manifest_source"],
+      "properties": {
+        "channel": {"enum": ["development", "release-candidate", "stable"]},
+        "manifest_source": {"type": "string"}
+      }
+    },
+    "repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "layout_version", "target_layout_version", "readable", "refresh_required"],
+      "properties": {
+        "path": {"type": "string"},
+        "layout_version": {"type": ["string", "null"]},
+        "target_layout_version": {"type": "string"},
+        "readable": {"type": "boolean"},
+        "refresh_required": {"type": "boolean"}
+      }
+    },
+    "authority_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tool_updated", "repository_modified"],
+      "properties": {
+        "tool_updated": {"const": false},
+        "repository_modified": {"const": false}
+      }
+    }
+  }
+}

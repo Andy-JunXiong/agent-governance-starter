@@ -59,6 +59,45 @@ class EvaluationBundleTests(unittest.TestCase):
 
         self.assertIs(result.status, EvaluationStatus.WARN)
         self.assertEqual(result.readiness, "needs_seed_cases")
+        self.assertIn(
+            "case review status: seed 0 declared/0 reviewed, "
+            "golden 0 declared/0 reviewed, failure 0 declared/0 reviewed",
+            result.messages,
+        )
+        self.assertIn(
+            "next add and review at least one seed case",
+            result.messages,
+        )
+
+    def test_needs_seed_cases_identifies_first_draft_seed_case(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            bundle = Path(temp_dir) / "bundle"
+            shutil.copytree(FIXTURES / "baseline-ready", bundle)
+            manifest_path = bundle / "evaluation-manifest.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["declared_readiness"] = "needs_seed_cases"
+            manifest["baseline"] = {
+                "human_approved": False,
+                "evidence_refs": [],
+            }
+            seed_path = bundle / manifest["cases"]["seed"][0]
+            seed = json.loads(seed_path.read_text(encoding="utf-8"))
+            seed["review_status"] = "draft"
+            seed_path.write_text(json.dumps(seed), encoding="utf-8")
+            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+            result = check_evaluation_bundle(bundle)
+
+        self.assertIs(result.status, EvaluationStatus.WARN)
+        self.assertIn(
+            "case review status: seed 1 declared/0 reviewed, "
+            "golden 1 declared/1 reviewed, failure 1 declared/1 reviewed",
+            result.messages,
+        )
+        self.assertIn(
+            "next review draft seed case seed-cases/basic-request.json",
+            result.messages,
+        )
 
     def test_reviewed_baseline_bundle_passes(self) -> None:
         result = check_evaluation_bundle(FIXTURES / "baseline-ready")

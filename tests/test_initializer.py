@@ -25,6 +25,7 @@ EXPECTED_OUTPUTS = {
     Path("governance/control-mapping.schema.json"),
     Path("governance/inventory.schema.json"),
     Path("governance/inventory.json"),
+    Path("governance/contract.json"),
     Path("governance/capabilities/example-capability.json"),
     Path("governance/controls/example-capability.json"),
     Path("governance/dependencies/example-capability.json"),

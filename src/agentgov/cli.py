@@ -46,6 +46,14 @@ from agentgov.references import (
     ReferenceStatus,
     check_capability_references,
 )
+from agentgov.refresh import (
+    RefreshAction,
+    RefreshConflictError,
+    apply_refresh_plan,
+    plan_refresh,
+    render_refresh_plan_json,
+    request_refresh_confirmation,
+)
 from agentgov.release_metadata import (
     load_release_manifest,
     validate_release_manifest,
@@ -56,11 +64,170 @@ from agentgov.reporting import (
     render_repository_report_json,
     write_report,
 )
+from agentgov.update_check import check_for_updates, render_update_check_json
 
 
 EXIT_PASS = 0
 EXIT_FAIL = 1
 EXIT_ERROR = 2
+
+
+def _update_check(
+    path: Path,
+    *,
+    manifest: Path | None,
+    output_format: str,
+) -> int:
+    try:
+        report = check_for_updates(path, manifest_path=manifest)
+    except FileNotFoundError as exc:
+        print(f"ERROR update: path not found: {exc.filename or exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except json.JSONDecodeError as exc:
+        print(
+            f"ERROR update: invalid JSON at line {exc.lineno}, column {exc.colno}: {exc.msg}",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    except (TypeError, ValueError) as exc:
+        print(f"ERROR update: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except (OSError, UnicodeError) as exc:
+        print(f"ERROR update: cannot inspect update state: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    if output_format == "json":
+        print(render_update_check_json(report), end="")
+    else:
+        print(f"TARGET update: {report.repository}")
+        print(
+            f"TOOL installed={report.installed_version} "
+            f"available={report.available_version} "
+            f"update={'yes' if report.tool_update_available else 'no'}"
+        )
+        print(
+            f"RUNTIME environment={report.environment} "
+            f"executable={report.executable}"
+        )
+        print(
+            "SHADOWING project-venv="
+            f"{'yes' if report.shadowed_by_project_venv else 'no'}"
+        )
+        print(
+            f"REPOSITORY contract={report.repository_layout or 'unversioned'} "
+            f"target={report.target_layout} "
+            f"readable={'yes' if report.readable else 'no'} "
+            f"refresh={'yes' if report.repository_refresh_required else 'no'}"
+        )
+        print(
+            f"RELEASE channel={report.channel} manifest={report.manifest_source}"
+        )
+        print("NOTE update check: no tool was installed or updated")
+        print("NOTE update check: no repository files or Git state were modified")
+    return EXIT_PASS if report.readable else EXIT_FAIL
+
+
+def _refresh_repository(
+    path: Path,
+    *,
+    dry_run: bool,
+    manifest: Path | None,
+    output_format: str,
+    non_interactive: bool,
+) -> int:
+    if not dry_run and non_interactive:
+        print(
+            "ERROR refresh: --non-interactive never authorizes writes; add --dry-run",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    if not dry_run and output_format == "json":
+        print(
+            "ERROR refresh: interactive apply requires text output",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    try:
+        plan = plan_refresh(path, manifest_path=manifest)
+    except FileNotFoundError as exc:
+        print(f"ERROR refresh: path not found: {exc.filename or exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except json.JSONDecodeError as exc:
+        print(
+            f"ERROR refresh: invalid JSON at line {exc.lineno}, column {exc.colno}: {exc.msg}",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    except (TypeError, ValueError) as exc:
+        print(f"ERROR refresh: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except (OSError, UnicodeError) as exc:
+        print(f"ERROR refresh: cannot prepare plan: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    if output_format == "json":
+        print(render_refresh_plan_json(plan), end="")
+    else:
+        print(f"TARGET refresh: {plan.update.repository}")
+        print(f"LAYOUT current={plan.update.repository_layout or 'unversioned'} "
+              f"target={plan.update.target_layout}")
+        for item in plan.items:
+            print(f"{item.action.value} {item.path.as_posix()}: {item.reason}")
+            if item.content is not None:
+                print("CONTENT")
+                print(item.content, end="")
+        print(
+            "SUMMARY "
+            + " ".join(
+                f"{action.value}={plan.count(action)}"
+                for action in RefreshAction
+            )
+        )
+        if dry_run:
+            print("NOTE refresh dry-run: no repository files or Git state were modified")
+            print("NOTE refresh dry-run: this preview does not authorize a later write")
+    if plan.has_conflicts:
+        return EXIT_FAIL
+    if dry_run:
+        return EXIT_PASS
+    if plan.count(RefreshAction.CREATE) == 0:
+        print("PASS refresh: repository contract already matches the target layout")
+        return EXIT_PASS
+
+    try:
+        confirmed = request_refresh_confirmation(
+            plan,
+            decision_reader=input,
+            is_interactive_terminal=sys.stdin.isatty(),
+        )
+    except EOFError:
+        confirmed = False
+    if not confirmed:
+        print("CANCELLED refresh: exact interactive REFRESH confirmation was not received")
+        print("NOTE refresh: no repository files or Git state were modified")
+        return EXIT_PASS
+
+    try:
+        result = apply_refresh_plan(plan)
+    except RefreshConflictError as exc:
+        print(f"FAIL refresh: {exc}")
+        return EXIT_FAIL
+    except (OSError, UnicodeError) as exc:
+        print(f"ERROR refresh: cannot apply plan: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    for created in result.created_files:
+        print(f"CREATE {created.as_posix()}")
+    print(f"PASS refresh: created {len(result.created_files)} deterministic file(s)")
+    print("CHECK refresh: verifying update and repository state")
+    update_exit = _update_check(
+        result.root,
+        manifest=manifest,
+        output_format="text",
+    )
+    repository_exit = _check_repository(result.root)
+    print("NOTE refresh: no Git, merge, publish, release, or deploy action is authorized")
+    return max(update_exit, repository_exit)
 
 
 def _next_repository(
@@ -700,6 +867,86 @@ def build_parser() -> argparse.ArgumentParser:
         version=f"%(prog)s {__version__}",
     )
     commands = parser.add_subparsers(dest="command", required=True)
+
+    update_parser = commands.add_parser(
+        "update",
+        help="Check tool and repository update state without installing or writing.",
+    )
+    update_parser.add_argument(
+        "--check",
+        action="store_true",
+        required=True,
+        help="Run the read-only update check.",
+    )
+    update_parser.add_argument(
+        "path",
+        nargs="?",
+        type=Path,
+        default=Path("."),
+        help="Repository directory to inspect (default: current directory).",
+    )
+    update_parser.add_argument(
+        "--manifest",
+        type=Path,
+        help="Reviewed release manifest to compare (default: bundled current manifest).",
+    )
+    update_parser.add_argument(
+        "--format",
+        dest="update_format",
+        choices=("text", "json"),
+        default="text",
+        help="Update-check serialization format (default: text).",
+    )
+    update_parser.set_defaults(
+        handler=lambda args: _update_check(
+            args.path,
+            manifest=args.manifest,
+            output_format=args.update_format,
+        )
+    )
+
+    refresh_parser = commands.add_parser(
+        "refresh",
+        help="Preview or explicitly apply a bounded repository contract refresh.",
+    )
+    refresh_parser.add_argument(
+        "path",
+        nargs="?",
+        type=Path,
+        default=Path("."),
+        help="Repository directory to preview (default: current directory).",
+    )
+    refresh_parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Preview exact repository changes without requesting confirmation.",
+    )
+    refresh_parser.add_argument(
+        "--manifest",
+        type=Path,
+        help="Reviewed release manifest (default: bundled current manifest).",
+    )
+    refresh_parser.add_argument(
+        "--non-interactive",
+        action="store_true",
+        help="Declare automation mode; it never grants write authority.",
+    )
+    refresh_parser.add_argument(
+        "--format",
+        dest="refresh_format",
+        choices=("text", "json"),
+        default="text",
+        help="Refresh-plan serialization format (default: text).",
+    )
+    refresh_parser.set_defaults(
+        handler=lambda args: _refresh_repository(
+            args.path,
+            dry_run=args.dry_run,
+            manifest=args.manifest,
+            output_format=args.refresh_format,
+            non_interactive=args.non_interactive,
+        )
+    )
 
     doctor_parser = commands.add_parser(
         "doctor",

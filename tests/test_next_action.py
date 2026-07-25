@@ -86,6 +86,29 @@ class NextActionTests(unittest.TestCase):
         self.assertFalse(action.blocking)
         self.assertIsNotNone(action.source_check_id)
 
+    def test_evaluation_warning_uses_scoped_check_command(self) -> None:
+        root = Path("evaluation-warning-fixture")
+        report = RepositoryReport(
+            root,
+            (
+                Finding(
+                    FindingStatus.WARN,
+                    "evaluation:evaluation/example-capability",
+                    "needs_seed_cases: next review draft seed case "
+                    "seed-cases/basic-request.json",
+                ),
+            ),
+        )
+
+        action = select_report_next_action(root, report)
+
+        self.assertIs(action.kind, ActionKind.INCOMPLETE_EVIDENCE)
+        self.assertIn("incomplete evaluation evidence", action.title.lower())
+        self.assertEqual(
+            action.command,
+            f'agentgov check evaluation "{root.resolve() / "evaluation/example-capability"}"',
+        )
+
     def test_json_result_is_read_only_and_does_not_execute_action(self) -> None:
         with TemporaryDirectory() as temp_dir:
             action = select_next_action(Path(temp_dir))

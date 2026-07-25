@@ -23,3 +23,9 @@ The distributed schema is
 [`schemas/release-manifest.schema.json`](../schemas/release-manifest.schema.json).
 Future RC publishing should attach a reviewed manifest conforming to this
 contract rather than derive compatibility claims from free-form release text.
+
+`current.json` is the reviewed manifest bundled with the installed tool. The
+read-only `agentgov update --check .` command uses it by default; a downloaded
+candidate can be evaluated explicitly with `--manifest`. The bounded refresh
+workflow may create a missing repository-version anchor; software installation
+and non-anchor layout migrations remain outside the implemented slice.

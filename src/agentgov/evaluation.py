@@ -420,6 +420,10 @@ def check_evaluation_bundle(bundle: Path) -> EvaluationResult:
         else None
     )
     counts = {case_type: 0 for case_type in _CASE_TYPES}
+    declared_counts = {
+        case_type: len(references) for case_type, references in case_refs.items()
+    }
+    draft_seed_references: list[str] = []
     seen_case_ids: set[str] = set()
     for case_type, references in case_refs.items():
         for reference in references:
@@ -451,6 +455,12 @@ def check_evaluation_bundle(bundle: Path) -> EvaluationResult:
                 )
             if not case_errors and reviewed and case_capability == capability_name:
                 counts[case_type] += 1
+            elif (
+                case_type == "seed"
+                and not case_errors
+                and case_capability == capability_name
+            ):
+                draft_seed_references.append(reference)
 
     if readiness in {"baseline_ready", "regression_ready"}:
         for case_type in _CASE_TYPES:
@@ -467,10 +477,24 @@ def check_evaluation_bundle(bundle: Path) -> EvaluationResult:
             declared_capability,
         )
     if readiness in {"not_configured", "schema_only", "needs_seed_cases"}:
+        case_summary = ", ".join(
+            f"{case_type} {declared_counts[case_type]} declared/{counts[case_type]} reviewed"
+            for case_type in _CASE_TYPES
+        )
+        messages = [
+            f"declared readiness {readiness} is valid but incomplete",
+            f"case review status: {case_summary}",
+        ]
+        if draft_seed_references:
+            messages.append(
+                f"next review draft seed case {draft_seed_references[0]}"
+            )
+        elif readiness == "needs_seed_cases" and declared_counts["seed"] == 0:
+            messages.append("next add and review at least one seed case")
         return EvaluationResult(
             EvaluationStatus.WARN,
             readiness,
-            (f"declared readiness {readiness} is valid but incomplete",),
+            tuple(messages),
             declared_capability,
         )
     return EvaluationResult(
