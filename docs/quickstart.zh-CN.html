@@ -24,10 +24,12 @@
   </header>
   <main class="shell">
     <section>
-      <h2>只读更新检查</h2>
-      <pre><code>agentgov update --check .
-agentgov refresh . --dry-run</code></pre>
-      <p>第一条命令报告工具版本、实际执行环境、项目虚拟环境遮蔽风险和仓库契约兼容性；第二条命令预览精确的仓库契约变化。审阅后可运行 <code>agentgov refresh .</code>，但只有在真实交互终端中准确输入 <code>REFRESH</code> 才会写入。两条命令都不会下载软件。</p>
+      <h2>一条命令完成更新</h2>
+      <pre><code>agentgov update .
+# 只读检查：
+agentgov update --check .</code></pre>
+      <p>主命令会报告版本和仓库兼容性、预览精确且有边界的变化、只请求一次准确的 <code>UPDATE</code> 确认、应用变化并自动复检。只读命令永不写入。在具备受审的稳定分发源之前，工具自身的自动安装保持禁用。</p>
+      <p>进度按 <code>CHECK</code>、<code>PLAN</code>、<code>APPLY</code> 和 <code>VALIDATE</code> 展示。最终状态明确区分 <code>SUCCESS</code>、<code>CANCELLED</code>、<code>BLOCKED</code>、<code>INTERRUPTED</code>、<code>PARTIAL</code> 和 <code>ERROR</code>。如果中断或验证失败前已经创建文件，CLI 会列出该文件并提供一条 <code>RECOVERY</code> 恢复命令。</p>
     </section>
     <section class="emphasis">
       <h2>开始之前</h2>

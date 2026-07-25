@@ -9,7 +9,7 @@ import sys
 import sysconfig
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Callable, Mapping
 
 from agentgov import __version__
 from agentgov.release_metadata import load_release_manifest, validate_release_manifest
@@ -195,3 +195,21 @@ def render_update_check_json(report: UpdateCheck) -> str:
         },
     }
     return json.dumps(payload, indent=2, ensure_ascii=False) + "\n"
+
+
+def request_update_confirmation(
+    *,
+    repository: Path,
+    change_count: int,
+    decision_reader: Callable[[str], str],
+    is_interactive_terminal: bool,
+) -> bool:
+    """Grant orchestration authority only for exact interactive confirmation."""
+
+    if not is_interactive_terminal:
+        return False
+    decision = decision_reader(
+        f'Type UPDATE to apply {change_count} repository change(s) in '
+        f'"{repository}": '
+    )
+    return decision == "UPDATE"

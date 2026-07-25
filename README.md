@@ -112,29 +112,41 @@ agentgov --version
 python -m agentgov --help
 ```
 
-Check the installed tool and repository contract without downloading,
-installing, or modifying anything:
+For an existing installation, use one command to check the tool and repository,
+preview the exact bounded change, request one `UPDATE` confirmation, apply it,
+and rerun validation:
+
+```powershell
+agentgov update .
+```
+
+Use `--check` for a strictly read-only CI or diagnostic result:
 
 ```powershell
 agentgov update --check .
 ```
 
 The development slice compares against the reviewed release manifest bundled
-with the tool. A future stable channel can supply a reviewed candidate with
-`--manifest`; automatic tool installation and non-anchor layout migrations are
-not yet implemented.
+with the tool. It can create a missing `governance/contract.json`, preserves a
+current contract, and blocks unsupported layout migrations. Redirected input,
+JSON mode, and non-interactive mode never authorize writes. `agentgov refresh`
+remains available as an advanced repository-only preview/apply command.
+Automatic tool installation still requires a reviewed stable Release or PyPI
+source and is not simulated from mutable development metadata.
 
-Preview the bounded repository-side refresh separately:
+Interactive update output uses explicit terminal states:
 
-```powershell
-agentgov refresh . --dry-run
-```
+- `SUCCESS`: update and final validation completed;
+- `CANCELLED`: confirmation was not granted and nothing changed;
+- `BLOCKED`: compatibility, integrity, or release metadata prevents a write;
+- `INTERRUPTED`: execution stopped before a write;
+- `PARTIAL`: a declared file was created, but interruption or validation failure
+  requires the printed `RECOVERY` command;
+- `ERROR`: an operational input, I/O, or contract error prevented completion.
 
-The current slice can plan creation of a missing
-`governance/contract.json`; it preserves a current contract and blocks
-unsupported layout migrations. Rerun without `--dry-run` to review the same
-plan and type exact `REFRESH` in an interactive terminal. Redirected input,
-JSON mode, and non-interactive mode never authorize the write.
+Progress is printed as `CHECK`, `PLAN`, `APPLY`, and `VALIDATE`. Every
+non-success result states whether repository files changed and prints one
+recovery action where automation can determine it.
 
 Create a synthetic governed repository, inspect it, and write a review report.
 

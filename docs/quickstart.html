@@ -37,10 +37,12 @@ agentgov next .</code></pre>
       <p><code>doctor</code> and <code>next</code> are read-only. Interactive <code>onboard</code> writes only after exact <code>ADOPT</code> from a real terminal, runs the first repository check, and never treats redirected or non-interactive input as write authority.</p>
     </section>
     <section>
-      <h2>Read-only update check</h2>
-      <pre><code>agentgov update --check .
-agentgov refresh . --dry-run</code></pre>
-      <p>The first command reports versions, executable environment, project-venv shadowing, and repository contract compatibility. The second previews an exact repository-contract change. Rerun <code>agentgov refresh .</code> only after review; it writes solely after exact <code>REFRESH</code> confirmation from an interactive terminal. Neither command downloads software.</p>
+      <h2>One-command update</h2>
+      <pre><code>agentgov update .
+# Read-only alternative:
+agentgov update --check .</code></pre>
+      <p>The primary command reports versions and repository compatibility, previews the exact bounded change, requests one exact <code>UPDATE</code> confirmation, applies it, and reruns validation. The check alternative never writes. Automatic tool installation remains disabled until a reviewed stable distribution source exists.</p>
+      <p>Progress is labeled <code>CHECK</code>, <code>PLAN</code>, <code>APPLY</code>, and <code>VALIDATE</code>. Final states distinguish <code>SUCCESS</code>, <code>CANCELLED</code>, <code>BLOCKED</code>, <code>INTERRUPTED</code>, <code>PARTIAL</code>, and <code>ERROR</code>. If a file was created before interruption or failed validation, the CLI lists it and prints one <code>RECOVERY</code> command.</p>
     </section>
     <section>
       <h2>1. Install</h2>

@@ -64,7 +64,11 @@ from agentgov.reporting import (
     render_repository_report_json,
     write_report,
 )
-from agentgov.update_check import check_for_updates, render_update_check_json
+from agentgov.update_check import (
+    check_for_updates,
+    render_update_check_json,
+    request_update_confirmation,
+)
 
 
 EXIT_PASS = 0
@@ -125,6 +129,186 @@ def _update_check(
         print("NOTE update check: no tool was installed or updated")
         print("NOTE update check: no repository files or Git state were modified")
     return EXIT_PASS if report.readable else EXIT_FAIL
+
+
+def _update_repository(
+    path: Path,
+    *,
+    check_only: bool,
+    manifest: Path | None,
+    output_format: str,
+    non_interactive: bool,
+) -> int:
+    if not check_only and non_interactive:
+        print(
+            "ERROR update: --non-interactive never authorizes writes; add --check",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    if not check_only and output_format == "json":
+        print(
+            "ERROR update: interactive apply requires text output; add --check",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    if check_only:
+        return _update_check(path, manifest=manifest, output_format=output_format)
+
+    print("[1/4] CHECK tool and repository compatibility")
+    try:
+        update = check_for_updates(path, manifest_path=manifest)
+        print("[2/4] PLAN exact repository changes")
+        plan = plan_refresh(path, manifest_path=manifest)
+    except KeyboardInterrupt:
+        print("\nINTERRUPTED UPDATE_INTERRUPTED: stopped before repository writes")
+        print("RECOVERY agentgov update .")
+        return EXIT_ERROR
+    except FileNotFoundError as exc:
+        print(
+            f"ERROR UPDATE_PATH: path not found: {exc.filename or exc}",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    except json.JSONDecodeError as exc:
+        print(
+            f"ERROR UPDATE_JSON: invalid JSON at line {exc.lineno}, "
+            f"column {exc.colno}: {exc.msg}",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    except (TypeError, ValueError) as exc:
+        print(f"ERROR UPDATE_CONTRACT: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except (OSError, UnicodeError) as exc:
+        print(f"ERROR UPDATE_IO: cannot prepare update: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    print(f"TARGET update: {update.repository}")
+    print(
+        f"TOOL installed={update.installed_version} "
+        f"available={update.available_version} "
+        f"update={'yes' if update.tool_update_available else 'no'}"
+    )
+    print(
+        f"REPOSITORY contract={update.repository_layout or 'unversioned'} "
+        f"target={update.target_layout} "
+        f"refresh={'yes' if update.repository_refresh_required else 'no'}"
+    )
+    for item in plan.items:
+        print(f"{item.action.value} {item.path.as_posix()}: {item.reason}")
+        if item.content is not None:
+            print("CONTENT")
+            print(item.content, end="")
+    print(
+        "SUMMARY "
+        + " ".join(
+            f"{action.value}={plan.count(action)}"
+            for action in RefreshAction
+        )
+    )
+
+    if update.tool_update_available:
+        print(
+            "BLOCKED UPDATE_INSTALL_SOURCE: a newer tool is declared, but no reviewed stable "
+            "installation source is available in the release contract"
+        )
+        print("NOTE update: no tool or repository files were modified")
+        print("RECOVERY publish or select a reviewed stable release manifest")
+        return EXIT_FAIL
+    if not update.readable or plan.has_conflicts:
+        print(
+            "BLOCKED UPDATE_CONFLICT: resolve the reported repository "
+            "compatibility conflict"
+        )
+        print("NOTE update: no repository files were modified")
+        print("RECOVERY agentgov refresh . --dry-run")
+        return EXIT_FAIL
+    create_count = plan.count(RefreshAction.CREATE)
+    if create_count == 0:
+        print("SUCCESS UPDATE_CURRENT: tool and repository contract are current")
+        return EXIT_PASS
+
+    try:
+        confirmed = request_update_confirmation(
+            repository=update.repository,
+            change_count=create_count,
+            decision_reader=input,
+            is_interactive_terminal=sys.stdin.isatty(),
+        )
+    except KeyboardInterrupt:
+        print("\nINTERRUPTED UPDATE_INTERRUPTED: confirmation stopped before writes")
+        print("NOTE update: no tool, repository files, or Git state were modified")
+        print("RECOVERY agentgov update .")
+        return EXIT_ERROR
+    except EOFError:
+        confirmed = False
+    if not confirmed:
+        print(
+            "CANCELLED UPDATE_NOT_CONFIRMED: exact interactive UPDATE "
+            "confirmation was not received"
+        )
+        print("NOTE update: no tool, repository files, or Git state were modified")
+        print("RECOVERY agentgov update .")
+        return EXIT_PASS
+
+    print("[3/4] APPLY reviewed repository changes")
+    try:
+        result = apply_refresh_plan(plan)
+    except KeyboardInterrupt:
+        created = tuple(
+            item.path
+            for item in plan.items
+            if item.action is RefreshAction.CREATE
+            and (plan.update.repository / item.path).is_file()
+        )
+        if created:
+            print("\nPARTIAL UPDATE_INTERRUPTED: interrupted after repository write")
+            for created_path in created:
+                print(f"CREATED {created_path.as_posix()}")
+            print(f'RECOVERY agentgov check repository "{plan.update.repository}"')
+        else:
+            print("\nINTERRUPTED UPDATE_INTERRUPTED: stopped before repository writes")
+            print("RECOVERY agentgov update .")
+        return EXIT_ERROR
+    except RefreshConflictError as exc:
+        print(f"BLOCKED UPDATE_RACE: {exc}")
+        print("RECOVERY agentgov update --check .")
+        return EXIT_FAIL
+    except (OSError, UnicodeError) as exc:
+        print(
+            f"ERROR UPDATE_WRITE: cannot apply repository refresh: {exc}",
+            file=sys.stderr,
+        )
+        print(f'RECOVERY agentgov check repository "{plan.update.repository}"')
+        return EXIT_ERROR
+
+    for created in result.created_files:
+        print(f"CREATE {created.as_posix()}")
+    print(f"APPLIED update: {len(result.created_files)} repository change(s)")
+    print("[4/4] VALIDATE final tool and repository state")
+    try:
+        update_exit = _update_check(
+            result.root,
+            manifest=manifest,
+            output_format="text",
+        )
+        repository_exit = _check_repository(result.root)
+    except KeyboardInterrupt:
+        print("\nPARTIAL UPDATE_INTERRUPTED: repository changed; validation interrupted")
+        for created in result.created_files:
+            print(f"CREATED {created.as_posix()}")
+        print(f'RECOVERY agentgov check repository "{result.root}"')
+        return EXIT_ERROR
+    print("NOTE update: no Git, merge, publish, release, or deploy action is authorized")
+    final_exit = max(update_exit, repository_exit)
+    if final_exit != EXIT_PASS:
+        print("PARTIAL UPDATE_VALIDATION: repository changed; final validation did not pass")
+        for created in result.created_files:
+            print(f"CREATED {created.as_posix()}")
+        print(f'RECOVERY agentgov check repository "{result.root}"')
+        return final_exit
+    print("SUCCESS UPDATE_COMPLETE: tool and repository contract are current")
+    return EXIT_PASS
 
 
 def _refresh_repository(
@@ -870,13 +1054,12 @@ def build_parser() -> argparse.ArgumentParser:
 
     update_parser = commands.add_parser(
         "update",
-        help="Check tool and repository update state without installing or writing.",
+        help="Check and explicitly apply the bounded tool/repository update workflow.",
     )
     update_parser.add_argument(
         "--check",
         action="store_true",
-        required=True,
-        help="Run the read-only update check.",
+        help="Check update state without installing or modifying repository files.",
     )
     update_parser.add_argument(
         "path",
@@ -884,6 +1067,11 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=Path("."),
         help="Repository directory to inspect (default: current directory).",
+    )
+    update_parser.add_argument(
+        "--non-interactive",
+        action="store_true",
+        help="Declare automation mode; it never grants write authority.",
     )
     update_parser.add_argument(
         "--manifest",
@@ -898,10 +1086,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="Update-check serialization format (default: text).",
     )
     update_parser.set_defaults(
-        handler=lambda args: _update_check(
+        handler=lambda args: _update_repository(
             args.path,
+            check_only=args.check,
             manifest=args.manifest,
             output_format=args.update_format,
+            non_interactive=args.non_interactive,
         )
     )
 
