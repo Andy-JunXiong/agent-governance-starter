@@ -6,6 +6,7 @@
   "additionalProperties": false,
   "required": [
     "contract_version",
+    "tool",
     "repository",
     "mode",
     "summary",
@@ -16,6 +17,15 @@
   ],
   "properties": {
     "contract_version": { "const": "1.0" },
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "const": "agentgov" },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    },
     "repository": { "type": "string", "minLength": 1 },
     "mode": { "const": "read_only" },
     "summary": {

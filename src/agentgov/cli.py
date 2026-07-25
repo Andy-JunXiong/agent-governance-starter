@@ -692,7 +692,10 @@ def build_parser() -> argparse.ArgumentParser:
 
     onboard_parser = commands.add_parser(
         "onboard",
-        help="Preview guided create-missing-only onboarding without writing.",
+        help=(
+            "Guide create-missing-only onboarding; preview by default and write "
+            "only after exact ADOPT confirmation in an interactive terminal."
+        ),
     )
     onboard_parser.add_argument(
         "path",

@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 
+from agentgov import __version__
 from agentgov.adoption import AdoptionState, inspect_adoption
 from agentgov.repository import FindingStatus, RepositoryReport, check_repository
 
@@ -158,6 +159,7 @@ def render_next_action_json(
 ) -> str:
     payload = {
         "contract_version": NEXT_ACTION_VERSION,
+        "tool": {"name": "agentgov", "version": __version__},
         "repository": str(action.root),
         "mode": "read_only",
         "interaction": "non_interactive" if non_interactive else "no_prompt",

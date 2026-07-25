@@ -10,6 +10,7 @@ from enum import Enum
 from pathlib import Path
 from typing import Sequence
 
+from agentgov import __version__
 from agentgov.adoption import AdoptionState, inspect_adoption
 
 
@@ -197,6 +198,7 @@ def diagnose_repository(
 def render_doctor_report_json(report: DoctorReport, *, non_interactive: bool) -> str:
     payload = {
         "contract_version": DOCTOR_REPORT_VERSION,
+        "tool": {"name": "agentgov", "version": __version__},
         "repository": str(report.root),
         "mode": "read_only",
         "interaction": "non_interactive" if non_interactive else "no_prompt",

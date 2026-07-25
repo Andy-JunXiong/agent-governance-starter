@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
 
+from agentgov import __version__
 from agentgov.adoption import (
     AdoptionState,
     ExistingRepositoryAdoption,
@@ -94,6 +95,7 @@ def render_onboarding_plan_json(
 ) -> str:
     payload = {
         "contract_version": ONBOARDING_PLAN_VERSION,
+        "tool": {"name": "agentgov", "version": __version__},
         "repository": str(plan.root),
         "mode": "dry_run",
         "interaction": "non_interactive" if non_interactive else "no_prompt",

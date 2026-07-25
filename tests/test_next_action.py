@@ -5,6 +5,7 @@ import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
+from agentgov import __version__
 from agentgov.cli import EXIT_ERROR, EXIT_FAIL, EXIT_PASS, main
 from agentgov.initializer import initialize_project
 from agentgov.next_action import (
@@ -93,6 +94,10 @@ class NextActionTests(unittest.TestCase):
             )
 
         self.assertEqual(payload["mode"], "read_only")
+        self.assertEqual(
+            payload["tool"],
+            {"name": "agentgov", "version": __version__},
+        )
         self.assertEqual(payload["interaction"], "non_interactive")
         self.assertEqual(
             payload["authority_boundary"],
@@ -192,6 +197,8 @@ class NextActionCliTests(unittest.TestCase):
 
         self.assertFalse(schema["additionalProperties"])
         self.assertEqual(schema["properties"]["mode"]["const"], "read_only")
+        self.assertEqual(schema["properties"]["tool"]["properties"]["name"]["const"], "agentgov")
+        self.assertIn("version", schema["properties"]["tool"]["required"])
         authority = schema["properties"]["authority_boundary"]
         self.assertFalse(authority["additionalProperties"])
         for property_schema in authority["properties"].values():

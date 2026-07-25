@@ -5,6 +5,7 @@ import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
+from agentgov import __version__
 from agentgov.adoption import (
     ADOPTION_REPORT_VERSION,
     AdoptionConflictError,
@@ -36,7 +37,7 @@ class AdoptionInspectionTests(unittest.TestCase):
             after = tuple(root.iterdir())
 
         self.assertEqual(before, after)
-        self.assertEqual(report.count(AdoptionState.MISSING), 7)
+        self.assertEqual(report.count(AdoptionState.MISSING), 6)
         self.assertEqual(report.count(AdoptionState.PRESENT), 0)
         self.assertIn("missing governance paths", " ".join(report.recommendations))
 
@@ -68,8 +69,11 @@ class AdoptionInspectionTests(unittest.TestCase):
             report = inspect_adoption(root)
 
         self.assertEqual(report.count(AdoptionState.PRESENT), 6)
-        self.assertEqual(report.count(AdoptionState.MISSING), 1)
-        self.assertEqual(report.items[-1].path.as_posix(), "governance/artifacts")
+        self.assertEqual(report.count(AdoptionState.MISSING), 0)
+        self.assertNotIn(
+            "governance/artifacts",
+            {item.path.as_posix() for item in report.items},
+        )
 
     def test_wrong_path_type_is_a_deterministic_conflict(self) -> None:
         with TemporaryDirectory() as temp_dir:
@@ -94,6 +98,10 @@ class AdoptionInspectionTests(unittest.TestCase):
         self.assertEqual(first, second)
         payload = json.loads(first)
         self.assertEqual(payload["contract_version"], ADOPTION_REPORT_VERSION)
+        self.assertEqual(
+            payload["tool"],
+            {"name": "agentgov", "version": __version__},
+        )
         self.assertEqual(payload["mode"], "read_only")
         self.assertFalse(payload["authority_boundary"]["inspection_modifies_repository"])
         self.assertFalse(
@@ -110,7 +118,7 @@ class AdoptionInspectionTests(unittest.TestCase):
 
         self.assertEqual(exit_code, EXIT_PASS)
         self.assertIn("MISSING governance:constitution:", stdout)
-        self.assertIn("SUMMARY PRESENT=0 MISSING=7 DISCOVERED=0 CONFLICT=0", stdout)
+        self.assertIn("SUMMARY PRESENT=0 MISSING=6 DISCOVERED=0 CONFLICT=0", stdout)
         self.assertIn("NOTE inspect: no repository files were created or modified", stdout)
         self.assertEqual(stderr, "")
 
@@ -135,6 +143,8 @@ class AdoptionInspectionTests(unittest.TestCase):
         self.assertEqual(schema["$schema"], "https://json-schema.org/draft/2020-12/schema")
         self.assertFalse(schema["additionalProperties"])
         self.assertEqual(schema["properties"]["contract_version"]["const"], "1.0")
+        self.assertEqual(schema["properties"]["tool"]["properties"]["name"]["const"], "agentgov")
+        self.assertIn("version", schema["properties"]["tool"]["required"])
 
     def test_cli_missing_repository_is_an_operational_error(self) -> None:
         with TemporaryDirectory() as temp_dir:

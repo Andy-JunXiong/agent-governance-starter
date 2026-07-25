@@ -136,6 +136,23 @@ class UserDocumentationTests(unittest.TestCase):
             self.assertGreaterEqual(english.count("<section"), 5)
             self.assertGreaterEqual(chinese.count("<section"), 5)
 
+        generated_english = (
+            ROOT / "docs/generated-files-guide.html"
+        ).read_text(encoding="utf-8")
+        generated_chinese = (
+            ROOT / "docs/generated-files-guide.zh-CN.html"
+        ).read_text(encoding="utf-8")
+        adoption_english = (
+            ROOT / "docs/existing-repository-adoption.html"
+        ).read_text(encoding="utf-8")
+        adoption_chinese = (
+            ROOT / "docs/existing-repository-adoption.zh-CN.html"
+        ).read_text(encoding="utf-8")
+        self.assertIn("optional generated output", generated_english)
+        self.assertIn("可选的生成输出", generated_chinese)
+        self.assertIn("not a core adoption path", adoption_english)
+        self.assertIn("不是核心接入路径", adoption_chinese)
+
     def test_web_quickstarts_use_one_python_environment_from_repository_root(
         self,
     ) -> None:

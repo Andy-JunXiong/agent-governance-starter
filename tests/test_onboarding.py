@@ -6,6 +6,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
+from agentgov import __version__
 from agentgov.cli import EXIT_ERROR, EXIT_FAIL, EXIT_PASS, main
 from agentgov.onboarding import (
     OnboardingConflictError,
@@ -96,6 +97,10 @@ class OnboardingPlanTests(unittest.TestCase):
             )
 
         self.assertEqual(payload["mode"], "dry_run")
+        self.assertEqual(
+            payload["tool"],
+            {"name": "agentgov", "version": __version__},
+        )
         self.assertEqual(payload["interaction"], "non_interactive")
         self.assertEqual(
             payload["authority_boundary"],
@@ -318,6 +323,8 @@ class OnboardingCliTests(unittest.TestCase):
 
         self.assertFalse(schema["additionalProperties"])
         self.assertEqual(schema["properties"]["mode"]["const"], "dry_run")
+        self.assertEqual(schema["properties"]["tool"]["properties"]["name"]["const"], "agentgov")
+        self.assertIn("version", schema["properties"]["tool"]["required"])
         authority = schema["properties"]["authority_boundary"]
         self.assertFalse(authority["additionalProperties"])
         for property_schema in authority["properties"].values():

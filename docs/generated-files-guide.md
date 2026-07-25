@@ -75,6 +75,8 @@ agentgov export capability governance/capabilities/example.json --repository .
 ```
 
 Artifacts are deterministic review snapshots. A matching hash proves declared content has not changed; it does not prove that the content is correct or approved.
+The directory is an optional generated-output location, not a core onboarding
+path, and `doctor` does not require it for a configured repository.
 
 ## Before accepting the change
 

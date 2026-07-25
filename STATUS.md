@@ -104,6 +104,10 @@ Guided onboarding validation on 2026-07-25:
   risk, project `.venv` signals, and governance adoption state;
 - text and strict JSON v1.0 results preserve deterministic versus advisory
   classification and stable exit semantics;
+- adoption, doctor, onboarding-plan, and next-action JSON keep contract version
+  separate from the producing AgentGov version in strict `tool` metadata;
+- `governance/artifacts` is treated as optional explicit export output rather
+  than an unresolved core onboarding path;
 - fixture tests cover healthy, unconfigured, conflict, stale `.venv`, old
   Python, deep Windows path, no-write, JSON, and missing-path behavior.
 - `agentgov onboard . --dry-run` produces text or strict JSON v1.0 plans,

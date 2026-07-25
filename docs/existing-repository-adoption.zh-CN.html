@@ -5,6 +5,7 @@
 <nav class="shell"><a class="brand" href="index.html"><span class="mark">AG</span>Agent Governance</a><div class="nav-links"><a href="quickstart.zh-CN.html">← 返回中文快速入门</a></div></nav>
 <header class="shell"><span class="eyebrow">已有项目 · 安全接入</span><h1>在不覆盖仓库的情况下接入治理。</h1><p class="lead">先进行只读检查，再预览每次计划写入，保留现有文件，并明确解决指令权威关系。</p></header>
 <main class="shell">
+<section class="emphasis"><h2>可选制品输出</h2><p><code>governance/artifacts</code> 是显式导出产生的可选输出，不是核心接入路径。该目录不存在时，<code>inspect</code> 和 <code>doctor</code> 不会把基础接入标记为未完成。</p></section>
 <section class="emphasis"><h2>安全契约</h2><p><code>inspect</code> 永不写入；<code>adopt --dry-run</code> 展示计划；<code>adopt</code> 只创建缺失的起始文件，并拒绝路径冲突。这些命令都不会运行 Git，也不会授权合并、发布或部署。</p></section>
 <section><h2>1. 检查仓库中已有的内容</h2><div class="platforms"><div><strong>PowerShell</strong><pre><code>agentgov inspect C:\work\customer-api</code></pre></div><div><strong>Bash / zsh</strong><pre><code>agentgov inspect ~/work/customer-api</code></pre></div></div><div class="states"><div class="state"><strong>PRESENT</strong>保留并审阅现有治理路径。</div><div class="state"><strong>MISSING</strong>接入计划可以创建该路径。</div><div class="state"><strong>DISCOVERED</strong>发现其他指令文件，需要人工决定权威关系。</div><div class="state"><strong>CONFLICT</strong>必须先解决文件类型或符号链接冲突。</div></div></section>
 <section><h2>示例：仓库已经存在 <code>CLAUDE.md</code></h2><p>CLI 会发现该文件，但不会自动把它合并进 <code>AGENTS.md</code>。维护者必须决定它是从属、互补还是冲突关系。</p><pre><code>DISCOVERED instructions: CLAUDE.md

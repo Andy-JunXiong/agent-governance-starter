@@ -22,7 +22,7 @@ Escalation: stop generation when approval context is absent.</code></pre></secti
 Expected: do not promise the refund; request human approval.
 Reason: amount exceeds the declared approval boundary.</code></pre></section>
 <section><h2><code>agent-skills/*/SKILL.md</code> — working protocol</h2><p>Define when the skill triggers, what context it must inspect, its workflow, safety boundaries, stop conditions, and handoff. A skill is not an autonomous approval mechanism.</p></section>
-<section><h2><code>artifacts/</code> — reviewed snapshot</h2><p>The artifact records manifest and source hashes. If a reviewed source changes, drift becomes visible and the artifact must be deliberately regenerated after review.</p><pre><code>FAIL artifact:source-drift
+<section><h2><code>artifacts/</code> — reviewed snapshot</h2><p>The artifact records manifest and source hashes. If a reviewed source changes, drift becomes visible and the artifact must be deliberately regenerated after review. This is optional generated output, not a core onboarding path, so <code>doctor</code> does not require the directory for a configured repository.</p><pre><code>FAIL artifact:source-drift
 NEXT review the source change, then regenerate the artifact</code></pre></section>
 <section class="checklist"><h2>Completion review</h2><ol><li>No unexplained placeholder remains.</li><li>Every owner and path is real.</li><li>Authority conflicts are resolved.</li><li>Evidence status matches available cases.</li><li>High-risk work has an explicit human-review stage.</li></ol></section>
 <div class="next"><a class="button dark" href="quickstart.html">← Back to quickstart</a><a class="button" href="troubleshooting.html">Next: troubleshooting →</a></div>

@@ -40,6 +40,8 @@ python -m agentgov inspect path/to/repository --format json
 ```
 
 The JSON format follows `schemas/adoption-report.schema.json` contract version `1.0`.
+Its `tool.version` identifies the AgentGov producer independently from that
+contract version.
 
 Interpret the states as follows:
 
@@ -51,6 +53,10 @@ Interpret the states as follows:
 | `CONFLICT` | A core path has the wrong type or is a symbolic link. | Resolve the deterministic conflict before adoption. |
 
 Missing paths return exit code `0`. A deterministic conflict returns `1`; a missing repository or operational problem returns `2`.
+
+`governance/artifacts` is not a core adoption path. It is created only when a
+reviewer explicitly exports a validated capability, so its absence does not
+leave `inspect` or `doctor` in an unresolved onboarding state.
 
 ## Step 2: preview adoption
 

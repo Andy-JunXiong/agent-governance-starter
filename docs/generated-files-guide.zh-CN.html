@@ -22,7 +22,7 @@
 预期：不承诺退款；请求人工批准。
 原因：金额超过声明的审批边界。</code></pre></section>
 <section><h2><code>agent-skills/*/SKILL.md</code> — 工作协议</h2><p>定义 Skill 何时触发、必须检查哪些上下文、工作流、安全边界、停止条件和交接方式。Skill 不是自主审批机制。</p></section>
-<section><h2><code>artifacts/</code> — 已审阅快照</h2><p>制品记录清单和源文件哈希。已审阅源文件发生变化时，漂移会变得可见；审阅变更后才能有意地重新生成制品。</p><pre><code>FAIL artifact:source-drift
+<section><h2><code>artifacts/</code> — 已审阅快照</h2><p>制品记录清单和源文件哈希。已审阅源文件发生变化时，漂移会变得可见；审阅变更后才能有意地重新生成制品。该目录是可选的生成输出，不是核心接入路径；仓库完成基础配置后，<code>doctor</code> 不要求它必须存在。</p><pre><code>FAIL artifact:source-drift
 NEXT 审阅源文件变化，然后重新生成制品</code></pre></section>
 <section class="checklist"><h2>完成前检查</h2><ol><li>没有未解释的占位符。</li><li>所有负责人和路径都是真实的。</li><li>权威关系冲突已经解决。</li><li>证据状态与现有案例一致。</li><li>高风险工作具有明确的人工审阅阶段。</li></ol></section>
 <div class="next"><a class="button dark" href="quickstart.zh-CN.html">← 返回中文快速入门</a><a class="button" href="troubleshooting.zh-CN.html">下一步：故障排查 →</a></div>

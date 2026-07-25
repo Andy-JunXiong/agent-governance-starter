@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 
+from agentgov import __version__
 from agentgov.initializer import InitFile, build_scaffold_files
 
 
@@ -60,7 +61,6 @@ _GOVERNANCE_PATHS = (
     ("capabilities", Path("governance/capabilities"), "directory"),
     ("evaluation", Path("evaluation"), "directory"),
     ("agent-skills", Path("agent-skills"), "directory"),
-    ("artifacts", Path("governance/artifacts"), "directory"),
 )
 
 _INSTRUCTION_PATHS = (
@@ -156,6 +156,7 @@ def render_adoption_report_json(report: AdoptionReport) -> str:
 
     payload = {
         "contract_version": ADOPTION_REPORT_VERSION,
+        "tool": {"name": "agentgov", "version": __version__},
         "repository": str(report.root),
         "mode": "read_only",
         "summary": {
