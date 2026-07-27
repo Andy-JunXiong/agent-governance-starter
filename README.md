@@ -477,6 +477,10 @@ $env:PYTHONPATH = "src"
 python -m agentgov check capability prompt-governance/fixtures/valid/runtime-low-risk.json
 ```
 
+This command intentionally exercises a legacy compatibility fixture. New
+repositories use canonical manifests under `governance/capabilities/`;
+`prompt-governance/` remains a bounded, read-only compatibility surface.
+
 After installing the package, the equivalent command is:
 
 ```powershell

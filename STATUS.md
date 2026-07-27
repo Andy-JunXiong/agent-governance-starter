@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-07-25
+Last verified: 2026-07-27
 
 ## Current state
 
@@ -50,6 +50,9 @@ Pre-pilot repository governance foundation:
 - explicit completeness advisories without automatic discovery claims;
 - implementation, review, supported CI, and human-controlled integration are
   complete on `main`.
+- ADR-0006 rejects a general semantic-model implementation until a verified
+  cross-domain gap survives existing-contract-first review; no semantic
+  schema, checker, report field, or migration has been added.
 
 ## Remaining TODOs
 
@@ -77,7 +80,9 @@ Pre-pilot repository governance foundation:
   session is still required.
 - [ ] Convert the Taxi adoption notes into a completed cross-domain pilot
   record, including timing, assistance required, unresolved release-gate
-  findings, and final maintainer decisions.
+  findings, and final maintainer decisions. A bounded semantic-relation gap
+  analysis record is prepared under `docs/experiments/semantic-relations/`;
+  it contains no invented Taxi observations.
 - [x] Decide whether the supported one-command experience should use an
   isolated tool installer, an ephemeral runner, or a small bootstrap command.
   The isolated installer is selected and the primary Quickstart now pins the
@@ -98,10 +103,22 @@ Pre-pilot repository governance foundation:
   The bilingual Quickstarts now label guided onboarding as a development
   preview; the primary path remains unchanged until an uncoached human pilot.
 - Dependency risk propagation and repository profiles are not implemented.
+- Output-level identity and evidence mapping remain an unverified cross-domain
+  question. Existing schema references must be evaluated before any new
+  semantic relation contract.
 - Legacy removal release remains undecided.
 - A successful check does not prove semantic governance sufficiency.
 
 ## Validation
+
+Semantic-relation admission documentation validation on 2026-07-27:
+
+- 302 unit tests passed with the active supported interpreter; one
+  platform-limited symbolic-link test was skipped;
+- repository self-check completed with
+  `PASS=16 WARN=2 FAIL=0 ADVISORY=4`;
+- `git diff --check` passed;
+- no semantic schema, checker, CLI behavior, or report contract changed.
 
 Isolated execution validation on 2026-07-25:
 
