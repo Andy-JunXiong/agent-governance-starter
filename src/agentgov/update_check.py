@@ -122,9 +122,10 @@ def check_for_updates(
     bundled_source = default_release_manifest().resolve()
     source = (manifest_path or bundled_source).resolve()
     manifest = load_release_manifest(source)
+    bundled_manifest = load_release_manifest(bundled_source)
     errors = (
         validate_installed_release_metadata(manifest)
-        if source == bundled_source
+        if source == bundled_source or manifest == bundled_manifest
         else validate_release_manifest(manifest)
     )
     if errors:

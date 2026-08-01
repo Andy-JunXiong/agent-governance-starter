@@ -59,6 +59,20 @@ class UpdateCheckTests(unittest.TestCase):
         self.assertFalse(report.repository_refresh_required)
         self.assertFalse(report.tool_update_available)
 
+    def test_checkout_copy_of_installed_metadata_is_recognized_by_content(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            installed = Path(temp_dir) / "current.json"
+            installed.write_bytes(CURRENT.read_bytes())
+
+            with patch(
+                "agentgov.update_check.default_release_manifest",
+                return_value=installed,
+            ):
+                report = check_for_updates(ROOT, manifest_path=CURRENT)
+
+        self.assertEqual(report.available_version, "0.2.0")
+        self.assertIsNone(report.artifact)
+
     def test_unversioned_repository_requires_refresh_without_writing(self) -> None:
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
