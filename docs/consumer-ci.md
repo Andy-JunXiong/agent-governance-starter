@@ -71,6 +71,24 @@ The generated workflow:
 - beginning with stable 0.2, checks on weekday pushes and pull requests as well
   as a scheduled 13:00 UTC weekday run, so update discovery does not depend on
   repository activity;
+- beginning with stable 0.3, keeps the entire PR governance workflow read-only
+  and uses a separate `.github/workflows/agentgov-upgrade.yml` workflow, with no
+  PR or push trigger, for the scheduled or explicitly dispatched Draft PR
+  proposal job with only `contents: write` and `pull-requests: write`;
+- beginning with stable 0.3, restores the previous trusted default-branch
+  report, verifies its monitor digest, shows up to 20 observed trend points in
+  the Actions Summary, and uploads a self-contained benefit-monitor page;
+- beginning with stable 0.3, gives PR authors only a baseline-relative delta and
+  required action, while trend and upgrade administration remain on trusted
+  default-branch and scheduled runs;
+- maps FAIL to a blocking error annotation and maps WARN/ADVISORY to visible,
+  non-blocking warning annotations without granting PR comment permission;
+- makes a trusted default-branch regression visibly red through a separate
+  read-only job, using GitHub's normal Actions failure notification rather than
+  granting issue or repository write authority;
+- retains the exact default-branch baseline for 90 days while preventing PR
+  runs from becoming the trusted baseline; weekday scheduled runs refresh that
+  baseline for low-activity repositories;
 - uploads both files as a GitHub Actions artifact even when governance has a
   deterministic failure;
 - blocks on AgentGov `FAIL`, while WARN and ADVISORY remain non-blocking;
@@ -96,13 +114,19 @@ The workflow automatically records whether a newer stable AgentGov version or
 repository refresh is available. Beginning with stable 0.2, it also generates
 the consumer upgrade review in the same read-only job. Version installation and
 repository migration remain explicit human-reviewed actions through
-`agentgov update .`. The workflow does not open, merge, or publish an upgrade
-pull request automatically.
+`agentgov update .`. A managed 0.3+ workflow may open one exact Draft PR for a
+compatible workflow-only release. It does not merge, approve, release, deploy,
+or execute production work.
 
-The development-source `agentgov plan upgrade-pr` command defines the read-only
-`current`, `candidate`, and `blocked` contract used by the review layer. See
-[`upgrade-pr-automation.md`](upgrade-pr-automation.md). No branch or pull
-request is created.
+`agentgov status` displays `benefit_evidence: monitor_enabled` only when the
+managed 0.3+ workflow is present. A first run reports `baseline_missing`; a
+single report is never presented as a trend.
+
+`agentgov plan upgrade-pr` defines the read-only `current`, `candidate`, and
+`blocked` contract used by the review and write layers. See
+[`upgrade-pr-automation.md`](upgrade-pr-automation.md). Planning never creates
+a branch or pull request; the separately authorized 0.3 proposal job may do so
+after exact remote revalidation.
 
 The NYC pilot's first stable 0.2.0 run verified the public wheel digest but
 exposed that pip rejects a downloaded wheel renamed to `agentgov.whl`. Patch

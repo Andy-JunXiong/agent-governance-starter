@@ -20,11 +20,12 @@ Adopt a two-stage boundary:
 
 1. a read-only planner validates the stable release manifest, compatibility,
    current managed workflow, exact before/after hashes, and proposed PR text;
-2. a separately authorized GitHub integration may later materialize that exact
-   plan as a branch and pull request, but it may never merge it.
+2. a separately authorized GitHub integration may materialize that exact plan
+   as one managed-workflow commit and Draft PR, but it may never merge it.
 
-The first implementation slice is `agentgov plan upgrade-pr`. It produces
-`current`, `candidate`, or `blocked` and performs no repository or Git write.
+`agentgov plan upgrade-pr` produces `current`, `candidate`, or `blocked` and
+performs no repository or Git write. `agentgov create upgrade-pr` is a separate
+write boundary restricted to scheduled or explicitly opted-in dispatch events.
 
 ## Owns
 
@@ -37,7 +38,7 @@ The first implementation slice is `agentgov plan upgrade-pr`. It produces
 
 ## Does not own
 
-- GitHub authentication or installation;
+- organization-wide GitHub authentication and token policy;
 - organization-wide rollout policy;
 - repository-specific workflow customization;
 - automatic merge, publication, release, deployment, or production execution;
@@ -45,12 +46,12 @@ The first implementation slice is `agentgov plan upgrade-pr`. It produces
 
 ## Consequences
 
-- A future bot can create a reviewable upgrade PR without a person copying
+- A repository-owned workflow can create a reviewable upgrade PR without a person copying
   release details between repositories.
 - Customized workflows and releases with repository migrations stop for human
   handling instead of being overwritten.
-- The initial slice does not yet create a PR; it establishes the deterministic
-  input contract required before write authority is considered.
+- An exact existing branch or PR is reusable after an interrupted run; drift or
+  unrelated changes block instead of being overwritten.
 
 ## Alternatives considered
 
@@ -63,18 +64,20 @@ The first implementation slice is `agentgov plan upgrade-pr`. It produces
 
 ## Implementation plan
 
-1. Ship and pilot the read-only plan contract.
-2. Release the planner through the normal stable channel.
-3. Add an opt-in GitHub workflow with only `contents: write` and
-   `pull-requests: write` for the proposal job.
-4. Revalidate hashes immediately before one branch/PR write.
-5. Keep merge and every downstream transition human-controlled.
+1. Ship and pilot the read-only plan contract. (complete in 0.2)
+2. Add an opt-in GitHub workflow with only `contents: write` and
+   `pull-requests: write` for the proposal job. (implemented for 0.3)
+3. Revalidate remote hashes immediately before one branch/PR write. (implemented)
+4. Bootstrap one pilot through a migration-declared 0.3 review. (pending release)
+5. Keep merge and every downstream transition human-controlled. (invariant)
 
 ## Validation
 
 Deterministic tests cover current, candidate, customized, incompatible,
-migration-declared, malformed-manifest, and no-write states. Human review must
-confirm that a repository owner accepts installation of the future PR creator.
+migration-declared, malformed-manifest, no-write, exact write, remote drift,
+unrelated branch content, idempotence, recovery, and event authorization states.
+Human review must confirm that a repository owner accepts installation of the
+PR creator and enables the repository permission needed by `GITHUB_TOKEN`.
 
 ## Rollback or replacement
 

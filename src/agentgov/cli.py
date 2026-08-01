@@ -27,6 +27,14 @@ from agentgov.artifacts import (
     export_capability_artifact,
 )
 from agentgov.benefits import compare_repository_reports, render_benefit_comparison_json
+from agentgov.benefit_monitor import (
+    BenefitMonitorConflictError,
+    build_benefit_monitor,
+    build_upgrade_observation,
+    render_github_annotations,
+    write_benefit_monitor_bundle,
+    write_upgrade_observation_bundle,
+)
 from agentgov.capability import load_capability_manifest, validate_capability_manifest
 from agentgov.consumer_ci import (
     ConsumerCIState,
@@ -109,6 +117,13 @@ from agentgov.upgrade_review import (
     UpgradeReviewConflictError,
     UpgradeReviewError,
     create_upgrade_review_bundle,
+)
+from agentgov.upgrade_writer import (
+    GitHubApiClient,
+    GitHubApiError,
+    UpgradeWriteConflictError,
+    create_upgrade_draft_pull_request,
+    render_upgrade_write_result_json,
 )
 
 
@@ -229,6 +244,121 @@ def _compare_benefit_reports(
     return EXIT_PASS
 
 
+def _monitor_benefits(
+    report: Path,
+    *,
+    baseline_report: Path | None,
+    baseline_monitor: Path | None,
+    repository: str,
+    ref: str,
+    commit_sha: str,
+    run_id: int,
+    run_attempt: int,
+    event: str,
+    observed_at: str,
+    output: Path,
+) -> int:
+    try:
+        monitor = build_benefit_monitor(
+            report,
+            repository=repository,
+            ref=ref,
+            commit_sha=commit_sha,
+            run_id=run_id,
+            run_attempt=run_attempt,
+            event=event,
+            observed_at=observed_at,
+            baseline_report=baseline_report,
+            baseline_monitor=baseline_monitor,
+        )
+        write_benefit_monitor_bundle(output, monitor)
+    except BenefitMonitorConflictError as exc:
+        print(f"FAIL benefits monitor: {exc}")
+        return EXIT_FAIL
+    except FileNotFoundError as exc:
+        print(
+            f"ERROR benefits monitor: path not found: {exc.filename or exc}",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    except (OSError, UnicodeError, ValueError, TypeError, json.JSONDecodeError) as exc:
+        print(f"ERROR benefits monitor: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    print(f"CREATE benefit-monitor: {output.resolve()}")
+    print(f"STATE {monitor.state.value}")
+    print(f"HISTORY points={len(monitor.history)}")
+    print(
+        "BASELINE "
+        + (f"run_id={monitor.baseline.run_id}" if monitor.baseline else "missing")
+    )
+    print("LIMIT benefits monitor: observed changes do not prove causality or ROI")
+    print("NOTE benefits monitor: no governed repository, Git, merge, release, or deploy action was run")
+    return EXIT_PASS
+
+
+def _annotate_benefits(report: Path) -> int:
+    try:
+        print(render_github_annotations(report), end="")
+    except FileNotFoundError as exc:
+        print(
+            f"ERROR benefits annotate: path not found: {exc.filename or exc}",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    except (OSError, UnicodeError, ValueError, TypeError, json.JSONDecodeError) as exc:
+        print(f"ERROR benefits annotate: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    return EXIT_PASS
+
+
+def _observe_upgrade_benefit(
+    result: Path,
+    *,
+    repository: str,
+    commit_sha: str,
+    run_id: int,
+    started_epoch: int,
+    completed_epoch: int,
+    output: Path,
+) -> int:
+    try:
+        observation = build_upgrade_observation(
+            result,
+            repository=repository,
+            commit_sha=commit_sha,
+            run_id=run_id,
+            started_epoch=started_epoch,
+            completed_epoch=completed_epoch,
+        )
+        write_upgrade_observation_bundle(output, observation)
+    except BenefitMonitorConflictError as exc:
+        print(f"FAIL benefits observe-upgrade: {exc}")
+        return EXIT_FAIL
+    except FileNotFoundError as exc:
+        print(
+            f"ERROR benefits observe-upgrade: path not found: {exc.filename or exc}",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    except (OSError, UnicodeError, ValueError, TypeError, json.JSONDecodeError) as exc:
+        print(f"ERROR benefits observe-upgrade: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    print(f"CREATE upgrade-observation: {output.resolve()}")
+    print(f"STATE {observation.state}")
+    print(
+        "METRIC detection_to_draft_pr_seconds="
+        f"{observation.detection_to_draft_pr_seconds}"
+    )
+    print(
+        "METRIC mechanical_bridge_actions_observed="
+        f"{observation.mechanical_bridge_actions_observed}"
+    )
+    print("LIMIT upgrade observation: workflow time is not labor saved or ROI")
+    return EXIT_PASS
+
+
 def _plan_upgrade_pr(
     path: Path,
     *,
@@ -268,6 +398,91 @@ def _plan_upgrade_pr(
             "merge, release, or deploy action was run"
         )
     return EXIT_FAIL if plan.state is UpgradePlanState.BLOCKED else EXIT_PASS
+
+
+def _create_upgrade_pr(
+    path: Path,
+    *,
+    manifest: Path,
+    repository: str,
+    base_branch: str,
+    event_source: str,
+    current_report: Path | None,
+    target_report: Path | None,
+    token_env: str,
+    output_format: str,
+) -> int:
+    token = os.environ.get(token_env, "")
+    if not token:
+        print(
+            f"ERROR create upgrade-pr: environment variable {token_env} is not set",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    try:
+        client = GitHubApiClient(repository, token=token)
+        result = create_upgrade_draft_pull_request(
+            path,
+            manifest_path=manifest,
+            repository=repository,
+            base_branch=base_branch,
+            event_source=event_source,
+            client=client,
+            current_report_path=current_report,
+            target_report_path=target_report,
+        )
+    except UpgradeWriteConflictError as exc:
+        print(f"FAIL create upgrade-pr: {exc}")
+        return EXIT_FAIL
+    except FileNotFoundError as exc:
+        print(
+            f"ERROR create upgrade-pr: path not found: {exc.filename or exc}",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    except (
+        GitHubApiError,
+        OSError,
+        UnicodeError,
+        ValueError,
+        TypeError,
+        json.JSONDecodeError,
+    ) as exc:
+        print(f"ERROR create upgrade-pr: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    if output_format == "json":
+        print(render_upgrade_write_result_json(result), end="")
+    else:
+        print(f"TARGET upgrade-pr: {result.repository}@{result.base_branch}")
+        print(f"STATE {result.state.value}")
+        print(
+            f"VERSION current={result.current_version} "
+            f"available={result.available_version}"
+        )
+        if result.branch:
+            print(f"BRANCH {result.branch}")
+        if result.pull_request:
+            print(
+                f"PULL_REQUEST #{result.pull_request.number} "
+                f"draft={str(result.pull_request.draft).lower()} "
+                f"url={result.pull_request.url}"
+            )
+        print(
+            "ACTIONS "
+            f"branch_created={str(result.branch_created).lower()} "
+            f"workflow_commit_created={str(result.workflow_commit_created).lower()} "
+            f"pull_request_created={str(result.pull_request_created).lower()}"
+        )
+        print(
+            "NOTE create upgrade-pr: write scope is limited to "
+            ".github/workflows/agentgov.yml on an AgentGov branch"
+        )
+        print(
+            "NOTE create upgrade-pr: merge, release, deploy, and production execution "
+            "remain unauthorized"
+        )
+    return EXIT_PASS
 
 
 def _integrate_github_actions(
@@ -1578,6 +1793,72 @@ def build_parser() -> argparse.ArgumentParser:
             output_format=args.benefits_format,
         )
     )
+    benefits_monitor_parser = benefits_targets.add_parser(
+        "monitor",
+        help="Create a portable trend bundle from a current report and trusted baseline.",
+    )
+    benefits_monitor_parser.add_argument("report", type=Path)
+    benefits_monitor_parser.add_argument("--baseline-report", type=Path)
+    benefits_monitor_parser.add_argument("--baseline-monitor", type=Path)
+    benefits_monitor_parser.add_argument("--repository", required=True)
+    benefits_monitor_parser.add_argument("--ref", required=True)
+    benefits_monitor_parser.add_argument("--commit", dest="commit_sha", required=True)
+    benefits_monitor_parser.add_argument("--run-id", type=int, required=True)
+    benefits_monitor_parser.add_argument("--run-attempt", type=int, required=True)
+    benefits_monitor_parser.add_argument("--event", required=True)
+    benefits_monitor_parser.add_argument("--observed-at", required=True)
+    benefits_monitor_parser.add_argument("--output", type=Path, required=True)
+    benefits_monitor_parser.set_defaults(
+        handler=lambda args: _monitor_benefits(
+            args.report,
+            baseline_report=args.baseline_report,
+            baseline_monitor=args.baseline_monitor,
+            repository=args.repository,
+            ref=args.ref,
+            commit_sha=args.commit_sha,
+            run_id=args.run_id,
+            run_attempt=args.run_attempt,
+            event=args.event,
+            observed_at=args.observed_at,
+            output=args.output,
+        )
+    )
+    benefits_annotate_parser = benefits_targets.add_parser(
+        "annotate",
+        help="Render redacted non-passing findings as GitHub workflow annotations.",
+    )
+    benefits_annotate_parser.add_argument("report", type=Path)
+    benefits_annotate_parser.set_defaults(
+        handler=lambda args: _annotate_benefits(args.report)
+    )
+    benefits_observe_upgrade_parser = benefits_targets.add_parser(
+        "observe-upgrade",
+        help="Record bounded upgrade automation timing and bridge observations.",
+    )
+    benefits_observe_upgrade_parser.add_argument("result", type=Path)
+    benefits_observe_upgrade_parser.add_argument("--repository", required=True)
+    benefits_observe_upgrade_parser.add_argument(
+        "--commit", dest="commit_sha", required=True
+    )
+    benefits_observe_upgrade_parser.add_argument("--run-id", type=int, required=True)
+    benefits_observe_upgrade_parser.add_argument(
+        "--started-epoch", type=int, required=True
+    )
+    benefits_observe_upgrade_parser.add_argument(
+        "--completed-epoch", type=int, required=True
+    )
+    benefits_observe_upgrade_parser.add_argument("--output", type=Path, required=True)
+    benefits_observe_upgrade_parser.set_defaults(
+        handler=lambda args: _observe_upgrade_benefit(
+            args.result,
+            repository=args.repository,
+            commit_sha=args.commit_sha,
+            run_id=args.run_id,
+            started_epoch=args.started_epoch,
+            completed_epoch=args.completed_epoch,
+            output=args.output,
+        )
+    )
 
     plan_parser = commands.add_parser(
         "plan",
@@ -1613,6 +1894,82 @@ def build_parser() -> argparse.ArgumentParser:
             args.path,
             manifest=args.manifest,
             output_format=args.upgrade_pr_format,
+        )
+    )
+
+    create_parser = commands.add_parser(
+        "create",
+        help="Perform one explicitly authorized bounded creation action.",
+    )
+    create_targets = create_parser.add_subparsers(dest="create_target", required=True)
+    create_upgrade_pr_parser = create_targets.add_parser(
+        "upgrade-pr",
+        help="Create or recover one exact AgentGov upgrade Draft PR.",
+    )
+    create_upgrade_pr_parser.add_argument(
+        "path",
+        nargs="?",
+        type=Path,
+        default=Path("."),
+        help="Consumer repository directory (default: current directory).",
+    )
+    create_upgrade_pr_parser.add_argument(
+        "--manifest",
+        type=Path,
+        required=True,
+        help="Downloaded stable release manifest used to revalidate the exact change.",
+    )
+    create_upgrade_pr_parser.add_argument(
+        "--repository",
+        required=True,
+        help="GitHub repository in owner/name form.",
+    )
+    create_upgrade_pr_parser.add_argument(
+        "--base",
+        dest="base_branch",
+        required=True,
+        help="Reviewed base branch, normally the repository default branch.",
+    )
+    create_upgrade_pr_parser.add_argument(
+        "--event",
+        dest="event_source",
+        choices=("schedule", "workflow_dispatch"),
+        required=True,
+        help="Authorized GitHub Actions event source.",
+    )
+    create_upgrade_pr_parser.add_argument(
+        "--current-report",
+        type=Path,
+        help="Dry-run JSON report produced by the currently pinned AgentGov version.",
+    )
+    create_upgrade_pr_parser.add_argument(
+        "--target-report",
+        type=Path,
+        help="Dry-run JSON report produced by the proposed AgentGov version.",
+    )
+    create_upgrade_pr_parser.add_argument(
+        "--token-env",
+        default="GH_TOKEN",
+        help="Environment variable containing the GitHub token (default: GH_TOKEN).",
+    )
+    create_upgrade_pr_parser.add_argument(
+        "--format",
+        dest="create_upgrade_pr_format",
+        choices=("text", "json"),
+        default="text",
+        help="Draft PR result serialization format (default: text).",
+    )
+    create_upgrade_pr_parser.set_defaults(
+        handler=lambda args: _create_upgrade_pr(
+            args.path,
+            manifest=args.manifest,
+            repository=args.repository,
+            base_branch=args.base_branch,
+            event_source=args.event_source,
+            current_report=args.current_report,
+            target_report=args.target_report,
+            token_env=args.token_env,
+            output_format=args.create_upgrade_pr_format,
         )
     )
 

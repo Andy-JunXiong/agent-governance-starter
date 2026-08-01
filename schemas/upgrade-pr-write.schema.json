@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/agent-governance-starter/upgrade-pr-write.schema.json",
+  "title": "AgentGov Upgrade Draft Pull Request Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "tool",
+    "mode",
+    "repository",
+    "base_branch",
+    "state",
+    "current_version",
+    "available_version",
+    "branch",
+    "pull_request",
+    "validation",
+    "actions",
+    "authority_boundary"
+  ],
+  "properties": {
+    "contract_version": {"const": "1.0"},
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": {"const": "agentgov"},
+        "version": {"type": "string", "minLength": 1}
+      }
+    },
+    "mode": {"const": "github_draft_pull_request"},
+    "repository": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+    },
+    "base_branch": {"type": "string", "minLength": 1},
+    "state": {"enum": ["current", "created", "recovered", "existing"]},
+    "current_version": {"type": "string", "minLength": 1},
+    "available_version": {"type": "string", "minLength": 1},
+    "branch": {"type": ["string", "null"]},
+    "pull_request": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["number", "url", "draft"],
+      "properties": {
+        "number": {"type": "integer", "minimum": 1},
+        "url": {"type": "string", "pattern": "^https://github\\.com/"},
+        "draft": {"type": "boolean"}
+      }
+    },
+    "validation": {
+      "anyOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "decision",
+            "current_report_sha256",
+            "target_report_sha256",
+            "current_summary",
+            "target_summary",
+            "deterministic_failures_introduced",
+            "deterministic_failures_resolved"
+          ],
+          "properties": {
+            "decision": {"enum": ["no_new_deterministic_failures", "attention_required"]},
+            "current_report_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "target_report_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "current_summary": {"$ref": "#/$defs/summary"},
+            "target_summary": {"$ref": "#/$defs/summary"},
+            "deterministic_failures_introduced": {"$ref": "#/$defs/check_ids"},
+            "deterministic_failures_resolved": {"$ref": "#/$defs/check_ids"}
+          }
+        }
+      ]
+    },
+    "actions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "branch_created",
+        "managed_workflow_commit_created",
+        "draft_pull_request_created"
+      ],
+      "properties": {
+        "branch_created": {"type": "boolean"},
+        "managed_workflow_commit_created": {"type": "boolean"},
+        "draft_pull_request_created": {"type": "boolean"}
+      }
+    },
+    "authority_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "changed_path",
+        "merge_authorized",
+        "release_authorized",
+        "deploy_authorized",
+        "production_execution_authorized"
+      ],
+      "properties": {
+        "changed_path": {
+          "enum": [".github/workflows/agentgov.yml", null]
+        },
+        "merge_authorized": {"const": false},
+        "release_authorized": {"const": false},
+        "deploy_authorized": {"const": false},
+        "production_execution_authorized": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pass", "warn", "fail", "advisory"],
+      "properties": {
+        "pass": {"type": "integer", "minimum": 0},
+        "warn": {"type": "integer", "minimum": 0},
+        "fail": {"type": "integer", "minimum": 0},
+        "advisory": {"type": "integer", "minimum": 0}
+      }
+    },
+    "check_ids": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"state": {"const": "current"}}},
+      "then": {"properties": {"validation": {"type": "null"}}},
+      "else": {"properties": {"validation": {"type": "object"}}}
+    }
+  ]
+}

@@ -32,6 +32,14 @@ class FindingTransition:
 
 
 @dataclass(frozen=True)
+class RepositoryReportSnapshot:
+    repository: str
+    tool_version: str
+    findings: Mapping[str, str]
+    summary: Mapping[str, int]
+
+
+@dataclass(frozen=True)
 class BenefitComparison:
     before_path: Path
     after_path: Path
@@ -76,7 +84,9 @@ def _mapping(value: Any, *, field: str) -> Mapping[str, Any]:
     return value
 
 
-def _load_report(path: Path) -> tuple[str, str, dict[str, str]]:
+def load_repository_report_snapshot(path: Path) -> RepositoryReportSnapshot:
+    """Validate and load the evidence fields needed by benefit monitoring."""
+
     if path.is_symlink() or not path.is_file():
         raise FileNotFoundError(path)
     document = json.loads(path.read_text(encoding="utf-8"))
@@ -132,15 +142,22 @@ def _load_report(path: Path) -> tuple[str, str, dict[str, str]]:
                 f"report summary.{field} does not match findings: "
                 f"declared {value}, calculated {expected}"
             )
-    return repository, version, findings
+    return RepositoryReportSnapshot(
+        repository=repository,
+        tool_version=version,
+        findings=findings,
+        summary=calculated,
+    )
 
 
 def compare_repository_reports(before: Path, after: Path) -> BenefitComparison:
-    before_repository, before_version, before_findings = _load_report(before)
-    after_repository, after_version, after_findings = _load_report(after)
-    if before_repository != after_repository:
+    before_snapshot = load_repository_report_snapshot(before)
+    after_snapshot = load_repository_report_snapshot(after)
+    if before_snapshot.repository != after_snapshot.repository:
         raise ValueError("before and after reports must identify the same repository")
 
+    before_findings = before_snapshot.findings
+    after_findings = after_snapshot.findings
     before_ids = set(before_findings)
     after_ids = set(after_findings)
     matched = sorted(before_ids & after_ids)
@@ -156,9 +173,9 @@ def compare_repository_reports(before: Path, after: Path) -> BenefitComparison:
     return BenefitComparison(
         before_path=before.resolve(),
         after_path=after.resolve(),
-        repository=before_repository,
-        before_tool_version=before_version,
-        after_tool_version=after_version,
+        repository=before_snapshot.repository,
+        before_tool_version=before_snapshot.tool_version,
+        after_tool_version=after_snapshot.tool_version,
         before_finding_count=len(before_findings),
         after_finding_count=len(after_findings),
         matched_check_count=len(matched),

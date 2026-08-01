@@ -418,11 +418,18 @@ The first usable release contains:
 - [Consumer CI and status](docs/consumer-ci.md) explains automatic pull-request
   checks, update visibility, report artifacts, and remaining human authority.
 - [Upgrade PR automation](docs/upgrade-pr-automation.md) defines the safe
-  proposal contract and the remaining opt-in GitHub write layer.
+  proposal contract, bounded Draft PR writer, and one-time 0.3 bootstrap.
 - [Consumer upgrade review](docs/consumer-upgrade-review.md) explains the
   adopting-project UI, exact workflow patch, gates, and approval boundary.
 - [Benefit evidence](docs/benefit-monitor.md) explains report comparison,
-  denominators, and claims that cannot yet be made.
+  trusted main baselines, the continuous monitor UI, denominators, and claims
+  that cannot be made.
+- [NYC benefit monitor pilot](docs/experiments/nyc-benefit-monitor-pilot.md)
+  defines what NYC users will see after the one-time 0.3 migration.
+- [Remaining development plan](docs/development-plan.md) separates implemented,
+  published, and NYC-adopted behavior and orders the next delivery slices.
+- [Open product decisions](docs/open-decisions-2026-08-02.md) records the
+  unresolved development-time, delivery, upgrade, and benefit questions.
 - [0.2.0rc1 release notes](docs/releases/0.2.0rc1.md) describe compatibility,
   changes, evidence, and the published candidate boundary.
 - [0.2.0 release notes](docs/releases/0.2.0.md) describe the prepared stable

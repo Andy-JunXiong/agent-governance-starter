@@ -9,10 +9,18 @@ from typing import Any, Mapping
 
 from agentgov import __version__
 from agentgov.adoption import AdoptionState, inspect_adoption
-from agentgov.consumer_ci import ConsumerCIState, ConsumerCIStatus, inspect_consumer_ci
+from agentgov.consumer_ci import (
+    UPGRADE_WORKFLOW_PATH,
+    WORKFLOW_PATH,
+    ConsumerCIState,
+    ConsumerCIStatus,
+    inspect_consumer_ci,
+    inspect_managed_workflow_content,
+    inspect_managed_upgrade_workflow_content,
+)
 from agentgov.next_action import NextAction, select_report_next_action
 from agentgov.repository import FindingStatus, RepositoryReport, check_repository
-from agentgov.update_check import load_repository_layout
+from agentgov.update_check import comparable_version_key, load_repository_layout
 
 
 STATUS_CONTRACT_VERSION = "1.0"
@@ -141,6 +149,29 @@ def inspect_governance_status(root: Path) -> GovernanceStatus:
         for path in artifact_root.rglob("artifact.json")
     )
     ci_active = ci.state in {ConsumerCIState.MANAGED, ConsumerCIState.CUSTOM}
+    managed_release = None
+    managed_workflow = resolved / WORKFLOW_PATH
+    if ci.state is ConsumerCIState.MANAGED and managed_workflow.is_file():
+        managed_release = inspect_managed_workflow_content(
+            managed_workflow.read_text(encoding="utf-8")
+        )
+    monitor_enabled = (
+        managed_release is not None
+        and comparable_version_key(managed_release.version)
+        >= comparable_version_key("0.3.0")
+    )
+    upgrade_workflow = resolved / UPGRADE_WORKFLOW_PATH
+    proposal_release = None
+    if upgrade_workflow.is_file() and not upgrade_workflow.is_symlink():
+        proposal_release = inspect_managed_upgrade_workflow_content(
+            upgrade_workflow.read_text(encoding="utf-8")
+        )
+    proposal_enabled = (
+        monitor_enabled
+        and proposal_release is not None
+        and comparable_version_key(proposal_release.version)
+        >= comparable_version_key("0.3.0")
+    )
     surfaces = (
         StatusSurface(
             "repository_validation",
@@ -159,9 +190,16 @@ def inspect_governance_status(root: Path) -> GovernanceStatus:
         _evaluation_surface(capabilities),
         StatusSurface(
             "benefit_evidence",
-            "ready_to_collect" if ci_active else "not_configured",
             (
-                "CI preserves versioned report snapshots; compare two runs with "
+                "monitor_enabled"
+                if monitor_enabled
+                else "ready_to_collect" if ci_active else "not_configured"
+            ),
+            (
+                "CI restores the previous trusted main baseline, publishes observed "
+                "trend evidence, and retains a self-contained monitor page"
+                if monitor_enabled
+                else "CI preserves versioned report snapshots; compare two runs with "
                 "agentgov benefits compare after the workflow has run"
                 if ci_active
                 else "no CI report snapshots are configured for later comparison"
@@ -169,9 +207,12 @@ def inspect_governance_status(root: Path) -> GovernanceStatus:
         ),
         StatusSurface(
             "upgrade_automation",
-            "review_ready",
+            "proposal_enabled" if proposal_enabled else "review_ready",
             (
-                "consumer-local stable upgrade review is available; no authenticated "
+                "scheduled and explicitly dispatched checks may create one bounded "
+                "AgentGov Draft PR; merge remains human-controlled"
+                if proposal_enabled
+                else "consumer-local stable upgrade review is available; no authenticated "
                 "branch or pull-request writer is configured"
             ),
         ),

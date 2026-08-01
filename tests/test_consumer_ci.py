@@ -17,9 +17,11 @@ from agentgov.consumer_ci import (
     WORKFLOW_PATH,
     apply_integration_plan,
     inspect_consumer_ci,
+    inspect_managed_upgrade_workflow_content,
     inspect_managed_workflow_content,
     plan_github_actions_integration,
     render_consumer_workflow,
+    render_consumer_upgrade_workflow,
     render_integration_plan_json,
     request_integration_confirmation,
 )
@@ -174,8 +176,80 @@ class ConsumerWorkflowTests(unittest.TestCase):
         )
         self.assertIn("            agentgov-upgrade-review", workflow)
         self.assertNotIn("contents: write", workflow)
+        self.assertNotIn("actions: read", workflow)
+        self.assertNotIn("agentgov benefits monitor", workflow)
+        self.assertNotIn("agentgov-main-baseline", workflow)
         self.assertNotIn("pull_request_target", workflow)
         self.assertNotIn("gh pr", workflow)
+
+    def test_version_0_3_limits_draft_pr_writes_to_schedule_or_opt_in_dispatch(self) -> None:
+        governance_workflow = render_consumer_workflow(
+            version="0.3.0",
+            wheel_sha256="e" * 64,
+        )
+        upgrade_workflow = render_consumer_upgrade_workflow(
+            version="0.3.0",
+            wheel_sha256="e" * 64,
+        )
+        workflow = governance_workflow + "\n" + upgrade_workflow
+
+        self.assertIn("create_upgrade_pr:", workflow)
+        self.assertIn("default: false", workflow)
+        self.assertIn("propose-agentgov-upgrade:", workflow)
+        self.assertIn(
+            "if: always() && (github.event_name == 'schedule' || "
+            "(github.event_name == 'workflow_dispatch' && inputs.create_upgrade_pr))",
+            workflow,
+        )
+        self.assertIn("needs: governance", workflow)
+        self.assertIn("contents: write", workflow)
+        self.assertIn("pull-requests: write", workflow)
+        self.assertIn("actions: read", workflow)
+        self.assertIn("persist-credentials: false", workflow)
+        self.assertIn("agentgov create upgrade-pr .", workflow)
+        self.assertIn('--event "$GITHUB_EVENT_NAME"', workflow)
+        self.assertIn("GH_TOKEN: ${{ github.token }}", workflow)
+        self.assertIn("Restore previous trusted AgentGov main baseline", workflow)
+        self.assertIn("actions/workflows/agentgov.yml/runs?branch=", workflow)
+        self.assertIn('select(.event == "push" or .event == "schedule"', workflow)
+        self.assertIn('select(.name == "agentgov-main-baseline")', workflow)
+        self.assertIn("agentgov benefits monitor agentgov-report.json \\", workflow)
+        self.assertIn('"${baseline_args[@]}" \\', workflow)
+        self.assertIn("agentgov-benefit-monitor/BENEFIT_MONITOR.md", workflow)
+        self.assertIn("agentgov-benefit-monitor/benefit-monitor.json", workflow)
+        self.assertIn("retention-days: 90", workflow)
+        self.assertIn("agentgov benefits observe-upgrade", workflow)
+        self.assertIn('started_epoch="$(date +%s)"', workflow)
+        self.assertIn("agentgov-upgrade-observation", workflow)
+        self.assertIn("agentgov-benefit-monitor/PR_REVIEW.md", workflow)
+        self.assertIn("agentgov benefits annotate agentgov-report.json", workflow)
+        self.assertIn("Enforce deterministic governance failures", workflow)
+        self.assertIn("surface-governance-regression:", workflow)
+        self.assertIn("Push regression through the workflow conclusion", workflow)
+        self.assertIn("github.event_name != 'pull_request'", workflow)
+        self.assertIn("GitHub can deliver its normal Actions failure notification", workflow)
+        self.assertIn("Run current and proposed versions before writing a Draft PR", workflow)
+        self.assertIn("agentgov check release-manifest", workflow)
+        self.assertIn('--current-report "$RUNNER_TEMP/agentgov-current-report.json"', workflow)
+        self.assertIn('--target-report "$RUNNER_TEMP/agentgov-target-report.json"', workflow)
+        self.assertIn('github.event_name != \'pull_request\'', workflow)
+        self.assertIn("retention-days: 90", workflow)
+        self.assertNotIn("contents: write", governance_workflow)
+        self.assertNotIn("pull-requests: write", governance_workflow)
+        self.assertNotIn("propose-agentgov-upgrade:", governance_workflow)
+        self.assertNotIn("pull_request:", upgrade_workflow)
+        self.assertNotIn("push:", upgrade_workflow)
+        self.assertIn("contents: write", upgrade_workflow)
+        self.assertIn("pull-requests: write", upgrade_workflow)
+        self.assertNotIn("issues: write", workflow)
+        self.assertIsNotNone(inspect_managed_upgrade_workflow_content(upgrade_workflow))
+        self.assertIsNone(
+            inspect_managed_upgrade_workflow_content(
+                upgrade_workflow.replace("default: false", "default: true")
+            )
+        )
+        self.assertNotIn("pull_request_target", workflow)
+        self.assertNotIn("gh pr merge", workflow)
 
     def test_modified_generated_workflow_is_not_managed(self) -> None:
         workflow = render_consumer_workflow().replace(

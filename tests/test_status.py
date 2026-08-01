@@ -6,7 +6,14 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from agentgov.cli import EXIT_ERROR, EXIT_FAIL, EXIT_PASS, main
-from agentgov.consumer_ci import apply_integration_plan, plan_github_actions_integration
+from agentgov.consumer_ci import (
+    UPGRADE_WORKFLOW_PATH,
+    WORKFLOW_PATH,
+    apply_integration_plan,
+    plan_github_actions_integration,
+    render_consumer_workflow,
+    render_consumer_upgrade_workflow,
+)
 from agentgov.initializer import initialize_project
 
 
@@ -65,6 +72,55 @@ class StatusCommandTests(unittest.TestCase):
         self.assertIn("SURFACE pull_request_visibility: state=active", stdout)
         self.assertIn("SURFACE benefit_evidence: state=ready_to_collect", stdout)
         self.assertIn("SURFACE upgrade_automation: state=review_ready", stdout)
+        self.assertEqual(stderr, "")
+
+    def test_status_makes_0_3_draft_pr_automation_visible(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            initialize_project(root, project_name="Proposal Fixture")
+            target = root / WORKFLOW_PATH
+            target.parent.mkdir(parents=True)
+            target.write_text(
+                render_consumer_workflow(
+                    version="0.3.0",
+                    wheel_sha256="f" * 64,
+                ),
+                encoding="utf-8",
+            )
+            upgrade_target = root / UPGRADE_WORKFLOW_PATH
+            upgrade_target.write_text(
+                render_consumer_upgrade_workflow(
+                    version="0.3.0",
+                    wheel_sha256="f" * 64,
+                ),
+                encoding="utf-8",
+            )
+
+            exit_code, stdout, stderr = run_cli("status", temp_dir)
+
+        self.assertEqual(exit_code, EXIT_PASS)
+        self.assertIn("SURFACE benefit_evidence: state=monitor_enabled", stdout)
+        self.assertIn("SURFACE upgrade_automation: state=proposal_enabled", stdout)
+        self.assertIn("merge remains human-controlled", stdout)
+        self.assertEqual(stderr, "")
+
+    def test_status_does_not_claim_writer_when_only_read_only_0_3_workflow_exists(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            initialize_project(root, project_name="Read-only 0.3 Fixture")
+            target = root / WORKFLOW_PATH
+            target.parent.mkdir(parents=True)
+            target.write_text(
+                render_consumer_workflow(version="0.3.0", wheel_sha256="f" * 64),
+                encoding="utf-8",
+            )
+
+            exit_code, stdout, stderr = run_cli("status", temp_dir)
+
+        self.assertEqual(exit_code, EXIT_PASS)
+        self.assertIn("SURFACE benefit_evidence: state=monitor_enabled", stdout)
+        self.assertIn("SURFACE upgrade_automation: state=review_ready", stdout)
+        self.assertNotIn("state=proposal_enabled", stdout)
         self.assertEqual(stderr, "")
 
     def test_json_status_is_read_only_and_preserves_exact_usage(self) -> None:

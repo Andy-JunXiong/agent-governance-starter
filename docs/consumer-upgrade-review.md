@@ -75,6 +75,8 @@ the release wheel, run project tests, create a branch or pull request, merge,
 release, or deploy. The release artifact still requires digest verification at
 installation time.
 
-The future authenticated write layer may attach this same evidence to a draft
-pull request after the consumer owner explicitly enables write permissions. It
-must revalidate the before hash and must never auto-merge.
+The authenticated 0.3+ write layer lives in a separate schedule/dispatch-only
+workflow and uses the same plan to create or recover a Draft PR after the
+consumer owner explicitly enables write permissions. It runs the exact current
+and proposed versions first, revalidates the remote before hash, permits only
+the managed governance workflow path, and never auto-merges.
