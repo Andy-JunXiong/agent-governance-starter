@@ -4,7 +4,7 @@ Last verified: 2026-08-02
 
 ## Current state
 
-- Version: stable `0.1.0`; local release candidate `0.2.0rc1`.
+- Version: stable `0.1.0`; unpublished release candidate `0.2.0rc1` on `main`.
 - Maturity: experimental and suitable for repository-level evaluation.
 - Canonical capability layout: `governance/`.
 - Legacy `prompt-governance/` input remains a bounded, read-only compatibility
@@ -22,8 +22,9 @@ Last verified: 2026-08-02
 - Verified one-command update flow: stable-release discovery, bounded temporary
   download, SHA-256 verification, pipx upgrade, new-process relaunch,
   repository refresh, explicit terminal states, and recovery guidance.
-- Tag-triggered GitHub Release workflow publishes the universal wheel and its
-  immutable machine-readable manifest.
+- Separate tag-triggered stable and release-candidate workflows publish the
+  universal wheel and immutable machine-readable manifest. RC tags create a
+  GitHub Pre-release and cannot enter the stable consumer update channel.
 - Deterministic repository, capability, reference, evaluation, agent-skill,
   and artifact-drift checks.
 - Explicit `PASS`, `WARN`, `FAIL`, and `ADVISORY` semantics.
@@ -123,9 +124,9 @@ Pre-pilot repository governance foundation:
   `status`, `integrate`, `plan upgrade-pr`, `review upgrade`, and
   `benefits compare` commands remain unpublished 0.2.0rc1 behavior until a
   later approved stable release.
-- The local 0.2.0rc1 wheel and immutable rehearsal manifest are validated, but
-  no commit, tag, push, or GitHub Release has been approved. The public stable
-  channel therefore correctly remains at 0.1.0.
+- The 0.2.0rc1 source is on `main`, and its local wheel and immutable rehearsal
+  manifest are validated, but no RC tag or GitHub Pre-release has been created.
+  The public stable channel therefore correctly remains at 0.1.0.
 - Benefit evidence currently compares two downloaded report snapshots. It does
   not yet observe project-test outcomes, PR disposition, runtime incidents,
   human handling time, or false-positive decisions.

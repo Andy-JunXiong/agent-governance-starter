@@ -75,7 +75,7 @@ No check result authorizes merge, publish, release, or deploy.
 
 ## Current State
 
-Status: stable `0.1.0`; local release candidate `0.2.0rc1`.
+Status: stable `0.1.0`; unpublished release candidate `0.2.0rc1` on `main`.
 
 Implemented foundations:
 
@@ -86,8 +86,8 @@ Implemented foundations:
 - verified stable-release discovery, bounded download, SHA-256 validation,
   pipx upgrade, new-process continuation, and repository refresh through
   `agentgov update .`;
-- tag-triggered publication of an immutable release manifest and universal
-  wheel through GitHub Releases;
+- separate tag-triggered stable and release-candidate publication of an
+  immutable release manifest and universal wheel through GitHub Releases;
 - safe initialization of new or empty repositories;
 - create-missing-only adoption for existing repositories;
 - read-only repository inspection and checks;

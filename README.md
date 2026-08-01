@@ -359,7 +359,7 @@ and deployment remain separate human-authorized actions.
 
 ## Project status and non-goals
 
-**Status: stable `0.1.0`; local release candidate `0.2.0rc1`.** The stable
+**Status: stable `0.1.0`; unpublished release candidate `0.2.0rc1` on `main`.** The stable
 release is suitable for evaluation and repository-level pilots. Consumer status,
 integration, upgrade-PR planning, and benefit comparison are development
 features pending a separately approved release. AgentGov is not a compliance
@@ -423,6 +423,8 @@ The first usable release contains:
   denominators, and claims that cannot yet be made.
 - [0.2.0rc1 release notes](docs/releases/0.2.0rc1.md) describe compatibility,
   changes, known gates, and the unpublished candidate boundary.
+- [Release channels](docs/release-channels.md) explain the separate stable and
+  release-candidate workflows, GitHub UI, and human-controlled tag boundary.
 - [Release review bundle](docs/release-review.md) explains automated evidence
   collection and the remaining human approve/change/reject decision.
 - [Case study](docs/case-study.md) explains the product decisions, trust

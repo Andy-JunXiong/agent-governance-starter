@@ -1,0 +1,71 @@
+name: Release candidate
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+rc[0-9]+"
+
+permissions:
+  contents: write
+
+env:
+  PYTHONPATH: src
+
+jobs:
+  release-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.13"
+
+      - name: Validate RC tag, package version, and release notes
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          package_version="$(PYTHONPATH=src python -c 'import agentgov; print(agentgov.__version__)')"
+          test "$version" = "$package_version"
+          [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+rc[0-9]+$ ]]
+          test -f "docs/releases/${version}.md"
+
+      - name: Run release tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Build wheel
+        run: |
+          python -m pip install build
+          python -m build --wheel
+
+      - name: Generate and validate immutable RC manifest
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          python scripts/build_release_manifest.py \
+            dist/agent_governance_starter-"$version"-py3-none-any.whl \
+            dist/release-manifest.json \
+            --version "$version" \
+            --channel release-candidate
+          PYTHONPATH=src python -m agentgov check release-manifest \
+            dist/release-manifest.json
+
+      - name: Create GitHub Pre-release with verified assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          gh release create "$GITHUB_REF_NAME" \
+            dist/agent_governance_starter-*.whl \
+            dist/release-manifest.json \
+            --verify-tag \
+            --title "AgentGov $GITHUB_REF_NAME" \
+            --notes-file "docs/releases/${version}.md" \
+            --prerelease \
+            --latest=false
