@@ -104,7 +104,7 @@ The development-source `agentgov plan upgrade-pr` command defines the read-only
 [`upgrade-pr-automation.md`](upgrade-pr-automation.md). No branch or pull
 request is created.
 
-The NYC pilot remains pinned to stable 0.1.0 until stable 0.2.0 is published.
-Its prepared managed upgrade adds the status card, consumer upgrade review, and
-weekday scheduled discovery. None becomes active in NYC GitHub Actions until
-the exact public stable workflow is reviewed, committed, and pushed.
+The NYC pilot's first stable 0.2.0 run verified the public wheel digest but
+exposed that pip rejects a downloaded wheel renamed to `agentgov.whl`. Patch
+0.2.1 preserves the canonical wheel filename. The exact public patch must pass
+consumer-local review before it replaces NYC's managed workflow.

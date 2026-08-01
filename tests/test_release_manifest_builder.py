@@ -58,6 +58,42 @@ class ReleaseManifestBuilderTests(unittest.TestCase):
             document["artifact"]["url"],
         )
 
+    def test_bundled_metadata_preserves_patch_upgrade_sources(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            wheel = root / "agent_governance_starter-0.2.1-py3-none-any.whl"
+            wheel.write_bytes(b"reviewed wheel fixture")
+            output = root / "release-manifest.json"
+            metadata = root / "current.json"
+            metadata.write_text(
+                json.dumps({
+                    "tool_version": "0.2.1",
+                    "channel": "stable",
+                    "supported_from": ["0.1.0", "0.2.0"],
+                }),
+                encoding="utf-8",
+            )
+
+            subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPT),
+                    str(wheel),
+                    str(output),
+                    "--version",
+                    "0.2.1",
+                    "--metadata",
+                    str(metadata),
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            document = json.loads(output.read_text(encoding="utf-8"))
+
+        self.assertEqual(document["supported_from"], ["0.1.0", "0.2.0"])
+        self.assertEqual(validate_release_manifest(document), [])
+
     def test_version_filename_mismatch_is_rejected_before_output(self) -> None:
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)

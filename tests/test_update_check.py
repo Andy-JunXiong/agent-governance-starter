@@ -70,7 +70,7 @@ class UpdateCheckTests(unittest.TestCase):
             ):
                 report = check_for_updates(ROOT, manifest_path=CURRENT)
 
-        self.assertEqual(report.available_version, "0.2.0")
+        self.assertEqual(report.available_version, "0.2.1")
         self.assertIsNone(report.artifact)
 
     def test_unversioned_repository_requires_refresh_without_writing(self) -> None:
@@ -341,13 +341,13 @@ class UpdateCheckCliTests(unittest.TestCase):
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
             manifest = json.loads(CURRENT.read_text(encoding="utf-8"))
-            manifest.update({"tool_version": "0.2.1", "channel": "stable"})
+            manifest.update({"tool_version": "0.2.2", "channel": "stable"})
             manifest["artifact"] = {
-                "filename": "agent_governance_starter-0.2.1-py3-none-any.whl",
+                "filename": "agent_governance_starter-0.2.2-py3-none-any.whl",
                 "url": (
                     "https://github.com/Andy-JunXiong/agent-governance-starter/"
-                    "releases/download/v0.2.1/"
-                    "agent_governance_starter-0.2.1-py3-none-any.whl"
+                    "releases/download/v0.2.2/"
+                    "agent_governance_starter-0.2.2-py3-none-any.whl"
                 ),
                 "sha256": "a" * 64,
                 "install_method": "pipx",

@@ -46,7 +46,7 @@ class ReleaseManifestTests(unittest.TestCase):
 
         self.assertEqual(document["tool_version"], __version__)
         self.assertEqual(document["channel"], "stable")
-        self.assertEqual(document["supported_from"], ["0.1.0"])
+        self.assertEqual(document["supported_from"], ["0.1.0", "0.2.0"])
         self.assertEqual(document["target_layout_version"], "1.0")
         self.assertFalse(document["repository_changes_declared"])
         self.assertEqual(document["declared_migrations"], [])

@@ -139,10 +139,9 @@ surfaces, and the next accountable action. Markdown output is designed for a
 GitHub Actions job summary and uses portable repository-relative commands. It
 is read-only and does not run the project or production workflows.
 
-These `status` and `integrate` commands are available in the public
-`0.2.0rc1` Pre-release but remain outside the stable update channel. The
-published stable `0.1.0` wheel continues to provide the checks, reports, and
-human-confirmed update flow used by consumer CI.
+These `status` and `integrate` commands are available in stable `0.2.0`. The
+prepared `0.2.1` patch corrects the managed workflow's local wheel filename;
+the checks, reports, and human-confirmed update boundary are unchanged.
 
 Preview a pinned consumer CI workflow, then explicitly create it after review:
 
@@ -361,11 +360,11 @@ and deployment remain separate human-authorized actions.
 
 ## Project status and non-goals
 
-**Status: stable `0.1.0`; published Pre-release `0.2.0rc1`; local stable
-preparation `0.2.0`.** The stable release is suitable for evaluation and
-repository-level pilots. Consumer status, integration, upgrade-PR planning,
-and benefit comparison remain outside the stable channel pending a separately
-approved `0.2.0` release. AgentGov is not a compliance certification, runtime
+**Status: stable `0.2.0`; local patch preparation `0.2.1`.** The stable release
+is suitable for evaluation and repository-level pilots. A consumer workflow
+wheel-filename defect found by the NYC pilot is fixed in the prepared 0.2.1
+patch but remains unpublished until its separate release gate. AgentGov is not
+a compliance certification, runtime
 security boundary, or authorization for autonomous merge, publication, or
 deployment.
 
@@ -428,6 +427,8 @@ The first usable release contains:
   changes, evidence, and the published candidate boundary.
 - [0.2.0 release notes](docs/releases/0.2.0.md) describe the prepared stable
   promotion and its remaining human-controlled gates.
+- [0.2.1 release notes](docs/releases/0.2.1.md) describe the consumer CI
+  wheel-filename correction found by the NYC pilot.
 - [Release channels](docs/release-channels.md) explain the separate stable and
   release-candidate workflows, GitHub UI, and human-controlled tag boundary.
 - [Release review bundle](docs/release-review.md) explains automated evidence

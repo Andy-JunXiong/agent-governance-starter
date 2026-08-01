@@ -75,8 +75,8 @@ No check result authorizes merge, publish, release, or deploy.
 
 ## Current State
 
-Status: stable `0.1.0`; published Pre-release `0.2.0rc1`; local stable
-preparation `0.2.0`.
+Status: stable `0.2.0`; local patch preparation `0.2.1` after NYC consumer CI
+identified an invalid temporary wheel filename.
 
 Implemented foundations:
 

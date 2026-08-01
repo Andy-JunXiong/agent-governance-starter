@@ -140,7 +140,7 @@ class ConsumerWorkflowTests(unittest.TestCase):
 
     def test_version_0_2_workflow_adds_visible_status_without_write_authority(self) -> None:
         workflow = render_consumer_workflow(
-            version="0.2.0",
+            version="0.2.1",
             wheel_sha256="d" * 64,
         )
 
@@ -161,6 +161,12 @@ class ConsumerWorkflowTests(unittest.TestCase):
         )
         self.assertIn("agentgov review upgrade .", workflow)
         self.assertIn('schedule:\n    - cron: "0 13 * * 1-5"', workflow)
+        self.assertIn(
+            'wheel_path="$RUNNER_TEMP/agent_governance_starter-0.2.1-py3-none-any.whl"',
+            workflow,
+        )
+        self.assertIn('python -m pip install --no-deps "$wheel_path"', workflow)
+        self.assertNotIn("$RUNNER_TEMP/agentgov.whl", workflow)
         self.assertIn("--output agentgov-upgrade-review", workflow)
         self.assertIn(
             'cat agentgov-upgrade-review/UPGRADE_REVIEW.md >> "$GITHUB_STEP_SUMMARY"',

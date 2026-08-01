@@ -48,7 +48,8 @@ jobs:
           python scripts/build_release_manifest.py \
             dist/agent_governance_starter-"$version"-py3-none-any.whl \
             dist/release-manifest.json \
-            --version "$version"
+            --version "$version" \
+            --metadata release/current.json
           PYTHONPATH=src python -m agentgov check release-manifest \
             dist/release-manifest.json
 

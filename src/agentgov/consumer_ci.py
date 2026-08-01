@@ -111,9 +111,18 @@ def render_consumer_workflow(
     version_core = re.match(r"^([0-9]+)\.([0-9]+)\.([0-9]+)", version)
     if version_core is None:
         raise ValueError(f"unsupported consumer AgentGov version: {version}")
-    supports_status_markdown = tuple(
-        int(part) for part in version_core.groups()
-    ) >= (0, 2, 0)
+    version_tuple = tuple(int(part) for part in version_core.groups())
+    supports_status_markdown = version_tuple >= (0, 2, 0)
+    wheel_install_script = """          curl --fail --location --silent --show-error "$AGENTGOV_WHEEL_URL" --output "$RUNNER_TEMP/agentgov.whl"
+          echo "$AGENTGOV_WHEEL_SHA256  $RUNNER_TEMP/agentgov.whl" | sha256sum --check -
+          python -m pip install --no-deps "$RUNNER_TEMP/agentgov.whl"
+"""
+    if version_tuple >= (0, 2, 1):
+        wheel_install_script = f"""          wheel_path="$RUNNER_TEMP/{wheel}"
+          curl --fail --location --silent --show-error "$AGENTGOV_WHEEL_URL" --output "$wheel_path"
+          echo "$AGENTGOV_WHEEL_SHA256  $wheel_path" | sha256sum --check -
+          python -m pip install --no-deps "$wheel_path"
+"""
     status_summary = ""
     status_artifact = ""
     schedule_trigger = ""
@@ -190,10 +199,7 @@ jobs:
           AGENTGOV_WHEEL_URL: "{resolved_url}"
           AGENTGOV_WHEEL_SHA256: "{wheel_sha256}"
         run: |
-          curl --fail --location --silent --show-error "$AGENTGOV_WHEEL_URL" --output "$RUNNER_TEMP/agentgov.whl"
-          echo "$AGENTGOV_WHEEL_SHA256  $RUNNER_TEMP/agentgov.whl" | sha256sum --check -
-          python -m pip install --no-deps "$RUNNER_TEMP/agentgov.whl"
-{update_manifest_step}
+{wheel_install_script}{update_manifest_step}
       - name: Record update state
         continue-on-error: true
         run: {update_command}
