@@ -116,6 +116,7 @@ def render_consumer_workflow(
     ) >= (0, 2, 0)
     status_summary = ""
     status_artifact = ""
+    schedule_trigger = ""
     update_manifest_step = ""
     update_command = (
         "agentgov update --check . --non-interactive --format json > "
@@ -123,6 +124,9 @@ def render_consumer_workflow(
     )
     upgrade_review_step = ""
     if supports_status_markdown:
+        schedule_trigger = """  schedule:
+    - cron: "0 13 * * 1-5"
+"""
         update_manifest_step = """
       - name: Download latest stable AgentGov manifest
         continue-on-error: true
@@ -162,7 +166,7 @@ on:
   pull_request:
   push:
   workflow_dispatch:
-
+{schedule_trigger}
 permissions:
   contents: read
 

@@ -139,10 +139,10 @@ surfaces, and the next accountable action. Markdown output is designed for a
 GitHub Actions job summary and uses portable repository-relative commands. It
 is read-only and does not run the project or production workflows.
 
-These `status` and `integrate` commands are currently unpublished release
-candidate `0.2.0rc1` behavior. The published stable `0.1.0` wheel continues to
-provide the checks, reports, and human-confirmed update flow used by consumer
-CI.
+These `status` and `integrate` commands are available in the public
+`0.2.0rc1` Pre-release but remain outside the stable update channel. The
+published stable `0.1.0` wheel continues to provide the checks, reports, and
+human-confirmed update flow used by consumer CI.
 
 Preview a pinned consumer CI workflow, then explicitly create it after review:
 
@@ -155,6 +155,8 @@ The generated workflow verifies and installs a fixed AgentGov Release, records u
 writes the JSON repository report on every push or pull request, and uploads the
 reports as CI artifacts. Starting with 0.2, it also generates the consumer-local
 stable upgrade review, appends it to the job summary, and uploads its evidence.
+It also checks for stable updates on a weekday schedule when the repository has
+no push or pull-request activity.
 It uses read-only repository permissions, does not install adopting-project
 dependencies, and never authorizes merge, release, deployment, or production
 execution. Existing workflow content is never overwritten.
@@ -359,12 +361,13 @@ and deployment remain separate human-authorized actions.
 
 ## Project status and non-goals
 
-**Status: stable `0.1.0`; unpublished release candidate `0.2.0rc1` on `main`.** The stable
-release is suitable for evaluation and repository-level pilots. Consumer status,
-integration, upgrade-PR planning, and benefit comparison are development
-features pending a separately approved release. AgentGov is not a compliance
-certification, runtime security boundary, or authorization for autonomous
-merge, publication, or deployment.
+**Status: stable `0.1.0`; published Pre-release `0.2.0rc1`; local stable
+preparation `0.2.0`.** The stable release is suitable for evaluation and
+repository-level pilots. Consumer status, integration, upgrade-PR planning,
+and benefit comparison remain outside the stable channel pending a separately
+approved `0.2.0` release. AgentGov is not a compliance certification, runtime
+security boundary, or authorization for autonomous merge, publication, or
+deployment.
 
 The current release is not a SaaS control plane, general configuration-quality
 linter, generic LLM evaluation platform, real-time agent monitor, deployment
@@ -422,7 +425,9 @@ The first usable release contains:
 - [Benefit evidence](docs/benefit-monitor.md) explains report comparison,
   denominators, and claims that cannot yet be made.
 - [0.2.0rc1 release notes](docs/releases/0.2.0rc1.md) describe compatibility,
-  changes, known gates, and the unpublished candidate boundary.
+  changes, evidence, and the published candidate boundary.
+- [0.2.0 release notes](docs/releases/0.2.0.md) describe the prepared stable
+  promotion and its remaining human-controlled gates.
 - [Release channels](docs/release-channels.md) explain the separate stable and
   release-candidate workflows, GitHub UI, and human-controlled tag boundary.
 - [Release review bundle](docs/release-review.md) explains automated evidence

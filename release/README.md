@@ -25,6 +25,10 @@ Future RC publishing should attach a reviewed manifest conforming to this
 contract rather than derive compatibility claims from free-form release text.
 
 `current.json` is the reviewed compatibility baseline bundled with the tool.
+For a stable installed version it intentionally leaves `artifact` null: a
+wheel cannot contain its own final SHA-256. Only this recognized bundled file
+uses the installed-metadata validator. Public stable release manifests remain
+strict and must name the fixed-tag wheel asset and its final SHA-256.
 The normal update path discovers `release-manifest.json` from the latest stable
 GitHub Release; `--manifest` remains an explicit offline/test override. The
 stable manifest names a fixed-tag wheel asset and its SHA-256. The tag-triggered

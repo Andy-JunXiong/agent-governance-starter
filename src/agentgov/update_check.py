@@ -12,7 +12,11 @@ from pathlib import Path
 from typing import Any, Callable, Mapping
 
 from agentgov import __version__
-from agentgov.release_metadata import load_release_manifest, validate_release_manifest
+from agentgov.release_metadata import (
+    load_release_manifest,
+    validate_installed_release_metadata,
+    validate_release_manifest,
+)
 
 
 REPOSITORY_CONTRACT = "agentgov.repository-contract"
@@ -115,9 +119,14 @@ def check_for_updates(
     if not resolved.is_dir():
         raise ValueError(f"repository path is not a directory: {root}")
 
-    source = (manifest_path or default_release_manifest()).resolve()
+    bundled_source = default_release_manifest().resolve()
+    source = (manifest_path or bundled_source).resolve()
     manifest = load_release_manifest(source)
-    errors = validate_release_manifest(manifest)
+    errors = (
+        validate_installed_release_metadata(manifest)
+        if source == bundled_source
+        else validate_release_manifest(manifest)
+    )
     if errors:
         raise ValueError("invalid release manifest: " + "; ".join(errors))
 

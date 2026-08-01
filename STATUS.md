@@ -4,7 +4,8 @@ Last verified: 2026-08-02
 
 ## Current state
 
-- Version: stable `0.1.0`; unpublished release candidate `0.2.0rc1` on `main`.
+- Version: stable `0.1.0`; published Pre-release `0.2.0rc1`; local stable
+  preparation `0.2.0`.
 - Maturity: experimental and suitable for repository-level evaluation.
 - Canonical capability layout: `governance/`.
 - Legacy `prompt-governance/` input remains a bounded, read-only compatibility
@@ -124,9 +125,12 @@ Pre-pilot repository governance foundation:
   `status`, `integrate`, `plan upgrade-pr`, `review upgrade`, and
   `benefits compare` commands remain unpublished 0.2.0rc1 behavior until a
   later approved stable release.
-- The 0.2.0rc1 source is on `main`, and its local wheel and immutable rehearsal
-  manifest are validated, but no RC tag or GitHub Pre-release has been created.
-  The public stable channel therefore correctly remains at 0.1.0.
+- The `v0.2.0rc1` GitHub Pre-release, wheel, and immutable manifest are
+  published and independently digest-verified. Stable `0.2.0` remains local
+  preparation, so the public stable channel correctly remains at 0.1.0.
+- The local stable 0.2.0 wheel and strict manifest are digest-matched. The
+  AgentGov/NYC release review passed seven gates, and the NYC consumer upgrade
+  review passed four gates with exactly one unapplied managed-workflow change.
 - Benefit evidence currently compares two downloaded report snapshots. It does
   not yet observe project-test outcomes, PR disposition, runtime incidents,
   human handling time, or false-positive decisions.

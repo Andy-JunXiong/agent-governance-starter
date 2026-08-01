@@ -68,6 +68,9 @@ The generated workflow:
 - beginning with stable 0.2, downloads the latest stable release manifest once,
   reuses it for update inspection and consumer-local upgrade review, appends an
   available review to the job summary, and uploads the complete review bundle;
+- beginning with stable 0.2, checks on weekday pushes and pull requests as well
+  as a scheduled 13:00 UTC weekday run, so update discovery does not depend on
+  repository activity;
 - uploads both files as a GitHub Actions artifact even when governance has a
   deterministic failure;
 - blocks on AgentGov `FAIL`, while WARN and ADVISORY remain non-blocking;
@@ -101,8 +104,7 @@ The development-source `agentgov plan upgrade-pr` command defines the read-only
 [`upgrade-pr-automation.md`](upgrade-pr-automation.md). No branch or pull
 request is created.
 
-The NYC pilot remains pinned to stable 0.1.0, so its current workflow keeps the
-existing report summary. The status card and automatic consumer upgrade review
-are locally verifiable but are not active in NYC CI until a stable release
-containing them is published and the managed workflow is upgraded through
-review.
+The NYC pilot remains pinned to stable 0.1.0 until stable 0.2.0 is published.
+Its prepared managed upgrade adds the status card, consumer upgrade review, and
+weekday scheduled discovery. None becomes active in NYC GitHub Actions until
+the exact public stable workflow is reviewed, committed, and pushed.

@@ -175,6 +175,22 @@ def validate_release_manifest(document: Mapping[str, Any]) -> list[str]:
     return errors
 
 
+def validate_installed_release_metadata(document: Mapping[str, Any]) -> list[str]:
+    """Validate bundled version metadata without requiring a self-hash.
+
+    A stable wheel cannot contain its own final SHA-256. The bundled
+    ``release/current.json`` therefore carries compatibility identity but no
+    artifact. Public release manifests remain strict under
+    :func:`validate_release_manifest`.
+    """
+
+    errors = validate_release_manifest(document)
+    self_hash_error = "$.artifact is required for stable releases"
+    if document.get("channel") == "stable" and document.get("artifact") is None:
+        errors = [error for error in errors if error != self_hash_error]
+    return errors
+
+
 def load_release_manifest(path: Path) -> Mapping[str, Any]:
     """Load one release manifest without interpreting untrusted fields."""
 

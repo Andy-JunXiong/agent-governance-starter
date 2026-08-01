@@ -75,7 +75,8 @@ No check result authorizes merge, publish, release, or deploy.
 
 ## Current State
 
-Status: stable `0.1.0`; unpublished release candidate `0.2.0rc1` on `main`.
+Status: stable `0.1.0`; published Pre-release `0.2.0rc1`; local stable
+preparation `0.2.0`.
 
 Implemented foundations:
 

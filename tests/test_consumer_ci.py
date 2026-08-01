@@ -67,6 +67,7 @@ class ConsumerWorkflowTests(unittest.TestCase):
         self.assertNotIn("agentgov-status.md", workflow)
         self.assertNotIn("agentgov review upgrade", workflow)
         self.assertNotIn("agentgov-latest-manifest.json", workflow)
+        self.assertNotIn("schedule:", workflow)
         self.assertIn("if: always()", workflow)
         self.assertIn("actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f", workflow)
         self.assertNotIn("requirements.txt", workflow)
@@ -159,6 +160,7 @@ class ConsumerWorkflowTests(unittest.TestCase):
             workflow,
         )
         self.assertIn("agentgov review upgrade .", workflow)
+        self.assertIn('schedule:\n    - cron: "0 13 * * 1-5"', workflow)
         self.assertIn("--output agentgov-upgrade-review", workflow)
         self.assertIn(
             'cat agentgov-upgrade-review/UPGRADE_REVIEW.md >> "$GITHUB_STEP_SUMMARY"',
