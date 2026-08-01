@@ -122,17 +122,20 @@ pilots, and observed repeat use rather than a uniqueness claim.
   model-output quality.
 - The project is not a runtime security boundary, compliance certification, or
   deployment authorization system.
-- The JSON v1.0 repository-report contract exists, but no web UI, API server,
-  GitHub Action integration, or repository discovery currently exists.
+- The JSON v1.0 repository-report contract now supports a bounded generated
+  GitHub Actions workflow, but no web UI, API server, cross-repository
+  discovery, or automatic upgrade pull request currently exists.
 - A successful internal rehearsal is not evidence of universal adoption speed.
 
 ## Future product direction
 
-The versioned JSON repository report now preserves the current finding
-semantics as a stable integration boundary. A future UI could consume that
-contract to show capability ownership, readiness, drift, exceptions, and
-human-review queues without duplicating checker logic or moving policy
-authority out of the repository.
+The versioned JSON repository report preserves the current finding semantics as
+a stable integration boundary. Consumer CI now uses that boundary directly,
+and the read-only status surface exposes capability ownership, callers,
+readiness, active checks, and missing integrations without reconstructing
+checker logic. A future UI could consume the same contract to show drift,
+exceptions, and human-review queues without moving policy authority out of the
+repository.
 
 That UI does not currently exist. Before building it, the project needs broader
 user validation and a read-only adoption path for existing repositories. Those

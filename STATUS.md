@@ -1,10 +1,10 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-07-27
+Last verified: 2026-08-02
 
 ## Current state
 
-- Version: `0.1.0`; stable GitHub Release published.
+- Version: stable `0.1.0`; local release candidate `0.2.0rc1`.
 - Maturity: experimental and suitable for repository-level evaluation.
 - Canonical capability layout: `governance/`.
 - Legacy `prompt-governance/` input remains a bounded, read-only compatibility
@@ -28,6 +28,23 @@ Last verified: 2026-07-27
   and artifact-drift checks.
 - Explicit `PASS`, `WARN`, `FAIL`, and `ADVISORY` semantics.
 - Markdown, JSON, and HTML report surfaces.
+- Read-only `agentgov status` visibility for adoption, CI state, governed
+  capabilities, active surfaces, repository findings, and the next action,
+  including a portable Markdown view for GitHub job summaries.
+- Create-missing-only `agentgov integrate github-actions` support for a pinned,
+  read-only consumer CI workflow with exact interactive confirmation.
+- Read-only `agentgov plan upgrade-pr` contract for current, candidate, and
+  blocked managed-workflow upgrades with exact hashes and no Git authority.
+- Read-only `agentgov benefits compare` evidence for two repository-report
+  snapshots with explicit finding denominators and no causal or ROI claim.
+- Create-new-only `agentgov review release` bundles exact wheel, manifest,
+  source-test, consumer-check, status, and upgrade-policy evidence while leaving
+  the approve/change/reject decision pending.
+- Consumer-local `agentgov review upgrade` bundles a stable upgrade plan,
+  current status, exact workflow patch, deterministic gates, and a pending
+  project-owner decision without applying the proposed change.
+- Managed 0.2+ consumer CI automatically publishes that upgrade review in the
+  GitHub job summary and report artifact while retaining read-only permissions.
 - Windows and Ubuntu CI definitions for Python 3.11, 3.12, and 3.13.
 
 ## Current milestone
@@ -50,6 +67,10 @@ Pre-pilot repository governance foundation:
 - explicit completeness advisories without automatic discovery claims;
 - implementation, review, supported CI, and human-controlled integration are
   complete on `main`.
+- the NYC Taxi repository is the first consumer-CI pilot: AgentGov validation
+  now runs on pull requests and pushes, publishes a GitHub job summary, and
+  uploads machine-readable and Markdown evidence without authorizing merge,
+  release, or deployment.
 - ADR-0006 rejects a general semantic-model implementation until a verified
   cross-domain gap survives existing-contract-first review; no semantic
   schema, checker, report field, or migration has been added.
@@ -96,6 +117,18 @@ Pre-pilot repository governance foundation:
 
 - Taxi supplied initial cross-domain adoption evidence, but the pilot record
   and maintainer decisions are not complete.
+- Consumer CI currently reports stable-release update state but does not open
+  or merge dependency-update pull requests. Upgrade PR planning is implemented,
+  but the authenticated branch/PR writer remains intentionally absent. The new
+  `status`, `integrate`, `plan upgrade-pr`, `review upgrade`, and
+  `benefits compare` commands remain unpublished 0.2.0rc1 behavior until a
+  later approved stable release.
+- The local 0.2.0rc1 wheel and immutable rehearsal manifest are validated, but
+  no commit, tag, push, or GitHub Release has been approved. The public stable
+  channel therefore correctly remains at 0.1.0.
+- Benefit evidence currently compares two downloaded report snapshots. It does
+  not yet observe project-test outcomes, PR disposition, runtime incidents,
+  human handling time, or false-positive decisions.
 - Installation still depends on Python 3.11 or newer and pipx. GitHub Release
   is the current stable distribution channel; PyPI publication is not yet
   configured.
@@ -110,6 +143,53 @@ Pre-pilot repository governance foundation:
 - A successful check does not prove semantic governance sufficiency.
 
 ## Validation
+
+Consumer CI pilot validation on 2026-08-01:
+
+- 353 unit tests passed with the active supported interpreter; one
+  platform-limited symbolic-link test was skipped;
+- repository self-check completed with
+  `PASS=16 WARN=2 FAIL=0 ADVISORY=4`;
+- NYC dry-run revalidation returned `PRESERVE=1` and `CONFLICT=0` for the
+  generated workflow;
+- development-source status classified NYC CI as `managed` and pull-request
+  visibility as active;
+- the installed stable AgentGov 0.1.0 validated NYC with
+  `PASS=17 WARN=1 FAIL=0 ADVISORY=4`;
+- the broken pipx launcher was rebuilt against Python 3.11.9 from the original
+  fixed v0.1.0 release URL and `agentgov --version` works again;
+- `git diff --check` passed in both repositories; NYC emitted only line-ending
+  warnings for unrelated pre-existing changes.
+
+Release-candidate wheel validation on 2026-08-02:
+
+- 370 unit tests passed with Python 3.11; one platform-limited symbolic-link
+  test was skipped;
+- built `agent_governance_starter-0.2.0rc1-py3-none-any.whl` in an isolated
+  Python 3.11 environment;
+- wheel SHA-256 was
+  `504a80878ee3f13b0ab7162b194ab1ec1aa612b5a27f528ddebe93c40bf18bdd`;
+- the wheel contains the status, consumer-CI, upgrade-PR, benefit, and release
+  review modules plus their machine-readable schemas;
+- an immutable rehearsal manifest passed validation, declared compatibility
+  from stable 0.1.0, retained layout 1.0, declared no repository migrations,
+  and matched the wheel digest;
+- a fresh wheel-only environment reported `agentgov 0.2.0rc1`, validated NYC
+  with `PASS=17 WARN=1 FAIL=0 ADVISORY=4`, and rendered its status as portable
+  Markdown;
+- NYC upgrade planning returned `blocked` because release-candidate manifests
+  cannot authorize a consumer upgrade proposal; only a validated stable
+  manifest may produce a candidate;
+- `agentgov review release` produced an atomic NYC evidence bundle with all
+  seven automated gates passing, state `ready_for_human_review`, and the human
+  decision left `pending`;
+- consumer-local NYC upgrade review correctly reported `blocked` for the RC
+  manifest, preserved a passing NYC governance check, and applied no workflow
+  or Git change;
+- stable 0.1 workflow rendering remained byte-exact with NYC at SHA-256
+  `9fa83b71b498b058afb2f5bdf777b23ed27933995faedc546faf4321f3974be8`,
+  while the 0.2 preview retained `contents: read` and added one automatic
+  consumer upgrade review.
 
 Semantic-relation admission documentation validation on 2026-07-27:
 

@@ -69,7 +69,7 @@ def select_report_next_action(root: Path, report: RepositoryReport) -> NextActio
 
     warning = _first_finding(report, FindingStatus.WARN)
     if warning is not None:
-        if warning.check_id.startswith("evaluation:"):
+        if warning.check_id.startswith("evaluation:evaluation/"):
             relative_bundle = warning.check_id.removeprefix("evaluation:")
             bundle = resolved / Path(relative_bundle)
             return NextAction(

@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/agent-governance-starter/release-review.schema.json",
+  "title": "AgentGov Release Review",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "tool",
+    "mode",
+    "release",
+    "source",
+    "consumer",
+    "review_state",
+    "gates",
+    "human_decision",
+    "authority_boundary"
+  ],
+  "properties": {
+    "contract_version": {"const": "1.0"},
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": {"const": "agentgov"},
+        "version": {"type": "string"}
+      }
+    },
+    "mode": {"const": "local_review"},
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "channel",
+        "wheel_filename",
+        "wheel_sha256",
+        "supported_from",
+        "readable_layout_versions",
+        "target_layout_version",
+        "repository_changes_declared",
+        "declared_migrations"
+      ],
+      "properties": {
+        "version": {"type": "string"},
+        "channel": {"enum": ["release-candidate", "stable"]},
+        "wheel_filename": {"type": "string"},
+        "wheel_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "supported_from": {"type": "array", "items": {"type": "string"}},
+        "readable_layout_versions": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "target_layout_version": {"type": "string"},
+        "repository_changes_declared": {"type": "boolean"},
+        "declared_migrations": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {"name": {"type": "string"}}
+    },
+    "consumer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {"name": {"type": "string"}}
+    },
+    "review_state": {"enum": ["ready_for_human_review", "blocked"]},
+    "gates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "status", "detail"],
+        "properties": {
+          "id": {"type": "string"},
+          "status": {"enum": ["PASS", "FAIL"]},
+          "detail": {"type": "string"}
+        }
+      }
+    },
+    "human_decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "allowed"],
+      "properties": {
+        "state": {"const": "pending"},
+        "allowed": {
+          "const": ["approve", "request_changes", "reject"]
+        }
+      }
+    },
+    "authority_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_modified",
+        "consumer_modified",
+        "git_commit_created",
+        "tag_created",
+        "pushed",
+        "published",
+        "deployed"
+      ],
+      "properties": {
+        "source_modified": {"const": false},
+        "consumer_modified": {"const": false},
+        "git_commit_created": {"const": false},
+        "tag_created": {"const": false},
+        "pushed": {"const": false},
+        "published": {"const": false},
+        "deployed": {"const": false}
+      }
+    }
+  }
+}

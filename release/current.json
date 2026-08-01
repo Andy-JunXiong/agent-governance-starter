@@ -2,13 +2,13 @@
   "contract": "agentgov.release-manifest",
   "schema_version": "1.0",
   "distribution_name": "agent-governance-starter",
-  "tool_version": "0.1.0.dev0",
-  "channel": "development",
-  "supported_from": ["0.1.0.dev0"],
+  "tool_version": "0.2.0rc1",
+  "channel": "release-candidate",
+  "supported_from": ["0.1.0"],
   "readable_layout_versions": ["1.0"],
   "target_layout_version": "1.0",
   "repository_changes_declared": false,
   "declared_migrations": [],
-  "release_notes_url": "https://github.com/Andy-JunXiong/agent-governance-starter",
+  "release_notes_url": "https://github.com/Andy-JunXiong/agent-governance-starter/releases/tag/v0.2.0rc1",
   "artifact": null
 }

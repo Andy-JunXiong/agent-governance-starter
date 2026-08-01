@@ -126,6 +126,72 @@ Use `--check` for a strictly read-only CI or diagnostic result:
 agentgov update --check .
 ```
 
+See whether governance is merely present or is connected to project workflows:
+
+```powershell
+agentgov status .
+agentgov status . --format markdown
+```
+
+The status surface lists the repository contract, GitHub Actions integration,
+declared capabilities, their callers and evaluation readiness, active review
+surfaces, and the next accountable action. Markdown output is designed for a
+GitHub Actions job summary and uses portable repository-relative commands. It
+is read-only and does not run the project or production workflows.
+
+These `status` and `integrate` commands are currently unpublished release
+candidate `0.2.0rc1` behavior. The published stable `0.1.0` wheel continues to
+provide the checks, reports, and human-confirmed update flow used by consumer
+CI.
+
+Preview a pinned consumer CI workflow, then explicitly create it after review:
+
+```powershell
+agentgov integrate github-actions . --dry-run
+agentgov integrate github-actions .
+```
+
+The generated workflow verifies and installs a fixed AgentGov Release, records update state,
+writes the JSON repository report on every push or pull request, and uploads the
+reports as CI artifacts. Starting with 0.2, it also generates the consumer-local
+stable upgrade review, appends it to the job summary, and uploads its evidence.
+It uses read-only repository permissions, does not install adopting-project
+dependencies, and never authorizes merge, release, deployment, or production
+execution. Existing workflow content is never overwritten.
+
+Prepare—but do not execute—the exact change for a future upgrade PR:
+
+```powershell
+agentgov plan upgrade-pr . --manifest release-manifest.json
+```
+
+Create the consumer-facing upgrade review inside the adopting project:
+
+```powershell
+agentgov review upgrade . --manifest release-manifest.json `
+  --output agentgov-upgrade-review
+```
+
+Compare two preserved CI reports as honest benefit evidence:
+
+```powershell
+agentgov benefits compare before.json after.json
+```
+
+Collect one candidate wheel, manifest, source-test, and NYC compatibility review
+without making the release decision:
+
+```powershell
+agentgov review release . --wheel <WHEEL> --manifest <MANIFEST> `
+  --consumer <CONSUMER_REPOSITORY> --output <NEW_REVIEW_DIRECTORY>
+```
+
+Upgrade planning and benefit comparison are read-only. Release and consumer
+upgrade review write only their explicitly named new evidence directories and
+refuse existing output. Consumer upgrade review does not apply the planned
+workflow change. None of these commands creates a branch, pull request, tag,
+release, deployment, causal claim, coverage percentage, or ROI claim.
+
 The updater discovers the latest stable GitHub Release manifest, downloads the
 fixed-tag wheel into a temporary directory, verifies its SHA-256, upgrades the
 pipx environment, verifies the installed version, and relaunches the new
@@ -226,11 +292,13 @@ flowchart TB
         TERMINAL["Terminal output<br/>Immediate feedback"]
         MARKDOWN["Markdown report<br/>Human-readable review"]
         JSON["JSON v1.0<br/>Machine-readable contract"]
+        STATUS_SURFACE["Status<br/>Adoption · Usage · Active surfaces"]
+        CONSUMER_CI["Consumer CI<br/>Pinned check · Report artifact"]
     end
 
     HUMAN["4. Accountable human review<br/>Resolve or defer gaps · Record judgment"]
     TRANSITION["High-risk transition<br/>Merge · Publish · Release · Deploy"]
-    FUTURE["Future consumers<br/>Web UI · API · CI integration<br/>Not included in v0.1"]
+    FUTURE["Future consumers<br/>Web UI · API<br/>Not included in v0.1"]
 
     CONSTITUTION --> VALIDATE
     PROTOCOLS --> VALIDATE
@@ -252,6 +320,8 @@ flowchart TB
     FINDINGS --> TERMINAL
     FINDINGS --> MARKDOWN
     FINDINGS --> JSON
+    FINDINGS --> STATUS_SURFACE
+    JSON --> CONSUMER_CI
 
     TERMINAL --> HUMAN
     MARKDOWN --> HUMAN
@@ -269,7 +339,7 @@ flowchart TB
 
     class CONSTITUTION,PROTOCOLS,CAPABILITY,EVALUATION,SOURCES,ARTIFACT repo;
     class VALIDATE,EXPORT,DRIFT,FINDINGS core;
-    class TERMINAL,MARKDOWN,JSON surface;
+    class TERMINAL,MARKDOWN,JSON,STATUS_SURFACE,CONSUMER_CI surface;
     class HUMAN human;
     class TRANSITION external;
     class FUTURE future;
@@ -278,9 +348,10 @@ flowchart TB
 `agentgov` treats repository files as the source of truth. Its read-only
 repository check validates declared contracts, checks artifact integrity and
 drift, and aggregates the results into one ordered findings model. Terminal,
-Markdown, and JSON are different views of the same repository state. Artifact
-export is a separate explicit write command, not a stage inside repository
-checking.
+Markdown, JSON, and status are different views of the same repository state.
+The bounded consumer CI integration runs the JSON report without installing
+the adopting project's dependencies. Artifact export is a separate explicit
+write command, not a stage inside repository checking.
 
 The checker can establish structural, reference, readiness, and integrity
 facts. It cannot approve high-risk transitions: merge, publication, release,
@@ -288,10 +359,12 @@ and deployment remain separate human-authorized actions.
 
 ## Project status and non-goals
 
-**Status: Experimental (`0.1.0`).** The project is suitable for evaluation
-and repository-level pilots. It is not a compliance certification, a runtime
-security boundary, or authorization for autonomous merge, publication, or
-deployment.
+**Status: stable `0.1.0`; local release candidate `0.2.0rc1`.** The stable
+release is suitable for evaluation and repository-level pilots. Consumer status,
+integration, upgrade-PR planning, and benefit comparison are development
+features pending a separately approved release. AgentGov is not a compliance
+certification, runtime security boundary, or authorization for autonomous
+merge, publication, or deployment.
 
 The current release is not a SaaS control plane, general configuration-quality
 linter, generic LLM evaluation platform, real-time agent monitor, deployment
@@ -309,7 +382,7 @@ system, or runtime enforcement service.
 - **Reviewable:** governance decisions, capability metadata, checks, and reports
   are inspectable artifacts.
 
-## v0.1 scope
+## Current scope
 
 The first usable release contains:
 
@@ -319,7 +392,12 @@ The first usable release contains:
 3. evaluation-readiness guidance;
 4. a small set of deterministic repository checks;
 5. deterministic Markdown and JSON v1.0 governance reports;
-6. AI Radar as a documented reference case, not a runtime dependency.
+6. read-only usage status and a create-missing-only consumer CI integration in
+   the development line;
+7. read-only upgrade-PR planning and two-snapshot benefit evidence in the
+   development line;
+8. AI Radar and NYC Taxi as documented reference or pilot cases, not runtime
+   dependencies.
 
 ## Project navigation
 
@@ -335,6 +413,18 @@ The first usable release contains:
   decisions required in each scaffold area.
 - [Troubleshooting](docs/troubleshooting.md) covers installation, conflicts,
   findings, reports, artifacts, and exit codes.
+- [Consumer CI and status](docs/consumer-ci.md) explains automatic pull-request
+  checks, update visibility, report artifacts, and remaining human authority.
+- [Upgrade PR automation](docs/upgrade-pr-automation.md) defines the safe
+  proposal contract and the remaining opt-in GitHub write layer.
+- [Consumer upgrade review](docs/consumer-upgrade-review.md) explains the
+  adopting-project UI, exact workflow patch, gates, and approval boundary.
+- [Benefit evidence](docs/benefit-monitor.md) explains report comparison,
+  denominators, and claims that cannot yet be made.
+- [0.2.0rc1 release notes](docs/releases/0.2.0rc1.md) describe compatibility,
+  changes, known gates, and the unpublished candidate boundary.
+- [Release review bundle](docs/release-review.md) explains automated evidence
+  collection and the remaining human approve/change/reject decision.
 - [Case study](docs/case-study.md) explains the product decisions, trust
   boundary, implementation, validation, and current limitations.
 - [Governance model](docs/governance-model.md) defines the conceptual chain and
@@ -652,8 +742,8 @@ Both formats are serialized from the same repository findings and contain
 summary counts, findings, known gaps, recommended actions, and scope
 limitations. JSON contract version `1.0` is defined by the
 [repository report schema](schemas/repository-report.schema.json). It is the
-integration boundary for a potential future web UI, API, or CI consumer; none
-of those integrations are part of the current product.
+integration boundary used by the bounded consumer CI workflow and remains
+available to potential future web UI or API consumers.
 
 Reports contain no coverage percentage or timestamp. File output refuses to
 overwrite an existing path; repositories with FAIL findings still produce a

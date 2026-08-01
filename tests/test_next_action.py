@@ -109,6 +109,27 @@ class NextActionTests(unittest.TestCase):
             f'agentgov check evaluation "{root.resolve() / "evaluation/example-capability"}"',
         )
 
+    def test_unconfigured_evaluation_bundle_uses_repository_check(self) -> None:
+        root = Path("evaluation-bundles-fixture")
+        report = RepositoryReport(
+            root,
+            (
+                Finding(
+                    FindingStatus.WARN,
+                    "evaluation:bundles",
+                    "no evaluation bundles are configured",
+                ),
+            ),
+        )
+
+        action = select_report_next_action(root, report)
+
+        self.assertIs(action.kind, ActionKind.INCOMPLETE_EVIDENCE)
+        self.assertEqual(
+            action.command,
+            f'agentgov check repository "{root.resolve()}"',
+        )
+
     def test_json_result_is_read_only_and_does_not_execute_action(self) -> None:
         with TemporaryDirectory() as temp_dir:
             action = select_next_action(Path(temp_dir))

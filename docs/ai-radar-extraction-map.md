@@ -79,3 +79,26 @@ result.
 
 New reference-project patterns must be admitted as separate scoped proposals
 rather than extending this map by default.
+
+## NYC Taxi consumer-integration pilot
+
+Pilot inventory date: 2026-08-01
+
+The local NYC Taxi repository at
+`C:\Users\maki8\OneDrive\桌面\Find a job\NY Taxi\NYC-Taxi-Demand-And-Fare-Intelligence-Platform`
+is a read-only research input for the consumer CI and status-visibility slice.
+No NYC source code, data, credentials, production workflow behavior, or
+project-specific policy is starter-kit source.
+
+| NYC Taxi source | Observed role | Classification | Starter-kit treatment |
+|---|---|---|---|
+| `.github/workflows/ci.yml` | Runs the project test suite but does not invoke AgentGov | `reference-only` | Use only as evidence that adopted governance can remain manual and invisible; create an independent portable consumer workflow. |
+| `AGENTS.md` | Names manual AgentGov validation and human authority boundaries | `reference-only` | Preserve the general need for explicit authority in the starter's existing contracts; do not copy NYC operating rules. |
+| `governance/capabilities/nyc-hourly-zone-demand-forecast.json` | Connects one capability to callers, contracts, ownership, risk, and evaluation | `reference-only` | Use sanitized field presence to test status rendering; do not copy the capability or its business semantics. |
+| `governance/contract.json` | Marks repository layout `1.0` after an explicit refresh | `generic-reusable` | Detect the existing portable contract through AgentGov's own schema; do not add NYC-specific fields. |
+
+Reuse decision: implement a generic create-missing-only GitHub Actions
+integration and a read-only status surface. Validate them against synthetic
+fixtures first, then use NYC only as an adoption pilot. The integration must
+not install adopting-project dependencies, run production workflows, overwrite
+an existing workflow, or authorize Git, merge, release, or deployment actions.

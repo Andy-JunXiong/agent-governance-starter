@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/agent-governance-starter/ci-integration-plan.schema.json",
+  "title": "AgentGov Consumer CI Integration Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "tool",
+    "repository",
+    "mode",
+    "interaction",
+    "integration",
+    "item",
+    "authority_boundary"
+  ],
+  "properties": {
+    "contract_version": {"const": "1.0"},
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": {"const": "agentgov"},
+        "version": {"type": "string", "minLength": 1}
+      }
+    },
+    "repository": {"type": "string", "minLength": 1},
+    "mode": {"const": "dry_run"},
+    "interaction": {"enum": ["no_prompt", "non_interactive"]},
+    "integration": {"const": "github-actions"},
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action", "path", "reason", "content"],
+      "properties": {
+        "action": {"enum": ["CREATE", "PRESERVE", "CONFLICT"]},
+        "path": {"const": ".github/workflows/agentgov.yml"},
+        "reason": {"type": "string", "minLength": 1},
+        "content": {"type": ["string", "null"]}
+      }
+    },
+    "authority_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository_modified",
+        "write_authorized",
+        "installs_project_dependencies",
+        "runs_project_or_production_workflows",
+        "authorizes_git_or_release_operations"
+      ],
+      "properties": {
+        "repository_modified": {"const": false},
+        "write_authorized": {"const": false},
+        "installs_project_dependencies": {"const": false},
+        "runs_project_or_production_workflows": {"const": false},
+        "authorizes_git_or_release_operations": {"const": false}
+      }
+    }
+  }
+}

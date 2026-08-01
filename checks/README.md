@@ -28,6 +28,29 @@ WARN and ADVISORY findings return process exit code `0`. Any FAIL returns `1`.
 Unreadable or invalid repository targets return `2`. The command does not
 calculate a coverage percentage or judge architecture quality.
 
+## Visible usage status
+
+```powershell
+agentgov status path/to/repository
+```
+
+Status reuses the repository check and adds read-only adoption, GitHub Actions,
+capability caller, evaluation-readiness, and active-surface visibility. A
+missing CI integration is shown as manual-only rather than being mistaken for
+automated enforcement.
+
+## Consumer CI integration
+
+```powershell
+agentgov integrate github-actions path/to/repository --dry-run
+```
+
+The preview contains the exact pinned workflow. Interactive apply requires
+exact `INTEGRATE`, creates only `.github/workflows/agentgov.yml`, and never
+overwrites existing content. See
+[`docs/consumer-ci.md`](../docs/consumer-ci.md) for the authority and runtime
+boundaries.
+
 ## Markdown report
 
 ```powershell

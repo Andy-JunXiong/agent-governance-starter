@@ -5,6 +5,7 @@ import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
+from agentgov import __version__
 from agentgov.cli import EXIT_ERROR, EXIT_FAIL, EXIT_PASS, main
 from agentgov.release_metadata import (
     RELEASE_MANIFEST_CONTRACT,
@@ -31,6 +32,16 @@ def run_cli(*args: str) -> tuple[int, str, str]:
 class ReleaseManifestTests(unittest.TestCase):
     def test_bundled_current_manifest_is_valid(self) -> None:
         self.assertEqual(validate_release_manifest(load_release_manifest(CURRENT)), [])
+
+    def test_bundled_candidate_matches_runtime_and_stable_upgrade_source(self) -> None:
+        document = load_release_manifest(CURRENT)
+
+        self.assertEqual(document["tool_version"], __version__)
+        self.assertEqual(document["channel"], "release-candidate")
+        self.assertEqual(document["supported_from"], ["0.1.0"])
+        self.assertEqual(document["target_layout_version"], "1.0")
+        self.assertFalse(document["repository_changes_declared"])
+        self.assertEqual(document["declared_migrations"], [])
 
     def test_valid_rc_manifest_declares_compatibility_without_authority(self) -> None:
         document = load_release_manifest(VALID)

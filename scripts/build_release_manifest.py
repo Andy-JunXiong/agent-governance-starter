@@ -1,11 +1,16 @@
-"""Generate a deterministic stable release manifest for one built wheel."""
+"""Generate a deterministic release manifest for one built wheel."""
 
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
+import re
 from pathlib import Path
+
+
+_STABLE_VERSION_RE = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+$")
+_RC_VERSION_RE = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+rc[0-9]+$")
 
 
 def main() -> int:
@@ -13,9 +18,28 @@ def main() -> int:
     parser.add_argument("wheel", type=Path)
     parser.add_argument("output", type=Path)
     parser.add_argument("--version", required=True)
+    parser.add_argument(
+        "--channel",
+        choices=("release-candidate", "stable"),
+        default="stable",
+    )
     args = parser.parse_args()
 
     filename = args.wheel.name
+    expected_filename = (
+        f"agent_governance_starter-{args.version}-py3-none-any.whl"
+    )
+    if filename != expected_filename:
+        parser.error(
+            "wheel filename must match --version exactly: "
+            f"expected {expected_filename}"
+        )
+    if args.channel == "stable" and not _STABLE_VERSION_RE.fullmatch(args.version):
+        parser.error("stable channel requires a final major.minor.patch version")
+    if args.channel == "release-candidate" and not _RC_VERSION_RE.fullmatch(
+        args.version
+    ):
+        parser.error("release-candidate channel requires an rc version")
     digest = hashlib.sha256(args.wheel.read_bytes()).hexdigest()
     tag = f"v{args.version}"
     document = {
@@ -23,8 +47,8 @@ def main() -> int:
         "schema_version": "1.0",
         "distribution_name": "agent-governance-starter",
         "tool_version": args.version,
-        "channel": "stable",
-        "supported_from": ["0.1.0.dev0"],
+        "channel": args.channel,
+        "supported_from": ["0.1.0"],
         "readable_layout_versions": ["1.0"],
         "target_layout_version": "1.0",
         "repository_changes_declared": False,

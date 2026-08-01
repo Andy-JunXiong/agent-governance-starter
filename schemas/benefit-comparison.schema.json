@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/agent-governance-starter/benefit-comparison.schema.json",
+  "title": "AgentGov Benefit Evidence Comparison",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "tool",
+    "mode",
+    "repository",
+    "inputs",
+    "denominators",
+    "evidence",
+    "scope_limitations",
+    "authority_boundary"
+  ],
+  "properties": {
+    "contract_version": {"const": "1.0"},
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": {"const": "agentgov"},
+        "version": {"type": "string", "minLength": 1}
+      }
+    },
+    "mode": {"const": "read_only"},
+    "repository": {"type": "string"},
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["before", "after", "before_tool_version", "after_tool_version"],
+      "properties": {
+        "before": {"type": "string", "minLength": 1},
+        "after": {"type": "string", "minLength": 1},
+        "before_tool_version": {"type": "string", "minLength": 1},
+        "after_tool_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "denominators": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["before_finding_count", "after_finding_count", "matched_check_count"],
+      "properties": {
+        "before_finding_count": {"type": "integer", "minimum": 0},
+        "after_finding_count": {"type": "integer", "minimum": 0},
+        "matched_check_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "deterministic_failures_resolved",
+        "deterministic_failures_introduced",
+        "non_passing_findings_cleared",
+        "added_checks",
+        "removed_checks",
+        "transitions"
+      ],
+      "properties": {
+        "deterministic_failures_resolved": {"$ref": "#/$defs/check_ids"},
+        "deterministic_failures_introduced": {"$ref": "#/$defs/check_ids"},
+        "non_passing_findings_cleared": {"$ref": "#/$defs/check_ids"},
+        "added_checks": {"$ref": "#/$defs/check_ids"},
+        "removed_checks": {"$ref": "#/$defs/check_ids"},
+        "transitions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["check_id", "before", "after"],
+            "properties": {
+              "check_id": {"type": "string", "minLength": 1},
+              "before": {"$ref": "#/$defs/status"},
+              "after": {"$ref": "#/$defs/status"}
+            }
+          }
+        }
+      }
+    },
+    "scope_limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "authority_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository_modified",
+        "git_or_pull_request_action_run",
+        "merge_release_or_deploy_authorized"
+      ],
+      "properties": {
+        "repository_modified": {"const": false},
+        "git_or_pull_request_action_run": {"const": false},
+        "merge_release_or_deploy_authorized": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "check_ids": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "status": {
+      "enum": ["PASS", "WARN", "FAIL", "ADVISORY"]
+    }
+  }
+}

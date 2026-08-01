@@ -125,6 +125,8 @@ class PortfolioDocumentationTests(unittest.TestCase):
             "Separate explicit write command",
             "Read-only drift detection",
             "Ordered RepositoryReport",
+            "Consumer CI",
+            "Pinned check · Report artifact",
             "Not included in v0.1",
         ):
             self.assertIn(label, diagram)
@@ -139,6 +141,8 @@ class PortfolioDocumentationTests(unittest.TestCase):
             "FINDINGS --> TERMINAL",
             "FINDINGS --> MARKDOWN",
             "FINDINGS --> JSON",
+            "FINDINGS --> STATUS_SURFACE",
+            "JSON --> CONSUMER_CI",
             "JSON -.-> FUTURE",
             'HUMAN -->|"Separate explicit authority"| TRANSITION',
         ):
@@ -146,8 +150,10 @@ class PortfolioDocumentationTests(unittest.TestCase):
         self.assertNotIn("Reject · Escalate", diagram)
         self.assertNotIn("A --> B", diagram)
         self.assertIn(
-            "Artifact\nexport is a separate explicit write command, not a stage "
-            "inside repository\nchecking.",
+            "The bounded consumer CI integration runs the JSON report without "
+            "installing\nthe adopting project's dependencies. Artifact export is "
+            "a separate explicit\nwrite command, not a stage inside repository "
+            "checking.",
             text,
         )
         self.assertIn(
@@ -167,6 +173,9 @@ class PortfolioDocumentationTests(unittest.TestCase):
             "governance/capability.schema.json",
             "evaluation/schemas/evaluation-manifest.schema.json",
             "schemas/repository-report.schema.json",
+            "docs/consumer-ci.md",
+            "docs/upgrade-pr-automation.md",
+            "docs/benefit-monitor.md",
         )
         text = README.read_text(encoding="utf-8")
 

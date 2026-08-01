@@ -37,3 +37,25 @@ Review CLI and report language and inspect workflow permissions.
 ### Failure response
 
 Stop the transition and obtain explicit authority.
+
+## Automated upgrade proposals never authorize merge
+
+- Authority: `docs/adr/0007-separate-upgrade-proposal-from-merge-authority.md`
+
+### Enforcement points
+
+- Upgrade planning is read-only and declares exact before/after hashes.
+- Only the managed consumer workflow may be proposed for automatic change.
+- Customized workflows, incompatible layouts, and declared migrations block.
+- Pull-request creation and merge are separate authorities.
+
+### Verification
+
+- Validate the upgrade PR plan schema and fixture states.
+- Confirm every authority flag is false in a dry-run plan.
+- Inspect any future proposal workflow permissions before enabling it.
+
+### Failure response
+
+Stop automatic proposal creation and route the conflict or migration to the
+consumer repository owner.

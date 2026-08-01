@@ -26,7 +26,18 @@ from agentgov.artifacts import (
     check_capability_artifact,
     export_capability_artifact,
 )
+from agentgov.benefits import compare_repository_reports, render_benefit_comparison_json
 from agentgov.capability import load_capability_manifest, validate_capability_manifest
+from agentgov.consumer_ci import (
+    ConsumerCIState,
+    IntegrationAction,
+    IntegrationConflictError,
+    apply_integration_plan,
+    inspect_consumer_ci,
+    plan_github_actions_integration,
+    render_integration_plan_json,
+    request_integration_confirmation,
+)
 from agentgov.doctor import (
     DoctorStatus,
     diagnose_repository,
@@ -67,6 +78,11 @@ from agentgov.reporting import (
     render_repository_report_json,
     write_report,
 )
+from agentgov.release_review import (
+    ReleaseReviewConflictError,
+    ReleaseReviewError,
+    create_release_review_bundle,
+)
 from agentgov.software_update import (
     SoftwareUpdateError,
     download_release_manifest,
@@ -74,16 +90,345 @@ from agentgov.software_update import (
     install_wheel_with_pipx,
     relaunch_updated_agentgov,
 )
+from agentgov.status import (
+    inspect_governance_status,
+    render_status_json,
+    render_status_markdown,
+)
 from agentgov.update_check import (
     check_for_updates,
     render_update_check_json,
     request_update_confirmation,
+)
+from agentgov.upgrade_pr import (
+    UpgradePlanState,
+    plan_upgrade_pull_request,
+    render_upgrade_pull_request_plan_json,
+)
+from agentgov.upgrade_review import (
+    UpgradeReviewConflictError,
+    UpgradeReviewError,
+    create_upgrade_review_bundle,
 )
 
 
 EXIT_PASS = 0
 EXIT_FAIL = 1
 EXIT_ERROR = 2
+
+
+def _review_release(
+    source: Path,
+    *,
+    wheel: Path,
+    manifest: Path,
+    consumer: Path,
+    output: Path,
+) -> int:
+    try:
+        result = create_release_review_bundle(
+            source,
+            wheel=wheel,
+            manifest_path=manifest,
+            consumer=consumer,
+            output=output,
+        )
+    except ReleaseReviewConflictError as exc:
+        print(f"FAIL review release: {exc}")
+        return EXIT_FAIL
+    except ReleaseReviewError as exc:
+        print(f"ERROR review release: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except (OSError, UnicodeError) as exc:
+        print(f"ERROR review release: cannot create review bundle: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    print(f"CREATE review-bundle: {result.output}")
+    print(f"STATE {result.state}")
+    for gate in result.gates:
+        print(f"GATE {gate['id']}: {gate['status']} - {gate['detail']}")
+    print("DECISION pending: approve, request_changes, or reject")
+    print("NOTE review release: source and consumer repositories were not modified")
+    print("NOTE review release: no Git, tag, push, publish, release, or deploy action was run")
+    return EXIT_FAIL if result.blocked else EXIT_PASS
+
+
+def _review_upgrade(
+    repository: Path,
+    *,
+    manifest: Path,
+    output: Path,
+) -> int:
+    try:
+        result = create_upgrade_review_bundle(
+            repository,
+            manifest_path=manifest,
+            output=output,
+        )
+    except UpgradeReviewConflictError as exc:
+        print(f"FAIL review upgrade: {exc}")
+        return EXIT_FAIL
+    except UpgradeReviewError as exc:
+        print(f"ERROR review upgrade: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except (OSError, UnicodeError) as exc:
+        print(f"ERROR review upgrade: cannot create review bundle: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    print(f"CREATE upgrade-review: {result.output}")
+    print(f"STATE {result.state}")
+    for gate in result.gates:
+        print(f"GATE {gate['id']}: {gate['status']} - {gate['detail']}")
+    print("DECISION pending: approve, request_changes, or reject")
+    print("NOTE review upgrade: the planned consumer workflow change was not applied")
+    print("NOTE review upgrade: no branch, pull request, merge, release, or deploy action was run")
+    return EXIT_FAIL if result.blocked else EXIT_PASS
+
+
+def _compare_benefit_reports(
+    before: Path,
+    after: Path,
+    *,
+    output_format: str,
+) -> int:
+    try:
+        comparison = compare_repository_reports(before, after)
+    except FileNotFoundError as exc:
+        print(f"ERROR benefits compare: report not found: {exc.filename or exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except (OSError, UnicodeError, ValueError, TypeError, json.JSONDecodeError) as exc:
+        print(f"ERROR benefits compare: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    if output_format == "json":
+        print(render_benefit_comparison_json(comparison), end="")
+    else:
+        print(f"TARGET benefits: {comparison.repository}")
+        print(
+            "DENOMINATOR "
+            f"before={comparison.before_finding_count} "
+            f"after={comparison.after_finding_count} "
+            f"matched={comparison.matched_check_count}"
+        )
+        print(
+            "EVIDENCE "
+            f"failures_resolved={len(comparison.deterministic_failures_resolved)} "
+            f"failures_introduced={len(comparison.deterministic_failures_introduced)} "
+            f"non_passing_cleared={len(comparison.non_passing_findings_cleared)} "
+            f"added_checks={len(comparison.added_checks)} "
+            f"removed_checks={len(comparison.removed_checks)}"
+        )
+        for transition in comparison.transitions:
+            print(
+                f"TRANSITION {transition.check_id}: "
+                f"{transition.before}->{transition.after}"
+            )
+        print("LIMIT benefits: two snapshots do not prove causality or prevented incidents")
+        print("LIMIT benefits: project tests and runtime outcomes were not observed")
+        print("NOTE benefits: no repository, Git, merge, release, or deploy action was run")
+    return EXIT_PASS
+
+
+def _plan_upgrade_pr(
+    path: Path,
+    *,
+    manifest: Path,
+    output_format: str,
+) -> int:
+    try:
+        plan = plan_upgrade_pull_request(path, manifest_path=manifest)
+    except FileNotFoundError as exc:
+        print(f"ERROR plan upgrade-pr: path not found: {exc.filename or exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except (OSError, UnicodeError, ValueError, TypeError, json.JSONDecodeError) as exc:
+        print(f"ERROR plan upgrade-pr: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    if output_format == "json":
+        print(render_upgrade_pull_request_plan_json(plan), end="")
+    else:
+        print(f"TARGET upgrade-pr: {plan.root}")
+        print(f"STATE {plan.state.value}")
+        print(
+            f"VERSION current={plan.current_version} available={plan.available_version}"
+        )
+        for reason in plan.reasons:
+            print(f"REASON {reason}")
+        if plan.branch:
+            print(f"BRANCH {plan.branch}")
+        if plan.title:
+            print(f"TITLE {plan.title}")
+        for change in plan.changes:
+            print(
+                f"CHANGE {change.path.as_posix()} "
+                f"before={change.before_sha256} after={change.after_sha256}"
+            )
+        print(
+            "NOTE upgrade-pr plan: no repository file, Git branch, pull request, "
+            "merge, release, or deploy action was run"
+        )
+    return EXIT_FAIL if plan.state is UpgradePlanState.BLOCKED else EXIT_PASS
+
+
+def _integrate_github_actions(
+    path: Path,
+    *,
+    dry_run: bool,
+    output_format: str,
+    non_interactive: bool,
+) -> int:
+    if not dry_run and non_interactive:
+        print(
+            "ERROR integrate: --non-interactive never authorizes writes; add --dry-run",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    if not dry_run and output_format == "json":
+        print(
+            "ERROR integrate: interactive apply requires text output",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    try:
+        plan = plan_github_actions_integration(path)
+    except FileNotFoundError:
+        print(f"ERROR integrate: repository path not found: {path}", file=sys.stderr)
+        return EXIT_ERROR
+    except (OSError, UnicodeError, ValueError) as exc:
+        print(f"ERROR integrate: cannot prepare GitHub Actions plan: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    if output_format == "json":
+        print(
+            render_integration_plan_json(
+                plan,
+                non_interactive=non_interactive,
+            ),
+            end="",
+        )
+    else:
+        print(f"TARGET integrate: {plan.root}")
+        print("INTEGRATION github-actions")
+        print(
+            f"{plan.item.action.value} {plan.item.path.as_posix()}: "
+            f"{plan.item.reason}"
+        )
+        if plan.item.content is not None:
+            print("CONTENT")
+            print(plan.item.content, end="")
+        print(
+            "SUMMARY "
+            + " ".join(
+                f"{action.value}={int(plan.item.action is action)}"
+                for action in IntegrationAction
+            )
+        )
+        if dry_run:
+            print("NOTE integrate dry-run: no repository files or Git state were modified")
+            print("NOTE integrate dry-run: this preview does not authorize a later write")
+
+    if plan.has_conflict:
+        return EXIT_FAIL
+    if dry_run or plan.item.action is IntegrationAction.PRESERVE:
+        return EXIT_PASS
+    try:
+        confirmed = request_integration_confirmation(
+            plan,
+            decision_reader=input,
+            is_interactive_terminal=sys.stdin.isatty(),
+        )
+    except EOFError:
+        confirmed = False
+    if not confirmed:
+        print(
+            "CANCELLED integrate: exact interactive INTEGRATE confirmation was not received"
+        )
+        print("NOTE integrate: no repository files or Git state were modified")
+        return EXIT_PASS
+    try:
+        result = apply_integration_plan(plan)
+    except IntegrationConflictError as exc:
+        print(f"FAIL integrate: {exc}")
+        return EXIT_FAIL
+    except (OSError, UnicodeError) as exc:
+        print(f"ERROR integrate: cannot create workflow: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    for created in result.created_files:
+        print(f"CREATE {created.as_posix()}")
+    status = inspect_consumer_ci(result.root)
+    if status.state is not ConsumerCIState.MANAGED:
+        print(f"FAIL integrate: post-write status is {status.state.value}")
+        return EXIT_FAIL
+    print(f"PASS integrate: created {len(result.created_files)} managed workflow file(s)")
+    print("NOTE integrate: project dependencies and production workflows were not run")
+    print("NOTE integrate: no Git, merge, publish, release, or deploy action is authorized")
+    return EXIT_PASS
+
+
+def _status_repository(
+    path: Path,
+    *,
+    output_format: str,
+    non_interactive: bool,
+) -> int:
+    try:
+        status = inspect_governance_status(path)
+    except FileNotFoundError:
+        print(f"ERROR status: repository path not found: {path}", file=sys.stderr)
+        return EXIT_ERROR
+    except (OSError, UnicodeError, ValueError, json.JSONDecodeError) as exc:
+        print(f"ERROR status: cannot inspect {path}: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    if output_format == "json":
+        print(render_status_json(status, non_interactive=non_interactive), end="")
+    elif output_format == "markdown":
+        print(render_status_markdown(status), end="")
+    else:
+        print(f"TARGET status: {status.root}")
+        layout = status.layout_version or ("invalid" if status.layout_error else "unversioned")
+        print(
+            f"ADOPTION configured={'yes' if status.adopted else 'no'} layout={layout}"
+        )
+        if status.layout_error:
+            print(f"FAIL repository-contract: {status.layout_error}")
+        paths = ",".join(path.as_posix() for path in status.ci.workflow_paths) or "none"
+        print(f"CI state={status.ci.state.value} workflows={paths}")
+        print(f"CI_DETAIL {status.ci.message}")
+        for capability in status.capabilities:
+            print(
+                f"CAPABILITY {capability.name}: owner={capability.owner} "
+                f"risk={capability.risk_level} readiness={capability.readiness}"
+            )
+            print(f"PURPOSE {capability.name}: {capability.purpose}")
+            for caller in capability.called_by:
+                print(f"USED_BY {capability.name}: {caller}")
+        if not status.capabilities:
+            print("CAPABILITY none: no readable capability manifest was discovered")
+        for surface in status.surfaces:
+            print(
+                f"SURFACE {surface.name}: state={surface.state} "
+                f"detail={surface.explanation}"
+            )
+        report = status.repository_report
+        print(
+            "SUMMARY "
+            + " ".join(
+                f"{finding_status.value}={report.count(finding_status)}"
+                for finding_status in FindingStatus
+            )
+        )
+        if status.ci.state is ConsumerCIState.MISSING:
+            print(
+                f'NEXT status: agentgov integrate github-actions "{status.root}" --dry-run'
+            )
+        else:
+            print(f"NEXT status: {status.next_action.title}")
+            if status.next_action.command:
+                print(f"COMMAND {status.next_action.command}")
+        print("NOTE status: visibility does not prove governance sufficiency")
+        print("NOTE status: no repository, Git, release, deploy, or production action was run")
+    return EXIT_FAIL if status.has_failures else EXIT_PASS
 
 
 def _update_check(
@@ -1113,6 +1458,239 @@ def build_parser() -> argparse.ArgumentParser:
         version=f"%(prog)s {__version__}",
     )
     commands = parser.add_subparsers(dest="command", required=True)
+
+    review_parser = commands.add_parser(
+        "review",
+        help="Collect deterministic evidence while preserving human decision authority.",
+    )
+    review_targets = review_parser.add_subparsers(
+        dest="review_target",
+        required=True,
+    )
+    release_review_parser = review_targets.add_parser(
+        "release",
+        help="Create one local release review bundle from exact candidate artifacts.",
+    )
+    release_review_parser.add_argument(
+        "source",
+        nargs="?",
+        type=Path,
+        default=Path("."),
+        help="AgentGov source repository (default: current directory).",
+    )
+    release_review_parser.add_argument(
+        "--wheel",
+        type=Path,
+        required=True,
+        help="Exact candidate wheel to install and review.",
+    )
+    release_review_parser.add_argument(
+        "--manifest",
+        type=Path,
+        required=True,
+        help="Immutable release manifest matching the candidate wheel.",
+    )
+    release_review_parser.add_argument(
+        "--consumer",
+        type=Path,
+        required=True,
+        help="Adopting repository used for compatibility evidence.",
+    )
+    release_review_parser.add_argument(
+        "--output",
+        type=Path,
+        required=True,
+        help="New review-bundle directory; existing paths are never overwritten.",
+    )
+    release_review_parser.set_defaults(
+        handler=lambda args: _review_release(
+            args.source,
+            wheel=args.wheel,
+            manifest=args.manifest,
+            consumer=args.consumer,
+            output=args.output,
+        )
+    )
+    upgrade_review_parser = review_targets.add_parser(
+        "upgrade",
+        help="Create a consumer-local review bundle for one stable upgrade proposal.",
+    )
+    upgrade_review_parser.add_argument(
+        "repository",
+        nargs="?",
+        type=Path,
+        default=Path("."),
+        help="Consumer repository directory (default: current directory).",
+    )
+    upgrade_review_parser.add_argument(
+        "--manifest",
+        type=Path,
+        required=True,
+        help="Downloaded and reviewed stable release manifest.",
+    )
+    upgrade_review_parser.add_argument(
+        "--output",
+        type=Path,
+        required=True,
+        help="New consumer review directory; existing paths are never overwritten.",
+    )
+    upgrade_review_parser.set_defaults(
+        handler=lambda args: _review_upgrade(
+            args.repository,
+            manifest=args.manifest,
+            output=args.output,
+        )
+    )
+
+    benefits_parser = commands.add_parser(
+        "benefits",
+        help="Compare governance report evidence without claiming causality.",
+    )
+    benefits_targets = benefits_parser.add_subparsers(
+        dest="benefits_target",
+        required=True,
+    )
+    benefits_compare_parser = benefits_targets.add_parser(
+        "compare",
+        help="Compare two repository report snapshots with explicit denominators.",
+    )
+    benefits_compare_parser.add_argument(
+        "before",
+        type=Path,
+        help="Earlier AgentGov repository report JSON.",
+    )
+    benefits_compare_parser.add_argument(
+        "after",
+        type=Path,
+        help="Later AgentGov repository report JSON.",
+    )
+    benefits_compare_parser.add_argument(
+        "--format",
+        dest="benefits_format",
+        choices=("text", "json"),
+        default="text",
+        help="Benefit-evidence serialization format (default: text).",
+    )
+    benefits_compare_parser.set_defaults(
+        handler=lambda args: _compare_benefit_reports(
+            args.before,
+            args.after,
+            output_format=args.benefits_format,
+        )
+    )
+
+    plan_parser = commands.add_parser(
+        "plan",
+        help="Build a read-only automation plan without applying it.",
+    )
+    plan_targets = plan_parser.add_subparsers(dest="plan_target", required=True)
+    upgrade_pr_parser = plan_targets.add_parser(
+        "upgrade-pr",
+        help="Plan one bounded managed-workflow upgrade pull request.",
+    )
+    upgrade_pr_parser.add_argument(
+        "path",
+        nargs="?",
+        type=Path,
+        default=Path("."),
+        help="Consumer repository directory (default: current directory).",
+    )
+    upgrade_pr_parser.add_argument(
+        "--manifest",
+        type=Path,
+        required=True,
+        help="Downloaded and reviewed stable release manifest.",
+    )
+    upgrade_pr_parser.add_argument(
+        "--format",
+        dest="upgrade_pr_format",
+        choices=("text", "json"),
+        default="text",
+        help="Upgrade PR plan serialization format (default: text).",
+    )
+    upgrade_pr_parser.set_defaults(
+        handler=lambda args: _plan_upgrade_pr(
+            args.path,
+            manifest=args.manifest,
+            output_format=args.upgrade_pr_format,
+        )
+    )
+
+    status_parser = commands.add_parser(
+        "status",
+        help="Explain where repository governance is used and which surfaces are active.",
+    )
+    status_parser.add_argument(
+        "path",
+        nargs="?",
+        type=Path,
+        default=Path("."),
+        help="Repository directory to inspect (default: current directory).",
+    )
+    status_parser.add_argument(
+        "--format",
+        dest="status_format",
+        choices=("text", "json", "markdown"),
+        default="text",
+        help="Status serialization format (default: text; markdown suits CI summaries).",
+    )
+    status_parser.add_argument(
+        "--non-interactive",
+        action="store_true",
+        help="Declare automation mode; status remains read-only and never prompts.",
+    )
+    status_parser.set_defaults(
+        handler=lambda args: _status_repository(
+            args.path,
+            output_format=args.status_format,
+            non_interactive=args.non_interactive,
+        )
+    )
+
+    integrate_parser = commands.add_parser(
+        "integrate",
+        help="Preview or explicitly create a bounded consumer integration.",
+    )
+    integrate_targets = integrate_parser.add_subparsers(
+        dest="integration_target",
+        required=True,
+    )
+    github_actions_parser = integrate_targets.add_parser(
+        "github-actions",
+        help="Create a pinned, read-only AgentGov consumer CI workflow.",
+    )
+    github_actions_parser.add_argument(
+        "path",
+        nargs="?",
+        type=Path,
+        default=Path("."),
+        help="Repository directory to integrate (default: current directory).",
+    )
+    github_actions_parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Preview exact workflow content without requesting confirmation.",
+    )
+    github_actions_parser.add_argument(
+        "--format",
+        dest="integration_format",
+        choices=("text", "json"),
+        default="text",
+        help="Integration-plan serialization format (default: text).",
+    )
+    github_actions_parser.add_argument(
+        "--non-interactive",
+        action="store_true",
+        help="Declare automation mode; it never grants write authority.",
+    )
+    github_actions_parser.set_defaults(
+        handler=lambda args: _integrate_github_actions(
+            args.path,
+            dry_run=args.dry_run,
+            output_format=args.integration_format,
+            non_interactive=args.non_interactive,
+        )
+    )
 
     update_parser = commands.add_parser(
         "update",

@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Development Plan
 
-Last updated: 2026-07-25
+Last updated: 2026-08-02
 
 ## Purpose
 
@@ -75,7 +75,7 @@ No check result authorizes merge, publish, release, or deploy.
 
 ## Current State
 
-Status: `0.1.0`, experimental stable GitHub Release.
+Status: stable `0.1.0`; local release candidate `0.2.0rc1`.
 
 Implemented foundations:
 
@@ -480,6 +480,27 @@ project-specific business thresholds or runtime logic.
 
 ### Consumer CI workflow
 
+Implemented as a bounded create-missing-only vertical slice on 2026-08-01.
+`agentgov integrate github-actions` previews or explicitly creates a pinned,
+read-only workflow, and `agentgov status` distinguishes managed, custom,
+manual-only, and conflicting integration states while showing declared
+capability usage. The workflow now verifies the fixed release wheel SHA-256.
+Development version 0.2 also renders a deterministic Markdown status card for
+GitHub job summaries. Version-aware workflow rendering leaves the stable 0.1
+consumer workflow unchanged and adds the status card only to 0.2-or-newer
+managed workflows.
+
+The bounded upgrade slice now includes `agentgov plan upgrade-pr`, which
+validates one stable release and produces a no-write `current`, `candidate`, or
+`blocked` plan. It only proposes an exact managed-workflow change. The
+consumer-local `agentgov review upgrade` layer turns that plan into portable
+JSON, Markdown UI, an exact patch, current status, gates, and a pending human
+decision without applying the change. Managed 0.2+ consumer CI automatically
+downloads the latest stable manifest, generates this bundle, appends the UI to
+the job summary, and uploads the evidence artifact. The authenticated GitHub
+branch/PR writer remains unimplemented until this behavior is published and
+separately authorized by a consumer owner.
+
 Provide an adopting-repository workflow that:
 
 - pins an agentgov version;
@@ -489,6 +510,37 @@ Provide an adopting-repository workflow that:
 - optionally adds a step summary;
 - blocks only configured deterministic statuses;
 - does not authorize release.
+
+### Benefit evidence monitor
+
+Implemented as a two-snapshot, read-only comparison in release candidate
+`0.2.0rc1`. `agentgov benefits compare` reports explicit before, after, and
+matched finding denominators plus status transitions. It does not infer
+causality, prevented incidents, time savings, governance coverage, or ROI.
+
+The next slice requires real NYC CI observations and a separate event contract
+for project-test status, PR outcome, timestamps, human disposition, and
+retention before trend reporting is admitted.
+
+### Release review evidence
+
+Implemented in local release candidate 0.2.0rc1. `agentgov review release`
+accepts an exact wheel, immutable manifest, source repository, and consumer
+pilot, then creates a new review bundle containing source tests, isolated-wheel
+checks, consumer status, and upgrade-policy evidence. Artifact construction
+remains a separate release stage, and the command never records a human
+decision or authorizes Git, publication, release, or deployment.
+
+### Consumer upgrade review evidence
+
+Implemented in local release candidate 0.2.0rc1. `agentgov review upgrade`
+runs against the adopting repository and a reviewed release manifest. It
+creates a new local/CI bundle showing the current and proposed versions, exact
+managed-workflow hashes and patch, consumer findings, deterministic gates, and
+the pending consumer decision. Release-candidate manifests are visibly blocked.
+Managed 0.2+ consumer CI publishes the review as a job summary and artifact.
+The command does not apply the patch, run project tests, create a branch or
+pull request, merge, release, or deploy.
 
 ### Evidence freshness
 
@@ -584,7 +636,7 @@ Carried forward after the release:
 
 - complete the fresh uncoached human adoption pilot;
 - finish the Taxi cross-domain pilot record and maintainer decisions;
-- add a reusable consumer CI workflow;
+- pilot the reusable consumer CI workflow in NYC and record the result;
 - verify the supported operating-system and Python matrix continuously in CI.
 
 ## Next Recommended Starting Point
@@ -595,8 +647,7 @@ Use the published `v0.1.0` path for the next evidence cycle:
    `agentgov update .` experience;
 2. finish the Taxi pilot record, including timing, assistance, unresolved
    findings, and maintainer decisions;
-3. design the reusable consumer CI workflow from the stable update and report
-   contracts;
+3. validate the reusable consumer CI workflow and status surface in NYC;
 4. decide whether PyPI adds enough user value beyond the verified GitHub
    Release channel.
 
