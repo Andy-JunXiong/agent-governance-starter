@@ -20,9 +20,11 @@ presence does not answer whether they describe the same capability, whether
 the evidence matches the declared readiness, or whether implementation sources
 changed after review.
 
-The product problem is therefore not simply generating an AGENTS.md file. It is
-making capability identity, evidence state, artifact integrity, deterministic
-checks, and human-review boundaries visible in one repository-local chain.
+The product problem is therefore not simply generating an AGENTS.md file or
+auditing a finished pull request. It is making the admitted requirement,
+relevant architecture, implementation boundary, capability identity, evidence
+state, deterministic checks, and human authority usable while the coding agent
+is still developing the change.
 
 ## Product decisions
 
@@ -71,6 +73,19 @@ The architecture deliberately uses files and a local CLI rather than a hosted
 database. This keeps v0.1 inspectable and makes its claims reproducible from a
 repository checkout.
 
+ADR-0009 defines the next architecture layer above this implemented chain:
+
+```text
+Requirement admission
+  -> task-relevant architecture context
+  -> bounded coding-agent implementation
+  -> changed-file and fresh-evidence verification
+  -> completion reconciliation
+  -> independent PR/CI replay
+```
+
+That layer is product direction, not a capability claimed by stable 0.2.1.
+
 ## Implementation
 
 The dependency-free runtime targets Python 3.11 or newer. The CLI exposes
@@ -105,11 +120,12 @@ Generic multi-agent configuration linting has become a crowded category. This
 project is therefore not positioned as another broad AGENTS.md or CLAUDE.md
 linter and does not attempt to score instruction-writing quality.
 
-Its narrower focus is the connection between capability declarations,
-repository evidence, evaluation readiness, artifact integrity, deterministic
-failure semantics, and human-review contracts. That positioning is still a
-product hypothesis; broader productisation requires interviews, repository
-pilots, and observed repeat use rather than a uniqueness claim.
+Its narrower focus is governing coding-agent work across requirements,
+architecture, implementation scope, evidence, and human authority, using
+capability declarations and deterministic repository contracts where those
+facts are machine-checkable. That positioning is still a product hypothesis;
+broader productisation requires interviews, repository pilots, and observed
+repeat use rather than a uniqueness claim.
 
 ## Current limitations
 
@@ -118,6 +134,9 @@ pilots, and observed repeat use rather than a uniqueness claim.
   adoption, but policy reconciliation remains manual.
 - The CLI discovers a small documented set of existing instruction paths but
   does not read, reconcile, or judge their policy content.
+- Stable 0.2.1 does not yet create a task contract, select task-relevant
+  architecture context, compare working changes with admitted scope, or run a
+  completion reconciliation.
 - Static checks cannot judge semantic policy quality, architecture quality, or
   model-output quality.
 - The project is not a runtime security boundary, compliance certification, or
@@ -129,14 +148,18 @@ pilots, and observed repeat use rather than a uniqueness claim.
 
 ## Future product direction
 
-The versioned JSON repository report preserves the current finding semantics as
-a stable integration boundary. Consumer CI now uses that boundary directly,
-and the read-only status surface exposes capability ownership, callers,
-readiness, active checks, and missing integrations without reconstructing
-checker logic. A future UI could consume the same contract to show drift,
-exceptions, and human-review queues without moving policy authority out of the
-repository.
+The next product slice moves governance into actual development: admit a task,
+select its architecture and authority context, compare real code changes with
+that boundary, require fresh evidence before completion, and reconcile scoped
+governance drift. Terminal, Markdown, and JSON are the primary portable
+surfaces for humans and coding agents.
 
-That UI does not currently exist. Before building it, the project needs broader
-user validation and a read-only adoption path for existing repositories. Those
-are future directions, not capabilities claimed by v0.1.
+The versioned repository report and existing consumer CI remain useful. They
+should replay the same deterministic facts independently and retain evidence,
+not define a separate PR-centric governance product. IDE hooks, watch mode,
+mechanical agent interruption, and expanded write authority remain deferred
+until the repository-native loop is proven.
+
+The versioned JSON repository report remains a stable integration boundary for
+that replay. A future UI could consume it without moving policy authority out
+of the repository. That UI does not currently exist.

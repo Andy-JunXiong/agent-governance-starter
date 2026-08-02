@@ -20,24 +20,35 @@ architecture decisions belong in `docs/adr/`.
 
 ## Product Direction
 
-The target product is a lightweight, repository-native AI governance kernel:
+The target product is a lightweight, repository-native coding-agent governance
+kernel:
 
 ```text
-Repository Governance Kernel
+Requirement and Task Governance
         +
-Project Evidence Bridge
+Architecture and Invariant Context
         +
-Domain-informed adoption profiles
+Bounded Coding-Agent Execution Evidence
+        +
+Independent PR/CI Replay
 ```
 
 It should connect:
 
+- human-admitted goals, non-goals, scope, acceptance signals, and stop
+  conditions;
+- repository architecture decisions and invariants relevant to the task;
 - declared AI capabilities;
 - implementation and contract references;
 - control implementation and verification evidence;
 - evaluation readiness and evaluation decisions;
 - accountable owners and human approval boundaries;
-- deterministic repository findings and advisory human judgments.
+- actual code changes, fresh validation evidence, deterministic repository
+  findings, and advisory human judgments.
+
+ADR-0009 makes this development-time loop the product core. PR and CI remain
+an independent backstop and evidence surface, not the first point at which a
+coding agent should discover constraints.
 
 Project-specific runtime controls, model runners, business thresholds, and
 deployment systems remain in adopting repositories.
@@ -75,8 +86,14 @@ No check result authorizes merge, publish, release, or deploy.
 
 ## Current State
 
-Status: stable `0.2.0`; local patch preparation `0.2.1` after NYC consumer CI
-identified an invalid temporary wheel filename.
+Status: stable `0.2.1`; future `0.3` behavior is implemented in development
+source but has not passed its release-candidate or NYC migration gates.
+
+Current product priority: productize the now-implemented requirement,
+architecture-context, changed-file, fresh-evidence, completion, event, Monitor,
+and guided-session loop for coding agents. This priority supersedes release
+packaging of the PR-centered 0.3 delivery work. The detailed ordering is in
+`docs/development-plan.md`.
 
 Implemented foundations:
 
@@ -113,7 +130,12 @@ Completed on 2026-07-23:
 - simultaneous canonical and legacy layouts became a deterministic conflict;
 - ADR-0001 and ADR-0002 recorded the durable decisions.
 
-## Current P0 Track
+## Foundation implementation history
+
+The sections below preserve the foundation and adoption sequencing that
+produced stable 0.2.1 and the future 0.3 source work. They are not the current
+priority order. `docs/development-plan.md` owns the active P0 coding-agent
+development loop defined by ADR-0009.
 
 ### Pre-pilot credibility hardening
 
@@ -493,14 +515,16 @@ managed workflows.
 
 The bounded upgrade slice now includes `agentgov plan upgrade-pr`, which
 validates one stable release and produces a no-write `current`, `candidate`, or
-`blocked` plan. It only proposes an exact managed-workflow change. The
+`blocked` plan. It proposes only the exact one- or two-file managed-workflow
+set. The
 consumer-local `agentgov review upgrade` layer turns that plan into portable
 JSON, Markdown UI, an exact patch, current status, gates, and a pending human
 decision without applying the change. Managed 0.2+ consumer CI automatically
 downloads the latest stable manifest, generates this bundle, appends the UI to
-the job summary, and uploads the evidence artifact. The authenticated GitHub
-branch/PR writer remains unimplemented until this behavior is published and
-separately authorized by a consumer owner.
+the job summary, and uploads the evidence artifact. Future 0.3 source contains
+a separate schedule/dispatch-only Draft PR writer for compatible updates to
+the two fixed workflow paths; the 0.2-to-0.3 file-creation migration remains a
+human-reviewed bootstrap and no writer can merge.
 
 Provide an adopting-repository workflow that:
 
@@ -642,15 +666,28 @@ Carried forward after the release:
 
 ## Next Recommended Starting Point
 
-Use the published `v0.1.0` path for the next evidence cycle:
+Continue productizing the implemented ADR-0009 loop:
 
-1. run a fresh uncoached human pilot using only the public Release install and
-   `agentgov update .` experience;
-2. finish the Taxi pilot record, including timing, assistance, unresolved
-   findings, and maintainer decisions;
-3. validate the reusable consumer CI workflow and status surface in NYC;
-4. decide whether PyPI adds enough user value beyond the verified GitHub
-   Release channel.
+1. [Completed internal pilot] Preserve the installed-build independent
+   repository evidence, including actual Coding Agent context consumption,
+   fail-closed Skill and validation-artifact findings, and the explicit limit
+   that this was not an uncoached human study;
+2. [Completed development preview] Define the explicit redacted event-export
+   contract so local history can be carried into CI without pretending the CI
+   replay observed development. The metadata-only bundle is immutable,
+   integrity-checked, explicitly confirmed, and now supports honest
+   `exported_development` and `combined` Monitor views;
+3. wire the static Monitor as an opt-in GitHub Actions artifact only after that
+   observation boundary is testable;
+4. converge installation, update, onboarding, task admission, and Monitor
+   generation on the same small guided workflow without hidden hooks or daemon
+   authority;
+5. run release-candidate review and consumer migration gates before publishing
+   the development-governance 0.3 line.
+
+The uncoached adoption pilot, Taxi record, 0.3 release packaging, NYC migration,
+and PyPI decision remain open evidence or delivery work. They do not replace
+the coding-agent development loop as the product core.
 
 Do not begin dependency risk propagation, repository profiles, governance
 scoring, or taxonomy expansion before pilot evidence justifies the change.

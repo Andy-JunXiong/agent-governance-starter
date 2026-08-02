@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/development-completion-v1.json",
+  "title": "AgentGov Development Completion Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "task_id", "task_path", "task_digest", "state", "evidence_ref", "evidence_id", "comparison_base_sha", "snapshot_head_sha", "change_set_digest", "findings", "known_limits", "event_ref", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.development-completion"},
+    "schema_version": {"const": "1.0"},
+    "task_id": {"type": "string", "minLength": 1},
+    "task_path": {"$ref": "#/$defs/path"},
+    "task_digest": {"$ref": "#/$defs/sha256"},
+    "state": {"enum": ["needs_evidence", "verified"]},
+    "evidence_ref": {"anyOf": [{"$ref": "#/$defs/path"}, {"type": "null"}]},
+    "evidence_id": {"anyOf": [{"type": "string", "pattern": "^evd-[0-9a-f]{32}$"}, {"type": "null"}]},
+    "comparison_base_sha": {"anyOf": [{"$ref": "#/$defs/gitSha"}, {"type": "null"}]},
+    "snapshot_head_sha": {"anyOf": [{"$ref": "#/$defs/gitSha"}, {"type": "null"}]},
+    "change_set_digest": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+    "findings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["status", "check_id", "message"],
+        "properties": {
+          "status": {"enum": ["PASS", "FAIL", "ADVISORY"]},
+          "check_id": {"type": "string", "minLength": 1},
+          "message": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "known_limits": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "event_ref": {"anyOf": [{"$ref": "#/$defs/path"}, {"type": "null"}]},
+    "authority_boundary": {"$ref": "#/$defs/authority"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "gitSha": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+    "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?![A-Za-z]:[\\\\/])(?!.*\\\\).+$"},
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authorizes_requirement_completion", "authorizes_architecture_correctness", "authorizes_exception", "authorizes_commit", "authorizes_merge", "authorizes_deployment"],
+      "properties": {
+        "authorizes_requirement_completion": {"const": false},
+        "authorizes_architecture_correctness": {"const": false},
+        "authorizes_exception": {"const": false},
+        "authorizes_commit": {"const": false},
+        "authorizes_merge": {"const": false},
+        "authorizes_deployment": {"const": false}
+      }
+    }
+  }
+}

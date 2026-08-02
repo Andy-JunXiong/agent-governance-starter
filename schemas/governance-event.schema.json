@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/governance-event-v1.1.json",
+  "title": "AgentGov Local Governance Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "event_id", "occurred_at", "event_type", "actor", "task_id", "task_digest", "observation_scope", "outcome", "evidence_ref", "governance_refs", "reason_codes", "metrics", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.governance-event"},
+    "schema_version": {"const": "1.1"},
+    "event_id": {"type": "string", "pattern": "^evt-[0-9a-f]{32}$"},
+    "occurred_at": {"type": "string", "minLength": 1},
+    "event_type": {"enum": ["task.started", "scope.checked", "validation.completed", "completion.reconciled"]},
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["class"],
+      "properties": {
+        "class": {"enum": ["human", "coding_agent", "ci"]},
+        "label": {"type": "string", "minLength": 1}
+      }
+    },
+    "task_id": {"type": "string", "minLength": 1},
+    "task_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "observation_scope": {"const": "local_development"},
+    "outcome": {"enum": ["started", "passed", "failed", "stale", "needs_evidence", "verified"]},
+    "evidence_ref": {"anyOf": [{"$ref": "#/$defs/path"}, {"type": "null"}]},
+    "governance_refs": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/path"}},
+    "reason_codes": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}},
+    "metrics": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "authority_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authorizes_code_change", "authorizes_exception", "authorizes_commit", "authorizes_merge", "authorizes_deployment"],
+      "properties": {
+        "authorizes_code_change": {"const": false},
+        "authorizes_exception": {"const": false},
+        "authorizes_commit": {"const": false},
+        "authorizes_merge": {"const": false},
+        "authorizes_deployment": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?![A-Za-z]:[\\\\/])(?!.*\\\\).+$"}
+  }
+}

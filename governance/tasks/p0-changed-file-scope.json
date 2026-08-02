@@ -1,0 +1,95 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-changed-file-scope",
+  "title": "Implement development-time changed-file scope governance",
+  "requirement": {
+    "summary": "Continue the reviewed plan by detecting deterministic task-scope drift while coding is still in progress.",
+    "source_refs": [
+      "docs/proposals/2026-08-02-agentgov-product-and-architecture-plan.zh-CN.md",
+      "docs/development-plan.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0009-govern-coding-agents-during-development.md"
+    ],
+    "rationale": "This is the next P0 development-governance phase after task-specific context selection."
+  },
+  "goal": "Inventory working-tree Git changes read-only and compare every relevant path with the admitted task using the reviewed segment-aware scope policy.",
+  "non_goals": [
+    "Do not implement fresh validation evidence, completion reconciliation, Event Store, Dashboard, hooks, automatic remediation, or Git writes.",
+    "Do not inspect committed-since-base changes until the later comparison-base evidence contract is implemented.",
+    "Do not turn architecture relevance, natural-language intent, or exception quality into deterministic failures.",
+    "Do not implement the final automated onboarding and update UX in this slice."
+  ],
+  "scope": {
+    "include_paths": [
+      "README.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-02.md",
+      "docs/development-plan.md",
+      "docs/development-scope-check.md",
+      "governance/tasks/p0-changed-file-scope.json",
+      "schemas/development-scope-report.schema.json",
+      "src/agentgov/change_scope.py",
+      "src/agentgov/cli.py",
+      "src/agentgov/development_context.py",
+      "src/agentgov/path_policy.py",
+      "src/agentgov/task_contract.py",
+      "tests/test_change_scope.py",
+      "tests/test_development_context.py",
+      "tests/test_path_policy.py",
+      "tests/test_portfolio_docs.py"
+    ],
+    "exclude_paths": [
+      ".github",
+      "release",
+      "src/agentgov/upgrade_writer.py"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0009-govern-coding-agents-during-development.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/specs/development-trigger-routing-v1.md"
+  ],
+  "acceptance_signals": [
+    "Staged, unstaged, non-ignored untracked, deleted, and renamed paths are classified without changing source, index, branch, or history.",
+    "Path prefixes match on full segments, exclude overrides include, and both rename endpoints must be admitted.",
+    "Out-of-scope paths produce deterministic FAIL while explicit architecture references produce only ADVISORY review.",
+    "Terminal, JSON, and Markdown output remain stable, task-specific, and vendor-neutral.",
+    "Fixture tests and the complete repository suite pass."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_path_policy tests.test_change_scope -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check repository ."
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "medium",
+    "items": [
+      "Incorrect Git parsing could omit or misclassify a changed path.",
+      "Raw string prefix matching would make deterministic scope findings untrustworthy.",
+      "A read-only check could accidentally mutate Git if implemented through inappropriate plumbing commands."
+    ]
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "owner": "Human product owner",
+    "evidence_refs": []
+  },
+  "stop_conditions": [
+    "Stop if reliable classification requires modifying the Git index or working tree.",
+    "Stop if a semantic judgment is required to produce a deterministic result.",
+    "Stop if unrelated user worktree changes cannot be preserved."
+  ],
+  "decision": {
+    "state": "admitted",
+    "decided_by": "Human product owner",
+    "rationale": "The user explicitly directed development to continue into the next reviewed phase."
+  }
+}

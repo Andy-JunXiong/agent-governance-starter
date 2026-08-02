@@ -7,9 +7,11 @@ from tempfile import TemporaryDirectory
 
 from agentgov.cli import EXIT_ERROR, EXIT_FAIL, EXIT_PASS, main
 from agentgov.consumer_ci import (
+    UPGRADE_WORKFLOW_PATH,
     WORKFLOW_PATH,
     apply_integration_plan,
     plan_github_actions_integration,
+    render_consumer_upgrade_workflow,
     render_consumer_workflow,
 )
 from agentgov.initializer import initialize_project
@@ -152,7 +154,79 @@ class UpgradePullRequestPlanTests(unittest.TestCase):
             plan = plan_upgrade_pull_request(root, manifest_path=manifest)
 
         self.assertIs(plan.state, UpgradePlanState.BLOCKED)
-        self.assertIn("repository migrations", plan.reasons[0])
+        self.assertIn("outside the bounded", plan.reasons[0])
+
+    def test_declared_0_3_migration_plans_update_and_create(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            configured_repository(root)
+            manifest = write_manifest(
+                root,
+                version="0.3.0",
+                supported_from=["0.1.0"],
+                repository_changes_declared=True,
+            )
+
+            plan = plan_upgrade_pull_request(root, manifest_path=manifest)
+
+        self.assertIs(plan.state, UpgradePlanState.CANDIDATE)
+        self.assertEqual(
+            tuple((change.action, change.path) for change in plan.changes),
+            (
+                ("update", WORKFLOW_PATH),
+                ("create", UPGRADE_WORKFLOW_PATH),
+            ),
+        )
+        self.assertIsNone(plan.changes[1].before_sha256)
+        self.assertIn("consumer-ci-v2", plan.reasons[0])
+
+    def test_0_3_patch_upgrade_updates_both_exact_workflows(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            configured_repository(root)
+            (root / WORKFLOW_PATH).write_text(
+                render_consumer_workflow(version="0.3.0", wheel_sha256="d" * 64),
+                encoding="utf-8",
+            )
+            (root / UPGRADE_WORKFLOW_PATH).write_text(
+                render_consumer_upgrade_workflow(
+                    version="0.3.0", wheel_sha256="d" * 64
+                ),
+                encoding="utf-8",
+            )
+            manifest = write_manifest(
+                root,
+                version="0.3.1",
+                supported_from=["0.3.0"],
+            )
+
+            plan = plan_upgrade_pull_request(root, manifest_path=manifest)
+
+        self.assertIs(plan.state, UpgradePlanState.CANDIDATE)
+        self.assertEqual(
+            tuple(change.path for change in plan.changes),
+            (WORKFLOW_PATH, UPGRADE_WORKFLOW_PATH),
+        )
+        self.assertTrue(all(change.action == "update" for change in plan.changes))
+
+    def test_0_3_current_state_requires_the_matching_upgrade_workflow(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            configured_repository(root)
+            (root / WORKFLOW_PATH).write_text(
+                render_consumer_workflow(version="0.3.0", wheel_sha256="d" * 64),
+                encoding="utf-8",
+            )
+            manifest = write_manifest(
+                root,
+                version="0.3.0",
+                supported_from=["0.3.0"],
+            )
+
+            plan = plan_upgrade_pull_request(root, manifest_path=manifest)
+
+        self.assertIs(plan.state, UpgradePlanState.BLOCKED)
+        self.assertIn("upgrade proposal workflow is missing", plan.reasons[0])
 
     def test_json_contract_is_read_only_and_denies_pr_authority(self) -> None:
         with TemporaryDirectory() as temp_dir:
@@ -177,6 +251,11 @@ class UpgradePullRequestPlanTests(unittest.TestCase):
         )
 
         self.assertFalse(schema["additionalProperties"])
+        self.assertEqual(schema["properties"]["contract_version"]["const"], "1.1")
+        self.assertEqual(
+            schema["properties"]["pull_request"]["properties"]["changes"]["maxItems"],
+            2,
+        )
         authority = schema["properties"]["authority_boundary"]
         self.assertFalse(authority["additionalProperties"])
         for property_schema in authority["properties"].values():

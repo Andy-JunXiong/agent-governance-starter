@@ -1,0 +1,21 @@
+{
+  "contract": "agentgov.control-mapping",
+  "schema_version": "1.0",
+  "capability_name": "example-app",
+  "controls": [
+    {
+      "control_id": "bounded-change",
+      "objective": "Keep the fixture change inside its declared application boundary.",
+      "applicability": "applicable",
+      "enforcement_mode": "human_procedural",
+      "implementation_refs": [
+        "AGENTS.md"
+      ],
+      "verification_refs": [
+        "docs/adr/INVARIANTS.md"
+      ],
+      "owner": "Fixture owner",
+      "exception_authority": "Fixture owner"
+    }
+  ]
+}

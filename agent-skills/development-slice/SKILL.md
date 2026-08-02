@@ -1,6 +1,9 @@
 ---
 name: development-slice
 description: Plan and deliver one bounded repository change with explicit scope, approval, validation, and handoff. Use when a feature, bug fix, refactor, or governance change needs meaningful implementation work. Do not use for trivial text-only edits, read-only explanation, or active operational incidents.
+triggers: ["task.admitted"]
+non_triggers: ["task.draft", "task.paused"]
+applies_to: ["development_task"]
 ---
 
 # Development Slice

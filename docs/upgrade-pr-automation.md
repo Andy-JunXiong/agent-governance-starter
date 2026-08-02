@@ -12,13 +12,18 @@ agentgov plan upgrade-pr . --manifest release-manifest.json --format json
 The planner returns:
 
 - `current` when the managed workflow already pins the latest stable release;
-- `candidate` with one exact workflow change, hashes, branch, title, and body;
+- `candidate` with one or two exact managed workflow changes, actions, hashes,
+  branch, title, and body;
 - `blocked` when the workflow is missing or customized, compatibility is not
-  declared, the layout is unreadable, or the release declares migrations.
+  declared, the layout is unreadable, or the release declares an unsupported
+  migration.
 
 The manifest must be a valid stable AgentGov release manifest with a fixed-tag
-wheel and SHA-256 digest. The candidate updates only
-`.github/workflows/agentgov.yml`. Planning never writes a repository file,
+wheel and SHA-256 digest. The candidate is limited to
+`.github/workflows/agentgov.yml` and, for 0.3+, the separate
+`.github/workflows/agentgov-upgrade.yml`. The read-only planner recognizes only
+the named `consumer-ci-v2` migration when moving from the legacy one-workflow
+layout to the two-workflow layout. Planning never writes a repository file,
 creates a branch or PR, merges, releases, or deploys.
 
 The consumer-facing review command remains read-only:
@@ -53,12 +58,13 @@ re-runs the complete plan, verifies the remote default-branch file against the
 exact `before_sha256`, and may then:
 
 1. create `agentgov/update-<version>` from the reviewed base SHA;
-2. commit only `.github/workflows/agentgov.yml` with the exact planned content;
+2. update only the existing managed AgentGov workflow set with the exact
+   planned content;
 3. create a Draft PR; or
 4. recover/idempotently reuse an exact branch or open PR left by an earlier run.
 
 Remote drift, an unrelated branch change, a customized workflow, absent
-compatibility, or a declared repository migration blocks before further write.
+compatibility, or any create/delete migration blocks before further write.
 Missing reports or a report whose tool version does not match the current or
 proposed version also blocks before branch creation. The Draft PR body includes
 current/target PASS, WARN, FAIL, and ADVISORY counts, newly introduced
@@ -106,7 +112,9 @@ to use a GitHub App or PAT when unattended PR checks are required in
 
 0.2.x is intentionally read-only and cannot retroactively acquire a writer.
 The 0.3.0 release must therefore declare its consumer-workflow migration and be
-reviewed once in each pilot repository. After the 0.3 managed workflow is
+reviewed once in each pilot repository. The review contains the exact update of
+`agentgov.yml` and creation of `agentgov-upgrade.yml`; the authenticated writer
+does not apply this bootstrap migration. After the 0.3 managed workflow set is
 human-merged, compatible releases with `repository_changes_declared: false`
 can create their own Draft upgrade PRs. Any later workflow architecture change
 must again declare a migration and stop for human review.

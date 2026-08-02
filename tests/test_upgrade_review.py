@@ -7,6 +7,7 @@ from tempfile import TemporaryDirectory
 
 from agentgov.cli import EXIT_ERROR, EXIT_FAIL, EXIT_PASS, main
 from agentgov.consumer_ci import (
+    UPGRADE_WORKFLOW_PATH,
     WORKFLOW_PATH,
     apply_integration_plan,
     plan_github_actions_integration,
@@ -39,6 +40,7 @@ def write_manifest(
     *,
     version: str = "0.2.0",
     channel: str = "stable",
+    repository_changes_declared: bool = False,
 ) -> Path:
     document = {
         "contract": "agentgov.release-manifest",
@@ -49,8 +51,10 @@ def write_manifest(
         "supported_from": ["0.1.0"],
         "readable_layout_versions": ["1.0"],
         "target_layout_version": "1.0",
-        "repository_changes_declared": False,
-        "declared_migrations": [],
+        "repository_changes_declared": repository_changes_declared,
+        "declared_migrations": (
+            ["consumer-ci-v2"] if repository_changes_declared else []
+        ),
         "release_notes_url": (
             "https://github.com/Andy-JunXiong/agent-governance-starter/"
             f"releases/tag/v{version}"
@@ -138,6 +142,42 @@ class UpgradeReviewBundleTests(unittest.TestCase):
         )
         self.assertEqual(stable_gate["status"], "FAIL")
 
+    def test_declared_0_3_migration_review_contains_both_workflows(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir) / "consumer"
+            root.mkdir()
+            configured_repository(root)
+            manifest = write_manifest(
+                Path(temp_dir),
+                version="0.3.0",
+                repository_changes_declared=True,
+            )
+            output = root / "upgrade-review"
+
+            result = create_upgrade_review_bundle(
+                root,
+                manifest_path=manifest,
+                output=output,
+            )
+            review = json.loads(
+                (output / "upgrade-review.json").read_text(encoding="utf-8")
+            )
+            patch = (output / "workflow.patch").read_text(encoding="utf-8")
+
+        self.assertEqual(result.state, "ready_for_human_review")
+        self.assertEqual(
+            tuple(
+                (change["action"], change["path"])
+                for change in review["transition"]["changes"]
+            ),
+            (
+                ("update", WORKFLOW_PATH.as_posix()),
+                ("create", UPGRADE_WORKFLOW_PATH.as_posix()),
+            ),
+        )
+        self.assertIn("--- /dev/null", patch)
+        self.assertIn(f"+++ b/{UPGRADE_WORKFLOW_PATH.as_posix()}", patch)
+
     def test_existing_review_output_is_preserved(self) -> None:
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir) / "consumer"
@@ -164,6 +204,11 @@ class UpgradeReviewBundleTests(unittest.TestCase):
         )
 
         self.assertFalse(schema["additionalProperties"])
+        self.assertEqual(schema["properties"]["contract_version"]["const"], "1.1")
+        self.assertEqual(
+            schema["properties"]["transition"]["properties"]["changes"]["maxItems"],
+            2,
+        )
         authority = schema["properties"]["authority_boundary"]
         self.assertTrue(authority["properties"]["review_output_created"]["const"])
         for name, property_schema in authority["properties"].items():

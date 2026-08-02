@@ -1,0 +1,90 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-installed-development-pilot",
+  "title": "Run an independent installed development governance pilot",
+  "requirement": {
+    "summary": "Validate the corrected product direction from an exact locally built wheel in an independent Git repository, including real coding-agent context consumption and the complete guided development governance loop.",
+    "source_refs": [
+      "docs/proposals/2026-08-02-agentgov-product-and-architecture-plan.zh-CN.md",
+      "DEVELOPMENT_PLAN.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0009-govern-coding-agents-during-development.md"
+    ],
+    "rationale": "An installed independent-repository pilot is required before treating the source implementation as a downloadable development-governance product."
+  },
+  "goal": "Build and install the exact development wheel in isolation, govern one small independent-repository coding task end to end, and record observed friction and honest claim limits.",
+  "non_goals": [
+    "Do not publish a package, GitHub Release, tag, commit, push, pull request, deployment, or external telemetry event.",
+    "Do not modify AI Radar, NYC, GLAP, or another existing consumer repository.",
+    "Do not present one internal coding-agent run as uncoached human validation, general effectiveness, causal benefit, or cross-platform proof.",
+    "Do not add hooks, a daemon, unattended approval, automatic governance mutation, or a combined CI/development history contract."
+  ],
+  "scope": {
+    "include_paths": [
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-02.md",
+      "docs/development-plan.md",
+      "docs/experiments/installed-development-governance-pilot.md",
+      "governance/tasks/p0-installed-development-pilot.json",
+      "tests/test_portfolio_docs.py"
+    ],
+    "exclude_paths": [
+      ".github",
+      "release",
+      "src/agentgov",
+      "AI Radar",
+      "NYC"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0009-govern-coding-agents-during-development.md",
+    "docs/adr/INVARIANTS.md"
+  ],
+  "acceptance_signals": [
+    "An exact wheel is built from the current source, identified by filename and SHA-256, and installed with --no-deps into a fresh isolated environment.",
+    "A fresh independent Git repository with no AI Radar dependency completes start, context routing, an in-scope coding-agent edit, check, fresh finish, and static Monitor generation using the installed package.",
+    "The coding agent records which selected constraints it read, which it followed, whether unrelated governance was omitted, and any context or workflow friction.",
+    "The Monitor contains the expected task start, scope, validation, and completion observations while retaining partial-history and consumption claim limits.",
+    "The pilot record distinguishes automated plumbing evidence, internal coding-agent observation, and claims that remain unknown.",
+    "The complete source suite and repository governance checks pass after documentation updates."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_portfolio_docs -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check repository ."
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "medium",
+    "items": [
+      "A source-built wheel could be confused with the published stable release because version promotion is intentionally deferred.",
+      "An internal agent-operated pilot could be overstated as independent human evidence.",
+      "Temporary repository or validation output could accidentally be persisted into the product repository."
+    ]
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "owner": "Human product owner",
+    "evidence_refs": []
+  },
+  "stop_conditions": [
+    "Stop if installation needs an unreviewed network dependency or external publication.",
+    "Stop if the pilot cannot identify the exact wheel independently of its displayed package version.",
+    "Stop if the coding task requires edits outside the disposable independent repository or its admitted path scope.",
+    "Stop if the pilot would require bypassing a failed governance check or weakening an existing test."
+  ],
+  "decision": {
+    "state": "admitted",
+    "decided_by": "Human product owner",
+    "rationale": "The user explicitly authorized the recommended independent installed-build pilot after reviewing the current project state."
+  }
+}

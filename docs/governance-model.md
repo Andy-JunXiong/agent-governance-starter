@@ -14,13 +14,16 @@ The starter kit uses the following governance chain:
 
 ```text
 Constitution
+  -> Requirement Admission
   -> Architecture Memory
   -> Agent Operating Protocols
+  -> Bounded Implementation
   -> AI Capability Governance
   -> Reviewable Artifacts
-  -> Evaluation and Policy Checks
+  -> Development Verification
+  -> Completion Reconciliation
   -> Human Approval
-  -> Controlled Change
+  -> PR/CI Independent Replay
   -> Monitoring and Learning
 ```
 
@@ -33,6 +36,14 @@ Defines repository scope, permissions, prohibited actions, approval boundaries,
 validation requirements, and escalation rules. `AGENTS.md` is the default
 portable artifact.
 
+### Requirement admission
+
+Turns a concrete development request into an explicit goal, non-goals,
+smallest scope, risks, acceptance signals, stop conditions, and human decision
+boundaries. Natural-language intent remains human-owned; AgentGov may preserve
+and check the declared contract but must not claim that it objectively inferred
+the user's meaning.
+
 ### Architecture memory
 
 Records durable decisions and invariants so an agent can recover design intent
@@ -44,6 +55,13 @@ invariants identify constraints that ordinary feature work must preserve.
 Provide scenario-specific development and operations procedures. They remain
 separate from product runtime prompts and should state triggers, non-triggers,
 required context, checks, stop conditions, and expected output.
+
+### Bounded implementation
+
+Keeps the coding agent inside the admitted requirement and architecture
+boundary while it edits, tests, diagnoses failures, and iterates. A closed loop
+grants responsibility for safe iteration inside the approved scope, not wider
+autonomy, Git authority, or permission to invent new architecture.
 
 ### AI capability governance
 
@@ -63,7 +81,7 @@ threshold is inferred from different readiness labels.
 Expose capability metadata, schemas, examples, failure cases, source hashes,
 and quality notes in forms that humans and automated checks can inspect.
 
-### Evaluation and policy checks
+### Development verification
 
 Separate deterministic facts from judgment:
 
@@ -71,16 +89,27 @@ Separate deterministic facts from judgment:
 - incomplete evidence should produce an explicit readiness state;
 - architecture sufficiency and policy quality may require advisory review.
 
+Development verification also compares actual changed files and fresh evidence
+with the admitted task. It should surface drift before a pull request exists.
+
+### Completion reconciliation
+
+Checks the task, architecture decisions, implementation, tests, evaluation
+evidence, and governance memory for scoped drift before the coding agent claims
+completion. It proposes follow-up when durable decisions changed; it does not
+automatically rewrite core governance files.
+
 ### Human approval
 
 Preserves explicit human control for high-risk decisions. A starter kit may
 verify that an approval policy exists; it cannot prove that a reviewer made a
 sound decision merely by finding text in a repository.
 
-### Controlled change
+### PR/CI independent replay
 
-Connects proposal, context review, invariant review, implementation, tests,
-evaluation, approval, merge or release, and post-change observation.
+Reproduces deterministic development facts outside the coding agent's local
+session, prevents silent bypass, and preserves durable review evidence. PR and
+CI are a final backstop rather than AgentGov's primary product interaction.
 
 ### Monitoring and learning
 
@@ -110,16 +139,31 @@ Dependency completeness is also advisory. A valid acyclic graph proves only
 that declared edges are internally consistent; it does not prove that every
 runtime or organizational relationship was discovered.
 
-## Controlled-upgrade loop
+## Coding-agent development loop
 
 ```text
-Understand -> Admit -> Design -> Implement -> Verify
-           -> Evaluate -> Approve -> Release -> Observe -> Learn
+Understand -> Admit -> Ground -> Bound -> Implement -> Verify
+           -> Reconcile -> Human Decision -> PR/CI Replay -> Observe -> Learn
 ```
 
-Not every repository needs every stage at the same maturity. Reports should
-show readiness and missing evidence rather than treating unconfigured controls
-as successful.
+Not every repository needs every stage at the same maturity. Small changes may
+use a compact task contract, while architecture or high-risk work needs deeper
+context and approval. Reports should show readiness and missing evidence rather
+than treating unconfigured controls as successful.
+
+## Architecture-drift learning case
+
+The starter kit's own [PR-center architecture drift](case-studies/0001-pr-center-architecture-drift.md)
+is the first acceptance scenario for this loop. It shows how individually
+bounded, tested work on adoption, CI, and upgrade delivery accumulated until a
+supporting surface displaced development-time governance as the effective
+product center.
+
+Commit history, declared task references, changed paths, and validation
+evidence are deterministic inputs. Whether those facts amount to architecture
+drift remains an advisory human judgment. A green test suite proves that the
+implemented behavior satisfies its contracts; it does not prove that the
+implementation still advances the original requirement.
 
 ## Report integration boundary
 

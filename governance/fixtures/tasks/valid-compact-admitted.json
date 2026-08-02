@@ -1,0 +1,33 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "compact",
+  "task_id": "compact-doc-fix",
+  "title": "Fix one bounded document",
+  "requirement": {
+    "summary": "Correct one explicitly named document with a low-risk change.",
+    "source_refs": []
+  },
+  "scope": {
+    "include_paths": [
+      "docs/example.md"
+    ],
+    "exclude_paths": []
+  },
+  "acceptance_signals": [
+    "The named document contains the agreed correction."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_user_documentation -v"
+  ],
+  "owner": "Documentation owner",
+  "risk": {
+    "level": "low",
+    "items": []
+  },
+  "decision": {
+    "state": "admitted",
+    "decided_by": "Documentation owner",
+    "rationale": "The small documentation-only change is explicitly admitted."
+  }
+}

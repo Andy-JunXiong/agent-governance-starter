@@ -4,7 +4,9 @@
 
 A lightweight, repository-native governance framework that connects AI
 capabilities, implementation evidence, deterministic checks, and accountable
-human decisions.
+human decisions. The next product core extends those implemented foundations
+into requirement, architecture, and code governance while coding agents are
+developing; pull requests and CI remain an independent backstop.
 
 [![CI](https://github.com/Andy-JunXiong/agent-governance-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/Andy-JunXiong/agent-governance-starter/actions/workflows/ci.yml)
 
@@ -19,6 +21,9 @@ AI-assisted repositories accumulate agent instructions, capability
 declarations, implementation references, evaluation evidence, and approval
 rules. Those files can all exist while reviewers still cannot answer:
 
+- What requirement and smallest change scope did the human actually admit?
+- Which architecture decisions and invariants constrain the coding agent now?
+- Has the implementation drifted beyond that task before a PR exists?
 - What AI capability is actually present?
 - Who owns it, and what decisions may it influence?
 - Which implementation and evidence support its claims?
@@ -43,8 +48,19 @@ flowchart LR
     DECLARE --> CONNECT --> VERIFY --> FINDINGS --> HUMAN
 ```
 
-The CLI verifies declared repository facts. It does not run the AI capability,
-judge output quality, calculate a governance score, or approve high-risk work.
+The current stable CLI verifies declared repository facts. ADR-0009 makes the
+development loop the next product core; task context, changed-file scope,
+fresh completion evidence, guided sessions, redacted event export, and the
+static Monitor are implemented in the future-0.3 development source but are
+not published in stable 0.2.1. AgentGov does not judge architecture quality,
+calculate a governance score, or approve high-risk work.
+
+The decided next lifecycle is:
+
+```text
+Admit requirement -> Ground architecture -> Bound implementation
+  -> Verify during development -> Reconcile completion -> Replay in PR/CI
+```
 
 ![Agent Governance CLI detecting incomplete evidence, source drift, and a human-review advisory](docs/assets/agentgov-demo.svg)
 
@@ -142,6 +158,86 @@ is read-only and does not run the project or production workflows.
 These `status` and `integrate` commands are available in stable `0.2.0`. The
 prepared `0.2.1` patch corrects the managed workflow's local wheel filename;
 the checks, reports, and human-confirmed update boundary are unchanged.
+
+From the current development source, validate an admitted task and select only
+its repository governance context:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m agentgov check task governance/tasks/p0-context-selection.json --repository .
+python -m agentgov context task governance/tasks/p0-context-selection.json `
+  --repository . --format markdown
+python -m agentgov check scope governance/tasks/p0-context-selection.json `
+  --repository . --format terminal
+python -m agentgov govern check governance/tasks/p0-context-selection.json `
+  --repository . --format terminal
+python -m agentgov govern finish governance/tasks/p0-context-selection.json `
+  --repository . --base <comparison-base-revision>
+python -m agentgov monitor development .
+```
+
+The guided daily path now removes the repeated task and base arguments:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m agentgov govern start governance/tasks/my-task.json --repository .
+python -m agentgov govern check --repository .
+python -m agentgov govern finish --repository .
+python -m agentgov monitor development .
+```
+
+When development observations need to move into CI, preview and explicitly
+create a metadata-only export, then build the corresponding Monitor:
+
+```powershell
+python -m agentgov export development --repository . --dry-run
+python -m agentgov export development --repository .
+python -m agentgov monitor development . `
+  --scope exported_development `
+  --export .agentgov/exports/exp-<id>.json
+```
+
+The write requires exact interactive `EXPORT` confirmation. It removes actor
+labels and local evidence references, rejects sensitive or unsafe records, and
+never uploads the resulting file or changes GitHub Actions.
+
+For a low-risk task, `govern start --title ... --include ...` previews a compact
+task contract and can detect conventional Python, npm, Cargo, or Go validation.
+Every start is previewed; a real terminal must confirm exactly `START` (or
+`REPLACE` for a different active task). Non-interactive and `--dry-run`
+execution write nothing. See [guided development governance
+sessions](docs/development-session.md).
+
+Context selection derives an in-memory Registry from the repository's own
+`AGENTS.md`, task references, Skill metadata, and capability relationships. It
+does not create `registry.json`, modify Git, or authorize implementation. This
+interface is a future-0.3 development preview, not part of stable 0.2.1.
+The scope command separately inventories staged, unstaged, deleted, renamed,
+and non-ignored untracked paths and applies segment-aware include/exclude
+rules. It is read-only and currently covers working-tree changes, not already
+committed task changes.
+The higher-level development preview records `govern check` observations in
+untracked `.agentgov/` local state. `govern finish --base` runs the admitted
+task's declared validation commands, binds them to committed, staged,
+unstaged, renamed, and non-ignored untracked identities, and returns
+`verified` only when the validation-to-finish snapshot is unchanged and in
+scope. It stores hashes and repository-relative identifiers rather than source,
+command text, or validation output. Passing evidence does not prove semantic
+requirement or architecture correctness and grants no Git authority.
+The Monitor command turns the validated local events into a self-contained
+Overview, Activity Timeline, and Task Detail dashboard at
+`.agentgov/dashboard.html`. It always displays partial observation scope and
+missing sources, separates observed facts from inference and unknowns, and
+contains no approval or governance mutation controls. It supports honest
+`local_session`, `exported_development`, `ci_only`, and `combined` source
+boundaries; every timeline event identifies its input source, and even a
+combined view keeps cross-stage discovery unavailable.
+
+The working-copy session pointer is strict, untracked local state rather than a
+second governance source of truth. It lets check and finish resume one admitted
+task and exact comparison base; task drift fails closed. The start event records
+which governance paths the Router selected, while the Monitor keeps actual
+coding-agent consumption explicitly unknown.
 
 Preview a pinned consumer CI workflow, then explicitly create it after review:
 
@@ -360,11 +456,12 @@ and deployment remain separate human-authorized actions.
 
 ## Project status and non-goals
 
-**Status: stable `0.2.0`; local patch preparation `0.2.1`.** The stable release
-is suitable for evaluation and repository-level pilots. A consumer workflow
-wheel-filename defect found by the NYC pilot is fixed in the prepared 0.2.1
-patch but remains unpublished until its separate release gate. AgentGov is not
-a compliance certification, runtime
+**Status: stable `0.2.1`; future `0.3` behavior is under source review.** The
+stable release is suitable for evaluation and repository-level pilots. The
+development source adds a two-workflow proposal boundary, compact/standard
+development tasks, and read-only task-specific governance context, but these
+are not yet a published release or adopted NYC workflow. AgentGov is not a compliance
+certification, runtime
 security boundary, or authorization for autonomous merge, publication, or
 deployment.
 
@@ -398,7 +495,10 @@ The first usable release contains:
    the development line;
 7. read-only upgrade-PR planning and two-snapshot benefit evidence in the
    development line;
-8. AI Radar and NYC Taxi as documented reference or pilot cases, not runtime
+8. an experimental development-source task contract and `check task` command
+   that preserve human-owned requirement, architecture, scope, approval, and
+   stop boundaries before implementation;
+9. AI Radar and NYC Taxi as documented reference or pilot cases, not runtime
    dependencies.
 
 ## Project navigation
@@ -428,8 +528,19 @@ The first usable release contains:
   defines what NYC users will see after the one-time 0.3 migration.
 - [Remaining development plan](docs/development-plan.md) separates implemented,
   published, and NYC-adopted behavior and orders the next delivery slices.
+- [AgentGov product and architecture plan (Chinese Revision 3)](docs/proposals/2026-08-02-agentgov-product-and-architecture-plan.zh-CN.md)
+  consolidates the GitHub distribution, AI Radar-aligned development
+  governance, trigger routing, observation events, and Monitor/Dashboard
+  proposal for human and Claude review.
+- [Development trigger and routing semantics](docs/specs/development-trigger-routing-v1.md)
+  fixes segment-aware path matching, include/exclude precedence, rename
+  handling, trigger classification, and the Phase 2 policy-test gate.
+- [Fresh validation evidence semantics](docs/specs/fresh-validation-evidence-v1.md)
+  fixes canonical Git snapshot scope, tool-state exclusions, validation
+  artifact behavior, workflow ordering, and the Phase 3 hard gate.
 - [Open product decisions](docs/open-decisions-2026-08-02.md) records the
-  unresolved development-time, delivery, upgrade, and benefit questions.
+  resolved development-time boundary and the remaining interface, delivery,
+  upgrade, and benefit questions.
 - [0.2.0rc1 release notes](docs/releases/0.2.0rc1.md) describe compatibility,
   changes, evidence, and the published candidate boundary.
 - [0.2.0 release notes](docs/releases/0.2.0.md) describe the prepared stable
@@ -442,8 +553,56 @@ The first usable release contains:
   collection and the remaining human approve/change/reject decision.
 - [Case study](docs/case-study.md) explains the product decisions, trust
   boundary, implementation, validation, and current limitations.
+- [Architecture-drift case AG-DRIFT-001](docs/case-studies/0001-pr-center-architecture-drift.md)
+  records how locally valid adoption, CI, and upgrade-PR slices displaced the
+  original development-time governance priority, and makes that history the
+  first P0 task-contract acceptance scenario.
+- [Development task contract](docs/development-task-contract.md) documents the
+  experimental schema, read-only CLI check, finding boundary, and deferred
+  changed-file and completion work.
+- [Development task schema](schemas/development-task.schema.json) defines the
+  versioned machine-readable `agentgov.development-task` contract.
+- [Development governance context](docs/development-context.md) documents the
+  derived in-memory Registry, selection modes, CLI formats, compact/standard
+  profiles, and current authority limits.
+- [Development context schema](schemas/development-context.schema.json) defines
+  the strict derived `agentgov.development-context` output contract.
+- [Guided development governance session](docs/development-session.md) documents
+  start preview/confirmation, compact task scaffolding, the single-active-task
+  working-copy boundary, and check/finish defaults.
+- [Development session schema](schemas/development-session.schema.json) defines
+  the strict local pointer without duplicating governance declarations.
+- [Development changed-file scope check](docs/development-scope-check.md)
+  documents read-only Git inventory, segment-aware decisions, rename handling,
+  advisory architecture routing, and current committed-change limits.
+- [Development scope report schema](schemas/development-scope-report.schema.json)
+  defines the strict derived changed-file result contract.
+- [Fresh validation evidence and completion reconciliation](docs/development-evidence.md)
+  documents canonical Git snapshots, `verified` limits, recovery guidance,
+  local events, and the validation-command trust boundary.
+- [Development evidence schema](schemas/development-evidence.schema.json),
+  [completion schema](schemas/development-completion.schema.json), and
+  [governance event schema](schemas/governance-event.schema.json) define the
+  privacy-bounded future-0.3 derived records.
+- [Development governance Monitor](docs/development-monitor.md) documents the
+  local static Dashboard, four observation scopes, safe generated-file
+  refresh, and observed/inferred/unknown layers.
+- [Redacted development-event export](docs/development-event-export.md)
+  documents the explicit preview/confirmation flow, metadata-only profile,
+  immutable bundle, Monitor ingestion, and privacy/claim boundaries.
+- [Development event export schema](schemas/development-event-export.schema.json)
+  defines the strict portable bundle and denied authority fields.
+- [Development Monitor schema](schemas/development-monitor.schema.json) defines
+  its strict Overview, Timeline, Task Detail, observation, and authority data.
+- [Installed development-governance pilot](docs/experiments/installed-development-governance-pilot.md)
+  records the exact wheel, independent repository, actual Coding Agent context
+  consumption, fail-closed setup findings, verified completion, and claim
+  limits for the first end-to-end development loop.
 - [Governance model](docs/governance-model.md) defines the conceptual chain and
   finding semantics.
+- [ADR-0009](docs/adr/0009-govern-coding-agents-during-development.md) records
+  development-time requirement, architecture, and code governance as the
+  product core and PR/CI as the retained backstop.
 - [Capability Dependencies](docs/capability-dependencies.md) defines explicit
   Inventory-linked dependency edges, cycle checks, and optional readiness
   floors.
@@ -489,6 +648,24 @@ Python 3.11 or newer is recommended.
 $env:PYTHONPATH = "src"
 python -m unittest discover -s tests -v
 ```
+
+## Development task contract preview
+
+The current development source can validate one human-declared task before or
+during coding-agent work:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m agentgov check task governance/tasks/p0-minimal-task-contract.json `
+  --repository .
+```
+
+The command checks structure, safe repository-local references, admission and
+approval consistency, and the declared task boundary without modifying files
+or Git state. Requirement meaning, architecture sufficiency, and objective
+alignment remain explicit `ADVISORY` judgments. This is a development preview,
+not a capability of published stable 0.2.1; see the
+[development task contract guide](docs/development-task-contract.md).
 
 ## Clean-repository adoption path
 
@@ -792,6 +969,10 @@ The initial patterns were extracted from lessons learned while building AI
 Radar. AI Radar remains a separate product and repository. This project does
 not import AI Radar packages or reproduce its product-specific evidence and
 workflow logic. See [the extraction map](docs/ai-radar-extraction-map.md).
+The current revalidation confirms that portable consistency means governing the
+coding agent during requirement admission, architecture grounding,
+implementation, verification, and closeout. It does not mean copying AI Radar's
+business gates or runtime.
 
 ## License
 

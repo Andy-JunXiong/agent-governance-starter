@@ -1,4 +1,4 @@
-"""Authenticated, draft-only materialization of one validated upgrade plan."""
+"""Authenticated, draft-only materialization of a validated upgrade plan."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ from typing import Any, Mapping, Protocol
 
 from agentgov import __version__
 from agentgov.benefits import compare_repository_reports, load_repository_report_snapshot
-from agentgov.consumer_ci import WORKFLOW_PATH
+from agentgov.consumer_ci import UPGRADE_WORKFLOW_PATH, WORKFLOW_PATH
 from agentgov.redaction import redact_evidence_text
 from agentgov.upgrade_pr import (
     UpgradeChange,
@@ -26,7 +26,7 @@ from agentgov.upgrade_pr import (
 )
 
 
-UPGRADE_WRITE_CONTRACT_VERSION = "1.0"
+UPGRADE_WRITE_CONTRACT_VERSION = "1.1"
 _REPOSITORY_RE = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
 _ALLOWED_EVENTS = {"schedule", "workflow_dispatch"}
 
@@ -63,6 +63,7 @@ class UpgradeWriteResult:
     branch_created: bool
     workflow_commit_created: bool
     pull_request_created: bool
+    changed_paths: tuple[str, ...]
     validation: "UpgradeValidationEvidence | None"
 
 
@@ -391,18 +392,26 @@ def _validation_body(evidence: UpgradeValidationEvidence) -> str:
     )
 
 
-def _validate_candidate_shape(plan: UpgradePullRequestPlan) -> UpgradeChange:
+def _validate_candidate_shape(
+    plan: UpgradePullRequestPlan,
+) -> tuple[UpgradeChange, ...]:
+    allowed_paths = (WORKFLOW_PATH, UPGRADE_WORKFLOW_PATH)
+    paths = tuple(change.path for change in plan.changes)
     if (
-        len(plan.changes) != 1
-        or plan.changes[0].path != WORKFLOW_PATH
+        not 1 <= len(plan.changes) <= 2
+        or paths != allowed_paths[: len(paths)]
+        or any(
+            change.action != "update" or change.before_sha256 is None
+            for change in plan.changes
+        )
         or not plan.branch
         or not plan.title
         or not plan.body
     ):
         raise UpgradeWriteConflictError(
-            "upgrade plan is not one exact managed workflow change"
+            "upgrade plan is not an exact update of the bounded managed workflow set"
         )
-    return plan.changes[0]
+    return plan.changes
 
 
 def create_upgrade_draft_pull_request(
@@ -416,7 +425,7 @@ def create_upgrade_draft_pull_request(
     current_report_path: Path | None = None,
     target_report_path: Path | None = None,
 ) -> UpgradeWriteResult:
-    """Revalidate and materialize exactly one managed workflow Draft PR."""
+    """Revalidate and materialize only the bounded managed workflow set."""
 
     if not _REPOSITORY_RE.fullmatch(repository):
         raise ValueError("repository must use owner/name format")
@@ -440,12 +449,13 @@ def create_upgrade_draft_pull_request(
             branch_created=False,
             workflow_commit_created=False,
             pull_request_created=False,
+            changed_paths=(),
             validation=None,
         )
     if plan.state is UpgradePlanState.BLOCKED:
         raise UpgradeWriteConflictError("; ".join(plan.reasons))
 
-    change = _validate_candidate_shape(plan)
+    changes = _validate_candidate_shape(plan)
     if current_report_path is None or target_report_path is None:
         raise UpgradeWriteConflictError(
             "current and target-version dry-run reports are required before creating an upgrade PR"
@@ -458,18 +468,25 @@ def create_upgrade_draft_pull_request(
     )
     branch = plan.branch
     assert branch is not None and plan.title is not None and plan.body is not None
-    path = change.path.as_posix()
+    paths = tuple(change.path.as_posix() for change in changes)
 
     existing_pr = client.find_open_pull_request(branch=branch, base=base_branch)
     if existing_pr is not None:
-        branch_file = client.get_file(path, ref=branch)
+        branch_files = {
+            change.path.as_posix(): client.get_file(change.path.as_posix(), ref=branch)
+            for change in changes
+        }
         changed_paths = client.compare_changed_paths(base=base_branch, head=branch)
         if (
-            _sha256_text(branch_file.content) != change.after_sha256
-            or changed_paths != (path,)
+            any(
+                _sha256_text(branch_files[change.path.as_posix()].content)
+                != change.after_sha256
+                for change in changes
+            )
+            or tuple(sorted(changed_paths)) != tuple(sorted(paths))
         ):
             raise UpgradeWriteConflictError(
-                "existing upgrade pull request is not the exact managed workflow change"
+                "existing upgrade pull request is not the exact managed workflow set"
             )
         return UpgradeWriteResult(
             repository=repository,
@@ -482,14 +499,22 @@ def create_upgrade_draft_pull_request(
             branch_created=False,
             workflow_commit_created=False,
             pull_request_created=False,
+            changed_paths=paths,
             validation=validation,
         )
 
     base_sha = client.get_branch_sha(base_branch)
     if base_sha is None:
         raise UpgradeWriteConflictError(f"base branch does not exist: {base_branch}")
-    base_file = client.get_file(path, ref=base_branch)
-    if _sha256_text(base_file.content) != change.before_sha256:
+    base_files = {
+        change.path.as_posix(): client.get_file(change.path.as_posix(), ref=base_branch)
+        for change in changes
+    }
+    if any(
+        _sha256_text(base_files[change.path.as_posix()].content)
+        != change.before_sha256
+        for change in changes
+    ):
         raise UpgradeWriteConflictError(
             "remote base workflow changed after planning; no branch was written"
         )
@@ -502,34 +527,60 @@ def create_upgrade_draft_pull_request(
         client.create_branch(branch, sha=base_sha)
         branch_created = True
         branch_sha = base_sha
-        branch_file = base_file
-    else:
-        branch_file = client.get_file(path, ref=branch)
-        branch_hash = _sha256_text(branch_file.content)
-        if branch_hash == change.after_sha256:
-            if client.compare_changed_paths(base=base_branch, head=branch) != (path,):
-                raise UpgradeWriteConflictError(
-                    "existing upgrade branch contains changes outside the managed workflow"
-                )
-            recovered = True
-        elif branch_hash != change.before_sha256 or branch_sha != base_sha:
-            raise UpgradeWriteConflictError(
-                "existing upgrade branch is not an unchanged base or exact prior write"
-            )
+    branch_files = {
+        change.path.as_posix(): client.get_file(change.path.as_posix(), ref=branch)
+        for change in changes
+    }
+    branch_hashes = {
+        path: _sha256_text(remote.content) for path, remote in branch_files.items()
+    }
+    after_paths = tuple(
+        change.path.as_posix()
+        for change in changes
+        if branch_hashes[change.path.as_posix()] == change.after_sha256
+    )
+    if any(
+        branch_hashes[change.path.as_posix()]
+        not in (change.before_sha256, change.after_sha256)
+        for change in changes
+    ):
+        raise UpgradeWriteConflictError(
+            "existing upgrade branch is not an unchanged base or bounded prior write"
+        )
+    actual_changed_paths = client.compare_changed_paths(base=base_branch, head=branch)
+    if tuple(sorted(actual_changed_paths)) != tuple(sorted(after_paths)):
+        raise UpgradeWriteConflictError(
+            "existing upgrade branch contains changes outside the managed workflow set"
+        )
+    if not after_paths and branch_sha != base_sha:
+        raise UpgradeWriteConflictError(
+            "existing upgrade branch does not point to the unchanged base"
+        )
+    recovered = len(after_paths) == len(changes)
 
     if not recovered:
-        client.update_file(
-            path,
-            branch=branch,
-            current_sha=branch_file.sha,
-            content=change.content,
-            message=plan.title,
-        )
-        commit_created = True
-        written_file = client.get_file(path, ref=branch)
-        if _sha256_text(written_file.content) != change.after_sha256:
+        for change in changes:
+            path = change.path.as_posix()
+            branch_file = branch_files[path]
+            if branch_hashes[path] == change.after_sha256:
+                continue
+            client.update_file(
+                path,
+                branch=branch,
+                current_sha=branch_file.sha,
+                content=change.content,
+                message=plan.title,
+            )
+            commit_created = True
+            written_file = client.get_file(path, ref=branch)
+            if _sha256_text(written_file.content) != change.after_sha256:
+                raise UpgradeWriteConflictError(
+                    "remote workflow did not match the validated after hash"
+                )
+        written_paths = client.compare_changed_paths(base=base_branch, head=branch)
+        if tuple(sorted(written_paths)) != tuple(sorted(paths)):
             raise UpgradeWriteConflictError(
-                "remote workflow did not match the validated after hash"
+                "written branch does not contain exactly the managed workflow set"
             )
 
     pull_request = client.create_draft_pull_request(
@@ -549,6 +600,7 @@ def create_upgrade_draft_pull_request(
         branch_created=branch_created,
         workflow_commit_created=commit_created,
         pull_request_created=True,
+        changed_paths=paths,
         validation=validation,
     )
 
@@ -598,9 +650,7 @@ def upgrade_write_result_document(result: UpgradeWriteResult) -> dict[str, Any]:
             "draft_pull_request_created": result.pull_request_created,
         },
         "authority_boundary": {
-            "changed_path": (
-                WORKFLOW_PATH.as_posix() if result.branch is not None else None
-            ),
+            "changed_paths": list(result.changed_paths),
             "merge_authorized": False,
             "release_authorized": False,
             "deploy_authorized": False,

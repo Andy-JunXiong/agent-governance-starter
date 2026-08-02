@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/development-monitor-v1.2.json",
+  "title": "AgentGov Development Monitor",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "generated_at", "observation", "overview", "timeline", "tasks", "claim_layers", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.development-monitor"},
+    "schema_version": {"const": "1.2"},
+    "generated_at": {"type": "string", "minLength": 1},
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope", "source_kind", "source_event_counts", "event_files_read", "duplicates_removed", "event_count", "started_at", "ended_at", "history_completeness", "missing_sources", "cross_stage_discovery_available"],
+      "properties": {
+        "scope": {"enum": ["local_session", "exported_development", "ci_only", "combined"]},
+        "source_kind": {"enum": ["repository_local_event_store", "ci_job_local_events", "redacted_development_export", "combined_sources"]},
+        "source_event_counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["local_session", "exported_development", "ci_only"],
+          "properties": {
+            "local_session": {"$ref": "#/$defs/count"},
+            "exported_development": {"$ref": "#/$defs/count"},
+            "ci_only": {"$ref": "#/$defs/count"}
+          }
+        },
+        "event_files_read": {"type": "integer", "minimum": 0},
+        "duplicates_removed": {"type": "integer", "minimum": 0},
+        "event_count": {"type": "integer", "minimum": 0},
+        "started_at": {"type": ["string", "null"]},
+        "ended_at": {"type": ["string", "null"]},
+        "history_completeness": {"enum": ["partial"]},
+        "missing_sources": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "cross_stage_discovery_available": {"const": false}
+      }
+    },
+    "overview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tasks", "events", "task_starts", "scope_checks", "validations", "completions", "passed_events", "failed_events", "stale_events", "verified_completions", "needs_evidence_completions", "event_reported_failures", "event_reported_advisories"],
+      "properties": {
+        "tasks": {"$ref": "#/$defs/count"},
+        "events": {"$ref": "#/$defs/count"},
+        "task_starts": {"$ref": "#/$defs/count"},
+        "scope_checks": {"$ref": "#/$defs/count"},
+        "validations": {"$ref": "#/$defs/count"},
+        "completions": {"$ref": "#/$defs/count"},
+        "passed_events": {"$ref": "#/$defs/count"},
+        "failed_events": {"$ref": "#/$defs/count"},
+        "stale_events": {"$ref": "#/$defs/count"},
+        "verified_completions": {"$ref": "#/$defs/count"},
+        "needs_evidence_completions": {"$ref": "#/$defs/count"},
+        "event_reported_failures": {"$ref": "#/$defs/count"},
+        "event_reported_advisories": {"$ref": "#/$defs/count"}
+      }
+    },
+    "timeline": {"type": "array", "items": {"$ref": "#/$defs/timelineEvent"}},
+    "tasks": {"type": "array", "items": {"$ref": "#/$defs/task"}},
+    "claim_layers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["observed", "inferred", "unknown"],
+      "properties": {
+        "observed": {"$ref": "#/$defs/claims"},
+        "inferred": {"$ref": "#/$defs/claims"},
+        "unknown": {"$ref": "#/$defs/claims"}
+      }
+    },
+    "authority_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["approves_governance", "writes_governance_files", "authorizes_exception", "authorizes_commit", "authorizes_merge", "authorizes_deployment"],
+      "properties": {
+        "approves_governance": {"const": false},
+        "writes_governance_files": {"const": false},
+        "authorizes_exception": {"const": false},
+        "authorizes_commit": {"const": false},
+        "authorizes_merge": {"const": false},
+        "authorizes_deployment": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "count": {"type": "integer", "minimum": 0},
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?![A-Za-z]:[\\\\/])(?!.*\\\\).+$"},
+    "claims": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "metrics": {"type": "object", "additionalProperties": {"$ref": "#/$defs/count"}},
+    "timelineEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event_id", "occurred_at", "event_type", "source_scope", "actor_class", "actor_label", "task_id", "task_digest", "outcome", "governance_refs", "reason_codes", "evidence_ref", "metrics"],
+      "properties": {
+        "event_id": {"type": "string", "pattern": "^evt-[0-9a-f]{32}$"},
+        "occurred_at": {"type": "string", "minLength": 1},
+        "event_type": {"enum": ["task.started", "scope.checked", "validation.completed", "completion.reconciled"]},
+        "source_scope": {"enum": ["local_session", "exported_development", "ci_only"]},
+        "actor_class": {"enum": ["human", "coding_agent", "ci"]},
+        "actor_label": {"type": ["string", "null"]},
+        "task_id": {"type": "string", "minLength": 1},
+        "task_digest": {"$ref": "#/$defs/sha256"},
+        "outcome": {"enum": ["started", "passed", "failed", "stale", "needs_evidence", "verified"]},
+        "governance_refs": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/path"}},
+        "reason_codes": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}},
+        "evidence_ref": {"anyOf": [{"$ref": "#/$defs/path"}, {"type": "null"}]},
+        "metrics": {"$ref": "#/$defs/metrics"}
+      }
+    },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_id", "task_digests", "event_count", "first_observed_at", "last_observed_at", "task_starts", "scope_checks", "validations", "completions", "latest_event_type", "latest_recorded_outcome", "latest_completion_state", "latest_completion_at", "observed_failure_count", "observed_advisory_count", "events"],
+      "properties": {
+        "task_id": {"type": "string", "minLength": 1},
+        "task_digests": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/sha256"}},
+        "event_count": {"$ref": "#/$defs/count"},
+        "first_observed_at": {"type": "string", "minLength": 1},
+        "last_observed_at": {"type": "string", "minLength": 1},
+        "task_starts": {"$ref": "#/$defs/count"},
+        "scope_checks": {"$ref": "#/$defs/count"},
+        "validations": {"$ref": "#/$defs/count"},
+        "completions": {"$ref": "#/$defs/count"},
+        "latest_event_type": {"enum": ["task.started", "scope.checked", "validation.completed", "completion.reconciled"]},
+        "latest_recorded_outcome": {"enum": ["started", "passed", "failed", "stale", "needs_evidence", "verified"]},
+        "latest_completion_state": {"enum": ["needs_evidence", "verified", null]},
+        "latest_completion_at": {"type": ["string", "null"]},
+        "observed_failure_count": {"$ref": "#/$defs/count"},
+        "observed_advisory_count": {"$ref": "#/$defs/count"},
+        "events": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/timelineEvent"}}
+      }
+    }
+  }
+}

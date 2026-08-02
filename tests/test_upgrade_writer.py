@@ -8,7 +8,12 @@ from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
 from agentgov.cli import EXIT_ERROR, main
-from agentgov.consumer_ci import WORKFLOW_PATH, render_consumer_workflow
+from agentgov.consumer_ci import (
+    UPGRADE_WORKFLOW_PATH,
+    WORKFLOW_PATH,
+    render_consumer_upgrade_workflow,
+    render_consumer_workflow,
+)
 from agentgov.initializer import initialize_project
 from agentgov.upgrade_writer import (
     PullRequest,
@@ -23,7 +28,15 @@ from agentgov.upgrade_writer import (
 class FakeGitHubClient:
     def __init__(self, *, base_content: str, base: str = "main") -> None:
         self.branches = {base: "base-sha"}
-        self.files = {(base, WORKFLOW_PATH.as_posix()): RemoteFile(base_content, "blob-1")}
+        upgrade_content = render_consumer_upgrade_workflow(
+            version="0.3.0", wheel_sha256="a" * 64
+        )
+        self.files = {
+            (base, WORKFLOW_PATH.as_posix()): RemoteFile(base_content, "blob-1"),
+            (base, UPGRADE_WORKFLOW_PATH.as_posix()): RemoteFile(
+                upgrade_content, "blob-2"
+            ),
+        }
         self.changed_paths: dict[str, tuple[str, ...]] = {}
         self.pull_request: PullRequest | None = None
         self.last_pr_body: str | None = None
@@ -40,9 +53,10 @@ class FakeGitHubClient:
     def create_branch(self, branch: str, *, sha: str) -> None:
         self.calls.append(f"create-branch:{branch}")
         self.branches[branch] = sha
-        self.files[(branch, WORKFLOW_PATH.as_posix())] = self.files[
-            ("main", WORKFLOW_PATH.as_posix())
-        ]
+        for path in (WORKFLOW_PATH, UPGRADE_WORKFLOW_PATH):
+            self.files[(branch, path.as_posix())] = self.files[
+                ("main", path.as_posix())
+            ]
 
     def update_file(
         self,
@@ -54,9 +68,11 @@ class FakeGitHubClient:
         message: str,
     ) -> str:
         self.calls.append(f"update-file:{branch}:{path}")
-        self.files[(branch, path)] = RemoteFile(content, "blob-2")
+        self.files[(branch, path)] = RemoteFile(content, f"updated-{len(self.calls)}")
         self.branches[branch] = "upgrade-commit"
-        self.changed_paths[branch] = (path,)
+        self.changed_paths[branch] = tuple(
+            sorted(set(self.changed_paths.get(branch, ())) | {path})
+        )
         return "upgrade-commit"
 
     def compare_changed_paths(self, *, base: str, head: str) -> tuple[str, ...]:
@@ -96,21 +112,35 @@ def write_consumer(root: Path, version: str = "0.3.0") -> str:
     target = root / WORKFLOW_PATH
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(content, encoding="utf-8")
+    (root / UPGRADE_WORKFLOW_PATH).write_text(
+        render_consumer_upgrade_workflow(
+            version=version, wheel_sha256="a" * 64
+        ),
+        encoding="utf-8",
+    )
     return content
 
 
-def write_manifest(root: Path, version: str = "0.3.1") -> Path:
+def write_manifest(
+    root: Path,
+    version: str = "0.3.1",
+    *,
+    supported_from: list[str] | None = None,
+    repository_changes_declared: bool = False,
+) -> Path:
     document = {
         "contract": "agentgov.release-manifest",
         "schema_version": "1.0",
         "distribution_name": "agent-governance-starter",
         "tool_version": version,
         "channel": "stable",
-        "supported_from": ["0.3.0"],
+        "supported_from": supported_from or ["0.3.0"],
         "readable_layout_versions": ["1.0"],
         "target_layout_version": "1.0",
-        "repository_changes_declared": False,
-        "declared_migrations": [],
+        "repository_changes_declared": repository_changes_declared,
+        "declared_migrations": (
+            ["consumer-ci-v2"] if repository_changes_declared else []
+        ),
         "release_notes_url": (
             "https://github.com/Andy-JunXiong/agent-governance-starter/"
             f"releases/tag/v{version}"
@@ -182,7 +212,7 @@ def create_upgrade_draft_pull_request(
 
 
 class UpgradeWriterTests(unittest.TestCase):
-    def test_creates_one_exact_workflow_commit_and_draft_pull_request(self) -> None:
+    def test_creates_exact_two_workflow_update_and_draft_pull_request(self) -> None:
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
             current = write_consumer(root)
@@ -208,7 +238,14 @@ class UpgradeWriterTests(unittest.TestCase):
         self.assertIn("no_new_deterministic_failures", client.last_pr_body)
         self.assertEqual(
             client.changed_paths["agentgov/update-0.3.1"],
-            (WORKFLOW_PATH.as_posix(),),
+            tuple(
+                sorted(
+                    (
+                        WORKFLOW_PATH.as_posix(),
+                        UPGRADE_WORKFLOW_PATH.as_posix(),
+                    )
+                )
+            ),
         )
 
     def test_existing_exact_pull_request_is_idempotent(self) -> None:
@@ -284,6 +321,37 @@ class UpgradeWriterTests(unittest.TestCase):
 
         self.assertEqual(client.calls, [])
 
+    def test_writer_refuses_the_review_only_file_creation_migration(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            initialize_project(root, project_name="Upgrade Migration Fixture")
+            current = render_consumer_workflow()
+            target = root / WORKFLOW_PATH
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(current, encoding="utf-8")
+            manifest = write_manifest(
+                root,
+                version="0.3.0",
+                supported_from=["0.1.0"],
+                repository_changes_declared=True,
+            )
+            client = FakeGitHubClient(base_content=current)
+
+            with self.assertRaisesRegex(
+                UpgradeWriteConflictError,
+                "bounded managed workflow set",
+            ):
+                create_upgrade_write(
+                    root,
+                    manifest_path=manifest,
+                    repository="owner/repository",
+                    base_branch="main",
+                    event_source="schedule",
+                    client=client,
+                )
+
+        self.assertEqual(client.calls, [])
+
     def test_candidate_requires_reports_from_exact_current_and_target_versions(self) -> None:
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
@@ -340,6 +408,42 @@ class UpgradeWriterTests(unittest.TestCase):
         self.assertFalse(recovered.workflow_commit_created)
         self.assertTrue(recovered.pull_request_created)
 
+    def test_completes_a_bounded_partial_two_workflow_write(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            current = write_consumer(root)
+            manifest = write_manifest(root)
+            client = FakeGitHubClient(base_content=current)
+            branch = "agentgov/update-0.3.1"
+            client.create_branch(branch, sha="base-sha")
+            target_governance = render_consumer_workflow(
+                version="0.3.1", wheel_sha256="b" * 64
+            )
+            client.update_file(
+                WORKFLOW_PATH.as_posix(),
+                branch=branch,
+                current_sha="blob-1",
+                content=target_governance,
+                message="interrupted write",
+            )
+
+            result = create_upgrade_draft_pull_request(
+                root,
+                manifest_path=manifest,
+                repository="owner/repository",
+                base_branch="main",
+                event_source="schedule",
+                client=client,
+            )
+
+        self.assertIs(result.state, UpgradeWriteState.CREATED)
+        self.assertTrue(result.workflow_commit_created)
+        self.assertTrue(result.pull_request_created)
+        self.assertEqual(
+            client.changed_paths[branch],
+            tuple(sorted((WORKFLOW_PATH.as_posix(), UPGRADE_WORKFLOW_PATH.as_posix()))),
+        )
+
     def test_existing_branch_with_unrelated_change_is_blocked(self) -> None:
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
@@ -357,6 +461,7 @@ class UpgradeWriterTests(unittest.TestCase):
             client.pull_request = None
             client.changed_paths["agentgov/update-0.3.1"] = (
                 WORKFLOW_PATH.as_posix(),
+                UPGRADE_WORKFLOW_PATH.as_posix(),
                 "README.md",
             )
 
@@ -386,7 +491,10 @@ class UpgradeWriterTests(unittest.TestCase):
             payload = json.loads(render_upgrade_write_result_json(result))
 
         self.assertEqual(payload["mode"], "github_draft_pull_request")
-        self.assertEqual(payload["authority_boundary"]["changed_path"], WORKFLOW_PATH.as_posix())
+        self.assertEqual(
+            payload["authority_boundary"]["changed_paths"],
+            [WORKFLOW_PATH.as_posix(), UPGRADE_WORKFLOW_PATH.as_posix()],
+        )
         self.assertFalse(payload["authority_boundary"]["merge_authorized"])
         self.assertFalse(payload["authority_boundary"]["deploy_authorized"])
 
@@ -423,6 +531,7 @@ class UpgradeWriterTests(unittest.TestCase):
         )
 
         self.assertFalse(schema["additionalProperties"])
+        self.assertEqual(schema["properties"]["contract_version"]["const"], "1.1")
         boundary = schema["properties"]["authority_boundary"]
         self.assertFalse(boundary["additionalProperties"])
         for key in (

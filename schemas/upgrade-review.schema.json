@@ -19,7 +19,7 @@
     "authority_boundary"
   ],
   "properties": {
-    "contract_version": {"const": "1.0"},
+    "contract_version": {"const": "1.1"},
     "tool": {
       "type": "object",
       "additionalProperties": false,
@@ -57,16 +57,33 @@
         "plan_state": {"enum": ["current", "candidate", "blocked"]},
         "changes": {
           "type": "array",
-          "maxItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true,
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["path", "before_sha256", "after_sha256"],
+            "required": ["path", "action", "before_sha256", "after_sha256"],
             "properties": {
-              "path": {"const": ".github/workflows/agentgov.yml"},
-              "before_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+              "path": {
+                "enum": [
+                  ".github/workflows/agentgov.yml",
+                  ".github/workflows/agentgov-upgrade.yml"
+                ]
+              },
+              "action": {"enum": ["create", "update"]},
+              "before_sha256": {
+                "type": ["string", "null"],
+                "pattern": "^[0-9a-f]{64}$"
+              },
               "after_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
-            }
+            },
+            "allOf": [
+              {
+                "if": {"properties": {"action": {"const": "create"}}},
+                "then": {"properties": {"before_sha256": {"type": "null"}}},
+                "else": {"properties": {"before_sha256": {"type": "string"}}}
+              }
+            ]
           }
         }
       }

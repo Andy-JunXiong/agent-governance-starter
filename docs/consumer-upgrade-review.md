@@ -36,7 +36,7 @@ agentgov-upgrade-review/
 artifact, or future draft pull request. It shows:
 
 - the current and proposed AgentGov versions;
-- the exact managed workflow path and before/after hashes;
+- each exact managed workflow action, path, and before/after hashes;
 - the current consumer governance findings;
 - stable-release, compatibility, bounded-change, and consumer-check gates;
 - approve, request-changes, and reject choices;
@@ -59,13 +59,15 @@ absolute local path.
 
 ## Meaning of states
 
-- `ready_for_human_review`: one compatible stable workflow update is available
-  and deterministic gates passed;
+- `ready_for_human_review`: one compatible stable managed-workflow change set
+  is available and deterministic gates passed;
 - `no_upgrade_needed`: the managed workflow already uses the available stable
   release;
-- `blocked`: the release is not stable, compatibility is absent, the workflow
-  is customized or unsafe, a migration is declared, or the consumer has a
-  deterministic governance failure.
+- `blocked`: the release is not stable, compatibility is absent, a managed
+  workflow is customized or unsafe, an unsupported migration is declared, or
+  the consumer has a deterministic governance failure. The bounded
+  `consumer-ci-v2` transition is the sole migration that this read-only review
+  can render; applying it remains a human action.
 
 ## Authority and evidence limits
 
@@ -78,5 +80,6 @@ installation time.
 The authenticated 0.3+ write layer lives in a separate schedule/dispatch-only
 workflow and uses the same plan to create or recover a Draft PR after the
 consumer owner explicitly enables write permissions. It runs the exact current
-and proposed versions first, revalidates the remote before hash, permits only
-the managed governance workflow path, and never auto-merges.
+and proposed versions first, revalidates every remote before hash, permits only
+the two managed workflow paths, refuses create/delete migrations, and never
+auto-merges.

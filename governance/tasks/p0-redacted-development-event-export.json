@@ -1,0 +1,104 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-redacted-development-event-export",
+  "title": "Export redacted development events for honest cross-environment monitoring",
+  "requirement": {
+    "summary": "Let a user explicitly create a portable, privacy-bounded development-event bundle and let the Monitor distinguish exported development history from CI replay history.",
+    "source_refs": [
+      "docs/proposals/2026-08-02-agentgov-product-and-architecture-plan.zh-CN.md",
+      "docs/development-monitor.md",
+      "docs/development-evidence.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0009-govern-coding-agents-during-development.md"
+    ],
+    "rationale": "Local events are intentionally ignored by default, so CI cannot honestly claim development-time visibility unless a user explicitly exports a redacted, validated bundle."
+  },
+  "goal": "Implement an explicit metadata-only development-event export and support exported_development and combined Monitor scopes without overstating history completeness or governance effect.",
+  "non_goals": [
+    "Do not automatically upload events, modify GitHub Actions, add central telemetry, or publish a package or release.",
+    "Do not export code, prompts, validation output, absolute paths, credentials, actor labels, or local evidence pointers.",
+    "Do not claim complete history, cross-stage discovery, requirement correctness, causal benefit, or return on investment.",
+    "Do not add approval, exception, commit, merge, deployment, hook, daemon, or governance-file write authority."
+  ],
+  "scope": {
+    "include_paths": [
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "docs/development-event-export.md",
+      "docs/development-evidence.md",
+      "docs/development-log/2026-08-03.md",
+      "docs/development-monitor.md",
+      "docs/development-plan.md",
+      "governance/tasks/p0-redacted-development-event-export.json",
+      "schemas/development-event-export.schema.json",
+      "schemas/development-monitor.schema.json",
+      "src/agentgov/cli.py",
+      "src/agentgov/development_event_export.py",
+      "src/agentgov/development_monitor.py",
+      "src/agentgov/event_store.py",
+      "tests/test_development_event_export.py",
+      "tests/test_development_monitor.py",
+      "tests/test_event_store.py",
+      "tests/test_portfolio_docs.py"
+    ],
+    "exclude_paths": [
+      ".github",
+      "release",
+      "AI Radar",
+      "NYC"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0009-govern-coding-agents-during-development.md",
+    "docs/adr/INVARIANTS.md"
+  ],
+  "acceptance_signals": [
+    "A strict export contract validates immutable metadata-only bundles and verifies their canonical event digest and derived interval/count fields.",
+    "Export rejects CI events, malformed or sensitive local records, symlinks, paths outside the repository, tracked outputs, existing outputs, and silent overwrite.",
+    "Export removes actor labels and local evidence references while retaining bounded actor class, task identity, governance references, reason codes, outcomes, and small counters.",
+    "The CLI previews the exact redaction and source counts without writing, and requires explicit confirmation before creating the bundle.",
+    "Monitor accepts exported_development from one validated export and combined from that export plus CI-only replay events, labels every timeline event by source, and reports source-specific counts.",
+    "All four observation scopes remain partial and cross-stage discovery remains unavailable because no cross-stage finding identity exists.",
+    "Focused contract, policy, CLI, schema, rendering, and documentation tests pass, followed by the complete suite and repository governance checks."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_development_event_export tests.test_development_monitor tests.test_event_store tests.test_portfolio_docs -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check repository ."
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "high",
+    "items": [
+      "A portable bundle could disclose development metadata if redaction is incomplete.",
+      "A combined Monitor could imply complete or causally linked cross-stage history when only two partial sources are visible.",
+      "An export writer could overwrite tracked or user-owned content without strict path and ownership controls."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": [
+      "docs/proposals/2026-08-02-agentgov-product-and-architecture-plan.zh-CN.md"
+    ]
+  },
+  "stop_conditions": [
+    "Stop if export safety would require retaining free-form text, source content, validation output, or absolute paths.",
+    "Stop if combined history cannot distinguish development export events from CI replay events.",
+    "Stop if implementation requires automatic upload, external telemetry, a workflow mutation, or expanded merge/deployment authority.",
+    "Stop if a deterministic integrity or privacy boundary cannot be covered by policy fixtures."
+  ],
+  "decision": {
+    "state": "admitted",
+    "decided_by": "Human product owner",
+    "rationale": "The user explicitly asked to continue the corrected development-governance plan after the installed-build pilot."
+  }
+}

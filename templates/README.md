@@ -29,6 +29,10 @@ rules.
   by the example capability.
 - `evaluation-manifest.template.json`: honest `needs_seed_cases` starting point
   that does not invent evaluation evidence.
+- `development-task.template.json`: strict low-risk `compact` starting point
+  for a human-owned coding-agent task. It stays `draft`, requires exact scope,
+  acceptance, validation command, owner, risk, and decision, and does not
+  invent parent-objective, approval, or architecture declarations.
 
 ## Placeholder contract
 
@@ -36,18 +40,22 @@ Markdown templates use `{{UPPER_SNAKE_CASE}}` placeholders. Replace every
 placeholder deliberately before adopting a template. Do not mechanically fill
 unknown values with invented policy.
 
-The prompt-capability template is different: it is valid JSON and passes the
-v0.1 capability contract as shipped. Replace its neutral example values while
-preserving the schema. Check the result with:
+The JSON templates are structurally valid as shipped. The capability template
+passes the v0.1 capability contract, while the development-task template is an
+honest draft that retains WARN and ADVISORY review needs. Replace neutral
+values while preserving the relevant schema. Check the results with:
 
 ```powershell
 agentgov check capability path/to/capability.json
 agentgov check references path/to/capability.json --repository .
+agentgov check task path/to/development-task.json --repository .
 ```
 
-These files are the single reviewed source used by `agentgov init`. Packaging
-installs the same files under the distribution data directory; there is no
-second generated template copy to keep in sync.
+Packaging installs these same reviewed files under the distribution data
+directory; there is no second generated template copy to keep in sync. The
+existing repository scaffold files are used by `agentgov init`; the
+development-task template remains explicit opt-in until its interface is
+proven.
 
 Initialize a new or empty directory with:
 

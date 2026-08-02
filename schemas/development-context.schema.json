@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/development-context-v1.json",
+  "title": "AgentGov Development Context",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "schema_version",
+    "task_id",
+    "task_profile",
+    "task_path",
+    "task_digest",
+    "content_mode",
+    "active_triggers",
+    "registry_summary",
+    "selected_governance",
+    "known_limits",
+    "authority_boundary"
+  ],
+  "properties": {
+    "contract": {"const": "agentgov.development-context"},
+    "schema_version": {"const": "1.0"},
+    "task_id": {"type": "string", "minLength": 1},
+    "task_profile": {"enum": ["compact", "standard"]},
+    "task_path": {"type": "string", "minLength": 1},
+    "task_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "content_mode": {"enum": ["references", "embedded"]},
+    "active_triggers": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "registry_summary": {
+      "type": "object",
+      "additionalProperties": {"type": "integer", "minimum": 0}
+    },
+    "selected_governance": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "artifact_type",
+          "path",
+          "roles",
+          "selection_mode",
+          "classification",
+          "reason",
+          "source_hash",
+          "content_included",
+          "content"
+        ],
+        "properties": {
+          "artifact_type": {"type": "string", "minLength": 1},
+          "path": {"type": "string", "minLength": 1},
+          "roles": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "selection_mode": {
+            "enum": ["required", "declared", "path_match", "capability_link", "advisory_candidate"]
+          },
+          "classification": {"enum": ["deterministic", "advisory"]},
+          "reason": {"type": "string", "minLength": 1},
+          "source_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+          "content_included": {"type": "boolean"},
+          "content": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "known_limits": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "authority_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "writes_repository",
+        "modifies_git",
+        "authorizes_implementation",
+        "authorizes_commit",
+        "authorizes_merge",
+        "authorizes_release",
+        "authorizes_deploy"
+      ],
+      "properties": {
+        "writes_repository": {"const": false},
+        "modifies_git": {"const": false},
+        "authorizes_implementation": {"const": false},
+        "authorizes_commit": {"const": false},
+        "authorizes_merge": {"const": false},
+        "authorizes_release": {"const": false},
+        "authorizes_deploy": {"const": false}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"content_mode": {"const": "references"}}, "required": ["content_mode"]},
+      "then": {
+        "properties": {
+          "selected_governance": {
+            "items": {
+              "properties": {
+                "content_included": {"const": false},
+                "content": {"type": "null"}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"content_mode": {"const": "embedded"}}, "required": ["content_mode"]},
+      "then": {
+        "properties": {
+          "selected_governance": {
+            "items": {
+              "properties": {
+                "content_included": {"const": true},
+                "content": {"type": "string"}
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

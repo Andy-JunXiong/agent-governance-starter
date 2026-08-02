@@ -11,15 +11,19 @@ from typing import Any, Mapping
 
 from agentgov import __version__
 from agentgov.consumer_ci import (
+    UPGRADE_WORKFLOW_PATH,
     WORKFLOW_PATH,
+    inspect_managed_upgrade_workflow_content,
     inspect_managed_workflow_content,
+    render_consumer_upgrade_workflow,
     render_consumer_workflow,
 )
 from agentgov.release_metadata import load_release_manifest, validate_release_manifest
 from agentgov.update_check import comparable_version_key, load_repository_layout
 
 
-UPGRADE_PR_CONTRACT_VERSION = "1.0"
+UPGRADE_PR_CONTRACT_VERSION = "1.1"
+CONSUMER_CI_V2_MIGRATION = "consumer-ci-v2"
 
 
 class UpgradePlanState(str, Enum):
@@ -31,7 +35,8 @@ class UpgradePlanState(str, Enum):
 @dataclass(frozen=True)
 class UpgradeChange:
     path: Path
-    before_sha256: str
+    action: str
+    before_sha256: str | None
     after_sha256: str
     content: str
 
@@ -95,7 +100,7 @@ def plan_upgrade_pull_request(
     *,
     manifest_path: Path,
 ) -> UpgradePullRequestPlan:
-    """Plan one exact managed-workflow change without writing or using Git."""
+    """Plan one exact managed-workflow change set without writing or using Git."""
 
     resolved = _resolve_root(root)
     source = manifest_path.resolve()
@@ -134,6 +139,43 @@ def plan_upgrade_pull_request(
             reason="consumer workflow is customized or conflicted and cannot be rewritten automatically",
         )
     current_version = managed_release.version
+
+    current_supports_upgrade_workflow = (
+        comparable_version_key(current_version) >= comparable_version_key("0.3.0")
+    )
+    target_supports_upgrade_workflow = (
+        comparable_version_key(available) >= comparable_version_key("0.3.0")
+    )
+    upgrade_target = resolved / UPGRADE_WORKFLOW_PATH
+    current_upgrade_content: str | None = None
+    if current_supports_upgrade_workflow:
+        if upgrade_target.is_symlink() or not upgrade_target.is_file():
+            return _blocked(
+                root=resolved,
+                manifest_source=source,
+                current_version=current_version,
+                available_version=available,
+                reason="managed upgrade proposal workflow is missing or unsafe",
+            )
+        current_upgrade_content = upgrade_target.read_text(encoding="utf-8")
+        managed_upgrade = inspect_managed_upgrade_workflow_content(
+            current_upgrade_content
+        )
+        if (
+            managed_upgrade is None
+            or managed_upgrade.version != current_version
+            or managed_upgrade.wheel_sha256 != managed_release.wheel_sha256
+        ):
+            return _blocked(
+                root=resolved,
+                manifest_source=source,
+                current_version=current_version,
+                available_version=available,
+                reason=(
+                    "upgrade proposal workflow is customized, conflicted, or not "
+                    "pinned to the managed governance release"
+                ),
+            )
 
     if comparable_version_key(available) <= comparable_version_key(current_version):
         return UpgradePullRequestPlan(
@@ -174,15 +216,46 @@ def plan_upgrade_pull_request(
             available_version=available,
             reason=f"repository layout {layout} is not readable by release {available}",
         )
-    if manifest.get("repository_changes_declared") is True:
+    changes_declared = manifest.get("repository_changes_declared") is True
+    declared_migrations = manifest.get("declared_migrations")
+    is_two_workflow_migration = (
+        target_supports_upgrade_workflow
+        and not current_supports_upgrade_workflow
+        and changes_declared
+        and declared_migrations == [CONSUMER_CI_V2_MIGRATION]
+    )
+    if target_supports_upgrade_workflow and not current_supports_upgrade_workflow:
+        if not is_two_workflow_migration:
+            return _blocked(
+                root=resolved,
+                manifest_source=source,
+                current_version=current_version,
+                available_version=available,
+                reason=(
+                    f"release {available} must declare only the "
+                    f"{CONSUMER_CI_V2_MIGRATION} migration for the two-workflow layout"
+                ),
+            )
+        if upgrade_target.exists() or upgrade_target.is_symlink():
+            return _blocked(
+                root=resolved,
+                manifest_source=source,
+                current_version=current_version,
+                available_version=available,
+                reason=(
+                    "upgrade proposal workflow target already exists and requires "
+                    "human conflict resolution"
+                ),
+            )
+    elif changes_declared:
         return _blocked(
             root=resolved,
             manifest_source=source,
             current_version=current_version,
             available_version=available,
             reason=(
-                "release declares repository migrations; a workflow-only upgrade PR "
-                "cannot apply them safely"
+                "release declares repository migrations outside the bounded "
+                "two-workflow transition"
             ),
         )
 
@@ -194,15 +267,37 @@ def plan_upgrade_pull_request(
         wheel_url=str(artifact["url"]),
         wheel_sha256=str(artifact["sha256"]),
     )
-    change = UpgradeChange(
-        path=WORKFLOW_PATH,
-        before_sha256=_sha256_text(current_content),
-        after_sha256=_sha256_text(next_content),
-        content=next_content,
-    )
+    changes = [
+        UpgradeChange(
+            path=WORKFLOW_PATH,
+            action="update",
+            before_sha256=_sha256_text(current_content),
+            after_sha256=_sha256_text(next_content),
+            content=next_content,
+        )
+    ]
+    if target_supports_upgrade_workflow:
+        next_upgrade_content = render_consumer_upgrade_workflow(
+            version=available,
+            wheel_url=str(artifact["url"]),
+            wheel_sha256=str(artifact["sha256"]),
+        )
+        changes.append(
+            UpgradeChange(
+                path=UPGRADE_WORKFLOW_PATH,
+                action=("update" if current_upgrade_content is not None else "create"),
+                before_sha256=(
+                    _sha256_text(current_upgrade_content)
+                    if current_upgrade_content is not None
+                    else None
+                ),
+                after_sha256=_sha256_text(next_upgrade_content),
+                content=next_upgrade_content,
+            )
+        )
     title = f"chore: update AgentGov to {available}"
     body = (
-        f"Updates the managed AgentGov consumer workflow from "
+        f"Updates the managed AgentGov consumer workflow set from "
         f"{current_version} to {available}.\n\n"
         "The release manifest and wheel digest were validated before this plan was "
         "created. This pull request does not authorize merge, release, or deployment."
@@ -216,8 +311,15 @@ def plan_upgrade_pull_request(
         branch=f"agentgov/update-{available}",
         title=title,
         body=body,
-        changes=(change,),
-        reasons=("a newer compatible stable release is available",),
+        changes=tuple(changes),
+        reasons=(
+            "a newer compatible stable release is available"
+            + (
+                f" with the declared {CONSUMER_CI_V2_MIGRATION} migration"
+                if is_two_workflow_migration
+                else ""
+            ),
+        ),
     )
 
 
@@ -240,6 +342,7 @@ def upgrade_pull_request_plan_document(
             "changes": [
                 {
                     "path": change.path.as_posix(),
+                    "action": change.action,
                     "before_sha256": change.before_sha256,
                     "after_sha256": change.after_sha256,
                     "content": change.content,

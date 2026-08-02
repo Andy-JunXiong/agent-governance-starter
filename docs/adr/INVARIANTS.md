@@ -38,6 +38,40 @@ Review CLI and report language and inspect workflow permissions.
 
 Stop the transition and obtain explicit authority.
 
+## Development-time governance is the primary product boundary
+
+- Authority: `docs/adr/0009-govern-coding-agents-during-development.md`
+
+### Enforcement points
+
+- Meaningful coding-agent work starts from an admitted requirement and bounded
+  task contract before implementation.
+- Task context selects relevant architecture, invariants, capabilities,
+  controls, evidence, and approval boundaries without presenting unrelated
+  repository detail as task-specific guidance.
+- Implementation and completion checks compare actual changes and fresh
+  evidence with the admitted task while preserving deterministic versus
+  advisory semantics.
+- PR and CI replay the deterministic facts independently; they are a backstop,
+  not the first governance interaction.
+- Agent protocols may request a stop but do not gain mechanical runtime, Git,
+  merge, release, or deployment authority.
+
+### Verification
+
+- Validate task contracts and changed-file fixtures across passing, incomplete,
+  conflicting, advisory, and not-applicable states where supported.
+- Confirm local development commands do not modify repository or Git state.
+- Confirm CI consumes the same versioned deterministic contract.
+- Pilot context relevance and workflow friction with humans; do not infer them
+  from structural checks.
+
+### Failure response
+
+Stop implementation on deterministic task-boundary failures. Route requirement
+meaning, architecture sufficiency, exceptions, and approval quality to the
+accountable human instead of manufacturing a deterministic answer.
+
 ## Automated upgrade proposals never authorize merge
 
 - Authority: `docs/adr/0007-separate-upgrade-proposal-from-merge-authority.md`
@@ -45,8 +79,11 @@ Stop the transition and obtain explicit authority.
 ### Enforcement points
 
 - Upgrade planning is read-only and declares exact before/after hashes.
-- Only the managed consumer workflow may be proposed for automatic change.
-- Customized workflows, incompatible layouts, and declared migrations block.
+- Only the two fixed managed consumer workflow paths may be proposed for
+  automatic change.
+- Customized workflows, incompatible layouts, and unsupported migrations
+  block. The named two-workflow bootstrap is review-only because it creates a
+  file; automatic writers accept updates only.
 - Pull-request creation and merge are separate authorities.
 - Proposal writes accept only scheduled or explicitly opted-in dispatch events.
 - Pull-request governance remains read-only; FAIL blocks, WARN and ADVISORY are
@@ -56,7 +93,7 @@ Stop the transition and obtain explicit authority.
   cannot comment, open issues, modify contents, merge, release, or deploy.
 - Authority: `docs/adr/0008-deliver-findings-by-persona-without-pr-write-authority.md`
 - Existing branches and PRs are reused only when their diff is exactly the
-  managed workflow change.
+  planned managed workflow set.
 
 ### Verification
 

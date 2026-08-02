@@ -6,23 +6,32 @@ already available in a published release or adopted by NYC.
 
 ## Product boundary: development-time versus pull-request governance
 
+ADR-0009 resolves the boundary: development-time governance of requirements,
+architecture, implementation scope, and fresh evidence is the product core.
+Pull-request and CI governance remains an independent replay and evidence
+backstop. This matches the responsibility separation revalidated against AI
+Radar's current Layer A' coding-agent governance without importing its product
+rules.
+
 The current product is strongest at the GitHub boundary: it renders repository
 checks, PR-facing findings, owner summaries, upgrade evidence, and retained
 artifacts. That is a useful final backstop, but it is too late to be the primary
 developer experience.
 
-The next product slice should give a developer or coding agent the same relevant
-constraints before a PR exists. The proposed entry points are intentionally not
-final:
+The first development-source slice now provides a strict task JSON contract
+and a read-only validation entry point:
 
 ```text
-agentgov dev start . --task "describe the intended change"
-agentgov dev check . --base main
+agentgov check task governance/tasks/<task-id>.json --repository .
 ```
 
-Open decisions:
+Task creation and changed-file entry points remain intentionally not final.
+Possible later commands include `agentgov dev start` and `agentgov dev check`,
+but the current check does not imply that either interface has been accepted.
 
-- final command names and whether `start` creates durable task context;
+The product boundary is decided. Interface decisions remain open:
+
+- whether and how a future `start` command creates durable task context;
 - deterministic versus advisory rules for mapping a task and changed files to
   capabilities, controls, dependencies, evaluation evidence, and approvals;
 - treatment of staged, unstaged, untracked, renamed, and generated files;

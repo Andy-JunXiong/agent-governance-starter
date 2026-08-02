@@ -1,6 +1,9 @@
 ---
 name: incident-attribution
 description: Capture and review collaboration failures as evidence-based process learning without turning attribution into blame or automatic policy change. Use when unclear framing, weak handoff, unsupported judgment, execution mistakes, or verification gaps reveal how humans and agents should work better together. Do not use for ordinary product bugs, live service incidents, production remediation, or individual performance evaluation.
+triggers: ["incident.attribution_requested"]
+non_triggers: ["task.admitted"]
+applies_to: ["incident"]
 ---
 
 # Incident Attribution

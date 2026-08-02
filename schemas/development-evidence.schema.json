@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/development-evidence-v1.json",
+  "title": "AgentGov Development Validation Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract", "schema_version", "evidence_id", "created_at",
+    "agentgov_version", "task_id", "task_path", "task_digest",
+    "comparison_base_sha", "snapshot_head_sha", "change_set_digest",
+    "digest_format_version", "snapshot_before", "snapshot_after",
+    "commands", "outcome", "mutation_reasons", "authority_boundary"
+  ],
+  "properties": {
+    "contract": {"const": "agentgov.development-evidence"},
+    "schema_version": {"const": "1.0"},
+    "evidence_id": {"type": "string", "pattern": "^evd-[0-9a-f]{32}$"},
+    "created_at": {"type": "string", "minLength": 1},
+    "agentgov_version": {"type": "string", "minLength": 1},
+    "task_id": {"type": "string", "minLength": 1},
+    "task_path": {"$ref": "#/$defs/repositoryPath"},
+    "task_digest": {"$ref": "#/$defs/sha256"},
+    "comparison_base_sha": {"$ref": "#/$defs/gitSha"},
+    "snapshot_head_sha": {"$ref": "#/$defs/gitSha"},
+    "change_set_digest": {"$ref": "#/$defs/sha256"},
+    "digest_format_version": {"const": "agentgov.git-change-set.v1"},
+    "snapshot_before": {"$ref": "#/$defs/snapshot"},
+    "snapshot_after": {"$ref": "#/$defs/snapshot"},
+    "commands": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["command_index", "command_identity", "started_at", "completed_at", "exit_code", "stdout_digest", "stderr_digest"],
+        "properties": {
+          "command_index": {"type": "integer", "minimum": 0},
+          "command_identity": {"$ref": "#/$defs/sha256"},
+          "started_at": {"type": "string", "minLength": 1},
+          "completed_at": {"type": "string", "minLength": 1},
+          "exit_code": {"type": "integer"},
+          "stdout_digest": {"$ref": "#/$defs/sha256"},
+          "stderr_digest": {"$ref": "#/$defs/sha256"}
+        }
+      }
+    },
+    "outcome": {"enum": ["passed", "failed", "stale"]},
+    "mutation_reasons": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "authority_boundary": {"$ref": "#/$defs/authority"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "gitSha": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+    "repositoryPath": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?![A-Za-z]:[\\\\/])(?!.*\\\\).+$"},
+    "change": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["layer", "status", "path", "old_path", "content_digest", "content_kind"],
+      "properties": {
+        "layer": {"enum": ["committed", "staged", "unstaged", "untracked"]},
+        "status": {"enum": ["added", "copied", "deleted", "modified", "renamed", "type_changed", "unmerged", "unknown", "untracked"]},
+        "path": {"$ref": "#/$defs/repositoryPath"},
+        "old_path": {"anyOf": [{"$ref": "#/$defs/repositoryPath"}, {"type": "null"}]},
+        "content_digest": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "content_kind": {"enum": ["file", "symlink", null]}
+      }
+    },
+    "layer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "identity_digest", "changes"],
+      "properties": {
+        "name": {"enum": ["committed", "staged", "unstaged", "untracked"]},
+        "identity_digest": {"$ref": "#/$defs/sha256"},
+        "changes": {"type": "array", "items": {"$ref": "#/$defs/change"}}
+      }
+    },
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format_version", "comparison_base_sha", "snapshot_head_sha", "change_set_digest", "layers", "exclusions"],
+      "properties": {
+        "format_version": {"const": "agentgov.git-change-set.v1"},
+        "comparison_base_sha": {"$ref": "#/$defs/gitSha"},
+        "snapshot_head_sha": {"$ref": "#/$defs/gitSha"},
+        "change_set_digest": {"$ref": "#/$defs/sha256"},
+        "layers": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"$ref": "#/$defs/layer"}},
+        "exclusions": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authorizes_requirement_completion", "authorizes_architecture_correctness", "authorizes_exception", "authorizes_commit", "authorizes_merge", "authorizes_deployment"],
+      "properties": {
+        "authorizes_requirement_completion": {"const": false},
+        "authorizes_architecture_correctness": {"const": false},
+        "authorizes_exception": {"const": false},
+        "authorizes_commit": {"const": false},
+        "authorizes_merge": {"const": false},
+        "authorizes_deployment": {"const": false}
+      }
+    }
+  }
+}

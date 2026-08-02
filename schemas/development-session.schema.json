@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/development-session-v1.json",
+  "title": "AgentGov Working-Copy Development Session",
+  "description": "A local pointer to one admitted task and its comparison base; never a source of governance authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "schema_version",
+    "task_path",
+    "task_id",
+    "task_digest",
+    "comparison_base_sha",
+    "started_at",
+    "actor"
+  ],
+  "properties": {
+    "contract": {"const": "agentgov.development-session"},
+    "schema_version": {"const": "1.0"},
+    "task_path": {"$ref": "#/$defs/path"},
+    "task_id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "task_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "comparison_base_sha": {"type": "string", "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$"},
+    "started_at": {"type": "string", "format": "date-time"},
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["class"],
+      "properties": {
+        "class": {"const": "human"},
+        "label": {"type": "string", "minLength": 1}
+      }
+    }
+  },
+  "$defs": {
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?![A-Za-z]:[\\\\/])(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+    }
+  }
+}

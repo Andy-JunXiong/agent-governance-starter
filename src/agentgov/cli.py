@@ -6,6 +6,7 @@ import argparse
 import json
 import os
 import secrets
+import subprocess
 import sys
 from tempfile import TemporaryDirectory
 from pathlib import Path
@@ -46,11 +47,59 @@ from agentgov.consumer_ci import (
     render_integration_plan_json,
     request_integration_confirmation,
 )
+from agentgov.change_scope import (
+    GitInspectionError,
+    ScopeFindingStatus,
+    ScopePolicyError,
+    check_development_scope,
+    render_scope_report_json,
+    render_scope_report_markdown,
+    render_scope_report_terminal,
+)
 from agentgov.doctor import (
     DoctorStatus,
     diagnose_repository,
     render_doctor_report_json,
 )
+from agentgov.development_context import (
+    ContextPolicyError,
+    render_development_context_json,
+    render_development_context_markdown,
+    render_development_context_terminal,
+    select_development_context,
+)
+from agentgov.development_evidence import (
+    EvidenceError,
+    reconcile_task_completion,
+    render_completion_json,
+    render_completion_markdown,
+    render_completion_terminal,
+    run_task_validation,
+)
+from agentgov.development_event_export import (
+    DevelopmentExportPolicyError,
+    build_development_event_export,
+    development_export_default_output,
+    render_development_event_export_preview,
+    request_development_export_confirmation,
+    write_development_event_export,
+)
+from agentgov.development_monitor import (
+    MonitorPolicyError,
+    build_development_monitor,
+    write_development_monitor,
+)
+from agentgov.development_session import (
+    SessionPolicyError,
+    apply_start_plan,
+    build_start_plan,
+    render_start_plan_json,
+    render_start_plan_terminal,
+    request_start_confirmation,
+    resolve_active_task,
+)
+from agentgov.event_store import LocalStateError, append_governance_event
+from agentgov.git_snapshot import GitSnapshotError
 from agentgov.initializer import InitConflictError, initialize_project
 from agentgov.onboarding import (
     OnboardingConflictError,
@@ -102,6 +151,10 @@ from agentgov.status import (
     inspect_governance_status,
     render_status_json,
     render_status_markdown,
+)
+from agentgov.task_contract import (
+    TaskFindingStatus,
+    check_development_task,
 )
 from agentgov.update_check import (
     check_for_updates,
@@ -389,9 +442,10 @@ def _plan_upgrade_pr(
         if plan.title:
             print(f"TITLE {plan.title}")
         for change in plan.changes:
+            before = change.before_sha256 or "absent"
             print(
-                f"CHANGE {change.path.as_posix()} "
-                f"before={change.before_sha256} after={change.after_sha256}"
+                f"CHANGE {change.action} {change.path.as_posix()} "
+                f"before={before} after={change.after_sha256}"
             )
         print(
             "NOTE upgrade-pr plan: no repository file, Git branch, pull request, "
@@ -476,7 +530,7 @@ def _create_upgrade_pr(
         )
         print(
             "NOTE create upgrade-pr: write scope is limited to "
-            ".github/workflows/agentgov.yml on an AgentGov branch"
+            "the two declared AgentGov workflow paths on an AgentGov branch"
         )
         print(
             "NOTE create upgrade-pr: merge, release, deploy, and production execution "
@@ -1333,6 +1387,433 @@ def _check_capability(path: Path) -> int:
         return EXIT_FAIL
 
     print(f"PASS capability: {path}")
+    return EXIT_PASS
+
+
+def _check_task(path: Path, *, repository: Path) -> int:
+    try:
+        report = check_development_task(path, repository=repository)
+    except FileNotFoundError as exc:
+        print(
+            f"ERROR task: file or repository not found: {exc.filename or exc}",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    except PermissionError as exc:
+        print(f"ERROR task: permission denied: {exc.filename or exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except json.JSONDecodeError as exc:
+        print(
+            f"ERROR task: invalid JSON: {path}:{exc.lineno}:{exc.colno}: {exc.msg}",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    except (OSError, UnicodeError, ValueError) as exc:
+        print(f"ERROR task: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    for finding in report.findings:
+        print(f"{finding.status.value} {finding.check_id}: {finding.message}")
+    summary = " ".join(
+        f"{status.value}={report.count(status)}" for status in TaskFindingStatus
+    )
+    print(f"SUMMARY {summary}")
+    print("NOTE task: validation was read-only and did not authorize implementation")
+    return EXIT_FAIL if report.has_failures else EXIT_PASS
+
+
+def _context_task(
+    path: Path,
+    *,
+    repository: Path,
+    context_format: str,
+    include_content: bool,
+) -> int:
+    try:
+        context = select_development_context(path, repository=repository)
+    except ContextPolicyError as exc:
+        print(f"FAIL context task: {exc}")
+        return EXIT_FAIL
+    except FileNotFoundError as exc:
+        print(
+            f"ERROR context task: file or repository not found: {exc.filename or exc}",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    except PermissionError as exc:
+        print(
+            f"ERROR context task: permission denied: {exc.filename or exc}",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    except json.JSONDecodeError as exc:
+        print(
+            f"ERROR context task: invalid JSON at line {exc.lineno}, "
+            f"column {exc.colno}: {exc.msg}",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    except (OSError, UnicodeError, ValueError) as exc:
+        print(f"ERROR context task: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    if context_format == "terminal":
+        rendered = render_development_context_terminal(context)
+    elif context_format == "json":
+        rendered = render_development_context_json(
+            context,
+            include_content=include_content,
+        )
+    else:
+        rendered = render_development_context_markdown(
+            context,
+            include_content=include_content,
+        )
+    print(rendered, end="")
+    return EXIT_PASS
+
+
+def _check_scope(
+    path: Path,
+    *,
+    repository: Path,
+    scope_format: str,
+) -> int:
+    try:
+        report = check_development_scope(path, repository=repository)
+    except ScopePolicyError as exc:
+        print(f"FAIL scope: {exc}")
+        return EXIT_FAIL
+    except FileNotFoundError as exc:
+        print(
+            f"ERROR scope: file, repository, or Git executable not found: {exc.filename or exc}",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    except PermissionError as exc:
+        print(f"ERROR scope: permission denied: {exc.filename or exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except json.JSONDecodeError as exc:
+        print(
+            f"ERROR scope: invalid JSON at line {exc.lineno}, column {exc.colno}: {exc.msg}",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    except (GitInspectionError, OSError, UnicodeError, ValueError) as exc:
+        print(f"ERROR scope: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    renderer = {
+        "terminal": render_scope_report_terminal,
+        "json": render_scope_report_json,
+        "markdown": render_scope_report_markdown,
+    }[scope_format]
+    print(renderer(report), end="")
+    return EXIT_FAIL if report.has_failures else EXIT_PASS
+
+
+def _govern_start(
+    repository: Path,
+    *,
+    task: Path | None,
+    title: str | None,
+    task_id: str | None,
+    requirement: str | None,
+    include_paths: Sequence[str],
+    exclude_paths: Sequence[str],
+    validation_commands: Sequence[str],
+    owner: str,
+    comparison_base: str,
+    actor_label: str | None,
+    replace_active: bool,
+    dry_run: bool,
+    output_format: str,
+) -> int:
+    """Preview and explicitly confirm one bounded development session."""
+
+    if output_format == "json" and not dry_run:
+        print("ERROR govern start: --format json requires --dry-run", file=sys.stderr)
+        return EXIT_ERROR
+    try:
+        plan = build_start_plan(
+            repository,
+            task=task,
+            title=title,
+            task_id=task_id,
+            requirement=requirement,
+            include_paths=include_paths,
+            exclude_paths=exclude_paths,
+            validation_commands=validation_commands,
+            owner=owner,
+            comparison_base=comparison_base,
+            actor_label=actor_label,
+            replace_active=replace_active,
+        )
+    except FileNotFoundError as exc:
+        print(f"ERROR govern start: file or executable not found: {exc.filename or exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except (
+        ContextPolicyError,
+        GitSnapshotError,
+        LocalStateError,
+        SessionPolicyError,
+        OSError,
+        UnicodeError,
+        ValueError,
+    ) as exc:
+        print(f"ERROR govern start: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    renderer = render_start_plan_json if output_format == "json" else render_start_plan_terminal
+    print(renderer(plan), end="")
+    if dry_run:
+        if output_format == "terminal":
+            print("DRY_RUN no files were written")
+        return EXIT_PASS
+    if plan.already_active:
+        print(f"ACTIVE {plan.session.task_id} ({plan.session.task_path})")
+        print("NOTE no files were written because the exact task and comparison base are already active")
+        return EXIT_PASS
+    confirmed = request_start_confirmation(
+        plan,
+        decision_reader=input,
+        is_interactive_terminal=sys.stdin.isatty(),
+    )
+    if not confirmed:
+        print("CANCELLED govern start requires exact confirmation from an interactive terminal")
+        return EXIT_FAIL
+    try:
+        result = apply_start_plan(plan)
+    except FileNotFoundError as exc:
+        print(f"ERROR govern start: file or executable not found: {exc.filename or exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except (
+        ContextPolicyError,
+        GitSnapshotError,
+        LocalStateError,
+        SessionPolicyError,
+        OSError,
+        UnicodeError,
+        ValueError,
+    ) as exc:
+        print(f"ERROR govern start: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    print(f"STARTED {result.session.task_id} ({result.session.task_path})")
+    print(f"SELECTED_GOVERNANCE {len(result.context.selected_governance)}")
+    for artifact in result.context.selected_governance:
+        print(f"  - {artifact.path} [{artifact.selection_mode}]")
+    if result.event_ref:
+        print(f"EVENT {result.event_ref}")
+    print("NEXT develop within the admitted scope, then run 'agentgov govern check' and 'agentgov govern finish'")
+    print("NOTE start does not authorize code change, exception, commit, merge, deployment, or release")
+    return EXIT_PASS
+
+
+def _govern_check(
+    path: Path | None,
+    *,
+    repository: Path,
+    output_format: str,
+    actor_class: str,
+    actor_label: str | None,
+) -> int:
+    """Observe one development scope check and append a bounded local event."""
+
+    try:
+        active_session = None
+        if path is None:
+            path, active_session = resolve_active_task(repository)
+        report = check_development_scope(path, repository=repository)
+        _, event_ref = append_governance_event(
+            repository,
+            event_type="scope.checked",
+            actor_class=actor_class,
+            actor_label=actor_label,
+            task_id=report.task_id,
+            task_digest=report.task_digest,
+            outcome="failed" if report.has_failures else "passed",
+            evidence_ref=None,
+            reason_codes=tuple(
+                code
+                for code in (
+                    "active_session_used" if active_session is not None else "explicit_check_requested",
+                    "scope_failure" if report.has_failures else None,
+                )
+                if code is not None
+            ),
+            metrics={
+                "changes": len(report.changes),
+                "failures": report.count(ScopeFindingStatus.FAIL),
+                "advisories": report.count(ScopeFindingStatus.ADVISORY),
+            },
+        )
+    except ScopePolicyError as exc:
+        print(f"FAIL govern check: {exc}")
+        return EXIT_FAIL
+    except FileNotFoundError as exc:
+        print(f"ERROR govern check: file or executable not found: {exc.filename or exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except (GitInspectionError, LocalStateError, SessionPolicyError, OSError, UnicodeError, ValueError) as exc:
+        print(f"ERROR govern check: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    renderer = {
+        "terminal": render_scope_report_terminal,
+        "json": render_scope_report_json,
+        "markdown": render_scope_report_markdown,
+    }[output_format]
+    print(renderer(report), end="")
+    if output_format == "terminal":
+        print(f"EVENT {event_ref}")
+    return EXIT_FAIL if report.has_failures else EXIT_PASS
+
+
+def _govern_finish(
+    path: Path | None,
+    *,
+    repository: Path,
+    comparison_base: str | None,
+    evidence: Path | None,
+    output_format: str,
+    actor_class: str,
+    actor_label: str | None,
+) -> int:
+    """Optionally validate, then reconcile completion against exact evidence."""
+
+    try:
+        active_session = None
+        if path is None:
+            path, active_session = resolve_active_task(repository)
+            if comparison_base is None and evidence is None:
+                comparison_base = active_session.comparison_base_sha
+        selected_evidence = evidence
+        validation_run = None
+        if comparison_base is not None:
+            validation_run = run_task_validation(
+                path,
+                repository=repository,
+                comparison_base=comparison_base,
+                actor_class=actor_class,
+                actor_label=actor_label,
+            )
+            selected_evidence = Path(validation_run.evidence_ref)
+        report = reconcile_task_completion(
+            path,
+            repository=repository,
+            evidence_path=selected_evidence,
+            actor_class=actor_class,
+            actor_label=actor_label,
+        )
+    except FileNotFoundError as exc:
+        print(f"ERROR govern finish: file or executable not found: {exc.filename or exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except subprocess.TimeoutExpired as exc:
+        print(f"ERROR govern finish: validation timed out after {exc.timeout} seconds", file=sys.stderr)
+        return EXIT_ERROR
+    except (EvidenceError, GitSnapshotError, LocalStateError, SessionPolicyError, OSError, UnicodeError, ValueError) as exc:
+        print(f"ERROR govern finish: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    if validation_run is not None:
+        for command, (stdout, stderr) in zip(validation_run.evidence.commands, validation_run.transient_outputs):
+            if command.exit_code != 0:
+                if stdout:
+                    print(stdout, end="" if stdout.endswith("\n") else "\n", file=sys.stderr)
+                if stderr:
+                    print(stderr, end="" if stderr.endswith("\n") else "\n", file=sys.stderr)
+    renderer = {
+        "terminal": render_completion_terminal,
+        "json": render_completion_json,
+        "markdown": render_completion_markdown,
+    }[output_format]
+    print(renderer(report), end="")
+    return EXIT_PASS if report.state == "verified" else EXIT_FAIL
+
+
+def _monitor_development(
+    repository: Path,
+    *,
+    observation_scope: str,
+    event_directory: Path | None,
+    export_path: Path | None,
+    output_format: str,
+    output: Path | None,
+) -> int:
+    try:
+        monitor = build_development_monitor(
+            repository,
+            observation_scope=observation_scope,
+            event_directory=event_directory,
+            export_path=export_path,
+        )
+        if output is None:
+            suffix = {"html": "html", "json": "json", "markdown": "md"}[output_format]
+            output = Path(f".agentgov/dashboard.{suffix}")
+        written = write_development_monitor(
+            repository,
+            monitor=monitor,
+            output=output,
+            output_format=output_format,
+        )
+        relative = written.relative_to(repository.resolve()).as_posix()
+    except FileNotFoundError as exc:
+        print(f"ERROR monitor development: file or executable not found: {exc.filename or exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except (LocalStateError, MonitorPolicyError, OSError, UnicodeError, ValueError) as exc:
+        print(f"ERROR monitor development: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    print(
+        f"MONITOR scope={monitor.observation['scope']} "
+        f"events={monitor.observation['event_count']} tasks={monitor.overview['tasks']}"
+    )
+    print(f"OUTPUT {relative}")
+    print("NOTE observed counts are partial history, not approval, causality, ROI, or semantic correctness")
+    return EXIT_PASS
+
+
+def _export_development_events(
+    repository: Path,
+    *,
+    event_directory: Path | None,
+    output: Path | None,
+    dry_run: bool,
+) -> int:
+    try:
+        bundle = build_development_event_export(
+            repository,
+            event_directory=event_directory,
+        )
+        selected_output = output or development_export_default_output(bundle)
+        print(render_development_event_export_preview(bundle, output=selected_output), end="")
+        if dry_run:
+            print("DRY_RUN no export file was written")
+            return EXIT_PASS
+        try:
+            confirmed = request_development_export_confirmation(
+                decision_reader=input,
+                is_interactive_terminal=sys.stdin.isatty(),
+            )
+        except EOFError:
+            confirmed = False
+        if not confirmed:
+            print("CANCELLED export development requires exact EXPORT confirmation from an interactive terminal")
+            print("NOTE no export file was written")
+            return EXIT_PASS
+        written = write_development_event_export(
+            repository,
+            bundle=bundle,
+            output=selected_output,
+        )
+        relative = written.relative_to(repository.resolve()).as_posix()
+    except FileNotFoundError as exc:
+        print(f"ERROR export development: path not found: {exc.filename or exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except (DevelopmentExportPolicyError, LocalStateError, OSError, UnicodeError, ValueError) as exc:
+        print(f"ERROR export development: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    print(f"EXPORT {relative}")
+    print(
+        f"PASS export development: {bundle.source['event_count']} redacted events; "
+        "history remains partial"
+    )
     return EXIT_PASS
 
 
@@ -2373,6 +2854,281 @@ def build_parser() -> argparse.ArgumentParser:
             replace=args.replace,
         )
     )
+    export_development_parser = export_targets.add_parser(
+        "development",
+        help="Preview and explicitly create a redacted local development-event bundle.",
+    )
+    export_development_parser.add_argument(
+        "--repository",
+        type=Path,
+        default=Path("."),
+        help="Git repository containing local AgentGov events (default: current directory).",
+    )
+    export_development_parser.add_argument(
+        "--events",
+        type=Path,
+        help="Event directory inside the repository (default: .agentgov/events).",
+    )
+    export_development_parser.add_argument(
+        "--output",
+        type=Path,
+        help="New JSON output inside the repository (default: .agentgov/exports/<export-id>.json).",
+    )
+    export_development_parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Preview source counts, retained metadata, and redaction without writing.",
+    )
+    export_development_parser.set_defaults(
+        handler=lambda args: _export_development_events(
+            args.repository,
+            event_directory=args.events,
+            output=args.output,
+            dry_run=args.dry_run,
+        )
+    )
+
+    govern_parser = commands.add_parser(
+        "govern",
+        help="Govern a coding-agent task during development and append local observations.",
+    )
+    govern_targets = govern_parser.add_subparsers(dest="govern_target", required=True)
+    govern_start_parser = govern_targets.add_parser(
+        "start",
+        help="Preview and explicitly confirm one guided development governance session.",
+    )
+    govern_start_parser.add_argument(
+        "task",
+        nargs="?",
+        type=Path,
+        help="Existing admitted task; if omitted, exactly one admitted task may be auto-discovered.",
+    )
+    govern_start_parser.add_argument(
+        "--repository",
+        type=Path,
+        default=Path("."),
+        help="Git worktree root (default: current directory).",
+    )
+    govern_start_parser.add_argument(
+        "--title",
+        help="Create a low-risk compact task with this title instead of selecting an existing task.",
+    )
+    govern_start_parser.add_argument("--task-id", help="Optional kebab-case id for a new compact task.")
+    govern_start_parser.add_argument(
+        "--requirement",
+        help="Human-readable requirement summary for a new compact task.",
+    )
+    govern_start_parser.add_argument(
+        "--include",
+        dest="include_paths",
+        action="append",
+        default=[],
+        help="Machine-checkable included path or segment prefix; repeat as needed.",
+    )
+    govern_start_parser.add_argument(
+        "--exclude",
+        dest="exclude_paths",
+        action="append",
+        default=[],
+        help="Excluded path or segment prefix; repeat as needed and always overrides include.",
+    )
+    govern_start_parser.add_argument(
+        "--validate",
+        dest="validation_commands",
+        action="append",
+        default=[],
+        help="Validation command for a new compact task; repeat as needed. Conventional tests are detected when omitted.",
+    )
+    govern_start_parser.add_argument(
+        "--owner",
+        default="Human product owner",
+        help="Accountable owner for a new compact task.",
+    )
+    govern_start_parser.add_argument(
+        "--base",
+        default="HEAD",
+        help="Comparison-base revision recorded for later fresh validation (default: HEAD).",
+    )
+    govern_start_parser.add_argument(
+        "--actor-label",
+        help="Optional vendor-neutral label for the confirming human.",
+    )
+    govern_start_parser.add_argument(
+        "--replace-active",
+        action="store_true",
+        help="Preview replacing a different active task; still requires exact REPLACE confirmation.",
+    )
+    govern_start_parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Render the complete plan and write nothing.",
+    )
+    govern_start_parser.add_argument(
+        "--format",
+        dest="govern_format",
+        choices=("terminal", "json"),
+        default="terminal",
+        help="Start preview format (default: terminal).",
+    )
+    govern_start_parser.set_defaults(
+        handler=lambda args: _govern_start(
+            args.repository,
+            task=args.task,
+            title=args.title,
+            task_id=args.task_id,
+            requirement=args.requirement,
+            include_paths=args.include_paths,
+            exclude_paths=args.exclude_paths,
+            validation_commands=args.validation_commands,
+            owner=args.owner,
+            comparison_base=args.base,
+            actor_label=args.actor_label,
+            replace_active=args.replace_active,
+            dry_run=args.dry_run,
+            output_format=args.govern_format,
+        )
+    )
+    govern_check_parser = govern_targets.add_parser(
+        "check",
+        help="Check the active or explicitly selected task scope and append one bounded event.",
+    )
+    govern_check_parser.add_argument(
+        "task",
+        nargs="?",
+        type=Path,
+        help="Optional admitted task; defaults to the task recorded by govern start.",
+    )
+    govern_check_parser.add_argument(
+        "--repository",
+        type=Path,
+        default=Path("."),
+        help="Git worktree root used for task and change inspection.",
+    )
+    govern_check_parser.add_argument(
+        "--format",
+        dest="govern_format",
+        choices=("terminal", "json", "markdown"),
+        default="terminal",
+        help="Observed scope report format (default: terminal).",
+    )
+    govern_check_parser.add_argument(
+        "--actor",
+        choices=("human", "coding_agent", "ci"),
+        default="coding_agent",
+        help="Accountable actor class recorded in the local event.",
+    )
+    govern_check_parser.add_argument(
+        "--actor-label",
+        help="Optional vendor-neutral actor label; absolute paths and credential assignments are rejected.",
+    )
+    govern_check_parser.set_defaults(
+        handler=lambda args: _govern_check(
+            args.task,
+            repository=args.repository,
+            output_format=args.govern_format,
+            actor_class=args.actor,
+            actor_label=args.actor_label,
+        )
+    )
+
+    govern_finish_parser = govern_targets.add_parser(
+        "finish",
+        help="Run declared validation or reuse evidence, then reconcile completion.",
+    )
+    govern_finish_parser.add_argument(
+        "task",
+        nargs="?",
+        type=Path,
+        help="Optional admitted task; defaults to the task and comparison base recorded by govern start.",
+    )
+    govern_finish_parser.add_argument(
+        "--repository",
+        type=Path,
+        default=Path("."),
+        help="Git worktree root used for validation and reconciliation.",
+    )
+    evidence_source = govern_finish_parser.add_mutually_exclusive_group()
+    evidence_source.add_argument(
+        "--base",
+        help="Comparison-base revision; runs every task-declared validation command before finish.",
+    )
+    evidence_source.add_argument(
+        "--evidence",
+        type=Path,
+        help="Specific prior record beneath .agentgov/evidence; otherwise the latest task evidence is used.",
+    )
+    govern_finish_parser.add_argument(
+        "--format",
+        dest="govern_format",
+        choices=("terminal", "json", "markdown"),
+        default="terminal",
+        help="Completion report format (default: terminal).",
+    )
+    govern_finish_parser.add_argument(
+        "--actor",
+        choices=("human", "coding_agent", "ci"),
+        default="coding_agent",
+        help="Accountable actor class recorded in local events.",
+    )
+    govern_finish_parser.add_argument(
+        "--actor-label",
+        help="Optional vendor-neutral actor label; absolute paths and credential assignments are rejected.",
+    )
+    govern_finish_parser.set_defaults(
+        handler=lambda args: _govern_finish(
+            args.task,
+            repository=args.repository,
+            comparison_base=args.base,
+            evidence=args.evidence,
+            output_format=args.govern_format,
+            actor_class=args.actor,
+            actor_label=args.actor_label,
+        )
+    )
+
+    context_parser = commands.add_parser(
+        "context",
+        help="Select read-only task-specific governance context.",
+    )
+    context_targets = context_parser.add_subparsers(
+        dest="context_target",
+        required=True,
+    )
+    context_task_parser = context_targets.add_parser(
+        "task",
+        help="Select governance for one admitted development task.",
+    )
+    context_task_parser.add_argument(
+        "task",
+        type=Path,
+        help="Admitted task contract JSON located inside the repository root.",
+    )
+    context_task_parser.add_argument(
+        "--repository",
+        type=Path,
+        default=Path("."),
+        help="Repository root used for discovery and reference resolution.",
+    )
+    context_task_parser.add_argument(
+        "--format",
+        dest="context_format",
+        choices=("terminal", "json", "markdown"),
+        default="terminal",
+        help="Context serialization format (default: terminal).",
+    )
+    context_task_parser.add_argument(
+        "--include-content",
+        action="store_true",
+        help="Embed selected file contents in JSON or Markdown instead of returning references only.",
+    )
+    context_task_parser.set_defaults(
+        handler=lambda args: _context_task(
+            args.task,
+            repository=args.repository,
+            context_format=args.context_format,
+            include_content=args.include_content,
+        )
+    )
 
     check_parser = commands.add_parser("check", help="Run a deterministic governance check.")
     check_targets = check_parser.add_subparsers(dest="check_target", required=True)
@@ -2383,6 +3139,55 @@ def build_parser() -> argparse.ArgumentParser:
     )
     capability_parser.add_argument("manifest", type=Path, help="Path to a capability JSON file.")
     capability_parser.set_defaults(handler=lambda args: _check_capability(args.manifest))
+
+    task_parser = check_targets.add_parser(
+        "task",
+        help="Validate one development-time coding-agent task contract.",
+    )
+    task_parser.add_argument(
+        "task",
+        type=Path,
+        help="Task contract JSON located inside the repository root.",
+    )
+    task_parser.add_argument(
+        "--repository",
+        type=Path,
+        default=Path("."),
+        help="Repository root used for reference resolution (default: current directory).",
+    )
+    task_parser.set_defaults(
+        handler=lambda args: _check_task(args.task, repository=args.repository)
+    )
+
+    scope_parser = check_targets.add_parser(
+        "scope",
+        help="Compare working-tree Git changes with one admitted task scope.",
+    )
+    scope_parser.add_argument(
+        "task",
+        type=Path,
+        help="Admitted task contract JSON located inside the repository root.",
+    )
+    scope_parser.add_argument(
+        "--repository",
+        type=Path,
+        default=Path("."),
+        help="Git worktree root used for task and change inspection.",
+    )
+    scope_parser.add_argument(
+        "--format",
+        dest="scope_format",
+        choices=("terminal", "json", "markdown"),
+        default="terminal",
+        help="Scope report serialization format (default: terminal).",
+    )
+    scope_parser.set_defaults(
+        handler=lambda args: _check_scope(
+            args.task,
+            repository=args.repository,
+            scope_format=args.scope_format,
+        )
+    )
 
     release_manifest_parser = check_targets.add_parser(
         "release-manifest",
@@ -2474,6 +3279,62 @@ def build_parser() -> argparse.ArgumentParser:
         help="Repository directory to check (default: current directory).",
     )
     repository_parser.set_defaults(handler=lambda args: _check_repository(args.path))
+
+    monitor_parser = commands.add_parser(
+        "monitor",
+        help="Generate an honest static view of observed development governance events.",
+    )
+    monitor_targets = monitor_parser.add_subparsers(dest="monitor_target", required=True)
+    development_monitor_parser = monitor_targets.add_parser(
+        "development",
+        help="Build Overview, Activity Timeline, and Task Detail from local events.",
+    )
+    development_monitor_parser.add_argument(
+        "repository",
+        nargs="?",
+        type=Path,
+        default=Path("."),
+        help="Repository containing .agentgov/events (default: current directory).",
+    )
+    development_monitor_parser.add_argument(
+        "--scope",
+        choices=("local_session", "exported_development", "ci_only", "combined"),
+        default="local_session",
+        help="Observation scope; exported and combined scopes require --export.",
+    )
+    development_monitor_parser.add_argument(
+        "--events",
+        type=Path,
+        help="Local event directory inside the repository (default: .agentgov/events).",
+    )
+    development_monitor_parser.add_argument(
+        "--export",
+        dest="development_export",
+        type=Path,
+        help="Validated redacted development-event export inside the repository.",
+    )
+    development_monitor_parser.add_argument(
+        "--format",
+        dest="monitor_format",
+        choices=("html", "json", "markdown"),
+        default="html",
+        help="Generated Monitor format (default: html).",
+    )
+    development_monitor_parser.add_argument(
+        "--output",
+        type=Path,
+        help="Output inside the repository (default: .agentgov/dashboard.<format>).",
+    )
+    development_monitor_parser.set_defaults(
+        handler=lambda args: _monitor_development(
+            args.repository,
+            observation_scope=args.scope,
+            event_directory=args.events,
+            export_path=args.development_export,
+            output_format=args.monitor_format,
+            output=args.output,
+        )
+    )
 
     report_parser = commands.add_parser(
         "report",

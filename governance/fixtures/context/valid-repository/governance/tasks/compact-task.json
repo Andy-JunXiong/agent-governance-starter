@@ -1,0 +1,41 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "compact",
+  "task_id": "fixture-app-change",
+  "title": "Change the fixture app",
+  "requirement": {
+    "summary": "Make one bounded change to the fixture application entry point.",
+    "source_refs": [
+      "docs/requirement.md"
+    ]
+  },
+  "scope": {
+    "include_paths": [
+      "src/app.py"
+    ],
+    "exclude_paths": [
+      "src/generated"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0001-app-boundary.md",
+    "docs/adr/INVARIANTS.md"
+  ],
+  "acceptance_signals": [
+    "The fixture application test passes."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_app -v"
+  ],
+  "owner": "Fixture owner",
+  "risk": {
+    "level": "low",
+    "items": []
+  },
+  "decision": {
+    "state": "admitted",
+    "decided_by": "Fixture owner",
+    "rationale": "The fixture task is intentionally low risk and bounded."
+  }
+}

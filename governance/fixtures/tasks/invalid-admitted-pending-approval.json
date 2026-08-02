@@ -1,0 +1,60 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "invalid-admission",
+  "title": "Invalid admitted task fixture",
+  "requirement": {
+    "summary": "Exercise the deterministic admission and approval consistency rule.",
+    "source_refs": [
+      "docs/development-plan.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0009-govern-coding-agents-during-development.md"
+    ],
+    "rationale": "This fixture deliberately conflicts with the approval contract."
+  },
+  "goal": "Demonstrate that pending approval cannot accompany admitted work.",
+  "non_goals": [
+    "Do not represent a valid development task."
+  ],
+  "scope": {
+    "include_paths": [
+      "src"
+    ],
+    "exclude_paths": []
+  },
+  "architecture_refs": [
+    "docs/adr/0009-govern-coding-agents-during-development.md"
+  ],
+  "acceptance_signals": [
+    "Validation fails on the inconsistent admission state."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_task_contract -v"
+  ],
+  "owner": "Fixture author",
+  "risk": {
+    "level": "high",
+    "items": [
+      "The task requires approval before implementation."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "pending",
+    "owner": "Human approver",
+    "evidence_refs": []
+  },
+  "stop_conditions": [
+    "Stop until approval is recorded."
+  ],
+  "decision": {
+    "state": "admitted",
+    "decided_by": "Fixture author",
+    "rationale": "This invalid state exists only to exercise deterministic validation."
+  }
+}

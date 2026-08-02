@@ -4,7 +4,11 @@ import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from agentgov.agent_skills import check_agent_skills, validate_agent_skill
+from agentgov.agent_skills import (
+    check_agent_skills,
+    read_agent_skill_metadata,
+    validate_agent_skill,
+)
 from agentgov.cli import EXIT_ERROR, EXIT_FAIL, EXIT_PASS, main
 
 
@@ -61,6 +65,26 @@ class AgentSkillContractTests(unittest.TestCase):
 
         self.assertFalse(report.has_failures)
         self.assertEqual(len(report.findings), 4)
+
+    def test_shipped_skills_own_structured_routing_metadata(self) -> None:
+        metadata = {
+            path.parent.name: read_agent_skill_metadata(path)
+            for path in sorted(AGENT_SKILLS.glob("*/SKILL.md"))
+        }
+
+        self.assertEqual(metadata["development-slice"].triggers, ("task.admitted",))
+        self.assertEqual(
+            metadata["context-first-review"].triggers,
+            ("architecture.candidate",),
+        )
+        self.assertEqual(
+            metadata["context-first-review"].applies_to,
+            ("development_task",),
+        )
+        self.assertIn(
+            "task.admitted",
+            metadata["incident-response"].non_triggers,
+        )
 
     def test_shipped_skills_are_free_of_reference_project_coupling(self) -> None:
         forbidden = {
@@ -138,6 +162,25 @@ class AgentSkillContractTests(unittest.TestCase):
 
         self.assertIn("frontmatter contains unsupported field(s): version", errors)
         self.assertIn("body is missing required heading: ## Stop conditions", errors)
+
+    def test_invalid_routing_metadata_fails_deterministically(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            skill_dir = Path(temp_dir) / "example-skill"
+            skill_dir.mkdir()
+            text = valid_skill_text("example-skill").replace(
+                "---\n\n# Example",
+                'triggers: ["Task Admitted"]\nnon_triggers: []\napplies_to: []\n---\n\n# Example',
+            )
+            path = skill_dir / "SKILL.md"
+            path.write_text(text, encoding="utf-8")
+
+            errors = validate_agent_skill(path)
+
+        self.assertTrue(any("portable routing identifier" in item for item in errors))
+        self.assertIn(
+            "routable skill frontmatter must declare at least one applies_to value",
+            errors,
+        )
 
     def test_frontmatter_name_must_match_directory(self) -> None:
         with TemporaryDirectory() as temp_dir:

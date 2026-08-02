@@ -7,7 +7,16 @@ governance patterns from AI Radar. It distinguishes portable contracts from
 AI Radar implementation details and prevents the starter kit from becoming a
 copy of the reference product.
 
-Inventory date: 2026-07-13
+Initial inventory date: 2026-07-13
+
+Development-loop revalidation date: 2026-08-02
+
+Current read-only reference repository:
+`C:\Users\maki8\OneDrive\桌面\Find a job\ai-radar-aws` at commit
+`3a9323cb2a9ef575da42d29fb17d330ef872afd3`. The scoped governance files
+listed below were clean against that commit during revalidation. The wider AI
+Radar worktree contained unrelated user and generated-data changes; those
+files were not used as extraction sources.
 
 ## Classification rules
 
@@ -22,13 +31,22 @@ Inventory date: 2026-07-13
 
 | AI Radar source | Current role | Classification | Starter-kit treatment |
 |---|---|---|---|
-| `AGENTS.md` | Constitution, operating modes, security and approval boundaries | `rewrite-required` | Extract a neutral constitution template; remove AWS, S3, product workflow, and repository-specific paths. |
+| `AGENTS.md` | Constitution, task modes, narrow-scope rules, context routing, security, core-file, Git, and approval boundaries | `rewrite-required` | Preserve always-loaded hard boundaries, explicit task scope and context routing; remove AWS, S3, dual-repository sync, product workflows, and repository-specific paths. |
+| `AI_CONTEXT.md` | Selective architecture memory for ambiguous or architectural work | `rewrite-required` | Preserve the distinction between always-loaded constitution and task-selected architecture context; do not copy AI Radar services, topology, or business objects. |
 | `docs/adr/TEMPLATE.md` | ADR authoring contract | `generic-reusable` | Adapt the decision and tradeoff structure into a portable template. |
-| `docs/adr/INVARIANTS.md` | Cross-ADR invariant register | `rewrite-required` | Define a generic invariant-record format without importing AI Radar invariants. |
-| `agent-skills/README.md` | Separates product runtime skills from coding-agent protocols | `generic-reusable` | Preserve the layer distinction and vendor-neutral source-of-truth principle. |
-| `agent-skills/development-slice/SKILL.md` | Small-slice planning, validation, and handoff protocol | `rewrite-required` | Remove AI Radar status files and product gates; keep the slice contract and closed-loop validation pattern. |
+| `docs/adr/INVARIANTS.md` | Cross-ADR invariant register and slice-to-required-reading router | `rewrite-required` | Preserve scoped invariant discovery and owning-decision references without importing AI Radar evidence, Reflection, Watch, or Project Takeaway rules. |
+| `agent-skills/README.md` | Separates product runtime skills from Layer A' coding-agent protocols and provides canonical trigger discovery | `generic-reusable` | Preserve the layer distinction, canonical registry, explicit consumers, and trigger routing without importing the complete AI Radar skill set. |
+| `agent-skills/development-slice/SKILL.md` | Requirement framing, architecture/core-doc preflight, bounded implementation, validation, and handoff | `rewrite-required` | Remove AI Radar status files and product gates; keep the slice contract, goal/non-goal fields, closed-loop ownership, validation, stop, and handoff pattern. |
+| `agent-skills/development-slice/references/closed-loop-contract.md` | Keeps the coding agent inside an approved implementation loop while the human retains purpose, boundary, and approval | `rewrite-required` | Generalize the task contract and fresh-evidence completion rule; do not treat a closed loop as broader autonomy or automatic Git authority. |
+| `agent-skills/grill-before-sprint/SKILL.md` | Project-axis requirement gate before meaningful implementation | `rewrite-required` | Generalize concrete-gap, why-now, smallest-slice, tradeoff, and validation questions into task admission; replace AI Radar-specific outcomes and records with portable task states. |
+| `agent-skills/grill-before-absorb/SKILL.md` | Human cognitive-ownership gate for durable agent-shaped decisions | `rewrite-required` | Preserve human ownership as an advisory decision boundary; remove named-person and cognitive-log coupling, and do not make it a deterministic code gate. |
 | `agent-skills/incident-response/SKILL.md` | Operational incident procedure | `rewrite-required` | Replace AWS-specific commands and deployment rules with configurable stop and escalation contracts. |
-| `agent-skills/context-first-review/SKILL.md` | Repo-grounded proposal review | `generic-reusable` | Adapted path, boundary, conflict, and decision discovery into a vendor-neutral protocol; excluded AI Radar admission gates and product invariants. |
+| `agent-skills/context-first-review/SKILL.md` | Repo-grounded architecture and cross-module proposal review | `generic-reusable` | Preserve path, boundary, conflict, and decision discovery before implementation; exclude AI Radar admission outcomes and product invariants. |
+| `agent-skills/action-loop-stagnation/SKILL.md` | Detects repeated action hypotheses, false completion, and handoff-before-evidence during implementation | `rewrite-required` | Generalize failure packets, structurally different hypotheses, verification oracles, and human handoff; retain the explicit boundary that a protocol request is not a mechanical runtime halt. |
+| `agent-skills/reconcile-invariants/SKILL.md` | Scoped completion-time alignment across constitution, ADRs, invariants, and protocol registry | `rewrite-required` | Generalize scoped drift review and proposed-diff output; do not scan the whole repository or automatically rewrite core governance files. |
+| `docs/adr/0004-agents-constitution-skill-registry.md` | Rationale for constitution-plus-routing rather than one always-loaded SOP | `reference-only` | Use as design evidence for separating hard rules from conditional protocols; do not copy AI Radar phases or proposed-status claims. |
+| `docs/adr/0005-dual-gate-pre-sprint-protocol.md` | Separates project value from human cognitive ownership before agent execution | `reference-only` | Preserve the decision-axis separation as product rationale; portable implementation remains subject to AgentGov task-contract design and user validation. |
+| `docs/adr/0016-action-loop-stagnation-protocol.md` | Separates action-loop governance from claim verification and runtime enforcement | `reference-only` | Preserve the protocol-versus-mechanical-enforcement boundary; do not import external-skill taxonomy, hooks, telemetry, or AI Radar runtime gates. |
 | `agent-skills/incident-attribution/SKILL.md` | Reviewable process-learning protocol | `rewrite-required` | Adapted factual capture, stage attribution, pattern review, and explicit outcomes; removed named participants, fixed record paths, infrastructure language, and core-file lists. |
 | `backend/app/prompts/skill_meta.py` | Minimal metadata decorator for prompt capabilities | `reference-only` | Use it as evidence for the capability-schema design; do not import the class. |
 | `backend/app/prompts/registry.py` | AI Radar runtime prompt implementations | `ai-radar-specific` | Do not copy prompts or runtime behavior. Use only anonymized metadata examples later. |
@@ -79,6 +97,42 @@ result.
 
 New reference-project patterns must be admitted as separate scoped proposals
 rather than extending this map by default.
+
+## Development-loop consistency decision
+
+The 2026-08-02 revalidation admits one new portable product direction: AgentGov
+should govern coding-agent work during development, from requirement admission
+through architecture grounding, bounded implementation, fresh verification,
+and scoped closeout reconciliation. Pull-request and CI checks remain an
+independent replay and evidence backstop, not the first or primary governance
+interaction.
+
+The portable correspondence is:
+
+| AI Radar governance moment | AgentGov portable responsibility |
+|---|---|
+| concrete sprint proposal | requirement/task admission with goal, non-goals, smallest scope, risks, and acceptance signals |
+| selective context and ADR/invariant preflight | architecture context assembled from repository-owned decisions, dependencies, controls, and approval boundaries |
+| development slice and closed loop | coding-agent execution constrained to the admitted task with explicit stop conditions and fresh verification |
+| action-loop stagnation | advisory detection of repeated approaches, missing verification, or premature handoff |
+| invariant reconciliation | completion-time check for drift between the task, architecture decisions, implementation, evidence, and governance memory |
+| PR and CI | independent deterministic replay, bypass prevention, and durable evidence |
+
+This does not admit AI Radar runtime code, its named business gates, cognitive
+logs, product schemas, project-specific core-file list, deployment model, or a
+mechanical agent-control hook. AgentGov must also preserve AI Radar's current
+Layer A' boundary: repository protocols can instruct, check, and request a
+stop, but they do not become runtime enforcement or new authority merely by
+being machine-readable.
+
+Phase 1 implementation reuse decision: derive an in-memory Registry from
+AgentGov artifacts, always select the consumer's root `AGENTS.md`, select
+explicit task references, route Skills from their own structured metadata, and
+connect capability governance through artifact-declared repository paths. This
+is a `rewrite-required` adaptation of the already recorded AI Radar
+`AGENTS.md`, `AI_CONTEXT.md`, Invariants, and Skill routing responsibilities.
+No AI Radar content, paths, runtime code, business taxonomy, or persisted
+Registry is copied.
 
 ## NYC Taxi consumer-integration pilot
 

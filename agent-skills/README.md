@@ -4,9 +4,11 @@ Reusable coding-agent protocols live under `agent-skills/<name>/SKILL.md`.
 They are development-time instructions and remain separate from product
 runtime prompts.
 
-Each protocol uses YAML frontmatter with exactly `name` and `description`.
-The description owns the trigger and non-trigger conditions. The body must
-contain these sections:
+Each protocol uses YAML frontmatter with required `name` and `description`.
+Routable protocols also own structured `triggers`, `non_triggers`, and
+`applies_to` arrays in that same frontmatter. Arrays use inline JSON syntax so
+the zero-dependency parser has one deterministic representation. No Registry
+mapping file may redefine them. The body must contain these sections:
 
 - `Goal`
 - `Required context`

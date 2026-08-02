@@ -1,0 +1,33 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "compact",
+  "task_id": "replace-with-task-id",
+  "title": "Replace with a concise task title",
+  "requirement": {
+    "summary": "Replace with the human-owned requirement this task serves.",
+    "source_refs": []
+  },
+  "scope": {
+    "include_paths": [
+      "replace/with/admitted/path"
+    ],
+    "exclude_paths": []
+  },
+  "acceptance_signals": [
+    "Replace with one observable acceptance signal."
+  ],
+  "validation_commands": [
+    "Replace with one repository validation command."
+  ],
+  "owner": "Replace with accountable human role",
+  "risk": {
+    "level": "low",
+    "items": []
+  },
+  "decision": {
+    "state": "draft",
+    "decided_by": "Replace with accountable human role",
+    "rationale": "Record why the task is draft, admitted, or paused."
+  }
+}

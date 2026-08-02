@@ -1,0 +1,56 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "document-supporting-work",
+  "title": "Document one supporting workflow",
+  "requirement": {
+    "summary": "Capture a small supporting workflow without changing runtime behavior.",
+    "source_refs": []
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": [
+      "docs/development-plan.md"
+    ],
+    "rationale": "This improves delivery documentation but does not define the product core."
+  },
+  "goal": "Produce a bounded documentation update for human review.",
+  "non_goals": [
+    "Do not change runtime code."
+  ],
+  "scope": {
+    "include_paths": [
+      "docs"
+    ],
+    "exclude_paths": [
+      "src"
+    ]
+  },
+  "architecture_refs": [],
+  "acceptance_signals": [
+    "The draft remains read-only and makes missing context visible."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_task_contract -v"
+  ],
+  "owner": "Documentation owner",
+  "risk": {
+    "level": "low",
+    "items": []
+  },
+  "approval": {
+    "required": true,
+    "status": "pending",
+    "owner": "Documentation owner",
+    "evidence_refs": []
+  },
+  "stop_conditions": [
+    "Stop before implementation until the task is admitted."
+  ],
+  "decision": {
+    "state": "draft",
+    "decided_by": "Documentation owner",
+    "rationale": "The task needs requirement provenance and architecture applicability review."
+  }
+}

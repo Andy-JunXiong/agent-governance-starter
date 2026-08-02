@@ -1,6 +1,9 @@
 ---
 name: incident-response
 description: Triage and contain an operational failure using evidence-first diagnosis, narrow remediation, and explicit escalation boundaries. Use when an alert, production error, failing CI check, smoke-test failure, or service degradation needs investigation. Do not use for routine feature development, planned deployment, or speculative architecture work.
+triggers: ["incident.response_requested"]
+non_triggers: ["task.admitted"]
+applies_to: ["incident"]
 ---
 
 # Incident Response

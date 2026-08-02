@@ -1,0 +1,100 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-fresh-evidence",
+  "title": "Implement fresh validation evidence and completion reconciliation",
+  "requirement": {
+    "summary": "Continue the reviewed development-governance plan by preventing a coding agent from claiming verified completion without evidence bound to the exact governed snapshot.",
+    "source_refs": [
+      "docs/proposals/2026-08-02-agentgov-product-and-architecture-plan.zh-CN.md",
+      "docs/development-plan.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0009-govern-coding-agents-during-development.md"
+    ],
+    "rationale": "Fresh validation and completion reconciliation close the development-time governance loop and create trustworthy inputs for the later Monitor."
+  },
+  "goal": "Bind declared validation commands to canonical task and Git snapshots, reconcile completion without false verified claims, and append privacy-bounded local governance events.",
+  "non_goals": [
+    "Do not build the HTML Dashboard, GitHub export, background hooks, daemon, automatic remediation, merge, deployment, or release behavior.",
+    "Do not treat passing validation as proof that requirements or architecture are correct.",
+    "Do not persist source content, command text, validation output, credentials, or absolute user paths in evidence or events.",
+    "Do not implement the final automated installation and update UX in this slice."
+  ],
+  "scope": {
+    "include_paths": [
+      "README.md",
+      "STATUS.md",
+      "docs/development-evidence.md",
+      "docs/development-log/2026-08-02.md",
+      "docs/development-plan.md",
+      "governance/tasks/p0-fresh-evidence.json",
+      "schemas/development-completion.schema.json",
+      "schemas/development-evidence.schema.json",
+      "schemas/governance-event.schema.json",
+      "src/agentgov/cli.py",
+      "src/agentgov/development_evidence.py",
+      "src/agentgov/event_store.py",
+      "src/agentgov/git_snapshot.py",
+      "tests/test_development_evidence.py",
+      "tests/test_event_store.py",
+      "tests/test_git_snapshot.py",
+      "tests/test_portfolio_docs.py"
+    ],
+    "exclude_paths": [
+      ".github",
+      "release",
+      "src/agentgov/upgrade_writer.py"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0009-govern-coding-agents-during-development.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/specs/fresh-validation-evidence-v1.md"
+  ],
+  "acceptance_signals": [
+    "Canonical snapshots cover committed-since-base, staged, unstaged, rename, and non-ignored untracked facts without storing source content.",
+    "Untracked .agentgov state and ignored build outputs do not invalidate evidence, while tracked changes and non-ignored validation artifacts do.",
+    "Both commit-before-validation and validate-before-commit workflows can verify when the validation-to-finish snapshot is unchanged.",
+    "Task, HEAD, index, worktree, rename, or non-ignored untracked mutations after validation prevent verified completion with actionable reasons.",
+    "Governance events are append-only, repository-local, privacy-bounded, and cannot grant Git or deployment authority.",
+    "The complete repository suite passes."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_git_snapshot tests.test_event_store tests.test_development_evidence -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check repository ."
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "high",
+    "items": [
+      "An incomplete digest could allow stale or unrelated validation to appear fresh.",
+      "Tool-generated local state could invalidate its own evidence or leak sensitive material.",
+      "Executing a declared validation command crosses a deliberate local execution boundary and must never imply merge or deployment authority."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": [
+      "docs/proposals/2026-08-02-agentgov-product-and-architecture-plan.zh-CN.md"
+    ]
+  },
+  "stop_conditions": [
+    "Stop if snapshot calculation requires modifying the worktree, index, branch, or history.",
+    "Stop if evidence cannot exclude local AgentGov state without also hiding tracked repository changes.",
+    "Stop if persisted records require source content, raw command text, raw validation output, credentials, or absolute user paths.",
+    "Stop if an advisory requirement or architecture judgment would be needed to claim deterministic verification."
+  ],
+  "decision": {
+    "state": "admitted",
+    "decided_by": "Human product owner",
+    "rationale": "The user explicitly directed development to continue after the reviewed Phase 2 core was completed."
+  }
+}

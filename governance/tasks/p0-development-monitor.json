@@ -1,0 +1,97 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-development-monitor",
+  "title": "Implement the local development governance Monitor",
+  "requirement": {
+    "summary": "Continue the reviewed plan by turning privacy-bounded development governance events into an honest local Monitor that shows when governance ran and what was observed.",
+    "source_refs": [
+      "docs/proposals/2026-08-02-agentgov-product-and-architecture-plan.zh-CN.md",
+      "docs/development-plan.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0009-govern-coding-agents-during-development.md"
+    ],
+    "rationale": "The Monitor completes the initial Govern, Observe, Monitor product loop without moving authority into a dashboard."
+  },
+  "goal": "Generate a self-contained static Overview, Activity Timeline, and Task Detail dashboard from validated local governance events with explicit observation and claim limits.",
+  "non_goals": [
+    "Do not build a central SaaS service, GitHub Pages deployment, event export, cross-machine merge, authentication, approval controls, or governance-file editing buttons.",
+    "Do not claim causal benefit, ROI, requirement correctness, architecture correctness, or complete development history.",
+    "Do not implement exported_development or combined data ingestion before the separate redacted export contract exists.",
+    "Do not add background hooks, a daemon, automatic GitHub Actions upload, commit, merge, deployment, or release behavior."
+  ],
+  "scope": {
+    "include_paths": [
+      "README.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-02.md",
+      "docs/development-monitor.md",
+      "docs/development-plan.md",
+      "governance/tasks/p0-development-monitor.json",
+      "schemas/development-monitor.schema.json",
+      "schemas/governance-event.schema.json",
+      "src/agentgov/cli.py",
+      "src/agentgov/development_evidence.py",
+      "src/agentgov/development_monitor.py",
+      "src/agentgov/event_store.py",
+      "tests/test_development_evidence.py",
+      "tests/test_development_monitor.py",
+      "tests/test_event_store.py",
+      "tests/test_portfolio_docs.py"
+    ],
+    "exclude_paths": [
+      ".github",
+      "release",
+      "src/agentgov/upgrade_writer.py"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0009-govern-coding-agents-during-development.md",
+    "docs/adr/INVARIANTS.md"
+  ],
+  "acceptance_signals": [
+    "Overview, Activity Timeline, and Task Detail answer what ran, when, why, by whom, what was observed, and the latest recorded outcome within the declared observation scope.",
+    "Every dashboard displays local_session or ci_only observation scope, source interval, event count, missing sources, and observed, inferred, and unknown claim layers.",
+    "CI-only data cannot display cross-stage discovery comparisons and cannot include non-CI actors.",
+    "Invalid or conflicting duplicate events fail closed rather than silently disappearing; identical duplicates are deduplicated deterministically.",
+    "HTML is self-contained, escapes untrusted event text, performs no external requests, and contains no approval or governance mutation controls.",
+    "Default output remains untracked .agentgov local state and does not invalidate fresh evidence.",
+    "The complete repository suite passes."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_development_monitor tests.test_event_store tests.test_development_evidence -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check repository ."
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "medium",
+    "items": [
+      "A dashboard could imply complete history when only local or CI events are visible.",
+      "Unescaped event metadata could create an unsafe generated HTML file.",
+      "Metrics could be mislabeled as causal effectiveness or governance approval."
+    ]
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "owner": "Human product owner",
+    "evidence_refs": []
+  },
+  "stop_conditions": [
+    "Stop if the Dashboard requires source content, raw validation output, credentials, absolute user paths, or external telemetry.",
+    "Stop if missing local or CI history cannot be shown honestly through observation-scope limits.",
+    "Stop if a view would turn inferred handling, effectiveness, or semantic correctness into an observed fact.",
+    "Stop if generation would overwrite a tracked or non-AgentGov-owned file without separate authority."
+  ],
+  "decision": {
+    "state": "admitted",
+    "decided_by": "Human product owner",
+    "rationale": "The user explicitly directed development to continue after the Phase 3 evidence and local event core was completed."
+  }
+}

@@ -1,6 +1,9 @@
 ---
 name: context-first-review
 description: Review repository-aware proposals by verifying paths, implementation boundaries, and conflicts before recommending action. Use when an architecture brief, migration proposal, prompt proposal, external analysis, or cross-module plan makes claims about the current repository. Do not use for trivial edits, isolated bug fixes with no proposal to assess, or conceptual brainstorming with no repository claims.
+triggers: ["architecture.candidate"]
+non_triggers: []
+applies_to: ["development_task"]
 ---
 
 # Context-First Review

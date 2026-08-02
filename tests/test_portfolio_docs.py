@@ -6,6 +6,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 README = ROOT / "README.md"
 CASE_STUDY = ROOT / "docs/case-study.md"
+ARCHITECTURE_DRIFT_CASE = (
+    ROOT / "docs/case-studies/0001-pr-center-architecture-drift.md"
+)
+PRODUCT_ARCHITECTURE_PLAN = (
+    ROOT / "docs/proposals/2026-08-02-agentgov-product-and-architecture-plan.zh-CN.md"
+)
+TRIGGER_ROUTING_SPEC = ROOT / "docs/specs/development-trigger-routing-v1.md"
+FRESH_EVIDENCE_SPEC = ROOT / "docs/specs/fresh-validation-evidence-v1.md"
+DEVELOPMENT_EVENT_EXPORT = ROOT / "docs/development-event-export.md"
 DEMO_ASSET = ROOT / "docs/assets/agentgov-demo.svg"
 
 
@@ -165,6 +174,18 @@ class PortfolioDocumentationTests(unittest.TestCase):
     def test_prominent_local_navigation_targets_exist(self) -> None:
         required_paths = (
             "docs/case-study.md",
+            "docs/case-studies/0001-pr-center-architecture-drift.md",
+            "docs/development-task-contract.md",
+            "docs/development-context.md",
+            "docs/development-session.md",
+            "docs/development-scope-check.md",
+            "docs/development-evidence.md",
+            "docs/development-event-export.md",
+            "docs/development-monitor.md",
+            "docs/experiments/installed-development-governance-pilot.md",
+            "docs/proposals/2026-08-02-agentgov-product-and-architecture-plan.zh-CN.md",
+            "docs/specs/development-trigger-routing-v1.md",
+            "docs/specs/fresh-validation-evidence-v1.md",
             "docs/governance-model.md",
             "docs/v0.1-adoption-rehearsal.md",
             "docs/ai-radar-extraction-map.md",
@@ -173,6 +194,15 @@ class PortfolioDocumentationTests(unittest.TestCase):
             "governance/capability.schema.json",
             "evaluation/schemas/evaluation-manifest.schema.json",
             "schemas/repository-report.schema.json",
+            "schemas/development-task.schema.json",
+            "schemas/development-context.schema.json",
+            "schemas/development-session.schema.json",
+            "schemas/development-scope-report.schema.json",
+            "schemas/development-evidence.schema.json",
+            "schemas/development-completion.schema.json",
+            "schemas/governance-event.schema.json",
+            "schemas/development-event-export.schema.json",
+            "schemas/development-monitor.schema.json",
             "docs/consumer-ci.md",
             "docs/upgrade-pr-automation.md",
             "docs/benefit-monitor.md",
@@ -206,6 +236,117 @@ class PortfolioDocumentationTests(unittest.TestCase):
         self.assertIn("stable integration boundary", text)
         self.assertIn("product hypothesis", text)
         self.assertNotRegex(text, r"\b\d+%")
+
+    def test_architecture_drift_case_separates_evidence_from_judgment(self) -> None:
+        text = ARCHITECTURE_DRIFT_CASE.read_text(encoding="utf-8")
+
+        for phrase in (
+            "Case: `AG-DRIFT-001`",
+            "deterministic history plus advisory interpretation",
+            "The original requirement did not change",
+            "This case is the first acceptance scenario",
+            "before PR creation",
+        ):
+            self.assertIn(phrase, text)
+        self.assertIn("must not be emitted\nas a deterministic failure", text)
+        self.assertIn("ADR-0009", text)
+
+    def test_installed_development_pilot_preserves_exact_evidence_and_claim_limits(self) -> None:
+        text = (
+            ROOT / "docs/experiments/installed-development-governance-pilot.md"
+        ).read_text(encoding="utf-8")
+
+        for phrase in (
+            "9ead26aaebe84317723018bf4f880100e513a3873b08bfb33917ec7beb2a884b",
+            "no AI Radar code",
+            "actual consumption",
+            "Invalid Skill gate",
+            "Validation-artifact gate",
+            "needs_evidence",
+            "verified",
+            "`partial` history",
+            "not an uncoached human study",
+            "one run cannot",
+            "0.3.0.dev0",
+        ):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, text)
+        self.assertNotRegex(text, r"C:\\Users\\")
+
+    def test_product_plan_connects_governance_observation_and_monitoring(self) -> None:
+        text = PRODUCT_ARCHITECTURE_PLAN.read_text(encoding="utf-8")
+
+        for phrase in (
+            "Govern -> Observe -> Monitor",
+            "Governance Registry",
+            "Governance Router",
+            "governance-event",
+            "Monitor / Dashboard",
+            "AGENTS.md",
+            "AI_CONTEXT.md",
+            "INVARIANTS.md",
+            "Agent Skills",
+            "PR/CI",
+            "GitHub Release",
+            "给 Claude 的 Review Prompt",
+        ):
+            self.assertIn(phrase, text)
+        self.assertIn("不能自动宣称", text)
+        self.assertIn("不得修改源码、Git index 或分支", text)
+        self.assertIn("不在 v1 建立中央 SaaS telemetry 服务", text)
+        self.assertIn("不落 `governance/registry.json`", text)
+        self.assertIn("自然语言 scope 不参与 FAIL", text)
+        self.assertIn("v1 禁止全文语义推断", text)
+        self.assertIn("CI Dashboard 只能诚实显示 `ci_only`", text)
+        self.assertIn("change-set digest", text)
+        self.assertIn("文件 mtime 不能作为主要 freshness oracle", text)
+        self.assertIn("`compact` 和 `standard` profile", text)
+        self.assertIn("一个真实 Coding Agent 使用 context output", text)
+        self.assertIn("Revision 3", text)
+        self.assertIn("每个 working copy 一个 active task", text)
+        self.assertIn("Phase 3 hard gate", text)
+
+    def test_split_specs_fix_phase_two_and_three_policy_semantics(self) -> None:
+        trigger_text = TRIGGER_ROUTING_SPEC.read_text(encoding="utf-8")
+        evidence_text = FRESH_EVIDENCE_SPEC.read_text(encoding="utf-8")
+
+        for phrase in (
+            "path-segment boundaries",
+            "must not use raw string `startswith`",
+            "Exclusion always overrides inclusion",
+            "both its old and new path",
+            "Natural-language descriptions",
+            "`architecture.candidate`",
+            "Required Phase 2 policy tests",
+        ):
+            self.assertIn(phrase, trigger_text)
+
+        for phrase in (
+            "`comparison_base_sha`",
+            "`snapshot_head_sha`",
+            "git ls-files --others --exclude-standard",
+            "tracked changes are never hidden",
+            "changed tracked `.gitignore`",
+            "`S0` immediately before",
+            "edit -> commit -> validate -> govern finish",
+            "A raw “digest mismatch” is insufficient",
+            "Required Phase 3 policy tests",
+        ):
+            self.assertIn(phrase, evidence_text)
+
+    def test_development_export_docs_preserve_privacy_and_claim_boundaries(self) -> None:
+        text = DEVELOPMENT_EVENT_EXPORT.read_text(encoding="utf-8")
+
+        for phrase in (
+            "metadata_only_v1",
+            "exact `EXPORT`",
+            "Actor labels and local evidence references were removed",
+            "cross-stage finding identity",
+            "not telemetry",
+            "does not add the artifact download, upload, retention, or workflow",
+        ):
+            self.assertIn(phrase, text)
+        self.assertNotRegex(text, r"C:\\Users\\")
 
 
 if __name__ == "__main__":

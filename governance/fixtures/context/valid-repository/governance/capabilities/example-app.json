@@ -1,0 +1,43 @@
+{
+  "contract": "agentgov.ai-capability",
+  "schema_version": "1.0",
+  "name": "example-app",
+  "version": "0.1.0",
+  "purpose": "Provide the bounded fixture application behavior used by context-selection tests.",
+  "capability_type": "decision_support",
+  "implementation_mode": "deterministic",
+  "decision_authority": "assess_claim",
+  "autonomy_level": "deterministic_gate",
+  "task_type": "fixture_application",
+  "triggers": [
+    "A fixture task changes the example application"
+  ],
+  "not_for": [
+    "Authorizing deployment or unrelated repository work"
+  ],
+  "called_by": [
+    "src"
+  ],
+  "contracts": {
+    "input_schema": "governance/contracts/example-app.input.schema.json",
+    "output_schema": "governance/contracts/example-app.output.schema.json"
+  },
+  "owner": "Fixture owner",
+  "risk_level": "low",
+  "human_review": {
+    "required": false,
+    "stages": []
+  },
+  "evaluation": {
+    "readiness": "needs_seed_cases",
+    "evidence_refs": [
+      "tests/test_app.py"
+    ]
+  },
+  "provenance": {
+    "origin": "authored",
+    "source_refs": [
+      "src"
+    ]
+  }
+}

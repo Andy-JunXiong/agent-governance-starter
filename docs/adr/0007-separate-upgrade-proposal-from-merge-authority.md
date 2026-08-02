@@ -21,7 +21,8 @@ Adopt a two-stage boundary:
 1. a read-only planner validates the stable release manifest, compatibility,
    current managed workflow, exact before/after hashes, and proposed PR text;
 2. a separately authorized GitHub integration may materialize that exact plan
-   as one managed-workflow commit and Draft PR, but it may never merge it.
+   as a bounded managed-workflow change set and Draft PR, but it may never
+   merge it.
 
 `agentgov plan upgrade-pr` produces `current`, `candidate`, or `blocked` and
 performs no repository or Git write. `agentgov create upgrade-pr` is a separate
@@ -30,7 +31,7 @@ write boundary restricted to scheduled or explicitly opted-in dispatch events.
 ## Owns
 
 - upgrade PR plan schema and state semantics;
-- fixed managed-workflow target scope;
+- fixed two-path managed-workflow target scope;
 - stable release and SHA-256 requirements;
 - compatibility, customization, and repository-migration blocking rules;
 - exact proposal branch, title, body, content, and hashes;
@@ -48,8 +49,10 @@ write boundary restricted to scheduled or explicitly opted-in dispatch events.
 
 - A repository-owned workflow can create a reviewable upgrade PR without a person copying
   release details between repositories.
-- Customized workflows and releases with repository migrations stop for human
-  handling instead of being overwritten.
+- Customized workflows and unsupported repository migrations stop for human
+  handling instead of being overwritten. The planner may render the named
+  `consumer-ci-v2` bootstrap for review, but the authenticated writer cannot
+  apply its file creation.
 - An exact existing branch or PR is reusable after an interrupted run; drift or
   unrelated changes block instead of being overwritten.
 
@@ -67,15 +70,17 @@ write boundary restricted to scheduled or explicitly opted-in dispatch events.
 1. Ship and pilot the read-only plan contract. (complete in 0.2)
 2. Add an opt-in GitHub workflow with only `contents: write` and
    `pull-requests: write` for the proposal job. (implemented for 0.3)
-3. Revalidate remote hashes immediately before one branch/PR write. (implemented)
+3. Revalidate all remote hashes immediately before one bounded branch/PR
+   write. (implemented)
 4. Bootstrap one pilot through a migration-declared 0.3 review. (pending release)
 5. Keep merge and every downstream transition human-controlled. (invariant)
 
 ## Validation
 
 Deterministic tests cover current, candidate, customized, incompatible,
-migration-declared, malformed-manifest, no-write, exact write, remote drift,
-unrelated branch content, idempotence, recovery, and event authorization states.
+migration-declared, malformed-manifest, no-write, exact one- and two-workflow
+writes, partial-write recovery, remote drift, unrelated branch content,
+idempotence, and event authorization states.
 Human review must confirm that a repository owner accepts installation of the
 PR creator and enables the repository permission needed by `GITHUB_TOKEN`.
 

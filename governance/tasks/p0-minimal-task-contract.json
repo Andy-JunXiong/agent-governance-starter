@@ -1,0 +1,94 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-minimal-task-contract",
+  "title": "Implement the minimum development-time task contract",
+  "requirement": {
+    "summary": "Continue development from the corrected plan by governing coding-agent work before and during implementation.",
+    "source_refs": [
+      "docs/case-studies/0001-pr-center-architecture-drift.md",
+      "docs/development-plan.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0009-govern-coding-agents-during-development.md"
+    ],
+    "rationale": "This is the first product-defining P0 slice after correcting the PR-center architecture drift."
+  },
+  "goal": "Provide a strict, read-only, vendor-neutral contract that bounds one coding-agent development task.",
+  "non_goals": [
+    "Do not compare Git changes with the admitted scope in this slice.",
+    "Do not automatically select or judge architecture relevance.",
+    "Do not implement completion reconciliation, hooks, commits, or remote writes."
+  ],
+  "scope": {
+    "include_paths": [
+      "schemas/development-task.schema.json",
+      "templates/development-task.template.json",
+      "templates/README.md",
+      "governance/tasks/p0-minimal-task-contract.json",
+      "governance/fixtures/tasks",
+      "src/agentgov/task_contract.py",
+      "src/agentgov/cli.py",
+      "tests/test_task_contract.py",
+      "tests/test_cli.py",
+      "tests/test_package.py",
+      "tests/test_portfolio_docs.py",
+      "tests/test_templates.py",
+      "README.md",
+      "STATUS.md",
+      "docs/development-task-contract.md",
+      "docs/development-plan.md",
+      "docs/open-decisions-2026-08-02.md",
+      "docs/development-log/2026-08-02.md"
+    ],
+    "exclude_paths": [
+      ".github",
+      "release",
+      "src/agentgov/upgrade_writer.py"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0009-govern-coding-agents-during-development.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/governance-model.md"
+  ],
+  "acceptance_signals": [
+    "A valid admitted task produces deterministic PASS findings and an explicit objective-alignment ADVISORY.",
+    "Missing requirement provenance or architecture context remains visible without being mislabeled as objective failure.",
+    "Invalid structure, unsafe references, and inconsistent admission or approval states fail deterministically.",
+    "The task check does not modify repository files, Git state, branches, or remote systems.",
+    "Focused and complete test suites pass."
+  ],
+  "validation_commands": [
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check repository ."
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "medium",
+    "items": [
+      "A premature schema could overfit AgentGov or turn semantic judgment into deterministic policy.",
+      "Adding the task check to repository-wide validation before its interface is proven could expand the stable contract too early."
+    ]
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "owner": "Human product owner",
+    "evidence_refs": []
+  },
+  "stop_conditions": [
+    "Stop if the contract requires AgentGov to infer human intent or architecture quality as an objective fact.",
+    "Stop if the slice needs repository writes, Git mutation, runtime hooks, or expanded external authority.",
+    "Stop if existing unrelated worktree changes cannot be preserved."
+  ],
+  "decision": {
+    "state": "admitted",
+    "decided_by": "Human product owner",
+    "rationale": "The user explicitly requested continued development according to the corrected P0 plan."
+  }
+}

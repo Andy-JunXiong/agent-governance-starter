@@ -1,0 +1,106 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-guided-govern-start",
+  "title": "Implement the guided development governance session",
+  "requirement": {
+    "summary": "Continue the reviewed product plan by replacing repeated low-level task, context, base, check, and finish arguments with one confirmed govern start workflow and a safe working-copy-local active task pointer.",
+    "source_refs": [
+      "docs/proposals/2026-08-02-agentgov-product-and-architecture-plan.zh-CN.md",
+      "docs/development-plan.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0009-govern-coding-agents-during-development.md"
+    ],
+    "rationale": "A development-time governance product must make the governed path easier than manually composing its low-level contracts while preserving explicit human admission and authority boundaries."
+  },
+  "goal": "Add a previewable govern start flow that discovers or creates one compact admitted task, selects governance, records the comparison base, and lets govern check and finish safely resume that task.",
+  "non_goals": [
+    "Do not add Git hooks, a daemon, IDE mutation, automatic commits, pushes, pull requests, merge, deployment, publishing, or release behavior.",
+    "Do not silently infer semantic scope, overwrite an existing task contract, or replace a different active task without explicit confirmation.",
+    "Do not turn the working-copy session pointer into a second source of truth for task or governance content.",
+    "Do not remove the existing low-level task, context, scope, evidence, or Monitor commands."
+  ],
+  "scope": {
+    "include_paths": [
+      "README.md",
+      "STATUS.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-log/2026-08-02.md",
+      "docs/development-context.md",
+      "docs/development-evidence.md",
+      "docs/development-monitor.md",
+      "docs/development-plan.md",
+      "docs/development-session.md",
+      "docs/development-scope-check.md",
+      "governance/tasks/p0-guided-govern-start.json",
+      "schemas/development-monitor.schema.json",
+      "schemas/development-session.schema.json",
+      "schemas/governance-event.schema.json",
+      "src/agentgov/change_scope.py",
+      "src/agentgov/cli.py",
+      "src/agentgov/development_context.py",
+      "src/agentgov/development_monitor.py",
+      "src/agentgov/development_session.py",
+      "src/agentgov/event_store.py",
+      "tests/test_development_evidence.py",
+      "tests/test_development_monitor.py",
+      "tests/test_development_session.py",
+      "tests/test_change_scope.py",
+      "tests/test_event_store.py",
+      "tests/test_portfolio_docs.py"
+    ],
+    "exclude_paths": [
+      ".github",
+      "release",
+      "src/agentgov/upgrade_writer.py"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0009-govern-coding-agents-during-development.md",
+    "docs/adr/INVARIANTS.md"
+  ],
+  "acceptance_signals": [
+    "govern start can preview and explicitly confirm either one discovered admitted task or a newly scaffolded compact task with machine-checkable include paths and validation commands.",
+    "A strict untracked .agentgov/current-task.json stores only working-copy session facts and never silently replaces a different active task.",
+    "The start event records the selected governance references without claiming that a coding agent consumed them.",
+    "govern check and govern finish can default to the active task; finish also defaults to the recorded comparison base and runs fresh validation.",
+    "Task drift after start fails closed and instructs the user to restart governance instead of silently widening scope.",
+    "Dry-run and non-interactive execution do not write, and the complete repository suite passes."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_development_session tests.test_event_store tests.test_development_monitor tests.test_development_evidence -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check repository ."
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "medium",
+    "items": [
+      "Automatic task discovery could select the wrong task when several admitted tasks exist.",
+      "A stale or tampered session pointer could make later commands govern the wrong scope.",
+      "A guided write workflow could imply authority that the human did not grant."
+    ]
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "owner": "Human product owner",
+    "evidence_refs": []
+  },
+  "stop_conditions": [
+    "Stop if start cannot disclose every target and require exact interactive confirmation before writing.",
+    "Stop if an existing task, tracked local-state file, symbolic link, Git index, source file, or branch would be overwritten or modified implicitly.",
+    "Stop if check or finish could proceed after the admitted task content changes without a new start.",
+    "Stop if automatic discovery needs semantic guessing or chooses among multiple eligible tasks."
+  ],
+  "decision": {
+    "state": "admitted",
+    "decided_by": "Human product owner",
+    "rationale": "The user explicitly directed development to continue into the next productization phase after the local Govern, Observe, and Monitor loop was completed."
+  }
+}

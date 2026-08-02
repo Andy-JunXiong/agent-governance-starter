@@ -20,7 +20,7 @@
     "authority_boundary"
   ],
   "properties": {
-    "contract_version": {"const": "1.0"},
+    "contract_version": {"const": "1.1"},
     "tool": {
       "type": "object",
       "additionalProperties": false,
@@ -95,15 +95,23 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "changed_path",
+        "changed_paths",
         "merge_authorized",
         "release_authorized",
         "deploy_authorized",
         "production_execution_authorized"
       ],
       "properties": {
-        "changed_path": {
-          "enum": [".github/workflows/agentgov.yml", null]
+        "changed_paths": {
+          "type": "array",
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              ".github/workflows/agentgov.yml",
+              ".github/workflows/agentgov-upgrade.yml"
+            ]
+          }
         },
         "merge_authorized": {"const": false},
         "release_authorized": {"const": false},

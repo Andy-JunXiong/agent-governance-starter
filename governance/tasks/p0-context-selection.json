@@ -1,0 +1,104 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-context-selection",
+  "title": "Implement derived governance context selection",
+  "requirement": {
+    "summary": "Start Phase 1 by giving a coding agent task-relevant repository governance before implementation.",
+    "source_refs": [
+      "docs/proposals/2026-08-02-agentgov-product-and-architecture-plan.zh-CN.md",
+      "docs/development-plan.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0009-govern-coding-agents-during-development.md"
+    ],
+    "rationale": "This is the first Phase 1 vertical slice approved after the product and architecture review."
+  },
+  "goal": "Derive a read-only repository governance registry and stable task-specific context output with provenance and selection reasons.",
+  "non_goals": [
+    "Do not implement changed-file scope failure, event persistence, fresh evidence, dashboard, hooks, or automatic governance-file edits.",
+    "Do not add an editable registry or use full-text semantic inference to select architecture.",
+    "Do not commit, push, publish, release, or modify AI Radar."
+  ],
+  "scope": {
+    "include_paths": [
+      "README.md",
+      "STATUS.md",
+      "agent-skills",
+      "docs/ai-radar-extraction-map.md",
+      "docs/development-context.md",
+      "docs/development-log/2026-08-02.md",
+      "docs/development-plan.md",
+      "docs/development-task-contract.md",
+      "governance/fixtures/context",
+      "governance/fixtures/tasks",
+      "governance/tasks/p0-context-selection.json",
+      "schemas/development-context.schema.json",
+      "schemas/development-task.schema.json",
+      "src/agentgov/agent_skills.py",
+      "src/agentgov/cli.py",
+      "src/agentgov/development_context.py",
+      "src/agentgov/task_contract.py",
+      "templates/README.md",
+      "templates/development-task.template.json",
+      "tests/test_agent_skills.py",
+      "tests/test_development_context.py",
+      "tests/test_package.py",
+      "tests/test_portfolio_docs.py",
+      "tests/test_task_contract.py",
+      "tests/test_templates.py"
+    ],
+    "exclude_paths": [
+      ".github",
+      "release",
+      "src/agentgov/upgrade_writer.py"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0009-govern-coding-agents-during-development.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/governance-model.md",
+    "docs/specs/development-trigger-routing-v1.md"
+  ],
+  "acceptance_signals": [
+    "An admitted task produces deterministic JSON, Markdown, and terminal context containing only selected governance with reason and provenance.",
+    "Compact and standard task profiles validate through the same task contract without allowing natural-language scope to become a failure rule.",
+    "Skill triggers and applicability remain owned by SKILL.md rather than a registry mapping file.",
+    "A real Coding Agent consumes the generated context for one small task and the observed adherence and noise limitations are recorded.",
+    "Focused and complete tests pass and context selection does not modify repository or Git state."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_development_context tests.test_task_contract tests.test_agent_skills -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check repository ."
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "medium",
+    "items": [
+      "Over-selection could make context too noisy for a coding agent.",
+      "A hidden routing map would duplicate artifact-owned declarations.",
+      "Changing the preview task schema requires migrating all repository fixtures together."
+    ]
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "owner": "Human product owner",
+    "evidence_refs": []
+  },
+  "stop_conditions": [
+    "Stop if selection requires semantic architecture judgment to be presented as deterministic.",
+    "Stop if the design requires a persistent editable Registry or automatic repository mutation.",
+    "Stop if unrelated user worktree changes cannot be preserved."
+  ],
+  "decision": {
+    "state": "admitted",
+    "decided_by": "Human product owner",
+    "rationale": "The user approved the reviewed plan and explicitly instructed development to start."
+  }
+}

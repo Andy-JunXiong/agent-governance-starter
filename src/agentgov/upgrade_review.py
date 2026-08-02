@@ -21,7 +21,7 @@ from agentgov.upgrade_pr import (
 )
 
 
-UPGRADE_REVIEW_CONTRACT_VERSION = "1.0"
+UPGRADE_REVIEW_CONTRACT_VERSION = "1.1"
 
 
 class UpgradeReviewError(Exception):
@@ -80,18 +80,28 @@ def _workflow_patch(root: Path, plan: object) -> str:
     changes = plan.changes  # type: ignore[attr-defined]
     if not changes:
         return ""
-    change = changes[0]
-    before = (root / change.path).read_text(encoding="utf-8").splitlines(keepends=True)
-    after = change.content.splitlines(keepends=True)
-    path = change.path.as_posix()
-    return "".join(
-        difflib.unified_diff(
-            before,
-            after,
-            fromfile=f"a/{path}",
-            tofile=f"b/{path}",
+    patches: list[str] = []
+    for change in changes:
+        before = (
+            []
+            if change.action == "create"
+            else (root / change.path)
+            .read_text(encoding="utf-8")
+            .splitlines(keepends=True)
         )
-    )
+        after = change.content.splitlines(keepends=True)
+        path = change.path.as_posix()
+        patches.append(
+            "".join(
+                difflib.unified_diff(
+                    before,
+                    after,
+                    fromfile=("/dev/null" if change.action == "create" else f"a/{path}"),
+                    tofile=f"b/{path}",
+                )
+            )
+        )
+    return "".join(patches)
 
 
 def _review_document(
@@ -106,7 +116,17 @@ def _review_document(
     candidate = plan_state is UpgradePlanState.CANDIDATE
     current = plan_state is UpgradePlanState.CURRENT
     no_failures = not report.has_failures
-    bounded_change = (candidate and len(plan.changes) == 1) or (current and not plan.changes)  # type: ignore[attr-defined]
+    allowed_paths = {
+        ".github/workflows/agentgov.yml",
+        ".github/workflows/agentgov-upgrade.yml",
+    }
+    change_paths = [change.path.as_posix() for change in plan.changes]  # type: ignore[attr-defined]
+    bounded_change = (
+        candidate
+        and 1 <= len(change_paths) <= 2
+        and len(change_paths) == len(set(change_paths))
+        and set(change_paths).issubset(allowed_paths)
+    ) or (current and not change_paths)
     gates: tuple[Mapping[str, str], ...] = (
         _gate(
             "stable-release-manifest",
@@ -130,7 +150,7 @@ def _review_document(
             "bounded-workflow-change",
             bounded_change,
             (
-                "proposal contains one exact managed workflow change"
+                f"proposal contains {len(change_paths)} exact managed workflow change(s)"
                 if candidate
                 else "no workflow change is required"
                 if current
@@ -156,6 +176,7 @@ def _review_document(
     changes = [
         {
             "path": change.path.as_posix(),
+            "action": change.action,
             "before_sha256": change.before_sha256,
             "after_sha256": change.after_sha256,
         }
@@ -237,8 +258,14 @@ def _render_markdown(document: Mapping[str, object]) -> str:
     if isinstance(changes, list) and changes:
         for change in changes:
             if isinstance(change, Mapping):
+                before = (
+                    "absent"
+                    if change["before_sha256"] is None
+                    else str(change["before_sha256"])
+                )
                 lines.append(
-                    f"- `{_escape(change['path'])}`: `{_escape(change['before_sha256'])}` → "
+                    f"- `{_escape(change['path'])}` ({_escape(change['action'])}): "
+                    f"`{_escape(before)}` → "
                     f"`{_escape(change['after_sha256'])}`"
                 )
     else:

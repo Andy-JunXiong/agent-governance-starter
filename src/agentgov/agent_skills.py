@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -9,7 +10,14 @@ from pathlib import Path
 
 _NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 _FRONTMATTER_KEY_RE = re.compile(r"^([a-z_]+):(?:\s*(.*))?$")
-_ALLOWED_FRONTMATTER = {"name", "description"}
+_REQUIRED_FRONTMATTER = {"name", "description"}
+_ALLOWED_FRONTMATTER = _REQUIRED_FRONTMATTER | {
+    "triggers",
+    "non_triggers",
+    "applies_to",
+}
+_ROUTING_FIELDS = ("triggers", "non_triggers", "applies_to")
+_ROUTING_VALUE_RE = re.compile(r"^[a-z][a-z0-9_.:-]*$")
 _REQUIRED_HEADINGS = (
     "## Goal",
     "## Required context",
@@ -37,6 +45,15 @@ class AgentSkillsReport:
     @property
     def has_failures(self) -> bool:
         return any(not finding.passed for finding in self.findings)
+
+
+@dataclass(frozen=True)
+class AgentSkillMetadata:
+    name: str
+    description: str
+    triggers: tuple[str, ...]
+    non_triggers: tuple[str, ...]
+    applies_to: tuple[str, ...]
 
 
 def _parse_frontmatter(text: str) -> tuple[dict[str, str], str, list[str]]:
@@ -83,6 +100,55 @@ def _parse_frontmatter(text: str) -> tuple[dict[str, str], str, list[str]]:
     return fields, "\n".join(lines[closing_index + 1 :]), errors
 
 
+def _routing_values(
+    fields: dict[str, str],
+    key: str,
+    errors: list[str],
+) -> tuple[str, ...]:
+    if key not in fields:
+        return ()
+    try:
+        value = json.loads(fields[key])
+    except json.JSONDecodeError:
+        errors.append(f"frontmatter {key} must be an inline JSON string array")
+        return ()
+    if not isinstance(value, list) or any(
+        not isinstance(item, str) or not item for item in value
+    ):
+        errors.append(f"frontmatter {key} must contain only non-empty strings")
+        return ()
+    if len(set(value)) != len(value):
+        errors.append(f"frontmatter {key} must contain unique items")
+    for item in value:
+        if not _ROUTING_VALUE_RE.fullmatch(item):
+            errors.append(
+                f"frontmatter {key} value {item!r} must use a portable routing identifier"
+            )
+    return tuple(value)
+
+
+def read_agent_skill_metadata(path: Path) -> AgentSkillMetadata:
+    """Read validated artifact-owned routing metadata for one skill."""
+
+    errors = validate_agent_skill(path)
+    if errors:
+        raise ValueError("; ".join(errors))
+    fields, _, _ = _parse_frontmatter(path.read_text(encoding="utf-8"))
+    routing_errors: list[str] = []
+    values = {
+        key: _routing_values(fields, key, routing_errors) for key in _ROUTING_FIELDS
+    }
+    if routing_errors:
+        raise ValueError("; ".join(routing_errors))
+    return AgentSkillMetadata(
+        name=fields["name"],
+        description=fields["description"],
+        triggers=values["triggers"],
+        non_triggers=values["non_triggers"],
+        applies_to=values["applies_to"],
+    )
+
+
 def validate_agent_skill(path: Path) -> list[str]:
     """Return contract errors for one SKILL.md path."""
 
@@ -101,7 +167,7 @@ def validate_agent_skill(path: Path) -> list[str]:
         errors.append(
             "frontmatter contains unsupported field(s): " + ", ".join(extra_fields)
         )
-    missing_fields = sorted(_ALLOWED_FRONTMATTER - set(fields))
+    missing_fields = sorted(_REQUIRED_FRONTMATTER - set(fields))
     if missing_fields:
         errors.append("frontmatter is missing field(s): " + ", ".join(missing_fields))
 
@@ -117,6 +183,22 @@ def validate_agent_skill(path: Path) -> list[str]:
             errors.append("description must state when to use the skill")
         if "do not use" not in description.lower():
             errors.append("description must state when not to use the skill")
+
+    routing = {
+        key: _routing_values(fields, key, errors) for key in _ROUTING_FIELDS
+    }
+    routing_declared = any(key in fields for key in _ROUTING_FIELDS)
+    if routing_declared:
+        missing_routing = sorted(set(_ROUTING_FIELDS) - set(fields))
+        if missing_routing:
+            errors.append(
+                "routable skill frontmatter is missing field(s): "
+                + ", ".join(missing_routing)
+            )
+        if not routing["triggers"]:
+            errors.append("routable skill frontmatter must declare at least one trigger")
+        if not routing["applies_to"]:
+            errors.append("routable skill frontmatter must declare at least one applies_to value")
 
     for heading in _REQUIRED_HEADINGS:
         if heading not in body.splitlines():

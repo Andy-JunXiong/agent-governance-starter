@@ -1,16 +1,100 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-08-02
+Last verified: 2026-08-03
 
 ## Current state
 
-- Version: stable `0.2.0`; local patch preparation `0.2.1`.
+- Version: stable `0.2.1`; future `0.3` behavior under source review.
 - Maturity: experimental and suitable for repository-level evaluation.
 - Canonical capability layout: `governance/`.
 - Legacy `prompt-governance/` input remains a bounded, read-only compatibility
   surface.
 - Merge, publish, release, and deployment remain separate human-authorized
   actions.
+
+## Product direction
+
+- ADR-0009 makes development-time governance of coding-agent requirements,
+  architecture context, implementation scope, verification evidence, and
+  completion reconciliation the product core.
+- PR and CI reporting, benefit evidence, and upgrade automation remain retained
+  backstop and delivery capabilities rather than the primary user interaction.
+- This direction was revalidated against clean scoped governance files from AI
+  Radar commit `3a9323cb2a9ef575da42d29fb17d330ef872afd3`; reuse and exclusion
+  decisions are recorded in `docs/ai-radar-extraction-map.md`.
+- Task contract 1.1 and read-only `agentgov check task` are implemented in
+  development source with low-risk compact and full standard profiles, safe
+  references, validation commands, and objective-alignment advisory review.
+- Read-only `agentgov context task` now derives an in-memory Registry and emits
+  terminal, JSON, or Markdown task context with artifact-owned Skill routing,
+  explicit references, path-linked capability governance, selection reasons,
+  source hashes, known limits, and denied mutation authority.
+- Guided `agentgov govern start` is implemented in development source. It can
+  select exactly one admitted task or preview a low-risk compact task, requires
+  exact interactive confirmation, derives the governance context, records the
+  comparison base, and writes a strict untracked single-task working-copy
+  pointer plus one immutable start event. Automatic GitHub Actions artifact
+  wiring is not implemented.
+- Read-only `agentgov check scope` now inventories staged, unstaged, deleted,
+  renamed, and non-ignored untracked paths and applies segment-aware
+  include/exclude rules. Explicit architecture references remain ADVISORY.
+  The low-level scope-only report remains working-tree-specific; explicit
+  exception records and action-loop self-reporting are not implemented yet.
+- `agentgov govern check` now appends a privacy-bounded local scope event.
+  `agentgov govern finish --base` captures canonical committed, staged,
+  unstaged, renamed, and non-ignored untracked identities, runs every declared
+  validation command, and reconciles `verified` versus `needs_evidence`.
+  Evidence and one-file events live under untracked `.agentgov/` local state;
+  tracked `.agentgov/` and `.gitignore` changes remain visible. These local
+  records are not CI-visible unless a user explicitly creates and transfers a
+  redacted development export.
+- With an active session, `govern check` defaults to its task and `govern
+  finish` defaults to its task and exact base. Changed task content fails
+  closed until a reviewed replacement start. Untracked `.agentgov/` tool state
+  is now consistently excluded by both scope and fresh-evidence inventories;
+  tracked local state remains visible.
+- `agentgov monitor development` now generates a self-contained static
+  Overview, Activity Timeline, and Task Detail from validated local, exported,
+  CI-only, or combined sources. Every output displays partial history, source
+  counts, per-event source labels, missing inputs, unavailable cross-stage
+  discovery, and separate observed, inferred, and unknown claims.
+- `agentgov export development` now previews and, after exact interactive
+  `EXPORT` confirmation, creates an immutable metadata-only bundle. It removes
+  actor labels and local evidence references; rejects CI events, sensitive
+  token/path shapes, tracked/existing/outside/symlink output, and integrity
+  drift; and grants no upload, workflow, Git, approval, or deployment authority.
+- The first exact-wheel independent development pilot is complete. A fresh
+  isolated installation routed eight relevant governance artifacts; the Coding
+  Agent read them, changed only the admitted Python source, passed scope and
+  validation, reached `verified`, and produced a four-event Monitor. The pilot
+  also preserved fail-closed evidence for an invalid Skill and unignored
+  `__pycache__` output instead of weakening checks.
+- The pilot is internal evidence, not uncoached human or general effectiveness
+  evidence. It also identified two pre-release actions: give the development
+  wheel a 0.3 identity instead of reporting stable 0.2.1, and add actionable
+  validation-artifact readiness guidance without editing `.gitignore`.
+
+## Development-source P0 preview
+
+- `schemas/development-task.schema.json` defines a strict, vendor-neutral task
+  identity with compact/standard profiles, exact scope, acceptance and
+  validation commands, owner, risk, and human decision. Standard adds parent
+  objective, goal boundaries, architecture, approval, and stop conditions.
+- `schemas/development-session.schema.json` defines the local task/base pointer;
+  task, ADR, invariant, AGENTS.md, and Skill content remain artifact-owned.
+- `agentgov check task <task.json> --repository .` validates the contract and
+  readable repository-local references without modifying repository or Git
+  state.
+- Draft and incomplete tasks retain WARN and ADVISORY findings. Admission and
+  approval inconsistencies, unsafe paths, and broken declared references fail
+  deterministically.
+- `governance/tasks/p0-minimal-task-contract.json` dogfoods the contract for
+  this slice and links `AG-DRIFT-001`, ADR-0009, and the corrected P0 plan.
+- `governance/tasks/p0-context-selection.json` admits the first Phase 1 slice;
+  `schemas/development-context.schema.json` defines its derived output.
+- This interface is not published in stable 0.2.1 and is not yet added to
+  initialization, repository-wide checking, task Markdown/JSON reporting, or
+  CI replay.
 
 ## Stable foundations
 
@@ -46,6 +130,9 @@ Last verified: 2026-08-02
   project-owner decision without applying the proposed change.
 - Managed 0.2+ consumer CI automatically publishes that upgrade review in the
   GitHub job summary and report artifact while retaining read-only permissions.
+- Future 0.3 source separates read-only governance from its schedule/dispatch
+  Draft PR writer and bounds upgrade plans to the two exact managed workflow
+  paths. This behavior is not yet published or adopted by NYC.
 - Windows and Ubuntu CI definitions for Python 3.11, 3.12, and 3.13.
 
 ## Current milestone
@@ -118,15 +205,15 @@ Pre-pilot repository governance foundation:
 
 - Taxi supplied initial cross-domain adoption evidence, but the pilot record
   and maintainer decisions are not complete.
-- Consumer CI currently reports stable-release update state but does not open
-  or merge dependency-update pull requests. Upgrade PR planning is implemented,
-  but the authenticated branch/PR writer remains intentionally absent.
-- Stable `v0.2.0` is published and is GitHub's latest release. Its wheel and
-  immutable manifest were independently digest-verified.
-- The first NYC run exposed that the managed workflow downloaded the valid
-  wheel as `agentgov.whl`, which pip rejects as an invalid wheel filename. The
-  local 0.2.1 patch preserves the canonical wheel filename and adds a regression
-  test; no NYC business or production workflow is involved.
+- Published 0.2.1 consumer CI reports stable-release update state but cannot
+  open or merge dependency-update pull requests. The future 0.3 source writer
+  remains unavailable to consumers until a separately approved release and
+  one-time workflow migration.
+- Stable `v0.2.1` is published. Its consumer workflow preserves the canonical
+  wheel filename found missing by the first NYC 0.2 run.
+- The first NYC 0.2 run exposed that pip rejects a valid wheel renamed to
+  `agentgov.whl`; stable 0.2.1 corrected the generated workflow. No NYC
+  business or production workflow was involved.
 - Benefit evidence currently compares two downloaded report snapshots. It does
   not yet observe project-test outcomes, PR disposition, runtime incidents,
   human handling time, or false-positive decisions.
@@ -144,6 +231,17 @@ Pre-pilot repository governance foundation:
 - A successful check does not prove semantic governance sufficiency.
 
 ## Validation
+
+Development-source Phase 7 validation on 2026-08-03:
+
+- 496 unit tests passed with one platform-limited skip;
+- repository self-check returned `PASS=16 WARN=2 FAIL=0 ADVISORY=4`;
+- the admitted redacted-export task returned
+  `PASS=6 WARN=0 FAIL=0 ADVISORY=1`;
+- export and four-scope Monitor CLI help rendered successfully;
+- `git diff --check` passed;
+- no commit, push, release, workflow mutation, artifact upload, or external
+  telemetry action was performed.
 
 Consumer CI pilot validation on 2026-08-01:
 

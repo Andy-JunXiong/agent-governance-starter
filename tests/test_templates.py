@@ -19,6 +19,7 @@ class GovernanceTemplateTests(unittest.TestCase):
             "INVARIANTS.template.md",
             "prompt-capability.template.json",
             "evaluation-manifest.template.json",
+            "development-task.template.json",
         }
 
         actual = {path.name for path in TEMPLATES.iterdir() if path.is_file()}
@@ -119,6 +120,21 @@ class GovernanceTemplateTests(unittest.TestCase):
 
         self.assertIs(result.status, EvaluationStatus.WARN)
         self.assertEqual(result.readiness, "needs_seed_cases")
+
+    def test_development_task_template_is_an_honest_draft(self) -> None:
+        from agentgov.task_contract import (
+            load_development_task,
+            validate_development_task_document,
+        )
+
+        task = load_development_task(TEMPLATES / "development-task.template.json")
+
+        self.assertEqual(validate_development_task_document(task), [])
+        self.assertEqual(task["profile"], "compact")
+        self.assertEqual(task["decision"]["state"], "draft")
+        self.assertEqual(task["requirement"]["source_refs"], [])
+        self.assertNotIn("architecture_refs", task)
+        self.assertEqual(len(task["validation_commands"]), 1)
 
 
 if __name__ == "__main__":
