@@ -1,0 +1,52 @@
+import re
+import unittest
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+DOCS = ROOT / "docs"
+
+
+class EvidencePortfolioTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.portfolio = (DOCS / "portfolio.html").read_text(encoding="utf-8")
+
+    def test_home_page_links_to_evidence_portfolio(self) -> None:
+        home = (DOCS / "index.html").read_text(encoding="utf-8")
+        self.assertIn('href="portfolio.html"', home)
+        self.assertIn("Explore the evidence story", home)
+
+    def test_portfolio_records_ai_radar_lineage_and_separation(self) -> None:
+        self.assertIn("https://app.ai-radar-lab.com/portfolio/", self.portfolio)
+        self.assertIn('href="ai-radar-extraction-map.md"', self.portfolio)
+        self.assertIn("relationship is documented lineage, not runtime coupling", self.portfolio)
+
+    def test_portfolio_keeps_independent_consumer_projects_isolated(self) -> None:
+        normalized = self.portfolio.lower()
+        self.assertNotIn("nyc", normalized)
+        self.assertNotIn("taxi", normalized)
+
+    def test_all_relative_portfolio_links_resolve(self) -> None:
+        hrefs = re.findall(r'href="([^"]+)"', self.portfolio)
+        relative_links = [
+            href.split("#", 1)[0]
+            for href in hrefs
+            if not href.startswith(("http://", "https://", "#"))
+        ]
+
+        missing = [
+            href
+            for href in relative_links
+            if not (DOCS / href).resolve().exists()
+        ]
+        self.assertEqual([], missing)
+
+    def test_portfolio_preserves_claim_and_authority_boundaries(self) -> None:
+        self.assertIn("deterministic facts, advisory judgment", self.portfolio)
+        self.assertIn("not that the requirement is correct", self.portfolio)
+        self.assertIn("does not authorize commit, merge, publish, release, or deployment", self.portfolio)
+        self.assertNotIn("governance coverage percentage", self.portfolio.lower())
+
+
+if __name__ == "__main__":
+    unittest.main()

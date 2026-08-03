@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Evidence of how Agent Governance admits, grounds, bounds, verifies, and reconciles coding-agent work."
+    />
+    <title>AgentGov Evidence Portfolio</title>
+    <link rel="stylesheet" href="portfolio.css" />
+    <script>
+      try {
+        const savedTheme = localStorage.getItem("agentgov-portfolio-theme");
+        if (savedTheme === "light" || savedTheme === "navy") {
+          document.documentElement.dataset.theme = savedTheme;
+        }
+      } catch (_) {}
+    </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="brand" href="portfolio.html" aria-label="Agent Governance evidence portfolio home">
+          <span class="brand-mark">AG</span>
+          <span>Agent Governance<small>Evidence Portfolio</small></span>
+        </a>
+        <nav class="header-nav" aria-label="Portfolio navigation">
+          <a href="#lineage">Lineage</a>
+          <a href="#lifecycle">Lifecycle</a>
+          <a href="#cases">Cases</a>
+          <a href="#boundary">Evidence boundary</a>
+          <a href="quickstart.html">Quickstart</a>
+        </nav>
+        <div class="header-actions">
+          <div class="theme-switch" aria-label="Portfolio color theme">
+            <button type="button" data-theme-choice="light" aria-pressed="true">Light</button>
+            <button type="button" data-theme-choice="navy" aria-pressed="false">Navy</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="shell hero" aria-labelledby="portfolio-title">
+        <div>
+          <p class="eyebrow">AgentGov · Evidence portfolio</p>
+          <h1 id="portfolio-title">Govern agent work <span>before completion becomes a claim.</span></h1>
+          <p class="hero-copy">
+            Agent Governance is a repository-native control layer for coding-agent work. It makes the
+            requirement, architecture context, implementation boundary, fresh evidence, and human
+            authority inspectable while the change is still being developed.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="#lifecycle">Trace the lifecycle →</a>
+            <a class="button secondary" href="demo-governance-report.html">Inspect a sample report</a>
+          </div>
+        </div>
+        <aside class="hero-ledger" aria-label="Portfolio evidence index">
+          <div class="ledger-head">
+            <small>Evidence index</small>
+            <strong>A compact map of what can be inspected.</strong>
+          </div>
+          <div class="ledger-stats">
+            <div><b>06</b><span>Governance moments</span></div>
+            <div><b>03</b><span>Repository cases</span></div>
+            <div><b>01</b><span>Human authority boundary</span></div>
+          </div>
+          <div class="ledger-boundary">
+            <strong>Evidence before assertion.</strong>
+            <span>Every case identifies deterministic facts, advisory judgment, and what remains unproved.</span>
+          </div>
+        </aside>
+      </section>
+
+      <section class="section" id="lineage" aria-labelledby="lineage-title">
+        <div class="shell">
+          <div class="section-intro">
+            <p class="eyebrow">Product lineage</p>
+            <h2 id="lineage-title">Related by governance responsibility. Independent by design.</h2>
+            <p>
+              AI Radar is the source system in which these coding-agent governance responsibilities were
+              exercised. AgentGov extracts the portable contracts and rebuilds them as an independent,
+              repository-native product.
+            </p>
+          </div>
+          <div class="origin-grid">
+            <article class="origin-card radar">
+              <span class="number" aria-hidden="true">01</span>
+              <p class="eyebrow">Reference system</p>
+              <h3>AI Radar</h3>
+              <p>
+                Demonstrated requirement admission, selective architecture context, bounded development,
+                fresh verification, action-loop review, and human approval inside a real AI product.
+              </p>
+              <a href="https://app.ai-radar-lab.com/portfolio/" target="_blank" rel="noreferrer">Inspect the public AI Radar evidence portfolio ↗</a>
+            </article>
+            <div class="origin-bridge" aria-label="Governance patterns are deliberately rewritten">
+              <div><span aria-hidden="true">→</span><strong>Extract · classify · rewrite</strong></div>
+            </div>
+            <article class="origin-card agentgov">
+              <span class="number" aria-hidden="true">02</span>
+              <p class="eyebrow">Portable product</p>
+              <h3>Agent Governance</h3>
+              <p>
+                Re-expresses those responsibilities as vendor-neutral task contracts, repository context,
+                deterministic checks, advisory findings, fresh evidence, and explicit denied authority.
+              </p>
+              <a href="ai-radar-extraction-map.md">Inspect the source and reuse decisions →</a>
+            </article>
+          </div>
+          <p class="separation-note">
+            <strong>Separation boundary:</strong> AgentGov does not import AI Radar runtime code, prompts,
+            private data, infrastructure, product schemas, business gates, or deployment authority. The
+            relationship is documented lineage, not runtime coupling.
+          </p>
+        </div>
+      </section>
+
+      <section class="section" id="lifecycle" aria-labelledby="lifecycle-title">
+        <div class="shell">
+          <div class="section-intro">
+            <p class="eyebrow">Implemented development loop</p>
+            <h2 id="lifecycle-title">One task, traced from admission to independent replay.</h2>
+            <p>
+              The development-source workflow connects human-owned intent to repository facts without
+              claiming that static machinery understands the requirement or approves the result.
+            </p>
+          </div>
+          <div class="trace-layout">
+            <div class="trace-panel">
+              <div class="trace-bar">
+                <strong>Coding-agent development lifecycle</strong>
+                <span class="trace-status">Source-implemented · Evidence-bounded</span>
+              </div>
+              <ol class="trace-list">
+                <li>
+                  <span class="trace-index">01</span>
+                  <div><strong>Admit requirement</strong><small>Goal, non-goals, scope, risk, acceptance and stop conditions</small></div>
+                  <a href="development-task-contract.md">Task contract</a>
+                </li>
+                <li>
+                  <span class="trace-index">02</span>
+                  <div><strong>Ground architecture</strong><small>Select repository-owned authority, decisions, invariants and protocols</small></div>
+                  <a href="development-context.md">Context record</a>
+                </li>
+                <li>
+                  <span class="trace-index">03</span>
+                  <div><strong>Bound implementation</strong><small>Compare Git-reported changes with exact admitted path prefixes</small></div>
+                  <a href="development-scope-check.md">Scope check</a>
+                </li>
+                <li>
+                  <span class="trace-index">04</span>
+                  <div><strong>Verify fresh evidence</strong><small>Run declared commands and bind results to an unchanged change snapshot</small></div>
+                  <a href="development-evidence.md">Evidence contract</a>
+                </li>
+                <li>
+                  <span class="trace-index">05</span>
+                  <div><strong>Reconcile completion</strong><small>Surface scope drift, stale evidence and unresolved human judgments</small></div>
+                  <a href="specs/fresh-validation-evidence-v1.md">Reconciliation spec</a>
+                </li>
+                <li>
+                  <span class="trace-index">06</span>
+                  <div><strong>Replay in PR and CI</strong><small>Reproduce deterministic facts outside the coding agent's local session</small></div>
+                  <a href="consumer-ci.md">CI boundary</a>
+                </li>
+              </ol>
+            </div>
+            <aside class="proof-panel">
+              <h3>What each artifact proves</h3>
+              <dl>
+                <div><dt>Task contract</dt><dd>A human-owned boundary was recorded; not that the requirement is correct.</dd></div>
+                <div><dt>Context selection</dt><dd>Relevant artifacts were selected; not that the agent understood them.</dd></div>
+                <div><dt>Scope report</dt><dd>Changed paths match declared prefixes; not that every change is semantically relevant.</dd></div>
+                <div><dt>Fresh evidence</dt><dd>Declared commands passed against a bound snapshot; not that the commands were sufficient.</dd></div>
+              </dl>
+              <p class="release-boundary">
+                <strong>Release boundary:</strong> the development loop is implemented in current development
+                source for the future 0.3 line. It is not represented here as part of stable 0.2.1.
+              </p>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="spine-title">
+        <div class="shell">
+          <div class="section-intro">
+            <p class="eyebrow">Governance narrative</p>
+            <h2 id="spine-title">Six moments where a locally reasonable change can escape its purpose.</h2>
+          </div>
+          <ol class="spine">
+            <li><b>01</b><strong>Admit</strong><small>Should this work start?</small></li>
+            <li><b>02</b><strong>Ground</strong><small>Which decisions bind it?</small></li>
+            <li><b>03</b><strong>Bound</strong><small>What may change?</small></li>
+            <li><b>04</b><strong>Verify</strong><small>What ran, and against what?</small></li>
+            <li><b>05</b><strong>Reconcile</strong><small>Can completion be supported?</small></li>
+            <li><b>06</b><strong>Replay</strong><small>Can another system reproduce the facts?</small></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="section" id="cases" aria-labelledby="cases-title">
+        <div class="shell">
+          <div class="section-intro">
+            <p class="eyebrow">Selected evidence</p>
+            <h2 id="cases-title">Three judgments, each limited by what the repository can support.</h2>
+            <p>Every case separates a reproducible fact from the judgment and authority that remain human.</p>
+          </div>
+          <div class="case-grid">
+            <article class="case-card">
+              <div class="case-meta"><span>Case AG-DRIFT-001</span><span>Architecture</span></div>
+              <h3>Green delivery can still move the product in the wrong direction.</h3>
+              <p class="case-lead">
+                AgentGov's adoption and PR machinery was useful and tested, yet accumulated into a product-center drift.
+              </p>
+              <p class="case-body">
+                Repository history showed a sequence from governance contracts to CI, upgrade review, and Draft PR
+                delivery. ADR-0009 restored development-time coding-agent governance as the product core while
+                retaining PR and CI as an independent backstop.
+              </p>
+              <div class="equation" aria-label="Passing local checks does not prove product alignment">
+                <span>Bounded slice + passing tests = implemented as specified</span>
+                <span>Implemented as specified ≠ advances the product core</span>
+              </div>
+              <div class="tier"><strong>Evidence tier</strong><span>Deterministic repository history + accepted advisory architecture judgment</span></div>
+              <p class="case-boundary"><strong>Boundary:</strong> history proves what changed and when. It does not objectively prove motivation or the optimal roadmap.</p>
+              <div class="evidence-links">
+                <a href="case-studies/0001-pr-center-architecture-drift.md">Read the full drift case →</a>
+                <details>
+                  <summary>Inspect supporting evidence</summary>
+                  <ul>
+                    <li><a href="adr/0009-govern-coding-agents-during-development.md">ADR-0009 product decision</a></li>
+                    <li><a href="governance-model.md">Current governance model</a></li>
+                    <li><a href="ai-radar-extraction-map.md">Extraction revalidation</a></li>
+                  </ul>
+                </details>
+              </div>
+            </article>
+
+            <article class="case-card">
+              <div class="case-meta"><span>Contract boundary</span><span>Scope</span></div>
+              <h3>A deterministic boundary should not pretend to understand intent.</h3>
+              <p class="case-lead">
+                AgentGov can decide whether changed paths are inside declared scope without declaring that the code is relevant or correct.
+              </p>
+              <p class="case-body">
+                The checker uses exact repository-relative path segments across staged, unstaged, renamed,
+                deleted, copied, and non-ignored untracked changes. Architecture relevance is emitted separately
+                as an advisory review question.
+              </p>
+              <div class="scope-diagram" aria-label="Deterministic and advisory scope distinctions">
+                <span>Path inside admitted prefix → deterministic fact</span>
+                <span>Change advances requirement → advisory judgment</span>
+                <span>Scope exception → explicit human decision</span>
+              </div>
+              <div class="tier"><strong>Evidence tier</strong><span>Schema-defined + fixture-tested + Git-observed</span></div>
+              <p class="case-boundary"><strong>Boundary:</strong> an in-scope path is not proof of semantic relevance, architectural correctness, or implementation quality.</p>
+              <div class="evidence-links">
+                <a href="development-scope-check.md">Read the scope contract →</a>
+                <details>
+                  <summary>Inspect supporting evidence</summary>
+                  <ul>
+                    <li><a href="../schemas/development-task.schema.json">Development task schema</a></li>
+                    <li><a href="../schemas/development-scope-report.schema.json">Scope report schema</a></li>
+                    <li><a href="specs/development-trigger-routing-v1.md">Routing semantics</a></li>
+                  </ul>
+                </details>
+              </div>
+            </article>
+
+            <article class="case-card">
+              <div class="case-meta"><span>Completion contract</span><span>Evidence</span></div>
+              <h3>A successful command is evidence, not completion authority.</h3>
+              <p class="case-lead">
+                Fresh results become stale when the bound change snapshot changes, and no self-reported claim is silently upgraded to verified.
+              </p>
+              <p class="case-body">
+                Evidence binds the task digest, comparison base, committed changes, staged and unstaged state,
+                renames, and non-ignored untracked identities. The record stores hashes and outcomes rather than
+                source content or credential-like values.
+              </p>
+              <div class="evidence-diagram" aria-label="Fresh evidence does not grant completion authority">
+                <span>Declared commands pass + snapshot unchanged → verified evidence</span>
+                <span>Verified evidence ≠ sufficient tests</span>
+                <span>Verified evidence ≠ merge, release, or deployment approval</span>
+              </div>
+              <div class="tier"><strong>Evidence tier</strong><span>Snapshot-bound validation + reconciliation contract</span></div>
+              <p class="case-boundary"><strong>Boundary:</strong> verified means the declared commands passed for the recorded change set. Requirement satisfaction remains a human judgment.</p>
+              <div class="evidence-links">
+                <a href="development-evidence.md">Read the evidence contract →</a>
+                <details>
+                  <summary>Inspect supporting evidence</summary>
+                  <ul>
+                    <li><a href="specs/fresh-validation-evidence-v1.md">Fresh evidence specification</a></li>
+                    <li><a href="demo-governance-report.html">Sample repository report</a></li>
+                    <li><a href="adr/0009-govern-coding-agents-during-development.md">Authority boundary</a></li>
+                  </ul>
+                </details>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="boundary" aria-labelledby="boundary-title">
+        <div class="shell">
+          <div class="section-intro">
+            <p class="eyebrow">Evidence boundary</p>
+            <h2 id="boundary-title">What this portfolio supports—and what it deliberately does not claim.</h2>
+            <p>
+              AgentGov exposes repository evidence and preserves uncertainty. It is a governance starter and
+              development control layer, not a certificate, hidden AI judge, or autonomous authority.
+              This page does not authorize commit, merge, publish, release, or deployment.
+            </p>
+          </div>
+          <div class="boundary-grid" role="table" aria-label="Supported evidence and explicit non-claims">
+            <div class="boundary-column" role="rowgroup">
+              <h3 role="columnheader">Supported here</h3>
+              <ul>
+                <li role="cell">A repository-native governance lifecycle is documented and implemented in development source.</li>
+                <li role="cell">Selected deterministic contracts have schemas, fixtures, tests, and inspectable reports.</li>
+                <li role="cell">Advisory findings and denied authority are represented explicitly.</li>
+                <li role="cell">AI Radar lineage and extraction exclusions are recorded.</li>
+              </ul>
+            </div>
+            <div class="boundary-column" role="rowgroup">
+              <h3 role="columnheader">Not claimed</h3>
+              <ul>
+                <li role="cell">That static checks prove semantic correctness, architecture quality, or requirement value.</li>
+                <li role="cell">That an approval record proves reviewer comprehension.</li>
+                <li role="cell">That repository protocols mechanically control every coding-agent runtime.</li>
+                <li role="cell">That any report authorizes commit, merge, publish, release, or deployment.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="context-title">
+        <div class="shell">
+          <div class="section-intro">
+            <p class="eyebrow">Build and operating context</p>
+            <h2 id="context-title">A small product surface with explicit responsibility layers.</h2>
+          </div>
+          <div class="context-grid">
+            <article><b>01</b><strong>Product</strong><span>Development-time coding-agent governance from task admission to replay.</span></article>
+            <article><b>02</b><strong>Interface</strong><span>Minimal Python CLI plus repository-owned JSON, Markdown, and HTML artifacts.</span></article>
+            <article><b>03</b><strong>Enforcement</strong><span>Deterministic schema, path, reference, drift, and evidence-integrity checks.</span></article>
+            <article><b>04</b><strong>Judgment</strong><span>Advisory findings preserve architecture, relevance, and sufficiency decisions for people.</span></article>
+            <article><b>05</b><strong>Authority</strong><span>Commit, merge, release, deployment, and exceptions remain explicitly human-controlled.</span></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="shell final-cta">
+        <p class="eyebrow">Continue the inspection</p>
+        <h2>Inspect the work, not just the description.</h2>
+        <p>
+          Start with the generated report for the visible finding model, then follow the task, scope, and
+          evidence contracts into the repository.
+        </p>
+        <div class="final-actions">
+          <a class="button" href="demo-governance-report.html">Open sample report</a>
+          <a class="button secondary" href="quickstart.html">Read the quickstart</a>
+          <a class="button secondary" href="https://github.com/Andy-JunXiong/agent-governance-starter" target="_blank" rel="noreferrer">Inspect GitHub ↗</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell footer-inner">
+        <span>Agent Governance · Evidence portfolio · No governance score</span>
+        <span class="footer-links">
+          <a href="index.html">Product home</a>
+          <a href="quickstart.html">Quickstart</a>
+          <a href="demo-governance-report.html">Sample report</a>
+          <a href="https://github.com/Andy-JunXiong/agent-governance-starter" target="_blank" rel="noreferrer">GitHub</a>
+        </span>
+      </div>
+    </footer>
+
+    <script>
+      const themeButtons = document.querySelectorAll("[data-theme-choice]");
+
+      function applyTheme(theme) {
+        document.documentElement.dataset.theme = theme;
+        themeButtons.forEach((button) => {
+          button.setAttribute("aria-pressed", String(button.dataset.themeChoice === theme));
+        });
+        try {
+          localStorage.setItem("agentgov-portfolio-theme", theme);
+        } catch (_) {}
+      }
+
+      const initialTheme = document.documentElement.dataset.theme === "navy" ? "navy" : "light";
+      applyTheme(initialTheme);
+      themeButtons.forEach((button) => button.addEventListener("click", () => applyTheme(button.dataset.themeChoice)));
+    </script>
+  </body>
+</html>
