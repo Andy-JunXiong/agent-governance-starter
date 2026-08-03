@@ -3,14 +3,15 @@
 <body><nav class="shell"><a class="brand" href="index.html"><span class="mark">AG</span>Agent Governance</a><div class="nav-links"><a href="quickstart.zh-CN.html">← 返回中文快速入门</a></div></nav>
 <header class="shell"><span class="eyebrow">修改前先诊断</span><h1>故障排查</h1><p class="lead">先判断问题属于安装、仓库状态、确定性失败，还是自动化无法作出的决定。</p></header>
 <main class="shell">
-<section><h2>找不到 <code>agentgov</code></h2><p>通常是命令被安装到另一个 Python 环境，或者脚本目录不在 PATH 中。请通过当前解释器安装并调用。</p><pre><code>python --version
-python -m pip install "git+https://github.com/Andy-JunXiong/agent-governance-starter.git@main"
-python -m agentgov --help</code></pre><p>整个流程优先使用 <code>python -m agentgov</code>，确保命令使用同一个 Python 环境。</p></section>
-<section><h2>Windows 构建 wheel 时出现 <code>No such file or directory</code></h2><p>如果把 starter 克隆在路径已经很深的目标仓库内部，pip 的临时构建路径可能超过 Windows 的有效路径限制。返回目标仓库根目录，直接从 GitHub 安装。</p><pre><code>Set-Location ..
-python -m pip install "git+https://github.com/Andy-JunXiong/agent-governance-starter.git@main"
-python -m agentgov --help</code></pre><p>不要提交嵌套的 starter clone。删除前必须确认准确路径，并确认其中没有需要保留的工作。</p></section>
+<section><h2>找不到 <code>agentgov</code></h2><p>通常是 pipx 的脚本目录不在 PATH 中。请安装已发布的稳定版、公开 pipx 命令路径，并在需要时重新打开终端。</p><pre><code>python --version
+pipx install "https://github.com/Andy-JunXiong/agent-governance-starter/releases/download/v0.2.1/agent_governance_starter-0.2.1-py3-none-any.whl"
+pipx ensurepath
+agentgov --help</code></pre></section>
+<section><h2>Windows 构建 wheel 时出现 <code>No such file or directory</code></h2><p>如果把 starter 克隆在路径已经很深的目标仓库内部，pip 的临时构建路径可能超过 Windows 的有效路径限制。请返回目标仓库根目录，通过 pipx 安装已发布 wheel。</p><pre><code>Set-Location ..
+pipx install "https://github.com/Andy-JunXiong/agent-governance-starter/releases/download/v0.2.1/agent_governance_starter-0.2.1-py3-none-any.whl"
+agentgov --help</code></pre><p>不要提交嵌套的 starter clone。删除前必须确认准确路径，并确认其中没有需要保留的工作。</p></section>
 <section><h2>虚拟环境指向不存在的 Python</h2><p>这说明环境已经失效。重建前先核对仓库声明的 Python 版本和依赖文件。用另一个系统 Python 成功运行 CLI，不能证明项目测试环境有效。</p></section>
-<section><h2><code>check</code> 报告 <code>invalid choice: '.'</code></h2><p>必须先写检查类型，再写路径；格式选项属于 <code>report</code>，不属于 <code>check</code>。</p><pre><code>python -m agentgov check repository .</code></pre></section>
+<section><h2><code>check</code> 报告 <code>invalid choice: '.'</code></h2><p>必须先写检查类型，再写路径；格式选项属于 <code>report</code>，不属于 <code>check</code>。</p><pre><code>agentgov check repository .</code></pre></section>
 <section><h2><code>adopt</code> 报告 CONFLICT</h2><p>不要强制写入。检查报告中的路径，确认它是目录、普通文件还是符号链接。</p><pre><code>agentgov inspect path/to/repository
 
 CONFLICT docs/adr — 预期为目录，但发现普通文件</code></pre><p>重命名或有计划地迁移冲突路径，重新运行 <code>inspect</code>，然后再次预览接入。</p></section>

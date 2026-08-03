@@ -92,8 +92,8 @@ class HumanAdoptionPilotContractTests(unittest.TestCase):
         self.assertIn("docs/uncoached-onboarding-handout.md", text)
         self.assertIn(
             'pipx install "https://github.com/Andy-JunXiong/'
-            "agent-governance-starter/releases/download/v0.1.0/"
-            'agent_governance_starter-0.1.0-py3-none-any.whl"',
+            "agent-governance-starter/releases/download/v0.2.1/"
+            'agent_governance_starter-0.2.1-py3-none-any.whl"',
             text,
         )
         self.assertIn("paste the block into the\nterminal and press Enter", text)

@@ -6,6 +6,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
+from agentgov import __version__
 from agentgov.cli import EXIT_ERROR, EXIT_FAIL, EXIT_PASS, main
 from agentgov.initializer import initialize_project
 from agentgov.update_check import (
@@ -70,8 +71,31 @@ class UpdateCheckTests(unittest.TestCase):
             ):
                 report = check_for_updates(ROOT, manifest_path=CURRENT)
 
-        self.assertEqual(report.available_version, "0.2.1")
+        self.assertEqual(report.available_version, __version__)
         self.assertIsNone(report.artifact)
+
+    def test_published_0_2_1_is_not_an_update_for_future_0_3_source(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            manifest = json.loads(CURRENT.read_text(encoding="utf-8"))
+            manifest.update({"tool_version": "0.2.1", "channel": "stable"})
+            manifest["artifact"] = {
+                "filename": "agent_governance_starter-0.2.1-py3-none-any.whl",
+                "url": (
+                    "https://github.com/Andy-JunXiong/agent-governance-starter/"
+                    "releases/download/v0.2.1/"
+                    "agent_governance_starter-0.2.1-py3-none-any.whl"
+                ),
+                "sha256": "a" * 64,
+                "install_method": "pipx",
+            }
+            manifest_path = root / "stable.json"
+            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+            report = check_for_updates(ROOT, manifest_path=manifest_path)
+
+        self.assertEqual(report.available_version, "0.2.1")
+        self.assertFalse(report.tool_update_available)
 
     def test_unversioned_repository_requires_refresh_without_writing(self) -> None:
         with TemporaryDirectory() as temp_dir:
@@ -341,13 +365,13 @@ class UpdateCheckCliTests(unittest.TestCase):
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
             manifest = json.loads(CURRENT.read_text(encoding="utf-8"))
-            manifest.update({"tool_version": "0.2.2", "channel": "stable"})
+            manifest.update({"tool_version": "0.3.0", "channel": "stable"})
             manifest["artifact"] = {
-                "filename": "agent_governance_starter-0.2.2-py3-none-any.whl",
+                "filename": "agent_governance_starter-0.3.0-py3-none-any.whl",
                 "url": (
                     "https://github.com/Andy-JunXiong/agent-governance-starter/"
-                    "releases/download/v0.2.2/"
-                    "agent_governance_starter-0.2.2-py3-none-any.whl"
+                    "releases/download/v0.3.0/"
+                    "agent_governance_starter-0.3.0-py3-none-any.whl"
                 ),
                 "sha256": "a" * 64,
                 "install_method": "pipx",

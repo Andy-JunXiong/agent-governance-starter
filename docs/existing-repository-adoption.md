@@ -13,30 +13,32 @@ This guide covers the complete read-only inspection and create-missing-only adop
 - a clean or reviewable working tree, so newly created files are easy to audit;
 - a human-readable project name.
 
-From the target repository root, activate its Python environment and install directly from GitHub. Do not clone the starter inside the target repository.
+From the target repository root, install the published stable package into an
+isolated pipx environment. Do not clone the starter inside the target
+repository.
 
 ```powershell
-python -m pip install "git+https://github.com/Andy-JunXiong/agent-governance-starter.git@main"
-python -m agentgov --help
+pipx install "https://github.com/Andy-JunXiong/agent-governance-starter/releases/download/v0.2.1/agent_governance_starter-0.2.1-py3-none-any.whl"
+agentgov --help
 ```
 
 Bash:
 
 ```bash
-python -m pip install "git+https://github.com/Andy-JunXiong/agent-governance-starter.git@main"
-python -m agentgov --help
+pipx install "https://github.com/Andy-JunXiong/agent-governance-starter/releases/download/v0.2.1/agent_governance_starter-0.2.1-py3-none-any.whl"
+agentgov --help
 ```
 
 ## Step 1: inspect without writing
 
 ```powershell
-python -m agentgov inspect path/to/repository
+agentgov inspect path/to/repository
 ```
 
 For a machine-readable plan:
 
 ```powershell
-python -m agentgov inspect path/to/repository --format json
+agentgov inspect path/to/repository --format json
 ```
 
 The JSON format follows `schemas/adoption-report.schema.json` contract version `1.0`.
@@ -63,13 +65,13 @@ leave `inspect` or `doctor` in an unresolved onboarding state.
 Always review a dry run before writing:
 
 ```powershell
-python -m agentgov adopt path/to/repository --project-name "Example Project" --dry-run
+agentgov adopt path/to/repository --project-name "Example Project" --dry-run
 ```
 
 Bash:
 
 ```bash
-python -m agentgov adopt path/to/repository --project-name "Example Project" --dry-run
+agentgov adopt path/to/repository --project-name "Example Project" --dry-run
 ```
 
 `PLAN` identifies missing files that would be created. `PRESERVE` identifies existing files whose content will remain unchanged.
@@ -87,7 +89,7 @@ Stop if:
 After reviewing the plan:
 
 ```powershell
-python -m agentgov adopt path/to/repository --project-name "Example Project"
+agentgov adopt path/to/repository --project-name "Example Project"
 ```
 
 The command uses exclusive file creation. If a destination appears after preflight, adoption stops instead of overwriting it. Existing files are not rewritten to match starter templates.

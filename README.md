@@ -4,17 +4,18 @@
 
 A lightweight, repository-native governance framework that connects AI
 capabilities, implementation evidence, deterministic checks, and accountable
-human decisions. The next product core extends those implemented foundations
+human decisions. The current development core extends those foundations
 into requirement, architecture, and code governance while coding agents are
 developing; pull requests and CI remain an independent backstop.
 
 [![CI](https://github.com/Andy-JunXiong/agent-governance-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/Andy-JunXiong/agent-governance-starter/actions/workflows/ci.yml)
 
-[![Agent Governance — From task intent to verified evidence](docs/assets/agentgov-evidence-portfolio.png)](https://andy-junxiong.github.io/agent-governance-starter/portfolio.html)
+[![Agent Governance — From task intent to verified evidence](docs/assets/agentgov-evidence-portfolio.png)](https://andy-junxiong.github.io/agent-governance-starter/)
 
 <p align="center">
   <strong>Follow one coding-agent task from human-owned intent to reviewable evidence.</strong><br />
-  <a href="https://andy-junxiong.github.io/agent-governance-starter/portfolio.html">Explore the evidence portfolio →</a> ·
+  <a href="https://andy-junxiong.github.io/agent-governance-starter/">Explore the AgentGov product story →</a> ·
+  <a href="https://andy-junxiong.github.io/agent-governance-starter/portfolio.html">Inspect the evidence portfolio</a> ·
   <a href="https://andy-junxiong.github.io/agent-governance-starter/demo-governance-report.html">Open the sample report</a> ·
   <a href="https://andy-junxiong.github.io/agent-governance-starter/quickstart.html">Read the quickstart</a>
 </p>
@@ -60,7 +61,7 @@ flowchart LR
 ```
 
 The current stable CLI verifies declared repository facts. ADR-0009 makes the
-development loop the next product core; task context, changed-file scope,
+development loop the current development-source product core; task context, changed-file scope,
 fresh completion evidence, guided sessions, redacted event export, and the
 static Monitor are implemented in the future-0.3 development source but are
 not published in stable 0.2.1. AgentGov does not judge architecture quality,
@@ -134,7 +135,7 @@ govern:
 
 ```powershell
 python --version
-pipx install "https://github.com/Andy-JunXiong/agent-governance-starter/releases/download/v0.1.0/agent_governance_starter-0.1.0-py3-none-any.whl"
+pipx install "https://github.com/Andy-JunXiong/agent-governance-starter/releases/download/v0.2.1/agent_governance_starter-0.2.1-py3-none-any.whl"
 agentgov --version
 agentgov --help
 ```
@@ -166,9 +167,10 @@ surfaces, and the next accountable action. Markdown output is designed for a
 GitHub Actions job summary and uses portable repository-relative commands. It
 is read-only and does not run the project or production workflows.
 
-These `status` and `integrate` commands are available in stable `0.2.0`. The
-prepared `0.2.1` patch corrects the managed workflow's local wheel filename;
-the checks, reports, and human-confirmed update boundary are unchanged.
+These `status` and `integrate` commands were introduced in stable `0.2.0` and
+remain available in published stable `0.2.1`. The `0.2.1` release corrects the
+managed workflow's local wheel filename; the checks, reports, and
+human-confirmed update boundary are unchanged.
 
 From the current development source, validate an admitted task and select only
 its repository governance context:
@@ -286,7 +288,7 @@ Compare two preserved CI reports as honest benefit evidence:
 agentgov benefits compare before.json after.json
 ```
 
-Collect one candidate wheel, manifest, source-test, and NYC compatibility review
+Collect one candidate wheel, manifest, source-test, and independent-consumer compatibility review
 without making the release decision:
 
 ```powershell
@@ -406,7 +408,7 @@ flowchart TB
 
     HUMAN["4. Accountable human review<br/>Resolve or defer gaps · Record judgment"]
     TRANSITION["High-risk transition<br/>Merge · Publish · Release · Deploy"]
-    FUTURE["Future consumers<br/>Web UI · API<br/>Not included in v0.1"]
+    FUTURE["Planned integrations<br/>Web UI · API<br/>Not in stable 0.2.1"]
 
     CONSTITUTION --> VALIDATE
     PROTOCOLS --> VALIDATE
@@ -467,12 +469,12 @@ and deployment remain separate human-authorized actions.
 
 ## Project status and non-goals
 
-**Status: stable `0.2.1`; future `0.3` behavior is under source review.** The
+**Status: published stable `0.2.1`; development source `0.3.0.dev0`.** The
 stable release is suitable for evaluation and repository-level pilots. The
 development source adds a two-workflow proposal boundary, compact/standard
 development tasks, and read-only task-specific governance context, but these
-are not yet a published release or adopted NYC workflow. AgentGov is not a compliance
-certification, runtime
+are not yet a published release or adopted consumer workflow. AgentGov is not
+a compliance certification, runtime
 security boundary, or authorization for autonomous merge, publication, or
 deployment.
 
@@ -509,8 +511,8 @@ The first usable release contains:
 8. an experimental development-source task contract and `check task` command
    that preserve human-owned requirement, architecture, scope, approval, and
    stop boundaries before implementation;
-9. AI Radar and NYC Taxi as documented reference or pilot cases, not runtime
-   dependencies.
+9. AI Radar as a documented origin reference, plus isolated consumer pilots;
+   neither is a runtime dependency.
 
 ## Project navigation
 
@@ -535,10 +537,8 @@ The first usable release contains:
 - [Benefit evidence](docs/benefit-monitor.md) explains report comparison,
   trusted main baselines, the continuous monitor UI, denominators, and claims
   that cannot be made.
-- [NYC benefit monitor pilot](docs/experiments/nyc-benefit-monitor-pilot.md)
-  defines what NYC users will see after the one-time 0.3 migration.
 - [Remaining development plan](docs/development-plan.md) separates implemented,
-  published, and NYC-adopted behavior and orders the next delivery slices.
+  published, and consumer-adopted behavior and orders the next delivery slices.
 - [AgentGov product and architecture plan (Chinese Revision 3)](docs/proposals/2026-08-02-agentgov-product-and-architecture-plan.zh-CN.md)
   consolidates the GitHub distribution, AI Radar-aligned development
   governance, trigger routing, observation events, and Monitor/Dashboard
@@ -557,7 +557,7 @@ The first usable release contains:
 - [0.2.0 release notes](docs/releases/0.2.0.md) describe the prepared stable
   promotion and its remaining human-controlled gates.
 - [0.2.1 release notes](docs/releases/0.2.1.md) describe the consumer CI
-  wheel-filename correction found by the NYC pilot.
+  wheel-filename correction found by the first independent consumer pilot.
 - [Release channels](docs/release-channels.md) explain the separate stable and
   release-candidate workflows, GitHub UI, and human-controlled tag boundary.
 - [Release review bundle](docs/release-review.md) explains automated evidence

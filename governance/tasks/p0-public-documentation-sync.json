@@ -1,0 +1,117 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-public-documentation-sync",
+  "title": "Restore AgentGov presentation and documentation consistency",
+  "requirement": {
+    "summary": "Keep AgentGov's own product page primary, treat AI Radar only as a bounded origin reference, isolate independent consumers from the public story, and synchronize current documentation with stable 0.2.1 and development source 0.3.0.dev0.",
+    "source_refs": [
+      "README.md",
+      "docs/index.html",
+      "docs/portfolio.html",
+      "docs/development-plan.md"
+    ]
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": [
+      "docs/adr/0009-govern-coding-agents-during-development.md"
+    ],
+    "rationale": "The public story had split into a separate portfolio design, promoted the reference system before AgentGov's own evidence, and retained v0.1 installation facts after stable 0.2.1 was published."
+  },
+  "goal": "Synchronize the AgentGov public story, stable installation path, development-source identity, related current documentation, localized guides, and freshness tests without creating runtime coupling to a reference or consumer project.",
+  "non_goals": [
+    "Do not import AI Radar or independent-consumer code, data, infrastructure, credentials, or business workflows.",
+    "Do not publish a release, change a consumer workflow, or claim stable 0.3 readiness.",
+    "Do not rewrite historical release notes, rehearsals, or dated evidence solely to remove their original version facts.",
+    "Do not add autonomous commit, merge, release, or deployment authority."
+  ],
+  "scope": {
+    "include_paths": [
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "docs/demo-governance-report.html",
+      "docs/demo-governance-report.zh-CN.html",
+      "docs/development-log/2026-08-03.md",
+      "docs/development-plan.md",
+      "docs/existing-repository-adoption.md",
+      "docs/governance-model.md",
+      "docs/index.html",
+      "docs/open-decisions-2026-08-02.md",
+      "docs/portfolio.css",
+      "docs/portfolio.html",
+      "docs/quickstart.html",
+      "docs/quickstart.zh-CN.html",
+      "docs/quickstart.zh-CN.md",
+      "docs/troubleshooting.html",
+      "docs/troubleshooting.md",
+      "docs/troubleshooting.zh-CN.html",
+      "governance/tasks/p0-public-documentation-sync.json",
+      "governance/tasks/p0-development-version-identity.json",
+      "release/README.md",
+      "release/current.json",
+      "src/agentgov/__init__.py",
+      "tests/test_human_adoption_pilot.py",
+      "tests/test_package.py",
+      "tests/test_portfolio_docs.py",
+      "tests/test_portfolio_page.py",
+      "tests/test_product_site.py",
+      "tests/test_public_documentation_freshness.py",
+      "tests/test_report_html.py",
+      "tests/test_release_metadata.py",
+      "tests/test_update_check.py",
+      "tests/test_user_documentation.py"
+    ],
+    "exclude_paths": [
+      ".github",
+      "docs/releases",
+      "NYC"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0009-govern-coding-agents-during-development.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/ai-radar-extraction-map.md"
+  ],
+  "acceptance_signals": [
+    "README and public navigation enter the AgentGov product page before the evidence portfolio.",
+    "The portfolio uses the AgentGov visual language and presents AI Radar after AgentGov lifecycle and cases without a direct external product call to action.",
+    "Current public install surfaces use the published stable 0.2.1 wheel and agentgov commands, while source-only execution remains explicitly labeled.",
+    "Public HTML excludes independent consumer project names and has no missing repository-relative links.",
+    "AGENTS.md requires affected current documentation, HTML, localization, release facts, and tests to be updated with behavior or version changes.",
+    "Focused documentation tests and the complete unit suite pass."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_public_documentation_freshness tests.test_product_site tests.test_portfolio_page tests.test_user_documentation tests.test_portfolio_docs tests.test_human_adoption_pilot tests.test_report_html -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check repository ."
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "medium",
+    "items": [
+      "A stable installation command could accidentally invoke development-source behavior.",
+      "A reference case could be presented as runtime or product coupling.",
+      "Localized and HTML guidance could drift from the README again without a cross-surface freshness contract."
+    ]
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "owner": "Human product owner",
+    "evidence_refs": []
+  },
+  "stop_conditions": [
+    "Stop if the presentation requires importing runtime code or data from a reference or consumer repository.",
+    "Stop if documentation synchronization would require a new release, tag, deployment, or consumer migration.",
+    "Stop if visual changes weaken deterministic versus advisory or human-authority boundaries."
+  ],
+  "decision": {
+    "state": "admitted",
+    "decided_by": "Human product owner",
+    "rationale": "The user explicitly requested the AgentGov-native presentation, full related-document audit and synchronization, and direct commit and push to main."
+  }
+}

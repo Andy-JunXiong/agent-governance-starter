@@ -5,7 +5,7 @@ from published and consumer-adopted behavior.
 
 ## Current checkpoint
 
-- Published stable: AgentGov 0.2.1.
+- Published stable: AgentGov 0.2.1; current source identity: 0.3.0.dev0.
 - NYC consumer: managed 0.2.1 workflow.
 - Implemented locally for the future 0.3 line: persona-aware PR and owner UI,
   trusted-main benefit monitor, scheduled baseline refresh, redacted portable
@@ -41,9 +41,15 @@ from published and consumer-adopted behavior.
   corrected run reached `verified` and generated four Monitor events. The
   initial invalid Skill and unignored Python cache attempts remained visible as
   fail-closed product evidence.
-- Not yet completed: 0.3 versioning, release-candidate review and publication,
-  NYC 0.3 migration, or evidence from real NYC runs. Those are supporting
-  delivery tasks rather than the next product-defining slice.
+- The development source and bundled compatibility metadata now identify as
+  0.3.0.dev0, distinct from published stable 0.2.1. Not yet completed:
+  release-candidate review and publication, NYC 0.3 migration, or evidence from
+  real NYC runs. Those are supporting delivery tasks rather than the next
+  product-defining slice.
+- Public entry points now distinguish stable 0.2.1 from development source
+  0.3.0.dev0, use one isolated pipx user path, keep the AgentGov product page
+  primary, and present AI Radar only as a bounded origin reference after the
+  AgentGov evidence story.
 
 ## Ordered work
 

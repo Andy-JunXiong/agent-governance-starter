@@ -87,7 +87,7 @@ class UserDocumentationTests(unittest.TestCase):
         ):
             self.assertIn(heading, text)
         self.assertIn("No exit code grants approval", text)
-        self.assertIn("python -m agentgov check repository .", text)
+        self.assertIn("agentgov check repository .", text)
         self.assertIn("is not valid syntax", text)
 
     def test_isolated_execution_decision_preserves_environment_boundaries(
@@ -153,7 +153,7 @@ class UserDocumentationTests(unittest.TestCase):
         self.assertIn("not a core adoption path", adoption_english)
         self.assertIn("不是核心接入路径", adoption_chinese)
 
-    def test_web_quickstarts_use_one_python_environment_from_repository_root(
+    def test_web_quickstarts_separate_stable_pipx_from_source_execution(
         self,
     ) -> None:
         english = QUICKSTART_WEB.read_text(encoding="utf-8")
@@ -162,14 +162,14 @@ class UserDocumentationTests(unittest.TestCase):
         for content in (english, chinese):
             self.assertIn(
                 'pipx install "https://github.com/Andy-JunXiong/'
-                "agent-governance-starter/releases/download/v0.1.0/"
-                'agent_governance_starter-0.1.0-py3-none-any.whl"',
+                "agent-governance-starter/releases/download/v0.2.1/"
+                'agent_governance_starter-0.2.1-py3-none-any.whl"',
                 content,
             )
             self.assertIn("python --version", content)
             self.assertIn("python -m agentgov --help", content)
-            self.assertIn("python -m agentgov inspect .", content)
-            self.assertIn("python -m agentgov check repository .", content)
+            self.assertIn("agentgov inspect .", content)
+            self.assertIn("agentgov check repository .", content)
             self.assertIn("\nagentgov --help", content)
             self.assertIn("Do not clone", english)
             self.assertIn("不要把 starter clone", chinese)

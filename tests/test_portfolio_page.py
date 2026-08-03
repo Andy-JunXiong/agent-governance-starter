@@ -23,6 +23,10 @@ class EvidencePortfolioTests(unittest.TestCase):
 
         self.assertIn("docs/assets/agentgov-evidence-portfolio.png", showcase)
         self.assertIn(
+            "https://andy-junxiong.github.io/agent-governance-starter/",
+            showcase,
+        )
+        self.assertIn(
             "https://andy-junxiong.github.io/agent-governance-starter/portfolio.html",
             showcase,
         )
@@ -31,9 +35,15 @@ class EvidencePortfolioTests(unittest.TestCase):
         self.assertTrue(image_path.read_bytes().startswith(b"\x89PNG\r\n\x1a\n"))
 
     def test_portfolio_records_ai_radar_lineage_and_separation(self) -> None:
-        self.assertIn("https://app.ai-radar-lab.com/portfolio/", self.portfolio)
         self.assertIn('href="ai-radar-extraction-map.md"', self.portfolio)
-        self.assertIn("relationship is documented lineage, not runtime coupling", self.portfolio)
+        self.assertIn("A useful precedent, not a second product inside this one", self.portfolio)
+        self.assertNotIn("https://app.ai-radar-lab.com", self.portfolio)
+
+    def test_portfolio_uses_agentgov_navigation_and_story_priority(self) -> None:
+        self.assertIn('href="index.html" aria-label="Agent Governance product home"', self.portfolio)
+        self.assertLess(self.portfolio.index('id="lifecycle"'), self.portfolio.index('id="lineage"'))
+        self.assertLess(self.portfolio.index('id="cases"'), self.portfolio.index('id="lineage"'))
+        self.assertNotIn("data-theme-choice", self.portfolio)
 
     def test_portfolio_keeps_independent_consumer_projects_isolated(self) -> None:
         normalized = self.portfolio.lower()

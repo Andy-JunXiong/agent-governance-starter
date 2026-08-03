@@ -91,8 +91,8 @@ class PortfolioDocumentationTests(unittest.TestCase):
 
         for command in (
             'pipx install "https://github.com/Andy-JunXiong/'
-            "agent-governance-starter/releases/download/v0.1.0/"
-            'agent_governance_starter-0.1.0-py3-none-any.whl"',
+            "agent-governance-starter/releases/download/v0.2.1/"
+            'agent_governance_starter-0.2.1-py3-none-any.whl"',
             "agentgov --help",
             'python -m agentgov init $Project --project-name "Portfolio Demo"',
             "python -m agentgov check repository $Project",
@@ -136,7 +136,7 @@ class PortfolioDocumentationTests(unittest.TestCase):
             "Ordered RepositoryReport",
             "Consumer CI",
             "Pinned check · Report artifact",
-            "Not included in v0.1",
+            "Not in stable 0.2.1",
         ):
             self.assertIn(label, diagram)
         for edge in (

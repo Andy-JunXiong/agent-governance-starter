@@ -4,7 +4,7 @@ Last verified: 2026-08-03
 
 ## Current state
 
-- Version: stable `0.2.1`; future `0.3` behavior under source review.
+- Version: published stable `0.2.1`; development source `0.3.0.dev0`.
 - Maturity: experimental and suitable for repository-level evaluation.
 - Canonical capability layout: `governance/`.
 - Legacy `prompt-governance/` input remains a bounded, read-only compatibility
@@ -70,11 +70,16 @@ Last verified: 2026-08-03
   also preserved fail-closed evidence for an invalid Skill and unignored
   `__pycache__` output instead of weakening checks.
 - The pilot is internal evidence, not uncoached human or general effectiveness
-  evidence. It also identified two pre-release actions: give the development
-  wheel a 0.3 identity instead of reporting stable 0.2.1, and add actionable
-  validation-artifact readiness guidance without editing `.gitignore`.
+  evidence. Its source-identity blocker is resolved: development builds now
+  report `0.3.0.dev0` instead of stable `0.2.1`. Actionable
+  validation-artifact readiness guidance without editing `.gitignore` remains
+  a pre-release action.
 
 ## Development-source P0 preview
+
+- Runtime and bundled compatibility metadata now use `0.3.0.dev0` with the
+  `development` channel. Published stable 0.2.1 documentation and consumer
+  pins remain unchanged; no release artifact or digest is claimed.
 
 - `schemas/development-task.schema.json` defines a strict, vendor-neutral task
   identity with compact/standard profiles, exact scope, acceptance and
@@ -137,7 +142,7 @@ Last verified: 2026-08-03
 
 ## Current milestone
 
-Pre-pilot repository governance foundation:
+Future-0.3 development-governance integration and pre-release evidence:
 
 - Governance Inventory contract and zero-dependency validator implemented;
 - canonical manifest, owner, identity, exclusion, and safe-path closure;
@@ -231,6 +236,36 @@ Pre-pilot repository governance foundation:
 - A successful check does not prove semantic governance sufficiency.
 
 ## Validation
+
+Documentation and development-source validation on 2026-08-03:
+
+- 507 unit tests passed with one platform-limited skip;
+- 46 focused product-site, portfolio, user-documentation, report, adoption, and
+  documentation-freshness tests passed;
+- all 12 public HTML files had resolvable repository-relative links;
+- the public README and HTML surfaces no longer advertise the v0.1 wheel,
+  mutable `main` installation, or the independent consumer project;
+- `git diff --check` passed with only Git's existing line-ending notice for the
+  Chinese HTML quickstart.
+- the admitted documentation-sync task returned
+  `PASS=6 WARN=0 FAIL=0 ADVISORY=1`, its combined working-copy scope returned
+  `PASS=35 FAIL=0 ADVISORY=1`, and repository governance returned
+  `PASS=16 WARN=2 FAIL=0 ADVISORY=4`.
+
+Development-source identity validation on 2026-08-03:
+
+- 497 unit tests passed with one platform-limited skip;
+- focused package, release-metadata, and update validation passed 36 tests;
+- an isolated wheel built as
+  `agent_governance_starter-0.3.0.dev0-py3-none-any.whl`, installed with no
+  runtime dependencies, and reported `agentgov 0.3.0.dev0`;
+- bundled development release metadata passed its strict manifest contract;
+- the admitted identity task returned `PASS=6 WARN=0 FAIL=0 ADVISORY=1`, and
+  its working-copy scope returned `PASS=12 FAIL=0 ADVISORY=1`;
+- repository self-check returned `PASS=16 WARN=2 FAIL=0 ADVISORY=4`;
+- `git diff --check` passed;
+- no workflow mutation, consumer migration, commit, push, tag, release,
+  publication, or artifact upload was performed.
 
 Development-source Phase 7 validation on 2026-08-03:
 

@@ -35,8 +35,14 @@ Out of scope:
    denominator, applicability rules, and weighting model.
 5. Do not weaken or delete failing tests to make a change pass.
 6. Do not commit, push, publish, or release without explicit human approval.
-7. Keep v0.1 lightweight; additions must support the documented ten-minute
-   adoption path.
+7. Keep the starter lightweight; additions must support the documented
+   ten-minute adoption path.
+8. When behavior, product scope, release identity, commands, or user journeys
+   change, update every affected source of truth in the same bounded change.
+   Check at least `README.md`, `STATUS.md`, development plans/logs, ADRs or
+   contracts, user guides, release metadata, public HTML, localized pages, and
+   the tests that protect those surfaces. Historical records may keep their
+   original version facts, but must be clearly labeled when superseded.
 
 ## Development workflow
 

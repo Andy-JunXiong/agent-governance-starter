@@ -33,13 +33,13 @@ agentgov update --check .</code></pre>
     </section>
     <section class="emphasis">
       <h2>开始之前</h2>
-      <p>在需要治理的仓库根目录打开终端，并激活该仓库自己的 Python 环境。使用 Python 3.11 或更新版本。静态检查通过只表示声明的确定性契约成功执行；它不授权合并、发布或部署。</p>
+      <p>在需要治理的仓库根目录打开终端，使用 Python 3.11 或更新版本，并确认 <code>pipx</code> 可用。静态检查通过只表示声明的确定性契约成功执行；它不授权合并、发布或部署。</p>
     </section>
     <section>
       <h2>1. 安装</h2>
-      <p>请从需要治理的仓库运行以下命令。它们会把当前开发版本安装到已激活的 Python 环境，而不会把 starter 源码复制进被治理仓库。</p>
+      <p>请从需要治理的仓库运行以下命令。它们会把已发布的稳定版 0.2.1 安装到隔离的 pipx 环境，而不会把 starter 源码复制进被治理仓库。</p>
       <pre><code>python --version
-pipx install "https://github.com/Andy-JunXiong/agent-governance-starter/releases/download/v0.1.0/agent_governance_starter-0.1.0-py3-none-any.whl"
+pipx install "https://github.com/Andy-JunXiong/agent-governance-starter/releases/download/v0.2.1/agent_governance_starter-0.2.1-py3-none-any.whl"
 agentgov --version
 agentgov --help</code></pre>
       <h3>不安装直接运行</h3>
@@ -53,10 +53,10 @@ python -m agentgov --help</code></pre></div>
     <section>
       <h2>2. 接入已有仓库</h2>
       <p>如果终端已经位于目标仓库根目录，请使用 <code>.</code>。每次只运行一条命令，确认输出后再继续。</p>
-      <pre><code>python -m agentgov inspect .
-python -m agentgov adopt . --project-name "My Project" --dry-run
-python -m agentgov adopt . --project-name "My Project"
-python -m agentgov check repository .</code></pre>
+      <pre><code>agentgov inspect .
+agentgov adopt . --project-name "My Project" --dry-run
+agentgov adopt . --project-name "My Project"
+agentgov check repository .</code></pre>
       <div class="states">
         <div class="state"><strong>PRESENT</strong>保留并审阅现有治理路径。</div>
         <div class="state"><strong>MISSING</strong>决定接入计划是否应创建它。</div>
@@ -70,22 +70,22 @@ python -m agentgov check repository .</code></pre>
       <h2>3. 创建新仓库</h2>
       <div class="platforms">
         <div><strong>PowerShell</strong><pre><code>$Project = Join-Path $PWD "governed-project"
-python -m agentgov init $Project --project-name "My Project"
-python -m agentgov check repository $Project</code></pre></div>
+agentgov init $Project --project-name "My Project"
+agentgov check repository $Project</code></pre></div>
         <div><strong>Bash / zsh</strong><pre><code>PROJECT="$PWD/governed-project"
-python -m agentgov init "$PROJECT" --project-name "My Project"
-python -m agentgov check repository "$PROJECT"</code></pre></div>
+agentgov init "$PROJECT" --project-name "My Project"
+agentgov check repository "$PROJECT"</code></pre></div>
       </div>
     </section>
     <section>
       <h2>4. 检查并生成报告</h2>
       <div class="platforms">
-        <div><strong>PowerShell</strong><pre><code>python -m agentgov check repository path/to/project
-python -m agentgov report repository path/to/project `
+        <div><strong>PowerShell</strong><pre><code>agentgov check repository path/to/project
+agentgov report repository path/to/project `
   --format html `
   --output path/to/project/governance-report.html</code></pre></div>
-        <div><strong>Bash / zsh</strong><pre><code>python -m agentgov check repository path/to/project
-python -m agentgov report repository path/to/project \
+        <div><strong>Bash / zsh</strong><pre><code>agentgov check repository path/to/project
+agentgov report repository path/to/project \
   --format html \
   --output path/to/project/governance-report.html</code></pre></div>
       </div>

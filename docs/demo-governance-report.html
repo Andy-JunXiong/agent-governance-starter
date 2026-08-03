@@ -28,7 +28,7 @@ h2{margin:0 0 8px;font-size:23px;letter-spacing:-.025em}.sub{color:var(--muted);
 </style>
 </head>
 <body>
-<header><div class="shell"><div class="brand"><span class="mark">AG</span>Agent Governance<a class="back" href="index.html">← Back to main page</a></div><div class="mode">Static | Read only | Local</div></div></header>
+<header><div class="shell"><div class="brand"><span class="mark">AG</span>Agent Governance<a class="back" href="index.html">← Back to main page</a></div><div class="mode">0.3.0.dev0 source snapshot | Static | Read only</div></div></header>
 <main class="shell">
 <section class="hero"><div><div class="eyebrow">Repository governance, made visible</div><h1>Know what is checked.<br>Know what still needs a human.</h1><p class="lede">Connect repository policy, capability declarations, evidence readiness, and artifact integrity -- without pretending static checks can approve high-risk work.</p></div><aside class="repo"><small>Repository</small><code>governed-demo</code><div class="boundary">This report does not authorize merge, publish, release, or deploy.</div></aside></section>
 <section class="orientation"><div class="panel"><h2>How this report was made</h2><p class="sub">The local CLI inspected declared governance assets in this repository. It did not send source code to an external service.</p><div class="command"><code>agentgov report repository . --format html --output governance-report.html</code></div><div class="input-list"><div><code>AGENTS.md</code><br>Repository rules and authority</div><div><code>docs/adr/</code><br>Durable decisions</div><div><code>INVARIANTS.md</code><br>Properties that must remain true</div><div><code>capabilities/</code><br>Purpose, owner and risk</div><div><code>schemas + sources</code><br>Contracts and provenance</div><div><code>evaluation/</code><br>Evidence readiness</div><div><code>agent-skills/</code><br>Triggers, workflow and handoff</div><div><code>artifacts/</code><br>Reviewed source hashes</div></div><div class="not-checked"><strong>What it does not prove</strong><br>The CLI checks declared structure, references, evidence state and drift. It does not run the AI capability, judge output quality, or approve high-risk work.</div></div><div class="panel"><h2>How to read this report</h2><p class="sub">Use the report as a review map, not as an approval certificate.</p><ol class="orientation-list"><li><b>1</b><div><strong>Start with Current state</strong><p>See how many deterministic checks passed, warned or failed, and how many questions still need a human.</p></div></li><li><b>2</b><div><strong>Open What needs attention</strong><p>Use each finding's specific next action and work area, then assign an accountable owner.</p></div></li><li><b>3</b><div><strong>Review All findings</strong><p>Read the exact check, repository fact and scope limitation before making a merge, release or deployment decision.</p></div></li></ol></div></section>
@@ -39,7 +39,7 @@ h2{margin:0 0 8px;font-size:23px;letter-spacing:-.025em}.sub{color:var(--muted);
   "schema_version": "1.0",
   "tool": {
     "name": "agentgov",
-    "version": "0.1.0.dev0"
+    "version": "0.3.0.dev0"
   },
   "repository": "governed-demo",
   "summary": {

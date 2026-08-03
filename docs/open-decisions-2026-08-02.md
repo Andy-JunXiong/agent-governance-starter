@@ -1,8 +1,9 @@
 # Open product decisions — 2026-08-02
 
-This note records decisions that were deliberately left open after the AgentGov
-and NYC integration review. It is not a claim that the described behavior is
-already available in a published release or adopted by NYC.
+This dated note records decisions that were deliberately left open after an
+AgentGov integration review. ADR-0009 has since resolved the primary product
+boundary; statements about the product at this checkpoint are historical and
+must not be read as the current development-source or published-release status.
 
 ## Product boundary: development-time versus pull-request governance
 
@@ -13,7 +14,7 @@ backstop. This matches the responsibility separation revalidated against AI
 Radar's current Layer A' coding-agent governance without importing its product
 rules.
 
-The current product is strongest at the GitHub boundary: it renders repository
+At this checkpoint, the published product was strongest at the GitHub boundary: it rendered repository
 checks, PR-facing findings, owner summaries, upgrade evidence, and retained
 artifacts. That is a useful final backstop, but it is too late to be the primary
 developer experience.

@@ -7,37 +7,27 @@
       name="description"
       content="Evidence of how Agent Governance admits, grounds, bounds, verifies, and reconciles coding-agent work."
     />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; style-src 'self'"
+    />
     <title>AgentGov Evidence Portfolio</title>
     <link rel="stylesheet" href="portfolio.css" />
-    <script>
-      try {
-        const savedTheme = localStorage.getItem("agentgov-portfolio-theme");
-        if (savedTheme === "light" || savedTheme === "navy") {
-          document.documentElement.dataset.theme = savedTheme;
-        }
-      } catch (_) {}
-    </script>
   </head>
   <body>
     <header class="site-header">
       <div class="shell header-inner">
-        <a class="brand" href="portfolio.html" aria-label="Agent Governance evidence portfolio home">
+        <a class="brand" href="index.html" aria-label="Agent Governance product home">
           <span class="brand-mark">AG</span>
           <span>Agent Governance<small>Evidence Portfolio</small></span>
         </a>
         <nav class="header-nav" aria-label="Portfolio navigation">
-          <a href="#lineage">Lineage</a>
           <a href="#lifecycle">Lifecycle</a>
           <a href="#cases">Cases</a>
           <a href="#boundary">Evidence boundary</a>
+          <a href="#lineage">Reference</a>
           <a href="quickstart.html">Quickstart</a>
         </nav>
-        <div class="header-actions">
-          <div class="theme-switch" aria-label="Portfolio color theme">
-            <button type="button" data-theme-choice="light" aria-pressed="true">Light</button>
-            <button type="button" data-theme-choice="navy" aria-pressed="false">Navy</button>
-          </div>
-        </div>
       </div>
     </header>
 
@@ -71,50 +61,6 @@
             <span>Every case identifies deterministic facts, advisory judgment, and what remains unproved.</span>
           </div>
         </aside>
-      </section>
-
-      <section class="section" id="lineage" aria-labelledby="lineage-title">
-        <div class="shell">
-          <div class="section-intro">
-            <p class="eyebrow">Product lineage</p>
-            <h2 id="lineage-title">Related by governance responsibility. Independent by design.</h2>
-            <p>
-              AI Radar is the source system in which these coding-agent governance responsibilities were
-              exercised. AgentGov extracts the portable contracts and rebuilds them as an independent,
-              repository-native product.
-            </p>
-          </div>
-          <div class="origin-grid">
-            <article class="origin-card radar">
-              <span class="number" aria-hidden="true">01</span>
-              <p class="eyebrow">Reference system</p>
-              <h3>AI Radar</h3>
-              <p>
-                Demonstrated requirement admission, selective architecture context, bounded development,
-                fresh verification, action-loop review, and human approval inside a real AI product.
-              </p>
-              <a href="https://app.ai-radar-lab.com/portfolio/" target="_blank" rel="noreferrer">Inspect the public AI Radar evidence portfolio ↗</a>
-            </article>
-            <div class="origin-bridge" aria-label="Governance patterns are deliberately rewritten">
-              <div><span aria-hidden="true">→</span><strong>Extract · classify · rewrite</strong></div>
-            </div>
-            <article class="origin-card agentgov">
-              <span class="number" aria-hidden="true">02</span>
-              <p class="eyebrow">Portable product</p>
-              <h3>Agent Governance</h3>
-              <p>
-                Re-expresses those responsibilities as vendor-neutral task contracts, repository context,
-                deterministic checks, advisory findings, fresh evidence, and explicit denied authority.
-              </p>
-              <a href="ai-radar-extraction-map.md">Inspect the source and reuse decisions →</a>
-            </article>
-          </div>
-          <p class="separation-note">
-            <strong>Separation boundary:</strong> AgentGov does not import AI Radar runtime code, prompts,
-            private data, infrastructure, product schemas, business gates, or deployment authority. The
-            relationship is documented lineage, not runtime coupling.
-          </p>
-        </div>
       </section>
 
       <section class="section" id="lifecycle" aria-labelledby="lifecycle-title">
@@ -303,6 +249,30 @@
         </div>
       </section>
 
+      <section class="section reference-section" id="lineage" aria-labelledby="lineage-title">
+        <div class="shell reference-layout">
+          <div class="section-intro">
+            <p class="eyebrow">Origin reference</p>
+            <h2 id="lineage-title">A useful precedent, not a second product inside this one.</h2>
+            <p>
+              AI Radar is one source system in which these governance responsibilities were exercised.
+              AgentGov deliberately rewrites only portable responsibilities as independent,
+              repository-native contracts.
+            </p>
+          </div>
+          <article class="reference-card">
+            <p class="eyebrow">Reuse decision</p>
+            <h3>Extract the responsibility. Preserve the boundary.</h3>
+            <p>
+              Requirement admission, selective architecture context, bounded development, fresh
+              verification, and human authority informed the abstraction. Product rules, runtime code,
+              prompts, private data, infrastructure, and deployment authority remain excluded.
+            </p>
+            <a href="ai-radar-extraction-map.md">Inspect the documented source and reuse decisions →</a>
+          </article>
+        </div>
+      </section>
+
       <section class="section" id="boundary" aria-labelledby="boundary-title">
         <div class="shell">
           <div class="section-intro">
@@ -380,22 +350,5 @@
       </div>
     </footer>
 
-    <script>
-      const themeButtons = document.querySelectorAll("[data-theme-choice]");
-
-      function applyTheme(theme) {
-        document.documentElement.dataset.theme = theme;
-        themeButtons.forEach((button) => {
-          button.setAttribute("aria-pressed", String(button.dataset.themeChoice === theme));
-        });
-        try {
-          localStorage.setItem("agentgov-portfolio-theme", theme);
-        } catch (_) {}
-      }
-
-      const initialTheme = document.documentElement.dataset.theme === "navy" ? "navy" : "light";
-      applyTheme(initialTheme);
-      themeButtons.forEach((button) => button.addEventListener("click", () => applyTheme(button.dataset.themeChoice)));
-    </script>
   </body>
 </html>

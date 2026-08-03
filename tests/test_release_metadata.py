@@ -31,22 +31,22 @@ def run_cli(*args: str) -> tuple[int, str, str]:
 
 
 class ReleaseManifestTests(unittest.TestCase):
-    def test_bundled_current_metadata_is_valid_without_claiming_a_self_hash(self) -> None:
+    def test_bundled_development_metadata_is_valid_without_claiming_an_artifact(self) -> None:
         document = load_release_manifest(CURRENT)
 
         self.assertEqual(validate_installed_release_metadata(document), [])
         self.assertEqual(document["artifact"], None)
-        self.assertIn(
-            "$.artifact is required for stable releases",
-            validate_release_manifest(document),
-        )
+        self.assertEqual(validate_release_manifest(document), [])
 
-    def test_bundled_stable_metadata_matches_runtime_and_compatibility(self) -> None:
+    def test_bundled_development_metadata_matches_runtime_and_compatibility(self) -> None:
         document = load_release_manifest(CURRENT)
 
         self.assertEqual(document["tool_version"], __version__)
-        self.assertEqual(document["channel"], "stable")
-        self.assertEqual(document["supported_from"], ["0.1.0", "0.2.0"])
+        self.assertEqual(document["channel"], "development")
+        self.assertEqual(
+            document["supported_from"],
+            ["0.1.0", "0.2.0", "0.2.1"],
+        )
         self.assertEqual(document["target_layout_version"], "1.0")
         self.assertFalse(document["repository_changes_declared"])
         self.assertEqual(document["declared_migrations"], [])

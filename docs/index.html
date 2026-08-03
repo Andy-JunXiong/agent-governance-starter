@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta
       name="description"
-      content="A local Python CLI and repository file standard for reviewable AI-assisted software development."
+      content="A repository-native control layer for reviewable coding-agent work from task intent to fresh evidence."
     />
     <meta name="theme-color" content="#10223f" />
     <meta
@@ -804,12 +804,13 @@
     <header id="top">
       <div class="shell hero">
         <div>
-          <span class="pill">v0.1 technical preview</span>
+          <span class="pill">Stable 0.2.1 · 0.3 development preview</span>
           <h1>Make AI-assisted repositories reviewable by default.</h1>
           <p>
-            A local Python CLI and repository file standard that connects agent
-            instructions, capability ownership, evaluation evidence and source
-            drift—while high-risk decisions remain human-controlled.
+            A repository-native control layer that connects human-owned task
+            intent, architecture context, bounded implementation, fresh
+            evidence and accountable review—while high-risk decisions remain
+            human-controlled.
           </p>
           <div class="actions">
             <a
@@ -1153,8 +1154,8 @@
           </div>
           <div class="code">
             <code
-              >python -m pip install "git+https://github.com/Andy-JunXiong/agent-governance-starter.git@main"
-              python -m agentgov inspect . python -m agentgov adopt . --project-name
+              >pipx install "https://github.com/Andy-JunXiong/agent-governance-starter/releases/download/v0.2.1/agent_governance_starter-0.2.1-py3-none-any.whl"
+              agentgov inspect . agentgov adopt . --project-name
               "My Project" --dry-run</code
             >
           </div>
@@ -1206,7 +1207,7 @@
     </main>
     <footer class="shell">
       <div class="footer-row">
-        <span>Agent Governance Starter Kit · v0.1 technical preview</span
+        <span>Agent Governance Starter Kit · stable 0.2.1 · 0.3 development preview</span
         ><span class="footer-links"
           ><a href="https://github.com/Andy-JunXiong/agent-governance-starter"
             >GitHub</a

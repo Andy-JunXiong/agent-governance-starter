@@ -2,15 +2,17 @@
 
 ## `agentgov` is not recognized
 
-Confirm that the intended Python environment is activated and install through that interpreter:
+Confirm that pipx is available, install the published stable wheel, and ensure
+the pipx scripts directory is on `PATH`:
 
 ```powershell
 python --version
-python -m pip install "git+https://github.com/Andy-JunXiong/agent-governance-starter.git@main"
-python -m agentgov --help
+pipx install "https://github.com/Andy-JunXiong/agent-governance-starter/releases/download/v0.2.1/agent_governance_starter-0.2.1-py3-none-any.whl"
+pipx ensurepath
+agentgov --help
 ```
 
-Prefer `python -m agentgov` throughout the guides. It avoids relying on the environment's scripts directory being present on `PATH`.
+After `pipx ensurepath`, open a new terminal if `agentgov` is still not found.
 
 ## Windows wheel build fails with `No such file or directory`
 
@@ -18,8 +20,8 @@ This can happen when the starter is cloned inside an already deeply nested targe
 
 ```powershell
 Set-Location ..
-python -m pip install "git+https://github.com/Andy-JunXiong/agent-governance-starter.git@main"
-python -m agentgov --help
+pipx install "https://github.com/Andy-JunXiong/agent-governance-starter/releases/download/v0.2.1/agent_governance_starter-0.2.1-py3-none-any.whl"
+agentgov --help
 ```
 
 The starter clone is not part of the governed project and should not be committed there. Do not delete it until you have confirmed the exact path and that it contains no work you need.
@@ -33,10 +35,11 @@ If activation or test commands mention a Python version that is no longer instal
 `check` requires a check target before the repository path. Use:
 
 ```powershell
-python -m agentgov check repository .
+agentgov check repository .
 ```
 
-`python -m agentgov check . --format text` is not valid syntax. Formatting belongs to `report`, not `check`.
+`agentgov check . --format text` is not valid syntax. Formatting belongs to
+`report`, not `check`.
 
 From a source checkout, use:
 
@@ -56,8 +59,8 @@ PYTHONPATH=src python -m agentgov --help
 This is intentional. `init` only supports a new or empty target. For an existing repository, use:
 
 ```powershell
-python -m agentgov inspect path/to/repository
-python -m agentgov adopt path/to/repository --project-name "Example Project" --dry-run
+agentgov inspect path/to/repository
+agentgov adopt path/to/repository --project-name "Example Project" --dry-run
 ```
 
 ## `inspect` reports `MISSING`

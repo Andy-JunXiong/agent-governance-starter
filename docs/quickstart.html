@@ -25,7 +25,7 @@
   <main class="shell">
     <section class="emphasis">
       <h2>Before you start</h2>
-      <p>Open a terminal at the root of the repository you want to govern and activate that repository's Python environment. Use Python 3.11 or newer. A passing static check means a declared deterministic contract ran successfully; it does not authorize merge, release or deployment.</p>
+      <p>Open a terminal at the root of the repository you want to govern. Use Python 3.11 or newer and ensure <code>pipx</code> is available. A passing static check means a declared deterministic contract ran successfully; it does not authorize merge, release or deployment.</p>
     </section>
     <section>
       <h2>Guided onboarding development preview</h2>
@@ -46,9 +46,9 @@ agentgov update --check .</code></pre>
     </section>
     <section>
       <h2>1. Install</h2>
-      <p>Run these commands from the repository you want to govern. They install the current package without copying the starter source tree into your repository.</p>
+      <p>Run these commands from the repository you want to govern. They install the published stable 0.2.1 package without copying the starter source tree into your repository.</p>
       <pre><code>python --version
-pipx install "https://github.com/Andy-JunXiong/agent-governance-starter/releases/download/v0.1.0/agent_governance_starter-0.1.0-py3-none-any.whl"
+pipx install "https://github.com/Andy-JunXiong/agent-governance-starter/releases/download/v0.2.1/agent_governance_starter-0.2.1-py3-none-any.whl"
 agentgov --version
 agentgov --help</code></pre>
       <h3>Run without installing</h3>
@@ -62,10 +62,10 @@ python -m agentgov --help</code></pre></div>
     <section>
       <h2>2. Adopt an existing repository</h2>
       <p>If your terminal is already at the target repository root, use <code>.</code>. Run one command at a time and review its output before continuing.</p>
-      <pre><code>python -m agentgov inspect .
-python -m agentgov adopt . --project-name "My Project" --dry-run
-python -m agentgov adopt . --project-name "My Project"
-python -m agentgov check repository .</code></pre>
+      <pre><code>agentgov inspect .
+agentgov adopt . --project-name "My Project" --dry-run
+agentgov adopt . --project-name "My Project"
+agentgov check repository .</code></pre>
       <div class="states">
         <div class="state"><strong>PRESENT</strong>Preserve and review the existing governance path.</div>
         <div class="state"><strong>MISSING</strong>Decide whether the adoption plan should create it.</div>
@@ -79,22 +79,22 @@ python -m agentgov check repository .</code></pre>
       <h2>3. Start a new repository</h2>
       <div class="platforms">
         <div><strong>PowerShell</strong><pre><code>$Project = Join-Path $PWD "governed-project"
-python -m agentgov init $Project --project-name "My Project"
-python -m agentgov check repository $Project</code></pre></div>
+agentgov init $Project --project-name "My Project"
+agentgov check repository $Project</code></pre></div>
         <div><strong>Bash / zsh</strong><pre><code>PROJECT="$PWD/governed-project"
-python -m agentgov init "$PROJECT" --project-name "My Project"
-python -m agentgov check repository "$PROJECT"</code></pre></div>
+agentgov init "$PROJECT" --project-name "My Project"
+agentgov check repository "$PROJECT"</code></pre></div>
       </div>
     </section>
     <section>
       <h2>4. Check and generate a report</h2>
       <div class="platforms">
-        <div><strong>PowerShell</strong><pre><code>python -m agentgov check repository path/to/project
-python -m agentgov report repository path/to/project `
+        <div><strong>PowerShell</strong><pre><code>agentgov check repository path/to/project
+agentgov report repository path/to/project `
   --format html `
   --output path/to/project/governance-report.html</code></pre></div>
-        <div><strong>Bash / zsh</strong><pre><code>python -m agentgov check repository path/to/project
-python -m agentgov report repository path/to/project \
+        <div><strong>Bash / zsh</strong><pre><code>agentgov check repository path/to/project
+agentgov report repository path/to/project \
   --format html \
   --output path/to/project/governance-report.html</code></pre></div>
       </div>

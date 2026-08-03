@@ -677,12 +677,18 @@ Continue productizing the implemented ADR-0009 loop:
    replay observed development. The metadata-only bundle is immutable,
    integrity-checked, explicitly confirmed, and now supports honest
    `exported_development` and `combined` Monitor views;
-3. wire the static Monitor as an opt-in GitHub Actions artifact only after that
+3. [Completed prerequisite] Give development source a distinct
+   `0.3.0.dev0` runtime and bundled-metadata identity while retaining stable
+   0.2.1 as the published consumer fact;
+4. [Completed prerequisite] Synchronize README, status, plans, public HTML,
+   localized guides, sample reports, release facts, and protecting tests; keep
+   AgentGov's product page primary and AI Radar as a bounded origin reference;
+5. wire the static Monitor as an opt-in GitHub Actions artifact only after that
    observation boundary is testable;
-4. converge installation, update, onboarding, task admission, and Monitor
+6. converge installation, update, onboarding, task admission, and Monitor
    generation on the same small guided workflow without hidden hooks or daemon
    authority;
-5. run release-candidate review and consumer migration gates before publishing
+7. run release-candidate review and consumer migration gates before publishing
    the development-governance 0.3 line.
 
 The uncoached adoption pilot, Taxi record, 0.3 release packaging, NYC migration,

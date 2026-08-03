@@ -114,11 +114,11 @@ CI are a final backstop rather than AgentGov's primary product interaction.
 ### Monitoring and learning
 
 Uses review outcomes and incidents to improve policies and checks. Runtime
-monitoring platforms are integrations, not part of the v0.1 core.
+monitoring platforms are integrations, not part of the repository-native core.
 
 ## Finding semantics
 
-The v0.1 CLI reporting model emits:
+The CLI reporting model emits:
 
 - `PASS`: a required, deterministic condition is satisfied;
 - `WARN`: a deterministic gap exists but policy does not make it blocking;

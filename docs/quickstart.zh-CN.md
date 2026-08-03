@@ -4,13 +4,14 @@
 
 ## 1. 安装
 
-在需要治理的仓库根目录打开终端，激活该仓库自己的 Python 环境，然后直接从 GitHub 安装。不要把 starter 克隆到目标仓库内部；Windows 上的深层嵌套路径可能导致 wheel 构建失败。
+在需要治理的仓库根目录打开终端，把已发布的稳定版安装到隔离的
+pipx 环境。不要把 starter 克隆到目标仓库内部。
 
 ```powershell
 python --version
-python -m pip install "git+https://github.com/Andy-JunXiong/agent-governance-starter.git@main"
+pipx install "https://github.com/Andy-JunXiong/agent-governance-starter/releases/download/v0.2.1/agent_governance_starter-0.2.1-py3-none-any.whl"
 agentgov --version
-python -m agentgov --help
+agentgov --help
 ```
 
 只有开发 starter 本身时，才应将它克隆到独立且较短的路径，并从包含 `src` 的 starter 根目录运行：
@@ -25,7 +26,7 @@ python -m agentgov --help
 先执行只读检查：
 
 ```powershell
-python -m agentgov inspect .
+agentgov inspect .
 ```
 
 结果含义：
@@ -38,13 +39,13 @@ python -m agentgov inspect .
 预览将创建和保留的文件：
 
 ```powershell
-python -m agentgov adopt . --project-name "项目名称" --dry-run
+agentgov adopt . --project-name "项目名称" --dry-run
 ```
 
 确认计划后，创建缺失文件：
 
 ```powershell
-python -m agentgov adopt . --project-name "项目名称"
+agentgov adopt . --project-name "项目名称"
 ```
 
 该命令不覆盖已有普通文件、不合并 `CLAUDE.md` 或 Copilot/Cursor 指令，也不运行 Git 命令。
@@ -52,9 +53,9 @@ python -m agentgov adopt . --project-name "项目名称"
 接着验证并生成报告：
 
 ```powershell
-python -m agentgov check repository .
-python -m agentgov report repository . --output governance-report.md
-python -m agentgov report repository . --format html --output governance-report.html
+agentgov check repository .
+agentgov report repository . --output governance-report.md
+agentgov report repository . --format html --output governance-report.html
 ```
 
 打开 `AGENTS.md` 和 `governance-report.html`。HTML 报告会用可视化方式解释四种状态、需要处理的事项和人工授权边界。处理或明确延后所有 `WARN`，并对 `ADVISORY` 记录人工判断。
@@ -67,9 +68,9 @@ python -m agentgov report repository . --format html --output governance-report.
 
 ```powershell
 $Project = Join-Path $PWD "governed-project"
-python -m agentgov init $Project --project-name "项目名称"
-python -m agentgov check repository $Project
-python -m agentgov report repository $Project --output "$Project/governance-report.md"
+agentgov init $Project --project-name "项目名称"
+agentgov check repository $Project
+agentgov report repository $Project --output "$Project/governance-report.md"
 ```
 
 生成结果会故意保留 placeholder 和早期 evaluation readiness。必须根据真实项目修改，而不是为了得到全绿结果而删除警告。

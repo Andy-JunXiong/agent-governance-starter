@@ -1,0 +1,91 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-development-version-identity",
+  "title": "Give future 0.3 source builds an explicit development identity",
+  "requirement": {
+    "summary": "Prevent a wheel built from future-0.3 development source from reporting the published stable 0.2.1 identity before release review and publication.",
+    "source_refs": [
+      "docs/experiments/installed-development-governance-pilot.md",
+      "docs/development-plan.md"
+    ]
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": [
+      "docs/adr/0009-govern-coding-agents-during-development.md"
+    ],
+    "rationale": "The independent installed-build pilot proved the source wheel and stable release could share the same displayed version even though their contents differed, which blocks trustworthy workflow pinning and release-candidate review."
+  },
+  "goal": "Set one PEP 440 future-0.3 development version across runtime and bundled compatibility metadata while retaining published stable and managed-consumer identities as historical external facts.",
+  "non_goals": [
+    "Do not publish a wheel, tag, release, manifest asset, or package index entry.",
+    "Do not change the version or digest pinned by an existing stable consumer workflow.",
+    "Do not wire the Development Monitor into GitHub Actions or migrate NYC in this slice.",
+    "Do not claim release-candidate or stable readiness from a development identity."
+  ],
+  "scope": {
+    "include_paths": [
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-03.md",
+      "docs/development-plan.md",
+      "governance/tasks/p0-development-version-identity.json",
+      "release/README.md",
+      "release/current.json",
+      "src/agentgov/__init__.py",
+      "tests/test_package.py",
+      "tests/test_release_metadata.py",
+      "tests/test_update_check.py"
+    ],
+    "exclude_paths": [
+      ".github",
+      "docs/releases",
+      "src/agentgov/consumer_ci.py",
+      "NYC"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0009-govern-coding-agents-during-development.md",
+    "docs/adr/INVARIANTS.md"
+  ],
+  "acceptance_signals": [
+    "Runtime and package metadata report 0.3.0.dev0 from the existing single version source.",
+    "Bundled current metadata declares the matching development channel and validates without claiming a published artifact digest.",
+    "Compatibility metadata includes published stable 0.2.1 as an eligible prior version without changing repository layout or migration claims.",
+    "Published stable 0.2.1 documentation and managed-consumer pins remain unchanged historical facts.",
+    "Focused package, release-metadata, and update tests pass, followed by the complete suite and repository governance check."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_package tests.test_release_metadata tests.test_update_check -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check repository ."
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "medium",
+    "items": [
+      "Update comparison could accidentally treat a published stable version as newer than the development runtime.",
+      "Bundled compatibility metadata could drift from the runtime version or make an unsupported migration claim.",
+      "Consumer workflow pins could be changed before a reviewed 0.3 artifact and digest exist."
+    ]
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "owner": "Human product owner",
+    "evidence_refs": []
+  },
+  "stop_conditions": [
+    "Stop if establishing a development identity requires changing a published tag, release asset, or consumer workflow.",
+    "Stop if runtime and bundled metadata cannot retain one version source without weakening manifest validation.",
+    "Stop if the change would imply release-candidate or stable approval."
+  ],
+  "decision": {
+    "state": "admitted",
+    "decided_by": "Human product owner",
+    "rationale": "The user asked to continue today's work, and the completed installed pilot recorded this identity separation as a release blocker."
+  }
+}
