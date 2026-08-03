@@ -1,3 +1,9 @@
+---
+layout: reference
+title: Development changed-file scope check
+source_path: docs/development-scope-check.md
+---
+
 # Development changed-file scope check
 
 ## Status

@@ -1,3 +1,9 @@
+---
+layout: reference
+title: AI Radar extraction map
+source_path: docs/ai-radar-extraction-map.md
+---
+
 # AI Radar extraction map
 
 ## Purpose

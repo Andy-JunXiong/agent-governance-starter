@@ -1,3 +1,9 @@
+---
+layout: reference
+title: Consumer CI and visible governance status
+source_path: docs/consumer-ci.md
+---
+
 # Consumer CI and visible governance status
 
 ## Purpose

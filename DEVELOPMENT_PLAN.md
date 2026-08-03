@@ -683,8 +683,9 @@ Continue productizing the implemented ADR-0009 loop:
 4. [Completed prerequisite] Synchronize README, status, plans, public HTML,
    localized guides, sample reports, release facts, and protecting tests; keep
    AgentGov's product page primary and AI Radar as a bounded origin reference;
-   publish Portfolio evidence through shared-layout HTML pages rather than raw
-   Markdown or project-root-escaping schema links;
+   publish Portfolio evidence by applying the shared reference layout directly
+   to authoritative Markdown, rather than raw Markdown, conflicting proxy
+   outputs, or project-root-escaping schema links;
 5. wire the static Monitor as an opt-in GitHub Actions artifact only after that
    observation boundary is testable;
 6. converge installation, update, onboarding, task admission, and Monitor

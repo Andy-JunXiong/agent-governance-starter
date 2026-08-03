@@ -1,3 +1,9 @@
+---
+layout: reference
+title: Fresh validation evidence and completion reconciliation
+source_path: docs/development-evidence.md
+---
+
 # Fresh validation evidence and completion reconciliation
 
 ## Status

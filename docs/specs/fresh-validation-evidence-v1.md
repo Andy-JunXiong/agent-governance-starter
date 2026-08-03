@@ -1,3 +1,9 @@
+---
+layout: reference
+title: Fresh validation evidence semantics v1
+source_path: docs/specs/fresh-validation-evidence-v1.md
+---
+
 # Fresh Validation Evidence Semantics v1
 
 Status: design contract; hard gate before Phase 3 implementation

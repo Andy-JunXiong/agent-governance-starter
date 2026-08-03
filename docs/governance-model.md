@@ -1,3 +1,9 @@
+---
+layout: reference
+title: Governance model
+source_path: docs/governance-model.md
+---
+
 # Governance model
 
 ## Problem

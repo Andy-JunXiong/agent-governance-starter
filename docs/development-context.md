@@ -1,3 +1,9 @@
+---
+layout: reference
+title: Development governance context
+source_path: docs/development-context.md
+---
+
 # Development governance context
 
 ## Status

@@ -9,10 +9,11 @@ Last verified: 2026-08-03
 - Canonical capability layout: `governance/`.
 - Legacy `prompt-governance/` input remains a bounded, read-only compatibility
   surface.
-- The working copy replaces raw-Markdown Portfolio links with project-base-aware
-  AgentGov reference pages generated from authoritative repository sources.
-  Published schema copies are byte-checked against their source contracts.
-  This Pages repair is validated locally but not yet committed or published.
+- Portfolio links now target project-base-aware HTML outputs generated from
+  authoritative repository Markdown. A live Pages replay exposed and the
+  working copy corrects a Jekyll same-destination collision by putting the
+  AgentGov layout directly on those Markdown sources. Published schema copies
+  remain byte-checked against their source contracts.
 - Merge, publish, release, and deployment remain separate human-authorized
   actions.
 
@@ -247,13 +248,14 @@ Published-reference-page validation on 2026-08-03:
 - 11 focused Portfolio and reference-page tests passed;
 - the admitted reference-page task returned
   `PASS=6 WARN=0 FAIL=0 ADVISORY=1`, its working-copy scope returned
-  `PASS=25 FAIL=0 ADVISORY=1`, and repository governance returned
+  `PASS=29 FAIL=0 ADVISORY=1`, and repository governance returned
   `PASS=16 WARN=2 FAIL=0 ADVISORY=4`;
 - no Portfolio link ends in `.md` or starts with `../`, every local target
   exists, and both published schema JSON files are byte-identical to their
   authoritative source schemas;
-- local validation cannot prove the GitHub Pages Jekyll build; the rendered
-  public URLs remain a post-push verification gate.
+- the first live Pages build proved schema publication and link routing but
+  exposed a same-destination layout collision for Markdown-backed HTML. The
+  corrected Markdown-front-matter build remains a post-push verification gate.
 
 Documentation and development-source validation on 2026-08-03:
 

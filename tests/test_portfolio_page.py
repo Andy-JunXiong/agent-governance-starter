@@ -62,6 +62,10 @@ class EvidencePortfolioTests(unittest.TestCase):
             href
             for href in relative_links
             if not (DOCS / href).resolve().exists()
+            and not (
+                href.endswith(".html")
+                and (DOCS / f"{href[:-5]}.md").resolve().exists()
+            )
         ]
         self.assertEqual([], missing)
 

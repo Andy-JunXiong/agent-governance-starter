@@ -1,3 +1,9 @@
+---
+layout: reference
+title: Development trigger and routing semantics v1
+source_path: docs/specs/development-trigger-routing-v1.md
+---
+
 # Development Trigger and Routing Semantics v1
 
 Status: design contract; required before Phase 2 implementation

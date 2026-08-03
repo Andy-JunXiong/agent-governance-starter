@@ -1,3 +1,9 @@
+---
+layout: reference
+title: PR-center architecture drift case
+source_path: docs/case-studies/0001-pr-center-architecture-drift.md
+---
+
 # Case study 0001: PR-center architecture drift
 
 ## Case identity

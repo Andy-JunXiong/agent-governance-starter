@@ -1,3 +1,9 @@
+---
+layout: reference
+title: Govern coding agents during development
+source_path: docs/adr/0009-govern-coding-agents-during-development.md
+---
+
 # ADR-0009: Govern Coding Agents During Development
 
 ## Decision gate

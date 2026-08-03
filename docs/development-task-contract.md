@@ -1,3 +1,9 @@
+---
+layout: reference
+title: Development task contract
+source_path: docs/development-task-contract.md
+---
+
 # Development task contract
 
 ## Status
