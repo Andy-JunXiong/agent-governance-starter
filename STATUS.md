@@ -9,6 +9,10 @@ Last verified: 2026-08-03
 - Canonical capability layout: `governance/`.
 - Legacy `prompt-governance/` input remains a bounded, read-only compatibility
   surface.
+- The working copy replaces raw-Markdown Portfolio links with project-base-aware
+  AgentGov reference pages generated from authoritative repository sources.
+  Published schema copies are byte-checked against their source contracts.
+  This Pages repair is validated locally but not yet committed or published.
 - Merge, publish, release, and deployment remain separate human-authorized
   actions.
 
@@ -236,6 +240,20 @@ Future-0.3 development-governance integration and pre-release evidence:
 - A successful check does not prove semantic governance sufficiency.
 
 ## Validation
+
+Published-reference-page validation on 2026-08-03:
+
+- 511 unit tests passed with one platform-limited skip;
+- 11 focused Portfolio and reference-page tests passed;
+- the admitted reference-page task returned
+  `PASS=6 WARN=0 FAIL=0 ADVISORY=1`, its working-copy scope returned
+  `PASS=25 FAIL=0 ADVISORY=1`, and repository governance returned
+  `PASS=16 WARN=2 FAIL=0 ADVISORY=4`;
+- no Portfolio link ends in `.md` or starts with `../`, every local target
+  exists, and both published schema JSON files are byte-identical to their
+  authoritative source schemas;
+- local validation cannot prove the GitHub Pages Jekyll build; the rendered
+  public URLs remain a post-push verification gate.
 
 Documentation and development-source validation on 2026-08-03:
 

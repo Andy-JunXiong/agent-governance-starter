@@ -1,0 +1,109 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-published-reference-pages",
+  "title": "Render portfolio evidence links inside the AgentGov site",
+  "requirement": {
+    "summary": "Replace raw Markdown and broken out-of-root schema links in the public evidence portfolio with AgentGov-styled HTML reference pages and published, synchronized schema assets.",
+    "source_refs": [
+      "docs/portfolio.html",
+      "docs/development-scope-check.md",
+      "schemas/development-task.schema.json",
+      "schemas/development-scope-report.schema.json"
+    ]
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": [
+      "governance/tasks/p0-public-documentation-sync.json"
+    ],
+    "rationale": "GitHub Pages served linked Markdown as raw source and resolved ../schemas outside the project base path, breaking the intended evidence-reading journey."
+  },
+  "goal": "Make every portfolio evidence link open a readable, branded page within the AgentGov GitHub Pages project while retaining repository Markdown and schemas as the authoritative sources.",
+  "non_goals": [
+    "Do not replace repository Markdown or JSON sources with generated HTML as the contract authority.",
+    "Do not introduce a client-side Markdown renderer, external CDN, runtime service, or unsafe HTML injection path.",
+    "Do not change governance semantics, schemas, release identity, or consumer repositories.",
+    "Do not publish, commit, or push without separate human authorization."
+  ],
+  "scope": {
+    "include_paths": [
+      "DEVELOPMENT_PLAN.md",
+      "STATUS.md",
+      "docs/_layouts/reference.html",
+      "docs/adr/0009-govern-coding-agents-during-development.html",
+      "docs/ai-radar-extraction-map.html",
+      "docs/case-studies/0001-pr-center-architecture-drift.html",
+      "docs/consumer-ci.html",
+      "docs/development-context.html",
+      "docs/development-evidence.html",
+      "docs/development-log/2026-08-03.md",
+      "docs/development-plan.md",
+      "docs/development-scope-check.html",
+      "docs/development-task-contract.html",
+      "docs/governance-model.html",
+      "docs/portfolio.html",
+      "docs/reference.css",
+      "docs/schemas/development-scope-report.schema.html",
+      "docs/schemas/development-scope-report.schema.json",
+      "docs/schemas/development-task.schema.html",
+      "docs/schemas/development-task.schema.json",
+      "docs/specs/development-trigger-routing-v1.html",
+      "docs/specs/fresh-validation-evidence-v1.html",
+      "governance/tasks/p0-published-reference-pages.json",
+      "tests/test_portfolio_page.py",
+      "tests/test_published_reference_pages.py"
+    ],
+    "exclude_paths": [
+      ".github",
+      "src",
+      "schemas",
+      "docs/releases",
+      "NYC"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0009-govern-coding-agents-during-development.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/ai-radar-extraction-map.md"
+  ],
+  "acceptance_signals": [
+    "No portfolio href ends in .md or starts with ../.",
+    "Every portfolio reference target exists inside docs and uses the shared AgentGov reference layout.",
+    "Published schema JSON files are byte-identical to their authoritative repository schemas.",
+    "Schema labels open styled HTML views and the adjacent JSON assets remain directly addressable.",
+    "Reference pages preserve AgentGov navigation, visual tokens, source attribution, and human-authority boundaries.",
+    "Focused page tests and the complete unit suite pass."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_portfolio_page tests.test_published_reference_pages -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check repository ."
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "medium",
+    "items": [
+      "Jekyll include or base-path behavior could produce a local-looking source file that fails after Pages builds.",
+      "Published schema copies could drift from their authoritative source files.",
+      "A generic Markdown rendering mechanism could create an unsafe or misleading content boundary."
+    ]
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "owner": "Human product owner",
+    "evidence_refs": []
+  },
+  "stop_conditions": [
+    "Stop if the solution requires enabling unsafe client-side rendering or an external runtime dependency.",
+    "Stop if schema publication requires changing the authoritative schema content.",
+    "Stop if GitHub Pages cannot produce project-base-aware HTML from repository-owned sources."
+  ],
+  "decision": {
+    "state": "admitted",
+    "decided_by": "Human product owner",
+    "rationale": "The user supplied public screenshots and exact failing URLs showing raw Markdown presentation and two schema 404 responses."
+  }
+}

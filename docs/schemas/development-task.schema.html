@@ -1,0 +1,8 @@
+---
+layout: reference
+title: Development task JSON schema
+source_path: schemas/development-task.schema.json
+---
+{% capture schema_json %}{% include_relative development-task.schema.json %}{% endcapture %}
+<p>This is the published browser view of the strict development-task contract. The adjacent JSON file is byte-identical to the repository source schema.</p>
+<pre><code>{{ schema_json | escape }}</code></pre>

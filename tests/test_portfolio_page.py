@@ -35,7 +35,7 @@ class EvidencePortfolioTests(unittest.TestCase):
         self.assertTrue(image_path.read_bytes().startswith(b"\x89PNG\r\n\x1a\n"))
 
     def test_portfolio_records_ai_radar_lineage_and_separation(self) -> None:
-        self.assertIn('href="ai-radar-extraction-map.md"', self.portfolio)
+        self.assertIn('href="ai-radar-extraction-map.html"', self.portfolio)
         self.assertIn("A useful precedent, not a second product inside this one", self.portfolio)
         self.assertNotIn("https://app.ai-radar-lab.com", self.portfolio)
 
@@ -64,6 +64,12 @@ class EvidencePortfolioTests(unittest.TestCase):
             if not (DOCS / href).resolve().exists()
         ]
         self.assertEqual([], missing)
+
+    def test_public_portfolio_does_not_link_raw_markdown_or_escape_site_root(self) -> None:
+        hrefs = re.findall(r'href="([^"]+)"', self.portfolio)
+
+        self.assertEqual([], [href for href in hrefs if href.endswith(".md")])
+        self.assertEqual([], [href for href in hrefs if href.startswith("../")])
 
     def test_portfolio_preserves_claim_and_authority_boundaries(self) -> None:
         self.assertIn("deterministic facts, advisory judgment", self.portfolio)

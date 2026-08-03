@@ -83,32 +83,32 @@
                 <li>
                   <span class="trace-index">01</span>
                   <div><strong>Admit requirement</strong><small>Goal, non-goals, scope, risk, acceptance and stop conditions</small></div>
-                  <a href="development-task-contract.md">Task contract</a>
+                  <a href="development-task-contract.html">Task contract</a>
                 </li>
                 <li>
                   <span class="trace-index">02</span>
                   <div><strong>Ground architecture</strong><small>Select repository-owned authority, decisions, invariants and protocols</small></div>
-                  <a href="development-context.md">Context record</a>
+                  <a href="development-context.html">Context record</a>
                 </li>
                 <li>
                   <span class="trace-index">03</span>
                   <div><strong>Bound implementation</strong><small>Compare Git-reported changes with exact admitted path prefixes</small></div>
-                  <a href="development-scope-check.md">Scope check</a>
+                  <a href="development-scope-check.html">Scope check</a>
                 </li>
                 <li>
                   <span class="trace-index">04</span>
                   <div><strong>Verify fresh evidence</strong><small>Run declared commands and bind results to an unchanged change snapshot</small></div>
-                  <a href="development-evidence.md">Evidence contract</a>
+                  <a href="development-evidence.html">Evidence contract</a>
                 </li>
                 <li>
                   <span class="trace-index">05</span>
                   <div><strong>Reconcile completion</strong><small>Surface scope drift, stale evidence and unresolved human judgments</small></div>
-                  <a href="specs/fresh-validation-evidence-v1.md">Reconciliation spec</a>
+                  <a href="specs/fresh-validation-evidence-v1.html">Reconciliation spec</a>
                 </li>
                 <li>
                   <span class="trace-index">06</span>
                   <div><strong>Replay in PR and CI</strong><small>Reproduce deterministic facts outside the coding agent's local session</small></div>
-                  <a href="consumer-ci.md">CI boundary</a>
+                  <a href="consumer-ci.html">CI boundary</a>
                 </li>
               </ol>
             </div>
@@ -172,13 +172,13 @@
               <div class="tier"><strong>Evidence tier</strong><span>Deterministic repository history + accepted advisory architecture judgment</span></div>
               <p class="case-boundary"><strong>Boundary:</strong> history proves what changed and when. It does not objectively prove motivation or the optimal roadmap.</p>
               <div class="evidence-links">
-                <a href="case-studies/0001-pr-center-architecture-drift.md">Read the full drift case →</a>
+                <a href="case-studies/0001-pr-center-architecture-drift.html">Read the full drift case →</a>
                 <details>
                   <summary>Inspect supporting evidence</summary>
                   <ul>
-                    <li><a href="adr/0009-govern-coding-agents-during-development.md">ADR-0009 product decision</a></li>
-                    <li><a href="governance-model.md">Current governance model</a></li>
-                    <li><a href="ai-radar-extraction-map.md">Extraction revalidation</a></li>
+                    <li><a href="adr/0009-govern-coding-agents-during-development.html">ADR-0009 product decision</a></li>
+                    <li><a href="governance-model.html">Current governance model</a></li>
+                    <li><a href="ai-radar-extraction-map.html">Extraction revalidation</a></li>
                   </ul>
                 </details>
               </div>
@@ -203,13 +203,13 @@
               <div class="tier"><strong>Evidence tier</strong><span>Schema-defined + fixture-tested + Git-observed</span></div>
               <p class="case-boundary"><strong>Boundary:</strong> an in-scope path is not proof of semantic relevance, architectural correctness, or implementation quality.</p>
               <div class="evidence-links">
-                <a href="development-scope-check.md">Read the scope contract →</a>
+                <a href="development-scope-check.html">Read the scope contract →</a>
                 <details>
                   <summary>Inspect supporting evidence</summary>
                   <ul>
-                    <li><a href="../schemas/development-task.schema.json">Development task schema</a></li>
-                    <li><a href="../schemas/development-scope-report.schema.json">Scope report schema</a></li>
-                    <li><a href="specs/development-trigger-routing-v1.md">Routing semantics</a></li>
+                    <li><a href="schemas/development-task.schema.html">Development task schema</a></li>
+                    <li><a href="schemas/development-scope-report.schema.html">Scope report schema</a></li>
+                    <li><a href="specs/development-trigger-routing-v1.html">Routing semantics</a></li>
                   </ul>
                 </details>
               </div>
@@ -234,13 +234,13 @@
               <div class="tier"><strong>Evidence tier</strong><span>Snapshot-bound validation + reconciliation contract</span></div>
               <p class="case-boundary"><strong>Boundary:</strong> verified means the declared commands passed for the recorded change set. Requirement satisfaction remains a human judgment.</p>
               <div class="evidence-links">
-                <a href="development-evidence.md">Read the evidence contract →</a>
+                <a href="development-evidence.html">Read the evidence contract →</a>
                 <details>
                   <summary>Inspect supporting evidence</summary>
                   <ul>
-                    <li><a href="specs/fresh-validation-evidence-v1.md">Fresh evidence specification</a></li>
+                    <li><a href="specs/fresh-validation-evidence-v1.html">Fresh evidence specification</a></li>
                     <li><a href="demo-governance-report.html">Sample repository report</a></li>
-                    <li><a href="adr/0009-govern-coding-agents-during-development.md">Authority boundary</a></li>
+                    <li><a href="adr/0009-govern-coding-agents-during-development.html">Authority boundary</a></li>
                   </ul>
                 </details>
               </div>
@@ -268,7 +268,7 @@
               verification, and human authority informed the abstraction. Product rules, runtime code,
               prompts, private data, infrastructure, and deployment authority remain excluded.
             </p>
-            <a href="ai-radar-extraction-map.md">Inspect the documented source and reuse decisions →</a>
+            <a href="ai-radar-extraction-map.html">Inspect the documented source and reuse decisions →</a>
           </article>
         </div>
       </section>

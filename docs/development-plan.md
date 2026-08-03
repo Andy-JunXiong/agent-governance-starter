@@ -50,6 +50,11 @@ from published and consumer-adopted behavior.
   0.3.0.dev0, use one isolated pipx user path, keep the AgentGov product page
   primary, and present AI Radar only as a bounded origin reference after the
   AgentGov evidence story.
+- The working copy also replaces Portfolio raw-Markdown and out-of-root schema
+  links with shared-layout HTML reference proxies. Markdown and source schemas
+  remain authoritative; published JSON schema copies are byte-checked. A real
+  GitHub Pages build and URL replay remain required before this repair can be
+  called published.
 
 ## Ordered work
 
