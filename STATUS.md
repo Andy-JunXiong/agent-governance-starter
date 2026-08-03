@@ -10,10 +10,11 @@ Last verified: 2026-08-03
 - Legacy `prompt-governance/` input remains a bounded, read-only compatibility
   surface.
 - Portfolio links now target project-base-aware HTML outputs generated from
-  authoritative repository Markdown. A live Pages replay exposed and the
-  working copy corrects a Jekyll same-destination collision by putting the
-  AgentGov layout directly on those Markdown sources. Published schema copies
-  remain byte-checked against their source contracts.
+  authoritative repository Markdown. Commit `743f3b3` corrected a Jekyll
+  same-destination collision by putting the AgentGov layout directly on those
+  Markdown sources. The Pages build and all linked reference/schema surfaces
+  are publicly verified; published schema copies remain byte-checked against
+  their source contracts.
 - Merge, publish, release, and deployment remain separate human-authorized
   actions.
 
@@ -253,9 +254,11 @@ Published-reference-page validation on 2026-08-03:
 - no Portfolio link ends in `.md` or starts with `../`, every local target
   exists, and both published schema JSON files are byte-identical to their
   authoritative source schemas;
-- the first live Pages build proved schema publication and link routing but
-  exposed a same-destination layout collision for Markdown-backed HTML. The
-  corrected Markdown-front-matter build remains a post-push verification gate.
+- the first live Pages build exposed a same-destination layout collision for
+  Markdown-backed HTML; follow-up commit `743f3b3` built successfully, all 13
+  HTML reference pages returned 200 with the AgentGov layout, both schema JSON
+  URLs returned valid JSON, and the Portfolio retained zero `.md` or `../`
+  hrefs.
 
 Documentation and development-source validation on 2026-08-03:
 

@@ -52,10 +52,10 @@ from published and consumer-adopted behavior.
   AgentGov evidence story.
 - Portfolio raw-Markdown and out-of-root schema links now target project-local
   HTML. A live build exposed that same-name HTML proxies collide with Jekyll's
-  Markdown output, so the working copy applies the shared AgentGov layout
-  directly to authoritative Markdown and removes those proxies. Published JSON
-  schema copies remain byte-checked. A second Pages build and URL replay remain
-  required before the correction can be called published.
+  Markdown output, so commit `743f3b3` applies the shared AgentGov layout
+  directly to authoritative Markdown and removes those proxies. The follow-up
+  Pages build and public URL replay passed for all reference and schema
+  surfaces; published JSON schema copies remain byte-checked.
 
 ## Ordered work
 
