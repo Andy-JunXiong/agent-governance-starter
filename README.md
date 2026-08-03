@@ -10,7 +10,7 @@ developing; pull requests and CI remain an independent backstop.
 
 [![CI](https://github.com/Andy-JunXiong/agent-governance-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/Andy-JunXiong/agent-governance-starter/actions/workflows/ci.yml)
 
-[![Agent Governance — From task intent to verified evidence](docs/assets/agentgov-evidence-portfolio.png)](https://andy-junxiong.github.io/agent-governance-starter/)
+[![Agent Governance — From task intent to verified evidence](docs/assets/agentgov-social-preview.jpg)](https://andy-junxiong.github.io/agent-governance-starter/)
 
 <p align="center">
   <strong>Follow one coding-agent task from human-owned intent to reviewable evidence.</strong><br />

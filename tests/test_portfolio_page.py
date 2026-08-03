@@ -19,9 +19,9 @@ class EvidencePortfolioTests(unittest.TestCase):
 
     def test_readme_exposes_a_rendered_showcase_entry(self) -> None:
         showcase = self.readme.split("## Why this exists", 1)[0]
-        image_path = DOCS / "assets" / "agentgov-evidence-portfolio.png"
+        image_path = DOCS / "assets" / "agentgov-social-preview.jpg"
 
-        self.assertIn("docs/assets/agentgov-evidence-portfolio.png", showcase)
+        self.assertIn("docs/assets/agentgov-social-preview.jpg", showcase)
         self.assertIn(
             "https://andy-junxiong.github.io/agent-governance-starter/",
             showcase,
@@ -32,7 +32,7 @@ class EvidencePortfolioTests(unittest.TestCase):
         )
         self.assertNotIn("nyc", showcase.lower())
         self.assertNotIn("taxi", showcase.lower())
-        self.assertTrue(image_path.read_bytes().startswith(b"\x89PNG\r\n\x1a\n"))
+        self.assertTrue(image_path.read_bytes().startswith(b"\xff\xd8"))
 
     def test_portfolio_records_ai_radar_lineage_and_separation(self) -> None:
         self.assertIn('href="ai-radar-extraction-map.html"', self.portfolio)

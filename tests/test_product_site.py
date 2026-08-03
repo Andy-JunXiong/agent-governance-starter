@@ -110,7 +110,7 @@ class ProductSiteTests(unittest.TestCase):
         self.assertIn('href="troubleshooting.html"', english)
         self.assertNotIn("http://", content)
         self.assertNotIn("<script src=", content)
-        self.assertNotIn("<link ", content)
+        self.assertNotIn('rel="stylesheet"', content)
         self.assertNotIn("C:\\Users", content)
         self.assertNotIn("Relevance AI", content)
 

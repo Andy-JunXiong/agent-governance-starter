@@ -15,6 +15,11 @@ Last verified: 2026-08-03
   Markdown sources. The Pages build and all linked reference/schema surfaces
   are publicly verified; published schema copies remain byte-checked against
   their source contracts.
+- Public entry and reference pages now declare canonical Open Graph and
+  large-image card metadata backed by the repository-owned 1280 x 640
+  `docs/assets/agentgov-social-preview.jpg`. GitHub repository cards require
+  that same image to be uploaded separately through the repository Social
+  preview setting; page metadata cannot change GitHub's repository card.
 - Merge, publish, release, and deployment remain separate human-authorized
   actions.
 
