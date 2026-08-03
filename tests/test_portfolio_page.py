@@ -10,11 +10,25 @@ DOCS = ROOT / "docs"
 class EvidencePortfolioTests(unittest.TestCase):
     def setUp(self) -> None:
         self.portfolio = (DOCS / "portfolio.html").read_text(encoding="utf-8")
+        self.readme = (ROOT / "README.md").read_text(encoding="utf-8")
 
     def test_home_page_links_to_evidence_portfolio(self) -> None:
         home = (DOCS / "index.html").read_text(encoding="utf-8")
         self.assertIn('href="portfolio.html"', home)
         self.assertIn("Explore the evidence story", home)
+
+    def test_readme_exposes_a_rendered_showcase_entry(self) -> None:
+        showcase = self.readme.split("## Why this exists", 1)[0]
+        image_path = DOCS / "assets" / "agentgov-evidence-portfolio.png"
+
+        self.assertIn("docs/assets/agentgov-evidence-portfolio.png", showcase)
+        self.assertIn(
+            "https://andy-junxiong.github.io/agent-governance-starter/portfolio.html",
+            showcase,
+        )
+        self.assertNotIn("nyc", showcase.lower())
+        self.assertNotIn("taxi", showcase.lower())
+        self.assertTrue(image_path.read_bytes().startswith(b"\x89PNG\r\n\x1a\n"))
 
     def test_portfolio_records_ai_radar_lineage_and_separation(self) -> None:
         self.assertIn("https://app.ai-radar-lab.com/portfolio/", self.portfolio)

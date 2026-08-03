@@ -10,8 +10,19 @@ developing; pull requests and CI remain an independent backstop.
 
 [![CI](https://github.com/Andy-JunXiong/agent-governance-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/Andy-JunXiong/agent-governance-starter/actions/workflows/ci.yml)
 
-[Explore the product](docs/index.html) ·
-[Open the sample governance report](docs/demo-governance-report.html) ·
+[![Agent Governance — From task intent to verified evidence](docs/assets/agentgov-evidence-portfolio.png)](https://andy-junxiong.github.io/agent-governance-starter/portfolio.html)
+
+<p align="center">
+  <strong>Follow one coding-agent task from human-owned intent to reviewable evidence.</strong><br />
+  <a href="https://andy-junxiong.github.io/agent-governance-starter/portfolio.html">Explore the evidence portfolio →</a> ·
+  <a href="https://andy-junxiong.github.io/agent-governance-starter/demo-governance-report.html">Open the sample report</a> ·
+  <a href="https://andy-junxiong.github.io/agent-governance-starter/quickstart.html">Read the quickstart</a>
+</p>
+
+> The portfolio links claims to repository evidence and states where that evidence stops. It does not authorize commit, merge, publish, release, or deployment.
+
+[Explore the repository product page](docs/index.html) ·
+[Open the repository sample report](docs/demo-governance-report.html) ·
 [Run the quickstart](#runnable-cli-example) ·
 [Inspect the architecture](#detailed-architecture)
 
