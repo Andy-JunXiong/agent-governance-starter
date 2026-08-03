@@ -57,6 +57,21 @@ from published and consumer-adopted behavior.
   Pages build and public URL replay passed for all reference and schema
   surfaces; published JSON schema copies remain byte-checked.
 
+## Next-session starting point
+
+Start with item 5 under the top-level `Next Recommended Starting Point`: a
+small, opt-in GitHub Actions slice that publishes the existing static
+development Monitor as an artifact. Before editing a workflow, admit an exact
+task and verify that CI can consume only the redacted portable export or
+actor-validated CI facts without implying it observed local development.
+
+Keep the first slice create/preserve-safe, read-only apart from artifact
+publication, and independent from AI Radar and NYC. Do not combine it with a
+0.3 release, consumer migration, automatic upload of local state, exception
+records, action-loop self-reporting, merge authority, or deployment. Stop if
+the current release-pinned workflow contract cannot truthfully execute the
+development-source Monitor without a separately reviewed packaging decision.
+
 ## Ordered work
 
 ### Accepted productization constraint

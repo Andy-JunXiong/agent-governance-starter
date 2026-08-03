@@ -18,6 +18,22 @@ Last verified: 2026-08-03
 - Merge, publish, release, and deployment remain separate human-authorized
   actions.
 
+## End-of-day checkpoint - 2026-08-03
+
+- Today's development source, product story, documentation, and published
+  reference work is complete on `main` through commit `f3514d8`.
+- The public AgentGov product page and Portfolio are live; all 13 linked HTML
+  reference/schema views use the AgentGov layout, both schema JSON URLs are
+  valid, and the Portfolio contains no raw `.md` or project-root-escaping
+  links.
+- The latest full source validation passed 511 tests with one
+  platform-limited skip. No 0.3 release, consumer migration, NYC change, AI
+  Radar runtime dependency, merge automation, or deployment was introduced.
+- The next bounded product slice is the opt-in GitHub Actions artifact for the
+  static development Monitor. It must preserve the tested observation and
+  redaction boundary; release-candidate and consumer migration work remain
+  later human-controlled gates.
+
 ## Product direction
 
 - ADR-0009 makes development-time governance of coding-agent requirements,
