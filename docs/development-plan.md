@@ -94,12 +94,14 @@ handoff, zero/one/many rollover selection, and exact `REPLACE`. Seventeen
 delivered historical tasks are paused for routing hygiene, leaving one admitted
 RC closeout task.
 
-Next, review Draft PR #9 after its Windows path assertion and future RC manifest
-generation are corrected. Do not rewrite `v0.3.0rc1`, publish another candidate,
-promote stable 0.3.0, migrate a consumer, add automatic local-state upload,
-exception records, action-loop self-reporting, merge authority, or deployment
-without a separate decision. Stable update routing still requires a later
-fixed-tag stable wheel and digest.
+The approved correction slice makes the missing requirement-admission,
+action-loop-stagnation, and invariant-reconciliation protocols installable and
+aligns the Inventory and product sources of truth. The next product validation
+is an NYC development-loop shadow pilot beginning before code edits; a 0.3
+GitHub migration follows only as independent backstop replay. Do not rewrite
+`v0.3.0rc1`, publish another candidate, promote stable 0.3.0, modify NYC,
+add automatic local-state upload, mechanical runtime interruption, merge
+authority, or deployment without a separate decision.
 
 ## Ordered work
 
@@ -133,8 +135,11 @@ final UX.
    exclude precedence, rename endpoints, terminal/JSON/Markdown reporting, and
    Git no-mutation fixtures now pass. Phase 3 canonical snapshots add
    committed-since-base identity. Explicit exception records remain pending.
-4. Map deterministic task-boundary failures separately from advisory
-   requirement, architecture, exception, and human-ownership judgments.
+4. [First protocol and control mapping implemented] Map deterministic
+   task-boundary and evidence failures separately from advisory requirement,
+   architecture, stagnation, exception, reconciliation, and human-ownership
+   judgments. Runtime hook integration and observed false-positive tuning
+   remain pending.
 5. [Implemented development preview] Add completion reconciliation that requires fresh validation evidence and
    exposes durable governance drift before claiming completion. Before
    implementation, satisfy the canonical Git-layer, local-tool-state,
@@ -175,6 +180,13 @@ final UX.
     confirmation precede the create-only write; actor labels, local evidence
     pointers, source content, validation output, absolute paths, credential
     assignments, and recognized secret-token shapes cannot enter the bundle.
+12. [Next external pilot] Exercise the complete development loop on one real,
+    low-risk NYC task in shadow mode: human admission before editing,
+    repository-grounded context, bounded implementation, stagnation handling,
+    fresh verification, and invariant reconciliation. Record assistance,
+    friction, false positives, missed constraints, overrides, and time; do not
+    copy NYC policy into AgentGov or treat the later CI replay as the product
+    interaction.
 
 Acceptance signals:
 
@@ -228,14 +240,16 @@ Acceptance signals:
 1. Replay bounded AI Radar development scenarios for requirement admission,
    architecture preflight, scoped implementation, fresh verification, and
    invariant reconciliation without importing AI Radar rules.
-2. Exercise an independent repository change through the same local contracts
-   to detect hidden AI Radar coupling.
-3. Compare what was surfaced before coding, during coding, at completion, and
-   in PR/CI.
-4. Record assistance, false positives, missed constraints, human overrides,
-   handling time, and evidence limitations.
-5. Resume the NYC 0.3 migration only when it tests the retained backstop or the
-   independent-consumer role rather than standing in for core product value.
+2. Run the NYC development-loop shadow pilot through the same portable local
+   contracts before any PR or CI migration, without importing NYC rules.
+3. Retain the completed independent installed-repository pilot and add another
+   independent change only if NYC reveals a hidden domain assumption.
+4. Compare what was surfaced before coding, during coding, at completion, and
+   in PR/CI; record assistance, false positives, missed constraints, human
+   overrides, handling time, and evidence limitations.
+5. Resume the NYC 0.3 migration only after the development-loop pilot, using CI
+   to replay the same deterministic facts as a retained backstop rather than as
+   the product's first governance interaction.
 
 Acceptance signals:
 
@@ -243,6 +257,8 @@ Acceptance signals:
   gates, paths, runtime schemas, or individual-specific policy;
 - the independent consumer can use the same contracts without AI Radar
   knowledge;
+- NYC demonstrates the governance interaction during coding, not only after a
+  pull request exists;
 - users discover relevant constraints before PR creation;
 - WARN and ADVISORY remain visible and non-blocking while configured
   deterministic FAIL can block;

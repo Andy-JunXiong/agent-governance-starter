@@ -71,6 +71,15 @@ _ASSET_OUTPUTS = {
     Path("agent-skills/development-slice/SKILL.md"): Path(
         "agent-skills/development-slice/SKILL.md"
     ),
+    Path("agent-skills/requirement-admission/SKILL.md"): Path(
+        "agent-skills/requirement-admission/SKILL.md"
+    ),
+    Path("agent-skills/action-loop-stagnation/SKILL.md"): Path(
+        "agent-skills/action-loop-stagnation/SKILL.md"
+    ),
+    Path("agent-skills/reconcile-invariants/SKILL.md"): Path(
+        "agent-skills/reconcile-invariants/SKILL.md"
+    ),
     Path("agent-skills/incident-attribution/SKILL.md"): Path(
         "agent-skills/incident-attribution/SKILL.md"
     ),

@@ -41,6 +41,9 @@ EXPECTED_OUTPUTS = {
     Path("agent-skills/README.md"),
     Path("agent-skills/context-first-review/SKILL.md"),
     Path("agent-skills/development-slice/SKILL.md"),
+    Path("agent-skills/requirement-admission/SKILL.md"),
+    Path("agent-skills/action-loop-stagnation/SKILL.md"),
+    Path("agent-skills/reconcile-invariants/SKILL.md"),
     Path("agent-skills/incident-attribution/SKILL.md"),
     Path("agent-skills/incident-response/SKILL.md"),
 }
@@ -145,6 +148,18 @@ class InitializerTests(unittest.TestCase):
         )
         self.assertIn(
             "share/agent-governance-starter/agent-skills/development-slice",
+            data_files,
+        )
+        self.assertIn(
+            "share/agent-governance-starter/agent-skills/requirement-admission",
+            data_files,
+        )
+        self.assertIn(
+            "share/agent-governance-starter/agent-skills/action-loop-stagnation",
+            data_files,
+        )
+        self.assertIn(
+            "share/agent-governance-starter/agent-skills/reconcile-invariants",
             data_files,
         )
         self.assertIn(

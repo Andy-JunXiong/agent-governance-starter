@@ -128,6 +128,9 @@ class RepositoryCheckTests(unittest.TestCase):
             {
                 "agent-skill:context-first-review",
                 "agent-skill:development-slice",
+                "agent-skill:requirement-admission",
+                "agent-skill:action-loop-stagnation",
+                "agent-skill:reconcile-invariants",
                 "agent-skill:incident-attribution",
                 "agent-skill:incident-response",
             },
@@ -330,7 +333,7 @@ class RepositoryCliTests(unittest.TestCase):
         self.assertIn("WARN artifacts:directory:", stdout)
         self.assertIn("ADVISORY governance:human-review:", stdout)
         self.assertIn("ADVISORY controls:effectiveness:", stdout)
-        self.assertIn("SUMMARY PASS=14 WARN=4 FAIL=0 ADVISORY=4", stdout)
+        self.assertIn("SUMMARY PASS=17 WARN=4 FAIL=0 ADVISORY=4", stdout)
         self.assertEqual(stderr, "")
 
     def test_missing_required_files_return_fail(self) -> None:

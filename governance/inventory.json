@@ -7,6 +7,12 @@
       "manifest": "governance/capabilities/repository-governance-assessment.json",
       "owner": "Repository maintainers",
       "governance_status": "active"
+    },
+    {
+      "name": "development-time-coding-agent-governance",
+      "manifest": "governance/capabilities/development-time-coding-agent-governance.json",
+      "owner": "Repository maintainers",
+      "governance_status": "provisional"
     }
   ],
   "exclusions": []

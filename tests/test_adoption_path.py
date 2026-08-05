@@ -50,7 +50,7 @@ class CleanRepositoryAdoptionTests(unittest.TestCase):
                 ),
                 (
                     ("check", "agent-skills", str(root / "agent-skills")),
-                    "SUMMARY PASS=4 FAIL=0",
+                    "SUMMARY PASS=7 FAIL=0",
                 ),
                 (
                     (
@@ -74,7 +74,7 @@ class CleanRepositoryAdoptionTests(unittest.TestCase):
                 ),
                 (
                     ("check", "repository", str(root)),
-                    "SUMMARY PASS=15 WARN=3 FAIL=0 ADVISORY=4",
+                    "SUMMARY PASS=18 WARN=3 FAIL=0 ADVISORY=4",
                 ),
                 (
                     (
@@ -97,7 +97,7 @@ class CleanRepositoryAdoptionTests(unittest.TestCase):
 
             report = report_path.read_text(encoding="utf-8")
 
-        self.assertIn("| PASS | 15 |", report)
+            self.assertIn("| PASS | 18 |", report)
         self.assertIn("| WARN | 3 |", report)
         self.assertIn("| FAIL | 0 |", report)
         self.assertIn("| ADVISORY | 4 |", report)

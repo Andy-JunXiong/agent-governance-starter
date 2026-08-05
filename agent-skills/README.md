@@ -21,13 +21,23 @@ mapping file may redefine them. The body must contain these sections:
 
 The starter set contains:
 
+- `requirement-admission`: human-owned problem, value, scope, trade-off, and
+  admission decision before meaningful implementation;
 - `context-first-review`: repository-grounded review of architecture,
   migration, prompt, and cross-module proposals;
 - `development-slice`: bounded planning, implementation, validation, and
   handoff;
+- `action-loop-stagnation`: advisory detection of repeated approaches,
+  missing verification, and false completion during implementation;
+- `reconcile-invariants`: scoped completion-time alignment across the task,
+  architecture, implementation, evidence, and governance memory;
 - `incident-attribution`: evidence-based collaboration learning and
   proportionate corrective decisions;
 - `incident-response`: evidence-first operational triage and narrow recovery.
+
+The first five protocols govern the development loop. Pull requests and CI
+remain an independent deterministic backstop, not the point where governance
+begins.
 
 Validate the complete directory with:
 

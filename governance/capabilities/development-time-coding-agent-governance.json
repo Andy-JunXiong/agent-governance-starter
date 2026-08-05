@@ -1,0 +1,61 @@
+{
+  "contract": "agentgov.ai-capability",
+  "schema_version": "1.0",
+  "name": "development-time-coding-agent-governance",
+  "version": "0.3.0-rc1",
+  "purpose": "Guide human-admitted coding work through repository-grounded context, bounded implementation, fresh evidence, and completion reconciliation without taking semantic or transition authority.",
+  "capability_type": "operator_guidance",
+  "implementation_mode": "hybrid",
+  "decision_authority": "recommend",
+  "autonomy_level": "human_approval_required",
+  "task_type": "development_time_coding_agent_governance",
+  "triggers": [
+    "A meaningful coding-agent task is requested or reaches a governed development checkpoint"
+  ],
+  "not_for": [
+    "Mechanical runtime interruption or security enforcement",
+    "Approving semantic requirement or architecture correctness",
+    "Authorizing commit, merge, publication, release, deployment, or external writes"
+  ],
+  "contracts": {
+    "input_schema": "schemas/development-task.schema.json",
+    "output_schema": "schemas/development-completion.schema.json"
+  },
+  "called_by": [
+    "agent-skills/requirement-admission/SKILL.md",
+    "agent-skills/development-slice/SKILL.md",
+    "agent-skills/action-loop-stagnation/SKILL.md",
+    "agent-skills/reconcile-invariants/SKILL.md",
+    "src/agentgov/cli.py"
+  ],
+  "owner": "Repository maintainers",
+  "risk_level": "medium",
+  "human_review": {
+    "required": true,
+    "stages": [
+      "task admission",
+      "scope or architecture change",
+      "completion reconciliation",
+      "consequential transition"
+    ],
+    "reason": "Value, architecture, exceptions, semantic completion, and consequential transitions remain accountable human decisions."
+  },
+  "evaluation": {
+    "readiness": "baseline_ready",
+    "evidence_refs": [
+      "tests/test_task_contract.py",
+      "tests/test_development_context.py",
+      "tests/test_change_scope.py",
+      "tests/test_development_evidence.py",
+      "tests/test_agent_skills.py"
+    ]
+  },
+  "provenance": {
+    "origin": "extracted",
+    "source_refs": [
+      "docs/ai-radar-extraction-map.md",
+      "docs/adr/0009-govern-coding-agents-during-development.md",
+      "agent-skills/development-slice/SKILL.md"
+    ]
+  }
+}

@@ -140,14 +140,16 @@ is a `rewrite-required` adaptation of the already recorded AI Radar
 No AI Radar content, paths, runtime code, business taxonomy, or persisted
 Registry is copied.
 
-## NYC Taxi consumer-integration pilot
+## NYC Taxi development-loop pilot boundary
 
 Pilot inventory date: 2026-08-01
 
 The local NYC Taxi repository at
 `C:\Users\maki8\OneDrive\桌面\Find a job\NY Taxi\NYC-Taxi-Demand-And-Fare-Intelligence-Platform`
-is a read-only research input for the consumer CI and status-visibility slice.
-No NYC source code, data, credentials, production workflow behavior, or
+is a read-only research input for AgentGov portability. The completed
+consumer-CI and status-visibility pilot is historical backstop evidence; it did
+not validate governance while a coding agent was developing the change. No NYC
+source code, data, credentials, production workflow behavior, or
 project-specific policy is starter-kit source.
 
 | NYC Taxi source | Observed role | Classification | Starter-kit treatment |
@@ -157,8 +159,12 @@ project-specific policy is starter-kit source.
 | `governance/capabilities/nyc-hourly-zone-demand-forecast.json` | Connects one capability to callers, contracts, ownership, risk, and evaluation | `reference-only` | Use sanitized field presence to test status rendering; do not copy the capability or its business semantics. |
 | `governance/contract.json` | Marks repository layout `1.0` after an explicit refresh | `generic-reusable` | Detect the existing portable contract through AgentGov's own schema; do not add NYC-specific fields. |
 
-Reuse decision: implement a generic create-missing-only GitHub Actions
-integration and a read-only status surface. Validate them against synthetic
-fixtures first, then use NYC only as an adoption pilot. The integration must
-not install adopting-project dependencies, run production workflows, overwrite
-an existing workflow, or authorize Git, merge, release, or deployment actions.
+Current reuse decision: use NYC first as a development-loop shadow pilot for a
+real low-risk task. Begin with human requirement admission and selected
+repository context before editing, observe bounded work and stagnation during
+implementation, and require fresh evidence plus scoped invariant
+reconciliation before handoff. Only afterward may the existing generic GitHub
+Actions integration independently replay deterministic facts as a backstop.
+The pilot must not copy or modify NYC business policy as starter-kit source,
+install project dependencies, run production workflows, overwrite an existing
+workflow, or authorize Git, merge, release, or deployment actions.

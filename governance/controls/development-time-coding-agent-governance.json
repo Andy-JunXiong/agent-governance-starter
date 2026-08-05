@@ -1,0 +1,83 @@
+{
+  "contract": "agentgov.control-mapping",
+  "schema_version": "1.0",
+  "capability_name": "development-time-coding-agent-governance",
+  "controls": [
+    {
+      "control_id": "human-task-admission",
+      "objective": "Keep value, priority, scope, trade-off, and admission decisions under accountable human ownership.",
+      "applicability": "applicable",
+      "enforcement_mode": "human_procedural",
+      "implementation_refs": [
+        "agent-skills/requirement-admission/SKILL.md",
+        "schemas/development-task.schema.json"
+      ],
+      "verification_refs": [
+        "tests/test_agent_skills.py",
+        "tests/test_task_contract.py"
+      ],
+      "owner": "Repository maintainers",
+      "exception_authority": "Human product owner"
+    },
+    {
+      "control_id": "repository-grounded-context",
+      "objective": "Select applicable repository decisions and authority boundaries before meaningful implementation.",
+      "applicability": "applicable",
+      "enforcement_mode": "advisory_only",
+      "implementation_refs": [
+        "agent-skills/context-first-review/SKILL.md",
+        "src/agentgov/development_context.py"
+      ],
+      "verification_refs": [
+        "tests/test_agent_skills.py",
+        "tests/test_development_context.py"
+      ],
+      "owner": "Repository maintainers",
+      "exception_authority": "Human product owner"
+    },
+    {
+      "control_id": "bounded-change-scope",
+      "objective": "Detect changed paths outside the admitted task boundary without modifying repository or Git state.",
+      "applicability": "applicable",
+      "enforcement_mode": "deterministic",
+      "implementation_refs": [
+        "src/agentgov/change_scope.py"
+      ],
+      "verification_refs": [
+        "tests/test_change_scope.py"
+      ],
+      "owner": "Repository maintainers",
+      "exception_authority": "Human product owner"
+    },
+    {
+      "control_id": "fresh-completion-evidence",
+      "objective": "Bind declared validation results to the unchanged scoped repository snapshot used for completion.",
+      "applicability": "applicable",
+      "enforcement_mode": "deterministic",
+      "implementation_refs": [
+        "src/agentgov/development_evidence.py"
+      ],
+      "verification_refs": [
+        "tests/test_development_evidence.py"
+      ],
+      "owner": "Repository maintainers",
+      "exception_authority": "Human product owner"
+    },
+    {
+      "control_id": "completion-human-authority",
+      "objective": "Expose invariant drift and proposed governance updates without converting evidence into semantic approval.",
+      "applicability": "applicable",
+      "enforcement_mode": "human_procedural",
+      "implementation_refs": [
+        "agent-skills/reconcile-invariants/SKILL.md",
+        "docs/adr/0009-govern-coding-agents-during-development.md"
+      ],
+      "verification_refs": [
+        "tests/test_agent_skills.py",
+        "tests/test_development_evidence.py"
+      ],
+      "owner": "Repository maintainers",
+      "exception_authority": "Human product owner"
+    }
+  ]
+}

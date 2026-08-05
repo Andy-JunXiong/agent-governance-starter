@@ -64,7 +64,7 @@ class AgentSkillContractTests(unittest.TestCase):
         report = check_agent_skills(AGENT_SKILLS)
 
         self.assertFalse(report.has_failures)
-        self.assertEqual(len(report.findings), 4)
+        self.assertEqual(len(report.findings), 7)
 
     def test_shipped_skills_own_structured_routing_metadata(self) -> None:
         metadata = {
@@ -73,6 +73,18 @@ class AgentSkillContractTests(unittest.TestCase):
         }
 
         self.assertEqual(metadata["development-slice"].triggers, ("task.admitted",))
+        self.assertEqual(
+            metadata["requirement-admission"].triggers,
+            ("task.requested",),
+        )
+        self.assertEqual(
+            metadata["action-loop-stagnation"].triggers,
+            ("development.stagnation_suspected",),
+        )
+        self.assertEqual(
+            metadata["reconcile-invariants"].triggers,
+            ("completion.requested",),
+        )
         self.assertEqual(
             metadata["context-first-review"].triggers,
             ("architecture.candidate",),
@@ -126,6 +138,54 @@ class AgentSkillContractTests(unittest.TestCase):
         )
         positions = [text.index(label) for label in output_labels]
         self.assertEqual(positions, sorted(positions))
+
+    def test_requirement_admission_keeps_value_and_authority_human_owned(self) -> None:
+        text = (
+            AGENT_SKILLS / "requirement-admission" / "SKILL.md"
+        ).read_text(encoding="utf-8")
+
+        for required in (
+            "why now",
+            "smallest coherent slice",
+            "trade-off",
+            "human-owned",
+            "`draft`, `admit`, `revise`, or `no-go`",
+            "Only the accountable human may change the task to admitted.",
+            "Do not begin implementation",
+        ):
+            self.assertIn(required, text)
+
+    def test_stagnation_protocol_is_advisory_and_evidence_grounded(self) -> None:
+        text = (
+            AGENT_SKILLS / "action-loop-stagnation" / "SKILL.md"
+        ).read_text(encoding="utf-8")
+
+        for required in (
+            "failure packet",
+            "structurally different hypothesis",
+            "verification oracle",
+            "false completion",
+            "not a mechanical runtime\n   halt",
+            "grants no new authority",
+        ):
+            self.assertIn(required, text)
+
+    def test_reconciliation_preserves_scope_and_human_decision(self) -> None:
+        text = (
+            AGENT_SKILLS / "reconcile-invariants" / "SKILL.md"
+        ).read_text(encoding="utf-8")
+
+        for required in (
+            "scoped reconciliation",
+            "observed facts",
+            "supported inferences",
+            "review judgments",
+            "unresolved unknowns",
+            "proposed diff",
+            "Do not automatically rewrite",
+            "pending-human-decision",
+        ):
+            self.assertIn(required, text)
 
     def test_incident_attribution_separates_learning_from_blame_and_operations(self) -> None:
         text = (
@@ -208,9 +268,12 @@ class AgentSkillsCliTests(unittest.TestCase):
         self.assertEqual(exit_code, EXIT_PASS)
         self.assertIn("PASS agent-skill:context-first-review:", stdout)
         self.assertIn("PASS agent-skill:development-slice:", stdout)
+        self.assertIn("PASS agent-skill:requirement-admission:", stdout)
+        self.assertIn("PASS agent-skill:action-loop-stagnation:", stdout)
+        self.assertIn("PASS agent-skill:reconcile-invariants:", stdout)
         self.assertIn("PASS agent-skill:incident-attribution:", stdout)
         self.assertIn("PASS agent-skill:incident-response:", stdout)
-        self.assertIn("SUMMARY PASS=4 FAIL=0", stdout)
+        self.assertIn("SUMMARY PASS=7 FAIL=0", stdout)
         self.assertEqual(stderr, "")
 
     def test_invalid_skill_returns_fail(self) -> None:

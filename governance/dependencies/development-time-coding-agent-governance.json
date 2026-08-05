@@ -1,0 +1,6 @@
+{
+  "contract": "agentgov.capability-dependencies",
+  "schema_version": "1.0",
+  "capability_name": "development-time-coding-agent-governance",
+  "depends_on": []
+}

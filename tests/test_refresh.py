@@ -204,7 +204,7 @@ class RefreshCliTests(unittest.TestCase):
         self.assertEqual(contract["layout_version"], "1.0")
         self.assertIn("PASS refresh: created 1 deterministic file(s)", stdout)
         self.assertIn("REPOSITORY contract=1.0 target=1.0", stdout)
-        self.assertIn("SUMMARY PASS=14 WARN=4 FAIL=0 ADVISORY=4", stdout)
+        self.assertIn("SUMMARY PASS=17 WARN=4 FAIL=0 ADVISORY=4", stdout)
         self.assertIn("no Git, merge, publish", stdout)
         self.assertEqual(stderr, "")
 

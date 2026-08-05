@@ -13,6 +13,10 @@ TROUBLESHOOTING = ROOT / "docs/troubleshooting.md"
 CONSUMER_CI = ROOT / "docs/consumer-ci.md"
 DEVELOPMENT_MONITOR = ROOT / "docs/development-monitor.md"
 DEVELOPMENT_SESSION = ROOT / "docs/development-session.md"
+DEVELOPMENT_PLAN = ROOT / "docs/development-plan.md"
+EXTRACTION_MAP = ROOT / "docs/ai-radar-extraction-map.md"
+STATUS = ROOT / "STATUS.md"
+AGENT_SKILLS_README = ROOT / "agent-skills/README.md"
 GUIDED_NEXT_ADR = ROOT / "docs/adr/0010-route-next-through-development-lifecycle.md"
 BOOTSTRAP_UPDATE_ADR = ROOT / "docs/adr/0011-separate-bootstrap-from-update-routing.md"
 SESSION_HANDOFF_ADR = ROOT / "docs/adr/0012-handoff-verified-development-sessions.md"
@@ -26,6 +30,34 @@ GUIDE_STYLE = ROOT / "docs/guide.css"
 
 
 class UserDocumentationTests(unittest.TestCase):
+    def test_development_governance_sources_resist_pr_center_drift(self) -> None:
+        readme = README.read_text(encoding="utf-8")
+        status = STATUS.read_text(encoding="utf-8")
+        plan = DEVELOPMENT_PLAN.read_text(encoding="utf-8")
+        extraction = EXTRACTION_MAP.read_text(encoding="utf-8")
+        skills = AGENT_SKILLS_README.read_text(encoding="utf-8")
+
+        for skill_name in (
+            "requirement-admission",
+            "action-loop-stagnation",
+            "reconcile-invariants",
+        ):
+            for text in (readme, status, skills):
+                with self.subTest(skill=skill_name):
+                    self.assertIn(skill_name, text)
+
+        self.assertIn("govern the\ncoding agent during development", readme)
+        self.assertIn("independent backstop", readme)
+        self.assertIn("first planned development-loop shadow pilot", status)
+        self.assertIn(
+            "NYC development-loop shadow pilot",
+            " ".join(plan.split()),
+        )
+        self.assertIn("before any PR or CI migration", plan)
+        self.assertIn("NYC Taxi development-loop pilot boundary", extraction)
+        self.assertIn("historical backstop evidence", extraction)
+        self.assertIn("not a mechanical runtime halt", readme)
+
     def test_verified_session_handoff_contract_preserves_identity_and_authority(self) -> None:
         readme = README.read_text(encoding="utf-8")
         session = DEVELOPMENT_SESSION.read_text(encoding="utf-8")

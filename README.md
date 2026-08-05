@@ -892,10 +892,14 @@ python -m agentgov check agent-skills agent-skills
 ```
 
 The check enforces portable frontmatter, explicit use and non-use conditions,
-and a common workflow, safety, escalation, and handoff structure. The starter
-protocols cover context-first proposal review, bounded development slices,
-collaboration-failure attribution, and evidence-first operational incident
-response; they contain no project-specific runtime or cloud dependency.
+and a common workflow, safety, escalation, and handoff structure. The seven
+starter protocols cover human-owned `requirement-admission`,
+`context-first-review`, `development-slice`, advisory
+`action-loop-stagnation`, scoped `reconcile-invariants`,
+`incident-attribution`, and `incident-response`. The first five govern the
+coding agent during development; pull requests and CI remain an independent
+backstop. The protocols contain no project-specific runtime or cloud
+dependency, and an advisory stop request is not a mechanical runtime halt.
 
 ## Repository check
 

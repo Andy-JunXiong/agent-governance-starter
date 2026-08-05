@@ -94,12 +94,27 @@ Last verified: 2026-08-05
   `PASS=16 WARN=2 FAIL=0 ADVISORY=4`; 539 tests passed with one
   platform-limited skip; bundled and generated RC manifests valid; diff check
   clean.
+- The development-governance drift-correction slice adds three installable
+  protocols and one provisional capability, preserves exactly one admitted
+  task after routing cleanup, and changes no consumer repository, workflow,
+  tag, release, or external system. Current validation passes 544 tests with
+  one platform-limited skip and the repository check reports
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`.
 
 ## Product direction
 
 - ADR-0009 makes development-time governance of coding-agent requirements,
   architecture context, implementation scope, verification evidence, and
   completion reconciliation the product core.
+- The repository now ships seven portable operating protocols. The new
+  `requirement-admission`, `action-loop-stagnation`, and
+  `reconcile-invariants` Skills close the first protocol gaps while keeping
+  semantic decisions and task admission human-owned; they are packaged into
+  newly initialized repositories.
+- The Inventory now declares `development-time-coding-agent-governance` as
+  provisional. This records the real product capability without claiming that
+  optional hooks, runtime enforcement, uncoached adoption, or benefit proof are
+  complete.
 - PR and CI reporting, benefit evidence, and upgrade automation remain retained
   backstop and delivery capabilities rather than the primary user interaction.
 - This direction was revalidated against clean scoped governance files from AI
@@ -245,10 +260,14 @@ Future-0.3 development-governance integration and pre-release evidence:
 - explicit completeness advisories without automatic discovery claims;
 - implementation, review, supported CI, and human-controlled integration are
   complete on `main`.
-- the NYC Taxi repository is the first consumer-CI pilot: AgentGov validation
-  now runs on pull requests and pushes, publishes a GitHub job summary, and
-  uploads machine-readable and Markdown evidence without authorizing merge,
-  release, or deployment.
+- the completed NYC Taxi consumer-CI pilot remains historical backstop
+  evidence: validation runs on pull requests and pushes and publishes bounded
+  evidence without transition authority. It is not evidence that the coding
+  process itself was governed.
+- NYC Taxi is now the first planned development-loop shadow pilot. It must
+  exercise human admission, pre-edit context, bounded in-progress checks,
+  stagnation handling, fresh verification, and reconciliation before any 0.3
+  GitHub migration is used as backstop evidence.
 - ADR-0006 rejects a general semantic-model implementation until a verified
   cross-domain gap survives existing-contract-first review; no semantic
   schema, checker, report field, or migration has been added.

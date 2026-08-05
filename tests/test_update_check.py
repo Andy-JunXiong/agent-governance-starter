@@ -250,7 +250,7 @@ class UpdateCheckCliTests(unittest.TestCase):
         self.assertIn("APPLIED update: 1 repository change(s)", stdout)
         self.assertIn("SUCCESS UPDATE_COMPLETE", stdout)
         self.assertIn("REPOSITORY contract=1.0 target=1.0", stdout)
-        self.assertIn("SUMMARY PASS=14 WARN=4 FAIL=0 ADVISORY=4", stdout)
+        self.assertIn("SUMMARY PASS=17 WARN=4 FAIL=0 ADVISORY=4", stdout)
         self.assertEqual(stderr, "")
 
     def test_redirected_update_confirmation_cancels_without_writing(self) -> None:

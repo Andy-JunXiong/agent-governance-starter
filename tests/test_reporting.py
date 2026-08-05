@@ -39,7 +39,7 @@ class MarkdownReportTests(unittest.TestCase):
             "## Scope limitations",
         ):
             self.assertIn(heading, markdown)
-        self.assertIn("| PASS | 14 |", markdown)
+        self.assertIn("| PASS | 17 |", markdown)
         self.assertIn("| WARN | 4 |", markdown)
         self.assertIn("| ADVISORY | 4 |", markdown)
         self.assertIn("`inventory:completeness`", markdown)
