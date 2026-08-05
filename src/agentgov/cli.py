@@ -107,6 +107,12 @@ from agentgov.development_session import (
     resolve_active_task,
 )
 from agentgov.event_store import LocalStateError, append_governance_event
+from agentgov.foreground_coordinator import (
+    CoordinatorPolicyError,
+    render_foreground_cycle_json,
+    render_foreground_cycle_terminal,
+    run_foreground_cycle,
+)
 from agentgov.git_snapshot import GitSnapshotError
 from agentgov.initializer import InitConflictError, initialize_project
 from agentgov.onboarding import (
@@ -133,6 +139,7 @@ from agentgov.refresh import (
     render_refresh_plan_json,
     request_refresh_confirmation,
 )
+from agentgov.reference_adapter import build_reference_trigger
 from agentgov.release_metadata import (
     load_release_manifest,
     validate_release_manifest,
@@ -164,6 +171,7 @@ from agentgov.task_contract import (
     TaskFindingStatus,
     check_development_task,
 )
+from agentgov.development_trigger import TRIGGER_TYPES, TriggerContractError
 from agentgov.update_check import (
     check_for_updates,
     render_update_check_json,
@@ -1518,6 +1526,68 @@ def _check_scope(
     }[scope_format]
     print(renderer(report), end="")
     return EXIT_FAIL if report.has_failures else EXIT_PASS
+
+
+def _dev_foreground(
+    repository: Path,
+    *,
+    trigger_type: str,
+    actor_class: str,
+    correlation_id: str | None,
+    validation_outcome: str | None,
+    evidence_ref: Path | None,
+    scope_decision: str | None,
+    review_outcome: str | None,
+    dashboard_output: Path,
+    output_format: str,
+) -> int:
+    """Run one explicit foreground adapter/coordinator cycle."""
+
+    try:
+        trigger = build_reference_trigger(
+            repository,
+            trigger_type=trigger_type,
+            actor_class=actor_class,
+            correlation_id=correlation_id,
+            validation_outcome=validation_outcome,
+            evidence_ref=evidence_ref.as_posix() if evidence_ref is not None else None,
+            scope_decision=scope_decision,
+            review_outcome=review_outcome,
+        )
+        cycle = run_foreground_cycle(
+            repository,
+            trigger=trigger,
+            dashboard_output=dashboard_output,
+        )
+    except FileNotFoundError as exc:
+        print(f"ERROR dev: file or executable not found: {exc.filename or exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except subprocess.TimeoutExpired as exc:
+        print(f"ERROR dev: validation timed out after {exc.timeout} seconds", file=sys.stderr)
+        return EXIT_ERROR
+    except (
+        CoordinatorPolicyError,
+        TriggerContractError,
+        ScopePolicyError,
+        GitInspectionError,
+        EvidenceError,
+        GitSnapshotError,
+        HandoffPolicyError,
+        MonitorPolicyError,
+        LocalStateError,
+        SessionPolicyError,
+        OSError,
+        UnicodeError,
+        ValueError,
+    ) as exc:
+        print(f"ERROR dev: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    renderer = {
+        "terminal": render_foreground_cycle_terminal,
+        "json": render_foreground_cycle_json,
+    }[output_format]
+    print(renderer(cycle), end="")
+    return EXIT_FAIL if cycle.status == "blocked" else EXIT_PASS
 
 
 def _govern_start(
@@ -2974,6 +3044,78 @@ def build_parser() -> argparse.ArgumentParser:
             event_directory=args.events,
             output=args.output,
             dry_run=args.dry_run,
+        )
+    )
+
+    dev_parser = commands.add_parser(
+        "dev",
+        help="Run one explicit foreground automatic-governance cycle.",
+    )
+    dev_parser.add_argument(
+        "repository",
+        nargs="?",
+        type=Path,
+        default=Path("."),
+        help="Git worktree root (default: current directory).",
+    )
+    dev_parser.add_argument(
+        "--event",
+        dest="trigger_type",
+        choices=tuple(sorted(TRIGGER_TYPES)),
+        default="repository.activated",
+        help="Adapter event for this foreground cycle (default: repository.activated).",
+    )
+    dev_parser.add_argument(
+        "--actor-class",
+        choices=("human", "coding_agent", "ci"),
+        default="coding_agent",
+        help="Originating actor class; human is required for review or recorded scope decisions.",
+    )
+    dev_parser.add_argument("--correlation-id", help="Optional adapter correlation id.")
+    dev_parser.add_argument(
+        "--validation-outcome",
+        choices=("passed", "failed"),
+        help="Context-only adapter outcome; valid only with validation.completed.",
+    )
+    dev_parser.add_argument(
+        "--evidence-ref",
+        type=Path,
+        help="Repository-relative adapter evidence pointer; valid only with validation.completed.",
+    )
+    dev_parser.add_argument(
+        "--scope-decision",
+        choices=("approved", "declined", "needs_human"),
+        help="Human decision; valid only with scope.decision_recorded.",
+    )
+    dev_parser.add_argument(
+        "--review-outcome",
+        choices=("accepted", "changes_requested"),
+        help="Human completion review; valid only with session.reviewed.",
+    )
+    dev_parser.add_argument(
+        "--dashboard-output",
+        type=Path,
+        default=Path(".agentgov/dashboard.html"),
+        help="Untracked AgentGov-owned Dashboard output inside the repository.",
+    )
+    dev_parser.add_argument(
+        "--format",
+        dest="dev_format",
+        choices=("terminal", "json"),
+        default="terminal",
+    )
+    dev_parser.set_defaults(
+        handler=lambda args: _dev_foreground(
+            args.repository,
+            trigger_type=args.trigger_type,
+            actor_class=args.actor_class,
+            correlation_id=args.correlation_id,
+            validation_outcome=args.validation_outcome,
+            evidence_ref=args.evidence_ref,
+            scope_decision=args.scope_decision,
+            review_outcome=args.review_outcome,
+            dashboard_output=args.dashboard_output,
+            output_format=args.dev_format,
         )
     )
 

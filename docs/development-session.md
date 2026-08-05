@@ -8,6 +8,45 @@ validation, completion reconciliation, and the local Monitor.
 This is the future-0.3 development-source interface. It is not part of the
 published stable 0.2.1 package yet.
 
+These commands expose the lifecycle primitives for development, headless use,
+CI, diagnostics, tests, fallback, and recovery. ADR-0013 explicitly rejects this manual
+sequence as the final ordinary-user journey. The accepted product direction is
+a foreground automatic coordinator plus coding-agent adapters that invoke the
+same checked state machine, update the Dashboard automatically, and ask the
+user only at material semantic or authority boundaries. Development source now
+implements the first one-cycle `agentgov dev` coordinator and reference
+adapter; live coding-agent transport and visual cards remain open. See
+[Automatic coding-agent governance product requirements](product-requirements-automatic-governance.md).
+
+## Foreground development cycle
+
+An adapter can now invoke one cycle without assembling the low-level command
+chain or hand-authoring JSON:
+
+```powershell
+agentgov dev . --event implementation.changed
+agentgov dev . --event completion.requested
+```
+
+The first event derives actual changed paths and records a deterministic scope
+observation. The second first checks scope, then runs only validation commands
+already admitted in the active task, reconciles completion, and refreshes
+`.agentgov/dashboard.html`. Out-of-scope changes block validation.
+
+A human-originated review event may hand off an exact verified session without
+typing the legacy fallback word:
+
+```powershell
+agentgov dev . --event session.reviewed `
+  --actor-class human --review-outcome accepted
+```
+
+These commands expose the reference adapter for development and integration
+testing. The intended normal experience is for a Codex, Claude Code, or IDE
+adapter to emit the events automatically. A missing admitted task returns a
+machine-readable `task_admission` gate and refreshes the Dashboard; it does not
+infer scope or create a task from raw prompt text.
+
 ## Normal workflow
 
 Start from an existing admitted task:

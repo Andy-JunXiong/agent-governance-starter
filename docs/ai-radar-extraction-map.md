@@ -17,12 +17,15 @@ Initial inventory date: 2026-07-13
 
 Development-loop revalidation date: 2026-08-02
 
-Current read-only reference repository:
-`C:\Users\maki8\OneDrive\桌面\Find a job\ai-radar-aws` at commit
-`3a9323cb2a9ef575da42d29fb17d330ef872afd3`. The scoped governance files
-listed below were clean against that commit during revalidation. The wider AI
-Radar worktree contained unrelated user and generated-data changes; those
-files were not used as extraction sources.
+Automatic-governance management revalidation date: 2026-08-05
+
+Current read-only reference: the `ai-radar-aws` repository at commit
+`dcc27bd8e1166bc3380d3ad75d2d2c76395106d8`. Machine-specific absolute paths
+are intentionally omitted. The 2026-08-05 management revalidation read only
+committed `HEAD` content with `git show`; it did not inspect or reuse the wider
+AI Radar worktree's unrelated user and generated-data changes. The earlier
+development-loop implementation comparison used commit
+`3a9323cb2a9ef575da42d29fb17d330ef872afd3`.
 
 ## Classification rules
 
@@ -54,6 +57,7 @@ files were not used as extraction sources.
 | `docs/adr/0005-dual-gate-pre-sprint-protocol.md` | Separates project value from human cognitive ownership before agent execution | `reference-only` | Preserve the decision-axis separation as product rationale; portable implementation remains subject to AgentGov task-contract design and user validation. |
 | `docs/adr/0016-action-loop-stagnation-protocol.md` | Separates action-loop governance from claim verification and runtime enforcement | `reference-only` | Preserve the protocol-versus-mechanical-enforcement boundary; do not import external-skill taxonomy, hooks, telemetry, or AI Radar runtime gates. |
 | `agent-skills/incident-attribution/SKILL.md` | Reviewable process-learning protocol | `rewrite-required` | Adapted factual capture, stage attribution, pattern review, and explicit outcomes; removed named participants, fixed record paths, infrastructure language, and core-file lists. |
+| `docs/metrics-monitoring-mvp.md` | Event-first local monitoring, operational summaries, privacy limits, and read-only admin views | `rewrite-required` | Preserve append-only local metadata events, observation gaps, period narratives, and read-only views; replace pipeline, collector, LLM, verification, cost, and AI Radar business metrics with AgentGov session, protection, evidence, benefit, and learning semantics. |
 | `backend/app/prompts/skill_meta.py` | Minimal metadata decorator for prompt capabilities | `reference-only` | Use it as evidence for the capability-schema design; do not import the class. |
 | `backend/app/prompts/registry.py` | AI Radar runtime prompt implementations | `ai-radar-specific` | Do not copy prompts or runtime behavior. Use only anonymized metadata examples later. |
 | `backend/app/prompts/export_skills.py` | Generates reviewable skill artifacts and source hashes | `rewrite-required` | Reimplemented as manifest-driven repository-local capability artifacts; removed runtime discovery, timestamps, Pydantic, scoring, and vendor-directory writes. |
@@ -140,13 +144,48 @@ is a `rewrite-required` adaptation of the already recorded AI Radar
 No AI Radar content, paths, runtime code, business taxonomy, or persisted
 Registry is copied.
 
+## Automatic-governance management revalidation
+
+The 2026-08-05 pass found that the useful AI Radar management primitives were
+already represented in AgentGov's task, context, development-slice,
+action-loop, reconciliation, incident-attribution, event, and Monitor
+contracts. A second skill tree or AI Radar-style management subsystem would be
+duplicate framework weight. The admitted next reuse is therefore narrower:
+
+1. project the existing development event stream into one versioned internal
+   lifecycle state that a foreground coordinator can consume;
+2. define a strict vendor-neutral trigger contract for coding-agent adapters;
+3. expose protection and benefit observations through the existing local
+   Monitor/Dashboard path rather than a second source of truth;
+4. keep high-risk project-value and human-ownership questions risk-triggered,
+   not mandatory interactions for every ordinary task.
+
+AI Radar's documentation architecture is also cautionary evidence. Its
+committed management surfaces are intentionally detailed and useful within
+that product, but AgentGov must not reproduce their accumulated always-loaded
+or current-status volume. AgentGov should keep canonical contracts small,
+derive read models from structured state, archive history, and use
+deterministic freshness checks instead of requiring humans to synchronize the
+same fact across many documents.
+
+Implementation decision for the first automatic slice: `rewrite-required`.
+AgentGov may reuse only the management responsibilities above. It must not copy
+AI Radar files, named people, product gates, cognitive logs, claim-verification
+objects, AWS/runtime metrics, business workflows, or host-specific paths.
+
+The following foreground slice remains the same `rewrite-required` decision:
+AgentGov implemented its own vendor-neutral trigger, state, one-cycle
+coordinator, reference adapter, and Dashboard contracts. No AI Radar runtime
+module, event schema, metric name, command surface, product gate, or business
+object was copied.
+
 ## NYC Taxi development-loop pilot boundary
 
 Pilot inventory date: 2026-08-01
 
-The local NYC Taxi repository at
-`C:\Users\maki8\OneDrive\桌面\Find a job\NY Taxi\NYC-Taxi-Demand-And-Fare-Intelligence-Platform`
-is a read-only research input for AgentGov portability. The completed
+The local `NYC-Taxi-Demand-And-Fare-Intelligence-Platform` repository is a
+read-only research input for AgentGov portability; its machine-specific
+absolute path is intentionally omitted. The completed
 consumer-CI and status-visibility pilot is historical backstop evidence; it did
 not validate governance while a coding agent was developing the change. No NYC
 source code, data, credentials, production workflow behavior, or

@@ -23,11 +23,13 @@ Constitution
   -> Requirement Admission
   -> Architecture Memory
   -> Agent Operating Protocols
+  -> Automatic Session Orchestration
   -> Bounded Implementation
   -> AI Capability Governance
   -> Reviewable Artifacts
   -> Development Verification
   -> Completion Reconciliation
+  -> Protection and Benefit Dashboard
   -> Human Approval
   -> PR/CI Independent Replay
   -> Monitoring and Learning
@@ -62,6 +64,29 @@ Provide scenario-specific development and operations procedures. They remain
 separate from product runtime prompts and should state triggers, non-triggers,
 required context, checks, stop conditions, and expected output.
 
+### Automatic session orchestration
+
+Coordinates the existing task, context, scope, evidence, completion, Monitor,
+and handoff primitives from vendor-neutral coding-agent events. Ordinary users
+should not poll workflow state or compose the internal command sequence.
+Automatic behavior is limited to declared repository observation,
+deterministic checks, pre-approved validation, privacy-bounded local evidence,
+Dashboard refresh, and feedback to the coding agent. Material scope,
+architecture, exception, semantic, and consequential authority remain human
+decisions.
+
+The first product slice is an explicit foreground or adapter-owned session,
+not a hidden daemon. Codex, Claude Code, IDE, and other integrations are
+optional adapters rather than Core governance authority.
+
+Development source now contains the first internal contracts for this stage:
+the read-only `agentgov.development-state` 1.0 lifecycle projection and the
+strict `agentgov.development-trigger` 1.0 adapter envelope. It also implements
+one explicit `agentgov.foreground-cycle` 1.0 through `agentgov dev`: the
+minimal reference adapter invokes admitted scope/completion cores and refreshes
+the Dashboard. Live coding-agent transport and visual cards are not yet implemented. See
+`docs/development-automation-contracts.md`.
+
 ### Bounded implementation
 
 Keeps the coding agent inside the admitted requirement and architecture
@@ -76,8 +101,9 @@ capability with identity, purpose, input/output contracts, call sites, risk,
 implementation mode, decision authority, autonomy, human-review requirements,
 provenance, and evaluation readiness.
 
-Governance Inventory is the identity authority for configured capability
-control mappings, evidence claims, and explicit capability dependencies.
+Governance Inventory is the capability-identity authority for configured
+control mappings, evaluation bundles, review artifacts, and explicit
+capability dependencies.
 Dependency declarations validate graph identity and cycles. Readiness is
 ordered only for an edge that deliberately declares `minimum_readiness`; no
 threshold is inferred from different readiness labels.
@@ -104,6 +130,20 @@ Checks the task, architecture decisions, implementation, tests, evaluation
 evidence, and governance memory for scoped drift before the coding agent claims
 completion. It proposes follow-up when durable decisions changed; it does not
 automatically rewrite core governance files.
+
+### Protection and benefit Dashboard
+
+Turns validated events into automatically refreshed Overview, Live Sessions,
+Protection Events, Task Detail, Benefit, and Learning views. The Dashboard
+protects users by making scope, authority, stale evidence, and unresolved
+decisions visible, and protects coding agents by making bounded intent,
+relevant architecture, repeated attempts, environmental failures, and
+responsibility limits explicit.
+
+Benefit reporting separates observed facts, reproduced comparisons with
+documented denominators, supported inference, attributed human feedback, and
+unknowns. It does not infer causal prevention, ROI, governance completeness, or
+a combined score from event counts.
 
 ### Human approval
 
@@ -149,8 +189,14 @@ runtime or organizational relationship was discovered.
 
 ```text
 Understand -> Admit -> Ground -> Bound -> Implement -> Verify
-           -> Reconcile -> Human Decision -> PR/CI Replay -> Observe -> Learn
+           -> Reconcile -> Protect/Explain -> Human Decision
+           -> PR/CI Replay -> Observe -> Learn
 ```
+
+The primary product automates this loop after activation. The implemented
+`next`, `govern start/check/finish`, Monitor, and handoff commands remain
+headless and recovery primitives while the automatic coordinator and adapter
+surface are implemented.
 
 Not every repository needs every stage at the same maturity. Small changes may
 use a compact task contract, while architecture or high-risk work needs deeper

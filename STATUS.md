@@ -22,6 +22,23 @@ Last verified: 2026-08-05
   preview setting; page metadata cannot change GitHub's repository card.
 - Merge, publish, release, and deployment remain separate human-authorized
   actions.
+- ADR-0013 accepts an automatic, event-driven primary experience: users request
+  work through a coding agent, AgentGov automatically coordinates context,
+  scope, approved validation, fresh evidence, Monitor, and Dashboard updates,
+  and humans are interrupted only at real semantic or authority boundaries.
+  This direction is not yet implemented as the primary UI; current manual
+  lifecycle commands remain development and fallback primitives.
+- The first ADR-0013 implementation slice is now present in development source:
+  a versioned read-only active-session state projection backs `next`, and a
+  strict vendor-neutral trigger contract covers repository, task, change,
+  scope-decision, validation, completion, and review events. Monitor 1.4 adds
+  Live Sessions and Protection Events as honest read models with unknown
+  resolution unless a future explicit link exists. Development source now also
+  implements one `agentgov dev` foreground cycle and minimal reference adapter:
+  scope and completion events invoke the existing deterministic cores and
+  refresh the Dashboard; human review can hand off verified work. Live
+  coding-agent transport, natural-language task admission, visual approval
+  cards, and Benefit/Learning remain unimplemented.
 
 ## Development checkpoint - 2026-08-05
 
@@ -58,7 +75,8 @@ Last verified: 2026-08-05
   development source. `govern handoff` re-establishes fresh evidence, previews
   one stable append-only `session.handed_off` event, requires exact interactive
   `HANDOFF`, retains the pointer and immutable evidence, and is idempotent.
-- Monitor schema 1.3 keeps verified completion distinct from handed-off routing.
+- Monitor schema 1.4 retains schema 1.3's separation of verified completion
+  from handed-off routing while adding Live Sessions and Protection Events.
   Read-only `next` excludes the same digest and offers a separate
   `--replace-active` preview for zero, one, or several remaining task choices.
 - The exact `0.3.0rc1` wheel completed the independent terminal-route rehearsal
@@ -264,10 +282,13 @@ Future-0.3 development-governance integration and pre-release evidence:
   evidence: validation runs on pull requests and pushes and publishes bounded
   evidence without transition authority. It is not evidence that the coding
   process itself was governed.
-- NYC Taxi is now the first planned development-loop shadow pilot. It must
-  exercise human admission, pre-edit context, bounded in-progress checks,
-  stagnation handling, fresh verification, and reconciliation before any 0.3
-  GitHub migration is used as backstop evidence.
+- NYC Taxi remains the first planned real-consumer development-loop shadow
+  pilot, but it now follows a general automatic-experience gate. AgentGov must
+  first complete an independent non-NYC rehearsal in which ordinary use needs
+  no hand-authored internal JSON, repeated `next` queries, manual lifecycle
+  command composition, or special confirmation words. NYC then supplies
+  classified feedback; its paths, policy, data, workflows, and business
+  semantics remain outside Core.
 - ADR-0006 rejects a general semantic-model implementation until a verified
   cross-domain gap survives existing-contract-first review; no semantic
   schema, checker, report field, or migration has been added.
@@ -279,8 +300,12 @@ Future-0.3 development-governance integration and pre-release evidence:
   selects persistent isolated tool execution through pipx for v0.1; the
   Windows rehearsal covered Git install, inspect, dry-run, adopt, repository
   check, upgrade, and uninstall without using the target `.venv`.
-- [ ] Complete guided onboarding so a first-time user can finish the safe path
-  without an AgentGov expert beside them. ADR-0005 now defines the bounded
+- [ ] Complete the automatic primary product experience so a first-time user
+  can request coding work, confirm only real boundaries, and review protection
+  and benefit evidence without an AgentGov expert beside them. ADR-0005 defines
+  bounded onboarding; ADR-0013 now makes the foreground coordinator,
+  vendor-neutral adapter events, automatic Monitor refresh, and Dashboard the
+  primary direction. The current
   `doctor`, `onboard`, and `next` interaction contracts, and the first
   read-only `agentgov doctor .` slice is implemented.
   `agentgov onboard . --dry-run` now combines diagnosis, exact target
@@ -293,11 +318,17 @@ Future-0.3 development-governance integration and pre-release evidence:
   checks and reports without displacing the active daily route. An isolated
   automated deep-path Windows rehearsal now covers the
   complete installed sequence and corrected `onboard` to run the first
-  repository check automatically. Remaining work is a fresh uncoached human
-  pilot.
-  The facilitator protocol, participant-only handout, and observation record
-  now exercise the current `doctor` → `onboard` → `next` path; a fresh human
-  session is still required.
+  repository check automatically. These commands remain fallback and test
+  surfaces. The first explicit one-cycle foreground coordinator and minimal
+  repository-state reference adapter are now implemented in development
+  source. Remaining work is a live coding-agent transport, natural-language
+  task drafting/admission, bounded task and completion cards, explicit
+  protection-resolution links, Benefit/Learning views, an independent
+  automatic rehearsal, and then a fresh uncoached human pilot.
+  Existing facilitator material exercises the historical
+  `doctor` → `onboard` → `next` path and must not be treated as validation of
+  the newly accepted automatic journey; a replacement automatic-journey pilot
+  record is required.
 - [ ] Convert the Taxi adoption notes into a completed cross-domain pilot
   record, including timing, assistance required, unresolved release-gate
   findings, and final maintainer decisions. A bounded semantic-relation gap

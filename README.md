@@ -70,9 +70,22 @@ calculate a governance score, or approve high-risk work.
 The decided next lifecycle is:
 
 ```text
-Admit requirement -> Ground architecture -> Bound implementation
-  -> Verify during development -> Reconcile completion -> Replay in PR/CI
+Human requests work through a coding agent
+  -> AgentGov automatically admits or routes the task and relevant context
+  -> observes scope and evidence during implementation
+  -> reconciles completion and refreshes the protection Dashboard
+  -> a human decides at real semantic and authority boundaries
+  -> PR/CI independently replays deterministic facts
 ```
+
+ADR-0013 makes automatic orchestration and an automatically updated Monitor
+and Dashboard the accepted primary product experience. Ordinary users should
+not hand-author internal JSON, poll `next`, type special confirmation words, or
+compose `govern start/check/finish/Monitor/handoff`. Those implemented commands
+remain development, headless, CI, diagnostic, testing, fallback, and recovery primitives
+while a vendor-neutral foreground coordinator and coding-agent adapters are
+built. See the [automatic governance product requirements](docs/product-requirements-automatic-governance.md)
+and [ADR-0013](docs/adr/0013-make-automatic-governance-and-dashboard-primary.md).
 
 ![Agent Governance CLI detecting incomplete evidence, source drift, and a human-review advisory](docs/assets/agentgov-demo.svg)
 
@@ -182,8 +195,10 @@ remain available in published stable `0.2.1`. The `0.2.1` release corrects the
 managed workflow's local wheel filename; the checks, reports, and
 human-confirmed update boundary are unchanged.
 
-From the current development source, validate an admitted task and select only
-its repository governance context:
+The following current development-source commands expose the low-level
+lifecycle for validation and recovery. They are not the accepted final user
+journey. Validate an admitted task and select only its repository governance
+context with:
 
 ```powershell
 $env:PYTHONPATH = "src"
@@ -199,7 +214,7 @@ python -m agentgov govern finish governance/tasks/p0-context-selection.json `
 python -m agentgov monitor development .
 ```
 
-The guided daily path now removes the repeated task and base arguments:
+The current low-level guided path removes repeated task and base arguments:
 
 ```powershell
 $env:PYTHONPATH = "src"
@@ -230,6 +245,33 @@ python -m agentgov next . --non-interactive
 
 Text and JSON output contain the selected command and `action_executed=false`;
 `next` never creates, repairs, validates, or runs anything.
+
+Development source now places this polling behavior behind the first internal
+state projection and an explicit one-cycle foreground coordinator. The
+reference adapter builds bounded events from repository state, invokes the same
+checked primitives, and refreshes the Dashboard. It interrupts a person only
+for task admission, material scope, architecture, exception, semantic, or
+consequential authority decisions. No live Codex, Claude Code, or IDE event
+transport is connected yet, so the commands below are adapter/headless
+development surfaces, not a request for ordinary users to manage lifecycle
+events:
+
+```powershell
+python -m agentgov dev .
+python -m agentgov dev . --event implementation.changed
+python -m agentgov dev . --event completion.requested
+python -m agentgov dev . --event session.reviewed `
+  --actor-class human --review-outcome accepted
+```
+
+`implementation.changed` automatically observes actual Git paths and records a
+scope result. `completion.requested` checks scope, runs only the validation
+commands already admitted in the task, reconciles fresh evidence, and refreshes
+the Dashboard. Human review may hand off the exact verified session without a
+special confirmation word. Missing task admission, scope expansion, external
+validation claims, Git authority, and deployment authority still fail closed
+or remain human-gated. Current stable 0.2.1 and published `v0.3.0rc1` behavior
+is unchanged until a later release.
 
 Development source now implements ADR-0012's event-only `govern handoff`.
 Preview re-establishes the exact verified evidence and lists one append-only
@@ -293,7 +335,7 @@ scope. It stores hashes and repository-relative identifiers rather than source,
 command text, or validation output. Passing evidence does not prove semantic
 requirement or architecture correctness and grants no Git authority.
 The Monitor command turns the validated local events into a self-contained
-Overview, Activity Timeline, and Task Detail dashboard at
+Overview, Live Sessions, Protection Events, Activity Timeline, and Task Detail dashboard at
 `.agentgov/dashboard.html`. It always displays partial observation scope and
 missing sources, separates observed facts from inference and unknowns, and
 contains no approval or governance mutation controls. It supports honest
@@ -306,6 +348,13 @@ second governance source of truth. It lets check and finish resume one admitted
 task and exact comparison base; task drift fails closed. The start event records
 which governance paths the Router selected, while the Monitor keeps actual
 coding-agent consumption explicitly unknown.
+
+The accepted next Dashboard makes this read model automatically updated, adds
+explicit protection resolution links, and adds Benefit and Learning views. Benefit claims
+must distinguish observed facts, reproduced comparisons with denominators,
+supported inference, human feedback, and unknowns. The product will not publish
+a single governance, protection, ROI, or benefit score without a documented
+applicability and comparison model.
 
 Preview a pinned consumer CI workflow, then explicitly create it after review:
 
@@ -658,13 +707,18 @@ The first usable release contains:
 - [Development governance Monitor](docs/development-monitor.md) documents the
   local static Dashboard, four observation scopes, safe generated-file
   refresh, and observed/inferred/unknown layers.
+- [Development automation contracts](docs/development-automation-contracts.md)
+  documents the first internal lifecycle-state and vendor-neutral adapter
+  trigger contracts, their denied authority, and the remaining foreground
+  coordinator boundary.
 - [Redacted development-event export](docs/development-event-export.md)
   documents the explicit preview/confirmation flow, metadata-only profile,
   immutable bundle, Monitor ingestion, and privacy/claim boundaries.
 - [Development event export schema](schemas/development-event-export.schema.json)
   defines the strict portable bundle and denied authority fields.
 - [Development Monitor schema](schemas/development-monitor.schema.json) defines
-  its strict Overview, Timeline, Task Detail, observation, and authority data.
+  its strict Overview, Live Sessions, Protection Events, Timeline, Task Detail,
+  observation, and authority data.
 - [Installed development-governance pilot](docs/experiments/installed-development-governance-pilot.md)
   records the exact wheel, independent repository, actual Coding Agent context
   consumption, fail-closed setup findings, verified completion, and claim
@@ -713,7 +767,7 @@ agent-governance-starter/
 
 ## Development setup
 
-Python 3.11 or newer is recommended.
+Python 3.11 or newer is required.
 
 ```powershell
 $env:PYTHONPATH = "src"

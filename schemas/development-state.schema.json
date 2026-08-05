@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/development-state-v1.0.json",
+  "title": "AgentGov Development State",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "task_id", "task_digest", "stage", "recommended_operation", "blocking", "reason_code", "event_count", "latest_event_type", "latest_outcome", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.development-state"},
+    "schema_version": {"const": "1.0"},
+    "task_id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "task_digest": {"$ref": "#/$defs/digest"},
+    "stage": {"enum": ["active_unchecked", "scope_passed", "scope_blocked", "validation_recorded", "needs_evidence", "review_ready", "handed_off", "invalid"]},
+    "recommended_operation": {"enum": ["check_scope", "validate_and_reconcile", "reconcile_completion", "refresh_dashboard", "rollover", "require_human"]},
+    "blocking": {"type": "boolean"},
+    "reason_code": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "event_count": {"type": "integer", "minimum": 0},
+    "latest_event_type": {"enum": ["task.started", "scope.checked", "validation.completed", "completion.reconciled", "session.handed_off", null]},
+    "latest_outcome": {"enum": ["started", "passed", "failed", "stale", "needs_evidence", "verified", "handed_off", null]},
+    "authority_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["executes_operation", "authorizes_code_change", "authorizes_exception", "authorizes_commit", "authorizes_merge", "authorizes_deployment"],
+      "properties": {
+        "executes_operation": {"const": false},
+        "authorizes_code_change": {"const": false},
+        "authorizes_exception": {"const": false},
+        "authorizes_commit": {"const": false},
+        "authorizes_merge": {"const": false},
+        "authorizes_deployment": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}

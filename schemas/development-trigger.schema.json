@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/development-trigger-v1.0.json",
+  "title": "AgentGov Development Trigger",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "trigger_id", "occurred_at", "trigger_type", "source", "working_copy_digest", "correlation_id", "task_ref", "facts", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.development-trigger"},
+    "schema_version": {"const": "1.0"},
+    "trigger_id": {"type": "string", "pattern": "^trg-[0-9a-f]{32}$"},
+    "occurred_at": {"type": "string", "minLength": 1},
+    "trigger_type": {"enum": ["task.requested", "repository.activated", "implementation.changed", "scope.decision_requested", "scope.decision_recorded", "completion.requested", "validation.completed", "session.reviewed"]},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adapter_id", "actor_class"],
+      "properties": {
+        "adapter_id": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$", "maxLength": 80},
+        "actor_class": {"enum": ["human", "coding_agent", "ci"]}
+      }
+    },
+    "working_copy_digest": {"$ref": "#/$defs/digest"},
+    "correlation_id": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$", "maxLength": 120},
+    "task_ref": {
+      "anyOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["task_id", "task_digest"],
+          "properties": {
+            "task_id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+            "task_digest": {"$ref": "#/$defs/digest"}
+          }
+        }
+      ]
+    },
+    "facts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["changed_paths", "validation_outcome", "evidence_ref", "scope_decision", "review_outcome"],
+      "properties": {
+        "changed_paths": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/path"}},
+        "validation_outcome": {"enum": ["passed", "failed", null]},
+        "evidence_ref": {"anyOf": [{"$ref": "#/$defs/path"}, {"type": "null"}]},
+        "scope_decision": {"enum": ["approved", "declined", "needs_human", null]},
+        "review_outcome": {"enum": ["accepted", "changes_requested", null]}
+      }
+    },
+    "authority_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authorizes_scope_expansion", "authorizes_exception", "authorizes_commit", "authorizes_merge", "authorizes_deployment"],
+      "properties": {
+        "authorizes_scope_expansion": {"const": false},
+        "authorizes_exception": {"const": false},
+        "authorizes_commit": {"const": false},
+        "authorizes_merge": {"const": false},
+        "authorizes_deployment": {"const": false}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"trigger_type": {"const": "implementation.changed"}}, "required": ["trigger_type"]},
+      "then": {"properties": {"facts": {"properties": {"changed_paths": {"minItems": 1}}}}},
+      "else": {"properties": {"facts": {"properties": {"changed_paths": {"maxItems": 0}}}}}
+    },
+    {
+      "if": {"properties": {"trigger_type": {"const": "validation.completed"}}, "required": ["trigger_type"]},
+      "then": {"properties": {"facts": {"properties": {"validation_outcome": {"enum": ["passed", "failed"]}}}}},
+      "else": {"properties": {"facts": {"properties": {"validation_outcome": {"type": "null"}, "evidence_ref": {"type": "null"}}}}}
+    },
+    {
+      "if": {"properties": {"trigger_type": {"const": "session.reviewed"}}, "required": ["trigger_type"]},
+      "then": {"properties": {"source": {"properties": {"actor_class": {"const": "human"}}}, "facts": {"properties": {"review_outcome": {"enum": ["accepted", "changes_requested"]}}}}},
+      "else": {"properties": {"facts": {"properties": {"review_outcome": {"type": "null"}}}}}
+    },
+    {
+      "if": {"properties": {"trigger_type": {"const": "scope.decision_recorded"}}, "required": ["trigger_type"]},
+      "then": {
+        "properties": {
+          "source": {"properties": {"actor_class": {"const": "human"}}},
+          "facts": {"properties": {"scope_decision": {"enum": ["approved", "declined", "needs_human"]}}}
+        }
+      },
+      "else": {"properties": {"facts": {"properties": {"scope_decision": {"type": "null"}}}}}
+    }
+  ],
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?![A-Za-z]:[\\\\/])(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"}
+  }
+}

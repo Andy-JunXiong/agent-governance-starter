@@ -86,17 +86,27 @@ No check result authorizes merge, publish, release, or deploy.
 
 ## Current State
 
-Status: stable `0.2.1`; future `0.3` behavior is implemented in development
-source but has not passed its release-candidate or NYC migration gates.
+Status: published stable `0.2.1`; published Pre-release `v0.3.0rc1`. The
+accepted automatic primary experience is not yet implemented. Its first
+internal contract slice now provides a read-only active-session state
+projection, vendor-neutral adapter trigger envelope, and Monitor 1.4 Live
+Sessions / Protection Events read models. The next slice now also implements
+one explicit `agentgov dev` foreground cycle, a minimal repository-state
+reference adapter, automatic scope/completion actions, Dashboard refresh, and
+human-review handoff. No live coding-agent transport, natural-language task
+admission, or visual card surface exists yet. No NYC development-loop pilot or
+0.3 consumer migration has occurred.
 
-Current product priority: converge the now-implemented installation, update,
+Current product priority: turn the now-implemented installation, update,
 onboarding, task admission, architecture context, changed-file, fresh-evidence,
-completion, event, Monitor, and guided-session surfaces into one small guided
-workflow for coding agents. The future 0.3 workflow template now includes the
-completed default-off Development Monitor artifact slice; it remains
-unpublished and unadopted. This priority supersedes release packaging of the
-PR-centered 0.3 delivery work. The detailed ordering is in
-`docs/development-plan.md`.
+completion, event, Monitor, handoff, and routing primitives into one automatic,
+event-driven coding-agent governance experience. Ordinary users should request
+work through their coding agent, confirm only real scope or authority
+boundaries, and review an automatically updated protection and benefit
+Dashboard. The existing command sequence remains a development and fallback
+surface. ADR-0013 and
+`docs/product-requirements-automatic-governance.md` own this direction; the
+detailed ordering is in `docs/development-plan.md`.
 
 Implemented foundations:
 
@@ -699,7 +709,7 @@ Continue productizing the implemented ADR-0009 loop:
    metadata-only development export plus actor-validated CI events, and uploads
    only the self-contained HTML read model. Stable workflow bytes, release
    identity, and consumer files remain unchanged;
-6. [Guided routing and installed rehearsal implemented] Converge installation, update,
+6. [Low-level guided routing and installed rehearsal implemented] Converge installation, update,
    onboarding, task admission, and Monitor generation on the same small guided
    workflow without hidden hooks or daemon authority. `agentgov next` now
    bridges onboarding and deterministic repository failures into strict
@@ -714,13 +724,32 @@ Continue productizing the implemented ADR-0009 loop:
    rollover are now implemented in development source. The exact `0.3.0rc1`
    wheel completed verified finish, Monitor, handoff, zero/one/many rollover,
    and exact `REPLACE` in independent repositories without source-path leakage;
-7. [Release candidate prepared locally] Run the final complete source gates,
-   then publish the reviewed GitHub Pre-release only after authentication.
-   Keep stable promotion and consumer migration as later, separate actions.
+7. [Release candidate published] Preserve `v0.3.0rc1` as immutable evidence of
+   the low-level lifecycle primitives; do not treat it as proof of the final
+   user experience;
+8. [One-cycle coordinator implemented; live integration remains] Connect the
+   implemented state projection, trigger envelope, reference adapter, and
+   `agentgov dev` foreground cycle to one real coding-agent surface. Preserve
+   automatic scope/completion actions, human gates, and denied authority;
+9. [Per-cycle automation implemented; richer views remain] Extend the
+   automatically refreshed Live Sessions, Protection Events, and Task Detail
+   views with explicit resolution links, and add denominator-aware
+   Benefit and Learning views without turning the Dashboard into a source of
+   truth or a score;
+10. [Gate before NYC] Prove one ordinary low-risk task in an independent
+    non-NYC repository without hand-authored internal JSON, repeated state
+    queries, manual lifecycle command composition, or special confirmation
+    words in the primary UI;
+11. [External feedback after the gate] Use NYC as the first real consumer,
+    keep NYC-specific policy local, classify feedback before admission, and
+    modify AgentGov only for general gaps;
+12. Keep stable promotion, consumer migration, publication, and deployment as
+    later, separate human-approved actions.
 
-The uncoached adoption pilot, Taxi record, 0.3 release packaging, NYC migration,
-and PyPI decision remain open evidence or delivery work. They do not replace
-the coding-agent development loop as the product core.
+The automatic independent rehearsal, uncoached adoption evidence, NYC feedback
+record, stable 0.3 promotion, NYC migration, and PyPI decision remain open.
+NYC feedback cannot replace general product admission, and the low-level
+command sequence cannot replace the automatic user experience as product core.
 
 Do not begin dependency risk propagation, repository profiles, governance
 scoring, or taxonomy expansion before pilot evidence justifies the change.

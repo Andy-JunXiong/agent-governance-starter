@@ -14,12 +14,19 @@ CONSUMER_CI = ROOT / "docs/consumer-ci.md"
 DEVELOPMENT_MONITOR = ROOT / "docs/development-monitor.md"
 DEVELOPMENT_SESSION = ROOT / "docs/development-session.md"
 DEVELOPMENT_PLAN = ROOT / "docs/development-plan.md"
+AUTOMATIC_PRODUCT_REQUIREMENTS = (
+    ROOT / "docs/product-requirements-automatic-governance.md"
+)
+AUTOMATION_CONTRACTS = ROOT / "docs/development-automation-contracts.md"
 EXTRACTION_MAP = ROOT / "docs/ai-radar-extraction-map.md"
 STATUS = ROOT / "STATUS.md"
 AGENT_SKILLS_README = ROOT / "agent-skills/README.md"
 GUIDED_NEXT_ADR = ROOT / "docs/adr/0010-route-next-through-development-lifecycle.md"
 BOOTSTRAP_UPDATE_ADR = ROOT / "docs/adr/0011-separate-bootstrap-from-update-routing.md"
 SESSION_HANDOFF_ADR = ROOT / "docs/adr/0012-handoff-verified-development-sessions.md"
+AUTOMATIC_EXPERIENCE_ADR = (
+    ROOT / "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md"
+)
 DEVELOPMENT_RELEASE = ROOT / "release/current.json"
 ISOLATED_EXECUTION_ADR = (
     ROOT / "docs/adr/0004-use-isolated-tool-execution-for-onboarding.md"
@@ -30,6 +37,75 @@ GUIDE_STYLE = ROOT / "docs/guide.css"
 
 
 class UserDocumentationTests(unittest.TestCase):
+    def test_automatic_governance_and_dashboard_are_the_primary_direction(self) -> None:
+        readme = README.read_text(encoding="utf-8")
+        status = STATUS.read_text(encoding="utf-8")
+        plan = DEVELOPMENT_PLAN.read_text(encoding="utf-8")
+        requirements = AUTOMATIC_PRODUCT_REQUIREMENTS.read_text(encoding="utf-8")
+        decision = AUTOMATIC_EXPERIENCE_ADR.read_text(encoding="utf-8")
+        session = DEVELOPMENT_SESSION.read_text(encoding="utf-8")
+        monitor = DEVELOPMENT_MONITOR.read_text(encoding="utf-8")
+        automation = AUTOMATION_CONTRACTS.read_text(encoding="utf-8")
+
+        for path in (AUTOMATIC_PRODUCT_REQUIREMENTS, AUTOMATIC_EXPERIENCE_ADR):
+            self.assertTrue(path.is_file())
+
+        for text in (readme, status, plan, requirements, decision):
+            self.assertIn("automatic", text.lower())
+            self.assertIn("Dashboard", text)
+
+        for text in (readme, plan, requirements, decision, session):
+            self.assertIn("fallback", text)
+
+        for phrase in (
+            "Live Sessions",
+            "Protection Events",
+            "Benefit",
+            "Learning",
+            "observed_fact",
+            "reproduced_comparison",
+            "supported_inference",
+            "human_feedback",
+            "unknown",
+        ):
+            self.assertIn(phrase, requirements)
+
+        self.assertIn("independent non-NYC", plan)
+        self.assertLess(plan.index("independent non-NYC"), plan.index("NYC shadow"))
+        self.assertIn("not yet implemented as the primary", requirements)
+        self.assertIn("not yet implemented", decision)
+        self.assertIn("not yet implemented", monitor)
+        for text in (readme, status, plan, requirements, decision, session, automation):
+            self.assertIn("agentgov dev", text)
+        self.assertIn("agentgov.foreground-cycle", automation)
+        self.assertIn("live coding-agent", automation.lower())
+
+        for forbidden_primary_action in (
+            "hand-author internal JSON",
+            "repeated `next` queries",
+            "manual lifecycle command composition",
+            "special confirmation words",
+        ):
+            self.assertIn(
+                forbidden_primary_action,
+                " ".join(requirements.split()),
+            )
+
+    def test_public_quickstarts_label_the_automatic_direction_as_future(self) -> None:
+        english = QUICKSTART_WEB.read_text(encoding="utf-8")
+        chinese = QUICKSTART_ZH_WEB.read_text(encoding="utf-8")
+
+        self.assertIn("Accepted automatic product direction", english)
+        self.assertIn("not implemented in stable 0.2.1", english)
+        self.assertIn("one-cycle", english)
+        self.assertIn("agentgov dev", english)
+        self.assertIn("开发源自动化状态", chinese)
+        self.assertIn("agentgov dev", chinese)
+        self.assertIn("已接受的自动化产品方向", chinese)
+        self.assertIn("尚未包含在 stable 0.2.1", chinese)
+        for text in (english, chinese):
+            self.assertIn("product-requirements-automatic-governance.html", text)
+
     def test_development_governance_sources_resist_pr_center_drift(self) -> None:
         readme = README.read_text(encoding="utf-8")
         status = STATUS.read_text(encoding="utf-8")
@@ -48,7 +124,10 @@ class UserDocumentationTests(unittest.TestCase):
 
         self.assertIn("govern the\ncoding agent during development", readme)
         self.assertIn("independent backstop", readme)
-        self.assertIn("first planned development-loop shadow pilot", status)
+        self.assertIn(
+            "first planned real-consumer development-loop shadow",
+            status,
+        )
         self.assertIn(
             "NYC development-loop shadow pilot",
             " ".join(plan.split()),
@@ -66,7 +145,7 @@ class UserDocumentationTests(unittest.TestCase):
 
         self.assertIn("Development source now implements ADR-0012", readme)
         self.assertIn("implements ADR-0012", session)
-        self.assertIn("Monitor schema 1.3", monitor)
+        self.assertIn("Monitor schema 1.4", monitor)
         for text in (readme, session):
             self.assertIn("govern handoff --repository . --dry-run", text)
             self.assertIn("exact", text)

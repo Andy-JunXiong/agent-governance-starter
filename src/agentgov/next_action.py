@@ -16,7 +16,7 @@ from agentgov.development_session import (
     load_active_session,
     resolve_active_task,
 )
-from agentgov.development_handoff import is_session_handoff_event
+from agentgov.development_state import DevelopmentStage, project_development_state
 from agentgov.event_store import GovernanceEvent, LocalStateError, load_governance_events
 from agentgov.git_snapshot import GitSnapshotError
 from agentgov.repository import FindingStatus, RepositoryReport, check_repository
@@ -237,16 +237,9 @@ def _active_development_action(root: Path, session: DevelopmentSession) -> NextA
             reason=str(exc),
             source_check_id="development-events:invalid",
         )
-    start = next(
-        (
-            event
-            for event in events
-            if event.event_type == "task.started"
-            and event.occurred_at == verified_session.started_at
-        ),
-        None,
-    )
-    if start is None:
+    state = project_development_state(verified_session, events)
+    stage = DevelopmentStage(state.stage)
+    if stage is DevelopmentStage.INVALID and state.reason_code == "missing_start_event":
         return _invalid_development_state(
             root,
             title="Restore the reviewed development-session boundary",
@@ -257,8 +250,8 @@ def _active_development_action(root: Path, session: DevelopmentSession) -> NextA
             source_check_id="development-session:start-event",
         )
 
-    latest = events[-1]
-    if latest.event_type == "task.started":
+    latest = events[-1] if events else None
+    if stage is DevelopmentStage.ACTIVE_UNCHECKED:
         return NextAction(
             root,
             ActionKind.DETERMINISTIC_WORK,
@@ -268,17 +261,18 @@ def _active_development_action(root: Path, session: DevelopmentSession) -> NextA
             "development-session:started",
             False,
         )
-    if latest.event_type == "scope.checked":
-        if latest.outcome == "passed":
-            return NextAction(
-                root,
-                ActionKind.INCOMPLETE_EVIDENCE,
-                "Run fresh validation and reconcile completion",
-                "the latest current-session scope check passed but completion is not verified",
-                finish_command,
-                "development-session:scope-passed",
-                False,
-            )
+    if stage is DevelopmentStage.SCOPE_PASSED:
+        return NextAction(
+            root,
+            ActionKind.INCOMPLETE_EVIDENCE,
+            "Run fresh validation and reconcile completion",
+            "the latest current-session scope check passed but completion is not verified",
+            finish_command,
+            "development-session:scope-passed",
+            False,
+        )
+    if stage is DevelopmentStage.SCOPE_BLOCKED:
+        assert latest is not None
         return _invalid_development_state(
             root,
             title="Resolve task-scope failures and check again",
@@ -289,7 +283,8 @@ def _active_development_action(root: Path, session: DevelopmentSession) -> NextA
             command=check_command,
             source_check_id="development-session:scope-failed",
         )
-    if latest.event_type == "validation.completed":
+    if stage is DevelopmentStage.VALIDATION_RECORDED:
+        assert latest is not None
         return NextAction(
             root,
             ActionKind.INCOMPLETE_EVIDENCE,
@@ -302,20 +297,21 @@ def _active_development_action(root: Path, session: DevelopmentSession) -> NextA
             "development-session:validation-recorded",
             False,
         )
-    if latest.event_type == "completion.reconciled":
-        if latest.outcome == "verified":
-            return NextAction(
-                root,
-                ActionKind.COMPLETE,
-                "Review the verified task in the Development Monitor",
-                (
-                    "the latest current-session completion is verified within its "
-                    "declared evidence limits"
-                ),
-                monitor_command,
-                "development-session:verified",
-                False,
-            )
+    if stage is DevelopmentStage.REVIEW_READY:
+        return NextAction(
+            root,
+            ActionKind.COMPLETE,
+            "Review the verified task in the Development Monitor",
+            (
+                "the latest current-session completion is verified within its "
+                "declared evidence limits"
+            ),
+            monitor_command,
+            "development-session:verified",
+            False,
+        )
+    if stage is DevelopmentStage.NEEDS_EVIDENCE:
+        assert latest is not None
         return NextAction(
             root,
             ActionKind.INCOMPLETE_EVIDENCE,
@@ -325,30 +321,26 @@ def _active_development_action(root: Path, session: DevelopmentSession) -> NextA
             "development-session:needs-evidence",
             False,
         )
-    if latest.event_type == "session.handed_off":
-        prior = events[-2] if len(events) >= 2 else None
-        if (
-            not is_session_handoff_event(latest, verified_session)
-            or prior is None
-            or prior.event_type != "completion.reconciled"
-            or prior.outcome != "verified"
-            or prior.evidence_ref != latest.evidence_ref
-        ):
-            return _invalid_development_state(
-                root,
-                title="Resolve the invalid verified-session handoff",
-                reason="the terminal event is not linked to the exact latest verified completion",
-                source_check_id="development-session:invalid-handoff",
-            )
+    if stage is DevelopmentStage.HANDED_OFF:
         return _start_action(
             root,
             replace_active=True,
             excluded_task_digests=(verified_session.task_digest,),
         )
+    if stage is DevelopmentStage.INVALID and state.reason_code == "invalid_handoff":
+        return _invalid_development_state(
+            root,
+            title="Resolve the invalid verified-session handoff",
+            reason="the terminal event is not linked to the exact latest verified completion",
+            source_check_id="development-session:invalid-handoff",
+        )
     return _invalid_development_state(
         root,
         title="Resolve unsupported current-session progress",
-        reason=f"the latest current-session event type is {latest.event_type!r}",
+        reason=(
+            f"the current-session event stream is {state.reason_code!r}; "
+            f"latest event type is {state.latest_event_type!r}"
+        ),
         source_check_id="development-events:unsupported-progress",
     )
 

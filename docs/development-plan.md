@@ -40,8 +40,8 @@ from published and consumer-adopted behavior.
 - Implemented in development source: ADR-0012's `govern handoff` re-establishes
   fresh verified evidence, previews one stable append-only event, requires
   exact interactive `HANDOFF`, preserves the pointer and prior artifacts, and
-  makes repeated matching handoff idempotent. Monitor 1.3 separates verified
-  completion from handed-off routing, and `next` filters the same digest before
+  makes repeated matching handoff idempotent. Monitor 1.4 retains the 1.3
+  separation of verified completion from handed-off routing, and `next` filters the same digest before
   offering a separate `--replace-active` rollover.
 - Not yet implemented: explicit exception records or action-loop
   self-reporting. Local-state transfer remains explicit; the workflow does not
@@ -94,30 +94,125 @@ handoff, zero/one/many rollover selection, and exact `REPLACE`. Seventeen
 delivered historical tasks are paused for routing hygiene, leaving one admitted
 RC closeout task.
 
-The approved correction slice makes the missing requirement-admission,
-action-loop-stagnation, and invariant-reconciliation protocols installable and
-aligns the Inventory and product sources of truth. The next product validation
-is an NYC development-loop shadow pilot beginning before code edits; a 0.3
-GitHub migration follows only as independent backstop replay. Do not rewrite
-`v0.3.0rc1`, publish another candidate, promote stable 0.3.0, modify NYC,
-add automatic local-state upload, mechanical runtime interruption, merge
-authority, or deployment without a separate decision.
+ADR-0013 now records the next product boundary: the implemented manual
+`next/start/check/finish/Monitor/handoff` sequence is a set of internal and
+fallback primitives, not the intended daily user experience. The next product
+slice is a general, vendor-neutral, foreground automatic coordinator plus an
+automatically refreshed protection and benefit Dashboard. It must pass an
+independent non-NYC rehearsal before NYC is used as the first real consumer
+feedback pilot.
+
+The first two internal automation slices are now implemented in development source:
+`agentgov.development-state` 1.0 projects validated active-session events into
+one lifecycle stage and recommended operation, and
+`agentgov.development-trigger` 1.0 defines privacy-bounded vendor-neutral
+adapter events. Existing `next` active-session routing consumes the projection.
+`agentgov.foreground-cycle` 1.0, `agentgov dev`, and the minimal reference
+adapter now perform one explicit event cycle: implementation changes trigger
+scope observation; completion requests trigger scope, admitted validation,
+reconciliation, and Dashboard refresh; human review can hand off verified work.
+Monitor 1.4 derives Live Sessions and Protection Events while keeping
+resolution unknown without an explicit link. Live coding-agent transport,
+natural-language task admission, visual cards, and Benefit/Learning remain; see
+`docs/development-automation-contracts.md`.
+
+Do not rewrite `v0.3.0rc1`, publish another candidate, promote stable 0.3.0,
+modify NYC, add automatic local-state upload, hidden daemon authority,
+mechanical runtime interruption, merge authority, or deployment without a
+separate decision.
 
 ## Ordered work
 
 ### Accepted productization constraint
 
 Final users must not need to hand-author internal JSON, understand Registry
-internals, or manually assemble a chain of low-level commands. GitHub
-installation, updates, repository onboarding, task admission, context routing,
-checks, finish, and Monitor generation must converge on a small guided workflow
-with safe discovery, preview, sensible defaults, and explicit human confirmation
-only at real authority boundaries. This productization work is intentionally
-scheduled after the core Govern/Observe/Monitor semantics are proven; the
-current low-level commands remain development interfaces, not the intended
-final UX.
+internals, poll workflow state, type special confirmation words, or manually
+assemble a chain of low-level commands. GitHub installation, updates,
+repository onboarding, task admission, context routing, scope observation,
+checks, completion, Monitor, Dashboard, benefit evidence, and handoff must
+converge on an event-driven automatic workflow. Human confirmation occurs only
+at material scope, architecture, exception, unapproved-execution, semantic, or
+consequential authority boundaries. The current low-level commands remain
+development, headless, CI, diagnostic, testing, and recovery interfaces, not
+the intended final UX. The canonical requirements are in
+`docs/product-requirements-automatic-governance.md`.
 
-### P0 — govern the coding agent during development
+### P0 — automate the primary product experience
+
+1. Complete extraction of the implemented lifecycle routing behind `next`, `govern start`,
+   `govern check`, `govern finish`, Monitor, and handoff into an internal
+   state-machine service while preserving current CLI bytes, exit codes,
+   authority flags, and fixture behavior. The active-session projection is
+   implemented; no-task admission remains a human gate.
+2. Extend the implemented strict, versioned, vendor-neutral trigger and
+   minimal reference-adapter contract for
+   at least task requested, repository activated, implementation changed,
+   scope decision requested, completion requested, validation completed, and
+   session reviewed events. The trigger vocabulary and authority boundary are
+   implemented; live vendor transport remains.
+3. Extend the implemented explicit one-cycle foreground coordinator
+   `agentgov dev`, that consumes adapter events, invokes existing deterministic
+   cores, records disclosed local metadata events, refreshes the Dashboard, and
+   returns findings without a hidden daemon. Connect it to a real coding-agent
+   surface and evaluate whether a longer-lived foreground process is needed.
+4. Extend the implemented repository-state reference adapter with one live
+   coding-agent transport. Adapter configuration remains replaceable input and
+   never governance authority.
+5. Add a concise task and approval surface. Normal product interaction uses a
+   card, button, or adapter approval event; exact `START`, `REPLACE`, and
+   `HANDOFF` text remains only a headless fallback.
+6. Preserve the implemented per-cycle automatic Monitor refresh and Overview,
+   Live Sessions, Protection Events, and Task Detail views; add explicit
+   resolution links. The Dashboard remains a read model and contains no policy,
+   merge, release, or deployment controls.
+7. Add Benefit and Learning views with explicit `observed_fact`,
+   `reproduced_comparison`, `supported_inference`, `human_feedback`, and
+   `unknown` semantics. Every comparison states its denominator,
+   applicability, and observation window; no combined governance score is
+   introduced.
+8. Run one exact-artifact automatic user-journey rehearsal in an independent
+   non-NYC repository. One ordinary low-risk task must reach a reviewable
+   completion without hand-authored internal JSON, repeated `next` queries,
+   manual lifecycle command composition, or special confirmation words in the
+   primary UI.
+9. Only after the general rehearsal passes, run one real low-risk NYC shadow
+   pilot. Keep its task, policy, paths, and business semantics in NYC; record
+   feedback as consumer-local, general Core, adapter, usability,
+   insufficient-evidence, or rejected.
+10. Implement only admitted general gaps in AgentGov and replay them in both
+    the independent repository and NYC before any stable promotion.
+
+Acceptance signals:
+
+- the ordinary user requests work through a coding-agent surface, confirms at
+  most one concise task card when required, and reviews one completion card;
+- context selection, scope observation, approved validation, evidence
+  reconciliation, Monitor refresh, and session routing occur automatically;
+- deterministic failures and protection events reach the coding agent and
+  Dashboard without requiring user polling;
+- ambiguous scope, architecture changes, exceptions, unapproved commands, and
+  consequential transitions remain explicitly human-gated;
+- Core events, transitions, findings, benefit semantics, and Dashboard data
+  contain no vendor or consumer-specific policy;
+- the Dashboard explains observed protection and evidence limits without
+  claiming unsupported causality, ROI, or coverage;
+- existing CLI and CI fixtures remain compatible and available for headless
+  recovery and independent replay.
+
+Stop conditions:
+
+- a design requires a hidden daemon, automatic local-state upload, raw prompt
+  collection, source upload, or host configuration as governance authority;
+- automation silently expands scope, invents semantic admission, approves an
+  exception, or gains external write authority;
+- the Dashboard becomes a second governance source of truth or publishes an
+  undocumented score;
+- an NYC-specific path, policy, workflow, business object, or threshold is
+  proposed for AgentGov Core;
+- the automatic path cannot preserve current deterministic/advisory and fresh
+  evidence semantics.
+
+### P0 foundation — govern the coding agent during development
 
 1. [Implemented development preview] Specify a minimal task contract for
    requirement provenance, parent objective, goal, non-goals, smallest scope,
@@ -180,13 +275,12 @@ final UX.
     confirmation precede the create-only write; actor labels, local evidence
     pointers, source content, validation output, absolute paths, credential
     assignments, and recognized secret-token shapes cannot enter the bundle.
-12. [Next external pilot] Exercise the complete development loop on one real,
-    low-risk NYC task in shadow mode: human admission before editing,
-    repository-grounded context, bounded implementation, stagnation handling,
-    fresh verification, and invariant reconciliation. Record assistance,
-    friction, false positives, missed constraints, overrides, and time; do not
-    copy NYC policy into AgentGov or treat the later CI replay as the product
-    interaction.
+12. [Deferred behind the automatic-experience gate] Exercise the complete
+    development loop on one real, low-risk NYC task in shadow mode only after
+    P0 automatic orchestration passes independently. Record assistance,
+    interruption burden, protection events, false positives, missed
+    constraints, overrides, benefit evidence, and time; do not copy NYC policy
+    into AgentGov or treat the later CI replay as the product interaction.
 
 Acceptance signals:
 
@@ -237,19 +331,24 @@ Acceptance signals:
 
 ### P2 — validate portability against AI Radar and an independent consumer
 
-1. Replay bounded AI Radar development scenarios for requirement admission,
+1. Run the complete automatic journey first in an independent non-NYC
+   repository, using the exact candidate artifact and one ordinary low-risk
+   task without manual lifecycle command composition.
+2. Replay bounded AI Radar development scenarios for requirement admission,
    architecture preflight, scoped implementation, fresh verification, and
    invariant reconciliation without importing AI Radar rules.
-2. Run the NYC development-loop shadow pilot through the same portable local
-   contracts before any PR or CI migration, without importing NYC rules.
-3. Retain the completed independent installed-repository pilot and add another
-   independent change only if NYC reveals a hidden domain assumption.
+3. Run the NYC development-loop shadow pilot through the same automatic,
+   portable contracts before any PR or CI migration, without importing NYC
+   rules.
 4. Compare what was surfaced before coding, during coding, at completion, and
-   in PR/CI; record assistance, false positives, missed constraints, human
-   overrides, handling time, and evidence limitations.
-5. Resume the NYC 0.3 migration only after the development-loop pilot, using CI
-   to replay the same deterministic facts as a retained backstop rather than as
-   the product's first governance interaction.
+   in PR/CI; record interruption burden, protection events, false positives,
+   missed constraints, human overrides, handling time, benefit evidence, and
+   limitations.
+5. Classify NYC feedback before admission; keep consumer-local configuration
+   in NYC and implement only general Core, adapter, or usability gaps in
+   AgentGov.
+6. Replay admitted changes in the independent repository and NYC, then resume
+   NYC 0.3 migration only as a retained CI backstop.
 
 Acceptance signals:
 
@@ -257,6 +356,7 @@ Acceptance signals:
   gates, paths, runtime schemas, or individual-specific policy;
 - the independent consumer can use the same contracts without AI Radar
   knowledge;
+- the automatic journey succeeds before NYC supplies product feedback;
 - NYC demonstrates the governance interaction during coding, not only after a
   pull request exists;
 - users discover relevant constraints before PR creation;

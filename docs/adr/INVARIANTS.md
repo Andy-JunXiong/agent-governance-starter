@@ -106,3 +106,41 @@ accountable human instead of manufacturing a deterministic answer.
 
 Stop automatic proposal creation and route the conflict or migration to the
 consumer repository owner.
+
+## The primary user journey is automatic and interruption-minimal
+
+- Authority: `docs/adr/0013-make-automatic-governance-and-dashboard-primary.md`
+
+### Enforcement points
+
+- Ordinary users interact through their coding agent and a concise approval
+  and Dashboard surface rather than composing lifecycle commands or internal
+  JSON.
+- Repository observation, context routing, declared checks, evidence
+  reconciliation, and Dashboard refresh are automatic after activation.
+- Human interruption is reserved for material scope, architecture, exception,
+  unapproved execution, semantic judgment, or consequential authority.
+- `next`, `govern start/check/finish`, Monitor generation, and handoff remain
+  supported internal, headless, diagnostic, CI, testing, and recovery
+  interfaces rather than the intended primary daily journey.
+- Benefit views distinguish observed facts, reproduced comparisons, supported
+  inference, human feedback, and unknowns; they do not manufacture a score.
+
+### Verification
+
+- Exercise one complete low-risk task through the automatic product surface
+  without hand-authored internal JSON, repeated state queries, manual lifecycle
+  command composition, or special confirmation words.
+- Confirm adapters cannot grant scope expansion, exceptions, external writes,
+  commit, merge, release, or deployment authority.
+- Confirm Dashboard data derives from validated events and does not become a
+  second governance source of truth.
+- Pilot interruption burden, context relevance, protection usefulness, and
+  benefit claim honesty with humans.
+
+### Failure response
+
+Treat a return to command-driven daily use, hidden authority, consumer-specific
+Core policy, or unsupported benefit claims as product architecture drift. Keep
+the low-level interface available for recovery while correcting the primary
+automatic journey.

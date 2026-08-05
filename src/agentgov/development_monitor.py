@@ -24,7 +24,7 @@ from agentgov.event_store import (
 
 
 MONITOR_CONTRACT = "agentgov.development-monitor"
-MONITOR_SCHEMA_VERSION = "1.3"
+MONITOR_SCHEMA_VERSION = "1.4"
 MONITOR_SCOPES = {"local_session", "exported_development", "ci_only", "combined"}
 
 
@@ -39,6 +39,8 @@ class DevelopmentMonitor:
     generated_at: str
     observation: Mapping[str, Any]
     overview: Mapping[str, int]
+    live_sessions: tuple[Mapping[str, Any], ...]
+    protection_events: tuple[Mapping[str, Any], ...]
     timeline: tuple[Mapping[str, Any], ...]
     tasks: tuple[Mapping[str, Any], ...]
     claim_layers: Mapping[str, tuple[str, ...]]
@@ -102,6 +104,58 @@ def _task_detail(task_id: str, observed_events: tuple[_ObservedEvent, ...]) -> d
         "observed_failure_count": sum(item.metrics.get("failures", 0) for item in events),
         "observed_advisory_count": sum(item.metrics.get("advisories", 0) for item in events),
         "events": [_timeline_entry(item) for item in observed_events],
+    }
+
+
+def _live_session(
+    task_id: str,
+    task_digest: str,
+    observed_events: tuple[_ObservedEvent, ...],
+) -> dict[str, Any]:
+    latest = observed_events[-1].event
+    if latest.event_type == "session.handed_off":
+        state = "handed_off"
+    elif latest.event_type == "completion.reconciled" and latest.outcome == "verified":
+        state = "review_ready"
+    elif latest.outcome in {"failed", "stale", "needs_evidence"}:
+        state = "needs_attention"
+    else:
+        state = "active"
+    return {
+        "task_id": task_id,
+        "task_digest": task_digest,
+        "state": state,
+        "attention_required": state == "needs_attention",
+        "latest_event_type": latest.event_type,
+        "latest_recorded_outcome": latest.outcome,
+        "last_observed_at": latest.occurred_at,
+    }
+
+
+def _protection_event(observed: _ObservedEvent) -> dict[str, Any] | None:
+    event = observed.event
+    protection_type: str | None = None
+    if event.event_type == "scope.checked" and event.outcome == "failed":
+        protection_type = "scope_boundary"
+    elif event.event_type == "validation.completed" and event.outcome == "failed":
+        protection_type = "validation_failure"
+    elif event.event_type == "validation.completed" and event.outcome == "stale":
+        protection_type = "stale_evidence"
+    elif event.event_type == "completion.reconciled" and event.outcome == "needs_evidence":
+        protection_type = "incomplete_completion"
+    if protection_type is None:
+        return None
+    return {
+        "protection_id": f"protection:{event.event_id}",
+        "source_event_id": event.event_id,
+        "source_scope": observed.source_scope,
+        "occurred_at": event.occurred_at,
+        "task_id": event.task_id,
+        "protection_type": protection_type,
+        "observed_outcome": event.outcome,
+        "status": "observed_resolution_unknown",
+        "reason_codes": list(event.reason_codes),
+        "evidence_ref": event.evidence_ref,
     }
 
 
@@ -204,6 +258,19 @@ def build_development_monitor(
         _task_detail(task_id, tuple(task_events))
         for task_id, task_events in sorted(by_task.items())
     )
+    by_session: dict[tuple[str, str], list[_ObservedEvent]] = {}
+    for item in observed_events:
+        key = (item.event.task_id, item.event.task_digest)
+        by_session.setdefault(key, []).append(item)
+    live_sessions = tuple(
+        _live_session(task_id, task_digest, tuple(session_events))
+        for (task_id, task_digest), session_events in sorted(by_session.items())
+    )
+    protection_events = tuple(
+        item
+        for item in (_protection_event(observed) for observed in observed_events)
+        if item is not None
+    )
     overview = {
         "tasks": len(tasks),
         "events": len(events),
@@ -225,6 +292,10 @@ def build_development_monitor(
         ),
         "event_reported_failures": sum(item.metrics.get("failures", 0) for item in events),
         "event_reported_advisories": sum(item.metrics.get("advisories", 0) for item in events),
+        "protection_events": len(protection_events),
+        "sessions_needing_attention": sum(
+            item["attention_required"] for item in live_sessions
+        ),
     }
     if observation_scope == "ci_only":
         missing_sources = (
@@ -274,6 +345,7 @@ def build_development_monitor(
             "Each timeline source label comes from the explicitly selected local, export, or CI input boundary rather than a semantic inference.",
             "Latest recorded outcome means the chronologically latest event visible in this observation scope.",
             "Verified completion and handed-off routing are counted separately; handoff records routing responsibility, not semantic approval.",
+            "Protection Events are deterministic read-model classifications of failed, stale, or incomplete recorded outcomes.",
         ),
         "inferred": (
             "Chronological grouping suggests a task activity sequence but does not prove that one event caused another.",
@@ -282,6 +354,7 @@ def build_development_monitor(
             "Events do not prove requirement satisfaction, architecture correctness, validation sufficiency, causal benefit, or return on investment.",
             "Which routed governance artifacts or Skills the coding agent actually consumed is unknown until context-consumption events exist.",
             "Human handling and resolution are unknown unless a future explicit human-decision event records them.",
+            "A later passing event does not prove that a Protection Event was resolved because cross-event resolution links do not yet exist.",
             "History outside the displayed observation scope is unknown.",
         ),
     }
@@ -291,6 +364,8 @@ def build_development_monitor(
         generated_at=generated_at or utc_now(),
         observation=observation,
         overview=overview,
+        live_sessions=live_sessions,
+        protection_events=protection_events,
         timeline=timeline,
         tasks=tasks,
         claim_layers=claim_layers,
@@ -335,6 +410,22 @@ def render_development_monitor_markdown(monitor: DevelopmentMonitor) -> str:
         "|---|---:|",
     ]
     lines.extend(f"| {key.replace('_', ' ')} | {value} |" for key, value in monitor.overview.items())
+    lines.extend(["", "## Live Sessions", ""])
+    if monitor.live_sessions:
+        lines.extend(
+            f"- `{item['task_id']}` — `{item['state']}` — latest `{item['latest_event_type']}` / `{item['latest_recorded_outcome']}`"
+            for item in monitor.live_sessions
+        )
+    else:
+        lines.append("- No sessions are visible in this observation scope.")
+    lines.extend(["", "## Protection Events", ""])
+    if monitor.protection_events:
+        lines.extend(
+            f"- `{item['occurred_at']}` — `{item['task_id']}` — `{item['protection_type']}` — resolution `unknown`"
+            for item in monitor.protection_events
+        )
+    else:
+        lines.append("- No protection event is visible in this observation scope.")
     lines.extend(["", "## Activity Timeline", ""])
     if monitor.timeline:
         lines.extend(
@@ -379,6 +470,8 @@ def render_development_monitor_html(monitor: DevelopmentMonitor) -> str:
             ("Validations", monitor.overview["validations"]),
             ("Verified completions", monitor.overview["verified_completions"]),
             ("Session handoffs", monitor.overview["handoffs"]),
+            ("Protection events", monitor.overview["protection_events"]),
+            ("Needs attention", monitor.overview["sessions_needing_attention"]),
         )
     )
     missing = "".join(f"<li>{esc(item)}</li>" for item in observation["missing_sources"])
@@ -421,6 +514,30 @@ def render_development_monitor_html(monitor: DevelopmentMonitor) -> str:
         )
     else:
         task_cards = '<div class="empty">No task details are available.</div>'
+    if monitor.live_sessions:
+        live_sessions = "".join(
+            '<article class="metric">'
+            f'<span>{esc(item["task_id"])}</span><strong>{esc(item["state"])}</strong>'
+            f'<small>Latest: {esc(item["latest_event_type"])} / {esc(item["latest_recorded_outcome"])}</small>'
+            "</article>"
+            for item in monitor.live_sessions
+        )
+    else:
+        live_sessions = '<div class="empty">No sessions are visible in this observation scope.</div>'
+    if monitor.protection_events:
+        protections = "".join(
+            '<article class="task">'
+            f'<summary><span>{esc(item["protection_type"])}</span><b>{esc(item["task_id"])}</b></summary>'
+            '<div class="task-grid">'
+            f'<div><small>Observed</small><strong>{esc(item["occurred_at"])}</strong></div>'
+            f'<div><small>Outcome</small><strong>{esc(item["observed_outcome"])}</strong></div>'
+            f'<div><small>Source</small><strong>{esc(item["source_scope"])}</strong></div>'
+            '<div><small>Resolution</small><strong>Unknown</strong></div>'
+            "</div></article>"
+            for item in monitor.protection_events
+        )
+    else:
+        protections = '<div class="empty">No protection event is visible in this observation scope.</div>'
     machine = html.escape(render_development_monitor_json(monitor), quote=False)
     return f'''<!doctype html>
 <!-- {MONITOR_CONTRACT} -->
@@ -433,6 +550,8 @@ def render_development_monitor_html(monitor: DevelopmentMonitor) -> str:
 <section aria-labelledby="overview"><h2 id="overview">Overview</h2><p class="sub">Observed counts within this dashboard's declared scope. They are not a governance score.</p><div class="metrics">{cards}</div></section>
 <section class="panel limits"><div><h2>Observation boundary</h2><p><b>{esc(observation['scope'])}</b> from {esc(observation['started_at'])} to {esc(observation['ended_at'])}.</p><p class="sub">Source events: {esc(", ".join(f"{key}={value}" for key, value in observation['source_event_counts'].items()))}.</p><p class="sub">Cross-stage discovery comparison is unavailable because the event contract has no cross-stage finding identity or resolution link.</p></div><div class="missing"><h3>Missing sources</h3><ul>{missing}</ul></div></section>
 <section class="panel"><h2>Claim layers</h2><p class="sub">Facts, cautious interpretation, and unknowns stay visibly separate.</p><div class="claims">{layers}</div></section>
+<section class="panel"><h2>Live Sessions</h2><p class="sub">Current read-model state from each task's latest visible event.</p><div class="metrics">{live_sessions}</div></section>
+<section class="panel"><h2>Protection Events</h2><p class="sub">Observed blocked, failed, stale, or incomplete outcomes. Resolution remains unknown without an explicit link.</p>{protections}</section>
 <section class="panel" aria-labelledby="timeline"><h2 id="timeline">Activity Timeline</h2><p class="sub">When governance triggered, why it triggered, who used it, and what was recorded.</p><ol class="timeline">{timeline}</ol></section>
 <section class="panel" aria-labelledby="tasks"><h2 id="tasks">Task Detail</h2><p class="sub">Latest recorded outcomes and visible task activity. Requirement and architecture correctness remain human judgments.</p>{task_cards}</section>
 <details class="machine"><summary>Embedded machine-readable Monitor</summary><pre>{machine}</pre></details>

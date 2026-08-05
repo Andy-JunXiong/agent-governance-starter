@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/foreground-cycle-v1.0.json",
+  "title": "AgentGov Foreground Cycle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "trigger", "status", "task_ref", "state_before", "state_after", "actions", "findings", "human_gate", "dashboard_ref", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.foreground-cycle"},
+    "schema_version": {"const": "1.0"},
+    "trigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["trigger_id", "trigger_type", "adapter_id", "actor_class", "correlation_id"],
+      "properties": {
+        "trigger_id": {"type": "string", "pattern": "^trg-[0-9a-f]{32}$"},
+        "trigger_type": {"type": "string", "minLength": 1},
+        "adapter_id": {"type": "string", "minLength": 1},
+        "actor_class": {"enum": ["human", "coding_agent", "ci"]},
+        "correlation_id": {"type": "string", "minLength": 1}
+      }
+    },
+    "status": {"enum": ["observed", "advanced", "blocked", "needs_human", "review_ready", "handed_off"]},
+    "task_ref": {"anyOf": [{"$ref": "#/$defs/taskRef"}, {"type": "null"}]},
+    "state_before": {"anyOf": [{"$ref": "#/$defs/state"}, {"type": "null"}]},
+    "state_after": {"anyOf": [{"$ref": "#/$defs/state"}, {"type": "null"}]},
+    "actions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/action"}},
+    "findings": {"type": "array", "items": {"$ref": "#/$defs/finding"}},
+    "human_gate": {"anyOf": [{"$ref": "#/$defs/humanGate"}, {"type": "null"}]},
+    "dashboard_ref": {"$ref": "#/$defs/path"},
+    "authority_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["uses_only_admitted_validation", "authorizes_scope_expansion", "authorizes_exception", "authorizes_commit", "authorizes_merge", "authorizes_deployment"],
+      "properties": {
+        "uses_only_admitted_validation": {"const": true},
+        "authorizes_scope_expansion": {"const": false},
+        "authorizes_exception": {"const": false},
+        "authorizes_commit": {"const": false},
+        "authorizes_merge": {"const": false},
+        "authorizes_deployment": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?![A-Za-z]:[\\\\/])(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+    "taskRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_id", "task_digest"],
+      "properties": {
+        "task_id": {"type": "string", "minLength": 1},
+        "task_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract", "schema_version", "task_id", "task_digest", "stage", "recommended_operation", "blocking", "reason_code", "event_count", "latest_event_type", "latest_outcome", "authority_boundary"],
+      "properties": {
+        "contract": {"const": "agentgov.development-state"},
+        "schema_version": {"const": "1.0"},
+        "task_id": {"type": "string", "minLength": 1},
+        "task_digest": {"$ref": "#/$defs/digest"},
+        "stage": {"enum": ["active_unchecked", "scope_passed", "scope_blocked", "validation_recorded", "needs_evidence", "review_ready", "handed_off", "invalid"]},
+        "recommended_operation": {"enum": ["check_scope", "validate_and_reconcile", "reconcile_completion", "refresh_dashboard", "rollover", "require_human"]},
+        "blocking": {"type": "boolean"},
+        "reason_code": {"type": "string", "minLength": 1},
+        "event_count": {"type": "integer", "minimum": 0},
+        "latest_event_type": {"type": ["string", "null"]},
+        "latest_outcome": {"type": ["string", "null"]},
+        "authority_boundary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["executes_operation", "authorizes_code_change", "authorizes_exception", "authorizes_commit", "authorizes_merge", "authorizes_deployment"],
+          "properties": {
+            "executes_operation": {"const": false},
+            "authorizes_code_change": {"const": false},
+            "authorizes_exception": {"const": false},
+            "authorizes_commit": {"const": false},
+            "authorizes_merge": {"const": false},
+            "authorizes_deployment": {"const": false}
+          }
+        }
+      }
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "outcome", "event_ref", "artifact_ref"],
+      "properties": {
+        "name": {"enum": ["check_scope", "run_preapproved_validation", "reconcile_completion", "handoff_session", "refresh_dashboard"]},
+        "outcome": {"type": "string", "minLength": 1},
+        "event_ref": {"anyOf": [{"$ref": "#/$defs/path"}, {"type": "null"}]},
+        "artifact_ref": {"anyOf": [{"$ref": "#/$defs/path"}, {"type": "null"}]}
+      }
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["semantics", "code", "message", "blocking"],
+      "properties": {
+        "semantics": {"enum": ["deterministic", "advisory"]},
+        "code": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "message": {"type": "string", "minLength": 1},
+        "blocking": {"type": "boolean"}
+      }
+    },
+    "humanGate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "reason_code", "options"],
+      "properties": {
+        "kind": {"enum": ["task_admission", "scope_decision", "task_readmission"]},
+        "reason_code": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "options": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}}
+      }
+    }
+  }
+}

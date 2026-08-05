@@ -124,6 +124,15 @@ agentgov onboard . --project-name "My Project"
 agentgov next .</code></pre>
       <p><code>doctor</code> 和 <code>next</code> 始终只读。交互式 <code>onboard</code> 仅接受真实终端中精确输入的 <code>ADOPT</code>，随后自动运行首次仓库检查；重定向输入和非交互模式都不能授予写权限。</p>
     </section>
+    <section class="emphasis">
+      <h2>已接受的自动化产品方向</h2>
+      <p>当前手动开发命令链只是开发和故障恢复接口，不是普通用户的目标流程。下一阶段产品允许用户直接向 Coding Agent 提出任务，由 AgentGov 自动协调上下文、范围、预批准验证、fresh evidence、Monitor 和 Dashboard，只在真正的语义或权限边界打断用户。</p>
+      <p>这个自动体验以及 Live Sessions、Protection Events、Benefit 和 Learning 视图尚未包含在 stable 0.2.1，也不是 v0.3.0rc1 的主要界面。详见<a href="product-requirements-automatic-governance.html">已批准的产品需求</a>。</p>
+    </section>
+    <section class="emphasis">
+      <h2>开发源自动化状态</h2>
+      <p>开发源现已实现单次前景 <code>agentgov dev</code> 协调循环和最小参考 Adapter，可自动执行范围观察、已批准验证、完成对账、人工评审后的 handoff 与 Dashboard 刷新。Codex、Claude Code 或 IDE 的实时事件接入、自然语言任务准入和可视化卡片仍是下一阶段；stable 0.2.1 与 v0.3.0rc1 未改变。</p>
+    </section>
   </main>
   <footer class="shell">Agent Governance Starter Kit · 本地运行 · 仓库原生 · 人工控制</footer>
   <script src="guide.js" defer></script>

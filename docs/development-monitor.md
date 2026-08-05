@@ -7,6 +7,8 @@ future 0.3 line. It consumes the privacy-bounded events created by
 `agentgov govern start/check/finish` and produces a self-contained local file with:
 
 - Overview;
+- Live Sessions;
+- Protection Events;
 - Activity Timeline;
 - Task Detail.
 
@@ -16,6 +18,24 @@ store. The future 0.3 managed workflow template now includes a default-off,
 manual-dispatch artifact path. It still does not include central telemetry,
 GitHub Pages, automatic local-state transfer, approval controls, or
 governance-file edits.
+
+## Accepted product direction
+
+ADR-0013 makes the Monitor and Dashboard a core automatically refreshed product
+surface rather than a command the ordinary user must remember to run. The
+current static Monitor is the validated read-model foundation. Development
+source now derives Overview, Live Sessions, Protection Events, Activity
+Timeline, and Task Detail. The accepted next slices add explicit protection
+resolution links and Benefit/Learning views. The first `agentgov dev`
+foreground cycle now refreshes this Dashboard after each processed adapter
+event; a live coding-agent transport that emits those events automatically is
+still unimplemented.
+
+The target Dashboard explains how AgentGov protected both the user and the
+coding agent: bounded scope and authority, relevant context, stale evidence,
+repeated attempts, failures attributable to environment or unclear intent,
+human decisions, and remaining unknowns. This target is not yet implemented in
+stable 0.2.1 or as the primary `v0.3.0rc1` user experience.
 
 Generate the default local dashboard:
 
@@ -94,8 +114,14 @@ Within the displayed observation scope:
   reason codes, observed counts, and outcome. Selection does not prove agent
   consumption.
 - Overview counts tasks, starts, checks, validations, completions, handoffs,
-  fresh/stale results, and event-reported findings without computing a score
-  or percentage.
+  fresh/stale results, Protection Events, sessions needing attention, and
+  event-reported findings without computing a score or percentage.
+- Live Sessions classifies the latest visible task event as `active`,
+  `needs_attention`, `review_ready`, or `handed_off`.
+- Protection Events deterministically classify recorded scope failures,
+  validation failures, stale validation evidence, and completion that needs
+  evidence. Their identity is derived from the source event; resolution is
+  explicitly unknown without a future link.
 - Task Detail groups the visible sequence and shows the latest recorded event
   and completion outcome.
 
@@ -105,7 +131,7 @@ decisions, so handling and resolution remain `unknown`. A later passing event
 is not labeled as proof that AgentGov caused or resolved an earlier problem.
 
 Development source implements ADR-0012's separate `session.handed_off` event.
-Monitor schema 1.3 counts and displays handoff as routing state while retaining
+Monitor schema 1.4 counts and displays handoff as routing state while retaining
 `verified` as the distinct latest completion state. Monitor generation itself
 does not create the event or claim that a human read the output. For the exact
 fresh verified local session, the CLI may print a `govern handoff --dry-run`
@@ -120,6 +146,12 @@ The Monitor keeps three claim layers visible:
   causality.
 - **Unknown:** missing history, semantic correctness, validation sufficiency,
   human handling, causal benefit, and ROI.
+
+The accepted Benefit view refines these layers into `observed_fact`,
+`reproduced_comparison`, `supported_inference`, `human_feedback`, and `unknown`.
+A reproduced comparison requires a documented denominator, applicability
+rules, and comparable observation windows. Protection-event counts do not by
+themselves prove a prevented production outcome, causal improvement, or ROI.
 
 The static HTML escapes event metadata, embeds no source code or raw validation
 output, performs no external requests, and contains no approval, exception,

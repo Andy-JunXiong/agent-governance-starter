@@ -2,6 +2,13 @@
 
 本指南帮助首次使用者在新仓库或已有仓库中完成最小接入。静态检查成功只代表契约已执行，不代表治理完成，也不授权合并、发布或部署。
 
+> 产品方向说明：当前手动 CLI 是 stable 接入和开发 fallback，不是最终
+> 日常体验。已接受的下一阶段产品允许用户直接向 Coding Agent 提出任务，
+> 由 AgentGov 自动协调上下文、范围、预批准验证、fresh evidence、Monitor
+> 和 Dashboard，只在真正的语义或权限边界打断用户。该自动体验尚未实现为
+> stable 0.2.1 或 v0.3.0rc1 的主要界面，详见
+> [自动治理产品需求](product-requirements-automatic-governance.md)。
+
 ## 1. 安装
 
 在需要治理的仓库根目录打开终端，把已发布的稳定版安装到隔离的

@@ -153,7 +153,49 @@ class DevelopmentMonitorTests(unittest.TestCase):
         self.assertEqual(monitor.tasks[0]["latest_completion_state"], "verified")
         self.assertEqual(monitor.tasks[0]["latest_routing_state"], "handed_off")
         self.assertEqual(monitor.tasks[0]["handoffs"], 1)
+        self.assertEqual(monitor.live_sessions[0]["state"], "handed_off")
+        self.assertFalse(monitor.live_sessions[0]["attention_required"])
+        self.assertEqual(monitor.protection_events, ())
         self.assertEqual(set(monitor.claim_layers), {"observed", "inferred", "unknown"})
+
+    def test_monitor_surfaces_protection_events_without_claiming_resolution(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            repository = create_repository(Path(temp_dir))
+            add_event(
+                repository,
+                event_type="scope.checked",
+                outcome="failed",
+                occurred_at="2026-08-02T01:01:00.000Z",
+                reasons=("scope_failure",),
+                metrics={"failures": 1},
+            )
+            add_event(
+                repository,
+                event_type="completion.reconciled",
+                outcome="needs_evidence",
+                occurred_at="2026-08-02T01:02:00.000Z",
+                reasons=("fresh_evidence_missing",),
+            )
+
+            monitor = build_development_monitor(repository, generated_at=FIXED_TIME)
+            html_output = render_development_monitor_html(monitor)
+
+        self.assertEqual(monitor.overview["protection_events"], 2)
+        self.assertEqual(monitor.overview["sessions_needing_attention"], 1)
+        self.assertEqual(monitor.live_sessions[0]["state"], "needs_attention")
+        self.assertEqual(
+            [item["protection_type"] for item in monitor.protection_events],
+            ["scope_boundary", "incomplete_completion"],
+        )
+        self.assertTrue(
+            all(
+                item["status"] == "observed_resolution_unknown"
+                for item in monitor.protection_events
+            )
+        )
+        self.assertIn("Protection Events", html_output)
+        self.assertIn("Resolution", html_output)
+        self.assertIn("Unknown", html_output)
 
     def test_empty_store_is_honest_partial_history(self) -> None:
         with TemporaryDirectory() as temp_dir:
@@ -322,7 +364,14 @@ class DevelopmentMonitorTests(unittest.TestCase):
             monitor = build_development_monitor(repository, generated_at=FIXED_TIME)
             output = render_development_monitor_html(monitor)
 
-        for heading in ("Overview", "Activity Timeline", "Task Detail", "Claim layers"):
+        for heading in (
+            "Overview",
+            "Live Sessions",
+            "Protection Events",
+            "Activity Timeline",
+            "Task Detail",
+            "Claim layers",
+        ):
             self.assertIn(heading, output)
         self.assertNotIn("<script>alert", output)
         self.assertIn("&lt;script&gt;alert", output)
