@@ -1,0 +1,108 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-guided-next-installed-rehearsal",
+  "title": "Rehearse guided next routing from an exact installed wheel",
+  "requirement": {
+    "summary": "Validate the new read-only next router from the exact current wheel in a disposable independent Git repository before extending its precedence model.",
+    "source_refs": [
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "docs/development-log/2026-08-05.md"
+    ]
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": [
+      "governance/tasks/p0-guided-next-development-routing.json",
+      "docs/adr/0010-route-next-through-development-lifecycle.md"
+    ],
+    "rationale": "Installed-use evidence must show that one recommendation at a time reaches the existing human-controlled commands without relying on the source checkout or silently choosing among tasks."
+  },
+  "goal": "Build and identify the exact current wheel, install it without dependencies in isolation, and record zero-task, multiple-task, start, check, finish, and Monitor routing observations from a fresh independent repository.",
+  "non_goals": [
+    "Do not change next routing, CLI contracts, schemas, package identity, installation or update behavior, or repository governance semantics during this rehearsal.",
+    "Do not claim uncoached human usability, semantic correctness, general effectiveness, or causal benefit from an internal agent-operated rehearsal.",
+    "Do not publish the wheel, copy it into release assets, alter a consumer, create a workflow, or upload local events or Monitor output.",
+    "Do not commit in the AgentGov source repository, push, tag, release, merge, deploy, or mutate any external system; local commits are permitted only inside the disposable independent repository because the governed workflow requires a truthful HEAD baseline.",
+    "Preserve every earlier uncommitted bounded slice and report the combined working-copy scope honestly."
+  ],
+  "scope": {
+    "include_paths": [
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "docs/adr/0005-bound-guided-onboarding-interactions.md",
+      "docs/adr/0010-route-next-through-development-lifecycle.md",
+      "docs/consumer-ci.md",
+      "docs/development-log/2026-08-05.md",
+      "docs/development-monitor.md",
+      "docs/development-plan.md",
+      "docs/development-session.md",
+      "docs/experiments/guided-next-installed-rehearsal.md",
+      "governance/tasks/p0-guided-next-development-routing.json",
+      "governance/tasks/p0-guided-next-installed-rehearsal.json",
+      "governance/tasks/p0-opt-in-monitor-artifact.json",
+      "src/agentgov/consumer_ci.py",
+      "src/agentgov/next_action.py",
+      "tests/test_consumer_ci.py",
+      "tests/test_next_action.py",
+      "tests/test_user_documentation.py"
+    ],
+    "exclude_paths": [
+      ".github/workflows",
+      "release",
+      "src/agentgov/cli.py",
+      "src/agentgov/development_session.py",
+      "src/agentgov/development_evidence.py",
+      "schemas"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0005-bound-guided-onboarding-interactions.md",
+    "docs/adr/0010-route-next-through-development-lifecycle.md",
+    "docs/adr/INVARIANTS.md"
+  ],
+  "acceptance_signals": [
+    "The exact current wheel is identified by filename and SHA-256 and installed with --no-deps into a fresh isolated environment.",
+    "Every observed next response is produced by the installed package in an independent Git repository and retains action_executed=false and modifies_repository=false.",
+    "A zero-task repository recommends compact-task start placeholders, while multiple admitted tasks require an explicit TASK_JSON choice and select neither task.",
+    "Following the chosen task through confirmed start, scope check, fresh finish, and verified completion yields exactly the expected check, finish, and Monitor recommendations.",
+    "The generated local Monitor exists only in the disposable repository and expected events remain source-labeled and partial-history limited.",
+    "The rehearsal record separates deterministic observations, internal operator observations, and claims that remain unknown.",
+    "The full source suite and repository governance checks pass after the evidence-only documentation update."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_next_action tests.test_development_session tests.test_user_documentation -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check repository ."
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "low",
+    "items": [
+      "A source checkout import could accidentally substitute for the installed wheel and invalidate the evidence.",
+      "Temporary repository warnings or failures could obscure lifecycle routing if the scaffold is incomplete or fixtures are not committed at the correct points.",
+      "An internal scripted run could be overstated as usability evidence."
+    ]
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "owner": "Human product owner",
+    "evidence_refs": []
+  },
+  "stop_conditions": [
+    "Stop if the installed package cannot be distinguished from source execution by interpreter and import path.",
+    "Stop if the wheel cannot be identified by both filename and digest.",
+    "Stop if completing the rehearsal requires editing product code, weakening a deterministic check, or writing outside the disposable repository and evidence documents.",
+    "Stop if any next invocation modifies files or Git state.",
+    "Stop if a release, consumer migration, workflow change, or external write becomes necessary."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "The user explicitly authorized the recommended exact-wheel independent-repository rehearsal while prior authority boundaries remain unchanged. The delivered task was paused on 2026-08-05 to remove it from automatic discovery; this is routing hygiene, not a claim of semantic completion, acceptance, merge, or release."
+  }
+}

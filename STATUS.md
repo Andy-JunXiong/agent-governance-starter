@@ -1,10 +1,10 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-08-03
+Last verified: 2026-08-05
 
 ## Current state
 
-- Version: published stable `0.2.1`; development source `0.3.0.dev0`.
+- Version: published stable `0.2.1`; prepared candidate source `0.3.0rc1`.
 - Maturity: experimental and suitable for repository-level evaluation.
 - Canonical capability layout: `governance/`.
 - Legacy `prompt-governance/` input remains a bounded, read-only compatibility
@@ -23,21 +23,75 @@ Last verified: 2026-08-03
 - Merge, publish, release, and deployment remain separate human-authorized
   actions.
 
-## End-of-day checkpoint - 2026-08-03
+## Development checkpoint - 2026-08-05
 
-- Today's development source, product story, documentation, and published
-  reference work is complete on `main` through commit `f3514d8`.
-- The public AgentGov product page and Portfolio are live; all 13 linked HTML
-  reference/schema views use the AgentGov layout, both schema JSON URLs are
-  valid, and the Portfolio contains no raw `.md` or project-root-escaping
-  links.
-- The latest full source validation passed 511 tests with one
-  platform-limited skip. No 0.3 release, consumer migration, NYC change, AI
-  Radar runtime dependency, merge automation, or deployment was introduced.
-- The next bounded product slice is the opt-in GitHub Actions artifact for the
-  static development Monitor. It must preserve the tested observation and
-  redaction boundary; release-candidate and consumer migration work remain
-  later human-controlled gates.
+- The future 0.3 managed governance workflow template now exposes a
+  default-off `publish_development_monitor` manual-dispatch input and an
+  optional repository-relative `development_export` input.
+- An explicitly requested run renders `ci_only` by default,
+  `exported_development` from a validated metadata-only export, or `combined`
+  only when actor-validated CI event files are also present. The separate
+  artifact uploads only `agentgov-development-monitor.html`, never the input
+  export, raw events, or `.agentgov/` local state.
+- Stable 0.1/0.2 rendered workflow bytes remain unchanged. No live workflow,
+  release identity, consumer repository, NYC project, AI Radar runtime, merge
+  automation, or deployment was changed.
+- Read-only `agentgov next` now preserves adoption conflict, missing-scaffold,
+  and repository-FAIL precedence, then selects exactly one dry-run start,
+  check, finish, or Monitor action from the strict active session and its
+  current immutable events. It never executes the selected command.
+- ADR-0010 records the refined precedence. Multiple admitted tasks require an
+  explicit human choice; old events cannot establish current progress; invalid
+  sessions, missing starts, task drift, invalid events, and failed scope fail
+  closed as one blocking action.
+- Focused guided-next, session, and documentation validation passed 46 tests.
+  The full source suite passed 527 tests with one platform-limited skip.
+- The exact-wheel independent-repository rehearsal of this route is complete.
+  The isolated `0.3.0.dev0` wheel moved from onboarding through explicit task
+  choice, start, check, verified finish, and a four-event local Monitor while
+  every `next` invocation left normalized Git status unchanged.
+- ADR-0011 now separates the reviewed fixed-wheel public bootstrap from the
+  installed `agentgov update --check` surface. Development metadata still has
+  no release artifact, and a read-only update check alone cannot advance the
+  action loop.
+- ADR-0012's verified-session handoff/rollover is now implemented in
+  development source. `govern handoff` re-establishes fresh evidence, previews
+  one stable append-only `session.handed_off` event, requires exact interactive
+  `HANDOFF`, retains the pointer and immutable evidence, and is idempotent.
+- Monitor schema 1.3 keeps verified completion distinct from handed-off routing.
+  Read-only `next` excludes the same digest and offers a separate
+  `--replace-active` preview for zero, one, or several remaining task choices.
+- The exact `0.3.0rc1` wheel completed the independent terminal-route rehearsal
+  in three disposable repositories. Verified finish, Monitor guidance, exact
+  `HANDOFF`, pointer preservation, idempotence, zero/one/many rollover, and
+  exact `REPLACE` passed without `next` changing Git state or importing from
+  the source checkout.
+- All 17 previously admitted delivered task contracts are now paused so they
+  no longer compete in automatic discovery. Their rationales explicitly state
+  that this is routing hygiene, not semantic completion or release evidence;
+  one admitted RC closeout task remains discoverable.
+- Source, bundled metadata, and release notes now agree on `0.3.0rc1`. Local
+  wheel and immutable release-manifest gates passed. GitHub authentication and
+  the full final gate set still stand between this prepared source and a
+  published Pre-release; stable update routing and consumer migration remain
+  later work.
+- Bootstrap/update documentation, `next`, and updater validation passed 56
+  focused tests. The final full source suite passed 528 tests with one
+  platform-limited skip.
+- Verified-session handoff contract validation passed 65 focused tests. After
+  recording the decision, the final full source suite passed 529 tests with
+  one platform-limited skip.
+- Verified-session handoff implementation validation passed 81 focused tests.
+  The final full source suite passed 539 tests with one platform-limited skip.
+- Installed RC handoff rehearsal evidence is recorded in
+  `docs/experiments/handoff-installed-rc-rehearsal.md`; the exact wheel was
+  266304 bytes with SHA-256
+  `069d9470ef7acabe0cd827f7957be31f261fd8f39e2053935ee664b7b0a06540`.
+- Final local RC gates: all 18 task contracts valid; closeout scope
+  `PASS=63 FAIL=0 ADVISORY=1`; repository governance
+  `PASS=16 WARN=2 FAIL=0 ADVISORY=4`; 539 tests passed with one
+  platform-limited skip; bundled and generated RC manifests valid; diff check
+  clean.
 
 ## Product direction
 
@@ -60,8 +114,9 @@ Last verified: 2026-08-03
   select exactly one admitted task or preview a low-risk compact task, requires
   exact interactive confirmation, derives the governance context, records the
   comparison base, and writes a strict untracked single-task working-copy
-  pointer plus one immutable start event. Automatic GitHub Actions artifact
-  wiring is not implemented.
+  pointer plus one immutable start event. The future 0.3 workflow template now
+  provides a separate default-off Monitor artifact path without transferring
+  local state automatically.
 - Read-only `agentgov check scope` now inventories staged, unstaged, deleted,
   renamed, and non-ignored untracked paths and applies segment-aware
   include/exclude rules. Explicit architecture references remain ADVISORY.
@@ -104,9 +159,10 @@ Last verified: 2026-08-03
 
 ## Development-source P0 preview
 
-- Runtime and bundled compatibility metadata now use `0.3.0.dev0` with the
-  `development` channel. Published stable 0.2.1 documentation and consumer
-  pins remain unchanged; no release artifact or digest is claimed.
+- Runtime and bundled compatibility metadata now use `0.3.0rc1` with the
+  `release-candidate` channel. Published stable 0.2.1 documentation and
+  consumer pins remain unchanged; no public candidate artifact or digest is
+  claimed until the tag-triggered release workflow succeeds.
 
 - `schemas/development-task.schema.json` defines a strict, vendor-neutral task
   identity with compact/standard profiles, exact scope, acceptance and
@@ -211,8 +267,10 @@ Future-0.3 development-governance integration and pre-release evidence:
   Interactive onboarding now accepts only exact `ADOPT` from a real terminal,
   revalidates the complete reviewed plan before writing, and creates only the
   files shown in that plan. `agentgov next .` now selects one read-only action
-  using fixed conflict, adoption, FAIL, WARN, ADVISORY, and complete
-  precedence. An isolated automated deep-path Windows rehearsal now covers the
+  using adoption conflict, missing scaffold, repository FAIL, then strict
+  development-session precedence. WARN and ADVISORY remain visible through
+  checks and reports without displacing the active daily route. An isolated
+  automated deep-path Windows rehearsal now covers the
   complete installed sequence and corrected `onboard` to run the first
   repository check automatically. Remaining work is a fresh uncoached human
   pilot.
@@ -263,6 +321,35 @@ Future-0.3 development-governance integration and pre-release evidence:
 - A successful check does not prove semantic governance sufficiency.
 
 ## Validation
+
+Guided next-action development routing validation on 2026-08-05:
+
+- the admitted task returned `PASS=6 WARN=0 FAIL=0 ADVISORY=1`;
+- its combined working-copy scope returned `PASS=17 FAIL=0 ADVISORY=1`;
+- 46 focused next-action, development-session, and documentation tests passed;
+- all 527 source tests passed with one platform-limited skip;
+- fixture coverage includes onboarding and FAIL precedence, zero/one/many task
+  discovery, start/check/validation/completion routing, old-event isolation,
+  failed scope, task drift, missing start events, malformed pointers, JSON
+  purity, and no-write behavior;
+- no command selected by `next` was executed and no task, session, event,
+  evidence, Monitor, Git state, workflow, release, or deployment was changed by
+  the router;
+- repository governance returned `PASS=16 WARN=2 FAIL=0 ADVISORY=4` and
+  `git diff --check` passed.
+
+Opt-in Development Monitor artifact validation on 2026-08-05:
+
+- the admitted task returned `PASS=6 WARN=0 FAIL=0 ADVISORY=1`;
+- its final working-copy scope returned `PASS=11 FAIL=0 ADVISORY=1`;
+- 34 focused consumer-workflow and documentation tests passed;
+- all 517 source tests passed with one platform-limited skip;
+- stable 0.1 workflow bytes retained their protected SHA-256 and the 0.2
+  template retained no Development Monitor inputs or steps;
+- repository governance returned `PASS=16 WARN=2 FAIL=0 ADVISORY=4`;
+- `git diff --check` passed;
+- no existing workflow, commit, push, tag, release, consumer migration,
+  artifact upload, merge, or deployment was performed.
 
 Published-reference-page validation on 2026-08-03:
 

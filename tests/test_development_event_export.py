@@ -108,6 +108,33 @@ class DevelopmentEventExportTests(unittest.TestCase):
         self.assertIn("EXCLUDED actor labels", preview)
         self.assertTrue(all(value is False for value in bundle.authority_boundary.values()))
 
+    def test_handoff_is_exported_as_redacted_version_1_2_metadata(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            repository = create_repository(Path(temp_dir))
+            add_event(repository)
+            append_governance_event(
+                repository,
+                event_type="session.handed_off",
+                actor_class="human",
+                actor_label="private-human-label",
+                task_id="fixture-task",
+                task_digest="sha256:" + "a" * 64,
+                outcome="handed_off",
+                evidence_ref=".agentgov/evidence/evd-" + "b" * 32 + ".json",
+                reason_codes=("handoff_confirmed", "verified_evidence_fresh"),
+                occurred_at="2026-08-03T01:02:09.000Z",
+                event_id="evt-" + "9" * 32,
+            )
+
+            bundle = build_development_event_export(repository, created_at=FIXED_TIME)
+
+        handoff = bundle.events[-1]
+        self.assertEqual(handoff["schema_version"], "1.2")
+        self.assertEqual(handoff["event_type"], "session.handed_off")
+        self.assertEqual(handoff["outcome"], "handed_off")
+        self.assertEqual(handoff["actor"], {"class": "human"})
+        self.assertIsNone(handoff["evidence_ref"])
+
     def test_write_and_load_are_repository_local_immutable_and_integrity_checked(self) -> None:
         with TemporaryDirectory() as temp_dir:
             repository = create_repository(Path(temp_dir))

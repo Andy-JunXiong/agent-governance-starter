@@ -14,7 +14,12 @@ from pathlib import Path, PurePosixPath
 from typing import Any, Callable, Mapping, Sequence
 
 from agentgov.development_context import DevelopmentContext, select_development_context
-from agentgov.event_store import append_governance_event, utc_now
+from agentgov.event_store import (
+    GovernanceEvent,
+    append_governance_event,
+    load_governance_events,
+    utc_now,
+)
 from agentgov.git_snapshot import resolve_comparison_base
 from agentgov.path_policy import is_segment_prefix, scope_path_error
 from agentgov.task_contract import (
@@ -242,7 +247,28 @@ def resolve_active_task(repository: Path) -> tuple[Path, DevelopmentSession]:
     return task_path, session
 
 
-def discover_admitted_tasks(repository: Path) -> tuple[Path, ...]:
+def current_session_events(
+    repository: Path,
+    session: DevelopmentSession,
+) -> tuple[GovernanceEvent, ...]:
+    """Load validated events belonging to one exact working-copy session."""
+
+    root = _safe_root(repository)
+    loaded = load_governance_events(root / ".agentgov" / "events")
+    return tuple(
+        event
+        for event in loaded.events
+        if event.task_id == session.task_id
+        and event.task_digest == session.task_digest
+        and event.occurred_at >= session.started_at
+    )
+
+
+def discover_admitted_tasks(
+    repository: Path,
+    *,
+    excluded_task_digests: Sequence[str] = (),
+) -> tuple[Path, ...]:
     """Return valid admitted direct task files without choosing among several."""
 
     root = _safe_root(repository)
@@ -259,7 +285,13 @@ def discover_admitted_tasks(repository: Path) -> tuple[Path, ...]:
         except (OSError, UnicodeError, ValueError, json.JSONDecodeError):
             continue
         decision = document.get("decision")
-        if not report.has_failures and isinstance(decision, Mapping) and decision.get("state") == "admitted":
+        digest = canonical_task_digest(document)
+        if (
+            not report.has_failures
+            and isinstance(decision, Mapping)
+            and decision.get("state") == "admitted"
+            and digest not in excluded_task_digests
+        ):
             admitted.append(path)
     return tuple(admitted)
 
@@ -365,6 +397,11 @@ def build_start_plan(
     """Build a complete, read-only preview of one guided start action."""
 
     root = _safe_root(repository)
+    prior = load_active_session(root)
+    prior_events = current_session_events(root, prior) if prior is not None else ()
+    prior_handed_off = bool(
+        prior_events and prior_events[-1].event_type == "session.handed_off"
+    )
     if task is not None and title is not None:
         raise SessionPolicyError("choose an existing task or --title, not both")
     creation_inputs = bool(
@@ -379,7 +416,8 @@ def build_start_plan(
         raise SessionPolicyError("--task-id, --requirement, --include, --exclude, --validate, and --owner require --title")
     create_task = title is not None
     if task is None and title is None:
-        candidates = discover_admitted_tasks(root)
+        excluded = (prior.task_digest,) if prior is not None and prior_handed_off else ()
+        candidates = discover_admitted_tasks(root, excluded_task_digests=excluded)
         if not candidates:
             raise SessionPolicyError("no admitted task was discovered; provide --title and at least one --include")
         if len(candidates) > 1:
@@ -435,7 +473,6 @@ def build_start_plan(
         started_at=timestamp,
         actor=actor,
     )
-    prior = load_active_session(root)
     same = prior is not None and all(
         (
             prior.task_path == session.task_path,
@@ -444,6 +481,11 @@ def build_start_plan(
             prior.comparison_base_sha == session.comparison_base_sha,
         )
     )
+    if same and prior_handed_off:
+        raise SessionPolicyError(
+            "the exact active task digest is already handed off and cannot be restarted; "
+            "select a different admitted task or review a changed task version"
+        )
     if prior is not None and not same and not replace_active:
         raise SessionPolicyError(
             f"active task {prior.task_id!r} would be replaced; review it and pass --replace-active"

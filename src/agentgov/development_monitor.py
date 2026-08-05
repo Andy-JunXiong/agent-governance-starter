@@ -24,7 +24,7 @@ from agentgov.event_store import (
 
 
 MONITOR_CONTRACT = "agentgov.development-monitor"
-MONITOR_SCHEMA_VERSION = "1.2"
+MONITOR_SCHEMA_VERSION = "1.3"
 MONITOR_SCOPES = {"local_session", "exported_development", "ci_only", "combined"}
 
 
@@ -80,6 +80,8 @@ def _task_detail(task_id: str, observed_events: tuple[_ObservedEvent, ...]) -> d
     events = tuple(item.event for item in observed_events)
     completion_events = tuple(item for item in events if item.event_type == "completion.reconciled")
     latest_completion = completion_events[-1] if completion_events else None
+    handoff_events = tuple(item for item in events if item.event_type == "session.handed_off")
+    latest_handoff = handoff_events[-1] if handoff_events else None
     return {
         "task_id": task_id,
         "task_digests": sorted({item.task_digest for item in events}),
@@ -90,10 +92,13 @@ def _task_detail(task_id: str, observed_events: tuple[_ObservedEvent, ...]) -> d
         "scope_checks": sum(item.event_type == "scope.checked" for item in events),
         "validations": sum(item.event_type == "validation.completed" for item in events),
         "completions": len(completion_events),
+        "handoffs": len(handoff_events),
         "latest_event_type": events[-1].event_type,
         "latest_recorded_outcome": events[-1].outcome,
         "latest_completion_state": latest_completion.outcome if latest_completion else None,
         "latest_completion_at": latest_completion.occurred_at if latest_completion else None,
+        "latest_routing_state": "handed_off" if latest_handoff else "active",
+        "latest_handoff_at": latest_handoff.occurred_at if latest_handoff else None,
         "observed_failure_count": sum(item.metrics.get("failures", 0) for item in events),
         "observed_advisory_count": sum(item.metrics.get("advisories", 0) for item in events),
         "events": [_timeline_entry(item) for item in observed_events],
@@ -206,6 +211,7 @@ def build_development_monitor(
         "scope_checks": sum(item.event_type == "scope.checked" for item in events),
         "validations": sum(item.event_type == "validation.completed" for item in events),
         "completions": sum(item.event_type == "completion.reconciled" for item in events),
+        "handoffs": sum(item.event_type == "session.handed_off" for item in events),
         "passed_events": sum(item.outcome == "passed" for item in events),
         "failed_events": sum(item.outcome == "failed" for item in events),
         "stale_events": sum(item.outcome == "stale" for item in events),
@@ -267,6 +273,7 @@ def build_development_monitor(
             "Selected governance paths come from confirmed task-start routing; they show selection, not coding-agent consumption.",
             "Each timeline source label comes from the explicitly selected local, export, or CI input boundary rather than a semantic inference.",
             "Latest recorded outcome means the chronologically latest event visible in this observation scope.",
+            "Verified completion and handed-off routing are counted separately; handoff records routing responsibility, not semantic approval.",
         ),
         "inferred": (
             "Chronological grouping suggests a task activity sequence but does not prove that one event caused another.",
@@ -345,6 +352,7 @@ def render_development_monitor_markdown(monitor: DevelopmentMonitor) -> str:
                 f"- Events: `{task['event_count']}`",
                 f"- Latest recorded outcome: `{task['latest_recorded_outcome']}`",
                 f"- Latest completion state: `{_display(task['latest_completion_state'])}`",
+                f"- Latest routing state: `{task['latest_routing_state']}`",
                 "",
             ]
         )
@@ -370,6 +378,7 @@ def render_development_monitor_html(monitor: DevelopmentMonitor) -> str:
             ("Scope checks", monitor.overview["scope_checks"]),
             ("Validations", monitor.overview["validations"]),
             ("Verified completions", monitor.overview["verified_completions"]),
+            ("Session handoffs", monitor.overview["handoffs"]),
         )
     )
     missing = "".join(f"<li>{esc(item)}</li>" for item in observation["missing_sources"])
@@ -403,8 +412,8 @@ def render_development_monitor_html(monitor: DevelopmentMonitor) -> str:
             '<div class="task-grid">'
             f'<div><small>First observed</small><strong>{esc(task["first_observed_at"])}</strong></div>'
             f'<div><small>Last observed</small><strong>{esc(task["last_observed_at"])}</strong></div>'
-            f'<div><small>Starts / checks / validations / completions</small><strong>{task["task_starts"]} / {task["scope_checks"]} / {task["validations"]} / {task["completions"]}</strong></div>'
-            f'<div><small>Latest completion</small><strong>{esc(task["latest_completion_state"])}</strong></div>'
+            f'<div><small>Starts / checks / validations / completions / handoffs</small><strong>{task["task_starts"]} / {task["scope_checks"]} / {task["validations"]} / {task["completions"]} / {task["handoffs"]}</strong></div>'
+            f'<div><small>Completion / routing</small><strong>{esc(task["latest_completion_state"])} / {esc(task["latest_routing_state"])}</strong></div>'
             "</div>"
             '<p class="task-note">Handling remains unknown unless an explicit human-decision event records it. A later outcome is not presented as proof that an earlier issue was caused or resolved by AgentGov.</p>'
             "</details>"

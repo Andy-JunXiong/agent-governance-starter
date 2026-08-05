@@ -28,23 +28,6 @@
       <p>Open a terminal at the root of the repository you want to govern. Use Python 3.11 or newer and ensure <code>pipx</code> is available. A passing static check means a declared deterministic contract ran successfully; it does not authorize merge, release or deployment.</p>
     </section>
     <section>
-      <h2>Guided onboarding development preview</h2>
-      <p>The current development build also provides a state-dependent path. It has passed an isolated automated Windows rehearsal, but it has not yet completed a fresh uncoached human pilot and therefore does not replace the primary steps below.</p>
-      <pre><code>agentgov doctor .
-agentgov onboard . --project-name "My Project" --dry-run
-agentgov onboard . --project-name "My Project"
-agentgov next .</code></pre>
-      <p><code>doctor</code> and <code>next</code> are read-only. Interactive <code>onboard</code> writes only after exact <code>ADOPT</code> from a real terminal, runs the first repository check, and never treats redirected or non-interactive input as write authority.</p>
-    </section>
-    <section>
-      <h2>One-command update</h2>
-      <pre><code>agentgov update .
-# Read-only alternative:
-agentgov update --check .</code></pre>
-      <p>The primary command discovers the latest stable GitHub Release, reports versions and repository compatibility, requests one exact <code>UPDATE</code> confirmation, verifies the wheel SHA-256, updates pipx, relaunches the new tool, applies the bounded repository change, and reruns validation. The check alternative never writes.</p>
-      <p>Progress is labeled <code>CHECK</code>, <code>PLAN</code>, <code>APPLY</code>, and <code>VALIDATE</code>. Final states distinguish <code>SUCCESS</code>, <code>CANCELLED</code>, <code>BLOCKED</code>, <code>INTERRUPTED</code>, <code>PARTIAL</code>, and <code>ERROR</code>. If a file was created before interruption or failed validation, the CLI lists it and prints one <code>RECOVERY</code> command.</p>
-    </section>
-    <section>
       <h2>1. Install</h2>
       <p>Run these commands from the repository you want to govern. They install the published stable 0.2.1 package without copying the starter source tree into your repository.</p>
       <pre><code>python --version
@@ -58,6 +41,23 @@ agentgov --help</code></pre>
 python -m agentgov --help</code></pre></div>
         <div><strong>Bash / zsh</strong><pre><code>PYTHONPATH=src python -m agentgov --help</code></pre></div>
       </div>
+    </section>
+    <section>
+      <h2>Guided onboarding development preview</h2>
+      <p>After installation, the current development build also provides a state-dependent path. It has passed an isolated automated Windows rehearsal, but it has not yet completed a fresh uncoached human pilot and therefore does not replace the primary steps that follow.</p>
+      <pre><code>agentgov doctor .
+agentgov onboard . --project-name "My Project" --dry-run
+agentgov onboard . --project-name "My Project"
+agentgov next .</code></pre>
+      <p><code>doctor</code> and <code>next</code> are read-only. Interactive <code>onboard</code> writes only after exact <code>ADOPT</code> from a real terminal, runs the first repository check, and never treats redirected or non-interactive input as write authority.</p>
+    </section>
+    <section>
+      <h2>One-command update</h2>
+      <pre><code>agentgov update .
+# Read-only alternative:
+agentgov update --check .</code></pre>
+      <p>The primary command discovers the latest stable GitHub Release, reports versions and repository compatibility, requests one exact <code>UPDATE</code> confirmation, verifies the wheel SHA-256, updates pipx, relaunches the new tool, applies the bounded repository change, and reruns validation. The check alternative never writes.</p>
+      <p>Progress is labeled <code>CHECK</code>, <code>PLAN</code>, <code>APPLY</code>, and <code>VALIDATE</code>. Final states distinguish <code>SUCCESS</code>, <code>CANCELLED</code>, <code>BLOCKED</code>, <code>INTERRUPTED</code>, <code>PARTIAL</code>, and <code>ERROR</code>. If a file was created before interruption or failed validation, the CLI lists it and prints one <code>RECOVERY</code> command.</p>
     </section>
     <section>
       <h2>2. Adopt an existing repository</h2>

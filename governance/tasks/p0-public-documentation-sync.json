@@ -110,8 +110,8 @@
     "Stop if visual changes weaken deterministic versus advisory or human-authority boundaries."
   ],
   "decision": {
-    "state": "admitted",
+    "state": "paused",
     "decided_by": "Human product owner",
-    "rationale": "The user explicitly requested the AgentGov-native presentation, full related-document audit and synchronization, and direct commit and push to main."
+    "rationale": "The user explicitly requested the AgentGov-native presentation, full related-document audit and synchronization, and direct commit and push to main. The delivered task was paused on 2026-08-05 to remove it from automatic discovery; this is routing hygiene, not a claim of semantic completion, acceptance, merge, or release."
   }
 }

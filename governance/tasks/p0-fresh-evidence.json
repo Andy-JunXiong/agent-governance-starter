@@ -93,8 +93,8 @@
     "Stop if an advisory requirement or architecture judgment would be needed to claim deterministic verification."
   ],
   "decision": {
-    "state": "admitted",
+    "state": "paused",
     "decided_by": "Human product owner",
-    "rationale": "The user explicitly directed development to continue after the reviewed Phase 2 core was completed."
+    "rationale": "The user explicitly directed development to continue after the reviewed Phase 2 core was completed. The delivered task was paused on 2026-08-05 to remove it from automatic discovery; this is routing hygiene, not a claim of semantic completion, acceptance, merge, or release."
   }
 }

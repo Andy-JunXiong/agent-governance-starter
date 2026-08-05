@@ -87,8 +87,8 @@
     "Stop if existing unrelated worktree changes cannot be preserved."
   ],
   "decision": {
-    "state": "admitted",
+    "state": "paused",
     "decided_by": "Human product owner",
-    "rationale": "The user explicitly requested continued development according to the corrected P0 plan."
+    "rationale": "The user explicitly requested continued development according to the corrected P0 plan. The delivered task was paused on 2026-08-05 to remove it from automatic discovery; this is routing hygiene, not a claim of semantic completion, acceptance, merge, or release."
   }
 }

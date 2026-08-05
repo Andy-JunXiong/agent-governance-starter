@@ -1,16 +1,18 @@
 # AgentGov remaining development plan
 
-Updated 2026-08-03. This page separates implemented development-source behavior
+Updated 2026-08-05. This page separates implemented development-source behavior
 from published and consumer-adopted behavior.
 
 ## Current checkpoint
 
-- Published stable: AgentGov 0.2.1; current source identity: 0.3.0.dev0.
+- Published stable: AgentGov 0.2.1; prepared candidate source: 0.3.0rc1.
 - NYC consumer: managed 0.2.1 workflow.
 - Implemented locally for the future 0.3 line: persona-aware PR and owner UI,
   trusted-main benefit monitor, scheduled baseline refresh, redacted portable
   evidence, separate bounded Draft PR workflow, and pre-write current/target
-  dry-run evidence.
+  dry-run evidence. The managed governance template also has a default-off,
+  manual-dispatch Development Monitor artifact path that uploads only the
+  derived HTML.
 - The generated two-workflow contract and fixture review is complete.
 - ADR-0009 now makes requirement, architecture, and coding-agent governance
   during development the primary product direction. PR/CI remains a backstop.
@@ -32,22 +34,47 @@ from published and consumer-adopted behavior.
   `export development` now creates an immutable metadata-only bundle after
   preview and exact confirmation; Monitor ingestion supports honest
   `exported_development` and `combined` views with per-source event labels and
-  counts.
-- Not yet implemented: explicit exception records, action-loop self-reporting,
-  or automatic GitHub Actions artifact wiring.
+  counts. Read-only `agentgov next` now preserves onboarding and repository
+  `FAIL` precedence, then derives exactly one start/check/finish/Monitor action
+  from the strict active-session pointer and current-session events.
+- Implemented in development source: ADR-0012's `govern handoff` re-establishes
+  fresh verified evidence, previews one stable append-only event, requires
+  exact interactive `HANDOFF`, preserves the pointer and prior artifacts, and
+  makes repeated matching handoff idempotent. Monitor 1.3 separates verified
+  completion from handed-off routing, and `next` filters the same digest before
+  offering a separate `--replace-active` rollover.
+- Not yet implemented: explicit exception records or action-loop
+  self-reporting. Local-state transfer remains explicit; the workflow does not
+  upload raw events or an export bundle.
 - Completed independent installed-build pilot: the exact source wheel was
   installed with no runtime dependencies in a fresh environment and governed
   a real Coding Agent change in a repository with no AI Radar dependency. The
   corrected run reached `verified` and generated four Monitor events. The
   initial invalid Skill and unignored Python cache attempts remained visible as
   fail-closed product evidence.
-- The development source and bundled compatibility metadata now identify as
-  0.3.0.dev0, distinct from published stable 0.2.1. Not yet completed:
-  release-candidate review and publication, NYC 0.3 migration, or evidence from
+- Completed exact-wheel guided-next rehearsal: an isolated `0.3.0.dev0` wheel
+  preserved onboarding and explicit-choice boundaries, then selected check,
+  finish, and Monitor in order for one verified task. All observed `next`
+  calls were Git-non-mutating; the local Monitor contained four source-labeled
+  events. This is internal deterministic plumbing evidence, not uncoached
+  usability evidence.
+- ADR-0011 completes the bootstrap/update boundary decision. Public fixed-wheel
+  installation must precede the CLI; installed update inspection remains
+  `agentgov update --check`; and update availability does not enter `next`
+  while development metadata has no artifact or verified sessions lack a
+  terminal handoff/rollover state.
+- ADR-0012 completes the verified-session terminal contract. Exact `HANDOFF`
+  now appends one `session.handed_off` event only after re-establishing
+  fresh verified evidence; it retains the pointer and all prior artifacts, and
+  leaves the next task to a separate reviewed `--replace-active` start. This is
+  a routing transition, not approval or semantic completion.
+- The source and bundled compatibility metadata now identify as 0.3.0rc1,
+  distinct from published stable 0.2.1. Not yet completed: GitHub candidate
+  publication, NYC 0.3 migration, or evidence from
   real NYC runs. Those are supporting delivery tasks rather than the next
   product-defining slice.
-- Public entry points now distinguish stable 0.2.1 from development source
-  0.3.0.dev0, use one isolated pipx user path, keep the AgentGov product page
+- Public entry points now distinguish stable 0.2.1 from candidate source
+  0.3.0rc1, use one isolated pipx user path, keep the AgentGov product page
   primary, and present AI Radar only as a bounded origin reference after the
   AgentGov evidence story.
 - Portfolio raw-Markdown and out-of-root schema links now target project-local
@@ -59,18 +86,17 @@ from published and consumer-adopted behavior.
 
 ## Next-session starting point
 
-Start with item 5 under the top-level `Next Recommended Starting Point`: a
-small, opt-in GitHub Actions slice that publishes the existing static
-development Monitor as an artifact. Before editing a workflow, admit an exact
-task and verify that CI can consume only the redacted portable export or
-actor-validated CI facts without implying it observed local development.
+The exact isolated `0.3.0rc1` wheel has completed the ADR-0012 rehearsal in
+three independent repositories: verified completion, Monitor guidance,
+handoff, zero/one/many rollover selection, and exact `REPLACE`. Seventeen
+delivered historical tasks are paused for routing hygiene, leaving one admitted
+RC closeout task.
 
-Keep the first slice create/preserve-safe, read-only apart from artifact
-publication, and independent from AI Radar and NYC. Do not combine it with a
-0.3 release, consumer migration, automatic upload of local state, exception
-records, action-loop self-reporting, merge authority, or deployment. Stop if
-the current release-pinned workflow contract cannot truthfully execute the
-development-source Monitor without a separately reviewed packaging decision.
+Next, complete the final source gates and publish only the reviewed GitHub
+Pre-release after authentication succeeds. Do not promote stable 0.3.0, migrate
+a consumer, add automatic local-state upload, exception records, action-loop
+self-reporting, merge authority, or deployment in that action. Stable update
+routing still requires a later fixed-tag stable wheel and digest.
 
 ## Ordered work
 
@@ -120,12 +146,16 @@ final UX.
    self-governance acceptance scenario: preserve requirement and architecture
    references, reproduce scope and evidence facts, and keep the conclusion
    that supporting work displaced the product core explicitly advisory.
-8. [Implemented local and portable MVP] Generate a self-contained development
-   Monitor with Overview, Activity Timeline, and Task Detail. The current
+8. [Implemented local, portable, and opt-in Actions MVP] Generate a
+   self-contained development Monitor with Overview, Activity Timeline, and
+   Task Detail. The current
    source supports honest `local_session`, `exported_development`,
    actor-validated `ci_only`, and explicit export-plus-CI `combined` views.
    All remain partial, identify each event source, keep cross-stage discovery
-   unavailable, and never expose approval or governance-write controls.
+   unavailable, and never expose approval or governance-write controls. The
+   future 0.3 managed workflow adds a default-off manual-dispatch artifact that
+   uploads only the derived HTML; it does not transfer raw events, the export
+   bundle, or local `.agentgov/` state.
 9. [Implemented development preview] Add the guided `govern start` vertical
    slice: deterministic single-candidate discovery, compact low-risk task
    scaffolding, exact write preview and confirmation, one active task per

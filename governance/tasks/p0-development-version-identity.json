@@ -84,8 +84,8 @@
     "Stop if the change would imply release-candidate or stable approval."
   ],
   "decision": {
-    "state": "admitted",
+    "state": "paused",
     "decided_by": "Human product owner",
-    "rationale": "The user asked to continue today's work, and the completed installed pilot recorded this identity separation as a release blocker."
+    "rationale": "The user asked to continue today's work, and the completed installed pilot recorded this identity separation as a release blocker. The delivered task was paused on 2026-08-05 to remove it from automatic discovery; this is routing hygiene, not a claim of semantic completion, acceptance, merge, or release."
   }
 }

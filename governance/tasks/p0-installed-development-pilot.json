@@ -83,8 +83,8 @@
     "Stop if the pilot would require bypassing a failed governance check or weakening an existing test."
   ],
   "decision": {
-    "state": "admitted",
+    "state": "paused",
     "decided_by": "Human product owner",
-    "rationale": "The user explicitly authorized the recommended independent installed-build pilot after reviewing the current project state."
+    "rationale": "The user explicitly authorized the recommended independent installed-build pilot after reviewing the current project state. The delivered task was paused on 2026-08-05 to remove it from automatic discovery; this is routing hygiene, not a claim of semantic completion, acceptance, merge, or release."
   }
 }

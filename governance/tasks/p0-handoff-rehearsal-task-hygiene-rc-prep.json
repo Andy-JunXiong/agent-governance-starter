@@ -1,0 +1,96 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-handoff-rehearsal-task-hygiene-rc-prep",
+  "title": "Rehearse handoff, retire delivered tasks, and prepare 0.3 RC",
+  "requirement": {
+    "summary": "Close the current development loop with installed-artifact evidence, remove delivered tasks from automatic discovery, and prepare a reviewable 0.3.0 release candidate.",
+    "source_refs": [
+      "docs/development-log/2026-08-05.md",
+      "docs/development-plan.md",
+      "STATUS.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0009-govern-coding-agents-during-development.md",
+      "docs/adr/0012-handoff-verified-development-sessions.md"
+    ],
+    "rationale": "The runtime slice needs distribution-level proof and a clean next-task queue before its first 0.3 candidate can be reviewed honestly."
+  },
+  "goal": "Prove handoff and rollover from the exact wheel, pause all delivered historical tasks without claiming completion semantics, and prepare validated 0.3.0rc1 source and release notes.",
+  "non_goals": [
+    "Do not claim independent human usability evidence from an agent-operated rehearsal.",
+    "Do not reinterpret paused as completed, accepted, merged, or released.",
+    "Do not promote 0.3.0rc1 to stable or migrate a consumer repository.",
+    "Do not weaken tests, compatibility checks, confirmation boundaries, or authority flags.",
+    "Do not publish, tag, or push unless the existing explicit human approval and GitHub authentication both remain valid."
+  ],
+  "scope": {
+    "include_paths": [
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "docs",
+      "governance/tasks",
+      "pyproject.toml",
+      "release/current.json",
+      "schemas",
+      "src/agentgov",
+      "tests"
+    ],
+    "exclude_paths": [
+      ".github/workflows",
+      "release/fixtures"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0009-govern-coding-agents-during-development.md",
+    "docs/adr/0012-handoff-verified-development-sessions.md",
+    "docs/adr/INVARIANTS.md"
+  ],
+  "acceptance_signals": [
+    "A fresh environment installs the exact built wheel without source-path leakage and completes verified finish, Monitor, HANDOFF, zero/one/many rollover, and exact REPLACE checks in an independent Git repository.",
+    "The rehearsal records wheel identity, commands, outcomes, limitations, and unchanged authority boundaries.",
+    "All seventeen previously admitted delivered task contracts are paused with an explicit routing-hygiene rationale that does not claim semantic completion.",
+    "The 0.3.0rc1 package identity, bundled compatibility metadata, and release notes agree, while stable promotion remains out of scope.",
+    "Focused tests, the complete suite, task and scope checks, repository governance, release-manifest validation, wheel inspection, and diff checks pass before any publication step.",
+    "Commit, push, RC tag, and GitHub Pre-release remain distinct observable actions and stop at any authentication or gate failure."
+  ],
+  "validation_commands": [
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-handoff-rehearsal-task-hygiene-rc-prep.json",
+    "python -m agentgov govern check governance/tasks/p0-handoff-rehearsal-task-hygiene-rc-prep.json .",
+    "python -m agentgov check repository ."
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "medium",
+    "items": [
+      "A source checkout could accidentally satisfy the rehearsal instead of the installed wheel.",
+      "Pausing delivered tasks could be misread as a completion record unless the rationale is explicit.",
+      "Release identity may drift between runtime, bundled metadata, wheel name, notes, and tag.",
+      "A publication step could partially succeed if authentication or a gate fails."
+    ]
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "owner": "Human product owner",
+    "evidence_refs": []
+  },
+  "stop_conditions": [
+    "Stop if the installed rehearsal imports AgentGov from the source checkout.",
+    "Stop if handoff or rollover mutates preserved session evidence or bypasses exact confirmation.",
+    "Stop if task hygiene requires inventing a completed decision state outside the task schema.",
+    "Stop before push, tag, or release if GitHub authentication is invalid or any required gate fails.",
+    "Stop before stable promotion or consumer migration."
+  ],
+  "decision": {
+    "state": "admitted",
+    "decided_by": "Human product owner",
+    "rationale": "The user explicitly authorized items 1, 2, 3, and 4 in one bounded continuation on 2026-08-05."
+  }
+}

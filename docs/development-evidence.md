@@ -101,14 +101,18 @@ Current event types are:
 - `task.started`;
 - `scope.checked`;
 - `validation.completed`;
-- `completion.reconciled`.
+- `completion.reconciled`;
+- `session.handed_off`.
 
 Events contain actor class (`human`, `coding_agent`, or `ci`), optional
 vendor-neutral label, task digest, outcome, selected governance references,
-reason codes, small observed counts, and denied authority. Version 1.1 adds
-`task.started` and governance references; the loader remains compatible with
-version 1.0 events, treating their absent reference list as empty. Events do
-not contain source, validation output, absolute paths, or causal/ROI claims.
+reason codes, small observed counts, and denied authority. Version 1.1 added
+`task.started` and governance references. Version 1.2 adds only the human
+`session.handed_off: handed_off` pair; it records terminal routing
+responsibility rather than approval. The loader remains compatible with 1.0
+and 1.1 events, treating the absent 1.0 reference list as empty, while an
+unsupported newer version fails closed. Events do not contain source,
+validation output, absolute paths, or causal/ROI claims.
 
 These events have observation scope `local_development`. CI and other machines
 cannot see them unless a user creates the explicit metadata-only bundle defined

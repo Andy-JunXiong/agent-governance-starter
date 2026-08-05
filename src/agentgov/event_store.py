@@ -13,10 +13,24 @@ from typing import Any, Mapping
 
 
 EVENT_CONTRACT = "agentgov.governance-event"
-EVENT_SCHEMA_VERSION = "1.1"
+EVENT_SCHEMA_VERSION = "1.2"
 ACTOR_CLASSES = {"human", "coding_agent", "ci"}
-EVENT_TYPES = {"task.started", "scope.checked", "validation.completed", "completion.reconciled"}
-EVENT_OUTCOMES = {"started", "passed", "failed", "stale", "needs_evidence", "verified"}
+EVENT_TYPES = {
+    "task.started",
+    "scope.checked",
+    "validation.completed",
+    "completion.reconciled",
+    "session.handed_off",
+}
+EVENT_OUTCOMES = {
+    "started",
+    "passed",
+    "failed",
+    "stale",
+    "needs_evidence",
+    "verified",
+    "handed_off",
+}
 
 _ABSOLUTE_WINDOWS_RE = re.compile(r"(?i)(?:^|[\s\"'])?[a-z]:[\\/]")
 _CREDENTIAL_ASSIGNMENT_RE = re.compile(
@@ -100,7 +114,7 @@ def _event_from_payload(
     expected_fields = base_fields if schema_version == "1.0" else base_fields | {"governance_refs"}
     if set(payload) != expected_fields:
         raise LocalStateError(f"event {source.name!r} has unexpected fields")
-    if payload.get("contract") != EVENT_CONTRACT or schema_version not in {"1.0", EVENT_SCHEMA_VERSION}:
+    if payload.get("contract") != EVENT_CONTRACT or schema_version not in {"1.0", "1.1", EVENT_SCHEMA_VERSION}:
         raise LocalStateError(f"event {source.name!r} uses an unsupported contract")
     event_id = payload.get("event_id")
     if not isinstance(event_id, str) or not re.fullmatch(r"evt-[0-9a-f]{32}", event_id):
@@ -119,6 +133,8 @@ def _event_from_payload(
         raise LocalStateError(f"event {event_id} has an unsupported event_type")
     if schema_version == "1.0" and event_type == "task.started":
         raise LocalStateError(f"event {event_id} uses task.started with an older schema")
+    if schema_version != EVENT_SCHEMA_VERSION and event_type == "session.handed_off":
+        raise LocalStateError(f"event {event_id} uses session.handed_off with an older schema")
     actor = payload.get("actor")
     if not isinstance(actor, dict) or set(actor) - {"class", "label"} or "class" not in actor:
         raise LocalStateError(f"event {event_id} actor is invalid")
@@ -134,10 +150,17 @@ def _event_from_payload(
         raise LocalStateError(f"event {event_id} task_digest is invalid")
     if payload.get("observation_scope") != "local_development":
         raise LocalStateError(f"event {event_id} observation_scope is unsupported")
-    if payload.get("outcome") not in EVENT_OUTCOMES:
+    outcome = payload.get("outcome")
+    if outcome not in EVENT_OUTCOMES:
         raise LocalStateError(f"event {event_id} outcome is invalid")
-    if schema_version == "1.0" and payload.get("outcome") == "started":
+    if schema_version == "1.0" and outcome == "started":
         raise LocalStateError(f"event {event_id} uses started with an older schema")
+    if schema_version != EVENT_SCHEMA_VERSION and outcome == "handed_off":
+        raise LocalStateError(f"event {event_id} uses handed_off with an older schema")
+    if (event_type == "session.handed_off") != (outcome == "handed_off"):
+        raise LocalStateError(f"event {event_id} has an invalid handoff type/outcome pair")
+    if event_type == "session.handed_off" and actor.get("class") != "human":
+        raise LocalStateError(f"event {event_id} handoff actor must be human")
     evidence_ref = payload.get("evidence_ref")
     if evidence_ref is not None and (
         not isinstance(evidence_ref, str)
@@ -332,6 +355,10 @@ def append_governance_event(
         raise ValueError("task_id must be a non-empty string")
     if outcome not in EVENT_OUTCOMES:
         raise ValueError(f"outcome must be one of {sorted(EVENT_OUTCOMES)}")
+    if (event_type == "session.handed_off") != (outcome == "handed_off"):
+        raise ValueError("session.handed_off and handed_off must be used together")
+    if event_type == "session.handed_off" and actor_class != "human":
+        raise ValueError("session.handed_off requires a human actor")
     if not re.fullmatch(r"sha256:[0-9a-f]{64}", task_digest):
         raise ValueError("task_digest must be a SHA-256 identity")
     if evidence_ref is not None and (

@@ -23,7 +23,10 @@ from agentgov.task_contract import (
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_PATH = ROOT / "schemas/development-task.schema.json"
-CURRENT_TASK = ROOT / "governance/tasks/p0-minimal-task-contract.json"
+CURRENT_TASK = (
+    ROOT
+    / "governance/tasks/p0-handoff-rehearsal-task-hygiene-rc-prep.json"
+)
 VALID_DRAFT = ROOT / "governance/fixtures/tasks/valid-supporting-draft.json"
 INVALID_ADMISSION = (
     ROOT / "governance/fixtures/tasks/invalid-admitted-pending-approval.json"
@@ -75,8 +78,12 @@ class DevelopmentTaskContractTests(unittest.TestCase):
         self.assertEqual(document["decision"]["state"], "admitted")
         self.assertEqual(document["profile"], "standard")
         self.assertEqual(document["objective"]["role"], "core")
+        self.assertEqual(
+            document["task_id"],
+            "p0-handoff-rehearsal-task-hygiene-rc-prep",
+        )
         self.assertIn(
-            "docs/case-studies/0001-pr-center-architecture-drift.md",
+            "docs/development-log/2026-08-05.md",
             document["requirement"]["source_refs"],
         )
 
@@ -196,6 +203,7 @@ class DevelopmentTaskContractTests(unittest.TestCase):
         self.assertEqual(after, before)
 
     def test_cli_returns_pass_for_admitted_task_and_prints_advisory(self) -> None:
+        task_id = load_development_task(CURRENT_TASK)["task_id"]
         exit_code, stdout, stderr = run_cli(
             "check",
             "task",
@@ -205,9 +213,9 @@ class DevelopmentTaskContractTests(unittest.TestCase):
         )
 
         self.assertEqual(exit_code, EXIT_PASS)
-        self.assertIn("PASS task:p0-minimal-task-contract:contract", stdout)
+        self.assertIn(f"PASS task:{task_id}:contract", stdout)
         self.assertIn(
-            "ADVISORY task:p0-minimal-task-contract:objective-alignment",
+            f"ADVISORY task:{task_id}:objective-alignment",
             stdout,
         )
         self.assertIn("validation was read-only", stdout)

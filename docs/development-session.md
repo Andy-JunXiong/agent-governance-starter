@@ -52,6 +52,65 @@ The Monitor displays the start, selected governance paths, checks, validation,
 and completion events. Selection is observed; actual coding-agent consumption
 remains unknown until a separate consumption event exists.
 
+## Read-only next-action routing
+
+The future-0.3 source implementation of `agentgov next .` now reads the same
+strict session pointer and immutable event stream to select one step without
+executing it:
+
+| Current working-copy state | Selected command family |
+|---|---|
+| No active session | Dry-run `govern start` preview |
+| Matching `task.started` | `govern check` |
+| Latest scope passed | `govern finish` |
+| Validation recorded or completion needs evidence | `govern finish` |
+| Completion verified | `monitor development` |
+| Session explicitly handed off | Dry-run `govern start --replace-active` rollover |
+
+Adoption conflicts, missing scaffold, and deterministic repository `FAIL`
+remain higher-priority gates. Multiple admitted tasks produce an explicit
+`<TASK_JSON>` choice rather than filename or semantic inference. Repository
+WARN and ADVISORY findings remain visible through `check`, `report`, and
+`status`, but they do not displace the current development step.
+
+Session or task drift, tracked/malformed pointers, missing matching start
+events, invalid event stores, and failed scope are blocking results. `next`
+does not repair those states or invent a safe command when the existing
+contracts do not define one. Events older than the exact session start do not
+establish current progress.
+
+This routing is read-only: text and strict JSON return exactly one action with
+`action_executed=false`, and no prompt, task write, validation, Monitor
+generation, Git operation, or authority transition occurs.
+
+## Verified-session terminal boundary
+
+Development source implements ADR-0012 without deleting
+`.agentgov/current-task.json` or treating Monitor generation as proof of human
+review:
+
+```powershell
+agentgov govern handoff --repository . --dry-run
+agentgov govern handoff --repository .
+agentgov next . --non-interactive
+```
+
+The preview re-establishes the exact task, comparison base, latest verified
+completion, evidence identity, full Git snapshot, and scope. It names the
+retained pointer and exactly one append-only `session.handed_off` target. The
+write requires exact `HANDOFF` from a real terminal, repeats the freshness
+check, and is idempotent for the stable session event identity. Redirected,
+cancelled, stale, drifted, malformed, and unsupported-progress paths append
+nothing.
+
+The retained pointer continues to identify the exact task digest, base, and
+session; handoff means only that automatic routing responsibility ended. A
+later read-only `next` recommendation previews a separate
+`govern start --replace-active --dry-run`, excludes the same handed-off digest,
+and preserves explicit choice among multiple tasks. A changed digest can enter
+only through the normal reviewed replacement and exact `REPLACE`. Published
+stable 0.2.1 does not include this development-source interface.
+
 ## Discovery and automation behavior
 
 - With no task or `--title`, start selects only when exactly one valid admitted
@@ -67,8 +126,8 @@ remains unknown until a separate consumption event exists.
 - One active task is supported per Git working copy. Separate Git worktrees
   have separate `.agentgov/current-task.json` pointers.
 
-This preserves the productization direction: later installation, update,
-onboarding, CI artifact wiring, and IDE/agent integration can automate safe
+This preserves the productization direction: installation and update routing,
+CI artifact adoption, and IDE/agent integration can later automate safe
 discovery and defaults around this contract. It does not justify hidden hooks,
 background daemons, silent governance edits, or unattended approval.
 

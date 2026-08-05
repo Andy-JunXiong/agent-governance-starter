@@ -90,8 +90,8 @@
     "Stop if generation would overwrite a tracked or non-AgentGov-owned file without separate authority."
   ],
   "decision": {
-    "state": "admitted",
+    "state": "paused",
     "decided_by": "Human product owner",
-    "rationale": "The user explicitly directed development to continue after the Phase 3 evidence and local event core was completed."
+    "rationale": "The user explicitly directed development to continue after the Phase 3 evidence and local event core was completed. The delivered task was paused on 2026-08-05 to remove it from automatic discovery; this is routing hygiene, not a claim of semantic completion, acceptance, merge, or release."
   }
 }

@@ -1,16 +1,16 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://agentgov.dev/schemas/governance-event-v1.1.json",
+  "$id": "https://agentgov.dev/schemas/governance-event-v1.2.json",
   "title": "AgentGov Local Governance Event",
   "type": "object",
   "additionalProperties": false,
   "required": ["contract", "schema_version", "event_id", "occurred_at", "event_type", "actor", "task_id", "task_digest", "observation_scope", "outcome", "evidence_ref", "governance_refs", "reason_codes", "metrics", "authority_boundary"],
   "properties": {
     "contract": {"const": "agentgov.governance-event"},
-    "schema_version": {"const": "1.1"},
+    "schema_version": {"const": "1.2"},
     "event_id": {"type": "string", "pattern": "^evt-[0-9a-f]{32}$"},
     "occurred_at": {"type": "string", "minLength": 1},
-    "event_type": {"enum": ["task.started", "scope.checked", "validation.completed", "completion.reconciled"]},
+    "event_type": {"enum": ["task.started", "scope.checked", "validation.completed", "completion.reconciled", "session.handed_off"]},
     "actor": {
       "type": "object",
       "additionalProperties": false,
@@ -23,7 +23,7 @@
     "task_id": {"type": "string", "minLength": 1},
     "task_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
     "observation_scope": {"const": "local_development"},
-    "outcome": {"enum": ["started", "passed", "failed", "stale", "needs_evidence", "verified"]},
+    "outcome": {"enum": ["started", "passed", "failed", "stale", "needs_evidence", "verified", "handed_off"]},
     "evidence_ref": {"anyOf": [{"$ref": "#/$defs/path"}, {"type": "null"}]},
     "governance_refs": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/path"}},
     "reason_codes": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}},
@@ -41,6 +41,21 @@
       }
     }
   },
+  "allOf": [
+    {
+      "if": {"properties": {"event_type": {"const": "session.handed_off"}}, "required": ["event_type"]},
+      "then": {
+        "properties": {
+          "outcome": {"const": "handed_off"},
+          "actor": {"properties": {"class": {"const": "human"}}}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"outcome": {"const": "handed_off"}}, "required": ["outcome"]},
+      "then": {"properties": {"event_type": {"const": "session.handed_off"}}}
+    }
+  ],
   "$defs": {
     "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?![A-Za-z]:[\\\\/])(?!.*\\\\).+$"}
   }

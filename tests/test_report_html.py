@@ -30,7 +30,7 @@ class HtmlReportTests(unittest.TestCase):
         self.assertIn('<span>FAIL</span><strong>0</strong>', demo)
         self.assertIn('<span>ADVISORY</span><strong>1</strong>', demo)
         self.assertIn('href="index.html">← Back to main page</a>', demo)
-        self.assertIn('"version": "0.3.0.dev0"', demo)
+        self.assertIn('"version": "0.3.0rc1"', demo)
         self.assertIn("header{position:sticky;top:0;z-index:100", demo)
         self.assertNotIn("C:\\Users", demo)
         self.assertNotIn("maki8", demo)
@@ -40,7 +40,7 @@ class HtmlReportTests(unittest.TestCase):
             / "docs/demo-governance-report.zh-CN.html"
         ).read_text(encoding="utf-8")
         self.assertIn('href="index.html">← 返回主页</a>', chinese_demo)
-        self.assertIn('"version": "0.3.0.dev0"', chinese_demo)
+        self.assertIn('"version": "0.3.0rc1"', chinese_demo)
         self.assertIn("header{position:sticky;top:0;z-index:100", chinese_demo)
 
     def test_html_is_self_contained_explanatory_and_deterministic(self) -> None:

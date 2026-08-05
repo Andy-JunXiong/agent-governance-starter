@@ -28,7 +28,7 @@ h2{margin:0 0 8px;font-size:23px;letter-spacing:-.025em}.sub{color:var(--muted);
 </style>
 </head>
 <body>
-<header><div class="shell"><div class="brand"><span class="mark">AG</span>Agent Governance<a class="back" href="index.html">← 返回主页</a></div><div class="mode">0.3.0.dev0 源码快照 | 静态检查 | 只读</div></div></header>
+<header><div class="shell"><div class="brand"><span class="mark">AG</span>Agent Governance<a class="back" href="index.html">← 返回主页</a></div><div class="mode">0.3.0rc1 候选快照 | 静态检查 | 只读</div></div></header>
 <main class="shell">
 <section class="hero"><div><div class="eyebrow">让仓库治理变得可见</div><h1>看清自动检查了什么。<br>看清哪些仍需要人决定。</h1><p class="lede">连接仓库规则、能力声明、证据成熟度和制品完整性，同时不假装静态检查可以批准高风险工作。</p></div><aside class="repo"><small>仓库</small><code>governed-demo</code><div class="boundary">本报告不授权合并、发布、release 或部署。</div></aside></section>
 <section class="orientation"><div class="panel"><h2>这份报告如何生成</h2><p class="sub">本地 CLI 检查了仓库中声明的治理资产，没有把源代码发送到外部服务。</p><div class="command"><code>agentgov report repository . --format html --output governance-report.html</code></div><div class="input-list"><div><code>AGENTS.md</code><br>仓库规则与权威边界</div><div><code>docs/adr/</code><br>长期有效的决策</div><div><code>INVARIANTS.md</code><br>必须持续成立的条件</div><div><code>capabilities/</code><br>用途、负责人和风险</div><div><code>schemas + sources</code><br>契约与来源</div><div><code>evaluation/</code><br>证据成熟度</div><div><code>agent-skills/</code><br>触发条件、工作流与交接</div><div><code>artifacts/</code><br>审阅后的源文件哈希</div></div><div class="not-checked"><strong>它不能证明什么</strong><br>CLI 检查声明的结构、引用、证据状态和漂移；它不运行 AI 能力、不判断输出质量，也不批准高风险工作。</div></div><div class="panel"><h2>如何阅读这份报告</h2><p class="sub">把报告当作审阅地图，而不是批准证书。</p><ol class="orientation-list"><li><b>1</b><div><strong>先看当前状态</strong><p>了解多少确定性检查通过、警告或失败，以及多少问题仍需人工判断。</p></div></li><li><b>2</b><div><strong>再看需要关注的事项</strong><p>按照每条发现的具体下一步和处理区域，指定负责人。</p></div></li><li><b>3</b><div><strong>最后审阅全部发现</strong><p>在决定合并、发布或部署前，阅读准确检查项、仓库事实和范围限制。</p></div></li></ol></div></section>
@@ -39,7 +39,7 @@ h2{margin:0 0 8px;font-size:23px;letter-spacing:-.025em}.sub{color:var(--muted);
   "schema_version": "1.0",
   "tool": {
     "name": "agentgov",
-    "version": "0.3.0.dev0"
+    "version": "0.3.0rc1"
   },
   "repository": "governed-demo",
   "summary": {

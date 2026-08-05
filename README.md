@@ -154,6 +154,16 @@ Use `--check` for a strictly read-only CI or diagnostic result:
 agentgov update --check .
 ```
 
+Installation necessarily happens before `agentgov next` can run: an
+uninstalled CLI cannot inspect or repair its own bootstrap state. The fixed
+stable pipx command above is therefore the reviewed pre-install surface.
+After installation, `agentgov update --check .` is the explicit read-only
+version and repository-layout inspection surface. The future-0.3 development
+manifest has no release artifact, so development-source `next` does not invent
+or recommend a 0.3 update. [ADR-0011](docs/adr/0011-separate-bootstrap-from-update-routing.md)
+records the stable-artifact and terminal-session handoff gates that must exist
+before update availability can enter `next`.
+
 See whether governance is merely present or is connected to project workflows:
 
 ```powershell
@@ -197,7 +207,41 @@ python -m agentgov govern start governance/tasks/my-task.json --repository .
 python -m agentgov govern check --repository .
 python -m agentgov govern finish --repository .
 python -m agentgov monitor development .
+python -m agentgov govern handoff --repository . --dry-run
+python -m agentgov govern handoff --repository .
+python -m agentgov next . --non-interactive
 ```
+
+The future-0.3 `agentgov next .` source preview can select exactly one of those
+steps without executing it. Adoption conflicts, missing scaffold, and
+deterministic repository `FAIL` remain higher priority. After those gates, no
+active session routes to a dry-run `govern start`; a started task routes to
+`govern check`; passed scope or incomplete evidence routes to `govern finish`;
+and verified completion routes to `monitor development`. Multiple admitted
+tasks require an explicit human choice. Malformed state, task drift, a missing
+start event, or failed scope returns one blocking action. WARN and ADVISORY
+remain visible in repository checks and reports but do not hide the active
+development step.
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m agentgov next . --non-interactive
+```
+
+Text and JSON output contain the selected command and `action_executed=false`;
+`next` never creates, repairs, validates, or runs anything.
+
+Development source now implements ADR-0012's event-only `govern handoff`.
+Preview re-establishes the exact verified evidence and lists one append-only
+event target; apply requires exact interactive `HANDOFF` and retains the
+session pointer, task, evidence, Monitor, and prior events. A matching handoff
+is idempotent. Afterwards, read-only `next` excludes the same task digest and
+previews a separate `govern start --replace-active --dry-run`: it names one
+other task, preserves `<TASK_JSON>` choice among several, or supplies compact
+task placeholders when none remain. Handoff means only “stop routing this
+working-copy session”; it does not mean requirement correctness, architecture
+approval, Monitor review, implementation acceptance, or merge readiness. This
+surface is not part of published stable 0.2.1.
 
 When development observations need to move into CI, preview and explicitly
 create a metadata-only export, then build the corresponding Monitor:
@@ -213,6 +257,17 @@ python -m agentgov monitor development . `
 The write requires exact interactive `EXPORT` confirmation. It removes actor
 labels and local evidence references, rejects sensitive or unsafe records, and
 never uploads the resulting file or changes GitHub Actions.
+
+The future 0.3 managed governance workflow template adds a separate, default-off
+manual dispatch input named `publish_development_monitor`. After a reviewed 0.3
+release and workflow migration, an owner may enable it in the Actions UI and may
+optionally provide the repository-relative `development_export` path. With no
+export, the Monitor is honestly `ci_only`; with a validated metadata-only export
+it is `exported_development`, or `combined` only when actor-validated CI event
+files are also present. The artifact contains only
+`agentgov-development-monitor.html`, never the export bundle, raw events, or the
+`.agentgov/` directory. This source implementation does not publish 0.3 or
+change an existing consumer workflow.
 
 For a low-risk task, `govern start --title ... --include ...` previews a compact
 task contract and can detect conventional Python, npm, Cargo, or Go validation.
@@ -469,11 +524,14 @@ and deployment remain separate human-authorized actions.
 
 ## Project status and non-goals
 
-**Status: published stable `0.2.1`; development source `0.3.0.dev0`.** The
+**Status: published stable `0.2.1`; candidate source `0.3.0rc1`.** The
 stable release is suitable for evaluation and repository-level pilots. The
 development source adds a two-workflow proposal boundary, compact/standard
-development tasks, and read-only task-specific governance context, but these
-are not yet a published release or adopted consumer workflow. AgentGov is not
+development tasks, read-only task-specific governance context, and a
+default-off Development Monitor artifact path in the future 0.3 workflow
+template. This source is prepared for candidate review but is not yet a
+published candidate or adopted consumer
+workflow. AgentGov is not
 a compliance certification, runtime
 security boundary, or authorization for autonomous merge, publication, or
 deployment.

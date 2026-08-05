@@ -179,8 +179,62 @@ class ConsumerWorkflowTests(unittest.TestCase):
         self.assertNotIn("actions: read", workflow)
         self.assertNotIn("agentgov benefits monitor", workflow)
         self.assertNotIn("agentgov-main-baseline", workflow)
+        self.assertNotIn("publish_development_monitor", workflow)
+        self.assertNotIn("agentgov-development-monitor", workflow)
         self.assertNotIn("pull_request_target", workflow)
         self.assertNotIn("gh pr", workflow)
+
+    def test_version_0_3_monitor_artifact_is_explicit_source_limited_and_read_only(self) -> None:
+        workflow = render_consumer_workflow(
+            version="0.3.0",
+            wheel_sha256="e" * 64,
+        )
+
+        self.assertIn("publish_development_monitor:", workflow)
+        self.assertIn(
+            'description: "Build and upload the source-limited Development Monitor"',
+            workflow,
+        )
+        self.assertIn("type: boolean\n        default: false", workflow)
+        self.assertIn("development_export:", workflow)
+        self.assertIn(
+            "if: github.event_name == 'workflow_dispatch' && "
+            "inputs.publish_development_monitor",
+            workflow,
+        )
+        self.assertIn("monitor_args=(--scope ci_only)", workflow)
+        self.assertIn(
+            'monitor_args=(--scope exported_development --export '
+            '"$AGENTGOV_DEVELOPMENT_EXPORT")',
+            workflow,
+        )
+        self.assertIn(
+            'monitor_args=(--scope combined --export '
+            '"$AGENTGOV_DEVELOPMENT_EXPORT")',
+            workflow,
+        )
+        self.assertIn("find .agentgov/events", workflow)
+        self.assertIn('"${monitor_args[@]}"', workflow)
+        self.assertIn("--output agentgov-development-monitor.html", workflow)
+        self.assertIn("name: agentgov-development-monitor", workflow)
+        self.assertIn("path: agentgov-development-monitor.html", workflow)
+        self.assertIn("if-no-files-found: error", workflow)
+        self.assertIn(
+            "if: always() && github.event_name == 'workflow_dispatch' && "
+            "inputs.publish_development_monitor",
+            workflow,
+        )
+
+        upload_block = workflow.split("- name: Upload opt-in Development Monitor", 1)[1]
+        upload_block = upload_block.split("- name: Preserve trusted main benefit baseline", 1)[0]
+        self.assertNotIn(".agentgov", upload_block)
+        self.assertNotIn("development_export", upload_block)
+        self.assertNotIn("events", upload_block)
+        self.assertIn("permissions:\n  contents: read\n  actions: read", workflow)
+        self.assertNotIn("contents: write", workflow)
+        self.assertNotIn("pull-requests: write", workflow)
+        self.assertNotIn("secrets.", workflow)
+        self.assertNotIn("pull_request_target", workflow)
 
     def test_version_0_3_limits_draft_pr_writes_to_schedule_or_opt_in_dispatch(self) -> None:
         governance_workflow = render_consumer_workflow(

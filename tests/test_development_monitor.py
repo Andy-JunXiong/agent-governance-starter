@@ -125,6 +125,16 @@ class DevelopmentMonitorTests(unittest.TestCase):
                 reasons=("declared_validation_requested",),
                 metrics={"commands_declared": 1, "commands_run": 1, "commands_passed": 1},
             )
+            add_event(
+                repository,
+                event_type="session.handed_off",
+                outcome="handed_off",
+                occurred_at="2026-08-02T01:04:00.000Z",
+                actor="human",
+                label="fixture-owner",
+                reasons=("handoff_confirmed", "verified_evidence_fresh"),
+                metrics={"verified_evidence": 1},
+            )
 
             monitor = build_development_monitor(
                 repository,
@@ -134,12 +144,15 @@ class DevelopmentMonitorTests(unittest.TestCase):
         self.assertEqual(monitor.observation["scope"], "local_session")
         self.assertEqual(monitor.observation["history_completeness"], "partial")
         self.assertFalse(monitor.observation["cross_stage_discovery_available"])
-        self.assertEqual(monitor.overview["events"], 3)
+        self.assertEqual(monitor.overview["events"], 4)
         self.assertEqual(monitor.overview["verified_completions"], 1)
+        self.assertEqual(monitor.overview["handoffs"], 1)
         self.assertEqual([item["event_type"] for item in monitor.timeline], [
-            "scope.checked", "validation.completed", "completion.reconciled"
+            "scope.checked", "validation.completed", "completion.reconciled", "session.handed_off"
         ])
         self.assertEqual(monitor.tasks[0]["latest_completion_state"], "verified")
+        self.assertEqual(monitor.tasks[0]["latest_routing_state"], "handed_off")
+        self.assertEqual(monitor.tasks[0]["handoffs"], 1)
         self.assertEqual(set(monitor.claim_layers), {"observed", "inferred", "unknown"})
 
     def test_empty_store_is_honest_partial_history(self) -> None:

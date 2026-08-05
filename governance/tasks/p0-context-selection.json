@@ -97,8 +97,8 @@
     "Stop if unrelated user worktree changes cannot be preserved."
   ],
   "decision": {
-    "state": "admitted",
+    "state": "paused",
     "decided_by": "Human product owner",
-    "rationale": "The user approved the reviewed plan and explicitly instructed development to start."
+    "rationale": "The user approved the reviewed plan and explicitly instructed development to start. The delivered task was paused on 2026-08-05 to remove it from automatic discovery; this is routing hygiene, not a claim of semantic completion, acceptance, merge, or release."
   }
 }

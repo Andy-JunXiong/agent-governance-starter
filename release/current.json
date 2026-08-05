@@ -2,13 +2,13 @@
   "contract": "agentgov.release-manifest",
   "schema_version": "1.0",
   "distribution_name": "agent-governance-starter",
-  "tool_version": "0.3.0.dev0",
-  "channel": "development",
+  "tool_version": "0.3.0rc1",
+  "channel": "release-candidate",
   "supported_from": ["0.1.0", "0.2.0", "0.2.1"],
   "readable_layout_versions": ["1.0"],
   "target_layout_version": "1.0",
   "repository_changes_declared": false,
   "declared_migrations": [],
-  "release_notes_url": "https://github.com/Andy-JunXiong/agent-governance-starter/blob/main/docs/development-plan.md",
+  "release_notes_url": "https://github.com/Andy-JunXiong/agent-governance-starter/blob/main/docs/releases/0.3.0rc1.md",
   "artifact": null
 }

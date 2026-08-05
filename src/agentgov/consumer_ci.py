@@ -148,6 +148,8 @@ def render_consumer_workflow(
     benefit_summary = ""
     benefit_artifact = ""
     benefit_baseline_upload = ""
+    development_monitor_step = ""
+    development_monitor_artifact = ""
     governance_job_outputs = ""
     finding_annotations_step = ""
     governance_gate_step = ""
@@ -192,6 +194,48 @@ def render_consumer_workflow(
         )
     if supports_upgrade_writer:
         workflow_permissions = "permissions:\n  contents: read\n  actions: read"
+        workflow_dispatch_trigger = """  workflow_dispatch:
+    inputs:
+      publish_development_monitor:
+        description: "Build and upload the source-limited Development Monitor"
+        required: false
+        type: boolean
+        default: false
+      development_export:
+        description: "Optional repository-relative metadata-only development export"
+        required: false
+        type: string
+        default: ""
+"""
+        development_monitor_step = """
+      - name: Build opt-in Development Monitor
+        if: github.event_name == 'workflow_dispatch' && inputs.publish_development_monitor
+        shell: bash
+        env:
+          AGENTGOV_DEVELOPMENT_EXPORT: ${{ inputs.development_export }}
+        run: |
+          monitor_args=(--scope ci_only)
+          if [ -n "$AGENTGOV_DEVELOPMENT_EXPORT" ]; then
+            monitor_args=(--scope exported_development --export "$AGENTGOV_DEVELOPMENT_EXPORT")
+            if find .agentgov/events -maxdepth 1 -type f -name 'evt-*.json' -print -quit 2>/dev/null | grep -q .; then
+              monitor_args=(--scope combined --export "$AGENTGOV_DEVELOPMENT_EXPORT")
+            fi
+          fi
+          agentgov monitor development . \\
+            "${monitor_args[@]}" \\
+            --format html \\
+            --output agentgov-development-monitor.html
+"""
+        development_monitor_artifact = """
+      - name: Upload opt-in Development Monitor
+        if: always() && github.event_name == 'workflow_dispatch' && inputs.publish_development_monitor
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: agentgov-development-monitor
+          path: agentgov-development-monitor.html
+          if-no-files-found: error
+          retention-days: 30
+"""
         benefit_baseline_step = """
       - name: Restore previous trusted AgentGov main baseline
         if: always()
@@ -519,7 +563,7 @@ jobs:
         run: {update_command}
 {upgrade_review_step}
       - name: Check repository and write JSON report
-{report_continue}        run: agentgov report repository . --format json --output agentgov-report.json{benefit_monitor_step}{finding_annotations_step}
+{report_continue}        run: agentgov report repository . --format json --output agentgov-report.json{benefit_monitor_step}{finding_annotations_step}{development_monitor_step}
 
       - name: Add visible governance summary
         if: always()
@@ -537,7 +581,7 @@ jobs:
             agentgov-report.json
             agentgov-report.md
 {status_artifact}            agentgov-update.json
-{benefit_artifact}          if-no-files-found: warn{benefit_baseline_upload}{governance_gate_step}
+{benefit_artifact}          if-no-files-found: warn{development_monitor_artifact}{benefit_baseline_upload}{governance_gate_step}
 
       - name: Preserve human authority boundary
         if: always()

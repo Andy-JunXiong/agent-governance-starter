@@ -75,10 +75,10 @@
       "required": ["contract", "schema_version", "event_id", "occurred_at", "event_type", "actor", "task_id", "task_digest", "observation_scope", "outcome", "evidence_ref", "governance_refs", "reason_codes", "metrics", "authority_boundary"],
       "properties": {
         "contract": {"const": "agentgov.governance-event"},
-        "schema_version": {"const": "1.1"},
+        "schema_version": {"const": "1.2"},
         "event_id": {"type": "string", "pattern": "^evt-[0-9a-f]{32}$"},
         "occurred_at": {"type": "string", "minLength": 1},
-        "event_type": {"enum": ["task.started", "scope.checked", "validation.completed", "completion.reconciled"]},
+        "event_type": {"enum": ["task.started", "scope.checked", "validation.completed", "completion.reconciled", "session.handed_off"]},
         "actor": {
           "type": "object",
           "additionalProperties": false,
@@ -88,7 +88,7 @@
         "task_id": {"type": "string", "minLength": 1, "maxLength": 128},
         "task_digest": {"$ref": "#/$defs/sha256"},
         "observation_scope": {"const": "local_development"},
-        "outcome": {"enum": ["started", "passed", "failed", "stale", "needs_evidence", "verified"]},
+        "outcome": {"enum": ["started", "passed", "failed", "stale", "needs_evidence", "verified", "handed_off"]},
         "evidence_ref": {"const": null},
         "governance_refs": {"type": "array", "maxItems": 128, "uniqueItems": true, "items": {"$ref": "#/$defs/path"}},
         "reason_codes": {"type": "array", "maxItems": 64, "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}},
@@ -105,7 +105,22 @@
             "authorizes_deployment": {"const": false}
           }
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"event_type": {"const": "session.handed_off"}}, "required": ["event_type"]},
+          "then": {
+            "properties": {
+              "outcome": {"const": "handed_off"},
+              "actor": {"properties": {"class": {"const": "human"}}}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"outcome": {"const": "handed_off"}}, "required": ["outcome"]},
+          "then": {"properties": {"event_type": {"const": "session.handed_off"}}}
+        }
+      ]
     }
   }
 }

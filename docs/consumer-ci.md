@@ -84,6 +84,11 @@ The generated workflow:
 - beginning with stable 0.3, restores the previous trusted default-branch
   report, verifies its monitor digest, shows up to 20 observed trend points in
   the Actions Summary, and uploads a self-contained benefit-monitor page;
+- beginning with stable 0.3, exposes a default-off
+  `publish_development_monitor` manual-dispatch input. When explicitly enabled,
+  it renders `ci_only` facts or a validated `development_export` and uploads
+  only `agentgov-development-monitor.html`; it never uploads the export bundle,
+  raw events, or `.agentgov/` local state;
 - beginning with stable 0.3, gives PR authors only a baseline-relative delta and
   required action, while trend and upgrade administration remain on trusted
   default-branch and scheduled runs;

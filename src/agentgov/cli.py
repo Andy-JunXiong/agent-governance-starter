@@ -84,6 +84,14 @@ from agentgov.development_event_export import (
     request_development_export_confirmation,
     write_development_event_export,
 )
+from agentgov.development_handoff import (
+    HandoffPolicyError,
+    apply_handoff_plan,
+    build_handoff_plan,
+    render_handoff_plan_json,
+    render_handoff_plan_terminal,
+    request_handoff_confirmation,
+)
 from agentgov.development_monitor import (
     MonitorPolicyError,
     build_development_monitor,
@@ -1728,6 +1736,70 @@ def _govern_finish(
     return EXIT_PASS if report.state == "verified" else EXIT_FAIL
 
 
+def _govern_handoff(
+    repository: Path,
+    *,
+    actor_label: str | None,
+    dry_run: bool,
+    output_format: str,
+) -> int:
+    """Preview and explicitly confirm one append-only verified-session handoff."""
+
+    if output_format == "json" and not dry_run:
+        print("ERROR govern handoff: --format json requires --dry-run", file=sys.stderr)
+        return EXIT_ERROR
+    try:
+        plan = build_handoff_plan(repository, actor_label=actor_label)
+    except FileNotFoundError as exc:
+        print(f"ERROR govern handoff: file or executable not found: {exc.filename or exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except (
+        EvidenceError,
+        GitSnapshotError,
+        HandoffPolicyError,
+        LocalStateError,
+        SessionPolicyError,
+        OSError,
+        UnicodeError,
+        ValueError,
+    ) as exc:
+        print(f"ERROR govern handoff: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    renderer = render_handoff_plan_json if output_format == "json" else render_handoff_plan_terminal
+    print(renderer(plan), end="")
+    if dry_run:
+        if output_format == "terminal":
+            print("DRY_RUN no files were written")
+        return EXIT_PASS
+    if plan.already_handed_off:
+        assert plan.existing_event_ref is not None
+        print(f"HANDED_OFF {plan.session.task_id}")
+        print(f"EVENT {plan.existing_event_ref}")
+        print("NOTE no files were written because this exact session is already handed off")
+        return EXIT_PASS
+    confirmed = request_handoff_confirmation(
+        plan,
+        decision_reader=input,
+        is_interactive_terminal=sys.stdin.isatty(),
+    )
+    if not confirmed:
+        print("CANCELLED govern handoff requires exact HANDOFF from an interactive terminal")
+        return EXIT_FAIL
+    try:
+        result = apply_handoff_plan(plan)
+    except (HandoffPolicyError, LocalStateError, SessionPolicyError, OSError, UnicodeError, ValueError) as exc:
+        print(f"ERROR govern handoff: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    print(f"HANDED_OFF {result.session.task_id}")
+    print(f"EVENT {result.event_ref}")
+    if result.already_handed_off:
+        print("NOTE no new event was written because a matching handoff already exists")
+    print("NEXT run 'agentgov next' to preview a separate governed task rollover")
+    print("NOTE handoff ends routing responsibility only; it grants no approval or Git/release authority")
+    return EXIT_PASS
+
+
 def _monitor_development(
     repository: Path,
     *,
@@ -1766,6 +1838,23 @@ def _monitor_development(
     )
     print(f"OUTPUT {relative}")
     print("NOTE observed counts are partial history, not approval, causality, ROI, or semantic correctness")
+    if observation_scope == "local_session" and event_directory is None and export_path is None:
+        try:
+            handoff = build_handoff_plan(repository)
+        except (
+            EvidenceError,
+            GitSnapshotError,
+            HandoffPolicyError,
+            LocalStateError,
+            SessionPolicyError,
+            OSError,
+            UnicodeError,
+            ValueError,
+        ):
+            handoff = None
+        if handoff is not None and not handoff.already_handed_off:
+            print(f'NEXT agentgov govern handoff --repository "{repository.resolve()}" --dry-run')
+            print("NOTE Monitor generation does not prove review and does not append the handoff event")
     return EXIT_PASS
 
 
@@ -3083,6 +3172,40 @@ def build_parser() -> argparse.ArgumentParser:
             output_format=args.govern_format,
             actor_class=args.actor,
             actor_label=args.actor_label,
+        )
+    )
+    govern_handoff_parser = govern_targets.add_parser(
+        "handoff",
+        help="Preview and explicitly confirm terminal routing handoff for one fresh verified session.",
+    )
+    govern_handoff_parser.add_argument(
+        "--repository",
+        type=Path,
+        default=Path("."),
+        help="Git worktree root containing the exact verified session.",
+    )
+    govern_handoff_parser.add_argument(
+        "--actor-label",
+        help="Optional vendor-neutral label for the confirming human.",
+    )
+    govern_handoff_parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Re-establish freshness, render the complete one-event preview, and write nothing.",
+    )
+    govern_handoff_parser.add_argument(
+        "--format",
+        dest="govern_format",
+        choices=("terminal", "json"),
+        default="terminal",
+        help="Handoff preview format (default: terminal).",
+    )
+    govern_handoff_parser.set_defaults(
+        handler=lambda args: _govern_handoff(
+            args.repository,
+            actor_label=args.actor_label,
+            dry_run=args.dry_run,
+            output_format=args.govern_format,
         )
     )
 

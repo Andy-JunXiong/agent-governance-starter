@@ -285,10 +285,14 @@ class UpdateCheckCliTests(unittest.TestCase):
     def test_newer_tool_without_stable_install_source_blocks_before_write(self) -> None:
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
+            newer_rc = root / "newer-rc.json"
+            document = json.loads(RC.read_text(encoding="utf-8"))
+            document["tool_version"] = "0.3.0rc2"
+            newer_rc.write_text(json.dumps(document), encoding="utf-8")
             terminal = TerminalInput("UPDATE\n")
             with patch("sys.stdin", terminal):
                 exit_code, stdout, stderr = run_cli(
-                    "update", str(root), "--manifest", str(RC)
+                    "update", str(root), "--manifest", str(newer_rc)
                 )
 
             self.assertFalse((root / "governance/contract.json").exists())

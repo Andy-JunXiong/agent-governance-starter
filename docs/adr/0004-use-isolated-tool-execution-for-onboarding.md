@@ -102,3 +102,11 @@ contained an unrelated `.venv` directory.
 A later ADR may select a version-pinned `uvx` or another isolated runner after
 equivalent Windows and cross-platform evidence exists. It must preserve the
 environment-isolation and human-authority boundaries in this decision.
+
+## 2026-08-05 bootstrap/update refinement
+
+[ADR-0011](0011-separate-bootstrap-from-update-routing.md) keeps pre-install
+bootstrap on the reviewed public installation surface and retains
+`agentgov update --check` as the installed read-only inspection surface. It
+does not add update routing to `next`; trustworthy stable artifact identity and
+a non-looping terminal-session handoff remain explicit prerequisites.

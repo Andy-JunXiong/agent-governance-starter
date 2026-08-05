@@ -31,18 +31,18 @@ def run_cli(*args: str) -> tuple[int, str, str]:
 
 
 class ReleaseManifestTests(unittest.TestCase):
-    def test_bundled_development_metadata_is_valid_without_claiming_an_artifact(self) -> None:
+    def test_bundled_candidate_metadata_is_valid_without_claiming_an_artifact(self) -> None:
         document = load_release_manifest(CURRENT)
 
         self.assertEqual(validate_installed_release_metadata(document), [])
         self.assertEqual(document["artifact"], None)
         self.assertEqual(validate_release_manifest(document), [])
 
-    def test_bundled_development_metadata_matches_runtime_and_compatibility(self) -> None:
+    def test_bundled_candidate_metadata_matches_runtime_and_compatibility(self) -> None:
         document = load_release_manifest(CURRENT)
 
         self.assertEqual(document["tool_version"], __version__)
-        self.assertEqual(document["channel"], "development")
+        self.assertEqual(document["channel"], "release-candidate")
         self.assertEqual(
             document["supported_from"],
             ["0.1.0", "0.2.0", "0.2.1"],

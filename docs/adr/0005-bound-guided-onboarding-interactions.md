@@ -63,6 +63,16 @@ existing governance files, or performs Git and release operations.
   failure when the isolated AgentGov interpreter is healthy.
 - Future `onboard` work must inject prompt decisions in tests.
 
+## 2026-08-05 development-routing refinement
+
+[ADR-0010](0010-route-next-through-development-lifecycle.md) extends only the
+`next` selection portion of this decision across the ADR-0009 development
+session. Adoption conflicts, missing scaffold, and deterministic repository
+`FAIL` remain first. Strict session/event state then selects `govern start`,
+`govern check`, `govern finish`, or `monitor development`; repository `WARN`
+and `ADVISORY` remain visible through checks and reports but no longer displace
+the active daily route. `next` remains read-only and never executes the command.
+
 ## Implementation plan
 
 1. Implement read-only `doctor` with text and strict JSON output.

@@ -1,0 +1,94 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-opt-in-monitor-artifact",
+  "title": "Wire the static Development Monitor as an opt-in Actions artifact",
+  "requirement": {
+    "summary": "Continue the reviewed ADR-0009 product loop by adding a minimal, explicitly dispatched GitHub Actions path that renders the existing static Development Monitor from validated portable inputs and uploads only the self-contained HTML read model.",
+    "source_refs": [
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "docs/development-monitor.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0009-govern-coding-agents-during-development.md"
+    ],
+    "rationale": "The local Monitor and redacted export contracts are implemented; the next bounded product slice is an honest, human-opted-in Actions artifact without widening governance or Git authority."
+  },
+  "goal": "Extend only the future 0.3 managed governance workflow template with an explicit manual-dispatch option that builds and uploads a source-limited Development Monitor HTML artifact.",
+  "non_goals": [
+    "Do not publish AgentGov 0.3, change the stable integration default, migrate a consumer, or claim that an unpublished development wheel exists.",
+    "Do not upload local .agentgov state, raw event files, a development export bundle, source content, validation output, credentials, or absolute paths.",
+    "Do not overwrite an existing workflow, add automatic push or pull-request Monitor upload, or grant Git, pull-request, merge, release, deployment, or production authority.",
+    "Do not add exception records, action-loop self-reporting, cross-stage discovery claims, GitHub Pages, telemetry, hooks, or a daemon."
+  ],
+  "scope": {
+    "include_paths": [
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "docs/consumer-ci.md",
+      "docs/development-log/2026-08-05.md",
+      "docs/development-monitor.md",
+      "docs/development-plan.md",
+      "governance/tasks/p0-opt-in-monitor-artifact.json",
+      "src/agentgov/consumer_ci.py",
+      "tests/test_consumer_ci.py",
+      "tests/test_public_documentation_freshness.py",
+      "tests/test_user_documentation.py"
+    ],
+    "exclude_paths": [
+      ".github/workflows",
+      "release",
+      "src/agentgov/upgrade_writer.py"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0009-govern-coding-agents-during-development.md",
+    "docs/adr/INVARIANTS.md"
+  ],
+  "acceptance_signals": [
+    "Only a caller-supplied, digest-pinned 0.3-or-newer managed governance workflow gains the Monitor artifact path; stable 0.1 and 0.2 rendered workflows remain unchanged.",
+    "Monitor publication defaults to false and runs only after an explicit workflow_dispatch boolean input.",
+    "The workflow passes an explicit redacted export to AgentGov when supplied and otherwise uses ci_only; combined is selected only when both the export and CI event files are present.",
+    "AgentGov remains responsible for rejecting a non-redacted export or any non-CI actor in a CI event store.",
+    "The artifact contains only the self-contained Monitor HTML and never uploads the input export, raw events, .agentgov directory, source content, or validation output.",
+    "The governance workflow retains read-only permissions, pinned actions, disabled checkout credentials, and no secret or write-permission references.",
+    "Focused workflow and documentation tests plus the complete repository suite pass."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_consumer_ci tests.test_user_documentation tests.test_public_documentation_freshness -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check repository ."
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "medium",
+    "items": [
+      "An Actions artifact could imply CI observed local development that was never explicitly exported.",
+      "A broad upload path could disclose the redacted input bundle or local event files instead of only the derived Monitor.",
+      "Rendering an unpublished version into a live workflow could create a false executable or release identity."
+    ]
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "owner": "Human product owner",
+    "evidence_refs": []
+  },
+  "stop_conditions": [
+    "Stop if the workflow must reference an unpublished wheel URL or fabricated digest.",
+    "Stop if the Monitor cannot distinguish explicit exported_development, actor-validated ci_only, and combined inputs.",
+    "Stop if implementation requires automatic transfer of local state or any repository write permission.",
+    "Stop if an existing consumer workflow would need to be modified without a separate release and migration decision."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "The user explicitly authorized the next bounded work item after reviewing its scope, non-goals, acceptance signals, and packaging stop boundary. The delivered task was paused on 2026-08-05 to remove it from automatic discovery; this is routing hygiene, not a claim of semantic completion, acceptance, merge, or release."
+  }
+}

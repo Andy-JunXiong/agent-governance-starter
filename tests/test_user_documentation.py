@@ -10,6 +10,13 @@ QUICKSTART_ZH_WEB = ROOT / "docs/quickstart.zh-CN.html"
 ADOPTION_GUIDE = ROOT / "docs/existing-repository-adoption.md"
 GENERATED_FILES_GUIDE = ROOT / "docs/generated-files-guide.md"
 TROUBLESHOOTING = ROOT / "docs/troubleshooting.md"
+CONSUMER_CI = ROOT / "docs/consumer-ci.md"
+DEVELOPMENT_MONITOR = ROOT / "docs/development-monitor.md"
+DEVELOPMENT_SESSION = ROOT / "docs/development-session.md"
+GUIDED_NEXT_ADR = ROOT / "docs/adr/0010-route-next-through-development-lifecycle.md"
+BOOTSTRAP_UPDATE_ADR = ROOT / "docs/adr/0011-separate-bootstrap-from-update-routing.md"
+SESSION_HANDOFF_ADR = ROOT / "docs/adr/0012-handoff-verified-development-sessions.md"
+DEVELOPMENT_RELEASE = ROOT / "release/current.json"
 ISOLATED_EXECUTION_ADR = (
     ROOT / "docs/adr/0004-use-isolated-tool-execution-for-onboarding.md"
 )
@@ -19,6 +26,91 @@ GUIDE_STYLE = ROOT / "docs/guide.css"
 
 
 class UserDocumentationTests(unittest.TestCase):
+    def test_verified_session_handoff_contract_preserves_identity_and_authority(self) -> None:
+        readme = README.read_text(encoding="utf-8")
+        session = DEVELOPMENT_SESSION.read_text(encoding="utf-8")
+        monitor = DEVELOPMENT_MONITOR.read_text(encoding="utf-8")
+        decision = SESSION_HANDOFF_ADR.read_text(encoding="utf-8")
+
+        self.assertIn("Development source now implements ADR-0012", readme)
+        self.assertIn("implements ADR-0012", session)
+        self.assertIn("Monitor schema 1.3", monitor)
+        for text in (readme, session):
+            self.assertIn("govern handoff --repository . --dry-run", text)
+            self.assertIn("exact", text)
+            self.assertIn("HANDOFF", text)
+            self.assertIn("--replace-active", text)
+        for phrase in (
+            "session.handed_off",
+            "exact `HANDOFF`",
+            "does not delete",
+            "matching existing handoff is idempotent",
+            "--replace-active",
+            "same handed-off task digest",
+            "does not prove that a human read it",
+            "one append-only target",
+            "Development-source runtime now implements",
+        ):
+            self.assertIn(phrase, decision)
+        self.assertIn("matching handoff\nis idempotent", readme)
+        self.assertIn("Published\nstable 0.2.1 does not include", session)
+
+    def test_bootstrap_and_update_decision_has_no_self_install_or_fake_release(self) -> None:
+        readme = README.read_text(encoding="utf-8")
+        decision = BOOTSTRAP_UPDATE_ADR.read_text(encoding="utf-8")
+        quickstart = QUICKSTART_WEB.read_text(encoding="utf-8")
+        development_release = DEVELOPMENT_RELEASE.read_text(encoding="utf-8")
+
+        stable_install = 'pipx install "https://github.com/Andy-JunXiong/'
+        self.assertLess(readme.index(stable_install), readme.index("python -m agentgov next ."))
+        self.assertLess(quickstart.index(stable_install), quickstart.index("agentgov next ."))
+        for text in (readme, decision):
+            self.assertIn("agentgov update --check", text)
+            self.assertIn("before `agentgov next`", text)
+        for phrase in (
+            "fixed-tag HTTPS wheel URL",
+            "artifact: null",
+            "terminal handoff",
+            "read-only check alone is not treated as progress",
+            "never executes the recommendation",
+        ):
+            self.assertIn(phrase, decision)
+        self.assertIn('"channel": "release-candidate"', development_release)
+        self.assertIn('"artifact": null', development_release)
+
+    def test_guided_next_docs_preserve_precedence_and_no_execution_boundary(self) -> None:
+        readme = README.read_text(encoding="utf-8")
+        session = DEVELOPMENT_SESSION.read_text(encoding="utf-8")
+        decision = GUIDED_NEXT_ADR.read_text(encoding="utf-8")
+
+        for text in (readme, session, decision):
+            self.assertIn("govern start", text)
+            self.assertIn("govern check", text)
+            self.assertIn("govern finish", text)
+            self.assertIn("monitor development", text)
+            self.assertIn("deterministic repository `FAIL`", text)
+            self.assertRegex(text.lower(), r"multiple admitted\s+tasks")
+        self.assertIn("action_executed=false", readme)
+        self.assertIn("action_executed=false", session)
+        self.assertIn("never executes", decision)
+        self.assertIn("Older events", decision)
+
+    def test_development_monitor_artifact_docs_preserve_opt_in_and_source_boundaries(self) -> None:
+        readme = README.read_text(encoding="utf-8")
+        monitor = DEVELOPMENT_MONITOR.read_text(encoding="utf-8")
+        consumer_ci = CONSUMER_CI.read_text(encoding="utf-8")
+
+        for text in (readme, monitor, consumer_ci):
+            self.assertIn("publish_development_monitor", text)
+            self.assertIn("agentgov-development-monitor.html", text)
+            self.assertIn("default-off", text)
+            self.assertIn("development_export", text)
+        self.assertIn("future 0.3", readme)
+        self.assertIn("future 0.3", monitor)
+        self.assertIn("never uploads the development export", monitor)
+        self.assertIn("actor-validated CI event files", monitor)
+        self.assertIn("raw events, or `.agentgov/` local state", consumer_ci)
+
     def test_readme_links_all_user_onboarding_guides(self) -> None:
         text = README.read_text(encoding="utf-8")
         for path in (

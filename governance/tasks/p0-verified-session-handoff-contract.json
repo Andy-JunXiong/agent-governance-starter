@@ -1,0 +1,126 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-verified-session-handoff-contract",
+  "title": "Define verified-session handoff and rollover",
+  "requirement": {
+    "summary": "Prevent a verified task from owning agentgov next forever after Monitor while preserving immutable evidence and explicit human meaning.",
+    "source_refs": [
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "docs/adr/0011-separate-bootstrap-from-update-routing.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0009-govern-coding-agents-during-development.md",
+      "docs/adr/0010-route-next-through-development-lifecycle.md",
+      "docs/adr/0011-separate-bootstrap-from-update-routing.md"
+    ],
+    "rationale": "The guided loop needs an explicit non-approval terminal transition before it can route another task or later consider update availability."
+  },
+  "goal": "Specify a fresh-verified, explicitly confirmed, append-only session handoff and a deterministic rollover route that keeps the active pointer and task artifacts intact.",
+  "non_goals": [
+    "Do not implement govern handoff, add or change an event type, change the session or Monitor schema, alter next routing, or modify CLI arguments in this decision slice.",
+    "Do not delete, archive, rename, or rewrite .agentgov/current-task.json, existing events, task contracts, completion evidence, or Monitor output.",
+    "Do not equate Monitor generation, handoff, or rollover with requirement correctness, architecture approval, merge readiness, task deletion, or human acceptance of the implementation.",
+    "Do not add Monitor self-reporting, hidden acknowledgement state, hooks, daemons, background checks, update routing, exception records, or telemetry.",
+    "Do not commit in the AgentGov source repository, push, tag, publish, release, migrate a consumer, change a workflow, merge, deploy, or mutate an external system.",
+    "Preserve all earlier uncommitted bounded slices and report their combined working-copy scope honestly."
+  ],
+  "scope": {
+    "include_paths": [
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "docs/adr/0004-use-isolated-tool-execution-for-onboarding.md",
+      "docs/adr/0005-bound-guided-onboarding-interactions.md",
+      "docs/adr/0010-route-next-through-development-lifecycle.md",
+      "docs/adr/0011-separate-bootstrap-from-update-routing.md",
+      "docs/adr/0012-handoff-verified-development-sessions.md",
+      "docs/consumer-ci.md",
+      "docs/development-log/2026-08-05.md",
+      "docs/development-monitor.md",
+      "docs/development-plan.md",
+      "docs/development-session.md",
+      "docs/experiments/guided-next-installed-rehearsal.md",
+      "docs/quickstart.html",
+      "governance/tasks/p0-bootstrap-update-boundary.json",
+      "governance/tasks/p0-guided-next-development-routing.json",
+      "governance/tasks/p0-guided-next-installed-rehearsal.json",
+      "governance/tasks/p0-opt-in-monitor-artifact.json",
+      "governance/tasks/p0-verified-session-handoff-contract.json",
+      "src/agentgov/consumer_ci.py",
+      "src/agentgov/next_action.py",
+      "tests/test_consumer_ci.py",
+      "tests/test_next_action.py",
+      "tests/test_user_documentation.py"
+    ],
+    "exclude_paths": [
+      ".github/workflows",
+      "release",
+      "schemas",
+      "src/agentgov/cli.py",
+      "src/agentgov/development_session.py",
+      "src/agentgov/event_store.py",
+      "src/agentgov/development_monitor.py",
+      "tests/test_development_session.py",
+      "tests/test_event_store.py",
+      "tests/test_development_monitor.py"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0009-govern-coding-agents-during-development.md",
+    "docs/adr/0010-route-next-through-development-lifecycle.md",
+    "docs/adr/0011-separate-bootstrap-from-update-routing.md",
+    "docs/adr/0012-handoff-verified-development-sessions.md",
+    "docs/adr/INVARIANTS.md"
+  ],
+  "acceptance_signals": [
+    "The decision chooses one explicit session.handed_off event rather than deleting the current-task pointer, mutating the task decision, or making Monitor generation a hidden state transition.",
+    "Handoff is admissible only for the exact active task digest and base after the latest completion is verified and still fresh; drift, stale evidence, failed scope, invalid events, or an unverified completion blocks it.",
+    "A future govern handoff command must preview one append-only event target and require exact HANDOFF confirmation from a real terminal; dry-run, redirected, cancelled, and non-interactive paths write nothing.",
+    "The handoff event records that a human ended routing responsibility for one working-copy session, not that requirements, architecture, implementation, or Monitor content were approved.",
+    "The current-task pointer, task contract, evidence, and prior events remain intact; repeated handoff is idempotent and does not append duplicates.",
+    "After handoff, next may recommend a new or explicitly selected task through govern start --replace-active --dry-run and must not automatically rediscover the same handed-off task digest.",
+    "Multiple remaining tasks still require explicit human choice, while a changed digest may be considered a new reviewed task version only through normal start confirmation.",
+    "Monitor remains a derived read model; a future successful Monitor command may print the handoff preview as its next command but cannot assert that a human read or approved the output.",
+    "Current runtime, schema, CLI, event, Monitor, next, release, workflow, and update behavior remains unchanged in this decision slice.",
+    "Documentation tests protect the event-only atomic boundary, freshness gate, no-approval semantics, pointer preservation, idempotence, and rollover choice rules."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_user_documentation tests.test_next_action tests.test_development_session tests.test_event_store tests.test_development_monitor -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check repository ."
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "medium",
+    "items": [
+      "Deleting the pointer could lose session identity or make the same completed task look new.",
+      "A handoff event could be mistaken for semantic approval or Monitor review if its authority boundary is vague.",
+      "A pointer-plus-event transition could become non-atomic if implementation writes more than the append-only event.",
+      "Task discovery could restart a handed-off digest or silently choose among several remaining tasks."
+    ]
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "owner": "Human product owner",
+    "evidence_refs": []
+  },
+  "stop_conditions": [
+    "Stop if safe handoff requires deleting or rewriting the active pointer, prior events, task artifacts, or completion evidence.",
+    "Stop if freshness cannot be re-established from the exact verified evidence before confirmation.",
+    "Stop if the event meaning would imply requirement correctness, architecture approval, merge readiness, or proof that Monitor was reviewed.",
+    "Stop if rollover must guess human task choice or restart the same handed-off digest automatically.",
+    "Stop if the decision requires runtime, schema, workflow, release, consumer, or external-state mutation."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "The user explicitly asked to continue with the next recommended verified-session handoff and rollover contract. The delivered task was paused on 2026-08-05 to remove it from automatic discovery; this is routing hygiene, not a claim of semantic completion, acceptance, merge, or release."
+  }
+}

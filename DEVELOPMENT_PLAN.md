@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Development Plan
 
-Last updated: 2026-08-02
+Last updated: 2026-08-05
 
 ## Purpose
 
@@ -89,10 +89,13 @@ No check result authorizes merge, publish, release, or deploy.
 Status: stable `0.2.1`; future `0.3` behavior is implemented in development
 source but has not passed its release-candidate or NYC migration gates.
 
-Current product priority: productize the now-implemented requirement,
-architecture-context, changed-file, fresh-evidence, completion, event, Monitor,
-and guided-session loop for coding agents. This priority supersedes release
-packaging of the PR-centered 0.3 delivery work. The detailed ordering is in
+Current product priority: converge the now-implemented installation, update,
+onboarding, task admission, architecture context, changed-file, fresh-evidence,
+completion, event, Monitor, and guided-session surfaces into one small guided
+workflow for coding agents. The future 0.3 workflow template now includes the
+completed default-off Development Monitor artifact slice; it remains
+unpublished and unadopted. This priority supersedes release packaging of the
+PR-centered 0.3 delivery work. The detailed ordering is in
 `docs/development-plan.md`.
 
 Implemented foundations:
@@ -438,7 +441,11 @@ Intended responsibilities:
   write confirmation, create-missing-only adoption, and the first repository
   check.
 - `next` maps current findings to the smallest useful next action and explains
-  whether it is deterministic work, incomplete evidence, or a human judgment.
+  whether it is deterministic work, incomplete evidence, a human judgment, or
+  a completed development step. In future-0.3 source it preserves onboarding
+  and repository-FAIL precedence, then routes strict session/event state to a
+  dry-run `govern start`, `govern check`, `govern finish`, or
+  `monitor development` without executing the command.
 
 Interaction contract:
 
@@ -686,13 +693,30 @@ Continue productizing the implemented ADR-0009 loop:
    publish Portfolio evidence by applying the shared reference layout directly
    to authoritative Markdown, rather than raw Markdown, conflicting proxy
    outputs, or project-root-escaping schema links;
-5. wire the static Monitor as an opt-in GitHub Actions artifact only after that
-   observation boundary is testable;
-6. converge installation, update, onboarding, task admission, and Monitor
-   generation on the same small guided workflow without hidden hooks or daemon
-   authority;
-7. run release-candidate review and consumer migration gates before publishing
-   the development-governance 0.3 line.
+5. [Completed development preview] Wire the static Monitor as a default-off
+   GitHub Actions artifact. The future 0.3 managed workflow now requires an
+   explicit manual-dispatch boolean, accepts only an optional validated
+   metadata-only development export plus actor-validated CI events, and uploads
+   only the self-contained HTML read model. Stable workflow bytes, release
+   identity, and consumer files remain unchanged;
+6. [Guided routing and installed rehearsal implemented] Converge installation, update,
+   onboarding, task admission, and Monitor generation on the same small guided
+   workflow without hidden hooks or daemon authority. `agentgov next` now
+   bridges onboarding and deterministic repository failures into strict
+   start/check/finish/Monitor session routing. An exact `0.3.0.dev0` wheel
+   completed the independent zero-task, multiple-task, and full lifecycle
+   rehearsal without `next` changing Git state. A truthful pre-install
+   bootstrap boundary is now decided by ADR-0011: fixed stable installation
+   precedes the CLI, while installed `update --check` remains separate from
+   `next`. Runtime update routing remains blocked until a reviewed stable
+   artifact and non-looping verified-session handoff exist. ADR-0012's
+   event-only, pointer-preserving handoff and separate `--replace-active`
+   rollover are now implemented in development source. The exact `0.3.0rc1`
+   wheel completed verified finish, Monitor, handoff, zero/one/many rollover,
+   and exact `REPLACE` in independent repositories without source-path leakage;
+7. [Release candidate prepared locally] Run the final complete source gates,
+   then publish the reviewed GitHub Pre-release only after authentication.
+   Keep stable promotion and consumer migration as later, separate actions.
 
 The uncoached adoption pilot, Taxi record, 0.3 release packaging, NYC migration,
 and PyPI decision remain open evidence or delivery work. They do not replace

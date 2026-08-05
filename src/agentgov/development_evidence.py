@@ -452,14 +452,12 @@ def _evidence_integrity_errors(
     return tuple(errors)
 
 
-def reconcile_task_completion(
+def _assess_task_completion(
     task_path: Path,
     *,
     repository: Path,
     evidence_path: Path | None = None,
-    actor_class: str = "coding_agent",
-    actor_label: str | None = None,
-) -> CompletionReport:
+) -> tuple[CompletionReport, tuple[str, ...]]:
     root = _safe_repository(repository)
     resolved_task, task = _admitted_task(task_path, root)
     task_digest = canonical_task_digest(task)
@@ -548,19 +546,54 @@ def reconcile_task_completion(
             "authorizes_deployment": False,
         },
     )
+    return provisional, tuple(dict.fromkeys(["completion_reconciliation_requested", *reason_codes]))
+
+
+def inspect_task_completion(
+    task_path: Path,
+    *,
+    repository: Path,
+    evidence_path: Path | None = None,
+) -> CompletionReport:
+    """Re-establish completion evidence freshness without appending an event."""
+
+    report, _reason_codes = _assess_task_completion(
+        task_path,
+        repository=repository,
+        evidence_path=evidence_path,
+    )
+    return report
+
+
+def reconcile_task_completion(
+    task_path: Path,
+    *,
+    repository: Path,
+    evidence_path: Path | None = None,
+    actor_class: str = "coding_agent",
+    actor_label: str | None = None,
+) -> CompletionReport:
+    """Assess completion and append one immutable reconciliation observation."""
+
+    root = _safe_repository(repository)
+    provisional, reason_codes = _assess_task_completion(
+        task_path,
+        repository=root,
+        evidence_path=evidence_path,
+    )
     _, event_ref = append_governance_event(
         root,
         event_type="completion.reconciled",
         actor_class=actor_class,
         actor_label=actor_label,
-        task_id=task_id,
-        task_digest=task_digest,
-        outcome=state,
-        evidence_ref=relative_evidence,
-        reason_codes=tuple(dict.fromkeys(["completion_reconciliation_requested", *reason_codes])),
+        task_id=provisional.task_id,
+        task_digest=provisional.task_digest,
+        outcome=provisional.state,
+        evidence_ref=provisional.evidence_ref,
+        reason_codes=reason_codes,
         metrics={
-            "failures": sum(item.status == "FAIL" for item in findings),
-            "advisories": sum(item.status == "ADVISORY" for item in findings),
+            "failures": sum(item.status == "FAIL" for item in provisional.findings),
+            "advisories": sum(item.status == "ADVISORY" for item in provisional.findings),
         },
     )
     return replace(provisional, event_ref=event_ref)

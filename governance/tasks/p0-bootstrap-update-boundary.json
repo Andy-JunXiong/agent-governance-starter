@@ -1,0 +1,116 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-bootstrap-update-boundary",
+  "title": "Separate pre-install bootstrap from installed update routing",
+  "requirement": {
+    "summary": "Use the exact-wheel guided-next rehearsal to decide where installation and update guidance belong without fabricating a self-installing CLI or an unpublished release.",
+    "source_refs": [
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "docs/experiments/guided-next-installed-rehearsal.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0004-use-isolated-tool-execution-for-onboarding.md",
+      "docs/adr/0005-bound-guided-onboarding-interactions.md",
+      "docs/adr/0010-route-next-through-development-lifecycle.md"
+    ],
+    "rationale": "A CLI cannot inspect the state before it is installed, while update routing cannot be truthful or progress-making without reviewed release metadata and an explicit precedence contract."
+  },
+  "goal": "Record the bootstrap/update ownership boundary, retain the existing read-only installed update check, and define gates that must be met before update availability may enter agentgov next.",
+  "non_goals": [
+    "Do not change next_action.py, update_check.py, CLI arguments, schemas, release metadata, package identity, install behavior, update execution, or repository refresh behavior.",
+    "Do not invent a 0.3 wheel URL, digest, stable manifest, release candidate, package-index entry, or automatic discovery service.",
+    "Do not download, install, upgrade, uninstall, refresh, migrate a consumer, or create or modify a workflow.",
+    "Do not add an acknowledgement file, update event, hook, daemon, background check, notification, or telemetry.",
+    "Do not commit in the AgentGov source repository, push, tag, publish, release, merge, deploy, or mutate an external system.",
+    "Preserve all earlier uncommitted bounded slices and report their combined working-copy scope honestly."
+  ],
+  "scope": {
+    "include_paths": [
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "docs/adr/0004-use-isolated-tool-execution-for-onboarding.md",
+      "docs/adr/0005-bound-guided-onboarding-interactions.md",
+      "docs/adr/0010-route-next-through-development-lifecycle.md",
+      "docs/adr/0011-separate-bootstrap-from-update-routing.md",
+      "docs/consumer-ci.md",
+      "docs/development-log/2026-08-05.md",
+      "docs/development-monitor.md",
+      "docs/development-plan.md",
+      "docs/development-session.md",
+      "docs/experiments/guided-next-installed-rehearsal.md",
+      "docs/quickstart.html",
+      "governance/tasks/p0-bootstrap-update-boundary.json",
+      "governance/tasks/p0-guided-next-development-routing.json",
+      "governance/tasks/p0-guided-next-installed-rehearsal.json",
+      "governance/tasks/p0-opt-in-monitor-artifact.json",
+      "src/agentgov/consumer_ci.py",
+      "src/agentgov/next_action.py",
+      "tests/test_consumer_ci.py",
+      "tests/test_next_action.py",
+      "tests/test_user_documentation.py"
+    ],
+    "exclude_paths": [
+      ".github/workflows",
+      "release",
+      "schemas",
+      "src/agentgov/cli.py",
+      "src/agentgov/update_check.py",
+      "tests/test_update_check.py"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0004-use-isolated-tool-execution-for-onboarding.md",
+    "docs/adr/0005-bound-guided-onboarding-interactions.md",
+    "docs/adr/0010-route-next-through-development-lifecycle.md",
+    "docs/adr/0011-separate-bootstrap-from-update-routing.md",
+    "docs/adr/INVARIANTS.md"
+  ],
+  "acceptance_signals": [
+    "The decision states that pre-install bootstrap is owned by a reviewed public installation surface because agentgov next cannot run before AgentGov exists.",
+    "Stable installation remains an isolated pipx command pinned to a fixed release wheel; development-source commands remain explicitly separate and are not presented as a stable release.",
+    "Installed update inspection remains the existing read-only agentgov update --check surface and grants no install or repository-write authority.",
+    "The current development manifest with channel development and artifact null cannot produce or justify a tool-update action.",
+    "Future next integration is blocked until a reviewed stable manifest supplies a newer compatible version, fixed-tag HTTPS wheel URL and SHA-256, a no-active-session rule, deterministic precedence, and a non-looping progress contract.",
+    "Current next and update code, schemas, release metadata, CLI behavior, and stable public commands remain unchanged.",
+    "Documentation tests protect the bootstrap ownership, no-fabricated-release, read-only update check, no-active-session, and no-execution boundaries.",
+    "The full source suite and repository governance checks pass."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_user_documentation tests.test_next_action tests.test_update_check -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check repository ."
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "low",
+    "items": [
+      "Documentation could imply that next can observe a pre-install state or that an unpublished 0.3 artifact exists.",
+      "A future update recommendation could displace an active task or loop forever if its read-only observation cannot change state.",
+      "The stable install path and development-source identity could be conflated."
+    ]
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "owner": "Human product owner",
+    "evidence_refs": []
+  },
+  "stop_conditions": [
+    "Stop if the decision requires changing runtime behavior, release metadata, a workflow, or an external installation surface.",
+    "Stop if no trustworthy non-looping state transition can be specified for a future next update recommendation.",
+    "Stop if any wording implies that development source 0.3.0.dev0 is a published installable release.",
+    "Stop if update routing would interrupt an active governed development session or weaken existing onboarding, repository-failure, and human-confirmation boundaries."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "The user explicitly authorized the recommended bootstrap/update boundary decision after the installed guided-next rehearsal. The delivered task was paused on 2026-08-05 to remove it from automatic discovery; this is routing hygiene, not a claim of semantic completion, acceptance, merge, or release."
+  }
+}

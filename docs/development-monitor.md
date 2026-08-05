@@ -10,10 +10,12 @@ future 0.3 line. It consumes the privacy-bounded events created by
 - Activity Timeline;
 - Task Detail.
 
-It is not part of stable 0.2.1. The later explicit redacted-export slice now
-lets it read one reviewed development export or combine that export with a
-CI-only replay store. It still does not include central telemetry, GitHub
-Pages, automatic Actions upload, approval controls, or governance-file edits.
+It is not part of stable 0.2.1. The explicit redacted-export slice lets it read
+one reviewed development export or combine that export with a CI-only replay
+store. The future 0.3 managed workflow template now includes a default-off,
+manual-dispatch artifact path. It still does not include central telemetry,
+GitHub Pages, automatic local-state transfer, approval controls, or
+governance-file edits.
 
 Generate the default local dashboard:
 
@@ -50,15 +52,26 @@ Supported sources are:
 - `combined`: one explicit development export plus one CI-only replay event
   directory.
 
-For a CI artifact:
+To render the CI-only form directly from development source:
 
 ```powershell
 python -m agentgov monitor development . `
   --scope ci_only --output .agentgov/dashboard.html
 ```
 
-The resulting file can be uploaded with the repository's normal artifact
-step. AgentGov does not add or change that workflow in this phase.
+The future 0.3 managed governance workflow exposes
+`publish_development_monitor`, a boolean manual-dispatch input whose default is
+`false`. When an owner explicitly enables it, the workflow uploads only
+`agentgov-development-monitor.html`. An optional repository-relative
+`development_export` input selects a validated metadata-only export. With no
+export the scope is `ci_only`; with an export it is `exported_development`, or
+`combined` only when actor-validated CI event files are also present.
+
+The template never uploads the development export, raw events, or the
+`.agentgov/` directory. AgentGov revalidates the export contract and rejects
+human or coding-agent actors from the CI event input. The feature exists only
+in the future 0.3 source template until a separate release and consumer
+migration are approved.
 
 Create and inspect a development export as documented in
 [Redacted development-event export](development-event-export.md), then pass its
@@ -80,8 +93,9 @@ Within the displayed observation scope:
   which actor class invoked it, which governance paths start selected, recorded
   reason codes, observed counts, and outcome. Selection does not prove agent
   consumption.
-- Overview counts tasks, starts, checks, validations, completions, fresh/stale results,
-  and event-reported findings without computing a score or percentage.
+- Overview counts tasks, starts, checks, validations, completions, handoffs,
+  fresh/stale results, and event-reported findings without computing a score
+  or percentage.
 - Task Detail groups the visible sequence and shows the latest recorded event
   and completion outcome.
 
@@ -89,6 +103,13 @@ Passing or verified outcomes are observations, not approval or causal benefit.
 The current events do not record explicit human continue/narrow/pause/override
 decisions, so handling and resolution remain `unknown`. A later passing event
 is not labeled as proof that AgentGov caused or resolved an earlier problem.
+
+Development source implements ADR-0012's separate `session.handed_off` event.
+Monitor schema 1.3 counts and displays handoff as routing state while retaining
+`verified` as the distinct latest completion state. Monitor generation itself
+does not create the event or claim that a human read the output. For the exact
+fresh verified local session, the CLI may print a `govern handoff --dry-run`
+command only as guidance; that message grants no write or approval authority.
 
 ## Observed, inferred, and unknown
 
