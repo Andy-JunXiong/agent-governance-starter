@@ -5,7 +5,7 @@ from published and consumer-adopted behavior.
 
 ## Current checkpoint
 
-- Published stable: AgentGov 0.2.1; prepared candidate source: 0.3.0rc1.
+- Published stable: AgentGov 0.2.1; published Pre-release: v0.3.0rc1.
 - NYC consumer: managed 0.2.1 workflow.
 - Implemented locally for the future 0.3 line: persona-aware PR and owner UI,
   trusted-main benefit monitor, scheduled baseline refresh, redacted portable
@@ -68,11 +68,13 @@ from published and consumer-adopted behavior.
   fresh verified evidence; it retains the pointer and all prior artifacts, and
   leaves the next task to a separate reviewed `--replace-active` start. This is
   a routing transition, not approval or semantic completion.
-- The source and bundled compatibility metadata now identify as 0.3.0rc1,
-  distinct from published stable 0.2.1. Not yet completed: GitHub candidate
-  publication, NYC 0.3 migration, or evidence from
-  real NYC runs. Those are supporting delivery tasks rather than the next
-  product-defining slice.
+- The source and bundled compatibility metadata identify as 0.3.0rc1,
+  distinct from published stable 0.2.1. The GitHub candidate is published;
+  its immutable manifest conservatively underclaims compatibility because the
+  tag workflow omitted the reviewed metadata input. The source workflow is
+  corrected for later candidates. Not yet completed: NYC 0.3 migration or
+  evidence from real NYC runs. Those are supporting delivery tasks rather
+  than the next product-defining slice.
 - Public entry points now distinguish stable 0.2.1 from candidate source
   0.3.0rc1, use one isolated pipx user path, keep the AgentGov product page
   primary, and present AI Radar only as a bounded origin reference after the
@@ -92,11 +94,12 @@ handoff, zero/one/many rollover selection, and exact `REPLACE`. Seventeen
 delivered historical tasks are paused for routing hygiene, leaving one admitted
 RC closeout task.
 
-Next, complete the final source gates and publish only the reviewed GitHub
-Pre-release after authentication succeeds. Do not promote stable 0.3.0, migrate
-a consumer, add automatic local-state upload, exception records, action-loop
-self-reporting, merge authority, or deployment in that action. Stable update
-routing still requires a later fixed-tag stable wheel and digest.
+Next, review Draft PR #9 after its Windows path assertion and future RC manifest
+generation are corrected. Do not rewrite `v0.3.0rc1`, publish another candidate,
+promote stable 0.3.0, migrate a consumer, add automatic local-state upload,
+exception records, action-loop self-reporting, merge authority, or deployment
+without a separate decision. Stable update routing still requires a later
+fixed-tag stable wheel and digest.
 
 ## Ordered work
 

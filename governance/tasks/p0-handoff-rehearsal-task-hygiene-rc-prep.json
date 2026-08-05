@@ -30,6 +30,7 @@
   ],
   "scope": {
     "include_paths": [
+      ".github/workflows",
       "DEVELOPMENT_PLAN.md",
       "README.md",
       "STATUS.md",
@@ -41,10 +42,7 @@
       "src/agentgov",
       "tests"
     ],
-    "exclude_paths": [
-      ".github/workflows",
-      "release/fixtures"
-    ]
+    "exclude_paths": ["release/fixtures"]
   },
   "architecture_refs": [
     "docs/adr/0009-govern-coding-agents-during-development.md",
@@ -56,13 +54,14 @@
     "The rehearsal records wheel identity, commands, outcomes, limitations, and unchanged authority boundaries.",
     "All seventeen previously admitted delivered task contracts are paused with an explicit routing-hygiene rationale that does not claim semantic completion.",
     "The 0.3.0rc1 package identity, bundled compatibility metadata, and release notes agree, while stable promotion remains out of scope.",
+    "Future release-candidate manifests inherit the reviewed supported-from versions from release/current.json instead of silently falling back to 0.1.0.",
     "Focused tests, the complete suite, task and scope checks, repository governance, release-manifest validation, wheel inspection, and diff checks pass before any publication step.",
     "Commit, push, RC tag, and GitHub Pre-release remain distinct observable actions and stop at any authentication or gate failure."
   ],
   "validation_commands": [
     "python -m unittest discover -s tests -v",
     "python -m agentgov check task governance/tasks/p0-handoff-rehearsal-task-hygiene-rc-prep.json",
-    "python -m agentgov govern check governance/tasks/p0-handoff-rehearsal-task-hygiene-rc-prep.json .",
+    "python -m agentgov govern check governance/tasks/p0-handoff-rehearsal-task-hygiene-rc-prep.json --repository .",
     "python -m agentgov check repository ."
   ],
   "owner": "Human product owner",

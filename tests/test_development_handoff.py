@@ -271,8 +271,8 @@ class DevelopmentHandoffTests(unittest.TestCase):
                     self.assertIn('"<TASK_TITLE>"', action.command or "")
                     self.assertIn('"<PATH>"', action.command or "")
                 elif task_count == 2:
-                    self.assertIn(str(tasks[1]), action.command or "")
-                    self.assertNotIn(str(tasks[0]), action.command or "")
+                    self.assertIn(str(tasks[1].resolve()), action.command or "")
+                    self.assertNotIn(str(tasks[0].resolve()), action.command or "")
                 else:
                     self.assertIn('"<TASK_JSON>"', action.command or "")
                     self.assertNotIn(str(tasks[1]), action.command or "")

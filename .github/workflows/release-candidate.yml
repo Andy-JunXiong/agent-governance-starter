@@ -51,7 +51,8 @@ jobs:
             dist/agent_governance_starter-"$version"-py3-none-any.whl \
             dist/release-manifest.json \
             --version "$version" \
-            --channel release-candidate
+            --channel release-candidate \
+            --metadata release/current.json
           PYTHONPATH=src python -m agentgov check release-manifest \
             dist/release-manifest.json
 

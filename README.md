@@ -524,14 +524,16 @@ and deployment remain separate human-authorized actions.
 
 ## Project status and non-goals
 
-**Status: published stable `0.2.1`; candidate source `0.3.0rc1`.** The
+**Status: published stable `0.2.1`; published Pre-release `v0.3.0rc1`.** The
 stable release is suitable for evaluation and repository-level pilots. The
 development source adds a two-workflow proposal boundary, compact/standard
 development tasks, read-only task-specific governance context, and a
 default-off Development Monitor artifact path in the future 0.3 workflow
-template. This source is prepared for candidate review but is not yet a
-published candidate or adopted consumer
-workflow. AgentGov is not
+template. The candidate is published for review but is not promoted to stable
+or adopted by a consumer workflow. Its published manifest conservatively lists
+only `0.1.0` in `supported_from`; the source workflow now passes the reviewed
+metadata so a later candidate can publish the complete declared compatibility
+set without rewriting `v0.3.0rc1`. AgentGov is not
 a compliance certification, runtime
 security boundary, or authorization for autonomous merge, publication, or
 deployment.

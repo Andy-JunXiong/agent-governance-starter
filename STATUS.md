@@ -4,7 +4,7 @@ Last verified: 2026-08-05
 
 ## Current state
 
-- Version: published stable `0.2.1`; prepared candidate source `0.3.0rc1`.
+- Version: published stable `0.2.1`; published Pre-release `v0.3.0rc1`.
 - Maturity: experimental and suitable for repository-level evaluation.
 - Canonical capability layout: `governance/`.
 - Legacy `prompt-governance/` input remains a bounded, read-only compatibility
@@ -70,11 +70,13 @@ Last verified: 2026-08-05
   no longer compete in automatic discovery. Their rationales explicitly state
   that this is routing hygiene, not semantic completion or release evidence;
   one admitted RC closeout task remains discoverable.
-- Source, bundled metadata, and release notes now agree on `0.3.0rc1`. Local
-  wheel and immutable release-manifest gates passed. GitHub authentication and
-  the full final gate set still stand between this prepared source and a
-  published Pre-release; stable update routing and consumer migration remain
-  later work.
+- Source, bundled metadata, and release notes agree on `0.3.0rc1`. The tag and
+  GitHub Pre-release were published from commit `66efecc`; the release workflow
+  and its artifact-bound immutable manifest passed. The public rc1 manifest
+  conservatively lists only `0.1.0` in `supported_from` because the candidate
+  workflow omitted the reviewed metadata input. The source workflow now passes
+  `release/current.json` for later candidates; immutable `v0.3.0rc1` is not
+  rewritten. Stable promotion and consumer migration remain later work.
 - Bootstrap/update documentation, `next`, and updater validation passed 56
   focused tests. The final full source suite passed 528 tests with one
   platform-limited skip.

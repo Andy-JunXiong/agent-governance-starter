@@ -71,6 +71,7 @@ class ReleaseCandidateWorkflowTests(unittest.TestCase):
         self.assertIn("python -m build --wheel", text)
         self.assertIn("scripts/build_release_manifest.py", text)
         self.assertIn("--channel release-candidate", text)
+        self.assertIn("--metadata release/current.json", text)
         self.assertIn("check release-manifest", text)
         self.assertIn("gh release create", text)
         self.assertIn("dist/agent_governance_starter-*.whl", text)
