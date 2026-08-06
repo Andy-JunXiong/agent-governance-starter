@@ -23,10 +23,7 @@ from agentgov.task_contract import (
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_PATH = ROOT / "schemas/development-task.schema.json"
-CURRENT_TASK = (
-    ROOT
-    / "governance/tasks/p0-handoff-rehearsal-task-hygiene-rc-prep.json"
-)
+CURRENT_TASK = ROOT / "governance/tasks/p0-native-mcp-alignment-self-review-adapter.json"
 VALID_DRAFT = ROOT / "governance/fixtures/tasks/valid-supporting-draft.json"
 INVALID_ADMISSION = (
     ROOT / "governance/fixtures/tasks/invalid-admitted-pending-approval.json"
@@ -80,10 +77,10 @@ class DevelopmentTaskContractTests(unittest.TestCase):
         self.assertEqual(document["objective"]["role"], "core")
         self.assertEqual(
             document["task_id"],
-            "p0-handoff-rehearsal-task-hygiene-rc-prep",
+            "p0-native-mcp-alignment-self-review-adapter",
         )
         self.assertIn(
-            "docs/development-log/2026-08-05.md",
+            "docs/product-requirements-automatic-governance.md",
             document["requirement"]["source_refs"],
         )
 

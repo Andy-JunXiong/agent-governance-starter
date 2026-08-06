@@ -1,0 +1,27 @@
+{
+  "contract": "agentgov.work-request",
+  "schema_version": "1.0",
+  "request_id": "wrq-00000000000000000000000000000000",
+  "source": {"adapter_id": "example-coding-agent", "actor_class": "coding_agent"},
+  "request_class": "question",
+  "active_task": null,
+  "proposal": null,
+  "characteristics": {
+    "ambiguous_intent": false,
+    "unknown_scope": false,
+    "architecture_change": false,
+    "dependency_change": false,
+    "authentication_or_authorization_change": false,
+    "security_boundary_change": false,
+    "data_schema_change": false,
+    "data_migration": false,
+    "destructive_operation": false,
+    "external_write": false,
+    "infrastructure_change": false,
+    "deployment_change": false,
+    "public_api_change": false,
+    "governance_policy_change": false
+  },
+  "content_boundary": {"contains_raw_prompt": false, "contains_transcript": false, "contains_source_content": false, "contains_credentials": false, "contains_absolute_paths": false},
+  "authority_boundary": {"admits_task": false, "authorizes_repository_write": false, "starts_session": false, "authorizes_scope_expansion": false, "authorizes_exception": false, "authorizes_git_operations": false, "authorizes_deployment": false, "authorizes_release": false}
+}

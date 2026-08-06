@@ -1,0 +1,108 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-semantic-review-provider-blueprint",
+  "title": "Add semantic review providers and risk routing to the blueprint",
+  "requirement": {
+    "summary": "Record the approved hybrid semantic-governance architecture: zero-configuration reuse of the current Coding Agent for medium-risk isolated self-review, optional user- or organization-provided independent Reviewer LLM for high-risk cross-review, and explicit human review or disclosed downgrade when an independent Reviewer is unavailable.",
+    "source_refs": [
+      "docs/proposals/2026-08-02-agentgov-product-and-architecture-plan.zh-CN.md",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+      "docs/clarification-dialogue.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md"
+    ],
+    "rationale": "A real semantic materializer cannot be designed safely until the product states who supplies inference, when a second reviewer is required, how missing capability is disclosed, and why no LLM gains governance authority."
+  },
+  "goal": "Update the authoritative project blueprint and affected product, architecture, roadmap, status, public, and protecting-test surfaces with a vendor-neutral Semantic Review Provider model, risk-tier routing, zero-configuration default, optional independent review, credential and privacy ownership, assurance disclosure, and human-only final authority.",
+  "non_goals": [
+    "Do not implement a provider interface, model client, sub-agent, router, configuration file, secret store, hosted service, or external LLM call.",
+    "Do not choose, endorse, bundle, or require one Coding Agent, model, vendor, cloud, gateway, or paid account.",
+    "Do not require a second model for installation, ordinary work, deterministic checks, or medium-risk self-review.",
+    "Do not silently label same-agent or same-model review as independent cross-review.",
+    "Do not let any model admit tasks, approve exceptions, change requirements or ADRs, authorize code or scope, or perform Git, publication, release, deployment, production, or external writes.",
+    "Do not change stable 0.2.1, immutable v0.3.0rc1, release metadata, workflows, consumer repositories, or external systems."
+  ],
+  "scope": {
+    "include_paths": [
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "agent-skills",
+      "docs",
+      "governance/tasks",
+      "schemas",
+      "src/agentgov",
+      "templates",
+      "tests"
+    ],
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      ".github/workflows",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/proposals/2026-08-02-agentgov-product-and-architecture-plan.zh-CN.md",
+    "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/product-requirements-automatic-governance.md"
+  ],
+  "acceptance_signals": [
+    "The project blueprint states that AgentGov Core remains model-free and owns deterministic checks, risk routing, context boundaries, assurance disclosure, state, and authority rather than semantic inference.",
+    "The default path requires no new user model configuration: medium-risk semantic review reuses the active Coding Agent's existing LLM entitlement in a separate review pass or isolated context and is labeled self-review rather than independent evidence.",
+    "High-risk review can use an optional independent Reviewer supplied once at user or organization level through a future vendor-neutral Provider boundary; separate context is mandatory and different model or provider increases disclosed independence.",
+    "When independent review is required but unavailable, AgentGov must proactively offer human review, explicit lower-assurance same-agent review, or provider setup and must never silently downgrade or block ordinary installation.",
+    "The blueprint assigns credentials, inference cost, retention, and provider policy to the user, organization, or optional future hosted service; secrets and raw conversation do not enter repository governance records or AgentGov Core.",
+    "All LLM findings remain advisory, evidence-linked, source- and independence-labeled, and unable to select the final direction or mutate project or external state.",
+    "The blueprint explains that medium-risk self-review is a single-agent multi-role shape unless a separate agent context is used, while high-risk independent review is a multi-agent shape orchestrated by AgentGov.",
+    "The next implementation dependency is explicitly a provider/risk-routing ADR and contract slice before any production materializer or vendor Adapter integration.",
+    "Focused documentation, task, scope, repository, compile, and diff validation pass."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_portfolio_docs tests.test_user_documentation tests.test_public_documentation_freshness tests.test_task_contract -v",
+    "python -m agentgov check task governance/tasks/p0-semantic-review-provider-blueprint.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-semantic-review-provider-blueprint.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "high",
+    "items": [
+      "A zero-configuration promise could be misunderstood as independent review when the same Coding Agent is checking its own work.",
+      "A required second model could increase cost, latency, configuration burden, data exposure, and vendor coupling.",
+      "Provider or model identity could be mistaken for decision authority or objective correctness.",
+      "An unavailable Reviewer could silently lower assurance unless the downgrade and human alternatives are explicit."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": [
+      "docs/development-log/2026-08-06.md"
+    ]
+  },
+  "stop_conditions": [
+    "Stop if the blueprint makes installation or ordinary development depend on a newly configured second LLM.",
+    "Stop if same-agent review can be presented as independent without disclosing its assurance level.",
+    "Stop if credentials, raw chat, source content, or provider secrets would enter Core or repository governance records.",
+    "Stop if an LLM finding becomes deterministic proof or grants project or external authority.",
+    "Stop before implementing a provider, calling a model, installing an integration, or writing outside documentation, task, and protecting-test surfaces.",
+    "Stop before any commit, push, publication, release, deployment, consumer mutation, or external-system write."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "The user reviewed the completed Revision 4 blueprint and explicitly authorized the recommended Provider and risk-routing contract slice on 2026-08-06. This task is paused for routing hygiene only; it does not claim merge, publication, or release."
+  }
+}

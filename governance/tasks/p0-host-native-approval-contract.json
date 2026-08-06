@@ -1,0 +1,101 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-host-native-approval-contract",
+  "title": "Define host-neutral approval interactions with a Codex binding",
+  "requirement": {
+    "summary": "Create a vendor-neutral host interaction contract for human governance decisions and prove its first honest binding through the capabilities Codex Hooks actually expose.",
+    "source_refs": [
+      "docs/development-automation-contracts.md",
+      "docs/development-plan.md",
+      "docs/product-requirements-automatic-governance.md",
+      "STATUS.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md"
+    ],
+    "rationale": "Task, scope, and completion cards exist, but hosts need a common interaction request and an explicit capability boundary so AgentGov does not become Codex-specific or pretend unsupported controls exist."
+  },
+  "goal": "Add a strict host-neutral interaction request and capability contract, attach it to bounded cards, and implement a Codex binding that preserves native permission prompts while honestly reporting unsupported custom governance controls.",
+  "non_goals": [
+    "Do not add Codex fields, tool names, permission modes, or hook payloads to AgentGov Core contracts.",
+    "Do not invent arbitrary Codex task, scope, or completion buttons that the official Hook surface does not support.",
+    "Do not parse prompt or assistant text as a human governance decision.",
+    "Do not let PermissionRequest automatically allow or deny tools, or treat Codex tool permission as task admission, scope expansion, exception, or semantic completion approval.",
+    "Do not implement a second host Adapter, natural-language task drafting/admission, a daemon, plugin, App Server dependency, network request, or external write.",
+    "Do not commit, push, merge, publish, release, deploy, install Hooks, or mutate a consumer repository."
+  ],
+  "scope": {
+    "include_paths": [
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "docs",
+      "governance/tasks",
+      "schemas",
+      "src/agentgov",
+      "templates",
+      "tests"
+    ],
+    "exclude_paths": [
+      ".codex",
+      ".github/workflows",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/development-automation-contracts.md"
+  ],
+  "acceptance_signals": [
+    "A strict AgentGov Core contract represents a human interaction request, offered decisions, host delivery mode, decision-recording mode, and denied consequential authority without vendor fields.",
+    "Missing task admission, material scope resolution, and review-ready completion produce deterministic interaction requests while non-decision cards do not invent approvals.",
+    "A host capability contract makes native, context-only, and unsupported behavior explicit so another Adapter can bind without changing Core.",
+    "The Codex binding preserves the normal PermissionRequest prompt without returning allow or deny, and states that tool permission is not an AgentGov governance decision.",
+    "Codex task, scope, and completion interactions remain context-only with unavailable native decision recording until a real supported surface exists.",
+    "The known Codex custom-control limitation is recorded as product drift rather than reported as completed functionality.",
+    "Existing JSONL, single-cycle, Hook, card, coordinator, and headless fallback behavior remains compatible.",
+    "Focused tests, the complete Python 3.11 suite, task/scope/repository checks, schema parsing, packaging assertions, and diff checks pass."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_host_interaction tests.test_codex_hooks tests.test_coding_agent_transport tests.test_foreground_coordinator tests.test_task_contract -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-host-native-approval-contract.json --repository .",
+    "python -m agentgov govern check governance/tasks/p0-host-native-approval-contract.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "medium",
+    "items": [
+      "A vendor-specific field in Core would couple every future Adapter to Codex.",
+      "A displayed action could be mistaken for a recorded human decision or consequential authority.",
+      "Codex PermissionRequest can bypass the normal prompt if a hook returns allow, so the Adapter must decline to decide.",
+      "A capability claim could overstate unsupported arbitrary buttons or decision callbacks."
+    ]
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "owner": "Human product owner",
+    "evidence_refs": []
+  },
+  "stop_conditions": [
+    "Stop if the Core contract requires a Codex-specific field or raw prompt, tool, transcript, assistant-message, model, credential, or absolute-path data.",
+    "Stop if Codex custom task/scope/completion controls must be claimed despite lacking an official supported Hook surface.",
+    "Stop if a Hook would silently allow or deny a native permission request or conflate it with AgentGov approval.",
+    "Stop before any Git write, Hook installation, release, consumer mutation, or external-system write."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "The user reviewed this completed requirement and explicitly selected the next vendor-neutral task proposal and human admission slice on 2026-08-06."
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/alignment-context-v1.0.json",
+  "title": "AgentGov Alignment Context",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "context_id", "source", "center", "drift", "assumptions", "unknowns", "candidate_resolutions", "recommended_resolution_id", "content_boundary", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.alignment-context"},
+    "schema_version": {"const": "1.0"},
+    "context_id": {"type": "string", "pattern": "^acx-[0-9a-f]{32}$"},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adapter_id", "actor_class", "subject_type", "subject_id"],
+      "properties": {
+        "adapter_id": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$"},
+        "actor_class": {"const": "coding_agent"},
+        "subject_type": {"enum": ["work_request", "active_task", "architecture"]},
+        "subject_id": {"type": "string", "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"}
+      }
+    },
+    "center": {"$ref": "#/$defs/center"},
+    "drift": {"$ref": "#/$defs/drift"},
+    "assumptions": {"$ref": "#/$defs/textList"},
+    "unknowns": {"type": "array", "maxItems": 100, "items": {"$ref": "#/$defs/question"}},
+    "candidate_resolutions": {"type": "array", "maxItems": 5, "items": {"$ref": "#/$defs/resolution"}},
+    "recommended_resolution_id": {"anyOf": [{"$ref": "#/$defs/resolutionId"}, {"type": "null"}]},
+    "content_boundary": {"$ref": "#/$defs/contentBoundary"},
+    "authority_boundary": {"$ref": "#/$defs/authority"}
+  },
+  "$defs": {
+    "textList": {"type": "array", "maxItems": 50, "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 400}},
+    "center": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "why_now", "success_signals", "constraints", "non_goals"],
+      "properties": {
+        "outcome": {"type": "string", "minLength": 1, "maxLength": 800},
+        "why_now": {"type": "string", "minLength": 1, "maxLength": 800},
+        "success_signals": {"allOf": [{"$ref": "#/$defs/textList"}, {"minItems": 1}]},
+        "constraints": {"$ref": "#/$defs/textList"},
+        "non_goals": {"$ref": "#/$defs/textList"}
+      }
+    },
+    "centerPatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "why_now", "success_signals", "constraints", "non_goals"],
+      "properties": {
+        "outcome": {"anyOf": [{"type": "string", "minLength": 1, "maxLength": 800}, {"type": "null"}]},
+        "why_now": {"anyOf": [{"type": "string", "minLength": 1, "maxLength": 800}, {"type": "null"}]},
+        "success_signals": {"anyOf": [{"$ref": "#/$defs/textList"}, {"type": "null"}]},
+        "constraints": {"anyOf": [{"$ref": "#/$defs/textList"}, {"type": "null"}]},
+        "non_goals": {"anyOf": [{"$ref": "#/$defs/textList"}, {"type": "null"}]}
+      }
+    },
+    "drift": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "semantics", "observation", "evidence_refs", "impact"],
+      "properties": {
+        "kind": {"enum": ["business", "requirement", "architecture", "scope", "implementation"]},
+        "semantics": {"enum": ["advisory", "deterministic"]},
+        "observation": {"type": "string", "minLength": 1, "maxLength": 800},
+        "evidence_refs": {"$ref": "#/$defs/textList"},
+        "impact": {"type": "string", "minLength": 1, "maxLength": 800}
+      }
+    },
+    "question": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["question_id", "question", "why_matters", "material", "priority"],
+      "properties": {
+        "question_id": {"type": "string", "pattern": "^qst-[0-9a-f]{16}$"},
+        "question": {"type": "string", "minLength": 1, "maxLength": 800},
+        "why_matters": {"type": "string", "minLength": 1, "maxLength": 800},
+        "material": {"type": "boolean"},
+        "priority": {"type": "integer", "minimum": 1, "maximum": 5}
+      }
+    },
+    "resolutionId": {"enum": ["return_to_center", "adopt_new_center", "split_new_requirement", "continue_exploration", "stop"]},
+    "resolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "effect", "center_patch"],
+      "properties": {
+        "id": {"$ref": "#/$defs/resolutionId"},
+        "label": {"type": "string", "minLength": 1, "maxLength": 160},
+        "effect": {"type": "string", "minLength": 1, "maxLength": 800},
+        "center_patch": {"$ref": "#/$defs/centerPatch"}
+      }
+    },
+    "contentBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contains_raw_prompt", "contains_raw_answer", "contains_transcript", "contains_assistant_response", "contains_source_content", "contains_credentials", "contains_absolute_paths"],
+      "properties": {
+        "contains_raw_prompt": {"const": false},
+        "contains_raw_answer": {"const": false},
+        "contains_transcript": {"const": false},
+        "contains_assistant_response": {"const": false},
+        "contains_source_content": {"const": false},
+        "contains_credentials": {"const": false},
+        "contains_absolute_paths": {"const": false}
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["changes_center", "resolves_drift", "admits_task", "starts_session", "authorizes_code_change", "authorizes_scope_expansion", "authorizes_exception", "authorizes_git_operations", "authorizes_deployment", "authorizes_release"],
+      "properties": {
+        "changes_center": {"const": false},
+        "resolves_drift": {"const": false},
+        "admits_task": {"const": false},
+        "starts_session": {"const": false},
+        "authorizes_code_change": {"const": false},
+        "authorizes_scope_expansion": {"const": false},
+        "authorizes_exception": {"const": false},
+        "authorizes_git_operations": {"const": false},
+        "authorizes_deployment": {"const": false},
+        "authorizes_release": {"const": false}
+      }
+    }
+  }
+}

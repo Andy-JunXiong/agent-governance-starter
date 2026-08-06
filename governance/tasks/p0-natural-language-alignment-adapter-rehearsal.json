@@ -1,0 +1,107 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-natural-language-alignment-adapter-rehearsal",
+  "title": "Rehearse natural-language alignment through a host Adapter",
+  "requirement": {
+    "summary": "Add a vendor-neutral reference Adapter journey in which a user speaks naturally, a host-owned semantic materializer creates strict ephemeral alignment records, AgentGov asks exactly one useful question at a time, and the host records the final single-select without requiring user-authored JSON or internal commands.",
+    "source_refs": [
+      "docs/clarification-dialogue.md",
+      "docs/development-automation-contracts.md",
+      "docs/product-requirements-automatic-governance.md",
+      "STATUS.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md"
+    ],
+    "rationale": "The strict Core transport is not yet the promised low-friction user experience. A small end-to-end host-side slice must prove that ordinary conversation can drive the protocol without moving raw chat into Core or making the user author governance records."
+  },
+  "goal": "Add a foreground reference Alignment Adapter API with a replaceable host semantic materializer, natural-language request and answer methods, host-owned final selection recording, a privacy-safe journey trace, and explicit interaction-burden metrics, then exercise the complete flow against the existing in-memory Core session.",
+  "non_goals": [
+    "Do not implement semantic inference inside AgentGov Core or claim deterministic understanding of arbitrary natural-language intent.",
+    "Do not bundle or call a model, retain raw request or answer text, store transcripts, or persist dialogue across process restarts.",
+    "Do not add a vendor-specific Adapter, daemon, dashboard, production UI, authenticated callback, or external integration.",
+    "Do not require the human to author JSON, contract IDs, digests, timestamps, actor fields, or internal CLI commands.",
+    "Do not automatically change requirements, architecture, tasks, sessions, code scope, Git, deployment, publication, or release state.",
+    "Do not change stable 0.2.1, immutable v0.3.0rc1, release metadata, workflows, consumer repositories, or external systems."
+  ],
+  "scope": {
+    "include_paths": [
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "agent-skills",
+      "docs",
+      "governance/tasks",
+      "schemas",
+      "src/agentgov",
+      "templates",
+      "tests"
+    ],
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      ".github/workflows",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/development-automation-contracts.md",
+    "docs/clarification-dialogue.md"
+  ],
+  "acceptance_signals": [
+    "A vendor-neutral host materializer boundary accepts raw natural-language request or answer text and returns only an existing strict normalized alignment-context or clarification-update record; Core never receives the raw text.",
+    "The reference Adapter starts from one natural-language request, returns the exact one-question Core prompt, accepts a natural-language answer, and returns either the next one-question prompt or the existing stable final single-select.",
+    "The host records a selected option through the existing human-decision result contract without asking the user to construct JSON, IDs, digests, timestamps, actor metadata, or internal commands.",
+    "A privacy-safe journey result exposes normalized Core responses and interaction-burden metrics while retaining no raw request, raw answer, transcript, source content, credential, model identity, or absolute host path.",
+    "Invalid materializer output, stale state, premature answer or decision, non-offered option, and raw-content declarations fail before the Adapter advances its Core session or journey metrics.",
+    "A complete independent test rehearsal proves one natural request, one natural clarification answer, one single-select decision, zero user-authored structured records, one governance decision episode, and no repository or external mutation.",
+    "Existing alignment and lifecycle transport behavior remains compatible, and focused/full tests, current-task, scope, repository, schema, compile, and diff validation pass."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_reference_alignment_adapter tests.test_alignment_transport tests.test_clarification_dialogue tests.test_human_decision tests.test_task_contract -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-natural-language-alignment-adapter-rehearsal.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-natural-language-alignment-adapter-rehearsal.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "high",
+    "items": [
+      "A host semantic materializer can still misunderstand or bias the user's center, drift, normalized answer, candidate choices, or recommendation even when Core validates structure correctly.",
+      "An Adapter could accidentally retain or forward raw conversation while presenting the journey as privacy-safe.",
+      "A scripted test could be mistaken for production semantic inference unless the replaceable materializer and current capability boundary are explicit.",
+      "Friction metrics could encourage premature decisions unless clarification answers remain separate from governance decision episodes."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": [
+      "docs/development-log/2026-08-06.md"
+    ]
+  },
+  "stop_conditions": [
+    "Stop if the flow requires Core to receive or retain raw natural language, transcript, source content, credential, model identity, or absolute host path.",
+    "Stop if arbitrary semantic inference would have to be falsely represented as deterministic AgentGov behavior.",
+    "Stop if the Coding Agent or Adapter can select the final human direction or impersonate a human clarification answer.",
+    "Stop if invalid materializer output partially advances Core state or interaction metrics.",
+    "Stop if the journey mutates project, task, architecture, session, scope, code, Git, deployment, publication, release, or external state.",
+    "Stop before any Git write, Hook installation, release, consumer mutation, deployment, or external-system write."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "The user reviewed the delivered natural-language Adapter rehearsal and explicitly approved documenting the next semantic-review compute and risk-routing architecture on 2026-08-06. This task is paused for routing hygiene only; it does not claim merge, publication, or release."
+  }
+}

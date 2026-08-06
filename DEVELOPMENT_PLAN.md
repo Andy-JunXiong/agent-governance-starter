@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Development Plan
 
-Last updated: 2026-08-05
+Last updated: 2026-08-06
 
 ## Purpose
 
@@ -93,9 +93,39 @@ projection, vendor-neutral adapter trigger envelope, and Monitor 1.4 Live
 Sessions / Protection Events read models. The next slice now also implements
 one explicit `agentgov dev` foreground cycle, a minimal repository-state
 reference adapter, automatic scope/completion actions, Dashboard refresh, and
-human-review handoff. No live coding-agent transport, natural-language task
-admission, or visual card surface exists yet. No NYC development-loop pilot or
-0.3 consumer migration has occurred.
+human-review handoff. A generic strict JSONL foreground transport, bounded
+task/scope/completion cards, and the first packaged Codex lifecycle-hook Adapter are
+now implemented in development source. A vendor-neutral host-interaction
+request/capability contract is also implemented, with Codex custom governance
+decisions honestly limited to context-only delivery. Natural-language task
+admission remains open. Proactive prompt/result contracts and a reference
+single-selection review path are implemented; a native authenticated decision
+surface and the complete automatic
+journey remain open. A vendor-neutral governed clarification protocol now
+keeps business, requirement, and architecture drift discussion separate from
+the final human direction decision. The live foreground Coding Agent stream
+now automatically carries normalized alignment context, human clarification
+updates, and the final direction result in memory. A host-side reference
+Alignment Adapter now proves the smaller natural-language alignment journey:
+the host materializer derives normalized drafts, the Adapter supplies strict
+envelopes, the user answers naturally and finishes with one selection, and the
+privacy-safe trace reports zero user-authored JSON or commands. This is an
+offline integration rehearsal, not a production semantic materializer or the
+complete automatic development journey. No NYC
+development-loop pilot or 0.3 consumer migration has occurred.
+
+ADR-0014 and the strict Provider-capability, risk-route, and advisory-result
+contracts now implement the model-free semantic-review boundary. Low risk does
+not request semantic review; medium risk binds the active Coding Agent's
+existing entitlement as disclosed self-review; high risk binds a qualifying
+independent Reviewer or exposes exactly three unselected human choices without
+silent downgrade. Cross-host fixtures exercise one vendor-neutral parser, but
+perform no inference. The host-neutral active-Agent materializer seam is now
+connected to the resolved `ReferenceAlignmentAdapter` journey: it invokes one
+supplied host callback with normalized ephemeral context and accepts only the
+exact advisory result. The next bounded dependency is installing that callback
+in one real Coding Agent surface; an external independent Reviewer remains a
+later optional integration.
 
 Current product priority: turn the now-implemented installation, update,
 onboarding, task admission, architecture context, changed-file, fresh-evidence,
@@ -727,23 +757,55 @@ Continue productizing the implemented ADR-0009 loop:
 7. [Release candidate published] Preserve `v0.3.0rc1` as immutable evidence of
    the low-level lifecycle primitives; do not treat it as proof of the final
    user experience;
-8. [One-cycle coordinator implemented; live integration remains] Connect the
-   implemented state projection, trigger envelope, reference adapter, and
-   `agentgov dev` foreground cycle to one real coding-agent surface. Preserve
-   automatic scope/completion actions, human gates, and denied authority;
-9. [Per-cycle automation implemented; richer views remain] Extend the
+8. [Codex hooks Adapter implemented in development source] Preserve the strict
+   `agentgov dev --stream` transport while mapping Codex `SessionStart`,
+   `UserPromptSubmit`, `PermissionRequest`, `PostToolUse`, and `Stop` through a
+   create-only, separately trusted project hook integration. Add another host
+   only when portability evidence requires it;
+9. [Proactive minimal-input decision contracts implemented; native authenticated
+   UI remains] Preserve vendor-neutral capability, interaction-request,
+   decision-prompt, and decision-result contracts. Capable hosts proactively
+   present one recommended single-select choice and return only its exact
+   transition; the reference terminal uses one number with no free text. Codex
+   keeps its normal human tool permission prompt, but Hooks do not provide
+   arbitrary trusted task/scope/completion button callbacks;
+10. [Structured task admission and risk routing implemented] Preserve the strict
+    vendor-neutral proposal and admission-plan contracts. A proactive numeric
+    human-review selection may create the exact manually reviewed low-risk
+    task; exact interactive `ADMIT` remains a fallback, while a
+    clean human-owned standing policy may non-interactively fast-track only its
+    narrow declared envelope. No-write and exact active-task continuation need
+    no admission or interruption. Automatic host-side proposal generation and
+    native decision delivery remain separate work;
+11. [Friction budget implemented] Preserve zero interruptions for no-write,
+    active-task, and fast-track routes, at most one for ordinary bounded
+    review, and full review for material characteristics;
+12. [Governed clarification implemented] Preserve the current center while
+    material meaning is unsettled, ask one natural-language question per turn,
+    keep normalized discussion turns outside the governance-decision budget,
+    and offer one digest-bound direction choice only after options stabilize.
+    The foreground Adapter stream now returns those prompts automatically from
+    strict normalized records, with no restart-persistence claim;
+13. [Native MCP Adapter and Codex configuration implemented; live rehearsal
+    remains] Preserve the five-tool normalized alignment/self-review journey,
+    explicit foreground handle, exact pending bindings, and create-missing-only
+    Codex config. Ordinary users add no protocol JSON, repeat confirmation, or
+    second-model setup. Complete one uncoached live Codex rehearsal, then prove
+    the same tool layer in another MCP host before attempting the optional
+    independent high-risk Reviewer path;
+14. [Per-cycle automation implemented; richer views remain] Extend the
    automatically refreshed Live Sessions, Protection Events, and Task Detail
    views with explicit resolution links, and add denominator-aware
    Benefit and Learning views without turning the Dashboard into a source of
    truth or a score;
-10. [Gate before NYC] Prove one ordinary low-risk task in an independent
+15. [Gate before NYC] Prove one ordinary low-risk task in an independent
     non-NYC repository without hand-authored internal JSON, repeated state
     queries, manual lifecycle command composition, or special confirmation
     words in the primary UI;
-11. [External feedback after the gate] Use NYC as the first real consumer,
+16. [External feedback after the gate] Use NYC as the first real consumer,
     keep NYC-specific policy local, classify feedback before admission, and
     modify AgentGov only for general gaps;
-12. Keep stable promotion, consumer migration, publication, and deployment as
+17. Keep stable promotion, consumer migration, publication, and deployment as
     later, separate human-approved actions.
 
 The automatic independent rehearsal, uncoached adoption evidence, NYC feedback

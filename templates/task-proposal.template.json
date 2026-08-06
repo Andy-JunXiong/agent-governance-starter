@@ -1,0 +1,50 @@
+{
+  "contract": "agentgov.task-proposal",
+  "schema_version": "1.0",
+  "proposal_id": "prp-00000000000000000000000000000000",
+  "source": {
+    "adapter_id": "example-coding-agent",
+    "actor_class": "coding_agent"
+  },
+  "task": {
+    "task_id": "replace-with-bounded-task-id",
+    "title": "Replace with a bounded low-risk task title",
+    "requirement_summary": "Summarize the interpreted requirement without copying the raw prompt or transcript.",
+    "scope": {
+      "include_paths": [
+        "replace/with/repository/path"
+      ],
+      "exclude_paths": []
+    },
+    "acceptance_signals": [
+      "State one observable signal that demonstrates the bounded task is complete."
+    ],
+    "validation_commands": [
+      "replace with one existing deterministic validation command"
+    ],
+    "owner": "Human product owner",
+    "risk": {
+      "level": "low",
+      "items": []
+    },
+    "assumptions": [],
+    "unknowns": []
+  },
+  "content_boundary": {
+    "contains_raw_prompt": false,
+    "contains_transcript": false,
+    "contains_source_content": false,
+    "contains_credentials": false,
+    "contains_absolute_paths": false
+  },
+  "authority_boundary": {
+    "admits_task": false,
+    "starts_session": false,
+    "authorizes_code_change": false,
+    "authorizes_scope_expansion": false,
+    "authorizes_exception": false,
+    "authorizes_git_operations": false,
+    "authorizes_deployment": false,
+    "authorizes_release": false
+  }
+}

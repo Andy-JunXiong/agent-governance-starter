@@ -52,6 +52,40 @@ boundaries. Natural-language intent remains human-owned; AgentGov may preserve
 and check the declared contract but must not claim that it objectively inferred
 the user's meaning.
 
+Development source now accepts `agentgov.task-proposal` 1.0 as a strict,
+non-authoritative Coding Agent interpretation. It rejects raw-prompt fields and
+unsafe or authoritative claims, previews the exact compact task, and requires
+an explicit human decision before exclusive task creation. A planned low-risk
+review uses a digest-bound proactive single-select prompt; the exact
+interactive `ADMIT` flow remains a recovery fallback. Admission and session
+start remain separate; automatic host-side proposal generation is not yet
+claimed.
+
+Development source also distinguishes observation from admission through
+`agentgov.work-request`, `agentgov.admission-routing-policy`, and
+`agentgov.admission-route` 1.0. No-write work and exact active-task iteration
+are not task-admission events. A bounded low-risk task may be admitted without
+a new interruption only when an admitted, tracked, clean human-owned policy
+already delegates its scope and validation envelope. Material characteristics
+always route to review. Git state and owner fields are auditable attestations,
+not cryptographic proof of semantic correctness or human identity.
+
+`agentgov.human-decision-prompt` and `agentgov.human-decision-result` 1.0
+separate display from choice. The prompt proactively explains why a decision
+is needed and recommends a safe option without selecting it. A capable host
+returns one human selection bound to the exact prompt, source, option, and
+predeclared transition; no free-text rationale or magic word is required.
+
+When meaning has not converged, `agentgov.alignment-context` and the
+clarification-dialogue contracts keep the current center and observed drift
+separate. The host asks one natural-language question at a time and Core keeps
+only normalized rolling summaries. Business, requirement, and architecture
+drift remain advisory. Clarification turns are not approval events and have no
+semantic turn cap. Only after material unknowns are resolved and option effects
+are stable does the existing human-decision contract record one re-centering
+choice. That structured result does not itself edit an ADR, admit a task, or
+grant implementation authority.
+
 ### Architecture memory
 
 Records durable decisions and invariants so an agent can recover design intent
@@ -84,8 +118,15 @@ the read-only `agentgov.development-state` 1.0 lifecycle projection and the
 strict `agentgov.development-trigger` 1.0 adapter envelope. It also implements
 one explicit `agentgov.foreground-cycle` 1.0 through `agentgov dev`: the
 minimal reference adapter invokes admitted scope/completion cores and refreshes
-the Dashboard. Live coding-agent transport and visual cards are not yet implemented. See
-`docs/development-automation-contracts.md`.
+the Dashboard. Development source now also accepts privacy-bounded live JSONL
+coding-agent events in one foreground process and returns bounded task and
+completion cards. The first packaged Codex lifecycle-hook Adapter maps reviewed
+project callbacks while discarding sensitive host fields before event
+construction. Vendor-neutral capability and interaction-request contracts now
+separate a displayed human gate from an applied decision. Codex's normal native
+tool permission remains host-managed, while custom task/scope/completion gates
+are context-only and unrecorded. Other host adapters and a real custom-decision
+surface are not yet implemented. See `docs/development-automation-contracts.md`.
 
 ### Bounded implementation
 

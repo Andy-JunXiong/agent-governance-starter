@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/interaction-card-v1.0.json",
+  "title": "AgentGov Interaction Card",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "kind", "status", "title", "summary", "facts", "actions", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.interaction-card"},
+    "schema_version": {"const": "1.0"},
+    "kind": {"enum": ["task", "scope", "completion"]},
+    "status": {"enum": ["review_required", "active", "observed", "advanced", "blocked", "needs_human", "review_ready", "handed_off"]},
+    "title": {"type": "string", "minLength": 1},
+    "summary": {"type": "string", "minLength": 1},
+    "facts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["label", "value"],
+        "properties": {
+          "label": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+          "value": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "actions": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}},
+    "authority_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authorizes_scope_expansion", "authorizes_exception", "authorizes_commit", "authorizes_merge", "authorizes_deployment"],
+      "properties": {
+        "authorizes_scope_expansion": {"const": false},
+        "authorizes_exception": {"const": false},
+        "authorizes_commit": {"const": false},
+        "authorizes_merge": {"const": false},
+        "authorizes_deployment": {"const": false}
+      }
+    }
+  }
+}

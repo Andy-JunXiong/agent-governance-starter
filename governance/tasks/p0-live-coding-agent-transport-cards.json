@@ -1,0 +1,96 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-live-coding-agent-transport-cards",
+  "title": "Connect a live coding-agent event stream and bounded cards",
+  "requirement": {
+    "summary": "Connect the existing foreground coordinator to one real process event surface and return concise task and completion cards without manual lifecycle command composition.",
+    "source_refs": [
+      "docs/development-log/2026-08-05.md",
+      "docs/development-plan.md",
+      "docs/product-requirements-automatic-governance.md",
+      "STATUS.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0009-govern-coding-agents-during-development.md",
+      "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md"
+    ],
+    "rationale": "The one-cycle coordinator is implemented, but ordinary coding-agent hosts still need a live foreground transport and a bounded review surface instead of hand-authored event arguments."
+  },
+  "goal": "Add a strict foreground JSONL coding-agent transport that derives trusted repository facts, invokes the existing coordinator, refreshes the Dashboard, and emits bounded task or completion cards.",
+  "non_goals": [
+    "Do not implement general natural-language task drafting or admission.",
+    "Do not add a hidden daemon, automatic local-state upload, raw prompt capture, or source capture.",
+    "Do not add Benefit or Learning views, protection-resolution links, or a consumer pilot.",
+    "Do not grant scope expansion, exception, commit, merge, release, publication, or deployment authority.",
+    "Do not commit, push, tag, release, migrate a consumer, or modify an external system."
+  ],
+  "scope": {
+    "include_paths": [
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "docs",
+      "governance/tasks",
+      "schemas",
+      "src/agentgov",
+      "tests"
+    ],
+    "exclude_paths": [
+      ".github/workflows",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0009-govern-coding-agents-during-development.md",
+    "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/development-automation-contracts.md"
+  ],
+  "acceptance_signals": [
+    "A foreground JSONL process accepts multiple strict coding-agent lifecycle events and returns one response per accepted event without requiring repeated agentgov invocations.",
+    "The transport rejects unknown fields, raw prompt or source fields, unsafe paths, unsupported actors, and consequential authority before coordinator mutation.",
+    "Repository paths, active task identity, scope observations, validation, and completion evidence are derived or produced by AgentGov rather than trusted from the adapter.",
+    "Task-request and repository-activation events return a concise task card; completion requests return a concise completion card with evidence limits and bounded human review actions.",
+    "The existing single-cycle CLI and headless confirmation fallbacks remain compatible.",
+    "Focused tests, the supported-Python complete suite, task and scope checks, repository governance, schema parsing, and diff checks pass or unsupported local-runtime limits are explicitly recorded."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_coding_agent_transport tests.test_foreground_coordinator tests.test_development_trigger tests.test_cli -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-live-coding-agent-transport-cards.json --repository .",
+    "python -m agentgov govern check governance/tasks/p0-live-coding-agent-transport-cards.json --repository .",
+    "python -m agentgov check repository ."
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "medium",
+    "items": [
+      "A permissive host envelope could leak prompt, source, identity, or absolute-path data into local governance state.",
+      "A transport event could be mistaken for governance authority or trusted completion evidence.",
+      "Card actions could imply that approval, commit, merge, or deployment occurred when they did not.",
+      "Streaming failure could process only part of a sequence without making the stop point explicit."
+    ]
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "owner": "Human product owner",
+    "evidence_refs": []
+  },
+  "stop_conditions": [
+    "Stop if the integration requires raw prompts, source upload, credentials, absolute host paths, or automatic local-state upload.",
+    "Stop if host configuration must become governance authority or a coding-agent event can self-approve scope or review.",
+    "Stop if the slice requires a hidden daemon or weakens the existing trigger, scope, evidence, handoff, or compatibility contracts.",
+    "Stop before any Git write, release, consumer change, or external-system mutation."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "The user explicitly authorized the next Codex host-adapter slice on 2026-08-06. This validated transport/card task is paused for routing hygiene only; the change does not claim commit, publication, stable promotion, consumer adoption, or external acceptance."
+  }
+}

@@ -41,6 +41,7 @@ class PublicDocumentationFreshnessTests(unittest.TestCase):
 
     def test_repository_instructions_require_related_documentation_updates(self) -> None:
         instructions = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        normalized = " ".join(instructions.split())
 
         for phrase in (
             "update every affected source of truth in the same bounded change",
@@ -50,7 +51,26 @@ class PublicDocumentationFreshnessTests(unittest.TestCase):
             "localized pages",
             "tests that protect those surfaces",
         ):
-            self.assertIn(phrase, instructions)
+            self.assertIn(phrase, normalized)
+
+    def test_repository_instructions_require_contextual_completion_explanations(
+        self,
+    ) -> None:
+        instructions = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        normalized = " ".join(instructions.split())
+
+        for phrase in (
+            "## Completion communication",
+            "plain language",
+            "What previous capability does it connect to or build on?",
+            "What is the next capability expected to connect to it?",
+            "How does it help the project as a whole?",
+            "instead of inventing a relationship or roadmap commitment",
+            "Review the completed requirement with the human product owner first",
+            "real unmet needs and observed drift",
+            "jointly choose the next requirement",
+        ):
+            self.assertIn(phrase, normalized)
 
 
 if __name__ == "__main__":

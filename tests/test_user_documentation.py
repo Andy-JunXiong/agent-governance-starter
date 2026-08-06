@@ -18,6 +18,13 @@ AUTOMATIC_PRODUCT_REQUIREMENTS = (
     ROOT / "docs/product-requirements-automatic-governance.md"
 )
 AUTOMATION_CONTRACTS = ROOT / "docs/development-automation-contracts.md"
+CODEX_HOOKS_ADAPTER = ROOT / "docs/codex-hooks-adapter.md"
+GOVERNANCE_MCP_ADAPTER = ROOT / "docs/governance-mcp-adapter.md"
+TASK_PROPOSAL_ADMISSION = ROOT / "docs/task-proposal-admission.md"
+ADMISSION_ROUTING = ROOT / "docs/admission-routing.md"
+HUMAN_DECISIONS = ROOT / "docs/human-decision-prompts.md"
+CLARIFICATION_DIALOGUE = ROOT / "docs/clarification-dialogue.md"
+ACTIVE_AGENT_SELF_REVIEW = ROOT / "docs/active-agent-self-review.md"
 EXTRACTION_MAP = ROOT / "docs/ai-radar-extraction-map.md"
 STATUS = ROOT / "STATUS.md"
 AGENT_SKILLS_README = ROOT / "agent-skills/README.md"
@@ -26,6 +33,9 @@ BOOTSTRAP_UPDATE_ADR = ROOT / "docs/adr/0011-separate-bootstrap-from-update-rout
 SESSION_HANDOFF_ADR = ROOT / "docs/adr/0012-handoff-verified-development-sessions.md"
 AUTOMATIC_EXPERIENCE_ADR = (
     ROOT / "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md"
+)
+SEMANTIC_REVIEW_ADR = (
+    ROOT / "docs/adr/0014-route-semantic-review-through-host-providers.md"
 )
 DEVELOPMENT_RELEASE = ROOT / "release/current.json"
 ISOLATED_EXECUTION_ADR = (
@@ -43,11 +53,25 @@ class UserDocumentationTests(unittest.TestCase):
         plan = DEVELOPMENT_PLAN.read_text(encoding="utf-8")
         requirements = AUTOMATIC_PRODUCT_REQUIREMENTS.read_text(encoding="utf-8")
         decision = AUTOMATIC_EXPERIENCE_ADR.read_text(encoding="utf-8")
+        semantic_review_decision = SEMANTIC_REVIEW_ADR.read_text(encoding="utf-8")
         session = DEVELOPMENT_SESSION.read_text(encoding="utf-8")
         monitor = DEVELOPMENT_MONITOR.read_text(encoding="utf-8")
         automation = AUTOMATION_CONTRACTS.read_text(encoding="utf-8")
+        codex = CODEX_HOOKS_ADAPTER.read_text(encoding="utf-8")
+        governance_mcp = GOVERNANCE_MCP_ADAPTER.read_text(encoding="utf-8")
+        proposal_admission = TASK_PROPOSAL_ADMISSION.read_text(encoding="utf-8")
+        admission_routing = ADMISSION_ROUTING.read_text(encoding="utf-8")
+        human_decisions = HUMAN_DECISIONS.read_text(encoding="utf-8")
+        clarification = CLARIFICATION_DIALOGUE.read_text(encoding="utf-8")
+        active_agent_review = ACTIVE_AGENT_SELF_REVIEW.read_text(encoding="utf-8")
+        codex_compact = " ".join(codex.split())
+        governance_mcp_compact = " ".join(governance_mcp.split())
 
-        for path in (AUTOMATIC_PRODUCT_REQUIREMENTS, AUTOMATIC_EXPERIENCE_ADR):
+        for path in (
+            AUTOMATIC_PRODUCT_REQUIREMENTS,
+            AUTOMATIC_EXPERIENCE_ADR,
+            SEMANTIC_REVIEW_ADR,
+        ):
             self.assertTrue(path.is_file())
 
         for text in (readme, status, plan, requirements, decision):
@@ -57,6 +81,20 @@ class UserDocumentationTests(unittest.TestCase):
         for text in (readme, plan, requirements, decision, session):
             self.assertIn("fallback", text)
 
+        alignment_docs = " ".join(
+            "\n".join(
+                (
+                    readme,
+                    status,
+                    requirements,
+                    decision,
+                    semantic_review_decision,
+                    automation,
+                    clarification,
+                    active_agent_review,
+                )
+            ).split()
+        )
         for phrase in (
             "Live Sessions",
             "Protection Events",
@@ -78,7 +116,123 @@ class UserDocumentationTests(unittest.TestCase):
         for text in (readme, status, plan, requirements, decision, session, automation):
             self.assertIn("agentgov dev", text)
         self.assertIn("agentgov.foreground-cycle", automation)
-        self.assertIn("live coding-agent", automation.lower())
+        self.assertIn("live jsonl", " ".join(automation.lower().split()))
+        self.assertIn("agentgov dev --stream", automation)
+        self.assertIn("agentgov.coding-agent-event", automation)
+        self.assertIn("task/scope/completion cards", status)
+        for phrase in (
+            "agentgov.host-interaction-capabilities",
+            "agentgov.host-interaction-request",
+            "context-only",
+            "PermissionRequest",
+        ):
+            self.assertIn(phrase, "\n".join((status, automation, codex)))
+        self.assertIn("returns neither `allow` nor `deny`", codex_compact)
+        self.assertIn("recorded product drift", codex_compact)
+        for text in (readme, status, plan, requirements, decision, session, automation):
+            self.assertIn("Codex", text)
+        for phrase in (
+            "agentgov integrate codex-hooks . --dry-run",
+            "create-missing-only",
+            "stop_hook_active",
+            "PostToolUse",
+            "does not grant hook trust",
+        ):
+            self.assertIn(phrase, codex_compact)
+        self.assertIn("docs/codex-hooks-adapter.md", readme)
+        for phrase in (
+            "agentgov.task-proposal",
+            "agentgov.task-admission-plan",
+            "agentgov propose task",
+            "ADMIT",
+            "does not start",
+            "raw prompt",
+        ):
+            self.assertIn(phrase, "\n".join((readme, status, automation, proposal_admission)))
+        self.assertIn("docs/task-proposal-admission.md", readme)
+        for phrase in (
+            "agentgov.work-request",
+            "agentgov.admission-routing-policy",
+            "agentgov.admission-route",
+            "observe_only",
+            "continue_active",
+            "fast_track",
+            "human_review",
+            "full_review",
+            "zero interruptions",
+        ):
+            self.assertIn(
+                phrase,
+                "\n".join((readme, status, automation, admission_routing)),
+            )
+        self.assertIn("docs/admission-routing.md", readme)
+        for phrase in (
+            "agentgov.human-decision-prompt",
+            "agentgov.human-decision-result",
+            "single-select",
+            "no free text",
+            "--prompt-human",
+            "one number",
+            "context_only",
+            "unavailable",
+        ):
+            self.assertIn(
+                phrase,
+                "\n".join((readme, status, automation, admission_routing, human_decisions)),
+            )
+        self.assertIn("docs/human-decision-prompts.md", readme)
+        for phrase in (
+            "agentgov.alignment-context",
+            "agentgov.clarification-dialogue",
+            "one natural-language question",
+            "governance decision episodes",
+            "not a semantic conversation limit",
+            "Business, requirement, and architecture drift",
+            "does not edit requirements or ADRs",
+        ):
+            self.assertIn(phrase, alignment_docs)
+        self.assertIn("docs/clarification-dialogue.md", readme)
+        for phrase in (
+            "agentgov.coding-agent-alignment-response",
+            "foreground_memory",
+            "survives_restart=false",
+            "same `agentgov dev --stream` connection",
+            "do not invoke the development lifecycle coordinator",
+            "Coding Agent Adapter remains responsible",
+            "ReferenceAlignmentAdapter",
+            "HostSemanticMaterializer",
+            "zero user-authored structured records",
+            "not general semantic inference",
+            "model-free",
+            "zero-configuration",
+            "optional independent Reviewer",
+            "silently downgrade",
+            "lower-assurance",
+            "Provider credentials",
+            "agentgov.semantic-review-provider-capabilities",
+            "agentgov.semantic-review-route",
+            "agentgov.semantic-review-result",
+            "digest-bound",
+            "no real model",
+            "ActiveAgentSelfReviewMaterializer",
+            "resolved `ReferenceAlignmentAdapter`",
+            "evidence allow-list",
+            "production host callback",
+        ):
+            self.assertIn(phrase, alignment_docs)
+        self.assertIn("docs/active-agent-self-review.md", readme)
+        for phrase in (
+            "agentgov integrate codex-mcp . --dry-run",
+            "foreground STDIO MCP",
+            "exactly five tools",
+            "journey handle",
+            "zero model and network calls",
+            "do not prove that a production model will always choose the right tool",
+            "live uncoached Codex session",
+            "independent high-risk Reviewer",
+        ):
+            self.assertIn(phrase, governance_mcp_compact)
+        self.assertIn("docs/governance-mcp-adapter.md", readme)
 
         for forbidden_primary_action in (
             "hand-author internal JSON",
@@ -97,14 +251,23 @@ class UserDocumentationTests(unittest.TestCase):
 
         self.assertIn("Accepted automatic product direction", english)
         self.assertIn("not implemented in stable 0.2.1", english)
-        self.assertIn("one-cycle", english)
+        self.assertIn("--stream", english)
         self.assertIn("agentgov dev", english)
+        self.assertIn("vendor-neutral host-interaction", english)
         self.assertIn("开发源自动化状态", chinese)
         self.assertIn("agentgov dev", chinese)
+        self.assertIn("--stream", chinese)
+        self.assertIn("宿主交互请求", chinese)
         self.assertIn("已接受的自动化产品方向", chinese)
         self.assertIn("尚未包含在 stable 0.2.1", chinese)
         for text in (english, chinese):
             self.assertIn("product-requirements-automatic-governance.html", text)
+            self.assertIn("agentgov route request", text)
+            self.assertIn("ADMIT", text)
+            self.assertIn("--prompt-human", text)
+            self.assertIn("agentgov integrate codex-mcp . --dry-run", text)
+            self.assertTrue("clarification" in text.lower() or "澄清" in text)
+            self.assertTrue("does not survive restart" in text or "重启后不会恢复" in text)
 
     def test_development_governance_sources_resist_pr_center_drift(self) -> None:
         readme = README.read_text(encoding="utf-8")
@@ -231,6 +394,8 @@ class UserDocumentationTests(unittest.TestCase):
             ADOPTION_GUIDE,
             GENERATED_FILES_GUIDE,
             TROUBLESHOOTING,
+            CODEX_HOOKS_ADAPTER,
+            GOVERNANCE_MCP_ADAPTER,
         ):
             relative = path.relative_to(ROOT).as_posix()
             with self.subTest(path=relative):

@@ -1,0 +1,109 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-proactive-minimal-input-human-decisions",
+  "title": "Prompt proactively for human decisions with minimal input",
+  "requirement": {
+    "summary": "Replace special confirmation words in the primary human-review path with a vendor-neutral proactive decision prompt that explains the decision, recommends one bounded option, accepts a single structured selection, and records exactly what the human selected without treating display or Coding Agent interpretation as approval.",
+    "source_refs": [
+      "docs/admission-routing.md",
+      "docs/development-automation-contracts.md",
+      "docs/product-requirements-automatic-governance.md",
+      "STATUS.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md"
+    ],
+    "rationale": "Risk routing reduces how often humans are interrupted, but the remaining review path still asks users to remember exact words or manually compose commands. The intended experience keeps decisions human-owned while making the system responsible for presenting the choice and carrying the selected bounded transition forward."
+  },
+  "goal": "Add strict vendor-neutral decision-prompt and decision-result contracts, proactive single-selection rendering, and a trusted reference selection flow that binds a human choice to the exact prompt and existing Core transition while keeping special confirmation words only as explicit fallback interfaces.",
+  "non_goals": [
+    "Do not infer a decision from free-form user text, silence, Coding Agent output, tool permission, environment variables, command flags, or prompt display alone.",
+    "Do not claim a host can render or record native controls when its declared capabilities say context-only or unavailable.",
+    "Do not require raw prompts, transcripts, assistant responses, source content, credentials, model identifiers, absolute host paths, or free-text rationale in the decision contracts.",
+    "Do not let a decision result expand scope, approve an exception, authorize arbitrary commands, commit, merge, deploy, release, publish, or write to an external system.",
+    "Do not automatically approve full-review material work, start or replace a session, or invent a Core event for an option that has no implemented transition.",
+    "Do not delete the exact ADMIT, START, REPLACE, or HANDOFF terminal fallbacks in this bounded compatibility slice.",
+    "Do not add a hidden daemon, install a host component, add a second vendor Adapter, or claim cryptographic human identity."
+  ],
+  "scope": {
+    "include_paths": [
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "agent-skills",
+      "docs",
+      "governance/tasks",
+      "schemas",
+      "src/agentgov",
+      "templates",
+      "tests"
+    ],
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      ".github/workflows",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/admission-routing.md",
+    "docs/development-automation-contracts.md"
+  ],
+  "acceptance_signals": [
+    "A strict vendor-neutral decision-prompt contract binds the exact source request and digest, explains why a decision is needed, identifies one recommendation, presents two or more bounded options, requires exactly one selection, and requires no free-text input.",
+    "A strict decision-result contract binds the exact prompt and source request digests, records one option selected by a human through a declared trusted host or interactive-terminal attestation, carries only the option's predeclared Core transition, and rejects unknown or authoritative fields.",
+    "Prompt display is proactive for real human gates and absent for observe-only, continue-active, and fast-track routes. Codex Hooks continue to report context-only/unavailable custom-decision capability instead of claiming false native support.",
+    "The reference presenter renders the complete concise choice before input, accepts a single numeric selection rather than a special confirmation word, does not echo or retain raw input, and records decline or change-request choices without repository writes.",
+    "A low-risk human-review route may apply only the exact already-built task admission plan after an approve selection; apply revalidates policy, request, prompt, result, task digest, and exclusive target and creates only that task.",
+    "Scope and completion decision results map only to their existing scope.decision_recorded and session.reviewed events; task routing options with no implemented transition remain non-applying guidance.",
+    "Existing fast-track, exact ADMIT fallback, task proposal, Coding Agent cards, JSONL, Codex Hook, session, scope, completion, packaging, and repository behavior remains compatible.",
+    "Focused tests, the complete Python 3.11 suite, task/scope/repository checks, schema parsing, packaging assertions, and diff checks pass."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_human_decision tests.test_admission_routing tests.test_host_interaction tests.test_coding_agent_transport tests.test_codex_hooks tests.test_task_contract -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-proactive-minimal-input-human-decisions.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-proactive-minimal-input-human-decisions.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "high",
+    "items": [
+      "A visually convenient selection could be mistaken for broader authority than the exact option describes.",
+      "A Coding Agent could forge a human selection if the Adapter trust boundary and actor source are not explicit.",
+      "A prompt or task could drift after presentation so the applied transition differs from the human-reviewed choice.",
+      "A host without native decision recording could be misrepresented as providing a trusted one-click approval."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": [
+      "docs/development-log/2026-08-06.md"
+    ]
+  },
+  "stop_conditions": [
+    "Stop if displaying a prompt, choosing a recommendation by default, or receiving Coding Agent text can count as a human decision.",
+    "Stop if a result is not bound to the exact prompt, source request, option, and predeclared transition reviewed by the human.",
+    "Stop if an unavailable/context-only host can produce a result that claims trusted native recording.",
+    "Stop if approval can apply material/full-review work, overwrite a target, start a session, execute a command, expand scope, approve an exception, or authorize Git, deployment, release, or publication.",
+    "Stop if the primary selection requires an exact magic word or free-text rationale instead of one bounded choice.",
+    "Stop before any Git write, host installation, release, consumer mutation, deployment, or external-system write."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "The user reviewed the completed proactive minimal-input decision flow, identified the need for governed multi-turn discussion before options are stable, and explicitly authorized clarification dialogue and drift re-centering on 2026-08-06."
+  }
+}

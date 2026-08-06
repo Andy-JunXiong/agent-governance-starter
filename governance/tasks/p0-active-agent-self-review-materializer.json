@@ -1,0 +1,110 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-active-agent-self-review-materializer",
+  "title": "Connect active-Agent self-review to the alignment Adapter",
+  "requirement": {
+    "summary": "Implement the first host-neutral semantic-review execution slice by allowing the existing Alignment Adapter to pass only resolved normalized context to the active Coding Agent materializer, bind its observations to the exact medium-risk self-review route and Provider, and return an accepted advisory result without new user configuration.",
+    "source_refs": [
+      "docs/adr/0014-route-semantic-review-through-host-providers.md",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/development-automation-contracts.md",
+      "docs/clarification-dialogue.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0014-route-semantic-review-through-host-providers.md"
+    ],
+    "rationale": "The Provider and risk-routing contracts are executable only after one host Adapter can materialize a normalized active-Agent self-review result through the existing user-facing alignment journey."
+  },
+  "goal": "Add a host-neutral active-Agent self-review materializer boundary, connect it to a resolved Alignment Adapter journey, enforce minimal normalized context and allowed evidence, and accept only the exact digest-bound advisory result with cross-host tests.",
+  "non_goals": [
+    "Do not add a vendor SDK, model endpoint, model selection, API key, account configuration, network call, hosted service, background process, or independent Reviewer integration.",
+    "Do not put Codex, Claude Code, IDE, or model-specific enums, branches, prompts, credentials, or behavior into Core.",
+    "Do not send raw request text, raw answers, transcripts, assistant responses, full source content, model prompts, credentials, secrets, or absolute host paths into Core or retained journey state.",
+    "Do not run self-review before the human-owned alignment dialogue is resolved, use it for low risk, describe it as independent, or silently upgrade its assurance.",
+    "Do not let the materializer invent evidence outside the allowed repository references, select a direction, modify requirements or ADRs, admit tasks, start sessions, or authorize code, scope, exceptions, Git, publication, release, deployment, production, or external writes.",
+    "Do not change stable 0.2.1, immutable v0.3.0rc1, release metadata, workflows, consumer repositories, or external systems."
+  ],
+  "scope": {
+    "include_paths": [
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "agent-skills",
+      "docs",
+      "governance/fixtures",
+      "governance/tasks",
+      "schemas",
+      "src/agentgov",
+      "templates",
+      "tests"
+    ],
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      ".github/workflows",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0014-route-semantic-review-through-host-providers.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/development-automation-contracts.md",
+    "docs/clarification-dialogue.md"
+  ],
+  "acceptance_signals": [
+    "A host-neutral ActiveAgentSelfReviewMaterializer protocol receives only an ephemeral normalized context derived from the exact resolved AlignmentStreamResponse, self-review route, active-host Provider, and explicitly allowed repository evidence references.",
+    "ReferenceAlignmentAdapter exposes one end-to-end self-review operation only after the human-owned dialogue is resolved; existing natural-language request, clarification, and single-select behavior remains unchanged.",
+    "The operation deterministically selects the medium-risk active-Agent self-review route, invokes the supplied host materializer exactly once, builds and accepts the exact Provider/route-digest-bound advisory result, and returns privacy/authority disclosures without retaining raw conversation.",
+    "The Adapter generates observation identities and rejects unknown draft fields, empty or oversized output, duplicate observations, evidence outside the allowed set, sensitive or host-local content, false authority, stale Provider/route/result bindings, and assurance substitution.",
+    "Low-risk no-review, unresolved dialogue, ready-but-unselected dialogue, unavailable or non-active Provider, independent-review Provider, unsupported risk, materializer failure, and malformed materializer output fail before an accepted result exists.",
+    "Codex and Claude Code active-host fixtures both execute through the same Adapter/materializer contract, while Core source contains no vendor-specific enum or special case.",
+    "No implementation code performs network I/O, loads credentials, starts an Agent, selects a model, writes repository/runtime state, or applies a human choice; the current Coding Agent host remains responsible for actually supplying semantic inference.",
+    "Affected source-of-truth and public documentation accurately distinguishes the implemented host execution seam and offline cross-host rehearsal from a production model SDK or independent Reviewer integration.",
+    "Focused/full tests, current-task, scope, repository, schemas, compile, and diff validation pass."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_active_agent_self_review tests.test_reference_alignment_adapter tests.test_semantic_review tests.test_alignment_transport tests.test_clarification_dialogue tests.test_agent_skills tests.test_task_contract tests.test_user_documentation tests.test_portfolio_docs -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-active-agent-self-review-materializer.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-active-agent-self-review-materializer.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "high",
+    "items": [
+      "Calling the same Agent after it developed a solution may create confirmation bias even when the result is accurately labeled self-review.",
+      "Passing too much alignment or source context could leak raw conversation, local paths, credentials, or undeclared repository content.",
+      "A permissive materializer could invent evidence, overstate independence, or make its advisory observation look like a human decision.",
+      "An Adapter-only callback can be mistaken for a finished production host integration unless the offline evidence and open SDK/UI boundary remain explicit."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": [
+      "docs/development-log/2026-08-06.md"
+    ]
+  },
+  "stop_conditions": [
+    "Stop if the self-review can run before the final human alignment selection or can alter that selection.",
+    "Stop if the materializer receives or persists raw conversation, credentials, secrets, model prompts, full undeclared source content, or absolute host paths.",
+    "Stop if the active Agent can be labeled independent or if an unavailable/non-active Provider can produce an accepted result.",
+    "Stop if observations can cite evidence outside the explicit allowed repository references or grant any project/external authority.",
+    "Stop if ordinary use requires a second model, new account, vendor SDK, API key, or network service.",
+    "Stop before any external model call, Provider setup, network access, external write, Git write, publication, release, deployment, or consumer mutation."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "The user reviewed the completed active-Agent materializer seam and explicitly requested the next live foreground transport feature on 2026-08-06."
+  }
+}

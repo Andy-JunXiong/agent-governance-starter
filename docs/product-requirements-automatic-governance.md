@@ -97,14 +97,118 @@ The primary product automatically performs:
 - feedback to the coding agent;
 - notification of deterministic failures and advisory human decisions.
 
-The first implementation is an explicit one-cycle foreground orchestrator,
-`agentgov dev`, plus a minimal repository-state reference adapter. It now
-handles activation, implementation-change scope checks, completion-triggered
-pre-approved validation and reconciliation, human-reviewed handoff, and
-Dashboard refresh in development source. A live coding-agent event transport,
-natural-language task drafting/admission, and visual approval/completion cards
-remain open. The target remains an adapter-owned foreground experience, not a
-hidden system daemon or a requirement that ordinary users type event commands.
+The development implementation includes the foreground orchestrator,
+repository-state reference adapter, and a strict `agentgov dev --stream` JSONL
+process transport. It handles activation, implementation-change scope checks,
+completion-triggered pre-approved validation and reconciliation,
+human-reviewed handoff, Dashboard refresh, and bounded task/scope/completion
+cards.
+The transport contains no prompt, source, host-path, task-identity,
+changed-path, or authority field; trusted facts are derived locally. Packaged
+host-specific integration now exists for Codex project hooks in development
+source. A vendor-neutral host capability/request contract represents human
+gates without applying decisions. Strict proactive prompt/result contracts now
+let a capable host present one recommended single-select choice and return the
+exact human selection without free text; the reference terminal path accepts
+one number instead of a magic word. Development source now also supports a
+vendor-neutral governed clarification dialogue before that final choice:
+current center and advisory drift remain visible, each turn asks one
+natural-language question, raw chat is not retained, and material unknowns
+must be resolved before the resolution options become selectable. Codex
+retains its native tool-permission
+prompt, but current Hooks cannot record arbitrary custom task, scope, or
+completion decisions. Natural-language task drafting, a native authenticated
+decision surface, and any additional host adapters remain open. The
+target remains an adapter-owned foreground experience, not a hidden daemon.
+
+That clarification is now connected to the development-source foreground
+transport. A Coding Agent Adapter sends only strict normalized alignment
+context; the host sends strict normalized human clarification updates and the
+final decision result. AgentGov automatically returns the next one-question
+prompt or stable final choice. The dialogue is memory-only for the disclosed
+stream and explicitly does not survive restart. Automatic host-side creation
+of the normalized context from arbitrary natural-language chat remains an
+Adapter responsibility and is not claimed by Core.
+
+Development source now provides that responsibility as a replaceable reference
+boundary: a host semantic materializer converts an ordinary request or answer
+into a small normalized draft, and `ReferenceAlignmentAdapter` supplies the
+strict envelope and drives the existing Core session. Its offline rehearsal
+reaches one final single-select with zero user-authored structured records,
+internal commands, or confirmation words and retains no raw conversation in
+the Adapter journey. This is interaction and integration evidence, not a claim
+that Core performs semantic inference or that a production host UI/model
+integration is complete.
+
+## Semantic review compute and risk routing
+
+AgentGov Core remains model-free. It owns deterministic facts, risk routing,
+minimal context disclosure, state, assurance labels, and authority boundaries.
+Development source now implements the vendor-neutral Provider capability,
+route, and advisory-result contracts from ADR-0014; semantic inference itself
+still belongs to a future production host materializer.
+
+The ordinary product remains zero-configuration:
+
+- low-risk work uses no additional semantic-model call when deterministic
+  checks are sufficient;
+- medium-risk work reuses the active Coding Agent's existing model entitlement
+  for one structured separate pass or isolated-context self-review;
+- high-risk work may use an optional independent Reviewer supplied once by the
+  user or organization through a second model, enterprise AI gateway, or
+  internal model. A future AgentGov-hosted Reviewer is optional and requires a
+  separate privacy, retention, compliance, and billing decision.
+
+Same-agent review must be labeled `self_review`, even when it uses a fresh
+pass. Separate context is the minimum independent-review property; different
+model and different provider are progressively stronger disclosed independence
+levels, not proof of correctness.
+
+When high-risk independent review is required but unavailable, AgentGov must
+proactively offer human review, explicit lower-assurance same-agent review, or
+Provider setup. It must not silently downgrade, block ordinary installation,
+or require a second account for medium-risk work. Every result identifies its
+Provider source and assurance level, remains `ADVISORY`, and grants no task,
+requirement, ADR, code, scope, exception, Git, publication, release,
+deployment, production, or external-write authority.
+
+Provider credentials and inference cost belong to the user, organization, or
+an explicitly selected future hosted service. Secrets, raw conversation,
+transcripts, and undeclared source content do not enter repository governance
+records or AgentGov Core.
+
+Contract acceptance is not semantic approval: matching digests prove which
+declared route and Provider produced a normalized result, not that the result
+is correct. Codex, Claude Code, generic IDE, and unavailable-Provider fixtures
+exercise compatibility without calling a model. Human judgment remains final.
+
+Development source now also implements the active-Agent execution seam. Only
+after the alignment dialogue has a human-owned resolution,
+`ReferenceAlignmentAdapter.self_review(...)` can give normalized ephemeral
+context and an explicit evidence allow-list to one host-supplied
+`ActiveAgentSelfReviewMaterializer` callback. AgentGov generates observation
+identities and accepts only the exact medium-risk self-review result. This adds
+no user decision or second-account setup. It is not yet a native production
+Codex, Claude Code, or IDE callback and makes no claim that Core called a model.
+
+Development source now also carries this operation over the existing
+foreground `agentgov dev --stream` connection. A host Adapter sends a start
+record only after the exact alignment resolution, receives one deterministic
+ephemeral materialization request, and returns small observation drafts on the
+same Adapter identity. AgentGov then emits the accepted advisory result. The
+ordinary user does not author these records, confirm again, or configure a
+second model. Native host installation and independent high-risk review remain
+separate product work.
+
+Development source now implements the first native host tool boundary with a
+foreground STDIO MCP Adapter. The current Coding Agent calls five strict tools
+to carry normalized alignment and medium-risk self-review; AgentGov returns an
+explicit journey handle and exact pending bindings, generates all governance
+identities, and loses the state on restart. A create-missing-only Codex project
+configuration is packaged, while the Core tool layer is exercised with both
+Codex and Claude Code Provider fixtures. This is not proof of live model tool
+selection or semantic correctness; an uncoached Codex rehearsal and another
+native MCP host package remain required.
 
 ## Human decision boundaries
 
@@ -120,6 +224,19 @@ AgentGov interrupts the user only for:
 
 Normal UI confirmation should use a concise card, button, or adapter approval
 event. Exact terminal words remain only a safe headless fallback.
+
+The card must be pushed when the boundary is reached, explain why the decision
+is needed, mark one safe recommendation without selecting it, show the effect
+of every option, and require at most one structured selection. Ordinary
+low-risk review must not require a free-text rationale or a remembered special
+word. Display alone is never approval.
+
+The one-selection budget applies to the final governance decision, not to
+substantive clarification. When business meaning, requirements, or architecture
+direction are unsettled, the host may continue a natural-language dialogue for
+as many turns as needed, asking one material question at a time. Those turns
+change no project state and are measured separately from governance decision
+episodes. A bounded rolling storage window must not become a semantic turn cap.
 
 ## Monitor and Dashboard
 
@@ -210,13 +327,20 @@ command composition.
 1. expose the existing lifecycle as an internal state-machine API;
 2. define vendor-neutral trigger and adapter contracts;
 3. implement one foreground automatic orchestrator;
-4. replace routine text confirmations with a bounded approval interface while
+4. preserve the implemented vendor-neutral structured task-proposal and
+   human-admission fallback, then let a host Adapter produce that proposal from
+   a natural-language request without sending raw conversation data to Core;
+5. preserve the implemented risk router and friction budget: no-write,
+   verified active-task continuation, and clean-policy fast-track have zero
+   human interruptions; ambiguity and material risk require review;
+6. bind the implemented vendor-neutral interaction request contract to a host
+   surface that can genuinely present and record custom human decisions while
    retaining safe headless fallbacks;
-5. make Monitor refresh automatic and add Dashboard protection views;
-6. add denominator-aware benefit and learning views;
-7. prove the complete automatic journey in an independent non-NYC repository;
-8. run one low-risk NYC shadow pilot as a consumer;
-9. classify feedback as consumer-local, generic, adapter, usability,
+7. make Monitor refresh automatic and add Dashboard protection views;
+8. add denominator-aware benefit and learning views;
+9. prove the complete automatic journey in an independent non-NYC repository;
+10. run one low-risk NYC shadow pilot as a consumer;
+11. classify feedback as consumer-local, generic, adapter, usability,
    insufficient-evidence, or rejected;
-10. change AgentGov Core only for admitted general gaps, then replay in the
+12. change AgentGov Core only for admitted general gaps, then replay in the
     independent repository and NYC before any stable promotion.

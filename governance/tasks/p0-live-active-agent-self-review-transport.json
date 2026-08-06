@@ -1,0 +1,112 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-live-active-agent-self-review-transport",
+  "title": "Carry active-Agent self-review over the foreground stream",
+  "requirement": {
+    "summary": "Extend the vendor-neutral agentgov dev --stream connection with a strict two-stage active-Agent self-review exchange: the Coding Agent requests a medium-risk review after resolved alignment, AgentGov returns the exact normalized materialization request, the same Adapter returns small observation drafts, and AgentGov returns the accepted digest-bound advisory result.",
+    "source_refs": [
+      "docs/active-agent-self-review.md",
+      "docs/adr/0014-route-semantic-review-through-host-providers.md",
+      "docs/development-automation-contracts.md",
+      "docs/development-session.md",
+      "docs/product-requirements-automatic-governance.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0014-route-semantic-review-through-host-providers.md"
+    ],
+    "rationale": "The self-review callback is executable inside the Python Adapter but cannot yet be driven by a real foreground Coding Agent connection; a strict request/draft exchange is the smallest portable installation boundary."
+  },
+  "goal": "Add strict start, draft, and response contracts plus an in-memory stream session that prepares and completes active-Agent self-review on the same resolved alignment and Coding Agent identity, then integrate it with agentgov dev --stream.",
+  "non_goals": [
+    "Do not add a vendor SDK, model endpoint, API key, account configuration, network call, hosted service, background Agent, or independent Reviewer integration.",
+    "Do not assume that an adapter_id identifies Codex, Claude Code, an IDE, a model, or an assurance level; portable Provider capability remains explicit.",
+    "Do not accept raw prompts, raw answers, transcripts, assistant responses, source content, credentials, model prompts, absolute paths, host-selected observation IDs, or authority claims.",
+    "Do not auto-start review before the human alignment decision is resolved, accept low/high risk through this medium-risk path, or let the Agent select a high-risk fallback choice.",
+    "Do not persist review state across process restart, write repository/runtime state, or mutate the completed alignment dialogue.",
+    "Do not change stable 0.2.1, immutable v0.3.0rc1, release metadata, workflows, consumer repositories, or external systems."
+  ],
+  "scope": {
+    "include_paths": [
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "agent-skills",
+      "docs",
+      "governance/fixtures",
+      "governance/tasks",
+      "schemas",
+      "src/agentgov",
+      "templates",
+      "tests"
+    ],
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      ".github/workflows",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0014-route-semantic-review-through-host-providers.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/development-automation-contracts.md",
+    "docs/development-session.md"
+  ],
+  "acceptance_signals": [
+    "Strict vendor-neutral active-agent-self-review-start and active-agent-self-review-draft input contracts exclude raw/private content, carry denied authority, and bind the adapter, resolved dialogue, active-host Provider, medium risk, allowed evidence, and exact pending request.",
+    "A strict active-agent-self-review-stream-response reports either one materialization_required request with normalized ephemeral context or one completed accepted run; impossible field/status combinations fail.",
+    "The in-memory session starts only against the exact current resolved AlignmentStreamResponse, accepts only the same Coding Agent adapter, emits one deterministic request binding, and never calls a model itself.",
+    "A valid draft from the same adapter completes through the existing active-Agent materializer result builder, preserves self_review assurance and advisory-only denied authority, and cannot supply observation IDs, route, Provider binding, or result identity.",
+    "Unknown contracts/fields, duplicate IDs, out-of-order start/draft, unresolved or stale alignment, adapter drift, request digest drift, wrong risk/provider, empty/duplicate/malformed/out-of-allow-list observations, sensitive/local content, context mutation, retry races, and authority drift fail before stream state advances; a valid retry remains possible where safe.",
+    "agentgov dev --stream dispatches lifecycle, alignment, self-review start, and self-review draft records on one foreground connection, preserves exact line numbers and fail-fast behavior, and returns pure JSONL in JSON mode.",
+    "Codex and Claude Code active-host fixtures complete the same four-record alignment-to-review journey without vendor branches in Core; no user-authored JSON is claimed as an ordinary product requirement because host Adapters own these records.",
+    "No implementation code performs network I/O, loads credentials, starts an Agent, selects a model, writes repository/runtime state, applies a human choice, or persists review context across restart.",
+    "Affected source-of-truth, public documentation, schemas, and tests accurately distinguish the implemented live transport from still-open native host callback installation and independent Reviewer integration.",
+    "Focused/full tests, current-task, scope, repository, schemas, compile, and diff validation pass."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_self_review_transport tests.test_active_agent_self_review tests.test_alignment_transport tests.test_reference_alignment_adapter tests.test_semantic_review tests.test_coding_agent_transport tests.test_agent_skills tests.test_task_contract tests.test_user_documentation tests.test_portfolio_docs -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-live-active-agent-self-review-transport.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-live-active-agent-self-review-transport.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "high",
+    "items": [
+      "A stateful stream could bind a draft to the wrong alignment, Provider, adapter, or request after an invalid record or retry.",
+      "Embedding normalized review context in a response could accidentally expose raw conversation, host-local paths, credentials, or undeclared source content.",
+      "Host-authored drafts could try to supply result identity, overstate independence, invent evidence, or gain authority.",
+      "Adding transport records can increase protocol weight unless they reuse existing contracts and remain invisible to ordinary user input."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": [
+      "docs/development-log/2026-08-06.md"
+    ]
+  },
+  "stop_conditions": [
+    "Stop if a review request can be produced before the exact human alignment resolution or for low/high risk.",
+    "Stop if a draft can cross adapter, dialogue, Provider, route, or request bindings, or if invalid input advances session state.",
+    "Stop if raw/private content, host-selected result identity, false independence, silent downgrade, or any project/external authority enters the stream contracts.",
+    "Stop if ordinary users must author stream JSON, enter a new confirmation, or configure a second model/account.",
+    "Stop if the transport writes repository/runtime state or survives foreground process restart.",
+    "Stop before any external model call, Provider setup, network access, external write, Git write, publication, release, deployment, or consumer mutation."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "The user reviewed and accepted the completed live active-Agent self-review transport on 2026-08-06, then explicitly authorized the recommended native host Adapter proof as the next requirement."
+  }
+}

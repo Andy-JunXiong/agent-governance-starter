@@ -176,6 +176,10 @@ class PortfolioDocumentationTests(unittest.TestCase):
             "docs/case-study.md",
             "docs/case-studies/0001-pr-center-architecture-drift.md",
             "docs/development-task-contract.md",
+            "docs/task-proposal-admission.md",
+            "docs/admission-routing.md",
+            "docs/human-decision-prompts.md",
+            "docs/clarification-dialogue.md",
             "docs/development-context.md",
             "docs/development-session.md",
             "docs/development-scope-check.md",
@@ -195,6 +199,18 @@ class PortfolioDocumentationTests(unittest.TestCase):
             "evaluation/schemas/evaluation-manifest.schema.json",
             "schemas/repository-report.schema.json",
             "schemas/development-task.schema.json",
+            "schemas/task-proposal.schema.json",
+            "schemas/task-admission-plan.schema.json",
+            "schemas/admission-routing-policy.schema.json",
+            "schemas/work-request.schema.json",
+            "schemas/admission-route.schema.json",
+            "schemas/human-decision-prompt.schema.json",
+            "schemas/human-decision-result.schema.json",
+            "schemas/alignment-context.schema.json",
+            "schemas/clarification-dialogue.schema.json",
+            "schemas/clarification-prompt.schema.json",
+            "schemas/clarification-update.schema.json",
+            "schemas/coding-agent-alignment-response.schema.json",
             "schemas/development-context.schema.json",
             "schemas/development-session.schema.json",
             "schemas/development-scope-report.schema.json",
@@ -303,6 +319,28 @@ class PortfolioDocumentationTests(unittest.TestCase):
         self.assertIn("`compact` 和 `standard` profile", text)
         self.assertIn("一个真实 Coding Agent 使用 context output", text)
         self.assertIn("Revision 3", text)
+        self.assertIn("Revision 4", text)
+        for provider_phrase in (
+            "SemanticReviewProvider",
+            "model-free",
+            "self_review",
+            "separate_pass",
+            "isolated_context",
+            "different_model",
+            "different_provider",
+            "不得静默降级",
+            "用户或组织一次性配置",
+            "API Key、Token、原始聊天",
+            "Multi-Agent",
+            "风险路由 ADR/contract",
+            "ADR-0014",
+            "三个严格契约",
+            "当前 Agent self-review materializer",
+            "ReferenceAlignmentAdapter",
+            "规范化临时上下文",
+            "安装宿主回调",
+        ):
+            self.assertIn(provider_phrase, text)
         self.assertIn("每个 working copy 一个 active task", text)
         self.assertIn("Phase 3 hard gate", text)
 

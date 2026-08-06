@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/coding-agent-response-v1.2.json",
+  "title": "AgentGov Coding Agent Response",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "sequence", "event", "status", "cycle", "card", "interaction", "decision_prompt"],
+  "properties": {
+    "contract": {"const": "agentgov.coding-agent-response"},
+    "schema_version": {"const": "1.2"},
+    "sequence": {"type": "integer", "minimum": 1},
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event_id", "event_type", "adapter_id", "actor_class", "correlation_id"],
+      "properties": {
+        "event_id": {"type": "string", "pattern": "^evt-[0-9a-f]{32}$"},
+        "event_type": {"type": "string", "minLength": 1},
+        "adapter_id": {"type": "string", "minLength": 1},
+        "actor_class": {"enum": ["human", "coding_agent", "ci"]},
+        "correlation_id": {"type": "string", "minLength": 1}
+      }
+    },
+    "status": {"const": "processed"},
+    "cycle": {"$ref": "foreground-cycle.schema.json"},
+    "card": {"anyOf": [{"$ref": "interaction-card.schema.json"}, {"type": "null"}]},
+    "interaction": {"anyOf": [{"$ref": "host-interaction-request.schema.json"}, {"type": "null"}]},
+    "decision_prompt": {"anyOf": [{"$ref": "human-decision-prompt.schema.json"}, {"type": "null"}]}
+  }
+}

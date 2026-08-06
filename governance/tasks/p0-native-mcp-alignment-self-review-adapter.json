@@ -1,0 +1,114 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-native-mcp-alignment-self-review-adapter",
+  "title": "Install alignment and active-Agent self-review through a native MCP Adapter",
+  "requirement": {
+    "summary": "Provide a lightweight foreground STDIO MCP Adapter that lets a current Coding Agent use the implemented alignment and medium-risk self-review state machines through model-controlled tools, with Codex as the first project-local installation proof and no user-authored protocol JSON or second-model setup.",
+    "source_refs": [
+      "docs/active-agent-self-review.md",
+      "docs/clarification-dialogue.md",
+      "docs/codex-hooks-adapter.md",
+      "docs/development-automation-contracts.md",
+      "docs/product-requirements-automatic-governance.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+      "docs/adr/0014-route-semantic-review-through-host-providers.md"
+    ],
+    "rationale": "The foreground JSONL protocol is executable but ordinary Coding Agent surfaces do not own its records. A model-controlled MCP tool boundary is the smallest native host integration that can keep Core model-free, reuse current-agent entitlement, and remain portable beyond one vendor."
+  },
+  "goal": "Add a vendor-neutral foreground MCP Adapter over the existing alignment and active-Agent self-review state machines, expose a reviewed project-local Codex configuration, and prove the current Agent can complete the normalized journey without user-authored JSON, another account, or Core model calls.",
+  "non_goals": [
+    "Do not add an OpenAI, Anthropic, or general model SDK; call a model from AgentGov; configure an API key; start a second Agent; or implement the independent high-risk Reviewer.",
+    "Do not treat Codex command hooks as model-capable prompt or agent handlers; current released hooks execute commands only.",
+    "Do not send raw prompts, raw answers, transcripts, assistant messages, full source content, credentials, model prompts, absolute paths, or host-selected governance identities into Core.",
+    "Do not let an MCP tool admit tasks, start development sessions, modify requirements or architecture, expand scope, approve exceptions, authorize code/Git/publication/release/deployment, or perform external writes.",
+    "Do not persist dialogue or self-review state across Adapter restart, write runtime/repository state from MCP tools, or run a background daemon.",
+    "Do not claim that offline protocol tests prove Codex, Claude Code, or an IDE will always select the right tool or perform correct semantic reasoning.",
+    "Do not change stable 0.2.1, immutable v0.3.0rc1, release metadata, workflows, consumer repositories, or external systems."
+  ],
+  "scope": {
+    "include_paths": [
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "agent-skills",
+      "docs",
+      "governance/fixtures",
+      "governance/tasks",
+      "schemas",
+      "src/agentgov",
+      "templates",
+      "tests"
+    ],
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      ".github/workflows",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+    "docs/adr/0014-route-semantic-review-through-host-providers.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/development-automation-contracts.md"
+  ],
+  "acceptance_signals": [
+    "A dependency-free foreground STDIO JSON-RPC MCP server supports current discovery/tool calls plus the legacy initialize path needed for host compatibility, emits only protocol JSON on stdout, and sends diagnostics only to stderr.",
+    "The server advertises a deterministic minimal tool set for starting/updating/resolving alignment and starting/completing active-Agent self-review, with strict JSON Schemas, read-only/advisory annotations, and server instructions that keep the workflow in order.",
+    "Each journey returns an explicit opaque handle; every later call must present that handle and the exact pending prompt/request binding. Unknown, duplicate, stale, out-of-order, cross-journey, cross-Adapter, or restarted calls fail without advancing state.",
+    "Tools accept only normalized center/drift/question/resolution/observation drafts. The Adapter, not the model, generates contract IDs, digests, timestamps, route/Provider bindings, observation identities, result identity, privacy declarations, and denied authority.",
+    "Self-review starts only after the same journey has a human-owned resolved alignment, uses an available medium-risk active-host Provider supplied by the host Adapter, and completes only through the existing active-Agent result builder.",
+    "MCP calls make zero AgentGov model/network calls, write no repository/runtime state, survive no process restart, and cannot claim independent assurance or downstream authority.",
+    "A create-missing-only Codex project integration plan/config launches the packaged AgentGov MCP command, requires normal trusted-project/config review, and does not overwrite an existing .codex/config.toml or change the existing hook trust boundary.",
+    "Codex and Claude Code Provider fixtures exercise the same in-process MCP tool journey without vendor branches in Core; Codex-specific configuration remains in the Adapter integration layer.",
+    "Tests cover discovery, legacy initialization, tool listing/calls, JSON-RPC errors, complete alignment-to-review flow, invalid atomic retry, restart loss, privacy/authority rejection, CLI STDIO framing, config conflict/preserve/create behavior, and documentation truthfulness.",
+    "Affected source-of-truth and public documentation distinguish implemented MCP protocol/configuration from unproven native model tool selection, future Claude/IDE installation, and independent high-risk Reviewer work.",
+    "Focused/full tests, current-task, scope, repository, schemas, compile, and diff validation pass."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_governance_mcp tests.test_codex_hooks tests.test_self_review_transport tests.test_alignment_transport tests.test_reference_alignment_adapter tests.test_task_contract tests.test_user_documentation tests.test_portfolio_docs -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-native-mcp-alignment-self-review-adapter.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-native-mcp-alignment-self-review-adapter.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "high",
+    "items": [
+      "A model-controlled tool sequence could cross journey, prompt, Provider, or pending self-review bindings after retry or restart.",
+      "A host could forward raw conversation or source content into normalized tool arguments unless schemas and runtime validation fail closed.",
+      "Project-local MCP configuration is executable and therefore must retain Codex trusted-project/config review rather than being silently installed.",
+      "MCP and Codex capabilities are evolving; the implementation must state the tested protocol/configuration boundary and avoid claiming unsupported hook agent execution."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": [
+      "docs/development-log/2026-08-06.md"
+    ]
+  },
+  "stop_conditions": [
+    "Stop if the MCP Adapter needs raw/private content, model credentials, a Core model call, a second Agent, background persistence, or a repository/runtime write.",
+    "Stop if a model can provide governance identities, skip the resolved human alignment, cross journey/Adapter/request bindings, or gain project/external authority.",
+    "Stop if project configuration can overwrite existing .codex/config.toml, bypass Codex trust review, or claim automatic support in an untested host.",
+    "Stop if ordinary users must author JSON-RPC/tool payloads, repeatedly confirm medium-risk self-review, or configure a second model/account.",
+    "Stop before external network/model calls, Git writes, publication, release, deployment, or consumer mutation."
+  ],
+  "decision": {
+    "state": "admitted",
+    "decided_by": "Human product owner",
+    "rationale": "The user reviewed the live self-review transport, accepted its requirement/drift closeout, and explicitly authorized the recommended native Coding Agent Adapter feature on 2026-08-06."
+  }
+}

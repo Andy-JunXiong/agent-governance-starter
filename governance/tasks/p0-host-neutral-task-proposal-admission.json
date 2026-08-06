@@ -1,0 +1,104 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-host-neutral-task-proposal-admission",
+  "title": "Convert structured coding-agent proposals into human-admitted tasks",
+  "requirement": {
+    "summary": "Add a vendor-neutral boundary that accepts a Coding Agent's structured interpretation of a natural-language request, previews an exact low-risk task contract, and writes it only after explicit human admission without retaining the raw prompt.",
+    "source_refs": [
+      "docs/development-automation-contracts.md",
+      "docs/development-plan.md",
+      "docs/product-requirements-automatic-governance.md",
+      "STATUS.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md"
+    ],
+    "rationale": "The host interaction contract can request task review, but a normal Coding Agent still lacks a portable and truthful way to turn a user's request into a reviewable task without asking the human to author internal JSON or conflating agent interpretation with human admission."
+  },
+  "goal": "Define strict task-proposal and admission-plan contracts plus a CLI/library flow that validates a structured low-risk proposal, previews the exact resulting task, and creates it only after a human types ADMIT in an interactive terminal.",
+  "non_goals": [
+    "Do not store, forward, echo, hash, or infer authority from a raw user prompt, conversation transcript, assistant response, source file content, model identifier, credential, or absolute path.",
+    "Do not let a Coding Agent, CI process, non-interactive command, Hook, inferred intent, or host tool permission admit a task.",
+    "Do not admit medium, high, or critical risk through the compact proposal path.",
+    "Do not overwrite an existing task, replace an active session, start a development session, execute validation, modify product code, or automatically continue into implementation.",
+    "Do not add vendor-specific fields to AgentGov Core or claim that Codex Hooks can render or record a native custom decision.",
+    "Do not commit, push, merge, publish, release, deploy, install a host component, or write to an external system."
+  ],
+  "scope": {
+    "include_paths": [
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "docs",
+      "governance/tasks",
+      "schemas",
+      "src/agentgov",
+      "templates",
+      "tests"
+    ],
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      ".github/workflows",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/development-automation-contracts.md",
+    "docs/development-task-contract.md"
+  ],
+  "acceptance_signals": [
+    "A strict vendor-neutral task-proposal contract carries only the Coding Agent's bounded structured interpretation, declared assumptions and unknowns, scope, validation commands, low-risk classification, and denied authority; unknown fields fail closed.",
+    "A strict admission-plan contract exposes proposal identity and digest, target state, the exact development-task document, planned targets, and denied consequential authority without embedding the raw prompt or host-specific data.",
+    "Preview is read-only and machine-readable; JSON output cannot be combined with a write attempt.",
+    "Only exact ADMIT from a real interactive terminal authorizes exclusive creation of the reviewed task file; CI, ordinary non-interactive agents, piped stdin, flags, environment variables, and inferred intent cannot confirm it. Terminal presence is an operator-attestation fallback, not cryptographic human identity proof.",
+    "The apply path revalidates proposal identity, digest, exact planned task content, safe repository-relative paths, parent directories, and target nonexistence so post-preview drift or races fail closed without overwrite.",
+    "Admission creates only the reviewed task contract and does not create local session state, append lifecycle events, execute commands, or authorize code change, scope expansion, exception, Git operations, deployment, or release.",
+    "Existing guided start, host interaction, JSONL, Codex Hook, coordinator, task, scope, completion, packaging, and repository behavior remains compatible.",
+    "Focused tests, the complete Python 3.11 suite, task/scope/repository checks, schema parsing, packaging assertions, and diff checks pass."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_task_proposal tests.test_development_session tests.test_task_contract tests.test_host_interaction tests.test_codex_hooks -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-host-neutral-task-proposal-admission.json --repository .",
+    "python -m agentgov govern check governance/tasks/p0-host-neutral-task-proposal-admission.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "medium",
+    "items": [
+      "A Coding Agent's interpretation may omit or distort the user's real need, so the proposal must remain non-authoritative until human review.",
+      "A raw prompt or transcript field would create unnecessary privacy and portability exposure.",
+      "A non-interactive confirmation path or writable approval flag would allow the proposing agent to self-admit its scope.",
+      "A write-after-preview race could create a task different from the one the human reviewed or overwrite repository governance."
+    ]
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "owner": "Human product owner",
+    "evidence_refs": []
+  },
+  "stop_conditions": [
+    "Stop if the contract or implementation needs to persist or echo raw prompt, transcript, response, source, model, credential, secret-like value, or absolute-path data.",
+    "Stop if admission can be performed through CI, non-interactive stdin, a command flag, inferred intent, or host permission rather than exact operator terminal confirmation; do not claim that terminal presence cryptographically proves human identity.",
+    "Stop if the proposed task is not low risk, has unsafe or ambiguous scope, lacks a validation command, or fails the existing development-task contract.",
+    "Stop if apply would overwrite an existing path, start or replace a session, execute validation, append an event, or write anything beyond the exact reviewed task file.",
+    "Stop before any Git write, host installation, release, consumer mutation, or external-system write."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "The user reviewed the completed proposal-admission boundary, identified its per-task friction risk, and explicitly selected risk-based admission routing with a measurable friction budget on 2026-08-06."
+  }
+}

@@ -33,6 +33,21 @@ rules.
   for a human-owned coding-agent task. It stays `draft`, requires exact scope,
   acceptance, validation command, owner, risk, and decision, and does not
   invent parent-objective, approval, or architecture declarations.
+- `task-proposal.template.json`: strict non-authoritative input for a Coding
+  Agent or host Adapter to describe one normalized low-risk task, assumptions,
+  unknowns, privacy boundary, and denied authority before human admission.
+- `admission-routing-policy.template.json`: human-owned standing policy that
+  ships as a draft with fast-track disabled and zero-interruption budgets for
+  no-write, active-task, and future fast-track routes.
+- `work-request.template.json`: zero-authority no-write request example for
+  host-side classification without raw prompt or transcript content.
+- `codex-hooks.template.json`: exact optional project hook definition for the
+  packaged Codex Adapter. Install it only through the create-missing-only
+  `agentgov integrate codex-hooks` flow and review trust separately in Codex.
+- `codex-mcp.template.toml`: exact optional project configuration for the
+  foreground AgentGov MCP Adapter. Install it only through the
+  create-missing-only `agentgov integrate codex-mcp` flow and preserve Codex
+  trusted-project/config review.
 
 ## Placeholder contract
 
@@ -49,13 +64,16 @@ values while preserving the relevant schema. Check the results with:
 agentgov check capability path/to/capability.json
 agentgov check references path/to/capability.json --repository .
 agentgov check task path/to/development-task.json --repository .
+agentgov propose task path/to/task-proposal.json --repository . --dry-run
+agentgov route request path/to/work-request.json `
+  --policy governance/admission-policy.json --repository .
 ```
 
 Packaging installs these same reviewed files under the distribution data
 directory; there is no second generated template copy to keep in sync. The
 existing repository scaffold files are used by `agentgov init`; the
-development-task template remains explicit opt-in until its interface is
-proven.
+development-task and task-proposal templates remain explicit opt-in fallback
+interfaces rather than the intended ordinary-user workflow.
 
 Initialize a new or empty directory with:
 

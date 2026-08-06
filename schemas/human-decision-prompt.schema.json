@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/human-decision-prompt-v1.0.json",
+  "title": "AgentGov Human Decision Prompt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "prompt_id", "source", "kind", "title", "summary", "why_now", "recommended_option_id", "options", "input", "binding", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.human-decision-prompt"},
+    "schema_version": {"const": "1.0"},
+    "prompt_id": {"type": "string", "pattern": "^dpr-[0-9a-f]{32}$"},
+    "source": {"$ref": "#/$defs/source"},
+    "kind": {"enum": ["task_routing", "task_admission", "scope_resolution", "completion_review", "alignment_resolution"]},
+    "title": {"type": "string", "minLength": 1, "maxLength": 160},
+    "summary": {"type": "string", "minLength": 1, "maxLength": 500},
+    "why_now": {"type": "string", "minLength": 1, "maxLength": 500},
+    "recommended_option_id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "options": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 5,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "index", "label", "effect", "transition"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+          "index": {"type": "integer", "minimum": 1, "maximum": 5},
+          "label": {"type": "string", "minLength": 1, "maxLength": 160},
+          "effect": {"type": "string", "minLength": 1, "maxLength": 500},
+          "transition": {"$ref": "#/$defs/transition"}
+        }
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "minimum_selections", "maximum_selections", "free_text_required"],
+      "properties": {
+        "mode": {"const": "single_select"},
+        "minimum_selections": {"const": 1},
+        "maximum_selections": {"const": 1},
+        "free_text_required": {"const": false}
+      }
+    },
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adapter_id", "delivery_mode", "decision_recording", "reason_code"],
+      "properties": {
+        "adapter_id": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$"},
+        "delivery_mode": {"enum": ["native", "structured", "context_only", "unsupported"]},
+        "decision_recording": {"enum": ["adapter_event", "host_managed", "unavailable"]},
+        "reason_code": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$"}
+      }
+    },
+    "authority_boundary": {"$ref": "#/$defs/promptAuthority"}
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract", "id", "digest"],
+      "properties": {
+        "contract": {"enum": ["agentgov.host-interaction-request", "agentgov.admission-route", "agentgov.clarification-dialogue"]},
+        "id": {"type": "string", "pattern": "^(?:req|wrq|dlg)-[0-9a-f]{32}$"},
+        "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "transition": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action"],
+          "properties": {"action": {"const": "none"}}
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action", "event_type", "fact_name", "fact_value"],
+          "properties": {
+            "action": {"const": "emit_core_event"},
+            "event_type": {"enum": ["scope.decision_recorded", "session.reviewed"]},
+            "fact_name": {"enum": ["scope_decision", "review_outcome"]},
+            "fact_value": {"enum": ["approved", "declined", "needs_human", "accepted", "changes_requested"]}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action", "target", "task_id", "task_digest"],
+          "properties": {
+            "action": {"const": "admit_exact_task"},
+            "target": {"type": "string", "pattern": "^governance/tasks/[a-z0-9]+(?:-[a-z0-9]+)*\\.json$"},
+            "task_id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+            "task_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action", "resolution_id"],
+          "properties": {
+            "action": {"const": "record_alignment_resolution"},
+            "resolution_id": {"enum": ["return_to_center", "adopt_new_center", "split_new_requirement", "continue_exploration", "stop"]}
+          }
+        }
+      ]
+    },
+    "promptAuthority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision_recorded", "decision_applied", "authorizes_code_change", "authorizes_scope_expansion", "authorizes_exception", "authorizes_git_operations", "authorizes_deployment", "authorizes_release"],
+      "properties": {
+        "decision_recorded": {"const": false},
+        "decision_applied": {"const": false},
+        "authorizes_code_change": {"const": false},
+        "authorizes_scope_expansion": {"const": false},
+        "authorizes_exception": {"const": false},
+        "authorizes_git_operations": {"const": false},
+        "authorizes_deployment": {"const": false},
+        "authorizes_release": {"const": false}
+      }
+    }
+  }
+}

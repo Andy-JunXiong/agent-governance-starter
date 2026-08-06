@@ -131,7 +131,10 @@ agentgov next .</code></pre>
     </section>
     <section class="emphasis">
       <h2>开发源自动化状态</h2>
-      <p>开发源现已实现单次前景 <code>agentgov dev</code> 协调循环和最小参考 Adapter，可自动执行范围观察、已批准验证、完成对账、人工评审后的 handoff 与 Dashboard 刷新。Codex、Claude Code 或 IDE 的实时事件接入、自然语言任务准入和可视化卡片仍是下一阶段；stable 0.2.1 与 v0.3.0rc1 未改变。</p>
+      <p>开发源现已实现 <code>agentgov dev</code> 协调器、严格的前台 <code>--stream</code> JSONL 实时进程接入、由本地事实驱动的范围观察、已批准验证、完成对账、人工评审后的 handoff、Dashboard 刷新、受约束的任务/范围/完成卡片、供应商中立的宿主交互请求，以及首个打包的 Codex 生命周期 Hook Adapter。现在还实现风险分级路由：提问、解释、状态查询和只读诊断不创建任务；已验证当前任务内的正常迭代不重复准入；只有 Git 已跟踪、无漂移且由真人准入的政策才能对其受限低风险范围实行零打断快速通道；材料风险必须评审。可用 <code>agentgov route request request.json --policy governance/admission-policy.json --repository .</code> 预览。对于已规划的低风险人工评审，可加 <code>--prompt-human</code>：AgentGov 会主动解释为什么现在需要决定，并让用户只输入一个数字选择批准、修改或拒绝，不要求 <code>ADMIT</code> 或自由文本。当需求含义还不稳定时，供应商中立的澄清协议会持续显示当前中心与建议性漂移，每轮只问一个自然语言问题，只保留规范化滚动摘要，并在选项稳定后才给出最后选择。同一个 <code>agentgov dev --stream</code> 连接现在可以接收严格的规范化对齐上下文和人类更新，然后自动返回下一个问题或最终选择；对话只存在于当前前台进程内，重启后不会恢复。宿主侧参考 Alignment Adapter 现在可以演练“普通需求、一次自然语言回答、一次最终单选”的完整小流程，用户无需编写 JSON 或内部命令；语义理解由可替换的宿主 materializer 完成，不属于 Core。开发源还已实现严格的供应商中立 Provider 能力、低/中/高风险路由和摘要绑定的 advisory 结果契约。中风险绑定当前 Coding Agent 自查，无需新账号；高风险绑定合格独立 Reviewer，否则返回恰好三个未选人类选项，不静默降级。Codex、Claude Code、通用 IDE 和 Provider 不可用 fixture 不调用真实模型、凭证或网络；生产语义 materializer 仍未完成。精确输入 <code>ADMIT</code> 的流程仅保留为恢复回退，并且不会启动开发。Codex Prompt Hook 会丢弃 Prompt，只返回路由和决定上下文，不再强制每条消息进入任务准入；它仍不能记录可信的自定义按钮结果。原生认证决定界面和其他宿主 Adapter 仍未完成；stable 0.2.1 与 v0.3.0rc1 未改变。</p>
+      <p>开发源现在还已把已解析的 Alignment Adapter 接到一个宿主中立的当前 Agent self-review 回调。只有用户完成最终方向选择后，才会传入规范化临时上下文和明确允许的仓库 evidence refs，并且只接受精确绑定的 advisory 结果。Codex 和 Claude Code fixture 共用同一路径。AgentGov 本身不调用模型、凭证或网络；生产宿主原生回调仍待安装。</p>
+      <p>当前 Agent 自查现在也通过同一个前台 stream 完成严格的 start/request/draft/completed 交换。这些记录由宿主 Adapter 自动生成：普通用户不用额外确认、不用编写 JSON，也不用配置第二个模型。AgentGov 本身不调用模型或网络；原生宿主安装仍待完成。</p>
+      <p>开发源现在还提供前台 STDIO MCP Adapter，通过五个模型可调用工具完成规范化对齐和当前 Agent 自查。可用 <code>agentgov integrate codex-mcp . --dry-run</code> 预览仅创建缺失文件的 Codex 项目配置；已有自定义配置不会被覆盖，Codex 信任决定仍由用户掌握。Codex 与 Claude Code fixture 共用 Core 工具路径；真实无指导宿主演练及非 Codex 安装包仍待完成。</p>
     </section>
   </main>
   <footer class="shell">Agent Governance Starter Kit · 本地运行 · 仓库原生 · 人工控制</footer>

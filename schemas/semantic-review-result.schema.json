@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/semantic-review-result-v1.0.json",
+  "title": "AgentGov Semantic Review Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "result_id", "route", "provider", "status", "semantics", "assurance", "observations", "content_boundary", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.semantic-review-result"},
+    "schema_version": {"const": "1.0"},
+    "result_id": {"type": "string", "pattern": "^srv-[0-9a-f]{32}$"},
+    "route": {"type": "object", "additionalProperties": false, "required": ["route_id", "route_digest"], "properties": {"route_id": {"type": "string", "pattern": "^srr-[0-9a-f]{32}$"}, "route_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}},
+    "provider": {"type": "object", "additionalProperties": false, "required": ["provider_id", "capability_digest"], "properties": {"provider_id": {"$ref": "semantic-review-provider-capabilities.schema.json#/$defs/identifier"}, "capability_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}},
+    "status": {"const": "completed"},
+    "semantics": {"const": "advisory"},
+    "assurance": {"type": "object", "additionalProperties": false, "required": ["review_mode", "independence_level"], "properties": {"review_mode": {"enum": ["self_review", "independent_review"]}, "independence_level": {"enum": ["same_turn", "separate_pass", "isolated_context", "different_model", "different_provider"]}}},
+    "observations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 50,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["observation_id", "kind", "summary", "evidence_refs", "assumptions", "unknowns", "recommended_question"],
+        "properties": {
+          "observation_id": {"type": "string", "pattern": "^obs-[0-9a-f]{16}$"},
+          "kind": {"enum": ["business", "requirement", "architecture", "scope", "implementation", "security", "data"]},
+          "summary": {"type": "string", "minLength": 1, "maxLength": 800},
+          "evidence_refs": {"type": "array", "minItems": 1, "maxItems": 20, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "assumptions": {"type": "array", "maxItems": 20, "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 400}},
+          "unknowns": {"type": "array", "maxItems": 20, "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 400}},
+          "recommended_question": {"anyOf": [{"type": "null"}, {"type": "string", "minLength": 1, "maxLength": 800}]}
+        }
+      }
+    },
+    "content_boundary": {"$ref": "semantic-review-provider-capabilities.schema.json#/$defs/contentBoundary"},
+    "authority_boundary": {"$ref": "semantic-review-provider-capabilities.schema.json#/$defs/authority"}
+  }
+}

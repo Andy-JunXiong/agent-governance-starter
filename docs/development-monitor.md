@@ -26,10 +26,16 @@ surface rather than a command the ordinary user must remember to run. The
 current static Monitor is the validated read-model foundation. Development
 source now derives Overview, Live Sessions, Protection Events, Activity
 Timeline, and Task Detail. The accepted next slices add explicit protection
-resolution links and Benefit/Learning views. The first `agentgov dev`
-foreground cycle now refreshes this Dashboard after each processed adapter
-event; a live coding-agent transport that emits those events automatically is
-still unimplemented.
+resolution links and Benefit/Learning views. `agentgov dev` refreshes this
+Dashboard after each processed adapter event, and its strict `--stream` JSONL
+mode can process several events in one foreground coding-agent connection. The
+first packaged Codex lifecycle-hook Adapter is implemented in development
+source; Claude Code and IDE adapters remain optional future portability work.
+
+Vendor-neutral host-interaction requests are foreground response artifacts,
+not Dashboard resolution evidence. A displayed option has
+`decision_applied=false`; until a later explicit decision/resolution link is
+recorded, Protection Events must continue to report resolution as unknown.
 
 The target Dashboard explains how AgentGov protected both the user and the
 coding agent: bounded scope and authority, relevant context, stale evidence,

@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/semantic-review-provider-capabilities-v1.0.json",
+  "title": "AgentGov Semantic Review Provider Capabilities",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "provider_id", "adapter_id", "source", "availability", "review_mode", "independence_level", "cost_owner", "data_policy", "content_boundary", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.semantic-review-provider-capabilities"},
+    "schema_version": {"const": "1.0"},
+    "provider_id": {"$ref": "#/$defs/identifier"},
+    "adapter_id": {"$ref": "#/$defs/identifier"},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["owner", "access_mode"],
+      "properties": {
+        "owner": {"enum": ["active_host", "user", "organization", "agentgov_hosted"]},
+        "access_mode": {"enum": ["current_agent_entitlement", "user_configured", "organization_gateway", "hosted_opt_in"]}
+      }
+    },
+    "availability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reason_code"],
+      "properties": {
+        "status": {"enum": ["available", "unavailable"]},
+        "reason_code": {"$ref": "#/$defs/identifier"}
+      }
+    },
+    "review_mode": {"enum": ["self_review", "independent_review"]},
+    "independence_level": {"enum": ["same_turn", "separate_pass", "isolated_context", "different_model", "different_provider"]},
+    "cost_owner": {"enum": ["existing_user_entitlement", "user", "organization", "hosted_service"]},
+    "data_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["retention", "external_transfer"],
+      "properties": {
+        "retention": {"enum": ["none", "host_policy", "provider_policy"]},
+        "external_transfer": {"type": "boolean"}
+      }
+    },
+    "content_boundary": {"$ref": "#/$defs/contentBoundary"},
+    "authority_boundary": {"$ref": "#/$defs/authority"}
+  },
+  "$defs": {
+    "identifier": {"type": "string", "maxLength": 120, "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$"},
+    "contentBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contains_raw_prompt", "contains_raw_answer", "contains_transcript", "contains_assistant_response", "contains_source_content", "contains_credentials", "contains_model_prompt", "contains_absolute_paths"],
+      "properties": {
+        "contains_raw_prompt": {"const": false},
+        "contains_raw_answer": {"const": false},
+        "contains_transcript": {"const": false},
+        "contains_assistant_response": {"const": false},
+        "contains_source_content": {"const": false},
+        "contains_credentials": {"const": false},
+        "contains_model_prompt": {"const": false},
+        "contains_absolute_paths": {"const": false}
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["changes_requirements", "changes_architecture", "admits_task", "starts_session", "authorizes_code_change", "authorizes_scope_expansion", "authorizes_exception", "authorizes_git_operations", "authorizes_publication", "authorizes_release", "authorizes_deployment", "authorizes_external_write"],
+      "properties": {
+        "changes_requirements": {"const": false},
+        "changes_architecture": {"const": false},
+        "admits_task": {"const": false},
+        "starts_session": {"const": false},
+        "authorizes_code_change": {"const": false},
+        "authorizes_scope_expansion": {"const": false},
+        "authorizes_exception": {"const": false},
+        "authorizes_git_operations": {"const": false},
+        "authorizes_publication": {"const": false},
+        "authorizes_release": {"const": false},
+        "authorizes_deployment": {"const": false},
+        "authorizes_external_write": {"const": false}
+      }
+    }
+  }
+}

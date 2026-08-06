@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/clarification-update-v1.0.json",
+  "title": "AgentGov Clarification Update",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "update_id", "dialogue", "prompt", "question_id", "actor", "recorded_at", "answer_summary", "center_patch", "new_questions", "candidate_resolutions", "recommended_resolution_id", "ready_requested", "content_boundary", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.clarification-update"},
+    "schema_version": {"const": "1.0"},
+    "update_id": {"type": "string", "pattern": "^cup-[0-9a-f]{32}$"},
+    "dialogue": {
+      "type": "object", "additionalProperties": false,
+      "required": ["dialogue_id", "revision", "digest"],
+      "properties": {
+        "dialogue_id": {"type": "string", "pattern": "^dlg-[0-9a-f]{32}$"},
+        "revision": {"type": "integer", "minimum": 1},
+        "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "prompt": {
+      "type": "object", "additionalProperties": false,
+      "required": ["prompt_id", "prompt_digest"],
+      "properties": {
+        "prompt_id": {"type": "string", "pattern": "^cqp-[0-9a-f]{32}$"},
+        "prompt_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "question_id": {"type": "string", "pattern": "^qst-[0-9a-f]{16}$"},
+    "actor": {
+      "type": "object", "additionalProperties": false,
+      "required": ["adapter_id", "actor_class", "recording_method"],
+      "properties": {
+        "adapter_id": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$"},
+        "actor_class": {"const": "human"},
+        "recording_method": {"enum": ["host_conversation", "reference_terminal_conversation"]}
+      }
+    },
+    "recorded_at": {"type": "string", "format": "date-time"},
+    "answer_summary": {"type": "string", "minLength": 1, "maxLength": 800},
+    "center_patch": {"$ref": "alignment-context.schema.json#/$defs/centerPatch"},
+    "new_questions": {"type": "array", "maxItems": 100, "items": {"$ref": "alignment-context.schema.json#/$defs/question"}},
+    "candidate_resolutions": {"type": "array", "maxItems": 5, "items": {"$ref": "alignment-context.schema.json#/$defs/resolution"}},
+    "recommended_resolution_id": {"anyOf": [{"$ref": "alignment-context.schema.json#/$defs/resolutionId"}, {"type": "null"}]},
+    "ready_requested": {"type": "boolean"},
+    "content_boundary": {"$ref": "alignment-context.schema.json#/$defs/contentBoundary"},
+    "authority_boundary": {"$ref": "alignment-context.schema.json#/$defs/authority"}
+  }
+}

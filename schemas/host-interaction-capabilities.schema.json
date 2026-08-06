@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/host-interaction-capabilities-v1.0.json",
+  "title": "AgentGov Host Interaction Capabilities",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "adapter_id", "surface_family", "interactions", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.host-interaction-capabilities"},
+    "schema_version": {"const": "1.0"},
+    "adapter_id": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$"},
+    "surface_family": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$"},
+    "interactions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_admission", "scope_resolution", "completion_review", "tool_permission"],
+      "properties": {
+        "task_admission": {"$ref": "#/$defs/capability"},
+        "scope_resolution": {"$ref": "#/$defs/capability"},
+        "completion_review": {"$ref": "#/$defs/capability"},
+        "tool_permission": {"$ref": "#/$defs/capability"}
+      }
+    },
+    "authority_boundary": {"$ref": "#/$defs/authority"}
+  },
+  "$defs": {
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["delivery_mode", "decision_recording", "reason_code"],
+      "properties": {
+        "delivery_mode": {"enum": ["native", "structured", "context_only", "unsupported"]},
+        "decision_recording": {"enum": ["adapter_event", "host_managed", "unavailable"]},
+        "reason_code": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$"}
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision_applied", "authorizes_scope_expansion", "authorizes_exception", "authorizes_commit", "authorizes_merge", "authorizes_deployment"],
+      "properties": {
+        "decision_applied": {"const": false},
+        "authorizes_scope_expansion": {"const": false},
+        "authorizes_exception": {"const": false},
+        "authorizes_commit": {"const": false},
+        "authorizes_merge": {"const": false},
+        "authorizes_deployment": {"const": false}
+      }
+    }
+  }
+}

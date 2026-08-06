@@ -1,0 +1,45 @@
+{
+  "contract": "agentgov.semantic-review-provider-capabilities",
+  "schema_version": "1.0",
+  "provider_id": "fixture.user-independent-review",
+  "adapter_id": "fixture.user-provider",
+  "source": {
+    "owner": "user",
+    "access_mode": "user_configured"
+  },
+  "availability": {
+    "status": "unavailable",
+    "reason_code": "provider_not_configured"
+  },
+  "review_mode": "independent_review",
+  "independence_level": "isolated_context",
+  "cost_owner": "user",
+  "data_policy": {
+    "retention": "provider_policy",
+    "external_transfer": true
+  },
+  "content_boundary": {
+    "contains_raw_prompt": false,
+    "contains_raw_answer": false,
+    "contains_transcript": false,
+    "contains_assistant_response": false,
+    "contains_source_content": false,
+    "contains_credentials": false,
+    "contains_model_prompt": false,
+    "contains_absolute_paths": false
+  },
+  "authority_boundary": {
+    "changes_requirements": false,
+    "changes_architecture": false,
+    "admits_task": false,
+    "starts_session": false,
+    "authorizes_code_change": false,
+    "authorizes_scope_expansion": false,
+    "authorizes_exception": false,
+    "authorizes_git_operations": false,
+    "authorizes_publication": false,
+    "authorizes_release": false,
+    "authorizes_deployment": false,
+    "authorizes_external_write": false
+  }
+}

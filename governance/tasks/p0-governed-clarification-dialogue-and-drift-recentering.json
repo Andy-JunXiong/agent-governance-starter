@@ -1,0 +1,109 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-governed-clarification-dialogue-and-drift-recentering",
+  "title": "Govern clarification dialogue and re-center drift",
+  "requirement": {
+    "summary": "Add a vendor-neutral advisory dialogue layer that keeps the user's business center visible, surfaces requirement or architecture drift, proactively asks one smallest useful question at a time, preserves normalized conclusions instead of raw conversation, and moves to a bounded human decision only when the options are actually stable.",
+    "source_refs": [
+      "docs/human-decision-prompts.md",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/development-automation-contracts.md",
+      "STATUS.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md"
+    ],
+    "rationale": "Single-select decisions reduce mechanical input only after the real choices are understood. Business, requirement, and architecture drift often require natural dialogue first. Treating every discussion turn as a gate or compressing material ambiguity into an early approval would optimize friction metrics at the expense of alignment."
+  },
+  "goal": "Define strict alignment-context, clarification-dialogue, clarification-prompt, and clarification-update contracts plus a multi-turn library/reference flow that preserves the center, classifies drift semantics, asks one question at a time, records only normalized human-owned summaries, and produces the existing minimal-input final decision only after clarification is ready.",
+  "non_goals": [
+    "Do not make ordinary exploratory conversation create a development task, require admission, or count each turn as a governance decision episode.",
+    "Do not claim business value, product priority, requirement meaning, architecture correctness, or a recommended re-centering option is objectively determined by a static check.",
+    "Do not store raw prompts, raw answers, transcripts, assistant responses, source content, credentials, model identifiers, or absolute host paths in Core dialogue contracts.",
+    "Do not impose a product-level maximum number of clarification turns; bounded document size is an operational safety limit, not a semantic pressure to end discussion.",
+    "Do not let a Coding Agent mark a human answer, close an unknown, change the center, or select a final resolution without a trusted human-originated structured update or decision result.",
+    "Do not automatically admit or replace a task, change architecture policy, expand scope, approve an exception, start a session, execute commands, or authorize Git, deployment, publication, or release.",
+    "Do not add a hidden daemon, install a host component, add a second vendor Adapter, or claim cryptographic human identity."
+  ],
+  "scope": {
+    "include_paths": [
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "agent-skills",
+      "docs",
+      "governance/tasks",
+      "schemas",
+      "src/agentgov",
+      "templates",
+      "tests"
+    ],
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      ".github/workflows",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/development-automation-contracts.md",
+    "docs/human-decision-prompts.md"
+  ],
+  "acceptance_signals": [
+    "A strict alignment-context contract separates the current center (outcome, why now, success, constraints, non-goals) from an advisory business, requirement, architecture, scope, or implementation drift observation, evidence, assumptions, unknowns, and denied authority.",
+    "A strict clarification-dialogue state keeps exact source identity and digest, revision, center, drift, open questions, normalized discussion records, candidate resolutions, alignment status, clarification-turn count, and governance-decision-episode count without raw conversation fields.",
+    "A proactive clarification prompt shows the current center, observed divergence, why the next question matters, and exactly one smallest useful natural-language question. Display and ordinary conversation grant no authority.",
+    "A strict human-originated clarification update binds the exact dialogue revision/digest and question, records a normalized answer summary plus explicit center/unknown/candidate changes, rejects unknown or raw fields, and cannot silently close or invent a different question.",
+    "Applying several valid updates advances immutable revisions without a product-level turn cap, counts clarification turns separately from governance decision episodes, and remains in dialogue until material unknowns are resolved and at least two bounded resolution options are stable.",
+    "Ready dialogue produces the existing digest-bound minimal-input human decision with return-to-center, adopt-new-center, split-new-requirement, continue-exploration, or stop options as applicable. The recommendation is advisory and never selected automatically.",
+    "A final human result can record only the selected alignment resolution and return a re-centered structured state; it does not itself mutate tasks, architecture documents, sessions, code, scope, Git, deployment, or release state.",
+    "Existing risk routing, decision prompts, exact ADMIT fallback, Coding Agent cards, JSONL, Codex Hooks, session, scope, completion, packaging, and repository behavior remains compatible; focused/full validation and governance checks pass."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_clarification_dialogue tests.test_human_decision tests.test_admission_routing tests.test_coding_agent_transport tests.test_agent_skills tests.test_task_contract -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-governed-clarification-dialogue-and-drift-recentering.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-governed-clarification-dialogue-and-drift-recentering.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "high",
+    "items": [
+      "A Coding Agent could bias the stated center, drift framing, questions, or recommendations and present advisory interpretation as fact.",
+      "Premature readiness could turn unresolved ambiguity into a misleading quick approval.",
+      "Persisting raw discussion would create unnecessary privacy, portability, and context-retention risk.",
+      "Counting every conversational turn as an interruption could recreate bureaucracy and pressure users into bad early decisions."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": [
+      "docs/development-log/2026-08-06.md"
+    ]
+  },
+  "stop_conditions": [
+    "Stop if the implementation needs raw prompt, answer, transcript, response, source, credential, model, or absolute host-path retention.",
+    "Stop if an Agent-originated update can impersonate a human answer, resolve a material unknown, change the center, or record the final resolution.",
+    "Stop if a dialogue with unresolved material unknowns can become ready for final single-selection approval.",
+    "Stop if clarification turns are hard-limited for friction optics or counted as separate governance decision episodes.",
+    "Stop if an advisory drift is rendered as an objective failure or if final resolution directly changes task, architecture, session, code, scope, Git, deployment, publication, or release state.",
+    "Stop before any Git write, host installation, release, consumer mutation, deployment, or external-system write."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "The user reviewed the completed clarification core, accepted its center/drift and discussion-before-decision semantics, and explicitly continued to Adapter-driven automatic clarification on 2026-08-06."
+  }
+}

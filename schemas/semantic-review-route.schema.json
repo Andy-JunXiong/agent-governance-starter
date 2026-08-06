@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/semantic-review-route-v1.0.json",
+  "title": "AgentGov Semantic Review Route",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "route_id", "risk", "route", "provider", "assurance", "options", "semantics", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.semantic-review-route"},
+    "schema_version": {"const": "1.0"},
+    "route_id": {"type": "string", "pattern": "^srr-[0-9a-f]{32}$"},
+    "risk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level", "reason_codes"],
+      "properties": {
+        "level": {"enum": ["low", "medium", "high"]},
+        "reason_codes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "semantic-review-provider-capabilities.schema.json#/$defs/identifier"}}
+      }
+    },
+    "route": {"enum": ["no_semantic_review", "self_review", "independent_review", "requires_human_choice"]},
+    "provider": {
+      "anyOf": [
+        {"type": "null"},
+        {"type": "object", "additionalProperties": false, "required": ["provider_id", "capability_digest"], "properties": {"provider_id": {"$ref": "semantic-review-provider-capabilities.schema.json#/$defs/identifier"}, "capability_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}}
+      ]
+    },
+    "assurance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requested_review_mode", "review_mode", "independence_level", "lower_than_requested"],
+      "properties": {
+        "requested_review_mode": {"enum": ["none", "self_review", "independent_review"]},
+        "review_mode": {"enum": ["none", "unresolved", "self_review", "independent_review"]},
+        "independence_level": {"enum": ["none", "same_turn", "separate_pass", "isolated_context", "different_model", "different_provider"]},
+        "lower_than_requested": {"type": "boolean"}
+      }
+    },
+    "options": {"type": "array", "uniqueItems": true, "items": {"enum": ["human_review", "accept_lower_assurance_self_review", "configure_provider"]}},
+    "semantics": {"const": "advisory"},
+    "authority_boundary": {"$ref": "semantic-review-provider-capabilities.schema.json#/$defs/authority"}
+  }
+}

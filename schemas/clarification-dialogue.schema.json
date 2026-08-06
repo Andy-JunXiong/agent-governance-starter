@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/clarification-dialogue-v1.0.json",
+  "title": "AgentGov Clarification Dialogue",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "dialogue_id", "source", "revision", "status", "center", "drift", "assumptions", "open_questions", "discussion_records", "candidate_resolutions", "recommended_resolution_id", "metrics", "resolution", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.clarification-dialogue"},
+    "schema_version": {"const": "1.0"},
+    "dialogue_id": {"type": "string", "pattern": "^dlg-[0-9a-f]{32}$"},
+    "source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["context_id", "context_digest"],
+      "properties": {
+        "context_id": {"type": "string", "pattern": "^acx-[0-9a-f]{32}$"},
+        "context_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "revision": {"type": "integer", "minimum": 1},
+    "status": {"enum": ["exploring", "ready_for_decision", "resolved", "stopped"]},
+    "center": {"$ref": "alignment-context.schema.json#/$defs/center"},
+    "drift": {"$ref": "alignment-context.schema.json#/$defs/drift"},
+    "assumptions": {"$ref": "alignment-context.schema.json#/$defs/textList"},
+    "open_questions": {"type": "array", "maxItems": 100, "items": {"$ref": "alignment-context.schema.json#/$defs/question"}},
+    "discussion_records": {
+      "type": "array", "maxItems": 100,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["question_id", "question_summary", "answer_summary", "recorded_at", "recorded_by"],
+        "properties": {
+          "question_id": {"type": "string", "pattern": "^qst-[0-9a-f]{16}$"},
+          "question_summary": {"type": "string", "minLength": 1, "maxLength": 800},
+          "answer_summary": {"type": "string", "minLength": 1, "maxLength": 800},
+          "recorded_at": {"type": "string", "format": "date-time"},
+          "recorded_by": {"const": "human"}
+        }
+      }
+    },
+    "candidate_resolutions": {"type": "array", "maxItems": 5, "items": {"$ref": "alignment-context.schema.json#/$defs/resolution"}},
+    "recommended_resolution_id": {"anyOf": [{"$ref": "alignment-context.schema.json#/$defs/resolutionId"}, {"type": "null"}]},
+    "metrics": {
+      "type": "object", "additionalProperties": false,
+      "required": ["clarification_turns", "governance_decision_episodes"],
+      "properties": {
+        "clarification_turns": {"type": "integer", "minimum": 0},
+        "governance_decision_episodes": {"type": "integer", "minimum": 0}
+      }
+    },
+    "resolution": {
+      "anyOf": [
+        {"type": "null"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["option_id", "summary", "recorded_at"],
+          "properties": {
+            "option_id": {"$ref": "alignment-context.schema.json#/$defs/resolutionId"},
+            "summary": {"type": "string", "minLength": 1, "maxLength": 800},
+            "recorded_at": {"type": "string", "format": "date-time"}
+          }
+        }
+      ]
+    },
+    "authority_boundary": {"$ref": "alignment-context.schema.json#/$defs/authority"}
+  }
+}

@@ -91,6 +91,27 @@ optional adapters. Host state is not governance authority. NYC and other
 consumer projects provide usage feedback but do not contribute project-specific
 paths, policy, data, workflows, or business concepts to Core.
 
+Semantic interpretation follows the same separation. AgentGov Core remains
+model-free and routes semantic review through a vendor-neutral host
+Provider. Medium-risk review defaults to the active Coding Agent performing a
+structured separate pass or isolated-context self-review with the user's
+existing entitlement and no new setup. High-risk review may use a user- or
+organization-provided independent Reviewer with at least separate context;
+different model or provider raises the disclosed independence level but does
+not create objective truth.
+
+If an independent Reviewer is required but unavailable, the product offers
+human review, an explicitly labeled lower-assurance same-agent review, or
+Provider setup. It never silently downgrades or makes a second model mandatory
+for installation and ordinary work. Credentials, cost, retention, and external
+transfer remain owned by the configured user/organization Provider or a future
+separately approved hosted service. Every LLM finding remains advisory and
+cannot select a direction or gain project or external-write authority.
+
+ADR-0014 now owns the implemented Provider-capability, risk-route, and
+advisory-result contracts. This ADR continues to own the broader automatic
+product journey; it does not imply that a production model materializer exists.
+
 The detailed approved requirements are owned by
 `docs/product-requirements-automatic-governance.md`.
 
@@ -185,6 +206,63 @@ human judgment, and unsupported causal claims into false precision.
   visual cards, persistent foreground session, Benefit/Learning views, and the
   independent automatic journey remain unimplemented. Therefore the accepted
   primary experience is still incomplete and no stable/RC behavior changes.
+
+## Implementation notes — 2026-08-06
+
+- `agentgov.coding-agent-event` 1.0 now provides a strict host-process JSONL
+  envelope. It cannot carry raw prompts, source, host paths, changed-path or
+  task-identity claims, or consequential authority.
+- `agentgov dev --stream` keeps one disclosed foreground process open for
+  several events and returns one structured response per accepted event. It is
+  not a daemon and does not upload local state.
+- The reference adapter derives working-copy identity, active task identity,
+  and Git changes locally before invoking the existing trigger/coordinator
+  path. Invalid records stop at their input line before coordinator action.
+- `agentgov.interaction-card` 1.0 provides bounded task, scope, and completion cards.
+  Card actions remain offers for human or host handling and apply no scope,
+  exception, commit, merge, release, or deployment authority.
+- The first packaged Codex lifecycle-hook Adapter maps `SessionStart`,
+  `UserPromptSubmit`, `PostToolUse`, and `Stop` into those vendor-neutral
+  events. Sensitive hook fields are discarded before event construction.
+- Codex project-hook integration is create-missing-only, requires exact
+  interactive confirmation, refuses overwrite/merge, and leaves trust review
+  to the user. `PostToolUse` cannot undo completed effects and repeated `Stop`
+  continuation is bounded by `stop_hook_active`.
+- `agentgov.host-interaction-capabilities` 1.0 and
+  `agentgov.host-interaction-request` 1.0 keep presentation and decision
+  recording vendor-neutral. A request has no decision or consequential
+  authority merely because a host displays it.
+- `agentgov.human-decision-prompt` and `agentgov.human-decision-result` 1.0 now
+  bind one proactive no-free-text choice to the exact source and predeclared
+  transition. The reference review accepts one number; safe recommendations
+  are never selected automatically.
+- The Codex binding declares custom task, scope, and completion gates as
+  context-only because current Hooks provide no arbitrary button or trusted
+  custom-decision callback. `PermissionRequest` leaves the ordinary Codex
+  human tool prompt undecided and is not treated as governance approval.
+- Vendor-neutral alignment-context and clarification-dialogue contracts now
+  keep substantive multi-turn discussion separate from final governance
+  decisions. They preserve the current center, mark business, requirement, and
+  architecture drift advisory, ask one natural-language question per turn,
+  retain only normalized rolling summaries, and reuse the existing
+  single-select result only after material unknowns and option instability are
+  resolved. Discussion or resolution grants no project-change authority.
+- The disclosed foreground Coding Agent stream now dispatches those strict
+  normalized contexts, human clarification updates, and final results. It
+  automatically returns exactly one next prompt through
+  `agentgov.coding-agent-alignment-response` 1.0, keeps state in memory only,
+  declares that it does not survive restart, and does not invoke a development
+  coordinator cycle for alignment-only records.
+- A host-side reference Alignment Adapter now accepts ordinary request and
+  answer text, delegates interpretation through a replaceable semantic
+  materializer, constructs the strict Core records, and records one final host
+  selection. Its privacy-safe offline rehearsal reports zero user-authored
+  JSON or internal commands; it does not add semantic inference to Core.
+- Natural-language task drafting, production host semantic materializers, a
+  native authenticated custom-decision surface,
+  explicit protection resolution, Benefit/Learning views, additional host
+  adapters, and the independent journey remain unimplemented. Stable 0.2.1 and
+  immutable `v0.3.0rc1` are unchanged.
 
 ## Validation
 

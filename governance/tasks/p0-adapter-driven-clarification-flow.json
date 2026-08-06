@@ -1,0 +1,109 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-adapter-driven-clarification-flow",
+  "title": "Connect governed clarification to the live Coding Agent Adapter",
+  "requirement": {
+    "summary": "Extend the vendor-neutral foreground Coding Agent stream so a normalized alignment observation automatically starts or resumes governed clarification, a strict human clarification update automatically returns the next question or final bounded choice, and the final human result returns only the resolved structured alignment state.",
+    "source_refs": [
+      "docs/clarification-dialogue.md",
+      "docs/development-automation-contracts.md",
+      "docs/product-requirements-automatic-governance.md",
+      "STATUS.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md"
+    ],
+    "rationale": "The clarification state machine is useful only when a Coding Agent host can invoke it proactively in the ordinary foreground connection. Requiring users to author contracts or call a separate manual command would preserve the protocol but miss the product need for active, low-mechanical-input guidance."
+  },
+  "goal": "Add a strict alignment stream response and an in-memory foreground alignment session, dispatch alignment-context, clarification-update, and final human-decision-result records through agentgov dev --stream, automatically return exactly one next clarification prompt or one stable final decision prompt, and preserve existing lifecycle-stream compatibility and all denied authority.",
+  "non_goals": [
+    "Do not send raw prompts, answers, transcripts, assistant responses, source content, credentials, model identifiers, or absolute host paths into AgentGov Core.",
+    "Do not claim Core semantically detects business or architecture drift from raw chat; the host Coding Agent Adapter must submit the strict normalized alignment context.",
+    "Do not persist dialogue across foreground process restarts, upload it, add a daemon, or add a second vendor-specific Adapter.",
+    "Do not let a Coding Agent submit a human clarification update or final direction selection.",
+    "Do not allow stale, duplicate, cross-dialogue, cross-prompt, cross-adapter, or out-of-order stream records to advance state.",
+    "Do not automatically edit requirements or ADRs, admit or replace a task, start a session, modify code or scope, execute commands, or authorize Git, deployment, publication, or release.",
+    "Do not change stable 0.2.1, immutable v0.3.0rc1, release metadata, workflows, consumer repositories, or external systems."
+  ],
+  "scope": {
+    "include_paths": [
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "agent-skills",
+      "docs",
+      "governance/tasks",
+      "schemas",
+      "src/agentgov",
+      "templates",
+      "tests"
+    ],
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      ".github/workflows",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/development-automation-contracts.md",
+    "docs/clarification-dialogue.md"
+  ],
+  "acceptance_signals": [
+    "A strict vendor-neutral alignment-stream response binds sequence, exact input identity, current dialogue revision, optional one-question clarification prompt, optional final human-decision prompt, status, and fully denied project authority.",
+    "The disclosed agentgov dev --stream process accepts strict agentgov.alignment-context 1.0 records alongside existing lifecycle events and immediately returns either the next one-question prompt or a final decision prompt without running a foreground development cycle.",
+    "The same stream accepts only a strict human-originated agentgov.clarification-update 1.0 bound to the active dialogue and exact last prompt, applies it in memory, and automatically returns the next question or stable final decision.",
+    "The same stream accepts only a strict agentgov.human-decision-result 1.0 bound to the active alignment decision prompt and returns resolved, stopped, or continued structured dialogue state without project mutation.",
+    "Duplicate contexts, missing active state, stale revisions, wrong prompts, cross-dialogue updates, Adapter drift, agent-authored human records, and unsupported contracts fail on the exact stream line before state advances.",
+    "The alignment session is memory-only for the disclosed foreground process; restart recovery and cross-process persistence are explicitly not claimed.",
+    "Existing coding-agent lifecycle JSONL events, response schema 1.2, cards, host interactions, human decisions, Codex Hooks, routing, session, scope, completion, packaging, and CLI behavior remain compatible.",
+    "Focused/full tests, all schema parsing, current-task, scope, repository, compile, and diff validation pass."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_alignment_transport tests.test_clarification_dialogue tests.test_coding_agent_transport tests.test_human_decision tests.test_codex_hooks tests.test_task_contract -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-adapter-driven-clarification-flow.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-adapter-driven-clarification-flow.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "high",
+    "items": [
+      "A host Adapter could bias or fabricate the normalized center, drift, questions, answer summary, or recommendation while Core correctly validates only structure and identity.",
+      "Mixing alignment and lifecycle records in one stream could weaken existing strict parsing, event ordering, or adapter identity guarantees.",
+      "Returning a final choice too early could make unresolved ambiguity look governed.",
+      "Treating the in-memory dialogue as durable could lose context or misrepresent restart recovery."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": [
+      "docs/development-log/2026-08-06.md"
+    ]
+  },
+  "stop_conditions": [
+    "Stop if live integration requires Core to retain or interpret raw chat, transcript, source, credential, model, or absolute host-path content.",
+    "Stop if a Coding Agent can impersonate the human clarification or final decision actor.",
+    "Stop if an invalid alignment record can partially advance the in-memory session or invoke a lifecycle coordinator action.",
+    "Stop if alignment response display or resolution can mutate project, task, architecture, session, scope, code, Git, deployment, publication, or release state.",
+    "Stop if existing strict lifecycle stream events or response behavior becomes ambiguous or incompatible.",
+    "Stop before any Git write, Hook installation, release, consumer mutation, deployment, or external-system write."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "The user reviewed the delivered live alignment transport and explicitly approved the next end-to-end natural-language Adapter rehearsal on 2026-08-06. This task is paused for routing hygiene only; the change does not claim acceptance, merge, publication, or release."
+  }
+}

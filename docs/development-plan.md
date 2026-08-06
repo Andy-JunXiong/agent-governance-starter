@@ -1,6 +1,6 @@
 # AgentGov remaining development plan
 
-Updated 2026-08-05. This page separates implemented development-source behavior
+Updated 2026-08-06. This page separates implemented development-source behavior
 from published and consumer-adopted behavior.
 
 ## Current checkpoint
@@ -91,8 +91,12 @@ from published and consumer-adopted behavior.
 The exact isolated `0.3.0rc1` wheel has completed the ADR-0012 rehearsal in
 three independent repositories: verified completion, Monitor guidance,
 handoff, zero/one/many rollover selection, and exact `REPLACE`. Seventeen
-delivered historical tasks are paused for routing hygiene, leaving one admitted
-RC closeout task.
+delivered historical tasks and the completed transport/card, Codex Adapter, and
+completion-communication and host-interaction tasks are paused for routing
+hygiene. The completed risk-based routing task is paused after review. The
+proactive-minimal-input-human-decisions and governed-clarification core tasks
+are paused after review. The adapter-driven-clarification-flow task is the only
+admitted task.
 
 ADR-0013 now records the next product boundary: the implemented manual
 `next/start/check/finish/Monitor/handoff` sequence is a set of internal and
@@ -112,9 +116,56 @@ adapter now perform one explicit event cycle: implementation changes trigger
 scope observation; completion requests trigger scope, admitted validation,
 reconciliation, and Dashboard refresh; human review can hand off verified work.
 Monitor 1.4 derives Live Sessions and Protection Events while keeping
-resolution unknown without an explicit link. Live coding-agent transport,
-natural-language task admission, visual cards, and Benefit/Learning remain; see
+resolution unknown without an explicit link. Development source now also
+provides a strict foreground JSONL coding-agent process transport, bounded
+task/scope/completion cards, vendor-neutral host-interaction requests, and the
+first packaged Codex lifecycle-hook Adapter. Codex preserves its native tool
+permission prompt but custom governance decisions remain context-only and
+unrecorded. Development source now also implements strict structured Coding
+Agent proposal and exact human task-admission contracts without raw-prompt
+retention or session start. Strict proactive prompt/result contracts now let a
+capable host present one recommended single-select decision and carry only its
+exact human-selected transition. Automatic host-side proposal generation, a
+native authenticated decision surface, protection resolution, and Benefit/Learning remain.
+Development source now also separates multi-turn natural-language
+clarification from the final governance decision: it preserves the current
+center, records business/requirement/architecture drift as advisory, retains
+only normalized rolling summaries, and waits for stable choices before using
+the existing single-select result. The same foreground Coding Agent stream now
+accepts that normalized context and its human updates, then automatically
+returns the next question or decision from memory-only state. A host-side
+reference Alignment Adapter now rehearses natural request, natural
+clarification, and one final single-select through a replaceable semantic
+materializer. It retains only normalized evidence and reports zero
+user-authored structured records or commands; production host materializers
+remain open. See
 `docs/development-automation-contracts.md`.
+
+ADR-0014 and three strict contracts now implement the model-free
+semantic-review boundary: Provider capability, risk route, and advisory result.
+Low risk uses no semantic review; medium risk binds the active Coding Agent's
+existing entitlement as disclosed self-review; high risk binds a qualifying
+independent Reviewer or returns exactly three unselected choices without
+silent downgrade. Cross-host fixtures prove contract portability, not model
+inference. The resolved Alignment Adapter now exposes a host-neutral
+active-Agent self-review materializer operation with evidence allow-list and
+exact result binding. The same foreground stream now implements a strict
+start/request/draft/completed exchange for that operation, including exact
+alignment, Adapter, Provider, evidence, and pending-request binding. The next
+bounded slice is now implemented as a foreground STDIO MCP Adapter with five
+model-controlled tools and a create-missing-only Codex project configuration.
+An uncoached live Codex rehearsal and then another native MCP-host proof remain;
+optional independent-Reviewer integration follows only after that evidence.
+
+The reviewed friction correction is now implemented in development source:
+no-write requests and locally verified active-task continuation require zero
+human interruptions; only a Git-tracked, clean, human-admitted standing policy
+can fast-track a bounded low-risk task; ambiguity and material characteristics
+route to review. Codex Prompt Hooks now request host-side structured routing
+without forwarding the prompt or forcing every message through task admission.
+The reference human-review path proactively shows approve/change/reject and
+accepts one number without a magic word or free-text rationale. Codex Hooks
+continue to disclose context-only/unavailable custom decision recording.
 
 Do not rewrite `v0.3.0rc1`, publish another candidate, promote stable 0.3.0,
 modify NYC, add automatic local-state upload, hidden daemon authority,
@@ -141,45 +192,61 @@ the intended final UX. The canonical requirements are in
 
 1. Complete extraction of the implemented lifecycle routing behind `next`, `govern start`,
    `govern check`, `govern finish`, Monitor, and handoff into an internal
-   state-machine service while preserving current CLI bytes, exit codes,
+   state-machine service while preserving current CLI results, exit codes,
    authority flags, and fixture behavior. The active-session projection is
-   implemented; no-task admission remains a human gate.
+   implemented; no-write work is explicitly not a task-admission gate.
 2. Extend the implemented strict, versioned, vendor-neutral trigger and
    minimal reference-adapter contract for
    at least task requested, repository activated, implementation changed,
    scope decision requested, completion requested, validation completed, and
    session reviewed events. The trigger vocabulary and authority boundary are
-   implemented; live vendor transport remains.
+   implemented; the generic process transport is implemented while packaged
+   vendor-specific adapters remain.
 3. Extend the implemented explicit one-cycle foreground coordinator
    `agentgov dev`, that consumes adapter events, invokes existing deterministic
    cores, records disclosed local metadata events, refreshes the Dashboard, and
-   returns findings without a hidden daemon. Connect it to a real coding-agent
-   surface and evaluate whether a longer-lived foreground process is needed.
-4. Extend the implemented repository-state reference adapter with one live
-   coding-agent transport. Adapter configuration remains replaceable input and
-   never governance authority.
-5. Add a concise task and approval surface. Normal product interaction uses a
-   card, button, or adapter approval event; exact `START`, `REPLACE`, and
-   `HANDOFF` text remains only a headless fallback.
-6. Preserve the implemented per-cycle automatic Monitor refresh and Overview,
+   returns findings without a hidden daemon. One JSONL foreground process can
+   now consume several coding-agent events; the first Codex hook integration is
+   implemented in development source.
+4. Preserve the implemented Codex lifecycle-hook Adapter and add another host
+   only when portability evidence requires it. Adapter configuration remains
+   replaceable input and never governance authority.
+5. Preserve the implemented vendor-neutral host capability, interaction
+   request, proactive decision-prompt, and human-result contracts. Capable
+   hosts present one recommended single-select choice and carry only its exact
+   transition; the reference presenter uses one number without free text.
+   Codex Hooks currently provide context-only custom gates; a native
+   authenticated button callback remains host productization work. Exact
+   `START`, `REPLACE`, and `HANDOFF` text remains only a headless fallback.
+6. Preserve the implemented vendor-neutral structured task-proposal and
+   human-admission fallback. A Coding Agent proposal grants no authority;
+   one proactive numeric approval can create only the exact reviewed low-risk
+   task; exact interactive `ADMIT` remains a fallback. Add
+   automatic natural-language-to-proposal generation only through a host
+   Adapter that excludes raw conversation data from Core.
+7. Preserve the implemented risk-based router and friction budget. No-write,
+   exact active-task continuation, and clean-policy fast-track each require
+   zero interruptions; material work must never enter fast-track. Treat Git
+   policy ownership as an auditable attestation, not cryptographic identity.
+8. Preserve the implemented per-cycle automatic Monitor refresh and Overview,
    Live Sessions, Protection Events, and Task Detail views; add explicit
    resolution links. The Dashboard remains a read model and contains no policy,
    merge, release, or deployment controls.
-7. Add Benefit and Learning views with explicit `observed_fact`,
+9. Add Benefit and Learning views with explicit `observed_fact`,
    `reproduced_comparison`, `supported_inference`, `human_feedback`, and
    `unknown` semantics. Every comparison states its denominator,
    applicability, and observation window; no combined governance score is
    introduced.
-8. Run one exact-artifact automatic user-journey rehearsal in an independent
+10. Run one exact-artifact automatic user-journey rehearsal in an independent
    non-NYC repository. One ordinary low-risk task must reach a reviewable
    completion without hand-authored internal JSON, repeated `next` queries,
    manual lifecycle command composition, or special confirmation words in the
    primary UI.
-9. Only after the general rehearsal passes, run one real low-risk NYC shadow
+11. Only after the general rehearsal passes, run one real low-risk NYC shadow
    pilot. Keep its task, policy, paths, and business semantics in NYC; record
    feedback as consumer-local, general Core, adapter, usability,
    insufficient-evidence, or rejected.
-10. Implement only admitted general gaps in AgentGov and replay them in both
+12. Implement only admitted general gaps in AgentGov and replay them in both
     the independent repository and NYC before any stable promotion.
 
 Acceptance signals:

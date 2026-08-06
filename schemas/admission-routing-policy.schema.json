@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/admission-routing-policy-v1.0.json",
+  "title": "AgentGov Admission Routing Policy",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "policy_id", "owner", "no_task_classes", "fast_track", "friction_budget", "authority", "decision"],
+  "properties": {
+    "contract": {"const": "agentgov.admission-routing-policy"},
+    "schema_version": {"const": "1.0"},
+    "policy_id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "maxLength": 100},
+    "owner": {"type": "string", "minLength": 1, "maxLength": 100},
+    "no_task_classes": {
+      "type": "array", "minItems": 4, "maxItems": 4, "uniqueItems": true,
+      "items": {"enum": ["question", "explanation", "status_query", "read_only_diagnosis"]},
+      "allOf": [
+        {"contains": {"const": "question"}}, {"contains": {"const": "explanation"}},
+        {"contains": {"const": "status_query"}}, {"contains": {"const": "read_only_diagnosis"}}
+      ]
+    },
+    "fast_track": {
+      "type": "object", "additionalProperties": false,
+      "required": ["enabled", "allowed_scope_prefixes", "denied_scope_prefixes", "validation_command_prefixes", "max_include_paths", "max_exclude_paths", "max_validation_commands", "max_risk_items", "max_assumptions", "require_no_unknowns", "forbidden_characteristics"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "allowed_scope_prefixes": {"$ref": "#/$defs/scopePaths"},
+        "denied_scope_prefixes": {"$ref": "#/$defs/scopePaths"},
+        "validation_command_prefixes": {"$ref": "#/$defs/textList"},
+        "max_include_paths": {"type": "integer", "minimum": 0, "maximum": 25},
+        "max_exclude_paths": {"type": "integer", "minimum": 0, "maximum": 25},
+        "max_validation_commands": {"type": "integer", "minimum": 0, "maximum": 10},
+        "max_risk_items": {"type": "integer", "minimum": 0, "maximum": 25},
+        "max_assumptions": {"type": "integer", "minimum": 0, "maximum": 25},
+        "require_no_unknowns": {"const": true},
+        "forbidden_characteristics": {
+          "type": "array", "minItems": 14, "maxItems": 14, "uniqueItems": true,
+          "items": {"$ref": "#/$defs/materialCharacteristic"}
+        }
+      }
+    },
+    "friction_budget": {
+      "type": "object", "additionalProperties": false,
+      "required": ["observe_only_max_human_interruptions", "continue_active_max_human_interruptions", "fast_track_max_human_interruptions", "human_review_max_human_interruptions", "full_review_max_human_interruptions"],
+      "properties": {
+        "observe_only_max_human_interruptions": {"const": 0},
+        "continue_active_max_human_interruptions": {"const": 0},
+        "fast_track_max_human_interruptions": {"const": 0},
+        "human_review_max_human_interruptions": {"const": 1},
+        "full_review_max_human_interruptions": {"type": "integer", "minimum": 1, "maximum": 2}
+      }
+    },
+    "authority": {
+      "type": "object", "additionalProperties": false,
+      "required": ["permits_noninteractive_fast_track_task_creation", "permits_session_start", "permits_code_change", "permits_scope_expansion", "permits_exception", "permits_git_operations", "permits_deployment", "permits_release"],
+      "properties": {
+        "permits_noninteractive_fast_track_task_creation": {"type": "boolean"},
+        "permits_session_start": {"const": false},
+        "permits_code_change": {"const": false},
+        "permits_scope_expansion": {"const": false},
+        "permits_exception": {"const": false},
+        "permits_git_operations": {"const": false},
+        "permits_deployment": {"const": false},
+        "permits_release": {"const": false}
+      }
+    },
+    "decision": {
+      "type": "object", "additionalProperties": false,
+      "required": ["state", "decided_by", "rationale"],
+      "properties": {
+        "state": {"enum": ["draft", "admitted", "paused"]},
+        "decided_by": {"type": "string", "minLength": 1, "maxLength": 100},
+        "rationale": {"type": "string", "minLength": 10, "maxLength": 1000}
+      }
+    }
+  },
+  "$defs": {
+    "textList": {"type": "array", "maxItems": 50, "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 1000}},
+    "scopePath": {"type": "string", "minLength": 1, "maxLength": 1000, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*[\\*?\\[\\]]).+$"},
+    "scopePaths": {"type": "array", "maxItems": 50, "uniqueItems": true, "items": {"$ref": "#/$defs/scopePath"}},
+    "materialCharacteristic": {"enum": ["ambiguous_intent", "unknown_scope", "architecture_change", "dependency_change", "authentication_or_authorization_change", "security_boundary_change", "data_schema_change", "data_migration", "destructive_operation", "external_write", "infrastructure_change", "deployment_change", "public_api_change", "governance_policy_change"]}
+  }
+}

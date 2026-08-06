@@ -27,6 +27,7 @@ def build_reference_trigger(
     *,
     trigger_type: str,
     actor_class: str = "coding_agent",
+    adapter_id: str = REFERENCE_ADAPTER_ID,
     correlation_id: str | None = None,
     validation_outcome: str | None = None,
     evidence_ref: str | None = None,
@@ -62,7 +63,7 @@ def build_reference_trigger(
         "occurred_at": utc_now(),
         "trigger_type": trigger_type,
         "source": {
-            "adapter_id": REFERENCE_ADAPTER_ID,
+            "adapter_id": adapter_id,
             "actor_class": actor_class,
         },
         "working_copy_digest": working_copy_digest(root),

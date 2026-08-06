@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/active-agent-self-review-draft-v1.0.json",
+  "title": "AgentGov Active Agent Self Review Draft",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "draft_id", "source", "request", "observations", "content_boundary", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.active-agent-self-review-draft"},
+    "schema_version": {"const": "1.0"},
+    "draft_id": {"type": "string", "pattern": "^asd-[0-9a-f]{32}$"},
+    "source": {"$ref": "active-agent-self-review-start.schema.json#/$defs/source"},
+    "request": {
+      "type": "object", "additionalProperties": false,
+      "required": ["request_id", "request_digest"],
+      "properties": {
+        "request_id": {"type": "string", "pattern": "^asq-[0-9a-f]{32}$"},
+        "request_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "observations": {
+      "type": "array", "minItems": 1, "maxItems": 20,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["kind", "summary", "evidence_refs", "assumptions", "unknowns", "recommended_question"],
+        "properties": {
+          "kind": {"enum": ["business", "requirement", "architecture", "scope", "implementation", "security", "data"]},
+          "summary": {"type": "string", "minLength": 1, "maxLength": 800},
+          "evidence_refs": {"type": "array", "minItems": 1, "maxItems": 20, "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 240}},
+          "assumptions": {"type": "array", "maxItems": 20, "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 400}},
+          "unknowns": {"type": "array", "maxItems": 20, "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 400}},
+          "recommended_question": {"anyOf": [{"type": "null"}, {"type": "string", "minLength": 1, "maxLength": 800}]}
+        }
+      }
+    },
+    "content_boundary": {"$ref": "semantic-review-provider-capabilities.schema.json#/$defs/contentBoundary"},
+    "authority_boundary": {"$ref": "semantic-review-provider-capabilities.schema.json#/$defs/authority"}
+  }
+}

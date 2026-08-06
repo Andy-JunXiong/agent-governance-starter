@@ -55,6 +55,30 @@ For meaningful changes:
 5. run the relevant tests and report unresolved gaps;
 6. keep commit, push, and release as separate human-controlled actions.
 
+## Completion communication
+
+After completing any development item, explain the result to the human product
+owner in plain language. The completion handoff must answer all four questions:
+
+1. What is this, and what can the user or project now do with it?
+2. What previous capability does it connect to or build on?
+3. What is the next capability expected to connect to it?
+4. How does it help the project as a whole?
+
+Keep this product context separate from implementation details and validation
+results so a non-specialist can understand it. Name the concrete upstream and
+downstream capabilities when repository evidence establishes them. When no
+connection exists, or the next step has not been decided, say `none`,
+`foundation`, `unknown`, or `not yet decided` explicitly instead of inventing a
+relationship or roadmap commitment.
+
+Completion is not the point where the coding agent independently selects and
+starts the next requirement. Review the completed requirement with the human
+product owner first. Use that review to confirm the delivered value, surface
+real unmet needs and observed drift, and jointly choose the next requirement.
+Do not treat an earlier roadmap entry as automatically authorized when the
+review reveals a different real need.
+
 ## Source boundaries
 
 Reference repositories are read-only research inputs. Record the source path

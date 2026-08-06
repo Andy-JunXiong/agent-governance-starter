@@ -1,6 +1,6 @@
-# AgentGov 产品与架构方案（Revision 3）
+# AgentGov 产品与架构方案（Revision 4）
 
-状态：第二轮 Claude Review 已通过；Phase 1 可开始，Phase 2/3 前置规范已记录
+状态：第二轮 Claude Review 已通过；自动治理与语义审查 Provider 增补方案已记录
 日期：2026-08-02
 范围：汇总原始 AI Radar governance 迁移目标、已完成能力、架构偏移修正和新增 Monitor/Dashboard 需求
 决策依据：[ADR-0009](../adr/0009-govern-coding-agents-during-development.md)
@@ -32,6 +32,98 @@
 | Registry 的 `last validation` 与内存派生冲突 | 接受。Registry 只保存当前运行可派生的 source hash/validation status；历史 validation 只能在 Phase 3 后由 Event Store 派生，不进入 Registry 声明。 |
 | `current-task.json` 暗含单任务限制 | 接受。v1 明确为每个 working copy 只允许一个 active task；Git worktree 之间可以各自持有本地 pointer，多任务并行留作后续设计。 |
 | 主文档同时承担产品、架构 spec 和 review log | 接受。触发目录和 fresh-evidence contract 已拆为独立 spec；本文件保留产品责任、阶段 gate 和 review resolution。 |
+
+## Revision 4 增补：语义审查算力与风险路由
+
+### 为什么需要这层
+
+AgentGov 可以确定性验证路径、Schema、Git 状态、证据新鲜度和权限边界，
+但需求是否被带偏、架构是否仍符合业务中心、关键 ADR 是否被误解，以及
+`grill-before-sprint` 等 Skill 提出的语义问题，需要 LLM 或人类判断。
+
+这不意味着 AgentGov Core 必须内置或托管一个模型。批准的架构是“Core
+治理、宿主推理、风险分级、用户决定”：
+
+```text
+用户与 Coding Agent 对话
+  -> AgentGov Core 确定性检查并判定风险层级
+  -> Semantic Review Provider 在宿主侧完成语义分析
+     -> 中风险：当前 Coding Agent 的隔离自查
+     -> 高风险：可选独立 Reviewer LLM 交叉审查
+  -> Adapter 只向 Core 返回规范化、可追溯的 ADVISORY
+  -> AgentGov 主动提醒；最终方向由用户决定
+```
+
+Core 保持 model-free。它负责触发、最小上下文、风险路由、状态、来源和
+独立性披露、权限边界以及失败关闭；它不负责理解原始聊天，也不把任何
+模型输出升级为确定性事实或治理授权。
+
+### 默认零配置与风险层级
+
+| 风险层级 | 语义处理 | LLM 来源 | 用户是否需要新增配置 |
+|---|---|---|---|
+| 低风险 | 仅确定性检查；无必要不调用 LLM | 无额外模型 | 否 |
+| 中风险 | 当前 Coding Agent 执行一次结构化复查，优先使用独立 pass 或隔离上下文 | 用户正在使用的 Codex、Claude Code、IDE Agent 或其他宿主已有模型与额度 | 否 |
+| 高风险 | 独立 Reviewer 在至少独立上下文中交叉审查 | 用户或组织一次性配置的第二模型、企业 AI Gateway 或内部模型；未来可选 AgentGov 托管服务 | 仅启用独立审查时需要 |
+
+中风险结果必须标为 `self_review`，不能称为独立证据。即使宿主启动了同模型
+子 Agent，也必须披露它与开发 Agent 使用同一模型或供应商。高风险的最低
+独立要求是分离上下文；不同模型提升独立性，不同供应商或组织内部 Reviewer
+提供更高的交叉检查独立性，但供应商身份本身不证明结论正确。
+
+### Reviewer 未配置或不可用
+
+安装和普通开发永远不能因为没有第二个 LLM 而失败。当政策要求高风险独立
+审查但 Provider 不可用时，AgentGov 必须主动提供一个有界选择：
+
+1. 交由用户或团队人工审查；
+2. 用户明确接受较低 assurance，使用当前 Agent 的隔离自查；
+3. 进入一次性 Provider 配置。
+
+不得静默降级。第二种选择必须显示“本次不是独立交叉验证”，并记录实际
+assurance 来源；它不能伪装成通过高风险独立审查。用户也不能被要求为了
+普通安装或中风险工作先配置新的模型。
+
+### Provider、凭证、成本与隐私责任
+
+已实现的供应商中立 `SemanticReviewProvider` 能力契约至少需要声明：
+
+- Provider、模型或网关来源，以及能力版本；
+- `same_turn`、`separate_pass`、`isolated_context`、`different_model` 或
+  `different_provider` 独立性等级；
+- 支持的审查类型、上下文上限和可用性；
+- 数据保留、区域、外部传输和允许内容边界；
+- 谁承担调用费用，以及凭证由用户、组织还是可选托管服务持有；
+- 输出只能包含规范化 observation、evidence refs、assumptions、unknowns、
+  建议问题和 `ADVISORY` 结论；
+- 对任务准入、需求/ADR 修改、代码、范围、例外、Git、发布、部署和外部系统
+  的权限全部为 false。
+
+个人用户配置一次后可跨仓库复用；组织可以通过统一策略或企业 Gateway
+提供。API Key、Token、原始聊天、完整 transcript 和未声明源内容不得进入
+仓库治理记录或 AgentGov Core。未来 AgentGov 托管 Reviewer 只能是用户
+明确选择的独立产品形态，必须另行解决计费、保留、合规和数据边界，不能
+成为开源工具的默认依赖。
+
+### 与 Multi-Agent 的关系
+
+同一个 Coding Agent 在同一会话中按 Skill 自查，是单 Agent 多角色。使用
+同模型但隔离上下文的 Reviewer 子 Agent，是较弱独立性的 Multi-Agent。
+开发 Agent 与另一个独立 Reviewer LLM 分工并由 AgentGov 编排，是正式的
+Multi-Agent 治理形态。AgentGov Core 本身是编排和治理层，不因协调多个
+模型而获得语义或最终决定权。
+
+### 实现状态与下一依赖
+
+ADR-0014 以及 Provider capability、risk route 和 advisory result 三个严格契约
+已在开发源中实现。Codex、Claude Code、通用 IDE 和 Provider 不可用 fixture
+都通过同一个供应商中立解析器；绑定漂移、虚假独立性、静默降级、敏感内容和
+权限声明均会失败关闭。这一切片没有调用真实模型，也没有凭证或网络依赖。
+宿主中立的 active-Agent self-review materializer 执行边界也已接入
+`ReferenceAlignmentAdapter`：只有用户完成最终方向选择后，才向宿主回调传入
+规范化临时上下文和允许的仓库 evidence refs，并接受精确绑定的 advisory
+结果。Codex 和 Claude Code fixture 共用同一执行路径。下一个最小切片是在一个真实
+Coding Agent surface 中安装该回调；独立 Reviewer 仍是后续可选增强。
 
 ## 1. 执行摘要
 
@@ -618,6 +710,10 @@ AgentGov 管理可移植的 governance contract 和触发责任；AI Radar 继�
 16. v1 core-file update 只生成 patch 建议；
 17. 将 0.3 定义为 development-governance release，PR writer 延后到 0.4 或继续 experimental；
 18. 只有完成独立仓库端到端 pilot 后，才发布新的稳定 Release。
+19. AgentGov Core 保持 model-free，语义推理由供应商中立的宿主 Provider 提供；
+20. 中风险默认复用当前 Coding Agent 并标记为 self-review，不要求用户配置第二个模型；
+21. 高风险独立 Reviewer 是用户或组织可选增强；不可用时必须提供人工审查、显式低 assurance 自查或配置，不得静默降级；
+22. 所有 LLM 结果保持带来源和独立性等级的 ADVISORY，不能获得项目或外部写权限。
 
 ## 14. Review 后仍开放的问题
 
@@ -660,3 +756,12 @@ Governance Registry
 ```
 
 该切片不新增可编辑 Registry 文件，也不提前建设完整 Event Store。Context output 保留未来 event 所需的 provenance，但 event persistence 在 Phase 3 统一实现。这样可以先验证 Coding Agent 是否真正消费治理上下文，避免再次出现“基础设施先于产品闭环”的架构偏移。
+
+Revision 4 的 Semantic Review Provider 与风险路由 ADR/contract 切片现已完成：
+三个严格契约定义 capability、风险输入、独立性与 assurance 披露、不可用选择、
+隐私及 denied authority，并通过 Codex、Claude Code、通用 IDE 和不可用 Provider
+fixture 兼容测试。宿主中立的当前 Agent self-review materializer 执行边界
+现已接入已解析的 Alignment Adapter，且 Codex/Claude Code fixture 共用同一路径。
+当前下一步缩小为：
+在一个真实 Coding Agent surface 中安装宿主回调。真实外部独立 Reviewer 不在
+这个已完切片内。

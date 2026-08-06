@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/coding-agent-alignment-response-v1.0.json",
+  "title": "AgentGov Coding Agent Alignment Response",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "sequence", "input", "status", "persistence", "dialogue", "clarification_prompt", "decision_prompt", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.coding-agent-alignment-response"},
+    "schema_version": {"const": "1.0"},
+    "sequence": {"type": "integer", "minimum": 1},
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract", "id", "actor_class", "adapter_id"],
+      "properties": {
+        "contract": {"enum": ["agentgov.alignment-context", "agentgov.clarification-update", "agentgov.human-decision-result"]},
+        "id": {"type": "string", "pattern": "^(?:acx|cup|drs)-[0-9a-f]{32}$"},
+        "actor_class": {"enum": ["coding_agent", "human"]},
+        "adapter_id": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$"}
+      }
+    },
+    "status": {"enum": ["exploring", "ready_for_decision", "resolved", "stopped"]},
+    "persistence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "survives_restart"],
+      "properties": {
+        "mode": {"const": "foreground_memory"},
+        "survives_restart": {"const": false}
+      }
+    },
+    "dialogue": {"$ref": "clarification-dialogue.schema.json"},
+    "clarification_prompt": {"anyOf": [{"$ref": "clarification-prompt.schema.json"}, {"type": "null"}]},
+    "decision_prompt": {"anyOf": [{"$ref": "human-decision-prompt.schema.json"}, {"type": "null"}]},
+    "authority_boundary": {"$ref": "alignment-context.schema.json#/$defs/authority"}
+  }
+}

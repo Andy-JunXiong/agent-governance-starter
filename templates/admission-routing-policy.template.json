@@ -1,0 +1,42 @@
+{
+  "contract": "agentgov.admission-routing-policy",
+  "schema_version": "1.0",
+  "policy_id": "repository-admission-routing",
+  "owner": "Human product owner",
+  "no_task_classes": ["question", "explanation", "status_query", "read_only_diagnosis"],
+  "fast_track": {
+    "enabled": false,
+    "allowed_scope_prefixes": [],
+    "denied_scope_prefixes": ["governance", ".github", "release"],
+    "validation_command_prefixes": [],
+    "max_include_paths": 0,
+    "max_exclude_paths": 0,
+    "max_validation_commands": 0,
+    "max_risk_items": 0,
+    "max_assumptions": 0,
+    "require_no_unknowns": true,
+    "forbidden_characteristics": ["ambiguous_intent", "unknown_scope", "architecture_change", "dependency_change", "authentication_or_authorization_change", "security_boundary_change", "data_schema_change", "data_migration", "destructive_operation", "external_write", "infrastructure_change", "deployment_change", "public_api_change", "governance_policy_change"]
+  },
+  "friction_budget": {
+    "observe_only_max_human_interruptions": 0,
+    "continue_active_max_human_interruptions": 0,
+    "fast_track_max_human_interruptions": 0,
+    "human_review_max_human_interruptions": 1,
+    "full_review_max_human_interruptions": 2
+  },
+  "authority": {
+    "permits_noninteractive_fast_track_task_creation": false,
+    "permits_session_start": false,
+    "permits_code_change": false,
+    "permits_scope_expansion": false,
+    "permits_exception": false,
+    "permits_git_operations": false,
+    "permits_deployment": false,
+    "permits_release": false
+  },
+  "decision": {
+    "state": "draft",
+    "decided_by": "Human product owner",
+    "rationale": "Fast-track remains disabled until the accountable human reviews repository-specific scope and validation limits."
+  }
+}

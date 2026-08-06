@@ -82,10 +82,17 @@ ADR-0013 makes automatic orchestration and an automatically updated Monitor
 and Dashboard the accepted primary product experience. Ordinary users should
 not hand-author internal JSON, poll `next`, type special confirmation words, or
 compose `govern start/check/finish/Monitor/handoff`. Those implemented commands
-remain development, headless, CI, diagnostic, testing, fallback, and recovery primitives
-while a vendor-neutral foreground coordinator and coding-agent adapters are
-built. See the [automatic governance product requirements](docs/product-requirements-automatic-governance.md)
+remain development, headless, CI, diagnostic, testing, fallback, and recovery
+primitives. Development source now includes a strict foreground JSONL
+coding-agent transport, bounded task/scope/completion cards, and the first packaged
+Codex lifecycle-hook Adapter. Development source now also defines a
+vendor-neutral host-interaction request/capability contract and a strict
+Coding Agent task-proposal/human-admission fallback. Automatic proposal
+generation from the host conversation, Claude Code/IDE adapters, and native
+recording of custom task/scope/completion decisions remain.
+See the [automatic governance product requirements](docs/product-requirements-automatic-governance.md)
 and [ADR-0013](docs/adr/0013-make-automatic-governance-and-dashboard-primary.md).
+ADR-0014 separately owns semantic-review Provider and assurance routing.
 
 ![Agent Governance CLI detecting incomplete evidence, source drift, and a human-review advisory](docs/assets/agentgov-demo.svg)
 
@@ -247,14 +254,48 @@ Text and JSON output contain the selected command and `action_executed=false`;
 `next` never creates, repairs, validates, or runs anything.
 
 Development source now places this polling behavior behind the first internal
-state projection and an explicit one-cycle foreground coordinator. The
-reference adapter builds bounded events from repository state, invokes the same
-checked primitives, and refreshes the Dashboard. It interrupts a person only
-for task admission, material scope, architecture, exception, semantic, or
-consequential authority decisions. No live Codex, Claude Code, or IDE event
-transport is connected yet, so the commands below are adapter/headless
-development surfaces, not a request for ordinary users to manage lifecycle
-events:
+state projection and a foreground coordinator. The reference adapter builds
+bounded triggers from repository state, invokes the same checked primitives,
+and refreshes the Dashboard. A strict JSONL process transport can keep one
+foreground `agentgov dev` process open while a coding-agent adapter sends
+lifecycle events; AgentGov returns one machine-readable response and an
+optional bounded task, scope, or completion card per input event. A separate
+`agentgov.host-interaction-request` 1.0 describes real human gates, offered
+options, delivery mode, decision-recording mode, and denied authority without
+adding any host vendor field to Core. The input contract
+has no prompt, source, host-path, changed-path, task-identity, or authority
+field. AgentGov derives those trusted facts locally.
+
+An adapter can connect its event stream without making the ordinary user
+compose lifecycle commands:
+
+```powershell
+Get-Content .agentgov-adapter/events.jsonl |
+  python -m agentgov dev . --stream --format json
+```
+
+The JSONL records use `agentgov.coding-agent-event` 1.0. The first packaged host
+integration now maps official Codex `SessionStart`, `UserPromptSubmit`,
+`PostToolUse`, and `Stop` hooks into that same vendor-neutral coordinator. Its
+`PermissionRequest` binding explicitly leaves Codex's normal human tool
+approval prompt undecided; that permission is not task admission, scope,
+exception, or completion approval. The Adapter
+discards prompt, tool input/output, transcript, assistant-message, model, and
+absolute host-path values before building any AgentGov event or hook output.
+
+Preview the development-source project hook integration without writing:
+
+```powershell
+python -m agentgov integrate codex-hooks . --dry-run
+```
+
+Interactive apply is create-missing-only, requires exact `INTEGRATE`, refuses
+to overwrite or merge an existing `.codex/hooks.json`, and does not grant hook
+trust. Codex requires the user to review the generated definition separately
+through `/hooks`. See the [Codex hooks Adapter guide](docs/codex-hooks-adapter.md).
+
+The existing single-cycle commands remain adapter/headless development and
+recovery surfaces:
 
 ```powershell
 python -m agentgov dev .
@@ -270,8 +311,124 @@ commands already admitted in the task, reconciles fresh evidence, and refreshes
 the Dashboard. Human review may hand off the exact verified session without a
 special confirmation word. Missing task admission, scope expansion, external
 validation claims, Git authority, and deployment authority still fail closed
-or remain human-gated. Current stable 0.2.1 and published `v0.3.0rc1` behavior
-is unchanged until a later release.
+or remain human-gated. Stream task, scope, and completion cards offer bounded
+action names but do not apply scope, commit, merge, release, or deployment
+decisions. Each real gate now also carries a proactive, single-select decision
+prompt with a safe recommendation and exact option effects. Capable hosts can
+return one structured human selection; Codex Hooks remain context-only and
+cannot natively record those decisions, so AgentGov reports that capability
+drift instead of inventing buttons.
+
+When the direction itself is not yet stable, AgentGov keeps discussion
+separate from approval. The vendor-neutral clarification protocol shows the
+current center and observed business, requirement, or architecture drift,
+asks one natural-language question at a time, and stores only normalized
+summaries. Clarification turns do not consume the one-decision friction budget
+and have no semantic turn cap. Only after material unknowns are resolved and
+option effects are stable does the existing single-select prompt record one
+human-owned re-centering choice. That choice updates only the dialogue record;
+it does not edit an ADR, admit a task, modify code, or grant downstream
+authority. See the [clarification and drift re-centering guide](docs/clarification-dialogue.md).
+
+The same foreground `agentgov dev --stream` connection now carries that flow.
+A Coding Agent Adapter can submit strict normalized `agentgov.alignment-context`
+instead of raw chat; AgentGov immediately returns one
+`agentgov.coding-agent-alignment-response` with either the next clarification
+question or the stable final decision. Strict human-originated
+`agentgov.clarification-update` and `agentgov.human-decision-result` records
+advance the exact in-memory dialogue. Invalid or out-of-order records fail on
+their input line before state advances. Dialogue state exists only for that
+disclosed foreground process and does not survive restart or mutate the
+repository.
+
+Development source now includes a host-side `ReferenceAlignmentAdapter` for
+the missing user-facing step. The user supplies an ordinary request and an
+ordinary clarification answer; a replaceable host `HostSemanticMaterializer`
+returns only small normalized drafts, while the Adapter creates all contract
+IDs, digests, timestamps, actor bindings, privacy declarations, and the final
+human-result record. Its privacy-safe journey reports clarification and
+decision burden, including zero user-authored structured records and internal
+commands. The reference tests use an offline fixture materializer: this proves
+the integration boundary and full interaction shape, not general semantic
+inference or a finished Codex, Claude Code, or IDE UI.
+
+Development source now implements the model-free contract layer from
+[ADR-0014](docs/adr/0014-route-semantic-review-through-host-providers.md):
+`agentgov.semantic-review-provider-capabilities`,
+`agentgov.semantic-review-route`, and `agentgov.semantic-review-result`.
+Low risk selects no semantic review; medium risk binds the active Coding Agent
+to a clearly labeled self-review; high risk binds a qualifying independent
+Reviewer or returns exactly human review, explicit lower-assurance self-review,
+and Provider setup as unselected choices. Provider and route digests prevent
+silent substitution, and all accepted observations remain `ADVISORY` with no
+project or external-write authority. Codex, Claude Code, generic IDE, and
+unavailable-Provider fixtures prove vendor-neutral compatibility only: no real
+model, credentials, network call, production materializer, or host UI is
+included yet, and ordinary use still requires no second model configuration.
+
+The execution seam and its live foreground transport are now implemented in
+development source.
+`ReferenceAlignmentAdapter.self_review(...)` accepts only a resolved
+human-alignment result, deterministically selects the medium-risk active-host
+route, passes normalized ephemeral context and allowed evidence references to
+an `ActiveAgentSelfReviewMaterializer`, and accepts only the exact digest-bound
+advisory result. The same `agentgov dev --stream` connection now carries a
+strict start/request/draft/completed exchange, bound to the current resolved
+dialogue and Coding Agent Adapter. Those records are host-owned; ordinary users
+type no JSON, make no additional confirmation, and configure no second model.
+Codex and Claude Code fixtures execute through the same path. AgentGov performs
+zero model and network calls itself; a native host Adapter is still required
+to emit the records and supply real inference. See the
+[active-Agent self-review guide](docs/active-agent-self-review.md).
+
+Development source now supplies that first native host boundary as a
+dependency-free foreground STDIO MCP Adapter. It exposes five model-controlled
+tools for normalized alignment and medium-risk active-Agent self-review, keeps
+an explicit journey handle in foreground memory, and generates every internal
+identity and digest itself. Codex project configuration is available through a
+create-missing-only `agentgov integrate codex-mcp . --dry-run` plan; existing
+`.codex/config.toml` is never overwritten or merged, and Codex trust remains a
+separate user decision. Codex and Claude Code Provider fixtures traverse the
+same Core tool path, but only Codex configuration is packaged and the live
+uncoached host rehearsal remains open. See the
+[native governance MCP Adapter guide](docs/governance-mcp-adapter.md).
+
+A Coding Agent or host Adapter can now submit a normalized, vendor-neutral
+low-risk proposal without passing the raw prompt to AgentGov Core:
+
+```powershell
+python -m agentgov propose task path/to/proposal.json --repository . --dry-run
+```
+
+The preview includes the exact final compact task, proposal and task digests,
+assumptions, unknowns, sole write target, and denied authority. Applying it
+requires exact `ADMIT` from a real interactive terminal and creates only the
+reviewed task file. It does not start a session, execute validation, or
+authorize code, scope, Git, deployment, or release actions. See the
+[task proposal and human admission guide](docs/task-proposal-admission.md).
+
+That exact `ADMIT` path is now a review fallback rather than a universal daily
+gate. Development source adds `agentgov.work-request` 1.0,
+`agentgov.admission-routing-policy` 1.0, and `agentgov.admission-route` 1.0:
+questions, explanations, status queries, and read-only diagnosis need no task;
+verified in-scope active work is not readmitted; a clean human-owned standing
+policy can fast-track a bounded low-risk task with zero human interruptions;
+and material or ambiguous work still stops for review.
+
+```powershell
+python -m agentgov route request path/to/request.json `
+  --policy governance/admission-policy.json --repository .
+```
+
+Only `fast_track` may use `--apply-fast-track`, which creates the task but does
+not start a session or execute code. A planned low-risk `human_review` can use
+`--prompt-human`: AgentGov proactively displays approve/change/reject choices
+and accepts one number, with no `ADMIT` word or free-text rationale. Approval
+revalidates and creates only the exact reviewed task; the other selections
+write nothing. See the [risk-based admission routing guide](docs/admission-routing.md)
+and [minimal-input decision guide](docs/human-decision-prompts.md).
+Current stable 0.2.1 and published `v0.3.0rc1` behavior is unchanged until a
+later release.
 
 Development source now implements ADR-0012's event-only `govern handoff`.
 Preview re-establishes the exact verified evidence and lists one append-only
@@ -639,6 +796,9 @@ The first usable release contains:
   findings, reports, artifacts, and exit codes.
 - [Consumer CI and status](docs/consumer-ci.md) explains automatic pull-request
   checks, update visibility, report artifacts, and remaining human authority.
+- [Codex hooks Adapter](docs/codex-hooks-adapter.md) explains the optional
+  project hook mapping, privacy boundary, create-only integration, and separate
+  Codex trust review.
 - [Upgrade PR automation](docs/upgrade-pr-automation.md) defines the safe
   proposal contract, bounded Draft PR writer, and one-time 0.3 bootstrap.
 - [Consumer upgrade review](docs/consumer-upgrade-review.md) explains the
@@ -648,7 +808,7 @@ The first usable release contains:
   that cannot be made.
 - [Remaining development plan](docs/development-plan.md) separates implemented,
   published, and consumer-adopted behavior and orders the next delivery slices.
-- [AgentGov product and architecture plan (Chinese Revision 3)](docs/proposals/2026-08-02-agentgov-product-and-architecture-plan.zh-CN.md)
+- [AgentGov product and architecture plan (Chinese Revision 4)](docs/proposals/2026-08-02-agentgov-product-and-architecture-plan.zh-CN.md)
   consolidates the GitHub distribution, AI Radar-aligned development
   governance, trigger routing, observation events, and Monitor/Dashboard
   proposal for human and Claude review.
@@ -682,6 +842,36 @@ The first usable release contains:
   changed-file and completion work.
 - [Development task schema](schemas/development-task.schema.json) defines the
   versioned machine-readable `agentgov.development-task` contract.
+- [Coding-agent task proposal and human admission](docs/task-proposal-admission.md)
+  documents the strict normalized proposal, read-only admission plan, exact
+  interactive `ADMIT`, exclusive task creation, and privacy/authority limits.
+- [Task proposal schema](schemas/task-proposal.schema.json) and
+  [task admission plan schema](schemas/task-admission-plan.schema.json) define
+  the vendor-neutral input and exact read-only output contracts.
+- [Risk-based admission routing](docs/admission-routing.md) documents no-task
+  work, active-task reuse, clean standing delegation, material-risk review,
+  friction budgets, and non-interactive fast-track limits.
+- [Proactive minimal-input human decisions](docs/human-decision-prompts.md)
+  documents digest-bound prompts/results, safe recommendations, one-selection
+  host behavior, reference numeric selection, and Codex capability limits.
+- [Governed clarification and drift re-centering](docs/clarification-dialogue.md)
+  documents vendor-neutral multi-turn discussion, center/drift separation,
+  normalized rolling records, readiness rules, and final human re-centering.
+- [Admission routing policy](schemas/admission-routing-policy.schema.json),
+  [work request](schemas/work-request.schema.json), and
+  [admission route](schemas/admission-route.schema.json) schemas define the
+  strict routing contracts.
+- [Human decision prompt](schemas/human-decision-prompt.schema.json) and
+  [human decision result](schemas/human-decision-result.schema.json) schemas
+  define the strict display-versus-selection boundary.
+- [Alignment context](schemas/alignment-context.schema.json),
+  [clarification dialogue](schemas/clarification-dialogue.schema.json),
+  [clarification prompt](schemas/clarification-prompt.schema.json), and
+  [clarification update](schemas/clarification-update.schema.json) schemas
+  define the strict discussion-before-decision boundary.
+- [Coding Agent alignment response](schemas/coding-agent-alignment-response.schema.json)
+  defines the strict foreground Adapter output, one-prompt exclusivity,
+  memory-only persistence claim, and denied project authority.
 - [Development governance context](docs/development-context.md) documents the
   derived in-memory Registry, selection modes, CLI formats, compact/standard
   profiles, and current authority limits.
@@ -711,6 +901,14 @@ The first usable release contains:
   documents the first internal lifecycle-state and vendor-neutral adapter
   trigger contracts, their denied authority, and the remaining foreground
   coordinator boundary.
+- [Active-Agent self-review and live transport](docs/active-agent-self-review.md)
+  documents the resolved-alignment precondition, host-neutral callback,
+  two-stage foreground exchange, evidence allow-list, digest binding, privacy
+  boundary, and native-installation limit.
+- [Native governance MCP Adapter](docs/governance-mcp-adapter.md) documents the
+  five-tool foreground journey, explicit handle and binding rules, Codex
+  create-missing-only configuration, cross-host boundary, and live-rehearsal
+  limit.
 - [Redacted development-event export](docs/development-event-export.md)
   documents the explicit preview/confirmation flow, metadata-only profile,
   immutable bundle, Monitor ingestion, and privacy/claim boundaries.
@@ -728,6 +926,9 @@ The first usable release contains:
 - [ADR-0009](docs/adr/0009-govern-coding-agents-during-development.md) records
   development-time requirement, architecture, and code governance as the
   product core and PR/CI as the retained backstop.
+- [ADR-0014](docs/adr/0014-route-semantic-review-through-host-providers.md)
+  records model-free Provider capability, risk routing, assurance disclosure,
+  advisory result binding, and no-silent-downgrade behavior.
 - [Capability Dependencies](docs/capability-dependencies.md) defines explicit
   Inventory-linked dependency edges, cycle checks, and optional readiness
   floors.

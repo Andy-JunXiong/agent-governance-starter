@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/active-agent-self-review-stream-response-v1.0.json",
+  "title": "AgentGov Active Agent Self Review Stream Response",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "sequence", "input", "status", "persistence", "materialization_request", "run", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.active-agent-self-review-stream-response"},
+    "schema_version": {"const": "1.0"},
+    "sequence": {"type": "integer", "minimum": 1},
+    "input": {
+      "type": "object", "additionalProperties": false,
+      "required": ["contract", "id", "adapter_id"],
+      "properties": {
+        "contract": {"enum": ["agentgov.active-agent-self-review-start", "agentgov.active-agent-self-review-draft"]},
+        "id": {"type": "string", "pattern": "^as[dx]-[0-9a-f]{32}$"},
+        "adapter_id": {"$ref": "semantic-review-provider-capabilities.schema.json#/$defs/identifier"}
+      }
+    },
+    "status": {"enum": ["materialization_required", "completed"]},
+    "persistence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["mode", "survives_restart"],
+      "properties": {"mode": {"const": "foreground_memory"}, "survives_restart": {"const": false}}
+    },
+    "materialization_request": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/request"}]},
+    "run": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/run"}]},
+    "authority_boundary": {"$ref": "semantic-review-provider-capabilities.schema.json#/$defs/authority"}
+  },
+  "allOf": [
+    {"if": {"properties": {"status": {"const": "materialization_required"}}}, "then": {"properties": {"materialization_request": {"$ref": "#/$defs/request"}, "run": {"type": "null"}}}},
+    {"if": {"properties": {"status": {"const": "completed"}}}, "then": {"properties": {"materialization_request": {"type": "null"}, "run": {"$ref": "#/$defs/run"}}}}
+  ],
+  "$defs": {
+    "request": {
+      "type": "object", "additionalProperties": false,
+      "required": ["request_id", "request_digest", "start", "context", "context_binding", "instruction"],
+      "properties": {
+        "request_id": {"type": "string", "pattern": "^asq-[0-9a-f]{32}$"},
+        "request_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "start": {"$ref": "#/$defs/startBinding"},
+        "context": {"$ref": "#/$defs/context"},
+        "context_binding": {"$ref": "#/$defs/contextBinding"},
+        "instruction": {"$ref": "#/$defs/instruction"}
+      }
+    },
+    "startBinding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["start_id", "start_digest"],
+      "properties": {
+        "start_id": {"type": "string", "pattern": "^asx-[0-9a-f]{32}$"},
+        "start_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "instruction": {
+      "type": "object", "additionalProperties": false,
+      "required": ["response_contract", "review_mode", "semantics", "return_observation_ids"],
+      "properties": {
+        "response_contract": {"const": "agentgov.active-agent-self-review-draft"},
+        "review_mode": {"const": "self_review"},
+        "semantics": {"const": "advisory"},
+        "return_observation_ids": {"const": false}
+      }
+    },
+    "context": {
+      "type": "object", "additionalProperties": false,
+      "required": ["subject", "dialogue", "route", "provider", "center", "drift", "assumptions", "allowed_evidence_refs", "content_boundary", "authority_boundary"],
+      "properties": {
+        "subject": {"type": "object", "additionalProperties": false, "required": ["type", "id"], "properties": {"type": {"const": "alignment_dialogue"}, "id": {"type": "string", "pattern": "^dlg-[0-9a-f]{32}$"}}},
+        "dialogue": {"type": "object", "additionalProperties": false, "required": ["dialogue_id", "revision", "digest", "resolution_option_id"], "properties": {"dialogue_id": {"type": "string", "pattern": "^dlg-[0-9a-f]{32}$"}, "revision": {"type": "integer", "minimum": 1}, "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}, "resolution_option_id": {"$ref": "alignment-context.schema.json#/$defs/resolutionId"}}},
+        "route": {"$ref": "semantic-review-route.schema.json"},
+        "provider": {"$ref": "semantic-review-provider-capabilities.schema.json"},
+        "center": {"$ref": "alignment-context.schema.json#/$defs/center"},
+        "drift": {"$ref": "alignment-context.schema.json#/$defs/drift"},
+        "assumptions": {"$ref": "alignment-context.schema.json#/$defs/textList"},
+        "allowed_evidence_refs": {"type": "array", "minItems": 1, "maxItems": 50, "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 240}},
+        "content_boundary": {"$ref": "semantic-review-provider-capabilities.schema.json#/$defs/contentBoundary"},
+        "authority_boundary": {"$ref": "semantic-review-provider-capabilities.schema.json#/$defs/authority"}
+      }
+    },
+    "contextBinding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["dialogue_id", "dialogue_revision", "dialogue_digest", "resolution_option_id", "route_id", "provider_id", "provider_capability_digest", "allowed_evidence_digest", "materializer_context_digest"],
+      "properties": {
+        "dialogue_id": {"type": "string", "pattern": "^dlg-[0-9a-f]{32}$"},
+        "dialogue_revision": {"type": "integer", "minimum": 1},
+        "dialogue_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "resolution_option_id": {"$ref": "alignment-context.schema.json#/$defs/resolutionId"},
+        "route_id": {"type": "string", "pattern": "^srr-[0-9a-f]{32}$"},
+        "provider_id": {"$ref": "semantic-review-provider-capabilities.schema.json#/$defs/identifier"},
+        "provider_capability_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "allowed_evidence_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "materializer_context_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "run": {
+      "type": "object", "additionalProperties": false,
+      "required": ["route", "result", "context_binding", "execution", "privacy_boundary", "authority_boundary"],
+      "properties": {
+        "route": {"$ref": "semantic-review-route.schema.json"},
+        "result": {"$ref": "semantic-review-result.schema.json"},
+        "context_binding": {"$ref": "#/$defs/contextBinding"},
+        "execution": {"$ref": "#/$defs/execution"},
+        "privacy_boundary": {"$ref": "#/$defs/privacy"},
+        "authority_boundary": {"$ref": "semantic-review-provider-capabilities.schema.json#/$defs/authority"}
+      }
+    },
+    "execution": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source", "review_mode", "materializer_invocations", "agentgov_model_calls", "agentgov_network_calls", "context_retained_by_adapter"],
+      "properties": {
+        "source": {"const": "active_host"}, "review_mode": {"const": "self_review"},
+        "materializer_invocations": {"const": 1}, "agentgov_model_calls": {"const": 0},
+        "agentgov_network_calls": {"const": 0}, "context_retained_by_adapter": {"const": false}
+      }
+    },
+    "privacy": {
+      "type": "object", "additionalProperties": false,
+      "required": ["contains_raw_request", "contains_raw_answer", "contains_transcript", "contains_assistant_response", "contains_source_content", "contains_credentials", "contains_model_prompt", "contains_absolute_paths"],
+      "properties": {
+        "contains_raw_request": {"const": false}, "contains_raw_answer": {"const": false},
+        "contains_transcript": {"const": false}, "contains_assistant_response": {"const": false},
+        "contains_source_content": {"const": false}, "contains_credentials": {"const": false},
+        "contains_model_prompt": {"const": false}, "contains_absolute_paths": {"const": false}
+      }
+    }
+  }
+}

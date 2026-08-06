@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/coding-agent-event-v1.0.json",
+  "title": "AgentGov Coding Agent Event",
+  "description": "A privacy-bounded foreground process event. Prompts, source, host paths, task claims, changed paths, and authority flags are deliberately absent.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "event_id", "occurred_at", "event_type", "source", "correlation_id", "facts"],
+  "properties": {
+    "contract": {"const": "agentgov.coding-agent-event"},
+    "schema_version": {"const": "1.0"},
+    "event_id": {"type": "string", "pattern": "^evt-[0-9a-f]{32}$"},
+    "occurred_at": {"type": "string", "format": "date-time", "pattern": "Z$"},
+    "event_type": {
+      "enum": [
+        "task.requested",
+        "repository.activated",
+        "implementation.changed",
+        "scope.decision_requested",
+        "scope.decision_recorded",
+        "completion.requested",
+        "validation.completed",
+        "session.reviewed"
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adapter_id", "actor_class"],
+      "properties": {
+        "adapter_id": {"type": "string", "maxLength": 80, "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$"},
+        "actor_class": {"enum": ["human", "coding_agent", "ci"]}
+      }
+    },
+    "correlation_id": {"type": "string", "maxLength": 120, "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$"},
+    "facts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["validation_outcome", "evidence_ref", "scope_decision", "review_outcome"],
+      "properties": {
+        "validation_outcome": {"enum": ["passed", "failed", null]},
+        "evidence_ref": {"anyOf": [{"$ref": "#/$defs/path"}, {"type": "null"}]},
+        "scope_decision": {"enum": ["approved", "declined", "needs_human", null]},
+        "review_outcome": {"enum": ["accepted", "changes_requested", null]}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"event_type": {"const": "validation.completed"}}, "required": ["event_type"]},
+      "then": {"properties": {"facts": {"properties": {"validation_outcome": {"enum": ["passed", "failed"]}}}}},
+      "else": {"properties": {"facts": {"properties": {"validation_outcome": {"type": "null"}, "evidence_ref": {"type": "null"}}}}}
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "scope.decision_recorded"}}, "required": ["event_type"]},
+      "then": {"properties": {"source": {"properties": {"actor_class": {"const": "human"}}}, "facts": {"properties": {"scope_decision": {"enum": ["approved", "declined", "needs_human"]}}}}},
+      "else": {"properties": {"facts": {"properties": {"scope_decision": {"type": "null"}}}}}
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "session.reviewed"}}, "required": ["event_type"]},
+      "then": {"properties": {"source": {"properties": {"actor_class": {"const": "human"}}}, "facts": {"properties": {"review_outcome": {"enum": ["accepted", "changes_requested"]}}}}},
+      "else": {"properties": {"facts": {"properties": {"review_outcome": {"type": "null"}}}}}
+    }
+  ],
+  "$defs": {
+    "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?![A-Za-z]:[\\\\/])(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"}
+  }
+}

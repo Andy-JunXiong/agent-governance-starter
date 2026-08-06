@@ -20,6 +20,10 @@ class GovernanceTemplateTests(unittest.TestCase):
             "prompt-capability.template.json",
             "evaluation-manifest.template.json",
             "development-task.template.json",
+            "task-proposal.template.json",
+            "admission-routing-policy.template.json",
+            "work-request.template.json",
+            "codex-mcp.template.toml",
         }
 
         actual = {path.name for path in TEMPLATES.iterdir() if path.is_file()}
@@ -135,6 +139,39 @@ class GovernanceTemplateTests(unittest.TestCase):
         self.assertEqual(task["requirement"]["source_refs"], [])
         self.assertNotIn("architecture_refs", task)
         self.assertEqual(len(task["validation_commands"]), 1)
+
+    def test_task_proposal_template_is_valid_and_non_authoritative(self) -> None:
+        import json
+
+        from agentgov.task_proposal import validate_task_proposal_document
+
+        proposal = json.loads(
+            (TEMPLATES / "task-proposal.template.json").read_text(encoding="utf-8")
+        )
+
+        self.assertEqual(validate_task_proposal_document(proposal), [])
+        self.assertFalse(proposal["authority_boundary"]["admits_task"])
+        self.assertFalse(proposal["content_boundary"]["contains_raw_prompt"])
+
+    def test_routing_templates_are_valid_and_fast_track_is_disabled(self) -> None:
+        import json
+
+        from agentgov.admission_routing import (
+            validate_admission_routing_policy,
+            validate_work_request,
+        )
+
+        policy = json.loads(
+            (TEMPLATES / "admission-routing-policy.template.json").read_text(encoding="utf-8")
+        )
+        request = json.loads(
+            (TEMPLATES / "work-request.template.json").read_text(encoding="utf-8")
+        )
+
+        self.assertEqual(validate_admission_routing_policy(policy), [])
+        self.assertEqual(validate_work_request(request), [])
+        self.assertFalse(policy["fast_track"]["enabled"])
+        self.assertEqual(policy["decision"]["state"], "draft")
 
 
 if __name__ == "__main__":

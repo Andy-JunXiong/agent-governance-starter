@@ -1,0 +1,103 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-codex-hooks-adapter",
+  "title": "Package the first Codex hooks Adapter",
+  "requirement": {
+    "summary": "Connect Codex lifecycle hooks to the existing vendor-neutral AgentGov foreground coordinator without collecting prompts, source, tool payloads, transcripts, or assistant messages.",
+    "source_refs": [
+      "docs/development-log/2026-08-06.md",
+      "docs/development-plan.md",
+      "docs/product-requirements-automatic-governance.md",
+      "STATUS.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0009-govern-coding-agents-during-development.md",
+      "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md"
+    ],
+    "rationale": "The generic JSONL process transport is implemented, but ordinary Codex use still needs a reviewed project hook configuration and a host-specific mapper that invokes the same vendor-neutral coordinator automatically."
+  },
+  "goal": "Add a packaged Codex hook Adapter for SessionStart, UserPromptSubmit, PostToolUse, and Stop plus a create-missing-only project hook integration preview and explicit apply path.",
+  "non_goals": [
+    "Do not parse task scope, approval, semantic acceptance, or authority from raw prompt or assistant text.",
+    "Do not persist or forward prompt, source, tool_input, tool_response, transcript_path, last_assistant_message, credentials, model, or absolute host paths from Codex hook input into AgentGov events or hook output.",
+    "Do not add a daemon, App Server dependency, network request, automatic upload, plugin installation, or hidden hook trust bypass.",
+    "Do not merge with or overwrite an existing .codex/hooks.json file.",
+    "Do not grant scope expansion, exception, commit, push, merge, release, publication, deployment, or external-system authority.",
+    "Do not commit, push, tag, release, publish, install the generated hooks in this repository, or modify a consumer repository."
+  ],
+  "scope": {
+    "include_paths": [
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "docs",
+      "governance/tasks",
+      "pyproject.toml",
+      "schemas",
+      "src/agentgov",
+      "templates",
+      "tests"
+    ],
+    "exclude_paths": [
+      ".codex",
+      ".github/workflows",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0009-govern-coding-agents-during-development.md",
+    "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/development-automation-contracts.md"
+  ],
+  "acceptance_signals": [
+    "SessionStart, UserPromptSubmit, PostToolUse, and Stop map deterministically to repository.activated, task.requested, implementation.changed, and completion.requested without vendor fields entering Core contracts.",
+    "The Adapter validates the hook event, session/turn identity, repository binding, and supported event-specific facts while explicitly discarding sensitive Codex payload fields.",
+    "A missing active task reaches Codex as bounded additional context rather than inferred task admission; material scope and completion failures reach Codex without claiming a completed side-effect was undone.",
+    "Stop continuation is bounded by stop_hook_active so the Adapter cannot create an infinite completion loop.",
+    "The managed .codex/hooks.json preview is deterministic, create-missing-only, preserves existing files, requires exact interactive confirmation to write, and leaves Codex hook trust to the user.",
+    "The existing generic JSONL transport, single-cycle CLI, GitHub Actions integration, and headless lifecycle fixtures remain compatible.",
+    "Focused tests, the complete supported-Python suite, task/scope/repository checks, schema parsing, packaging assertions, and diff checks pass."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_codex_hooks tests.test_coding_agent_transport tests.test_foreground_coordinator tests.test_cli -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-codex-hooks-adapter.json --repository .",
+    "python -m agentgov govern check governance/tasks/p0-codex-hooks-adapter.json --repository .",
+    "python -m agentgov check repository ."
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "medium",
+    "items": [
+      "Hook input includes raw prompt, tool, transcript, and assistant fields that must never enter AgentGov events or output.",
+      "PostToolUse occurs after side effects and must not claim that a scope finding undid or prevented the tool action.",
+      "A Stop continuation can loop unless repeat invocation is explicitly bounded.",
+      "An existing project hook configuration could contain user policy that must not be overwritten or silently merged.",
+      "Project hooks require Codex trust review and may be disabled by user or managed configuration."
+    ]
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "owner": "Human product owner",
+    "evidence_refs": []
+  },
+  "stop_conditions": [
+    "Stop if current official Codex documentation does not establish the required hook events or structured output behavior.",
+    "Stop if implementation requires retaining prompt, source, tool payload, transcript, assistant message, credential, or absolute path data.",
+    "Stop if hook configuration must bypass Codex trust review, overwrite existing config, become governance authority, or run as a hidden daemon.",
+    "Stop if PostToolUse would be described as undoing a completed side effect or a coding-agent event could self-approve scope or semantic completion.",
+    "Stop before any Git write, plugin install, hook installation in this repository, release, consumer mutation, or external-system write."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "The Codex hooks Adapter implementation and validation are complete. The task is paused for routing hygiene while the user-authorized development completion communication guidance is added; this does not claim commit, release, publication, or external acceptance."
+  }
+}

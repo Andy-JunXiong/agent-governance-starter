@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/clarification-prompt-v1.0.json",
+  "title": "AgentGov Clarification Prompt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "prompt_id", "dialogue", "status", "center_summary", "drift_summary", "why_question_matters", "question", "guidance", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.clarification-prompt"},
+    "schema_version": {"const": "1.0"},
+    "prompt_id": {"type": "string", "pattern": "^cqp-[0-9a-f]{32}$"},
+    "dialogue": {
+      "type": "object", "additionalProperties": false,
+      "required": ["dialogue_id", "revision", "digest"],
+      "properties": {
+        "dialogue_id": {"type": "string", "pattern": "^dlg-[0-9a-f]{32}$"},
+        "revision": {"type": "integer", "minimum": 1},
+        "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "status": {"const": "requires_clarification"},
+    "center_summary": {"type": "string", "minLength": 1, "maxLength": 800},
+    "drift_summary": {"type": "string", "minLength": 1, "maxLength": 800},
+    "why_question_matters": {"type": "string", "minLength": 1, "maxLength": 800},
+    "question": {
+      "type": "object", "additionalProperties": false,
+      "required": ["question_id", "text", "response_mode"],
+      "properties": {
+        "question_id": {"type": "string", "pattern": "^qst-[0-9a-f]{16}$"},
+        "text": {"type": "string", "minLength": 1, "maxLength": 800},
+        "response_mode": {"const": "natural_language"}
+      }
+    },
+    "guidance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["one_question", "answer_in_own_words", "raw_answer_persisted", "decision_episode"],
+      "properties": {
+        "one_question": {"const": true},
+        "answer_in_own_words": {"const": true},
+        "raw_answer_persisted": {"const": false},
+        "decision_episode": {"const": false}
+      }
+    },
+    "authority_boundary": {"$ref": "alignment-context.schema.json#/$defs/authority"}
+  }
+}

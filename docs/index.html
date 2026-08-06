@@ -952,11 +952,59 @@
               consequential authority decisions.
             </p>
             <p>
-              Development source now implements one explicit foreground cycle
-              through <code>agentgov dev</code>, a minimal reference adapter,
-              automatic scope/completion actions, and per-cycle Dashboard
-              refresh. Live coding-agent transport and user-facing cards remain
-              the next product slice; stable 0.2.1 and v0.3.0rc1 are unchanged.
+              Development source now implements a strict foreground JSONL
+              coding-agent transport through <code>agentgov dev --stream</code>,
+              locally derived scope/completion facts, per-event Dashboard
+              refresh, bounded task/scope/completion cards, and the first packaged
+              Codex lifecycle-hook Adapter. A vendor-neutral host-interaction
+              contract now distinguishes displayed requests from recorded
+              human decisions. Codex keeps its native tool permission prompt,
+              but custom task/scope/completion decisions remain context-only.
+              Risk-based routing now leaves no-write requests and exact active
+              task iteration at zero interruptions. Only a tracked, clean,
+              human-owned standing policy can fast-track its bounded low-risk
+              envelope; material work still stops for review. The exact
+              admission flow remains a fallback and never starts a session.
+              Every real gate now carries a digest-bound proactive prompt with
+              one safe recommendation and one required selection. The reference
+              review accepts a number instead of a special word; Codex Hooks
+              still cannot record trusted custom buttons. When meaning is not
+              stable, the vendor-neutral clarification protocol keeps the
+              current center and advisory drift visible, asks one natural-language
+              question per turn, and delays that final selection until material
+              unknowns are resolved. The same foreground stream now accepts
+              strict normalized alignment and human-update records, then
+              automatically returns the next question or stable choice from
+              memory-only state that does not survive restart. Discussion
+              applies no project change.
+              A host-side reference Alignment Adapter now rehearses an
+              ordinary request, one natural-language answer, and one final
+              selection while retaining only normalized evidence. A
+              replaceable host materializer performs semantic interpretation;
+              Core still does not understand arbitrary raw chat.
+              Development source now implements the vendor-neutral Provider,
+              risk-route, and advisory-result contracts: medium risk binds the
+              active Coding Agent's disclosed self-review, while high risk
+              binds an optional independent Reviewer or returns three explicit
+              human choices without silent downgrade. Cross-host fixtures make
+              no real model or network call; production materializers remain.
+              The resolved Alignment Adapter now also exposes one host-neutral
+              active-Agent self-review callback with normalized ephemeral
+              context, an evidence allow-list, and exact advisory-result
+              binding. Codex and Claude Code fixtures share this path; a native
+              production host callback is still open. The same foreground
+              stream now carries a strict start/request/draft/completed
+              exchange for this self-review, with no extra user confirmation,
+              user-authored JSON, or second model configuration.
+              A foreground STDIO MCP Adapter now exposes that alignment and
+              self-review journey as five model-controlled tools with explicit
+              handles. A create-missing-only Codex project config is packaged;
+              live uncoached host use and another MCP-host package remain open.
+              A native authenticated
+              decision surface and additional host adapters remain;
+              stable 0.2.1 and v0.3.0rc1 are unchanged.
+              See the <a href="{{ '/human-decision-prompts.html' | relative_url }}">minimal-input decision contract</a>.
+              See <a href="{{ '/clarification-dialogue.html' | relative_url }}">governed clarification and drift re-centering</a>.
             </p>
           </div>
           <div class="proof">

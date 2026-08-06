@@ -88,8 +88,8 @@
     "Stop before stable promotion or consumer migration."
   ],
   "decision": {
-    "state": "admitted",
+    "state": "paused",
     "decided_by": "Human product owner",
-    "rationale": "The user explicitly authorized items 1, 2, 3, and 4 in one bounded continuation on 2026-08-05."
+    "rationale": "The user authorized the next automatic-product slice on 2026-08-06. This delivered RC closeout task is paused for routing hygiene only; the change does not claim new completion, acceptance, publication, stable promotion, or consumer migration evidence."
   }
 }

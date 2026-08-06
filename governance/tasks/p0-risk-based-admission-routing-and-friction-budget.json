@@ -1,0 +1,109 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-risk-based-admission-routing-and-friction-budget",
+  "title": "Route development requests by risk and enforce a friction budget",
+  "requirement": {
+    "summary": "Replace universal per-task confirmation with a vendor-neutral router that observes no-write requests without task admission, fast-tracks bounded low-risk proposals under explicit standing human policy, reuses active admitted work without repeated confirmation, and reserves review for real ambiguity or material risk.",
+    "source_refs": [
+      "docs/task-proposal-admission.md",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/development-automation-contracts.md",
+      "STATUS.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md"
+    ],
+    "rationale": "The structured admission fallback is safe but becomes product drift if every question, diagnosis, trivial change, and in-scope iteration must stop for a full preview and special confirmation word. AgentGov should route all observed work but interrupt humans only at material boundaries."
+  },
+  "goal": "Add strict standing-policy, structured work-request, and routing-result contracts plus a CLI/library flow that deterministically chooses observe-only, continue-active, policy fast-track, human review, or full review, and permits non-interactive low-risk task creation only when an admitted human policy explicitly delegates it.",
+  "non_goals": [
+    "Do not make every user request create a development task or require a manual confirmation.",
+    "Do not infer request meaning, risk, scope, or authority directly from raw prompts, transcripts, assistant responses, source bodies, credentials, models, or host paths.",
+    "Do not let Coding Agent classification alone grant fast-track authority; authority must come from a strict repository policy admitted by an accountable human.",
+    "Do not fast-track ambiguous scope, unknowns, medium/high/critical risk, architecture changes, dependency changes, authentication/authorization, security boundaries, data schema or migration, destructive operations, external writes, infrastructure/deployment, public API compatibility, or policy changes.",
+    "Do not automatically start or replace a development session, execute validation, change code, expand scope, approve an exception, or perform Git, publication, deployment, or release actions.",
+    "Do not add a hidden daemon, vendor-specific Core fields, a second host Adapter, or a cryptographic human-identity claim.",
+    "Do not commit, push, merge, publish, release, deploy, install a host component, or write to an external system."
+  ],
+  "scope": {
+    "include_paths": [
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "agent-skills",
+      "docs",
+      "governance/tasks",
+      "schemas",
+      "src/agentgov",
+      "templates",
+      "tests"
+    ],
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      ".github/workflows",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/development-automation-contracts.md",
+    "docs/task-proposal-admission.md"
+  ],
+  "acceptance_signals": [
+    "A strict vendor-neutral work-request contract classifies no-write work, new repository changes, and active-task continuation without carrying raw conversation or authority fields; material-risk flags are explicit and unknown fields fail closed.",
+    "A strict human-owned standing admission policy declares allowed no-write classes, whether low-risk fast-track is enabled, allowed scope prefixes and validation command prefixes, maximum scope/validation/risk-item counts, forbidden material characteristics, and a numeric friction budget.",
+    "Routing is deterministic and produces observe-only for allowed no-write requests, continue-active only for a locally verified active admitted task with matching identity, fast-track only when every policy constraint passes, human review for bounded low-risk proposals outside delegation, and full review for material or ambiguous work.",
+    "The friction budget requires zero manual confirmations for no-write observation, policy fast-track, and active-task continuation, at most one for ordinary bounded review, and explicit full review for material work; route results report the applicable budget and actual planned confirmations.",
+    "Policy-authorized fast-track apply works non-interactively, revalidates policy/proposal/route digests and exclusive target safety, creates only the exact reviewed compact task, and does not create a session/event or execute validation.",
+    "Without a valid admitted policy, or when policy/request/proposal/active-task facts drift, the router fails closed to review and never writes or overwrites a task.",
+    "Existing exact ADMIT fallback, task proposal, host interaction, Coding Agent cards, JSONL, Codex Hook, coordinator, session, task, scope, completion, packaging, and repository behavior remains compatible.",
+    "Focused tests, the complete Python 3.11 suite, task/scope/repository checks, schema parsing, packaging assertions, and diff checks pass."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_admission_routing tests.test_task_proposal tests.test_coding_agent_transport tests.test_host_interaction tests.test_development_session tests.test_task_contract -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-risk-based-admission-routing-and-friction-budget.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-risk-based-admission-routing-and-friction-budget.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "high",
+    "items": [
+      "A weak or agent-controlled policy could turn fast-track into self-authorization.",
+      "A false low-risk classification could bypass a necessary human review.",
+      "Universal routing overhead could still become user-visible bureaucracy if no-write and active-task cases are not genuinely zero-confirmation.",
+      "A policy or proposal race could create a different task from the one evaluated by the route."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": [
+      "docs/development-log/2026-08-06.md"
+    ]
+  },
+  "stop_conditions": [
+    "Stop if fast-track authority can originate from the Coding Agent request, a command flag, environment variable, inferred intent, or host permission instead of an admitted repository policy.",
+    "Stop if any material-risk flag, ambiguity, unknown, unsafe scope, unrestricted validation command, policy mismatch, drift, or missing local active-task fact can still produce fast-track or continue-active.",
+    "Stop if no-write or active-task routing creates a task, writes repository state, or requires a manual confirmation.",
+    "Stop if fast-track apply writes anything beyond the exact reviewed task file, overwrites a target, starts a session, appends an event, or executes a command.",
+    "Stop if the implementation claims terminal presence proves human identity or claims static classification proves semantic correctness.",
+    "Stop before any Git write, host installation, release, consumer mutation, deployment, or external-system write."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "The user reviewed the completed risk router, confirmed that human decisions should remain while manual input is minimized, and explicitly authorized the proactive minimal-input decision experience as the next requirement on 2026-08-06."
+  }
+}

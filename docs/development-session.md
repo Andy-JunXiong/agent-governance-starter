@@ -14,14 +14,40 @@ sequence as the final ordinary-user journey. The accepted product direction is
 a foreground automatic coordinator plus coding-agent adapters that invoke the
 same checked state machine, update the Dashboard automatically, and ask the
 user only at material semantic or authority boundaries. Development source now
-implements the first one-cycle `agentgov dev` coordinator and reference
-adapter; live coding-agent transport and visual cards remain open. See
+implements the `agentgov dev` coordinator, a strict live foreground JSONL
+process transport, bounded task/scope/completion cards, vendor-neutral host
+interaction requests, and the first packaged Codex lifecycle-hook Adapter.
+It also implements a vendor-neutral Coding Agent task-proposal and exact human
+admission fallback plus proactive digest-bound prompt/result contracts and a
+reference one-number human-review path. Automatic proposal generation, other
+host adapters, and a native authenticated custom-decision surface remain open. See
 [Automatic coding-agent governance product requirements](product-requirements-automatic-governance.md).
 
 ## Foreground development cycle
 
-An adapter can now invoke one cycle without assembling the low-level command
-chain or hand-authoring JSON:
+A coding-agent adapter can keep one foreground process open and send strict
+`agentgov.coding-agent-event` 1.0 JSONL records:
+
+```powershell
+Get-Content .agentgov-adapter/events.jsonl |
+  agentgov dev . --stream --format json
+```
+
+Each accepted record produces one flushed response and an optional bounded
+task or completion card. The stream rejects raw prompt/source fields, host
+paths, changed-path or task-identity claims, unknown fields, and non-human
+decisions. AgentGov derives repository facts locally. The process exits at the
+first rejected record and reports its exact input line.
+
+After a human-owned alignment result is resolved, the same connection also
+accepts an Adapter-owned active-Agent self-review start. AgentGov returns one
+`materialization_required` context request; the same Adapter returns observation
+drafts bound to that request; AgentGov returns the completed advisory result.
+This two-stage exchange uses foreground memory only. It is not an extra user
+prompt: the Coding Agent Adapter emits the records and uses its existing model
+entitlement, while AgentGov itself makes no model or network call.
+
+The existing adapter/headless fallback can still invoke one cycle directly:
 
 ```powershell
 agentgov dev . --event implementation.changed
@@ -41,11 +67,85 @@ agentgov dev . --event session.reviewed `
   --actor-class human --review-outcome accepted
 ```
 
-These commands expose the reference adapter for development and integration
-testing. The intended normal experience is for a Codex, Claude Code, or IDE
-adapter to emit the events automatically. A missing admitted task returns a
-machine-readable `task_admission` gate and refreshes the Dashboard; it does not
-infer scope or create a task from raw prompt text.
+These commands expose the reference adapter for development, recovery, and
+integration testing. The intended normal experience is for a packaged Codex,
+Claude Code, or IDE adapter to emit the JSONL events automatically. A missing
+admitted task returns a task card and machine-readable `task_admission` gate,
+then refreshes the Dashboard; it does not infer scope or create a task from raw
+prompt text.
+
+## Codex project-hook Adapter
+
+The optional development-source Codex Adapter maps reviewed project callbacks
+without forwarding prompt, tool payload, transcript, assistant-message, model,
+or absolute host-path values:
+
+| Codex callback | AgentGov event |
+| --- | --- |
+| `SessionStart` | `repository.activated` |
+| `UserPromptSubmit` | `task.requested` |
+| `PostToolUse` | `implementation.changed` |
+| `Stop` | `completion.requested` |
+
+Preview the exact create-only project hook file with:
+
+```powershell
+agentgov integrate codex-hooks . --dry-run
+```
+
+Interactive apply requires exact `INTEGRATE`, refuses to overwrite or merge an
+existing `.codex/hooks.json`, and does not grant hook trust. Review and enable
+the definition separately through Codex `/hooks`. `PostToolUse` findings are
+after-the-fact observations and do not undo a tool side effect. A repeated
+`Stop` callback with `stop_hook_active` does not rerun completion. See
+[Codex hooks Adapter](codex-hooks-adapter.md).
+
+The managed configuration also observes `PermissionRequest`, but AgentGov
+returns neither allow nor deny. Codex keeps its normal human tool approval
+prompt, and that permission is not treated as task admission, scope expansion,
+exception approval, or completion acceptance.
+
+Task-admission, scope-resolution, and completion-review cards now carry a
+vendor-neutral `agentgov.host-interaction-request` when a real human gate
+exists. The request declares delivery and decision-recording capability and
+always reports `decision_applied=false`. Current Codex Hooks deliver these
+custom gates as context only and cannot record their decision.
+
+Codex `UserPromptSubmit` is no longer treated as proof that a development task
+exists. The Hook discards the prompt and tells the conversational Agent to
+classify a strict `agentgov.work-request` host-side. Questions, explanations,
+status queries, and read-only diagnosis need no task; repository modification
+must route before it begins.
+
+## Risk-based admission routing
+
+`agentgov route request` separates five outcomes: `observe_only`,
+`continue_active`, `fast_track`, `human_review`, and `full_review`. The first
+three have a zero-interruption budget. `fast_track` additionally requires an
+admitted, Git-tracked, clean standing policy and every scope, validation, risk,
+assumption, unknown, and material-characteristic constraint to pass.
+
+Only `--apply-fast-track` may create the bounded task without a per-task human
+decision. It creates no session and executes no code. See
+[risk-based admission routing](admission-routing.md).
+
+## Structured task proposal fallback
+
+A host Adapter or Coding Agent may prepare a strict normalized low-risk
+proposal for separate human review:
+
+```powershell
+agentgov propose task path/to/proposal.json --repository . --dry-run
+```
+
+The proposal contract excludes raw prompts, transcripts, source content,
+credentials, absolute paths, and authority. Preview shows the exact compact
+task, assumptions, unknowns, digests, and sole target. A planned low-risk
+review may proactively accept one numbered approve/change/reject selection;
+exact interactive `ADMIT` remains a fallback. Either admission path creates
+only that task file and does not start this development session. See
+[task proposal and human admission](task-proposal-admission.md) and
+[minimal-input human decisions](human-decision-prompts.md).
 
 ## Normal workflow
 

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/active-agent-self-review-start-v1.0.json",
+  "title": "AgentGov Active Agent Self Review Start",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "start_id", "source", "alignment", "risk", "provider", "allowed_evidence_refs", "content_boundary", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.active-agent-self-review-start"},
+    "schema_version": {"const": "1.0"},
+    "start_id": {"type": "string", "pattern": "^asx-[0-9a-f]{32}$"},
+    "source": {"$ref": "#/$defs/source"},
+    "alignment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["dialogue_id", "revision", "digest"],
+      "properties": {
+        "dialogue_id": {"type": "string", "pattern": "^dlg-[0-9a-f]{32}$"},
+        "revision": {"type": "integer", "minimum": 1},
+        "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "risk": {
+      "type": "object", "additionalProperties": false,
+      "required": ["level", "reason_codes"],
+      "properties": {
+        "level": {"const": "medium"},
+        "reason_codes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "semantic-review-provider-capabilities.schema.json#/$defs/identifier"}}
+      }
+    },
+    "provider": {"$ref": "semantic-review-provider-capabilities.schema.json"},
+    "allowed_evidence_refs": {"type": "array", "minItems": 1, "maxItems": 50, "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 240}},
+    "content_boundary": {"$ref": "semantic-review-provider-capabilities.schema.json#/$defs/contentBoundary"},
+    "authority_boundary": {"$ref": "semantic-review-provider-capabilities.schema.json#/$defs/authority"}
+  },
+  "$defs": {
+    "source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["adapter_id", "actor_class"],
+      "properties": {
+        "adapter_id": {"$ref": "semantic-review-provider-capabilities.schema.json#/$defs/identifier"},
+        "actor_class": {"const": "coding_agent"}
+      }
+    }
+  }
+}

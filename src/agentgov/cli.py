@@ -10,7 +10,7 @@ import subprocess
 import sys
 from tempfile import TemporaryDirectory
 from pathlib import Path
-from typing import Sequence
+from typing import Mapping, Sequence
 
 from agentgov import __version__
 from agentgov.adoption import (
@@ -21,6 +21,14 @@ from agentgov.adoption import (
     render_adoption_report_json,
 )
 from agentgov.agent_skills import check_agent_skills
+from agentgov.admission_routing import (
+    AdmissionRoutingError,
+    apply_fast_track_route,
+    build_admission_route,
+    load_work_request,
+    render_admission_route_json,
+    render_admission_route_terminal,
+)
 from agentgov.artifacts import (
     ArtifactConflictError,
     ArtifactPolicyError,
@@ -55,6 +63,51 @@ from agentgov.change_scope import (
     render_scope_report_json,
     render_scope_report_markdown,
     render_scope_report_terminal,
+)
+from agentgov.coding_agent_transport import (
+    EVENT_CONTRACT as CODING_AGENT_EVENT_CONTRACT,
+    CodingAgentTransportError,
+    coding_agent_event_from_payload,
+    render_coding_agent_response_json,
+    render_coding_agent_response_terminal,
+    run_coding_agent_event,
+)
+from agentgov.alignment_transport import (
+    ALIGNMENT_CONTEXT_CONTRACT,
+    SUPPORTED_INPUT_CONTRACTS as ALIGNMENT_INPUT_CONTRACTS,
+    AlignmentStreamResponse,
+    AlignmentStreamSession,
+    AlignmentTransportError,
+    alignment_stream_record_from_json,
+    render_alignment_stream_response_json,
+    render_alignment_stream_response_terminal,
+)
+from agentgov.self_review_transport import (
+    SELF_REVIEW_INPUT_CONTRACTS,
+    ActiveAgentSelfReviewStreamSession,
+    SelfReviewTransportError,
+    render_self_review_stream_response_json,
+    render_self_review_stream_response_terminal,
+)
+from agentgov.codex_hooks import (
+    CodexHookPolicyError,
+    CodexHooksAction,
+    CodexHooksIntegrationError,
+    apply_codex_hooks_plan,
+    plan_codex_hooks_integration,
+    process_codex_hook,
+    render_codex_hook_output,
+    render_codex_hooks_plan_json,
+    request_codex_hooks_confirmation,
+)
+from agentgov.codex_mcp import (
+    CODEX_MCP_ADAPTER_ID,
+    CODEX_MCP_PROVIDER_ID,
+    CodexMcpIntegrationError,
+    apply_codex_mcp_plan,
+    plan_codex_mcp_integration,
+    render_codex_mcp_plan_json,
+    request_codex_mcp_confirmation,
 )
 from agentgov.doctor import (
     DoctorStatus,
@@ -113,6 +166,12 @@ from agentgov.foreground_coordinator import (
     render_foreground_cycle_terminal,
     run_foreground_cycle,
 )
+from agentgov.governance_mcp import (
+    GovernanceMcpAdapter,
+    GovernanceMcpError,
+    GovernanceMcpServer,
+    build_active_host_self_review_provider,
+)
 from agentgov.git_snapshot import GitSnapshotError
 from agentgov.initializer import InitConflictError, initialize_project
 from agentgov.onboarding import (
@@ -124,6 +183,13 @@ from agentgov.onboarding import (
 )
 from agentgov.next_action import render_next_action_json, select_next_action
 from agentgov.html_reporting import render_repository_report_html
+from agentgov.human_decision import (
+    HumanDecisionError,
+    apply_route_human_decision,
+    build_route_decision_prompt,
+    render_human_decision_prompt_terminal,
+    request_reference_terminal_selection,
+)
 from agentgov.evaluation import EvaluationStatus, check_evaluation_bundle
 from agentgov.repository import FindingStatus, check_repository
 from agentgov.references import (
@@ -170,6 +236,15 @@ from agentgov.status import (
 from agentgov.task_contract import (
     TaskFindingStatus,
     check_development_task,
+)
+from agentgov.task_proposal import (
+    TaskProposalPolicyError,
+    apply_task_admission_plan,
+    build_task_admission_plan,
+    load_task_proposal,
+    render_task_admission_plan_json,
+    render_task_admission_plan_terminal,
+    request_task_admission_confirmation,
 )
 from agentgov.development_trigger import TRIGGER_TYPES, TriggerContractError
 from agentgov.update_check import (
@@ -647,6 +722,233 @@ def _integrate_github_actions(
     print(f"PASS integrate: created {len(result.created_files)} managed workflow file(s)")
     print("NOTE integrate: project dependencies and production workflows were not run")
     print("NOTE integrate: no Git, merge, publish, release, or deploy action is authorized")
+    return EXIT_PASS
+
+
+def _integrate_codex_hooks(
+    path: Path,
+    *,
+    dry_run: bool,
+    output_format: str,
+    non_interactive: bool,
+) -> int:
+    if not dry_run and non_interactive:
+        print(
+            "ERROR integrate: --non-interactive never authorizes writes; add --dry-run",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    if not dry_run and output_format == "json":
+        print(
+            "ERROR integrate: interactive apply requires text output",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    try:
+        plan = plan_codex_hooks_integration(path)
+    except FileNotFoundError:
+        print(f"ERROR integrate: repository path not found: {path}", file=sys.stderr)
+        return EXIT_ERROR
+    except (CodexHookPolicyError, OSError, UnicodeError, ValueError) as exc:
+        print(f"ERROR integrate: cannot prepare Codex hooks plan: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    if output_format == "json":
+        print(
+            render_codex_hooks_plan_json(plan, non_interactive=non_interactive),
+            end="",
+        )
+    else:
+        print(f"TARGET integrate: {plan.root}")
+        print("INTEGRATION codex-hooks")
+        print(f"{plan.action.value} {plan.path.as_posix()}: {plan.reason}")
+        if plan.content is not None:
+            print("CONTENT")
+            print(plan.content, end="")
+        print(
+            "SUMMARY "
+            + " ".join(
+                f"{action.value}={int(plan.action is action)}"
+                for action in CodexHooksAction
+            )
+        )
+        if dry_run:
+            print("NOTE integrate dry-run: no repository files or Git state were modified")
+            print("NOTE integrate dry-run: this preview does not authorize a later write")
+            print("NOTE integrate dry-run: Codex hook trust remains a separate user decision")
+
+    if plan.has_conflict:
+        return EXIT_FAIL
+    if dry_run or plan.action is CodexHooksAction.PRESERVE:
+        return EXIT_PASS
+    try:
+        confirmed = request_codex_hooks_confirmation(
+            plan,
+            decision_reader=input,
+            is_interactive_terminal=sys.stdin.isatty(),
+        )
+    except EOFError:
+        confirmed = False
+    if not confirmed:
+        print(
+            "CANCELLED integrate: exact interactive INTEGRATE confirmation was not received"
+        )
+        print("NOTE integrate: no repository files or Git state were modified")
+        return EXIT_PASS
+    try:
+        result = apply_codex_hooks_plan(plan)
+    except CodexHooksIntegrationError as exc:
+        print(f"FAIL integrate: {exc}")
+        return EXIT_FAIL
+    except (OSError, UnicodeError) as exc:
+        print(f"ERROR integrate: cannot create Codex hooks: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    for created in result.created_files:
+        print(f"CREATE {created.as_posix()}")
+    print(f"PASS integrate: created {len(result.created_files)} Codex hook file(s)")
+    print("NOTE integrate: use /hooks in Codex to review and trust the exact definition")
+    print("NOTE integrate: no plugin, Git operation, release, or deployment was authorized")
+    return EXIT_PASS
+
+
+def _run_codex_hook_adapter(
+    repository: Path,
+    *,
+    dashboard_output: Path,
+) -> int:
+    """Read one official Codex hook object and emit only valid hook JSON."""
+
+    try:
+        payload = json.load(sys.stdin)
+        result = process_codex_hook(
+            payload,
+            repository=repository,
+            dashboard_output=dashboard_output,
+        )
+    except json.JSONDecodeError:
+        print("AgentGov Codex hook input is not valid JSON", file=sys.stderr)
+        return EXIT_ERROR
+    except FileNotFoundError:
+        print("AgentGov Codex hook repository path was not found", file=sys.stderr)
+        return EXIT_ERROR
+    except subprocess.TimeoutExpired as exc:
+        print(
+            f"AgentGov Codex hook validation timed out after {exc.timeout} seconds",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    except (
+        CodexHookPolicyError,
+        CoordinatorPolicyError,
+        TriggerContractError,
+        ScopePolicyError,
+        GitInspectionError,
+        EvidenceError,
+        GitSnapshotError,
+        HandoffPolicyError,
+        MonitorPolicyError,
+        LocalStateError,
+        SessionPolicyError,
+        OSError,
+        UnicodeError,
+        ValueError,
+    ) as exc:
+        print(f"AgentGov Codex hook rejected: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    print(render_codex_hook_output(result), end="")
+    return EXIT_PASS
+
+
+def _run_governance_mcp_adapter(*, host_profile: str) -> int:
+    """Run the foreground STDIO MCP server without writing non-protocol stdout."""
+
+    try:
+        if host_profile != "codex":
+            raise GovernanceMcpError("unsupported MCP host profile")
+        provider = build_active_host_self_review_provider(
+            adapter_id=CODEX_MCP_ADAPTER_ID,
+            provider_id=CODEX_MCP_PROVIDER_ID,
+        )
+        server = GovernanceMcpServer(
+            GovernanceMcpAdapter(
+                adapter_id=CODEX_MCP_ADAPTER_ID,
+                provider=provider,
+            )
+        )
+        return server.serve(sys.stdin, sys.stdout)
+    except (GovernanceMcpError, OSError, UnicodeError) as exc:
+        print(f"AgentGov MCP Adapter error: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+
+def _integrate_codex_mcp(
+    path: Path,
+    *,
+    dry_run: bool,
+    output_format: str,
+    non_interactive: bool,
+) -> int:
+    if not dry_run and non_interactive:
+        print("ERROR integrate: --non-interactive never authorizes writes; add --dry-run", file=sys.stderr)
+        return EXIT_ERROR
+    if not dry_run and output_format == "json":
+        print("ERROR integrate: interactive apply requires text output", file=sys.stderr)
+        return EXIT_ERROR
+    try:
+        plan = plan_codex_mcp_integration(path)
+    except FileNotFoundError:
+        print(f"ERROR integrate: repository path not found: {path}", file=sys.stderr)
+        return EXIT_ERROR
+    except (CodexHookPolicyError, OSError, UnicodeError, ValueError) as exc:
+        print(f"ERROR integrate: cannot prepare Codex MCP plan: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    if output_format == "json":
+        print(render_codex_mcp_plan_json(plan, non_interactive=non_interactive), end="")
+    else:
+        print(f"TARGET integrate: {plan.root}")
+        print("INTEGRATION codex-mcp")
+        print(f"{plan.action.value} {plan.path.as_posix()}: {plan.reason}")
+        if plan.content is not None:
+            print("CONTENT")
+            print(plan.content, end="")
+        print(
+            "SUMMARY "
+            + " ".join(
+                f"{action.value}={int(plan.action is action)}"
+                for action in CodexHooksAction
+            )
+        )
+        if dry_run:
+            print("NOTE integrate dry-run: no repository files or Git state were modified")
+            print("NOTE integrate dry-run: this preview does not authorize a later write")
+            print("NOTE integrate dry-run: trusted-project/config review remains separate")
+    if plan.has_conflict:
+        return EXIT_FAIL
+    if dry_run or plan.action is CodexHooksAction.PRESERVE:
+        return EXIT_PASS
+    try:
+        confirmed = request_codex_mcp_confirmation(
+            plan, decision_reader=input, is_interactive_terminal=sys.stdin.isatty()
+        )
+    except EOFError:
+        confirmed = False
+    if not confirmed:
+        print("CANCELLED integrate: exact interactive INTEGRATE confirmation was not received")
+        print("NOTE integrate: no repository files or Git state were modified")
+        return EXIT_PASS
+    try:
+        result = apply_codex_mcp_plan(plan)
+    except CodexMcpIntegrationError as exc:
+        print(f"FAIL integrate: {exc}")
+        return EXIT_FAIL
+    except (OSError, UnicodeError) as exc:
+        print(f"ERROR integrate: cannot create Codex MCP config: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    for created in result.created_files:
+        print(f"CREATE {created.as_posix()}")
+    print(f"PASS integrate: created {len(result.created_files)} Codex MCP config file(s)")
+    print("NOTE integrate: Codex trusted-project/config review remains required")
+    print("NOTE integrate: no model call, Git operation, release, or deployment was authorized")
     return EXIT_PASS
 
 
@@ -1590,6 +1892,164 @@ def _dev_foreground(
     return EXIT_FAIL if cycle.status == "blocked" else EXIT_PASS
 
 
+def _dev_live_stream(
+    repository: Path,
+    *,
+    dashboard_output: Path,
+    output_format: str,
+) -> int:
+    """Consume a strict coding-agent JSONL stream in one foreground process."""
+
+    lifecycle_renderer = {
+        "terminal": render_coding_agent_response_terminal,
+        "json": render_coding_agent_response_json,
+    }[output_format]
+    alignment_renderer = {
+        "terminal": render_alignment_stream_response_terminal,
+        "json": render_alignment_stream_response_json,
+    }[output_format]
+    self_review_renderer = {
+        "terminal": render_self_review_stream_response_terminal,
+        "json": render_self_review_stream_response_json,
+    }[output_format]
+    saw_event = False
+    blocked = False
+    seen_event_ids: set[str] = set()
+    stream_identity: tuple[str, str] | None = None
+    alignment_session = AlignmentStreamSession()
+    self_review_session = ActiveAgentSelfReviewStreamSession()
+    latest_alignment_response: AlignmentStreamResponse | None = None
+    for sequence, line in enumerate(sys.stdin, start=1):
+        saw_event = True
+        try:
+            payload = alignment_stream_record_from_json(line)
+            if payload.get("contract") == CODING_AGENT_EVENT_CONTRACT:
+                event = coding_agent_event_from_payload(payload)
+                if event.event_id in seen_event_ids:
+                    raise CodingAgentTransportError("duplicate event_id in coding-agent stream")
+                identity = (event.source["adapter_id"], event.correlation_id)
+                if stream_identity is not None and identity != stream_identity:
+                    raise CodingAgentTransportError(
+                        "adapter_id and correlation_id must remain stable within one stream"
+                    )
+                if (
+                    alignment_session.coding_adapter_id is not None
+                    and event.source["adapter_id"] != alignment_session.coding_adapter_id
+                ):
+                    raise CodingAgentTransportError(
+                        "lifecycle and alignment records must use the same Coding Agent adapter"
+                    )
+                response = run_coding_agent_event(
+                    repository,
+                    event=event,
+                    sequence=sequence,
+                    dashboard_output=dashboard_output,
+                )
+                seen_event_ids.add(event.event_id)
+                stream_identity = identity
+                output = lifecycle_renderer(response)
+                blocked = blocked or response.cycle.status == "blocked"
+            elif payload.get("contract") in ALIGNMENT_INPUT_CONTRACTS:
+                if payload.get("contract") == ALIGNMENT_CONTEXT_CONTRACT and stream_identity:
+                    source = payload.get("source")
+                    adapter_id = source.get("adapter_id") if isinstance(source, Mapping) else None
+                    if adapter_id != stream_identity[0]:
+                        raise AlignmentTransportError(
+                            "lifecycle and alignment records must use the same Coding Agent adapter"
+                        )
+                alignment_response = alignment_session.process_payload(
+                    payload,
+                    sequence=sequence,
+                )
+                latest_alignment_response = alignment_response
+                output = alignment_renderer(alignment_response)
+            elif payload.get("contract") in SELF_REVIEW_INPUT_CONTRACTS:
+                self_review_response = self_review_session.process_payload(
+                    payload,
+                    sequence=sequence,
+                    alignment_response=latest_alignment_response,
+                    expected_adapter_id=alignment_session.coding_adapter_id,
+                )
+                output = self_review_renderer(self_review_response)
+            else:
+                raise AlignmentTransportError("coding-agent stream contract is unsupported")
+        except FileNotFoundError as exc:
+            print(
+                f"ERROR dev stream line {sequence}: file or executable not found: {exc.filename or exc}",
+                file=sys.stderr,
+            )
+            return EXIT_ERROR
+        except subprocess.TimeoutExpired as exc:
+            print(
+                f"ERROR dev stream line {sequence}: validation timed out after {exc.timeout} seconds",
+                file=sys.stderr,
+            )
+            return EXIT_ERROR
+        except (
+            CodingAgentTransportError,
+            AlignmentTransportError,
+            SelfReviewTransportError,
+            CoordinatorPolicyError,
+            TriggerContractError,
+            ScopePolicyError,
+            GitInspectionError,
+            EvidenceError,
+            GitSnapshotError,
+            HandoffPolicyError,
+            MonitorPolicyError,
+            LocalStateError,
+            SessionPolicyError,
+            OSError,
+            UnicodeError,
+            ValueError,
+        ) as exc:
+            print(f"ERROR dev stream line {sequence}: {exc}", file=sys.stderr)
+            return EXIT_ERROR
+        print(output, end="", flush=True)
+    if not saw_event:
+        print("ERROR dev stream: expected at least one JSONL event on stdin", file=sys.stderr)
+        return EXIT_ERROR
+    return EXIT_FAIL if blocked else EXIT_PASS
+
+
+def _dev_command(args: argparse.Namespace) -> int:
+    """Keep streaming and single-cycle argument surfaces unambiguous."""
+
+    if args.stream:
+        incompatible = (
+            args.trigger_type != "repository.activated"
+            or args.actor_class != "coding_agent"
+            or args.correlation_id is not None
+            or args.validation_outcome is not None
+            or args.evidence_ref is not None
+            or args.scope_decision is not None
+            or args.review_outcome is not None
+        )
+        if incompatible:
+            print(
+                "ERROR dev stream: --event and event-fact options belong to single-cycle mode",
+                file=sys.stderr,
+            )
+            return EXIT_ERROR
+        return _dev_live_stream(
+            args.repository,
+            dashboard_output=args.dashboard_output,
+            output_format=args.dev_format,
+        )
+    return _dev_foreground(
+        args.repository,
+        trigger_type=args.trigger_type,
+        actor_class=args.actor_class,
+        correlation_id=args.correlation_id,
+        validation_outcome=args.validation_outcome,
+        evidence_ref=args.evidence_ref,
+        scope_decision=args.scope_decision,
+        review_outcome=args.review_outcome,
+        dashboard_output=args.dashboard_output,
+        output_format=args.dev_format,
+    )
+
+
 def _govern_start(
     repository: Path,
     *,
@@ -1684,6 +2144,165 @@ def _govern_start(
         print(f"EVENT {result.event_ref}")
     print("NEXT develop within the admitted scope, then run 'agentgov govern check' and 'agentgov govern finish'")
     print("NOTE start does not authorize code change, exception, commit, merge, deployment, or release")
+    return EXIT_PASS
+
+
+def _propose_task(
+    proposal_path: Path,
+    *,
+    repository: Path,
+    dry_run: bool,
+    output_format: str,
+) -> int:
+    """Preview and explicitly admit one structured Coding Agent proposal."""
+
+    if output_format == "json" and not dry_run:
+        print("ERROR propose task: --format json requires --dry-run", file=sys.stderr)
+        return EXIT_ERROR
+    try:
+        proposal = load_task_proposal(proposal_path)
+        plan = build_task_admission_plan(repository, proposal)
+    except FileNotFoundError as exc:
+        print(
+            f"ERROR propose task: file or repository not found: {exc.filename or exc}",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    except (OSError, UnicodeError, TaskProposalPolicyError, ValueError) as exc:
+        print(f"ERROR propose task: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    renderer = (
+        render_task_admission_plan_json
+        if output_format == "json"
+        else render_task_admission_plan_terminal
+    )
+    print(renderer(plan), end="")
+    if dry_run:
+        if output_format == "terminal":
+            print("DRY_RUN no files were written and no task or session was admitted")
+        return EXIT_PASS
+    confirmed = request_task_admission_confirmation(
+        plan,
+        decision_reader=input,
+        is_interactive_terminal=sys.stdin.isatty(),
+    )
+    if not confirmed:
+        print("CANCELLED task admission requires exact ADMIT from an interactive terminal")
+        return EXIT_FAIL
+    try:
+        result = apply_task_admission_plan(plan)
+    except (OSError, UnicodeError, TaskProposalPolicyError, ValueError) as exc:
+        print(f"ERROR propose task: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    print(f"ADMITTED {result.task_id} ({result.target})")
+    print(f"TASK_DIGEST {result.task_digest}")
+    print(
+        f'NEXT review session start with \'agentgov govern start "{result.target}" '
+        "--repository . --dry-run\'"
+    )
+    print(
+        "NOTE admission created only the reviewed task; it did not start development, "
+        "execute commands, or authorize code, scope, Git, deployment, or release actions"
+    )
+    return EXIT_PASS
+
+
+def _route_request(
+    request_path: Path,
+    *,
+    policy_path: Path,
+    repository: Path,
+    apply_fast_track: bool,
+    prompt_human: bool,
+    output_format: str,
+) -> int:
+    """Route one structured request and optionally apply standing delegation."""
+
+    try:
+        request = load_work_request(request_path)
+        route = build_admission_route(
+            repository,
+            policy_path=policy_path,
+            request=request,
+        )
+    except FileNotFoundError as exc:
+        print(
+            f"ERROR route request: file or repository not found: {exc.filename or exc}",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    except (AdmissionRoutingError, OSError, UnicodeError, ValueError) as exc:
+        print(f"ERROR route request: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    if prompt_human:
+        if apply_fast_track or output_format != "terminal":
+            print(
+                "ERROR route request: --prompt-human requires terminal format and cannot be combined with --apply-fast-track",
+                file=sys.stderr,
+            )
+            return EXIT_ERROR
+        print(render_admission_route_terminal(route), end="")
+        if route.route in {"observe_only", "continue_active", "fast_track"}:
+            print(f"NO_HUMAN_PROMPT route {route.route} requires no human decision")
+            print("NOTE route preview wrote nothing and the system did not interrupt the user")
+            return EXIT_PASS
+        if route.route != "human_review" or route.admission_plan is None:
+            print(
+                "CANCELLED full human review cannot be reduced to this low-risk single-selection flow",
+                file=sys.stderr,
+            )
+            return EXIT_FAIL
+        try:
+            prompt = build_route_decision_prompt(route)
+            print(render_human_decision_prompt_terminal(prompt), end="")
+            result = request_reference_terminal_selection(
+                prompt,
+                decision_reader=input,
+                is_interactive_terminal=sys.stdin.isatty(),
+            )
+            applied = apply_route_human_decision(route, prompt, result)
+        except (HumanDecisionError, OSError, UnicodeError, ValueError) as exc:
+            print(f"CANCELLED human decision: {exc}", file=sys.stderr)
+            return EXIT_FAIL
+        print(f"DECISION_RECORDED {result.selection['option_id']} ({result.result_id})")
+        if applied is None:
+            print("NO_REPOSITORY_WRITE the selected option applied no transition")
+        else:
+            print(f"ADMITTED {applied.task_id} ({applied.target})")
+            print(f"TASK_DIGEST {applied.task_digest}")
+            print("NEXT the host may offer the separately governed session-start decision")
+        print("NOTE one numeric selection replaced a special confirmation word; no code, session, Git, deployment, or release authority was granted")
+        return EXIT_PASS
+
+    if not apply_fast_track:
+        renderer = render_admission_route_json if output_format == "json" else render_admission_route_terminal
+        print(renderer(route), end="")
+        print("NOTE route preview wrote nothing and granted no code, session, scope, Git, deployment, or release authority") if output_format == "terminal" else None
+        return EXIT_PASS
+    if route.route != "fast_track":
+        if output_format == "terminal":
+            print(render_admission_route_terminal(route), end="")
+        print(
+            f"CANCELLED route {route.route} cannot use non-interactive fast-track apply",
+            file=sys.stderr,
+        )
+        return EXIT_FAIL
+    if output_format == "terminal":
+        print(render_admission_route_terminal(route), end="")
+    try:
+        result = apply_fast_track_route(route)
+    except (AdmissionRoutingError, OSError, UnicodeError, ValueError) as exc:
+        print(f"ERROR route request: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    if output_format == "json":
+        print(render_admission_route_json(route, decision_applied=True), end="")
+    else:
+        print(f"FAST_TRACK_ADMITTED {result.task_id} ({result.target})")
+        print(f"TASK_DIGEST {result.task_digest}")
+        print("NEXT start or continue development only through the separately governed session lifecycle")
+        print("NOTE fast-track created only the policy-authorized task; it did not start a session or execute code")
     return EXIT_PASS
 
 
@@ -2689,6 +3308,72 @@ def build_parser() -> argparse.ArgumentParser:
         )
     )
 
+    codex_hooks_parser = integrate_targets.add_parser(
+        "codex-hooks",
+        help="Create reviewed project hooks for the packaged Codex Adapter.",
+    )
+    codex_hooks_parser.add_argument(
+        "path",
+        nargs="?",
+        type=Path,
+        default=Path("."),
+        help="Git repository root to integrate (default: current repository).",
+    )
+    codex_hooks_parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Preview the exact create/preserve/conflict action without writing.",
+    )
+    codex_hooks_parser.add_argument(
+        "--format",
+        dest="integration_format",
+        choices=("text", "json"),
+        default="text",
+        help="Integration-plan serialization format (default: text).",
+    )
+    codex_hooks_parser.add_argument(
+        "--non-interactive",
+        action="store_true",
+        help="Declare automation mode; it never grants write or hook-trust authority.",
+    )
+    codex_hooks_parser.set_defaults(
+        handler=lambda args: _integrate_codex_hooks(
+            args.path,
+            dry_run=args.dry_run,
+            output_format=args.integration_format,
+            non_interactive=args.non_interactive,
+        )
+    )
+
+    codex_mcp_parser = integrate_targets.add_parser(
+        "codex-mcp",
+        help="Create reviewed project configuration for the AgentGov MCP Adapter.",
+    )
+    codex_mcp_parser.add_argument(
+        "path", nargs="?", type=Path, default=Path("."),
+        help="Git repository root to integrate (default: current repository).",
+    )
+    codex_mcp_parser.add_argument(
+        "--dry-run", action="store_true",
+        help="Preview the exact create/preserve/conflict action without writing.",
+    )
+    codex_mcp_parser.add_argument(
+        "--format", dest="integration_format", choices=("text", "json"), default="text",
+        help="Integration-plan serialization format (default: text).",
+    )
+    codex_mcp_parser.add_argument(
+        "--non-interactive", action="store_true",
+        help="Declare automation mode; it never grants write or config-trust authority.",
+    )
+    codex_mcp_parser.set_defaults(
+        handler=lambda args: _integrate_codex_mcp(
+            args.path,
+            dry_run=args.dry_run,
+            output_format=args.integration_format,
+            non_interactive=args.non_interactive,
+        )
+    )
+
     update_parser = commands.add_parser(
         "update",
         help="Check and explicitly apply the bounded tool/repository update workflow.",
@@ -3047,6 +3732,155 @@ def build_parser() -> argparse.ArgumentParser:
         )
     )
 
+    adapter_parser = commands.add_parser(
+        "adapter",
+        help="Run one packaged coding-agent host Adapter.",
+    )
+    adapter_targets = adapter_parser.add_subparsers(
+        dest="adapter_target",
+        required=True,
+    )
+    codex_hook_parser = adapter_targets.add_parser(
+        "codex-hook",
+        help="Read one Codex lifecycle hook JSON object from stdin.",
+    )
+    codex_hook_parser.add_argument(
+        "repository",
+        nargs="?",
+        type=Path,
+        default=Path("."),
+        help="Any path inside the selected Git worktree (default: current directory).",
+    )
+    codex_hook_parser.add_argument(
+        "--dashboard-output",
+        type=Path,
+        default=Path(".agentgov/dashboard.html"),
+        help="Untracked AgentGov-owned Dashboard output inside the repository.",
+    )
+    codex_hook_parser.set_defaults(
+        handler=lambda args: _run_codex_hook_adapter(
+            args.repository,
+            dashboard_output=args.dashboard_output,
+        )
+    )
+
+    governance_mcp_parser = adapter_targets.add_parser(
+        "governance-mcp",
+        help="Run the foreground AgentGov STDIO MCP Adapter.",
+    )
+    governance_mcp_parser.add_argument(
+        "--host-profile",
+        choices=("codex",),
+        default="codex",
+        help="Host Adapter capability profile (default: codex).",
+    )
+    governance_mcp_parser.set_defaults(
+        handler=lambda args: _run_governance_mcp_adapter(
+            host_profile=args.host_profile,
+        )
+    )
+
+    propose_parser = commands.add_parser(
+        "propose",
+        help="Review a vendor-neutral Coding Agent proposal without granting it authority.",
+    )
+    propose_targets = propose_parser.add_subparsers(
+        dest="propose_target",
+        required=True,
+    )
+    propose_task_parser = propose_targets.add_parser(
+        "task",
+        help="Preview and explicitly admit one structured low-risk task proposal.",
+    )
+    propose_task_parser.add_argument(
+        "proposal",
+        type=Path,
+        help="Strict agentgov.task-proposal JSON prepared without raw prompt content.",
+    )
+    propose_task_parser.add_argument(
+        "--repository",
+        type=Path,
+        default=Path("."),
+        help="Adopted repository containing governance/tasks (default: current directory).",
+    )
+    propose_task_parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Render the exact proposal, target, and resulting task without writing.",
+    )
+    propose_task_parser.add_argument(
+        "--format",
+        dest="propose_format",
+        choices=("terminal", "json"),
+        default="terminal",
+        help="Admission preview format (default: terminal).",
+    )
+    propose_task_parser.set_defaults(
+        handler=lambda args: _propose_task(
+            args.proposal,
+            repository=args.repository,
+            dry_run=args.dry_run,
+            output_format=args.propose_format,
+        )
+    )
+
+    route_parser = commands.add_parser(
+        "route",
+        help="Classify structured work without making every request a manual gate.",
+    )
+    route_targets = route_parser.add_subparsers(dest="route_target", required=True)
+    route_request_parser = route_targets.add_parser(
+        "request",
+        help="Route no-write, active-task, low-risk, or material work under standing policy.",
+    )
+    route_request_parser.add_argument(
+        "request",
+        type=Path,
+        help="Strict agentgov.work-request JSON prepared without raw conversation content.",
+    )
+    route_request_parser.add_argument(
+        "--policy",
+        type=Path,
+        required=True,
+        help="Human-owned admission routing policy inside the repository.",
+    )
+    route_request_parser.add_argument(
+        "--repository",
+        type=Path,
+        default=Path("."),
+        help="Governed Git repository (default: current directory).",
+    )
+    route_request_parser.add_argument(
+        "--apply-fast-track",
+        action="store_true",
+        help="Create only a task whose still-clean admitted policy route is fast_track.",
+    )
+    route_request_parser.add_argument(
+        "--prompt-human",
+        action="store_true",
+        help=(
+            "For a planned low-risk human_review route, proactively show one numbered "
+            "decision and apply only an explicit approve selection."
+        ),
+    )
+    route_request_parser.add_argument(
+        "--format",
+        dest="route_format",
+        choices=("terminal", "json"),
+        default="terminal",
+        help="Routing result format (default: terminal).",
+    )
+    route_request_parser.set_defaults(
+        handler=lambda args: _route_request(
+            args.request,
+            policy_path=args.policy,
+            repository=args.repository,
+            apply_fast_track=args.apply_fast_track,
+            prompt_human=args.prompt_human,
+            output_format=args.route_format,
+        )
+    )
+
     dev_parser = commands.add_parser(
         "dev",
         help="Run one explicit foreground automatic-governance cycle.",
@@ -3064,6 +3898,14 @@ def build_parser() -> argparse.ArgumentParser:
         choices=tuple(sorted(TRIGGER_TYPES)),
         default="repository.activated",
         help="Adapter event for this foreground cycle (default: repository.activated).",
+    )
+    dev_parser.add_argument(
+        "--stream",
+        action="store_true",
+        help=(
+            "Consume strict coding-agent lifecycle and governed-alignment records "
+            "as JSONL from stdin."
+        ),
     )
     dev_parser.add_argument(
         "--actor-class",
@@ -3105,18 +3947,7 @@ def build_parser() -> argparse.ArgumentParser:
         default="terminal",
     )
     dev_parser.set_defaults(
-        handler=lambda args: _dev_foreground(
-            args.repository,
-            trigger_type=args.trigger_type,
-            actor_class=args.actor_class,
-            correlation_id=args.correlation_id,
-            validation_outcome=args.validation_outcome,
-            evidence_ref=args.evidence_ref,
-            scope_decision=args.scope_decision,
-            review_outcome=args.review_outcome,
-            dashboard_output=args.dashboard_output,
-            output_format=args.dev_format,
-        )
+        handler=_dev_command
     )
 
     govern_parser = commands.add_parser(

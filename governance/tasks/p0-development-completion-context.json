@@ -1,0 +1,83 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-development-completion-context",
+  "title": "Require contextual explanations at development completion",
+  "requirement": {
+    "summary": "Every completed development handoff must explain the result plainly, identify its upstream and downstream connections, and state its project-wide value.",
+    "source_refs": [
+      "AGENTS.md"
+    ]
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": [
+      "docs/governance-model.md"
+    ],
+    "rationale": "A consistent completion explanation helps the human product owner understand each slice as part of the product system instead of receiving only implementation details and test counts."
+  },
+  "goal": "Add a durable repository instruction and regression test for plain-language, upstream, downstream, and project-value completion explanations.",
+  "non_goals": [
+    "Do not make further changes to product runtime behavior, CLI behavior, release identity, public documentation, or consumer templates; their existing uncommitted paths remain listed only so the combined validated working copy can be inspected without hiding the preceding completed slice.",
+    "Do not require invented upstream or downstream relationships when none is established.",
+    "Do not commit, push, publish, release, deploy, or modify an external system."
+  ],
+  "scope": {
+    "include_paths": [
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "docs",
+      "governance/tasks",
+      "schemas",
+      "src/agentgov",
+      "templates",
+      "tests"
+    ],
+    "exclude_paths": [
+      ".github/workflows",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/governance-model.md"
+  ],
+  "acceptance_signals": [
+    "AGENTS.md requires every completed development handoff to explain what was built in plain language, its upstream connection, its downstream connection, and its value to the overall project.",
+    "The guidance requires explicit none, foundation, unknown, or not-yet-decided wording instead of inventing a relationship.",
+    "A focused regression test protects the required completion explanation contract.",
+    "The current task, scope, repository, and diff checks pass."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_public_documentation_freshness tests.test_task_contract -v",
+    "python -m agentgov check task governance/tasks/p0-development-completion-context.json --repository .",
+    "python -m agentgov govern check governance/tasks/p0-development-completion-context.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "low",
+    "items": [
+      "Vague wording could produce repetitive technical summaries instead of the requested product context.",
+      "Forcing a connection where none exists could create false roadmap claims."
+    ]
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "owner": "Human product owner",
+    "evidence_refs": []
+  },
+  "stop_conditions": [
+    "Stop if the guidance would require inventing roadmap commitments or relationships not supported by repository evidence.",
+    "Stop before any runtime, release, consumer-template, Git, or external-system change."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "The completion communication guidance and its regression test are complete. The task is paused for routing hygiene after the human review selected the vendor-neutral host approval contract as the next real need."
+  }
+}

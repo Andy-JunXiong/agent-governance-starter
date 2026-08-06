@@ -1,0 +1,111 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-semantic-review-provider-risk-routing-contracts",
+  "title": "Define semantic review providers and risk routing",
+  "requirement": {
+    "summary": "Implement the Revision 4 architecture as strict vendor-neutral Provider capability, semantic risk route, and advisory review result contracts with zero-call low risk, active-Agent medium-risk self-review, optional independent high-risk review, and explicit human/lower-assurance/setup choices when independence is unavailable.",
+    "source_refs": [
+      "docs/proposals/2026-08-02-agentgov-product-and-architecture-plan.zh-CN.md",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+      "docs/development-automation-contracts.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md"
+    ],
+    "rationale": "The natural-language Adapter needs a trustworthy, cross-agent contract for who supplies semantic inference and what assurance is available before any real model or vendor integration is selected."
+  },
+  "goal": "Add an accepted Provider/risk-routing ADR, three strict model-free contracts and Python reference logic, cross-agent capability fixtures, fail-closed route/result binding, and protecting tests without calling a model or configuring credentials.",
+  "non_goals": [
+    "Do not call, bundle, download, benchmark, select, or recommend a real LLM, model SDK, endpoint, gateway, account, or vendor.",
+    "Do not create or read API keys, environment secrets, global user configuration, repository Provider configuration, billing data, or external network state.",
+    "Do not implement a production materializer, sub-agent runtime, background process, host callback, UI, or hosted AgentGov Reviewer.",
+    "Do not treat same-agent review as independent, silently downgrade high-risk assurance, or allow Provider identity to imply correctness.",
+    "Do not allow an LLM result to become deterministic proof, select a human option, mutate project state, or authorize code, scope, exceptions, Git, publication, release, deployment, production, or external writes.",
+    "Do not change stable 0.2.1, immutable v0.3.0rc1, release metadata, workflows, consumer repositories, or external systems."
+  ],
+  "scope": {
+    "include_paths": [
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "agent-skills",
+      "docs",
+      "governance/fixtures",
+      "governance/tasks",
+      "schemas",
+      "src/agentgov",
+      "templates",
+      "tests"
+    ],
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      ".github/workflows",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/proposals/2026-08-02-agentgov-product-and-architecture-plan.zh-CN.md",
+    "docs/development-automation-contracts.md"
+  ],
+  "acceptance_signals": [
+    "An accepted ADR owns the model-free Core, host Provider, risk-tier, assurance disclosure, missing-independence, privacy/cost ownership, advisory-only result, and denied-authority decisions without selecting a vendor.",
+    "A strict semantic-review-provider-capabilities contract declares portable Provider/source identity, availability, supported self or independent mode, exact independence level, cost owner, retention/external-transfer boundaries, forbidden raw content, and fully denied authority.",
+    "Codex, Claude Code, generic IDE independent-review, and unavailable-Provider fixtures all validate through the same contract while Core source and schemas contain no vendor enum or special case.",
+    "A strict semantic-review-route deterministically maps low risk to no semantic call, medium risk to available active-Agent self-review, and high risk to an available independent Reviewer with at least isolated context.",
+    "High risk with no qualifying independent Reviewer returns exactly human review, explicit lower-assurance self-review, and Provider setup choices; none is selected and the route cannot be described as independently reviewed.",
+    "A strict semantic-review-result is accepted only for the exact routed Provider and route digest, reports only evidence-linked ADVISORY observations and disclosed assurance, excludes raw/sensitive/host-local content, and grants no project or external authority.",
+    "Unknown fields, invalid mode/independence combinations, unavailable execution, same-agent independent claims, stale route/provider bindings, non-advisory semantics, silent downgrade, and authority drift fail before any result is accepted.",
+    "No code path performs network I/O, loads credentials, starts an agent, calls a model, writes repository/runtime state, or applies a human choice.",
+    "Affected source-of-truth and public documentation accurately distinguishes implemented contracts from still-open production Provider integration.",
+    "Focused/full tests, schemas, current-task, scope, repository, compile, and diff validation pass."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_semantic_review tests.test_host_interaction tests.test_human_decision tests.test_agent_skills tests.test_task_contract tests.test_user_documentation tests.test_portfolio_docs -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-semantic-review-provider-risk-routing-contracts.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-semantic-review-provider-risk-routing-contracts.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "high",
+    "items": [
+      "Contract fields could accidentally present model provenance or independence as evidence of correctness.",
+      "Routing could silently treat a current-Agent pass as independent review or continue high-risk work without disclosed assurance loss.",
+      "Provider metadata could leak credentials, raw conversation, host paths, model secrets, or undeclared source content.",
+      "Adding contracts before real host evidence could create protocol weight unless limited to the next executable vertical slice."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": [
+      "docs/development-log/2026-08-06.md"
+    ]
+  },
+  "stop_conditions": [
+    "Stop if low or medium risk requires a newly configured second model or external account.",
+    "Stop if independent review can use same-turn context or an unavailable/self-review-only Provider.",
+    "Stop if an absent Reviewer can silently route to lower assurance without a human-owned choice.",
+    "Stop if raw conversation, source content, credentials, secrets, model prompts, or absolute host paths enter Core contracts.",
+    "Stop if any Provider/result field grants project, task, architecture, session, code, scope, exception, Git, publication, release, deployment, production, or external-write authority.",
+    "Stop before any model call, Provider setup, network access, external write, Git write, publication, release, deployment, or consumer mutation."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "The user reviewed the completed contract slice and explicitly approved moving to the next active-Agent self-review materializer requirement on 2026-08-06."
+  }
+}

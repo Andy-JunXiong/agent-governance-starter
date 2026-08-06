@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/host-interaction-request-v1.0.json",
+  "title": "AgentGov Host Interaction Request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "request_id", "kind", "status", "title", "summary", "options", "binding", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.host-interaction-request"},
+    "schema_version": {"const": "1.0"},
+    "request_id": {"type": "string", "pattern": "^req-[0-9a-f]{32}$"},
+    "kind": {"enum": ["task_admission", "scope_resolution", "completion_review"]},
+    "status": {"const": "requires_human"},
+    "title": {"type": "string", "minLength": 1},
+    "summary": {"type": "string", "minLength": 1},
+    "options": {
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label", "next_event"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+          "label": {"type": "string", "minLength": 1},
+          "next_event": {
+            "anyOf": [
+              {"type": "null"},
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["event_type", "fact_name", "fact_value"],
+                "properties": {
+                  "event_type": {"enum": ["scope.decision_recorded", "session.reviewed"]},
+                  "fact_name": {"enum": ["scope_decision", "review_outcome"]},
+                  "fact_value": {"enum": ["approved", "declined", "needs_human", "accepted", "changes_requested"]}
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adapter_id", "delivery_mode", "decision_recording", "reason_code"],
+      "properties": {
+        "adapter_id": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$"},
+        "delivery_mode": {"enum": ["native", "structured", "context_only", "unsupported"]},
+        "decision_recording": {"enum": ["adapter_event", "host_managed", "unavailable"]},
+        "reason_code": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$"}
+      }
+    },
+    "authority_boundary": {"$ref": "host-interaction-capabilities.schema.json#/$defs/authority"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"kind": {"const": "task_admission"}}, "required": ["kind"]},
+      "then": {"properties": {"options": {"items": {"properties": {"next_event": {"type": "null"}}}}}}
+    },
+    {
+      "if": {"properties": {"kind": {"const": "scope_resolution"}}, "required": ["kind"]},
+      "then": {"properties": {"options": {"items": {"properties": {"next_event": {"type": "object", "properties": {"event_type": {"const": "scope.decision_recorded"}, "fact_name": {"const": "scope_decision"}, "fact_value": {"enum": ["approved", "declined", "needs_human"]}}}}}}}}
+    },
+    {
+      "if": {"properties": {"kind": {"const": "completion_review"}}, "required": ["kind"]},
+      "then": {"properties": {"options": {"items": {"properties": {"next_event": {"type": "object", "properties": {"event_type": {"const": "session.reviewed"}, "fact_name": {"const": "review_outcome"}, "fact_value": {"enum": ["accepted", "changes_requested"]}}}}}}}}
+    }
+  ]
+}

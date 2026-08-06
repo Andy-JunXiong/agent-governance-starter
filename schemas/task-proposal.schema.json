@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/task-proposal-v1.0.json",
+  "title": "AgentGov Task Proposal",
+  "description": "A non-authoritative, vendor-neutral Coding Agent interpretation prepared for human review without raw prompt retention.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "proposal_id", "source", "task", "content_boundary", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.task-proposal"},
+    "schema_version": {"const": "1.0"},
+    "proposal_id": {"type": "string", "pattern": "^prp-[0-9a-f]{32}$"},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adapter_id", "actor_class"],
+      "properties": {
+        "adapter_id": {"type": "string", "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$", "maxLength": 100},
+        "actor_class": {"const": "coding_agent"}
+      }
+    },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_id", "title", "requirement_summary", "scope", "acceptance_signals", "validation_commands", "owner", "risk", "assumptions", "unknowns"],
+      "properties": {
+        "task_id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "maxLength": 100},
+        "title": {"type": "string", "minLength": 5, "maxLength": 200},
+        "requirement_summary": {"type": "string", "minLength": 10, "maxLength": 1000},
+        "scope": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["include_paths", "exclude_paths"],
+          "properties": {
+            "include_paths": {"$ref": "#/$defs/scopePaths"},
+            "exclude_paths": {"$ref": "#/$defs/optionalScopePaths"}
+          }
+        },
+        "acceptance_signals": {"$ref": "#/$defs/nonEmptyTextList"},
+        "validation_commands": {"$ref": "#/$defs/nonEmptyTextList"},
+        "owner": {"type": "string", "minLength": 1, "maxLength": 100},
+        "risk": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["level", "items"],
+          "properties": {
+            "level": {"const": "low"},
+            "items": {"$ref": "#/$defs/optionalTextList"}
+          }
+        },
+        "assumptions": {"$ref": "#/$defs/optionalTextList"},
+        "unknowns": {"$ref": "#/$defs/optionalTextList"}
+      }
+    },
+    "content_boundary": {"$ref": "#/$defs/contentBoundary"},
+    "authority_boundary": {"$ref": "#/$defs/authorityBoundary"}
+  },
+  "$defs": {
+    "text": {"type": "string", "minLength": 1, "maxLength": 1000},
+    "optionalTextList": {"type": "array", "maxItems": 25, "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+    "nonEmptyTextList": {"type": "array", "minItems": 1, "maxItems": 25, "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+    "scopePath": {"type": "string", "minLength": 1, "maxLength": 1000, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*[\\*?\\[\\]]).+$"},
+    "scopePaths": {"type": "array", "minItems": 1, "maxItems": 25, "uniqueItems": true, "items": {"$ref": "#/$defs/scopePath"}},
+    "optionalScopePaths": {"type": "array", "maxItems": 25, "uniqueItems": true, "items": {"$ref": "#/$defs/scopePath"}},
+    "contentBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contains_raw_prompt", "contains_transcript", "contains_source_content", "contains_credentials", "contains_absolute_paths"],
+      "properties": {
+        "contains_raw_prompt": {"const": false},
+        "contains_transcript": {"const": false},
+        "contains_source_content": {"const": false},
+        "contains_credentials": {"const": false},
+        "contains_absolute_paths": {"const": false}
+      }
+    },
+    "authorityBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["admits_task", "starts_session", "authorizes_code_change", "authorizes_scope_expansion", "authorizes_exception", "authorizes_git_operations", "authorizes_deployment", "authorizes_release"],
+      "properties": {
+        "admits_task": {"const": false},
+        "starts_session": {"const": false},
+        "authorizes_code_change": {"const": false},
+        "authorizes_scope_expansion": {"const": false},
+        "authorizes_exception": {"const": false},
+        "authorizes_git_operations": {"const": false},
+        "authorizes_deployment": {"const": false},
+        "authorizes_release": {"const": false}
+      }
+    }
+  }
+}

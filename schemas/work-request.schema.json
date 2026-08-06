@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/work-request-v1.0.json",
+  "title": "AgentGov Structured Work Request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "request_id", "source", "request_class", "active_task", "proposal", "characteristics", "content_boundary", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.work-request"},
+    "schema_version": {"const": "1.0"},
+    "request_id": {"type": "string", "pattern": "^wrq-[0-9a-f]{32}$"},
+    "source": {
+      "type": "object", "additionalProperties": false, "required": ["adapter_id", "actor_class"],
+      "properties": {
+        "adapter_id": {"type": "string", "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$", "maxLength": 100},
+        "actor_class": {"const": "coding_agent"}
+      }
+    },
+    "request_class": {"enum": ["question", "explanation", "status_query", "read_only_diagnosis", "repository_change", "active_task_continuation"]},
+    "active_task": {
+      "anyOf": [
+        {"type": "null"},
+        {"type": "object", "additionalProperties": false, "required": ["task_id", "task_digest"], "properties": {"task_id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"}, "task_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}}
+      ]
+    },
+    "proposal": {"anyOf": [{"type": "null"}, {"$ref": "task-proposal.schema.json"}]},
+    "characteristics": {"$ref": "#/$defs/characteristics"},
+    "content_boundary": {"$ref": "#/$defs/contentBoundary"},
+    "authority_boundary": {"$ref": "#/$defs/authorityBoundary"}
+  },
+  "$defs": {
+    "characteristics": {
+      "type": "object", "additionalProperties": false,
+      "required": ["ambiguous_intent", "unknown_scope", "architecture_change", "dependency_change", "authentication_or_authorization_change", "security_boundary_change", "data_schema_change", "data_migration", "destructive_operation", "external_write", "infrastructure_change", "deployment_change", "public_api_change", "governance_policy_change"],
+      "properties": {
+        "ambiguous_intent": {"type": "boolean"}, "unknown_scope": {"type": "boolean"},
+        "architecture_change": {"type": "boolean"}, "dependency_change": {"type": "boolean"},
+        "authentication_or_authorization_change": {"type": "boolean"}, "security_boundary_change": {"type": "boolean"},
+        "data_schema_change": {"type": "boolean"}, "data_migration": {"type": "boolean"},
+        "destructive_operation": {"type": "boolean"}, "external_write": {"type": "boolean"},
+        "infrastructure_change": {"type": "boolean"}, "deployment_change": {"type": "boolean"},
+        "public_api_change": {"type": "boolean"}, "governance_policy_change": {"type": "boolean"}
+      }
+    },
+    "contentBoundary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["contains_raw_prompt", "contains_transcript", "contains_source_content", "contains_credentials", "contains_absolute_paths"],
+      "properties": {"contains_raw_prompt": {"const": false}, "contains_transcript": {"const": false}, "contains_source_content": {"const": false}, "contains_credentials": {"const": false}, "contains_absolute_paths": {"const": false}}
+    },
+    "authorityBoundary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["admits_task", "authorizes_repository_write", "starts_session", "authorizes_scope_expansion", "authorizes_exception", "authorizes_git_operations", "authorizes_deployment", "authorizes_release"],
+      "properties": {"admits_task": {"const": false}, "authorizes_repository_write": {"const": false}, "starts_session": {"const": false}, "authorizes_scope_expansion": {"const": false}, "authorizes_exception": {"const": false}, "authorizes_git_operations": {"const": false}, "authorizes_deployment": {"const": false}, "authorizes_release": {"const": false}}
+    }
+  }
+}
