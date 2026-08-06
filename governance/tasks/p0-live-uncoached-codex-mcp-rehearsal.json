@@ -1,0 +1,102 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-live-uncoached-codex-mcp-rehearsal",
+  "title": "Rehearse the native governance MCP journey in a real Codex host",
+  "requirement": {
+    "summary": "Install the reviewed create-missing-only project MCP configuration and record one live, uncoached Codex rehearsal of the five-tool alignment and active-Agent self-review journey without manually directing tool calls.",
+    "source_refs": [
+      "docs/governance-mcp-adapter.md",
+      "docs/development-automation-contracts.md",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/development-log/2026-08-06.md"
+    ]
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": [
+      "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+      "docs/adr/0014-route-semantic-review-through-host-providers.md"
+    ],
+    "rationale": "Offline protocol tests prove deterministic boundaries but not whether a production Codex host discovers and selects the tools at the right moments while preserving human direction ownership."
+  },
+  "goal": "Obtain honest live-host evidence for tool discovery, selection timing, human-owned alignment, current-Agent self-review, privacy, authority, and interaction burden, then record observed failures without weakening the contracts.",
+  "non_goals": [
+    "Do not coach Codex to call a named MCP tool or hand-author protocol payloads during the measured journey.",
+    "Do not change the five-tool Core contract, add a model SDK or credential, start a second Agent, or implement an independent Reviewer.",
+    "Do not treat one Codex rehearsal as proof for Claude Code, IDE hosts, general semantic correctness, causal benefit, or production readiness.",
+    "Do not overwrite or merge existing Codex configuration, bypass project trust review, or preserve raw prompts, transcripts, source, credentials, or absolute host paths as governance evidence.",
+    "Do not commit, push, publish, release, deploy, or mutate a consumer repository."
+  ],
+  "scope": {
+    "include_paths": [
+      ".codex/config.toml",
+      "DEVELOPMENT_PLAN.md",
+      "STATUS.md",
+      "docs/development-plan.md",
+      "docs/development-log/2026-08-06.md",
+      "docs/experiments",
+      "governance/tasks",
+      "tests/test_task_contract.py"
+    ],
+    "exclude_paths": [
+      "docs/assets/linkedin-github-repository-cover.png",
+      ".github/workflows",
+      "release",
+      "src",
+      "tests/test_active_agent_self_review.py"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+    "docs/adr/0014-route-semantic-review-through-host-providers.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/governance-mcp-adapter.md"
+  ],
+  "acceptance_signals": [
+    "The reviewed integration plan creates only a previously missing .codex/config.toml after explicit human authorization and preserves Codex trusted-project review as a separate decision.",
+    "A fresh real Codex host discovers the AgentGov MCP server and its exact five tools without source-path or hand-authored protocol setup.",
+    "One ordinary ambiguous request causes Codex to use alignment tools at appropriate moments, ask the human for direction, and record only the human-selected resolution.",
+    "After the bounded work, the same active Codex Agent invokes the medium-risk self-review tools and returns advisory observations without claiming independent assurance or downstream authority.",
+    "The record distinguishes observed facts, advisory interpretation, failures, coaching, restarts, privacy exposure, and unknowns; any manual tool direction disqualifies the run as uncoached evidence.",
+    "The rehearsal performs no Git write, publication, release, deployment, consumer mutation, external Provider call, or hidden background execution.",
+    "Task, scope, repository, documentation, and diff validation pass for the recorded result."
+  ],
+  "validation_commands": [
+    "python -m agentgov check task governance/tasks/p0-live-uncoached-codex-mcp-rehearsal.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-live-uncoached-codex-mcp-rehearsal.json --repository .",
+    "python -m agentgov check repository .",
+    "python -m unittest discover -s tests -p test_user_documentation.py -v",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "high",
+    "items": [
+      "A production model may ignore, misuse, or overuse the tools even though the protocol is correct.",
+      "Calling the rehearsal uncoached after manual tool direction would overstate evidence.",
+      "Project configuration is executable and requires separate Codex trust review.",
+      "A live transcript may contain private content and must not be copied into retained governance evidence."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": [
+      "docs/development-log/2026-08-06.md"
+    ]
+  },
+  "stop_conditions": [
+    "Stop if .codex/config.toml already exists or the integration requires overwrite, merge, or trust bypass.",
+    "Stop if the measured journey requires coaching a named tool, hand-authored MCP payloads, raw transcript retention, a credential, network setup, or another Agent.",
+    "Stop if Codex selects the user's direction, claims independent assurance, or gains task, Git, release, deployment, or external-write authority.",
+    "Stop before Git writes, publication, release, deployment, consumer mutation, or a second-host proof."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "The live rehearsal produced an honest failed product result: tool discovery and selection worked, but generic Core rejection blocked human alignment and self-review. The user explicitly authorized the recommended diagnostic correction on 2026-08-06; this rehearsal is paused for routing hygiene without claiming success."
+  }
+}

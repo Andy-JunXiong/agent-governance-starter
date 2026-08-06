@@ -35,7 +35,7 @@ from agentgov.self_review_transport import (
 MCP_PROTOCOL_VERSION = "2026-07-28"
 MCP_LEGACY_PROTOCOL_VERSIONS = ("2025-11-25", "2025-06-18")
 MCP_SERVER_NAME = "agentgov-governance"
-MCP_SERVER_VERSION = "1.0.0"
+MCP_SERVER_VERSION = "1.2.0"
 MCP_TOOL_NAMES = (
     "agentgov_alignment_start",
     "agentgov_alignment_update",
@@ -44,11 +44,17 @@ MCP_TOOL_NAMES = (
     "agentgov_self_review_complete",
 )
 MCP_SERVER_INSTRUCTIONS = (
-    "Use these tools in order: start alignment from normalized meaning; answer only the exact "
-    "pending question; let the human select the final offered direction; then run medium-risk "
-    "active-Agent self-review and return its observations. Never send raw prompts, raw answers, "
+    "Use these tools without waiting for the user to name them. Before meaningful development "
+    "with multiple reasonable product, requirement, architecture, scope, or implementation "
+    "directions, or when asked to choose what to build, start alignment from normalized meaning. "
+    "Do not use alignment merely for read-only explanation, diagnosis, status, or a fully specified "
+    "low-risk change with no material direction choice. Answer only the exact pending question and "
+    "let the human select the final offered direction; never select it for them. After implementing "
+    "and validating that resolved direction, run medium-risk active-Agent self-review as a distinct "
+    "advisory pass and return its observations before completion. If a required call fails, report "
+    "the bounded failure and do not silently continue. Never send raw prompts, raw answers, "
     "transcripts, assistant messages, credentials, absolute paths, or source content. The tools "
-    "are advisory and grant no task, code, scope, Git, release, deployment, or external authority."
+    "grant no task, code, scope, Git, release, deployment, or external authority."
 )
 
 _HANDLE_RE = re.compile(r"^mcpj-[0-9a-f]{32}$")
@@ -61,6 +67,34 @@ _ID_RE = re.compile(r"^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$")
 
 class GovernanceMcpError(ValueError):
     """An MCP request or governed tool call is malformed, stale, or unsafe."""
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        code: str = "mcp_invalid_request",
+        stage: str = "tool_call",
+        field_path: str | None = None,
+        rule: str = "invalid",
+        retryable: bool = False,
+    ) -> None:
+        super().__init__(message)
+        self.code = code
+        self.stage = stage
+        self.field_path = field_path
+        self.rule = rule
+        self.retryable = retryable
+
+    def diagnostic(self) -> Mapping[str, Any]:
+        return {
+            "contract": "agentgov.mcp-tool-error",
+            "schema_version": "1.0",
+            "error_code": self.code,
+            "stage": self.stage,
+            "field_path": self.field_path,
+            "rule": self.rule,
+            "retryable": self.retryable,
+        }
 
 
 class _NormalizedOnlyMaterializer:
@@ -106,8 +140,77 @@ def build_active_host_self_review_provider(
 
 def _exact_arguments(value: Any, fields: set[str], *, tool: str) -> Mapping[str, Any]:
     if not isinstance(value, Mapping) or set(value) != fields:
-        raise GovernanceMcpError(f"{tool} arguments have unexpected fields")
+        raise GovernanceMcpError(
+            f"{tool} arguments have unexpected fields",
+            code="tool_arguments_invalid",
+            stage=tool,
+            field_path="$",
+            rule="exact_fields",
+            retryable=True,
+        )
     return value
+
+
+def _questions_with_adapter_ids(value: Any, *, stage: str, field_path: str) -> tuple[Mapping[str, Any], ...]:
+    if not isinstance(value, list):
+        raise GovernanceMcpError(
+            f"{field_path} must be an array",
+            code="alignment_invalid_field",
+            stage=stage,
+            field_path=field_path,
+            rule="array_required",
+            retryable=True,
+        )
+    expected = {"question", "why_matters", "material", "priority"}
+    questions = []
+    for index, item in enumerate(value):
+        if not isinstance(item, Mapping) or set(item) != expected:
+            raise GovernanceMcpError(
+                f"{field_path} item has unexpected fields",
+                code="alignment_invalid_field",
+                stage=stage,
+                field_path=f"{field_path}[{index}]",
+                rule="exact_fields",
+                retryable=True,
+            )
+        questions.append({"question_id": f"qst-{uuid.uuid4().hex[:16]}", **item})
+    return tuple(questions)
+
+
+def _alignment_rejection(exc: BaseException, *, stage: str) -> GovernanceMcpError:
+    cause = exc.__cause__
+    message = str(cause) if isinstance(cause, ValueError) else ""
+    mappings = (
+        ("alignment center has unexpected fields", "center", "exact_fields"),
+        ("alignment center requires at least one success signal", "center.success_signals", "min_items"),
+        ("drift observation has unexpected fields", "drift", "exact_fields"),
+        ("drift kind or semantics is unsupported", "drift", "enum"),
+        ("drift evidence must be repository-relative", "drift.evidence_refs", "repository_relative"),
+        ("assumptions", "assumptions", "normalized_text"),
+        ("unknowns", "unknowns", "normalized_question"),
+        ("candidate resolution", "candidate_resolutions", "normalized_resolution"),
+        ("recommended resolution", "recommended_resolution_id", "candidate_binding"),
+        ("sensitive or host-local content", "$", "privacy_boundary"),
+        ("control characters", "$", "normalized_text"),
+    )
+    for marker, field_path, rule in mappings:
+        if marker in message:
+            return GovernanceMcpError(
+                "Core rejected a normalized alignment field; correct the indicated field and retry",
+                code="alignment_invalid_field",
+                stage=stage,
+                field_path=field_path,
+                rule=rule,
+                retryable=True,
+            )
+    return GovernanceMcpError(
+        "Core rejected the normalized alignment draft without a safe retry classification",
+        code="alignment_rejected_internal",
+        stage=stage,
+        field_path=None,
+        rule="unclassified",
+        retryable=False,
+    )
 
 
 def _binding(value: Any, *, fields: set[str], identifier: re.Pattern[str], label: str) -> Mapping[str, Any]:
@@ -179,9 +282,8 @@ def _drift_schema() -> Mapping[str, Any]:
 def _question_schema() -> Mapping[str, Any]:
     return {
         "type": "object", "additionalProperties": False,
-        "required": ["question_id", "question", "why_matters", "material", "priority"],
+        "required": ["question", "why_matters", "material", "priority"],
         "properties": {
-            "question_id": {"type": "string", "pattern": "^qst-[0-9a-f]{16}$"},
             "question": {"type": "string", "minLength": 1, "maxLength": 800},
             "why_matters": {"type": "string", "minLength": 1, "maxLength": 800},
             "material": {"type": "boolean"}, "priority": {"type": "integer", "minimum": 1, "maximum": 5},
@@ -237,7 +339,7 @@ def governance_mcp_tools() -> tuple[Mapping[str, Any], ...]:
         {
             "name": MCP_TOOL_NAMES[0],
             "title": "Start governed alignment",
-            "description": "Start one foreground alignment journey from normalized meaning, never raw conversation.",
+            "description": "Use before meaningful development when multiple reasonable directions exist or the Agent is asked to choose what to build. Start one foreground alignment journey from normalized meaning; the human must select the final direction. Do not use for read-only or fully specified low-risk work.",
             "inputSchema": _tool_schema(
                 {
                     "subject_type": {"enum": ["work_request", "active_task", "architecture"]},
@@ -285,7 +387,7 @@ def governance_mcp_tools() -> tuple[Mapping[str, Any], ...]:
         {
             "name": MCP_TOOL_NAMES[3],
             "title": "Start active-Agent self-review",
-            "description": "Prepare one medium-risk self-review request after resolved human alignment.",
+            "description": "Use after implementing and validating a human-resolved aligned direction, before completion handoff. Prepare one distinct advisory current-Agent self-review request from allowed evidence.",
             "inputSchema": _tool_schema(
                 {"journey_handle": _handle_schema(), "reason_codes": {"type": "array", "minItems": 1, "uniqueItems": True, "items": {"type": "string"}}, "allowed_evidence_refs": {"type": "array", "minItems": 1, "uniqueItems": True, "items": {"type": "string"}}},
                 ("journey_handle", "reason_codes", "allowed_evidence_refs"),
@@ -337,7 +439,9 @@ class GovernanceMcpAdapter:
             raise GovernanceMcpError("MCP tool name is unsupported")
         try:
             return handler(arguments)
-        except (ReferenceAlignmentAdapterError, SelfReviewTransportError, ValueError, TypeError) as exc:
+        except ReferenceAlignmentAdapterError as exc:
+            raise _alignment_rejection(exc, stage=name) from exc
+        except (SelfReviewTransportError, ValueError, TypeError) as exc:
             if isinstance(exc, GovernanceMcpError):
                 raise
             raise GovernanceMcpError(str(exc)) from exc
@@ -352,10 +456,25 @@ class GovernanceMcpAdapter:
     def _alignment_start(self, value: Any) -> Mapping[str, Any]:
         fields = {"subject_type", "subject_id", "center", "drift", "assumptions", "unknowns", "candidate_resolutions", "recommended_resolution_id"}
         args = _exact_arguments(value, fields, tool=MCP_TOOL_NAMES[0])
+        if (
+            args["subject_type"] not in {"work_request", "active_task", "architecture"}
+            or not isinstance(args["subject_id"], str)
+            or not re.fullmatch(r"^[a-z0-9]+(?:[._-][a-z0-9]+)*$", args["subject_id"])
+        ):
+            raise GovernanceMcpError(
+                "alignment subject identity is invalid",
+                code="alignment_invalid_field",
+                stage=MCP_TOOL_NAMES[0],
+                field_path="subject_id",
+                rule="normalized_identifier",
+                retryable=True,
+            )
         draft = AlignmentContextDraft(
             subject_type=args["subject_type"], subject_id=args["subject_id"],
             center=args["center"], drift=args["drift"], assumptions=tuple(args["assumptions"]),
-            unknowns=tuple(args["unknowns"]), candidate_resolutions=tuple(args["candidate_resolutions"]),
+            unknowns=_questions_with_adapter_ids(
+                args["unknowns"], stage=MCP_TOOL_NAMES[0], field_path="unknowns"
+            ), candidate_resolutions=tuple(args["candidate_resolutions"]),
             recommended_resolution_id=args["recommended_resolution_id"],
         )
         host_capabilities = build_host_interaction_capabilities(
@@ -392,7 +511,9 @@ class GovernanceMcpAdapter:
             raise GovernanceMcpError("clarification prompt binding is stale")
         draft = ClarificationUpdateDraft(
             answer_summary=args["answer_summary"], center_patch=args["center_patch"],
-            new_questions=tuple(args["new_questions"]), candidate_resolutions=tuple(args["candidate_resolutions"]),
+            new_questions=_questions_with_adapter_ids(
+                args["new_questions"], stage=MCP_TOOL_NAMES[1], field_path="new_questions"
+            ), candidate_resolutions=tuple(args["candidate_resolutions"]),
             recommended_resolution_id=args["recommended_resolution_id"], ready_requested=args["ready_requested"],
         )
         response = journey.adapter.answer_from_draft(draft)
@@ -511,7 +632,13 @@ class GovernanceMcpServer:
             try:
                 structured = self.adapter.call_tool(name, params.get("arguments", {}))
             except GovernanceMcpError as exc:
-                return self._result(request_id, {"resultType": "complete", "content": [{"type": "text", "text": str(exc)}], "isError": True})
+                diagnostic = exc.diagnostic()
+                return self._result(request_id, {
+                    "resultType": "complete",
+                    "content": [{"type": "text", "text": str(exc)}],
+                    "structuredContent": {"error": diagnostic},
+                    "isError": True,
+                })
             text = json.dumps(structured, ensure_ascii=False, sort_keys=True)
             return self._result(request_id, {"resultType": "complete", "content": [{"type": "text", "text": text}], "structuredContent": structured, "isError": False})
         return self._error(request_id, -32601, "Method not found")

@@ -21,6 +21,9 @@ agentgov --version
 agentgov --help
 ```
 
+也可以直接运行 `agentgov`。无参数运行是安全的只读入口：它会显示命令概览，
+并引导首次使用者选择 `doctor`、`next` 或 `status`，不会检查或修改仓库。
+
 只有开发 starter 本身时，才应将它克隆到独立且较短的路径，并从包含 `src` 的 starter 根目录运行：
 
 ```powershell

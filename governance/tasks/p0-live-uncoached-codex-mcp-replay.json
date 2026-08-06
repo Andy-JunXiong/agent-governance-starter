@@ -1,0 +1,61 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-live-uncoached-codex-mcp-replay",
+  "title": "Replay the corrected native governance MCP journey in Codex",
+  "requirement": {
+    "summary": "Install the validated diagnostic correction into the existing local pipx runtime and replay the same bounded uncoached Codex journey to determine whether alignment, human direction selection, and current-Agent self-review now complete.",
+    "source_refs": ["docs/experiments/live-codex-mcp-rehearsal.md", "docs/governance-mcp-adapter.md", "docs/development-log/2026-08-06.md", "STATUS.md"]
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": ["docs/adr/0013-make-automatic-governance-and-dashboard-primary.md", "docs/adr/0014-route-semantic-review-through-host-providers.md"],
+    "rationale": "The first real run proved discovery and tool selection but failed at the now-corrected question-identity and generic-error boundary; only a fresh uncoached replay can validate the product journey."
+  },
+  "goal": "Update the isolated local AgentGov runtime from the exact current working source, verify the corrected five-tool schema and error contract, then record one fresh uncoached Codex replay without coaching or overstating the result.",
+  "non_goals": [
+    "Do not publish, tag, or represent the rebuilt local 0.3.0rc1-identified wheel as the immutable released v0.3.0rc1 artifact.",
+    "Do not change Core behavior, weaken validation, handcraft a passing payload, direct named tool calls, or edit the measured result during the run.",
+    "Do not add a second Agent, another MCP host, independent Reviewer, NYC work, model SDK, credential, or external Provider call.",
+    "Do not commit, push, publish, release, deploy, or mutate a consumer repository."
+  ],
+  "scope": {
+    "include_paths": [".codex/config.toml", "DEVELOPMENT_PLAN.md", "README.md", "STATUS.md", "docs/development-plan.md", "docs/development-log/2026-08-06.md", "docs/experiments/live-codex-mcp-rehearsal.md", "governance/tasks", "tests/test_task_contract.py"],
+    "exclude_paths": ["docs/assets/linkedin-github-repository-cover.png", ".github/workflows", "release", "src", "schemas"]
+  },
+  "architecture_refs": ["docs/adr/0013-make-automatic-governance-and-dashboard-primary.md", "docs/adr/0014-route-semantic-review-through-host-providers.md", "docs/adr/INVARIANTS.md", "docs/governance-mcp-adapter.md"],
+  "acceptance_signals": [
+    "A locally rebuilt current-source wheel is hash-recorded and force-installed into the existing pipx environment without publication or release claims.",
+    "The installed server advertises five tools whose question inputs contain no question_id and returns agentgov.mcp-tool-error 1.0 for a deterministic invalid-field probe.",
+    "A fresh Codex session discovers the corrected server without the user naming AgentGov, MCP, alignment, self-review, or any tool.",
+    "The same ordinary request reaches a human-owned direction selection and current-Agent advisory self-review, or records a new honest failure without coaching.",
+    "The record distinguishes static install evidence from live semantic behavior and retains no raw prompt, transcript, source, credential, absolute path, or model-private reasoning.",
+    "No Git write, publication, release, deployment, NYC work, consumer mutation, second Agent, or independent Reviewer occurs."
+  ],
+  "validation_commands": [
+    "python -m agentgov check task governance/tasks/p0-live-uncoached-codex-mcp-replay.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-live-uncoached-codex-mcp-replay.json --repository .",
+    "python -m agentgov check repository .",
+    "python -m unittest discover -s tests -p test_task_contract.py -v",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "high",
+    "items": [
+      "Reusing the source version label could be confused with the immutable published RC unless the local-only identity boundary is explicit.",
+      "The current VS Code process may cache the old MCP process; only a newly created session is eligible.",
+      "Any named-tool coaching would invalidate the replay evidence.",
+      "A successful retry would still be one-host evidence, not general effectiveness proof."
+    ]
+  },
+  "approval": {"required": true, "status": "approved", "owner": "Human product owner", "evidence_refs": ["docs/development-log/2026-08-06.md"]},
+  "stop_conditions": [
+    "Stop if the installed runtime does not expose the corrected no-question-ID schema and structured error contract.",
+    "Stop if replay requires named-tool coaching, hand-authored protocol payloads, raw/private retention, another Agent, or trust bypass.",
+    "Stop if the current session rather than a fresh host is used as replay evidence.",
+    "Stop before Git writes, publication, release, deployment, NYC work, consumer mutation, or second-host proof."
+  ],
+  "decision": {"state": "paused", "decided_by": "Human product owner", "rationale": "The post-correction replay failed on 2026-08-06 because the fresh Agent implemented a self-selected change without starting alignment, preserving human direction ownership, or running current-Agent self-review; the user then authorized a bounded tool-selection guidance correction."}
+}

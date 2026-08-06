@@ -998,8 +998,12 @@
               user-authored JSON, or second model configuration.
               A foreground STDIO MCP Adapter now exposes that alignment and
               self-review journey as five model-controlled tools with explicit
-              handles. A create-missing-only Codex project config is packaged;
-              live uncoached host use and another MCP-host package remain open.
+              handles. Question IDs remain Adapter-owned, and known rejected
+              normalized input returns bounded field/rule/retry diagnostics
+              without advancing state. A create-missing-only Codex project
+              config is packaged; the first live run exposed this now-corrected
+              boundary, while a successful replay and another MCP-host package
+              remain open.
               A native authenticated
               decision surface and additional host adapters remain;
               stable 0.2.1 and v0.3.0rc1 are unchanged.

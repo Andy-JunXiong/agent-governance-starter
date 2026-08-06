@@ -114,6 +114,16 @@ offline integration rehearsal, not a production semantic materializer or the
 complete automatic development journey. No NYC
 development-loop pilot or 0.3 consumer migration has occurred.
 
+The 2026-08-06 native Codex MCP work now proves five-tool discovery, automatic
+alignment selection for a delegated product choice, human ownership of the
+final direction, and fail-closed stopping. The latest uncoached replay still
+failed because alignment start reached an unclassified, non-retryable
+Adapter/Core contract rejection. The next bounded work is normalized-fixture
+diagnosis and safe error classification for that mismatch, followed by one new
+installed-runtime replay. NYC, another host, stable promotion, release, and
+deployment remain gated on completion of human direction selection and
+current-Agent advisory self-review.
+
 ADR-0014 and the strict Provider-capability, risk-route, and advisory-result
 contracts now implement the model-free semantic-review boundary. Low risk does
 not request semantic review; medium risk binds the active Coding Agent's
@@ -786,11 +796,14 @@ Continue productizing the implemented ADR-0009 loop:
     and offer one digest-bound direction choice only after options stabilize.
     The foreground Adapter stream now returns those prompts automatically from
     strict normalized records, with no restart-persistence claim;
-13. [Native MCP Adapter and Codex configuration implemented; live rehearsal
-    remains] Preserve the five-tool normalized alignment/self-review journey,
+13. [Native MCP Adapter implemented; first live rehearsal failed and diagnostic
+    correction implemented; replay remains] Preserve the five-tool normalized
+    alignment/self-review journey,
     explicit foreground handle, exact pending bindings, and create-missing-only
-    Codex config. Ordinary users add no protocol JSON, repeat confirmation, or
-    second-model setup. Complete one uncoached live Codex rehearsal, then prove
+    Codex config. Ordinary users add no protocol JSON, protocol question IDs,
+    repeat confirmation, or second-model setup. Known invalid normalized input
+    now receives privacy-safe structured field/rule/retry diagnostics without
+    partial state. Replay the failed uncoached Codex journey, then prove
     the same tool layer in another MCP host before attempting the optional
     independent high-risk Reviewer path;
 14. [Per-cycle automation implemented; richer views remain] Extend the

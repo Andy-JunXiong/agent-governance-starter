@@ -160,6 +160,10 @@ agentgov --version
 agentgov --help
 ```
 
+Running `agentgov` without arguments is also a safe, read-only orientation
+surface. It prints the command overview and points first-time users to
+`doctor`, `next`, and `status`; it does not inspect or modify the repository.
+
 For an existing installation, use one command to check the tool and repository,
 preview the exact bounded change, request one `UPDATE` confirmation, apply it,
 and rerun validation:
@@ -385,12 +389,21 @@ Development source now supplies that first native host boundary as a
 dependency-free foreground STDIO MCP Adapter. It exposes five model-controlled
 tools for normalized alignment and medium-risk active-Agent self-review, keeps
 an explicit journey handle in foreground memory, and generates every internal
-identity and digest itself. Codex project configuration is available through a
+identity and digest itself. Model-authored question IDs have been removed from
+the tool inputs; known validation failures now return only a stable code,
+stage, bounded field path, rule, and retryable flag, without rejected values or
+arbitrary exception text. Failed calls remain atomic. Codex project
+configuration is available through a
 create-missing-only `agentgov integrate codex-mcp . --dry-run` plan; existing
 `.codex/config.toml` is never overwritten or merged, and Codex trust remains a
 separate user decision. Codex and Claude Code Provider fixtures traverse the
-same Core tool path, but only Codex configuration is packaged and the live
-uncoached host rehearsal remains open. See the
+same Core tool path. The first live Codex rehearsal discovered and selected the
+tools but failed on the former question-identity/generic-error boundary. A
+post-correction replay then bypassed alignment, selected its own change, and
+omitted self-review. Development source now adds explicit intent-oriented tool
+selection guidance to both MCP metadata and repository `AGENTS.md`; this is a
+testable selection contract, not a guarantee of model behavior, and requires a
+fresh live replay. Only Codex configuration is packaged. See the
 [native governance MCP Adapter guide](docs/governance-mcp-adapter.md).
 
 A Coding Agent or host Adapter can now submit a normalized, vendor-neutral

@@ -204,11 +204,14 @@ Development source now implements the first native host tool boundary with a
 foreground STDIO MCP Adapter. The current Coding Agent calls five strict tools
 to carry normalized alignment and medium-risk self-review; AgentGov returns an
 explicit journey handle and exact pending bindings, generates all governance
-identities, and loses the state on restart. A create-missing-only Codex project
+identities, including question IDs that are absent from model inputs, and loses
+the state on restart. Known normalized-input failures return bounded
+privacy-safe diagnostics and preserve atomic retry. A create-missing-only Codex project
 configuration is packaged, while the Core tool layer is exercised with both
-Codex and Claude Code Provider fixtures. This is not proof of live model tool
-selection or semantic correctness; an uncoached Codex rehearsal and another
-native MCP host package remain required.
+Codex and Claude Code Provider fixtures. The first live Codex rehearsal proved
+discovery and selection but failed on the former question-identity/generic-error
+boundary. A fresh successful replay and another native MCP host package remain
+required; static correction tests are not semantic-success evidence.
 
 ## Human decision boundaries
 

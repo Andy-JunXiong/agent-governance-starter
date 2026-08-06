@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/agentgov/schemas/mcp-tool-error.schema.json",
+  "title": "AgentGov MCP Tool Error",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "schema_version",
+    "error_code",
+    "stage",
+    "field_path",
+    "rule",
+    "retryable"
+  ],
+  "properties": {
+    "contract": {
+      "const": "agentgov.mcp-tool-error"
+    },
+    "schema_version": {
+      "const": "1.0"
+    },
+    "error_code": {
+      "enum": [
+        "mcp_invalid_request",
+        "tool_arguments_invalid",
+        "alignment_invalid_field",
+        "alignment_rejected_internal"
+      ]
+    },
+    "stage": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "field_path": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^(?:\\$|[a-z_]+(?:\\[[0-9]+\\])?(?:\\.[a-z_]+)*)$",
+          "maxLength": 160
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "rule": {
+      "enum": [
+        "invalid",
+        "exact_fields",
+        "array_required",
+        "normalized_identifier",
+        "normalized_text",
+        "normalized_question",
+        "normalized_resolution",
+        "min_items",
+        "enum",
+        "repository_relative",
+        "candidate_binding",
+        "privacy_boundary",
+        "unclassified"
+      ]
+    },
+    "retryable": {
+      "type": "boolean"
+    }
+  }
+}

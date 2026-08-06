@@ -74,7 +74,14 @@
     "Focused/full tests, current-task, scope, repository, schemas, compile, and diff validation pass."
   ],
   "validation_commands": [
-    "python -m unittest tests.test_governance_mcp tests.test_codex_hooks tests.test_self_review_transport tests.test_alignment_transport tests.test_reference_alignment_adapter tests.test_task_contract tests.test_user_documentation tests.test_portfolio_docs -v",
+    "python -m unittest discover -s tests -p test_governance_mcp.py -v",
+    "python -m unittest discover -s tests -p test_codex_hooks.py -v",
+    "python -m unittest discover -s tests -p test_self_review_transport.py -v",
+    "python -m unittest discover -s tests -p test_alignment_transport.py -v",
+    "python -m unittest discover -s tests -p test_reference_alignment_adapter.py -v",
+    "python -m unittest discover -s tests -p test_task_contract.py -v",
+    "python -m unittest discover -s tests -p test_user_documentation.py -v",
+    "python -m unittest discover -s tests -p test_portfolio_docs.py -v",
     "python -m unittest discover -s tests -v",
     "python -m agentgov check task governance/tasks/p0-native-mcp-alignment-self-review-adapter.json --repository .",
     "python -m agentgov check scope governance/tasks/p0-native-mcp-alignment-self-review-adapter.json --repository .",
@@ -107,8 +114,8 @@
     "Stop before external network/model calls, Git writes, publication, release, deployment, or consumer mutation."
   ],
   "decision": {
-    "state": "admitted",
+    "state": "paused",
     "decided_by": "Human product owner",
-    "rationale": "The user reviewed the live self-review transport, accepted its requirement/drift closeout, and explicitly authorized the recommended native Coding Agent Adapter feature on 2026-08-06."
+    "rationale": "The user reviewed the completed native MCP Adapter, accepted its purpose and benefits, and explicitly authorized the next development step on 2026-08-06. This task is paused for routing hygiene only; it does not claim publication, release, or consumer adoption."
   }
 }

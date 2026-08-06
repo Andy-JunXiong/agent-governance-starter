@@ -13,9 +13,11 @@ question or final choices. After the user selects a direction, the same Agent
 can request a clearly labeled medium-risk second look and return normalized
 observations.
 
-The user does not write JSON-RPC, contract IDs, digests, timestamps, or review
-records. AgentGov generates and validates those fields. The user also does not
-configure a second model or repeat the direction decision for self-review.
+The user does not write JSON-RPC, contract IDs, question IDs, digests,
+timestamps, or review records. AgentGov generates and validates those fields.
+The model supplies normalized question meaning and materiality, never a
+protocol identity. The user also does not configure a second model or repeat
+the direction decision for self-review.
 
 ```text
 ordinary host conversation
@@ -60,10 +62,28 @@ The server advertises exactly five tools in a fixed order:
 5. `agentgov_self_review_complete` validates normalized observations and
    returns the accepted advisory result.
 
+Server instructions and tool descriptions also disclose the host selection
+boundary. Meaningful development with multiple reasonable directions—or a
+request asking the Agent to choose what to build—starts alignment without the
+human naming a tool. Read-only explanation, diagnosis, status, and fully
+specified low-risk work do not start it merely for ceremony. The Agent must
+leave the final offered direction to the human. After implementing and
+validating that resolved direction, the same Agent starts a distinct advisory
+self-review before its completion handoff. Repository `AGENTS.md` repeats this
+host-visible rule; deterministic tests keep both surfaces synchronized.
+
 The model must carry the journey handle and exact prompt/request digest returned
 by AgentGov. Unknown, stale, duplicate, out-of-order, cross-journey, or
 post-restart calls fail without advancing state. Input schemas reject unknown
 fields at every governance-bearing object boundary.
+
+Known normalized-input failures return `agentgov.mcp-tool-error` 1.0 with only
+a stable error code, stage, bounded field path, validation rule, and retryable
+flag. Rejected values, raw conversation, source, credentials, absolute paths,
+arbitrary exception text, and stack traces are never included. A failed start
+creates no journey, and a failed update does not advance its journey, so the
+host may correct a retryable field in the same foreground process. An
+unclassified Core rejection remains non-retryable and exposes no field path.
 
 ## Privacy, cost, and authority
 
@@ -105,18 +125,26 @@ manual protocol input after the host has loaded the reviewed MCP server.
 
 ## Honest implementation limit
 
-Unit and CLI tests prove the STDIO protocol, tool state machine, Codex project
-configuration, and shared Codex/Claude Code Provider path offline. They do not
-prove that a production model will always choose the right tool, normalize
-meaning correctly, or ask the human before claiming a selection. A live
-uncoached Codex session using the reviewed config is still required. Native
-Claude Code and other IDE configuration packages, authenticated custom decision
-recording, and independent high-risk Reviewer execution remain later slices.
+The first live uncoached Codex session discovered all five tools and selected
+alignment at the right moment, but it failed before human direction selection:
+the tool asked the model for a Core-owned question identity and returned only a
+generic rejection. Development source now keeps that identity Adapter-owned and
+returns privacy-safe structured diagnostics with atomic retry. Static tests
+prove the correction, not the production journey. A post-correction replay then
+bypassed the tools, independently selected a change, and omitted self-review.
+Development source now adds intent-oriented server/tool metadata and matching
+repository guidance, but no prompt can guarantee model selection; another
+fresh uncoached replay is still required. These changes do not prove that a
+production model will always choose the right tool. Native Claude Code and
+other IDE configuration packages,
+authenticated custom decision recording, and independent high-risk Reviewer
+execution remain later slices.
 
 ## Feature connections
 
 - Upstream: governed clarification, resolved human alignment, Provider/risk
   routing, and live active-Agent self-review transport.
 - Current: model-controlled native tools over one foreground MCP Adapter.
-- Downstream: one uncoached Codex host rehearsal, followed by another MCP host
-  installation proof and then optional independent high-risk review.
+- Downstream: replay the failed uncoached Codex journey with the corrected
+  Adapter, followed only after success by another MCP host installation proof
+  and then optional independent high-risk review.

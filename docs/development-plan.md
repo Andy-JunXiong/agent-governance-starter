@@ -91,12 +91,32 @@ from published and consumer-adopted behavior.
 The exact isolated `0.3.0rc1` wheel has completed the ADR-0012 rehearsal in
 three independent repositories: verified completion, Monitor guidance,
 handoff, zero/one/many rollover selection, and exact `REPLACE`. Seventeen
-delivered historical tasks and the completed transport/card, Codex Adapter, and
-completion-communication and host-interaction tasks are paused for routing
-hygiene. The completed risk-based routing task is paused after review. The
-proactive-minimal-input-human-decisions and governed-clarification core tasks
-are paused after review. The adapter-driven-clarification-flow task is the only
-admitted task.
+delivered historical tasks and the completed automatic-governance slices are
+paused for routing hygiene. The native MCP alignment/self-review Adapter has
+completed implementation and validation and is paused after human review. The
+live uncoached Codex MCP rehearsal is the only admitted task. Its reviewed
+project configuration is installed. Preparation found that the default
+Python could not bootstrap pipx over TLS, so an authorized parallel official
+Python 3.12 runtime was installed and used to build and pipx-install the exact
+current-source `0.3.0rc1` wheel. `agentgov` is now available through the user
+`PATH`, without borrowing another project environment or an absolute source
+path. Exact human `INTEGRATE` then created the reviewed project config, and a
+real-user Codex preflight discovered the enabled five-tool server with healthy
+authentication and reachability. The eligible live journey then failed: the
+host discovered and selected the tools, but Core rejected normalized alignment
+before the human direction choice, so self-review did not begin. The reviewed
+correction is implemented: MCP question meaning no longer carries a
+model-authored protocol ID, known rejection returns bounded structured
+diagnostics, and failed start/update calls remain atomic. Complete validation
+passed. The post-correction replay still failed because the Agent bypassed the
+tools, selected the product direction itself, and omitted self-review. The only
+admitted task now adds explicit host/tool selection guidance and synchronization
+tests before another replay. NYC remains gated on replay success.
+The post-guidance replay proved automatic selection, human direction ownership,
+and fail-closed stopping, but alignment start still returned an unclassified
+non-retryable Core rejection. The next session should diagnose that remaining
+normalized Adapter/Core mismatch before another replay. NYC remains gated on a
+replay that completes alignment and current-Agent self-review.
 
 ADR-0013 now records the next product boundary: the implemented manual
 `next/start/check/finish/Monitor/handoff` sequence is a set of internal and

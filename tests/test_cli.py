@@ -37,6 +37,28 @@ def run_cli(*args: str) -> tuple[int, str, str]:
 
 
 class CapabilityCliTests(unittest.TestCase):
+    def test_no_arguments_orients_first_time_user_without_error(self) -> None:
+        exit_code, stdout, stderr = run_cli()
+
+        self.assertEqual(exit_code, EXIT_PASS)
+        self.assertIn("Check repository-native AI governance contracts.", stdout)
+        self.assertIn("Start here:", stdout)
+        self.assertIn("agentgov doctor .", stdout)
+        self.assertIn("agentgov next .", stdout)
+        self.assertIn("agentgov status .", stdout)
+        self.assertEqual(stderr, "")
+
+    def test_help_includes_first_time_user_entry_points(self) -> None:
+        stdout = io.StringIO()
+        stderr = io.StringIO()
+        with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+            with self.assertRaises(SystemExit) as raised:
+                main(["--help"])
+
+        self.assertEqual(raised.exception.code, EXIT_PASS)
+        self.assertIn("Start here:", stdout.getvalue())
+        self.assertEqual(stderr.getvalue(), "")
+
     def test_valid_manifest_returns_pass(self) -> None:
         exit_code, stdout, stderr = run_cli("check", "capability", str(VALID_MANIFEST))
 

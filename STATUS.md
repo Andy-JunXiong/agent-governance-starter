@@ -100,14 +100,47 @@ Last verified: 2026-08-06
   `.codex/config.toml` plan is packaged without overwriting custom config or
   granting trust. Codex and Claude Code fixtures share the Core tool path;
   live uncoached Codex use, native Claude/IDE packaging, and the independent
-  Reviewer remain open.
+  Reviewer remain open. The Codex rehearsal is now admitted. Its first
+  preflight found no `agentgov` executable on `PATH` and no working TLS in the
+  default Python, then resolved that bootstrap boundary through an authorized
+  parallel official Python 3.12 runtime and exact current-source pipx install.
+  No reference-project environment or absolute source path was substituted.
+  Exact human `INTEGRATE` created the reviewed project config, and a real-user
+  Codex preflight now discovers the enabled five-tool server with a healthy
+  local configuration. A subsequent eligible session discovered all five
+  tools and selected alignment without named-tool coaching, but Core rejected
+  two normalized alignment-start attempts with only a generic error. Human
+  direction selection and active-Agent self-review never occurred. The live
+  product journey is recorded as failed while static regression remains
+  healthy. The reviewed correction is now implemented in development source:
+  question IDs are Adapter-owned rather than model inputs, known normalized
+  failures return privacy-safe structured field/rule/retry metadata, and
+  rejected start/update calls remain atomic. A fresh uncoached replay remains
+  required before the live journey can be called successful. The first
+  post-correction replay failed earlier in host selection: the Agent bypassed
+  alignment, independently selected and implemented a change, and omitted
+  current-Agent self-review. The admitted correction now makes the ordinary
+  intent triggers, human-owned direction boundary, completion-time self-review,
+  and fail-closed behavior explicit in both `AGENTS.md` and MCP metadata.
+- The post-guidance uncoached replay automatically selected alignment, left the
+  final direction to the human, and stopped without repository mutation when
+  alignment start returned an unclassified non-retryable Core rejection. This
+  confirms the selection-guidance correction while leaving the product journey
+  failed before human choice and self-review. The next bounded requirement is
+  normalized-fixture diagnosis of the remaining Adapter/Core mismatch; NYC,
+  another host, publication, release, and deployment remain gated.
 - Native MCP Adapter and affected governance regression passed 103 focused
-  tests and the full Python 3.12 suite passed 720 tests with two
+  tests and the latest full Python 3.12 suite passed 724 tests with two
   platform-limited skips. The
   admitted task reported `PASS=6 WARN=0 FAIL=0 ADVISORY=1`; combined
   working-copy scope reported `PASS=110 FAIL=0 ADVISORY=1`; repository
   governance reported `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; all 55 schemas parsed,
   source/tests compiled, and `git diff --check` passed.
+- The MCP diagnostic correction passed 61 expanded focused tests and the full
+  Python 3.12 suite passed 724 tests with two platform-limited skips. Repository
+  governance remained `FAIL=0`; all 56 schemas parsed. Combined dirty-worktree
+  scope remains honestly failing only for the retained host-local Codex config
+  and unrelated user-owned social-cover image.
 - The active-Agent self-review, Alignment Adapter/transport, semantic-review,
   clarification, Skill, task, documentation, and portfolio regression passed
   110 focused tests. The current
@@ -119,6 +152,11 @@ Last verified: 2026-08-06
   700 tests with two platform-limited skips.
 
 ## Development checkpoint - 2026-08-06
+
+- The development CLI now treats a bare `agentgov` invocation as a safe
+  first-time orientation surface instead of a missing-command error. It prints
+  help, recommends the read-only `doctor`, `next`, and `status` entry points,
+  performs no repository inspection or write, and exits successfully.
 
 - `ReferenceAlignmentAdapter` now connects a host's natural-language request,
   one natural-language clarification answer, and one final single-select to

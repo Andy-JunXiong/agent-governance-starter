@@ -1,0 +1,114 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-mcp-alignment-safe-diagnostics-retry",
+  "title": "Make MCP alignment rejection diagnosable and safely retryable",
+  "requirement": {
+    "summary": "Correct the live Codex alignment-start failure by keeping protocol identities Adapter-owned and returning privacy-safe structured rejection diagnostics that let the same host repair normalized input without partially advancing state.",
+    "source_refs": [
+      "docs/experiments/live-codex-mcp-rehearsal.md",
+      "docs/governance-mcp-adapter.md",
+      "docs/development-automation-contracts.md",
+      "docs/development-log/2026-08-06.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+      "docs/adr/0014-route-semantic-review-through-host-providers.md"
+    ],
+    "rationale": "The first real host selected the correct tool but could neither satisfy an Adapter-owned identity field nor learn which safe normalized field Core rejected; deterministic fail-closed behavior therefore became an unrecoverable product failure."
+  },
+  "goal": "Remove question identities from model-authored MCP inputs, generate them inside the Adapter, and return bounded structured error metadata for invalid normalized alignment calls while preserving privacy, strict validation, atomic state, and successful retry.",
+  "non_goals": [
+    "Do not weaken alignment, privacy, authority, ordering, digest, or human-direction validation.",
+    "Do not return rejected field values, raw conversation, source, credentials, absolute paths, model-private reasoning, stack traces, or arbitrary exception text.",
+    "Do not retain the failed live transcript or reconstruct its exact private tool payload.",
+    "Do not add model calls, a second Agent, independent review, background persistence, NYC work, or another host Adapter.",
+    "Do not commit, push, publish, release, deploy, or mutate a consumer repository."
+  ],
+  "scope": {
+    "include_paths": [
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "docs/development-plan.md",
+      "docs/development-log/2026-08-06.md",
+      "docs/experiments/live-codex-mcp-rehearsal.md",
+      "docs/development-automation-contracts.md",
+      "docs/governance-mcp-adapter.md",
+      "docs/index.html",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/quickstart.html",
+      "governance/tasks",
+      "schemas/mcp-tool-error.schema.json",
+      "src/agentgov/governance_mcp.py",
+      "src/agentgov/reference_alignment_adapter.py",
+      "tests/test_governance_mcp.py",
+      "tests/test_reference_alignment_adapter.py",
+      "tests/test_task_contract.py"
+    ],
+    "exclude_paths": [
+      ".codex/config.toml",
+      "docs/assets/linkedin-github-repository-cover.png",
+      ".github/workflows",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+    "docs/adr/0014-route-semantic-review-through-host-providers.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/governance-mcp-adapter.md"
+  ],
+  "acceptance_signals": [
+    "MCP alignment start and update schemas ask the model for question meaning and materiality but not question IDs; the Adapter generates valid unique question identities before Core validation.",
+    "Invalid normalized calls return a stable structured error with code, stage, bounded field path, rule, and retryable flag alongside concise safe text.",
+    "Diagnostics never include rejected values, raw prompt/answer/transcript/source, credentials, absolute paths, arbitrary exception text, or stack traces.",
+    "Unknown fields, invalid subject identity, invalid question shape, duplicate questions, unstable recommendation, privacy-bearing content, stale bindings, and ordering errors remain rejected.",
+    "A failed start creates no journey; a failed update does not advance its journey; a corrected retry succeeds through the same MCP server process.",
+    "Existing Codex and Claude fixture journeys remain vendor-neutral and complete without model-generated contract IDs.",
+    "Focused/full tests, task, scope, repository, documentation, compile, and diff validation pass before another live rehearsal is proposed."
+  ],
+  "validation_commands": [
+    "python -m unittest discover -s tests -p test_governance_mcp.py -v",
+    "python -m unittest discover -s tests -p test_reference_alignment_adapter.py -v",
+    "python -m unittest discover -s tests -p test_task_contract.py -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-mcp-alignment-safe-diagnostics-retry.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-mcp-alignment-safe-diagnostics-retry.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "high",
+    "items": [
+      "Overly detailed errors could echo private normalized content or host-local values.",
+      "A retry path could accidentally preserve partial state from a rejected call.",
+      "Removing model-authored IDs changes the public MCP input schema and requires synchronized documentation and compatibility tests.",
+      "Generic classification could mislead the host unless unknown failures remain safely internal and non-retryable."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": [
+      "docs/development-log/2026-08-06.md"
+    ]
+  },
+  "stop_conditions": [
+    "Stop if useful diagnostics require returning rejected values, raw/private content, stack traces, absolute paths, or unrestricted exception text.",
+    "Stop if identity generation must become model-owned or deterministic validation must be weakened.",
+    "Stop if a rejected call partially advances a journey or a retry can cross journey, Adapter, prompt, or request bindings.",
+    "Stop before a new live host run, NYC work, Git write, publication, release, deployment, or consumer mutation."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "The privacy-safe diagnostic and atomic-retry correction completed implementation and validation. The user explicitly requested the next step on 2026-08-06, so this task is paused for routing hygiene without claiming live success, publication, or release."
+  }
+}

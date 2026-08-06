@@ -1,0 +1,60 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-mcp-tool-selection-guidance",
+  "title": "Make governed MCP tool selection explicit for Codex",
+  "requirement": {
+    "summary": "Correct the host guidance and MCP metadata that allowed a fresh Codex Agent to bypass alignment, choose its own development direction, and omit current-Agent self-review during the corrected live replay.",
+    "source_refs": ["docs/experiments/live-codex-mcp-rehearsal.md", "AGENTS.md", "docs/governance-mcp-adapter.md", "docs/development-log/2026-08-06.md"]
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": ["docs/adr/0013-make-automatic-governance-and-dashboard-primary.md", "docs/adr/0014-route-semantic-review-through-host-providers.md"],
+    "rationale": "The native tools are discoverable and executable, but the host needs deterministic repository guidance and intent-oriented tool descriptions to select them at the two product journey boundaries."
+  },
+  "goal": "Add minimal Codex-visible selection rules and intent-oriented MCP descriptions for alignment before self-selected meaningful development and advisory self-review after resolved work, with deterministic synchronization tests and a fresh installed-runtime replay boundary.",
+  "non_goals": [
+    "Do not force alignment for read-only explanation, diagnosis, status, or a fully specified low-risk request with no material direction choice.",
+    "Do not weaken Core validation, fabricate human choices, automatically approve work, or make self-review independent.",
+    "Do not change the unrelated no-argument CLI UX change produced during the failed replay.",
+    "Do not commit, push, publish, release, deploy, start NYC work, mutate a consumer, or add a second Agent or Provider."
+  ],
+  "scope": {
+    "include_paths": ["AGENTS.md", "README.md", "STATUS.md", "docs/development-plan.md", "docs/development-log/2026-08-06.md", "docs/experiments/live-codex-mcp-rehearsal.md", "docs/governance-mcp-adapter.md", "governance/tasks", "src/agentgov/governance_mcp.py", "tests/test_governance_mcp.py", "tests/test_task_contract.py"],
+    "exclude_paths": ["src/agentgov/cli.py", "tests/test_cli.py", "docs/quickstart.zh-CN.md", "docs/quickstart.zh-CN.html", "docs/assets/linkedin-github-repository-cover.png", ".github/workflows", "release"]
+  },
+  "architecture_refs": ["docs/adr/0013-make-automatic-governance-and-dashboard-primary.md", "docs/adr/0014-route-semantic-review-through-host-providers.md", "docs/adr/INVARIANTS.md", "docs/governance-mcp-adapter.md"],
+  "acceptance_signals": [
+    "Repository instructions tell Codex when meaningful ambiguity requires alignment and prohibit the Agent from selecting the human-owned final direction.",
+    "Repository instructions tell the same Agent to run advisory self-review after implementing and validating a human-resolved aligned direction.",
+    "The MCP server instructions and start/self-review tool descriptions state the same trigger boundaries without claiming guaranteed model behavior.",
+    "Deterministic tests bind repository guidance, server instructions, tool order, descriptions, and privacy/authority limits.",
+    "The corrected installed runtime passes a five-tool metadata preflight before any new uncoached replay.",
+    "No Git write, publication, release, deployment, NYC work, consumer mutation, second Agent, or independent Reviewer occurs."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_governance_mcp tests.test_task_contract tests.test_user_documentation -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-mcp-tool-selection-guidance.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-mcp-tool-selection-guidance.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "high",
+    "items": [
+      "Over-broad guidance could add governance friction to read-only or fully specified low-risk work.",
+      "Tool descriptions influence host selection but cannot guarantee model behavior; only a fresh uncoached replay can supply product evidence.",
+      "The dirty working tree contains approved prerequisite and failed-replay changes that must not be mistaken for this correction's scope."
+    ]
+  },
+  "approval": {"required": true, "status": "approved", "owner": "Human product owner", "evidence_refs": ["docs/development-log/2026-08-06.md"]},
+  "stop_conditions": [
+    "Stop if the correction requires bypassing host trust, hidden prompt injection, raw conversation retention, or Core weakening.",
+    "Stop if instructions let the Agent invent or select the human-owned final direction.",
+    "Stop before Git writes, publication, release, deployment, NYC work, consumer mutation, a second Agent, or independent review."
+  ],
+  "decision": {"state": "admitted", "decided_by": "Human product owner", "rationale": "After reviewing the failed post-correction replay, the user explicitly authorized the proposed tool-selection guidance correction on 2026-08-06."}
+}

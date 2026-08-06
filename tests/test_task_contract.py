@@ -23,7 +23,7 @@ from agentgov.task_contract import (
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_PATH = ROOT / "schemas/development-task.schema.json"
-CURRENT_TASK = ROOT / "governance/tasks/p0-native-mcp-alignment-self-review-adapter.json"
+CURRENT_TASK = ROOT / "governance/tasks/p0-mcp-tool-selection-guidance.json"
 VALID_DRAFT = ROOT / "governance/fixtures/tasks/valid-supporting-draft.json"
 INVALID_ADMISSION = (
     ROOT / "governance/fixtures/tasks/invalid-admitted-pending-approval.json"
@@ -74,13 +74,13 @@ class DevelopmentTaskContractTests(unittest.TestCase):
         self.assertEqual(validate_development_task_document(document), [])
         self.assertEqual(document["decision"]["state"], "admitted")
         self.assertEqual(document["profile"], "standard")
-        self.assertEqual(document["objective"]["role"], "core")
+        self.assertEqual(document["objective"]["role"], "supporting")
         self.assertEqual(
             document["task_id"],
-            "p0-native-mcp-alignment-self-review-adapter",
+            "p0-mcp-tool-selection-guidance",
         )
         self.assertIn(
-            "docs/product-requirements-automatic-governance.md",
+            "docs/governance-mcp-adapter.md",
             document["requirement"]["source_refs"],
         )
 
@@ -98,7 +98,7 @@ class DevelopmentTaskContractTests(unittest.TestCase):
             if finding.check_id.endswith(":objective-alignment")
         )
         self.assertIn("accountable human must confirm", alignment.message)
-        self.assertIn("declared core objective role", alignment.message)
+        self.assertIn("declared supporting objective role", alignment.message)
 
     def test_draft_fixture_preserves_warning_and_advisory_states(self) -> None:
         report = check_development_task(VALID_DRAFT, repository=ROOT)

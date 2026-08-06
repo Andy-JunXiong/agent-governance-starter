@@ -66,10 +66,16 @@ def start_arguments() -> dict:
             "impact": "Pretending a command hook is an Agent would overstate the integration.",
         },
         "assumptions": ["The host supports model-controlled MCP tools."],
-        "unknowns": [question("a", "Should the foreground MCP Adapter own the normalized journey?")],
+        "unknowns": [mcp_question("Should the foreground MCP Adapter own the normalized journey?")],
         "candidate_resolutions": [],
         "recommended_resolution_id": None,
     }
+
+
+def mcp_question(text: str) -> dict:
+    value = question("a", text)
+    value.pop("question_id")
+    return value
 
 
 def prompt_binding(response: dict, key: str) -> dict:
@@ -170,10 +176,34 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
         )
         self.assertEqual(governance_mcp_tools(), governance_mcp_tools())
         self.assertIn("Never send raw prompts", MCP_SERVER_INSTRUCTIONS)
+        self.assertIn("without waiting for the user to name them", MCP_SERVER_INSTRUCTIONS)
+        self.assertIn("when asked to choose what to build", MCP_SERVER_INSTRUCTIONS)
+        self.assertIn("never select it for them", MCP_SERVER_INSTRUCTIONS)
+        self.assertIn("After implementing and validating", MCP_SERVER_INSTRUCTIONS)
+        self.assertIn("do not silently continue", MCP_SERVER_INSTRUCTIONS)
+        descriptions = {tool["name"]: tool["description"] for tool in listed["result"]["tools"]}
+        self.assertIn("multiple reasonable directions", descriptions[MCP_TOOL_NAMES[0]])
+        self.assertIn("human must select", descriptions[MCP_TOOL_NAMES[0]])
+        self.assertIn("before completion handoff", descriptions[MCP_TOOL_NAMES[3]])
+        self.assertIn("distinct advisory", descriptions[MCP_TOOL_NAMES[3]])
         for tool in listed["result"]["tools"]:
             self.assertFalse(tool["inputSchema"]["additionalProperties"])
             self.assertTrue(tool["annotations"]["readOnlyHint"])
             self.assertFalse(tool["annotations"]["destructiveHint"])
+        start_question = listed["result"]["tools"][0]["inputSchema"]["properties"]["unknowns"]["items"]
+        update_question = listed["result"]["tools"][1]["inputSchema"]["properties"]["new_questions"]["items"]
+        self.assertNotIn("question_id", start_question["properties"])
+        self.assertNotIn("question_id", update_question["properties"])
+
+    def test_repository_guidance_matches_mcp_selection_boundaries(self) -> None:
+        guidance = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        self.assertIn("the human does not need to name the tools", guidance)
+        self.assertIn("asks the Agent to choose what to build", guidance)
+        self.assertIn("Do not choose that direction for them", guidance)
+        self.assertIn("fully specified low-risk change", guidance)
+        self.assertIn("agentgov_self_review_start", guidance)
+        self.assertIn("agentgov_self_review_complete", guidance)
+        self.assertIn("remain fail-closed", guidance)
 
     def test_codex_and_claude_hosts_complete_the_same_normalized_tool_journey(self) -> None:
         for host in ("fixture.codex-mcp", "fixture.claude-code-mcp"):
@@ -254,7 +284,105 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
         self.assertEqual(unknown_method["error"]["code"], -32601)
         self.assertEqual(unknown_tool["error"]["code"], -32602)
         self.assertTrue(tool_error["result"]["isError"])
+        self.assertEqual(
+            tool_error["result"]["structuredContent"]["error"]["contract"],
+            "agentgov.mcp-tool-error",
+        )
         self.assertIsNone(notification)
+
+    def test_alignment_error_is_structured_private_and_corrected_start_retries(self) -> None:
+        server = GovernanceMcpServer(adapter())
+        invalid = start_arguments()
+        private_value = "C:\\private\\draft.txt"
+        invalid["center"]["outcome"] = private_value
+        failed = server.dispatch(
+            rpc(1, "tools/call", {"name": MCP_TOOL_NAMES[0], "arguments": invalid})
+        )["result"]
+
+        self.assertTrue(failed["isError"])
+        error = failed["structuredContent"]["error"]
+        self.assertEqual(error["error_code"], "alignment_invalid_field")
+        self.assertEqual(error["stage"], MCP_TOOL_NAMES[0])
+        self.assertEqual(error["field_path"], "$")
+        self.assertEqual(error["rule"], "privacy_boundary")
+        self.assertTrue(error["retryable"])
+        self.assertNotIn(private_value, json.dumps(failed))
+
+        corrected = server.dispatch(
+            rpc(2, "tools/call", {"name": MCP_TOOL_NAMES[0], "arguments": start_arguments()})
+        )["result"]
+        self.assertFalse(corrected["isError"])
+        generated = corrected["structuredContent"]["response"]["dialogue"]["open_questions"][0]["question_id"]
+        self.assertRegex(generated, r"^qst-[0-9a-f]{16}$")
+
+    def test_invalid_question_shape_reports_path_and_does_not_start_journey(self) -> None:
+        server = GovernanceMcpServer(adapter())
+        invalid = start_arguments()
+        invalid["unknowns"][0]["question_id"] = "model-owned-id"
+        failed = server.dispatch(
+            rpc(1, "tools/call", {"name": MCP_TOOL_NAMES[0], "arguments": invalid})
+        )["result"]
+        error = failed["structuredContent"]["error"]
+        self.assertEqual(error["field_path"], "unknowns[0]")
+        self.assertEqual(error["rule"], "exact_fields")
+        self.assertTrue(error["retryable"])
+
+        corrected = server.dispatch(
+            rpc(2, "tools/call", {"name": MCP_TOOL_NAMES[0], "arguments": start_arguments()})
+        )["result"]
+        self.assertFalse(corrected["isError"])
+
+    def test_subject_and_recommendation_errors_are_bounded_and_retryable(self) -> None:
+        server = GovernanceMcpServer(adapter())
+        invalid_subject = start_arguments()
+        invalid_subject["subject_id"] = "Invalid Subject"
+        subject_error = server.dispatch(
+            rpc(1, "tools/call", {"name": MCP_TOOL_NAMES[0], "arguments": invalid_subject})
+        )["result"]["structuredContent"]["error"]
+        self.assertEqual(subject_error["field_path"], "subject_id")
+        self.assertEqual(subject_error["rule"], "normalized_identifier")
+
+        invalid_recommendation = start_arguments()
+        invalid_recommendation["unknowns"] = []
+        invalid_recommendation["candidate_resolutions"] = resolutions()
+        invalid_recommendation["recommended_resolution_id"] = "stop"
+        recommendation_error = server.dispatch(
+            rpc(2, "tools/call", {"name": MCP_TOOL_NAMES[0], "arguments": invalid_recommendation})
+        )["result"]["structuredContent"]["error"]
+        self.assertEqual(recommendation_error["field_path"], "recommended_resolution_id")
+        self.assertEqual(recommendation_error["rule"], "candidate_binding")
+        self.assertTrue(recommendation_error["retryable"])
+
+    def test_failed_update_is_atomic_and_adapter_assigns_new_question_identity(self) -> None:
+        server = GovernanceMcpServer(adapter())
+        started = server.dispatch(
+            rpc(1, "tools/call", {"name": MCP_TOOL_NAMES[0], "arguments": start_arguments()})
+        )["result"]["structuredContent"]
+        update = {
+            "journey_handle": started["journey_handle"],
+            "prompt": prompt_binding(started, "clarification_prompt"),
+            "answer_summary": "The user kept the current center and identified one follow-up.",
+            "center_patch": empty_patch(),
+            "new_questions": [mcp_question("Should the result record include retry evidence?")],
+            "candidate_resolutions": [],
+            "recommended_resolution_id": None,
+            "ready_requested": False,
+        }
+        invalid = json.loads(json.dumps(update))
+        invalid["new_questions"][0]["question_id"] = "model-owned-id"
+        failed = server.dispatch(
+            rpc(2, "tools/call", {"name": MCP_TOOL_NAMES[1], "arguments": invalid})
+        )["result"]
+        self.assertTrue(failed["isError"])
+        self.assertEqual(failed["structuredContent"]["error"]["field_path"], "new_questions[0]")
+
+        corrected = server.dispatch(
+            rpc(3, "tools/call", {"name": MCP_TOOL_NAMES[1], "arguments": update})
+        )["result"]
+        self.assertFalse(corrected["isError"])
+        open_questions = corrected["structuredContent"]["response"]["dialogue"]["open_questions"]
+        self.assertEqual(len(open_questions), 1)
+        self.assertRegex(open_questions[0]["question_id"], r"^qst-[0-9a-f]{16}$")
 
     def test_cli_stdio_emits_only_json_rpc_lines(self) -> None:
         stream = "\n".join(

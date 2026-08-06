@@ -2925,6 +2925,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="agentgov",
         description="Check repository-native AI governance contracts.",
+        epilog=(
+            "Start here:\n"
+            "  agentgov doctor .   Check whether this repository is ready\n"
+            "  agentgov next .     Show one safe next action\n"
+            "  agentgov status .   Explain the current governance state"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
         "--version",
@@ -4474,5 +4481,10 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None) -> int:
     """Run the CLI and return a stable process exit code."""
 
-    args = build_parser().parse_args(argv)
+    parser = build_parser()
+    arguments = list(sys.argv[1:] if argv is None else argv)
+    if not arguments:
+        parser.print_help()
+        return EXIT_PASS
+    args = parser.parse_args(arguments)
     return int(args.handler(args))

@@ -277,10 +277,15 @@ Implemented native MCP Adapter boundary:
 - the Adapter creates an explicit opaque journey handle. Later calls must carry
   that handle plus the exact pending prompt or review-request digest. State is
   in process memory only and a restarted server rejects the old handle;
-- the current Coding Agent supplies only normalized drafts. The Adapter creates
-  IDs, timestamps, records, Provider/route bindings, observation identities,
-  privacy declarations, and denied authority through the existing alignment
-  and self-review state machines;
+- the current Coding Agent supplies only normalized meaning, including question
+  text, reason, materiality, and priority. The Adapter creates question IDs and
+  all other IDs, timestamps, records, Provider/route bindings, observation
+  identities, privacy declarations, and denied authority through the existing
+  alignment and self-review state machines;
+- known normalized-input rejection returns `agentgov.mcp-tool-error` 1.0 with
+  only a stable code, stage, bounded field path, rule, and retryable flag.
+  Rejected values and arbitrary exception text remain hidden; failed start and
+  update calls are atomic, while unclassified rejection is non-retryable;
 - `agentgov integrate codex-mcp . --dry-run` previews an exact project-local
   `.codex/config.toml`. Interactive apply is create-missing-only; existing
   custom config is a conflict and Codex trusted-project/config review remains
@@ -299,8 +304,10 @@ Not yet implemented:
   normalized proposal is implemented;
 - production Coding Agent materializers for the implemented natural-language
   alignment Adapter boundary; only the independent offline rehearsal exists;
-- a live uncoached Codex session using the packaged MCP configuration, followed
-  by native Claude Code or another IDE installation evidence;
+- a successful live uncoached Codex session using the packaged MCP
+  configuration. The first run discovered and selected the tools but exposed
+  the now-corrected question-identity and generic-error boundary; a fresh replay
+  is required before native Claude Code or another IDE installation evidence;
   no model SDK, account, endpoint, credential store, or network call is present
   in AgentGov;
 - a packaged host with native custom buttons and authenticated decision

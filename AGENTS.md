@@ -55,6 +55,30 @@ For meaningful changes:
 5. run the relevant tests and report unresolved gaps;
 6. keep commit, push, and release as separate human-controlled actions.
 
+## Native governance MCP journey
+
+When the five `agentgov_*` governance tools are available, use them as part of
+the normal development workflow; the human does not need to name the tools.
+
+- Before meaningful development where the request leaves multiple reasonable
+  product, requirement, architecture, scope, or implementation directions—or
+  asks the Agent to choose what to build—call `agentgov_alignment_start` from
+  normalized meaning. Continue the alignment tools until options are ready,
+  then present the offered directions and let the human make the final choice
+  through `agentgov_alignment_resolve`. Do not choose that direction for them.
+- Do not start alignment merely for read-only explanation, diagnosis, status,
+  or a fully specified low-risk change with no material direction choice.
+- After implementing and validating a human-resolved aligned direction, call
+  `agentgov_self_review_start`, perform a distinct advisory review pass using
+  only allowed evidence, and submit normalized observations through
+  `agentgov_self_review_complete` before the completion handoff.
+- If a required governance call fails, remain fail-closed: report the bounded
+  failure and do not silently continue outside the governed journey.
+
+These tools grant no task, code, scope, Git, release, deployment, or external
+authority. Preserve the privacy and human-ownership boundaries returned by the
+tools.
+
 ## Completion communication
 
 After completing any development item, explain the result to the human product
