@@ -88,8 +88,9 @@ coding-agent transport, bounded task/scope/completion cards, and the first packa
 Codex lifecycle-hook Adapter. Development source now also defines a
 vendor-neutral host-interaction request/capability contract and a strict
 Coding Agent task-proposal/human-admission fallback. Automatic proposal
-generation from the host conversation, Claude Code/IDE adapters, and native
-recording of custom task/scope/completion decisions remain.
+generation and native exact-plan review are now connected in development Codex
+Adapter `1.3.0`; external live proof, Claude Code/IDE adapters, and native
+recording of other custom task/scope/completion decisions remain.
 See the [automatic governance product requirements](docs/product-requirements-automatic-governance.md)
 and [ADR-0013](docs/adr/0013-make-automatic-governance-and-dashboard-primary.md).
 ADR-0014 separately owns semantic-review Provider and assurance routing.
@@ -366,9 +367,10 @@ Reviewer or returns exactly human review, explicit lower-assurance self-review,
 and Provider setup as unselected choices. Provider and route digests prevent
 silent substitution, and all accepted observations remain `ADVISORY` with no
 project or external-write authority. Codex, Claude Code, generic IDE, and
-unavailable-Provider fixtures prove vendor-neutral compatibility only: no real
-model, credentials, network call, production materializer, or host UI is
-included yet, and ordinary use still requires no second model configuration.
+unavailable-Provider fixtures prove vendor-neutral compatibility only:
+no real model is bundled by AgentGov, and it includes no credentials, network
+call, or independent Reviewer host UI. Ordinary use still requires no second
+model configuration.
 
 The execution seam and its live foreground transport are now implemented in
 development source.
@@ -386,13 +388,15 @@ to emit the records and supply real inference. See the
 [active-Agent self-review guide](docs/active-agent-self-review.md).
 
 Development source now supplies that first native host boundary as a
-dependency-free foreground STDIO MCP Adapter. It exposes five model-controlled
-tools for normalized alignment and medium-risk active-Agent self-review, keeps
+dependency-free foreground STDIO MCP Adapter. It exposes five base
+model-controlled tools for normalized alignment and medium-risk active-Agent self-review, keeps
 an explicit journey handle in foreground memory, and generates every internal
 identity and digest itself. Model-authored question IDs have been removed from
 the tool inputs; known validation failures now return only a stable code,
 stage, bounded field path, rule, and retryable flag, without rejected values or
-arbitrary exception text. Failed calls remain atomic. Codex project
+arbitrary exception text. The start schema keeps judgment-bearing drift
+advisory and requires at least two stable options plus one recommendation when
+there are no open unknowns. Failed calls remain atomic. Codex project
 configuration is available through a
 create-missing-only `agentgov integrate codex-mcp . --dry-run` plan; existing
 `.codex/config.toml` is never overwritten or merged, and Codex trust remains a
@@ -400,10 +404,39 @@ separate user decision. Codex and Claude Code Provider fixtures traverse the
 same Core tool path. The first live Codex rehearsal discovered and selected the
 tools but failed on the former question-identity/generic-error boundary. A
 post-correction replay then bypassed alignment, selected its own change, and
-omitted self-review. Development source now adds explicit intent-oriented tool
-selection guidance to both MCP metadata and repository `AGENTS.md`; this is a
-testable selection contract, not a guarantee of model behavior, and requires a
-fresh live replay. Only Codex configuration is packaged. See the
+omitted self-review. Intent-oriented tool guidance fixed that selection
+boundary, but later fresh replays exposed successive schema/Core mismatches.
+Development Adapter `1.2.3` now validates the complete Alignment Start input
+boundary before Core, publishes a documented eleven-family parity matrix, and
+keeps only generated internal invariant failures unclassified. This remains a testable
+contract, not a successful end-to-end host claim. The exact development source
+is installed in the local Python 3.12.10 pipx runtime and has passed installed
+protocol preflight. One approved external Codex session completed, but its
+normalizer mixed actual events with historical repository text, so the run is
+not accepted as tool-call evidence. A separately approved replay with an
+event-scoped normalizer then completed two real Alignment Start calls: one
+retryable correction followed by `ready_for_decision` and the human selection
+boundary, with no internal or unclassified failure. This proves Start recovery,
+not the live post-selection implementation/self-review journey. Development
+Adapter `1.2.4` now hardens the deterministic post-selection boundary: Resolve,
+self-review start, and self-review completion classify repairable normalized
+input by field and rule before state advances, and corrected same-process retry
+remains available. An independent installation-gate audit additionally aligned
+reason identifiers, evidence length and allow-list membership, observation
+list bounds, and duplicate detection with the downstream Core contracts. This
+source is now installed locally as Adapter `1.2.4`; installed protocol and
+same-process retry preflight passed with zero AgentGov model or network calls.
+The human product owner then designated the current ephemeral Codex session as
+the sole approved live continuation and selected the recommended direction.
+That session bound the exact human choice through native Alignment Resolve;
+focused validation and the complete 734-test Python 3.12 suite pass. The
+distinct current-Agent self-review also completed with bounded advisory
+observations, zero AgentGov model/network calls, and no Adapter context
+retention. This closes the measured current-host post-selection slice without
+claiming another host, consumer adoption, release, or deployment. The later
+reference task-proposal slice adds an offline-tested host contract seam, not a
+production Codex proposal UI or live semantic-quality proof.
+Only Codex configuration is packaged. See the
 [native governance MCP Adapter guide](docs/governance-mcp-adapter.md).
 
 A Coding Agent or host Adapter can now submit a normalized, vendor-neutral
@@ -419,6 +452,29 @@ requires exact `ADMIT` from a real interactive terminal and creates only the
 reviewed task file. It does not start a session, execute validation, or
 authorize code, scope, Git, deployment, or release actions. See the
 [task proposal and human admission guide](docs/task-proposal-admission.md).
+
+Development source also includes `ReferenceTaskProposalAdapter`. A Coding
+Agent host can supply one replaceable semantic materializer so ordinary request
+text produces that same strict, read-only preview without entering AgentGov
+Core. The Adapter retains no raw request and owns proposal identity, privacy,
+low-risk, and denied-authority fields. Its standalone proof remains fixture-
+based.
+
+Development Codex Adapter `1.3.0` now supplies the first production host
+binding: the current Codex Agent passes only normalized proposal fields to
+`agentgov_task_proposal_review`, then Codex presents the exact generated plan
+through native MCP form elicitation. Only the bound human choice to admit that
+exact task creates its task file; change, reject, decline, cancellation,
+interruption, invalid responses, stale plans, and target races write nothing.
+Clients without form elicitation keep the original five tools. AgentGov adds no
+credential, model call, network call, or second Agent, and ordinary tool
+permission is not admission. The exact source is now installed in the existing
+local pipx environment and has passed installed-runtime protocol preflight.
+Two authorized external attempts have occurred, but neither reached a proposal
+form or tool result. The corrected attempt ended at App Server EOF after
+`turn/start`; the same standalone Codex binary then reported `Not logged in`.
+Authentication repair and another replay remain separate human-controlled
+actions, so live Adapter behavior is still unproven.
 
 That exact `ADMIT` path is now a review fallback rather than a universal daily
 gate. Development source adds `agentgov.work-request` 1.0,
@@ -919,9 +975,9 @@ The first usable release contains:
   two-stage foreground exchange, evidence allow-list, digest binding, privacy
   boundary, and native-installation limit.
 - [Native governance MCP Adapter](docs/governance-mcp-adapter.md) documents the
-  five-tool foreground journey, explicit handle and binding rules, Codex
-  create-missing-only configuration, cross-host boundary, and live-rehearsal
-  limit.
+  five base alignment/self-review tools plus the capability-gated native task
+  proposal review, explicit handle and binding rules, Codex create-missing-only
+  configuration, cross-host boundary, and live-rehearsal limit.
 - [Redacted development-event export](docs/development-event-export.md)
   documents the explicit preview/confirmation flow, metadata-only profile,
   immutable bundle, Monitor ingestion, and privacy/claim boundaries.

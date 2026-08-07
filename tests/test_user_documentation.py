@@ -232,6 +232,18 @@ class UserDocumentationTests(unittest.TestCase):
             "independent high-risk Reviewer",
         ):
             self.assertIn(phrase, governance_mcp_compact)
+        for text in (automation, governance_mcp, proposal_admission):
+            self.assertIn("agentgov_task_proposal_review", text)
+        self.assertIn("agentgov.task-proposal-review-result", proposal_admission)
+        self.assertIn("five base tools", automation)
+        self.assertNotIn("five fixed tools", automation)
+        self.assertNotIn("every tool remains advisory/read-only", automation)
+        self.assertNotIn(
+            "Production natural-language task drafting, a native authenticated decision surface",
+            requirements,
+        )
+        self.assertIn("Development Codex Adapter `1.3.0`", requirements)
+        self.assertIn("native MCP form elicitation", session)
         self.assertIn("docs/governance-mcp-adapter.md", readme)
 
         for forbidden_primary_action in (
@@ -266,6 +278,8 @@ class UserDocumentationTests(unittest.TestCase):
             self.assertIn("ADMIT", text)
             self.assertIn("--prompt-human", text)
             self.assertIn("agentgov integrate codex-mcp . --dry-run", text)
+            self.assertIn("1.3.0", text)
+            self.assertIn("agentgov_task_proposal_review", text)
             self.assertTrue("clarification" in text.lower() or "澄清" in text)
             self.assertTrue("does not survive restart" in text or "重启后不会恢复" in text)
 

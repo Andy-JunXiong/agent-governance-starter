@@ -1,0 +1,55 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-live-codex-mcp-drift-retry-replay",
+  "title": "Replay corrected Codex alignment and self-review journey",
+  "requirement": {
+    "summary": "Install the exact validated current source into the existing isolated AgentGov runtime, preflight Adapter 1.2.1 and the drift-semantics contract, then run one fresh uncoached Codex journey through human alignment and current-Agent advisory self-review.",
+    "source_refs": ["docs/development-log/2026-08-07.md", "docs/experiments/live-codex-mcp-rehearsal.md", "docs/governance-mcp-adapter.md", "STATUS.md"]
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": ["docs/adr/0013-make-automatic-governance-and-dashboard-primary.md", "docs/adr/0014-route-semantic-review-through-host-providers.md"],
+    "rationale": "Static regression now covers the known Adapter/Core mismatch, but only a fresh host session can show that ordinary tool selection, human direction ownership, corrected retry behavior, implementation, and current-Agent self-review work together."
+  },
+  "goal": "Prepare a hash-recorded local-only runtime, verify its exact MCP metadata and corrected drift behavior, and leave one fresh no-coaching replay as the sole measured product journey.",
+  "non_goals": [
+    "Do not publish or present the locally rebuilt 0.3.0rc1-identified wheel as the immutable released v0.3.0rc1 artifact.",
+    "Do not coach the fresh Agent with AgentGov, MCP, alignment, self-review, protocol JSON, or tool names.",
+    "Do not add another host, second Agent, independent Reviewer, NYC work, unrelated product changes, or README punctuation work.",
+    "Do not commit, push, publish, release, deploy, or mutate a consumer repository."
+  ],
+  "scope": {
+    "include_paths": ["DEVELOPMENT_PLAN.md", "STATUS.md", "docs/development-plan.md", "docs/development-log/2026-08-07.md", "docs/experiments/live-codex-mcp-rehearsal.md", "docs/governance-mcp-adapter.md", "governance/tasks", "src/agentgov/governance_mcp.py", "tests/test_governance_mcp.py", "tests/test_task_contract.py"],
+    "exclude_paths": [".codex/config.toml", "docs/assets/linkedin-github-repository-cover.png", ".github/workflows", "release"]
+  },
+  "architecture_refs": ["docs/adr/0013-make-automatic-governance-and-dashboard-primary.md", "docs/adr/0014-route-semantic-review-through-host-providers.md", "docs/adr/INVARIANTS.md", "docs/governance-mcp-adapter.md"],
+  "acceptance_signals": [
+    "The exact current working source is built locally with official Python 3.12, hash-recorded, and installed only into the existing isolated pipx AgentGov environment.",
+    "Installed preflight reports Adapter 1.2.1, exactly five tools, the advisory-only conditional schema for business, requirement, and architecture drift, and retryable advisory_required behavior without value echo.",
+    "A fresh Codex session receives one ordinary multi-direction development request without named-tool coaching and selects alignment before repository mutation.",
+    "The human selects the final offered direction; the same Agent implements only that direction, validates it, and completes distinct advisory self-review.",
+    "Any required-call failure remains fail-closed and is recorded as a failed product journey without fabricated completion evidence."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_governance_mcp tests.test_task_contract -v",
+    "python -m agentgov check task governance/tasks/p0-live-codex-mcp-drift-retry-replay.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-live-codex-mcp-drift-retry-replay.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "high",
+    "items": ["Replacing the shared pipx runtime may encounter locks from existing AgentGov MCP child processes.", "The current source still carries the 0.3.0rc1 package identity and must not be confused with the immutable published artifact.", "A coached or non-fresh session would invalidate the replay evidence."]
+  },
+  "approval": {"required": true, "status": "approved", "owner": "Human product owner", "evidence_refs": ["docs/development-log/2026-08-07.md"]},
+  "stop_conditions": [
+    "Stop if installation would touch another project's environment or require network, publication, or consumer mutation.",
+    "Stop unless any locking process is read-only identified as the AgentGov governance MCP chain before termination.",
+    "Stop the active session after installed-runtime preflight; only a newly created Codex session is eligible for measured replay.",
+    "Stop on any governance-tool failure before implementation and record the journey honestly as failed."
+  ],
+  "decision": {"state": "paused", "decided_by": "Human product owner", "rationale": "The fresh replay selected governance and failed closed without mutation after a retryable drift error was corrected and Core returned a second unclassified rejection. The user reviewed that result and explicitly authorized the bounded diagnosis on 2026-08-07."}
+}

@@ -117,9 +117,13 @@ natural-language question, raw chat is not retained, and material unknowns
 must be resolved before the resolution options become selectable. Codex
 retains its native tool-permission
 prompt, but current Hooks cannot record arbitrary custom task, scope, or
-completion decisions. Natural-language task drafting, a native authenticated
-decision surface, and any additional host adapters remain open. The
-target remains an adapter-owned foreground experience, not a hidden daemon.
+completion decisions. Generic production natural-language materializers for
+additional hosts and cryptographically authenticated custom decision controls
+remain open. The reference task-proposal materializer seam described below is
+implemented. Development Codex Adapter `1.3.0` now adds the first
+production-host materializer and native MCP form review path. Local
+installation and protocol preflight pass; external live proof remains open.
+The target remains an adapter-owned foreground experience, not a hidden daemon.
 
 That clarification is now connected to the development-source foreground
 transport. A Coding Agent Adapter sends only strict normalized alignment
@@ -139,6 +143,16 @@ internal commands, or confirmation words and retains no raw conversation in
 the Adapter journey. This is interaction and integration evidence, not a claim
 that Core performs semantic inference or that a production host UI/model
 integration is complete.
+
+The same host-owned pattern now covers low-risk task proposals.
+`ReferenceTaskProposalAdapter` invokes one replaceable
+`HostTaskProposalMaterializer`, adds Adapter-owned proposal identity, privacy,
+low-risk, and denied-authority fields, and produces the existing read-only
+admission plan. Its offline fixture reaches the unchanged human admission path
+without raw request data entering Core or any AgentGov model/network call.
+This remains the portable reference seam. Codex development source now uses the
+current Agent as its production materializer through strict normalized MCP
+input; AgentGov itself still performs no proposal inference or network call.
 
 ## Semantic review compute and risk routing
 
@@ -200,18 +214,21 @@ ordinary user does not author these records, confirm again, or configure a
 second model. Native host installation and independent high-risk review remain
 separate product work.
 
-Development source now implements the first native host tool boundary with a
-foreground STDIO MCP Adapter. The current Coding Agent calls five strict tools
-to carry normalized alignment and medium-risk self-review; AgentGov returns an
-explicit journey handle and exact pending bindings, generates all governance
-identities, including question IDs that are absent from model inputs, and loses
-the state on restart. Known normalized-input failures return bounded
-privacy-safe diagnostics and preserve atomic retry. A create-missing-only Codex project
-configuration is packaged, while the Core tool layer is exercised with both
-Codex and Claude Code Provider fixtures. The first live Codex rehearsal proved
-discovery and selection but failed on the former question-identity/generic-error
-boundary. A fresh successful replay and another native MCP host package remain
-required; static correction tests are not semantic-success evidence.
+Development source implements the first native host tool boundary with a
+foreground STDIO MCP Adapter. Five base tools carry normalized alignment and
+medium-risk self-review; capability-gated development Adapter `1.3.0` adds
+`agentgov_task_proposal_review` for current-Agent materialization and native MCP
+form review. AgentGov returns an explicit journey handle and exact pending
+bindings, generates all governance identities, including question IDs that are
+absent from model inputs, and loses state on restart. Known normalized-input
+failures return bounded privacy-safe diagnostics and preserve atomic retry. A
+create-missing-only Codex project configuration is packaged, while the Core
+tool layer is exercised with both Codex and Claude Code Provider fixtures.
+Installed Adapter `1.2.4` completed the current-host post-selection journey.
+The exact `1.3.0` source is now installed and its local installed-runtime
+protocol preflight passes; a fresh external replay of `1.3.0`, plus another
+native MCP host package, remain required. Local deterministic evidence is not
+semantic-success evidence.
 
 ## Human decision boundaries
 
@@ -330,9 +347,12 @@ command composition.
 1. expose the existing lifecycle as an internal state-machine API;
 2. define vendor-neutral trigger and adapter contracts;
 3. implement one foreground automatic orchestrator;
-4. preserve the implemented vendor-neutral structured task-proposal and
-   human-admission fallback, then let a host Adapter produce that proposal from
-   a natural-language request without sending raw conversation data to Core;
+4. preserve the implemented vendor-neutral structured task-proposal,
+   human-admission fallback, and reference host Adapter that produces the
+   proposal from a natural-language request without sending raw conversation
+   data to Core; development Codex `1.3.0` binds the current Agent as the first
+   production materializer and native MCP form reviewer, while install/live
+   proof and other hosts remain work;
 5. preserve the implemented risk router and friction budget: no-write,
    verified active-task continuation, and clean-policy fast-track have zero
    human interruptions; ambiguity and material risk require review;

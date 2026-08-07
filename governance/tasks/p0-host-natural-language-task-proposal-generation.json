@@ -1,0 +1,97 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-host-natural-language-task-proposal-generation",
+  "title": "Generate strict task proposals at the host boundary",
+  "requirement": {
+    "summary": "Let a host Coding Agent convert one ordinary-language work request into the existing strict low-risk task-proposal and read-only admission preview without sending raw conversation to AgentGov Core or admitting the task automatically.",
+    "source_refs": [
+      "docs/development-automation-contracts.md",
+      "docs/development-plan.md",
+      "docs/task-proposal-admission.md",
+      "STATUS.md"
+    ]
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": [
+      "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md"
+    ],
+    "rationale": "Core already validates normalized proposals and preserves human-only admission, while the selected next product gap is the host-owned conversion from an ordinary request into that contract."
+  },
+  "goal": "Add a replaceable host materializer seam that produces a strict proposal and existing admission plan, proves raw-request non-retention and denied authority with fixtures, and leaves final ADMIT handling unchanged.",
+  "non_goals": [
+    "Do not add a model, credential, network call, host installation, or production semantic materializer.",
+    "Do not send raw prompt, transcript, source content, credentials, or absolute host paths to AgentGov Core or place them in the normalized proposal and rendered preview.",
+    "Do not let the materializer generate authority, admit a task, write a repository, start a session, or bypass the existing exact human confirmation.",
+    "Do not modify NYC, add another host, commit, push, publish, release, or deploy."
+  ],
+  "scope": {
+    "include_paths": [
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "docs",
+      "governance/tasks",
+      "src/agentgov",
+      "tests"
+    ],
+    "exclude_paths": [
+      ".codex/config.toml",
+      "docs/assets/linkedin-github-repository-cover.png",
+      ".github/workflows",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/development-automation-contracts.md",
+    "docs/task-proposal-admission.md"
+  ],
+  "acceptance_signals": [
+    "One ordinary-language request invokes a replaceable host materializer exactly once and yields the existing strict task-proposal and read-only admission-plan contracts.",
+    "The Adapter, not the materializer, supplies proposal identity, source actor, privacy declarations, and denied authority before existing Core validation.",
+    "Raw request text is absent from the proposal, admission plan, result evidence, and bounded failure output; AgentGov reports zero model and network calls.",
+    "Malformed or unsafe normalized drafts fail before repository mutation, and corrected retry can use a fresh Adapter invocation.",
+    "The existing interactive ADMIT path remains the only write boundary and is covered end to end with a deterministic fixture materializer.",
+    "Documentation distinguishes the implemented host contract seam from an unimplemented production semantic materializer or live host integration."
+  ],
+  "validation_commands": [
+    "python -m unittest discover -s tests -p test_reference_task_proposal_adapter.py -v",
+    "python -m unittest discover -s tests -p test_task_proposal.py -v",
+    "python -m unittest discover -s tests -p test_task_contract.py -v",
+    "python -m agentgov check task governance/tasks/p0-host-natural-language-task-proposal-generation.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-host-natural-language-task-proposal-generation.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "medium",
+    "items": [
+      "A semantic materializer may omit or distort the user's intent, so its output must remain a non-authoritative proposal for human review.",
+      "An over-broad result or exception could retain raw conversation or host-local data.",
+      "Existing uncommitted Adapter 1.2.4 files share the working copy and must be preserved without being misrepresented as part of this feature."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": [
+      "docs/development-log/2026-08-07.md"
+    ]
+  },
+  "stop_conditions": [
+    "Stop if implementation requires raw conversation to enter Core, persist in Adapter results, or appear in failure diagnostics.",
+    "Stop if the materializer can admit a task, write files, start work, or grant code, scope, Git, release, deployment, or external authority.",
+    "Stop if completion requires a model, credential, external service, host installation, or another live replay."
+  ],
+  "decision": {
+    "state": "admitted",
+    "decided_by": "Human product owner",
+    "rationale": "The product owner selected option 1, automatic proposal generation, as the next bounded requirement on 2026-08-07."
+  }
+}

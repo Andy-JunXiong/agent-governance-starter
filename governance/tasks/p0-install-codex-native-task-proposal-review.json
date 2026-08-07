@@ -1,0 +1,101 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-install-codex-native-task-proposal-review",
+  "title": "Install and preflight Codex native task proposal review",
+  "requirement": {
+    "summary": "Build and hash the exact reviewed source, replace only the existing isolated AgentGov runtime, minimally enable the sixth proposal-review tool in the existing project Codex configuration, and validate the installed foreground protocol without an external replay.",
+    "source_refs": [
+      "docs/adr/0015-use-mcp-elicitation-for-codex-task-admission.md",
+      "docs/governance-mcp-adapter.md",
+      "docs/task-proposal-admission.md"
+    ]
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": [
+      "governance/tasks/p0-codex-native-task-proposal-review.json",
+      "docs/adr/0015-use-mcp-elicitation-for-codex-task-admission.md"
+    ],
+    "rationale": "The source implementation and drift correction are complete; installed-runtime identity, sixth-tool visibility, and local protocol behavior must be proven before any separately authorized external replay."
+  },
+  "goal": "Install the exact Adapter 1.3.0 source into the existing pipx AgentGov environment, preserve the working absolute launcher, append only agentgov_task_proposal_review to the project tool allow-list, and complete local installed-runtime preflight.",
+  "non_goals": [
+    "Do not start Codex, call the OpenAI service, send repository context externally, or claim a live replay.",
+    "Do not change AgentGov source behavior, weaken tests, rewrite existing project Codex settings, change the absolute launcher, or grant trust.",
+    "Do not install project dependencies, create another environment, modify another project, retain build artifacts in the repository, or require network access.",
+    "Do not implement a proposed task, touch NYC, create a session, commit, push, publish, release, deploy, or modify consumers."
+  ],
+  "scope": {
+    "include_paths": [
+      ".codex/config.toml",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "docs",
+      "governance/tasks",
+      "schemas",
+      "src/agentgov",
+      "templates/codex-mcp.template.toml",
+      "tests"
+    ],
+    "exclude_paths": [
+      "docs/assets/linkedin-github-repository-cover.png",
+      ".github/workflows",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0015-use-mcp-elicitation-for-codex-task-admission.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/governance-mcp-adapter.md",
+    "docs/task-proposal-admission.md"
+  ],
+  "acceptance_signals": [
+    "A wheel built from the exact working source has a recorded SHA-256 and is installed only into the pre-existing pipx AgentGov environment without network access.",
+    "The installed foreground MCP server reports Adapter 1.3.0 and advertises six tools when form elicitation is negotiated; legacy initialization retains five tools.",
+    "The project Codex configuration preserves its existing absolute executable path and every existing setting, changing only the enabled_tools list to append agentgov_task_proposal_review.",
+    "Installed protocol preflight verifies the restricted elicitation schema, vendor-neutral result contract, compatible ignored response extensions, exclusive admit, and zero-write non-admission/failure behavior.",
+    "Task, scope, repository, documentation, and diff checks pass or report only explicitly preserved pre-existing exclusions; no external replay occurs."
+  ],
+  "validation_commands": [
+    "agentgov --version",
+    "agentgov adapter governance-mcp --host-profile codex",
+    "python -m unittest discover -s tests -p test_governance_mcp.py -v",
+    "python -m agentgov check task governance/tasks/p0-install-codex-native-task-proposal-review.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-install-codex-native-task-proposal-review.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "high",
+    "items": [
+      "Replacing the isolated runtime may fail if an AgentGov MCP launcher or child still holds the pipx environment lock.",
+      "Changing more than the single tool allow-list entry could break the working absolute launcher or alter Codex trust and approval behavior.",
+      "A source/install mismatch could create false live-readiness evidence unless the installed server version, schemas, and exact wheel hash are checked independently.",
+      "An accidental Codex launch would cross the separately controlled external-transmission boundary."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": [
+      "docs/development-log/2026-08-07.md"
+    ]
+  },
+  "stop_conditions": [
+    "Stop if the exact working source cannot be built offline and hashed or if the wheel identity cannot be tied to the current source.",
+    "Stop if installation would create a new environment, touch another project, require network access, or stop an unrelated process.",
+    "Stop if the existing project config differs beyond the known absolute launcher and five-tool allow-list or cannot be changed atomically by one appended tool name.",
+    "Stop on any installed version, discovery, schema, extension-compatibility, privacy, atomicity, task, scope, repository, or diff failure before declaring preflight complete.",
+    "Stop before starting Codex, external replay, implementation, Git writes, publication, release, or deployment."
+  ],
+  "decision": {
+    "state": "admitted",
+    "decided_by": "Human product owner",
+    "rationale": "On 2026-08-07 the product owner explicitly approved exact-source build and hashing, replacement of the existing pipx runtime, the one-field project allow-list addition while preserving all other settings, and installed-only preflight without external replay."
+  }
+}

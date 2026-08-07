@@ -23,7 +23,7 @@ from agentgov.task_contract import (
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_PATH = ROOT / "schemas/development-task.schema.json"
-CURRENT_TASK = ROOT / "governance/tasks/p0-mcp-tool-selection-guidance.json"
+CURRENT_TASK = ROOT / "governance/tasks/p0-live-codex-mcp-task-proposal-review-replay.json"
 VALID_DRAFT = ROOT / "governance/fixtures/tasks/valid-supporting-draft.json"
 INVALID_ADMISSION = (
     ROOT / "governance/fixtures/tasks/invalid-admitted-pending-approval.json"
@@ -68,16 +68,16 @@ class DevelopmentTaskContractTests(unittest.TestCase):
             DECISION_STATES,
         )
 
-    def test_current_p0_task_is_valid_and_admitted(self) -> None:
+    def test_current_p0_task_is_valid_and_paused_after_host_auth_block(self) -> None:
         document = load_development_task(CURRENT_TASK)
 
         self.assertEqual(validate_development_task_document(document), [])
-        self.assertEqual(document["decision"]["state"], "admitted")
+        self.assertEqual(document["decision"]["state"], "paused")
         self.assertEqual(document["profile"], "standard")
         self.assertEqual(document["objective"]["role"], "supporting")
         self.assertEqual(
             document["task_id"],
-            "p0-mcp-tool-selection-guidance",
+            "p0-live-codex-mcp-task-proposal-review-replay",
         )
         self.assertIn(
             "docs/governance-mcp-adapter.md",
@@ -88,8 +88,8 @@ class DevelopmentTaskContractTests(unittest.TestCase):
         report = check_development_task(CURRENT_TASK, repository=ROOT)
 
         self.assertFalse(report.has_failures)
-        self.assertEqual(report.count(TaskFindingStatus.PASS), 6)
-        self.assertEqual(report.count(TaskFindingStatus.WARN), 0)
+        self.assertEqual(report.count(TaskFindingStatus.PASS), 5)
+        self.assertEqual(report.count(TaskFindingStatus.WARN), 1)
         self.assertEqual(report.count(TaskFindingStatus.FAIL), 0)
         self.assertEqual(report.count(TaskFindingStatus.ADVISORY), 1)
         alignment = next(

@@ -168,6 +168,14 @@ Implemented now:
   `prepare_task_proposal` while retaining existing review/decline actions. The
   reference host can now record one structured selection, while options that
   have no implemented Core transition remain guidance-only;
+- a host-side `ReferenceTaskProposalAdapter` now accepts one ordinary-language
+  work request, invokes a replaceable `HostTaskProposalMaterializer` once, and
+  turns only its normalized `TaskProposalDraft` into the existing strict
+  proposal and read-only admission plan;
+- proposal identity, source actor, low-risk classification, privacy boundary,
+  and denied authority are Adapter-owned. The preparation retains no raw
+  request, performs zero AgentGov model/network calls, writes nothing, and
+  leaves exact human admission to the existing path;
 - `agentgov.admission-routing-policy` 1.0 and `agentgov.admission-route` 1.0
   provide human-owned standing delegation and deterministic observe-only,
   continue-active, fast-track, human-review, and full-review results;
@@ -270,10 +278,13 @@ Implemented native MCP Adapter boundary:
 - `agentgov adapter governance-mcp --host-profile codex` runs a dependency-free
   foreground STDIO JSON-RPC server. It supports current MCP discovery/tool
   calls and the legacy initialize handshake used by existing clients;
-- five fixed tools start, update, and resolve alignment, then start and complete
-  medium-risk active-Agent self-review. Every input schema rejects unknown
-  governance-bearing fields and every tool remains advisory/read-only with no
-  open-world action;
+- five base tools start, update, and resolve alignment, then start and complete
+  medium-risk active-Agent self-review. Those base tools remain advisory and
+  read-only. A capability-gated sixth tool, `agentgov_task_proposal_review`,
+  may create only the exact reviewed task after native MCP form acceptance and
+  the explicit `admit` choice. Every tool input rejects unknown
+  governance-bearing fields; no tool grants session, code, Git, release,
+  deployment, external-write, or open-world authority;
 - the Adapter creates an explicit opaque journey handle. Later calls must carry
   that handle plus the exact pending prompt or review-request digest. State is
   in process memory only and a restarted server rejects the old handle;
@@ -299,9 +310,10 @@ Not yet implemented:
 - explicit cross-event protection resolution links;
 - a packaged Claude Code or IDE adapter; the first Codex Adapter is present in
   development source;
-- automatic host-side conversion of a natural-language request into the
-  implemented structured proposal contract; Core admission from an already
-  normalized proposal is implemented;
+- external live proof for the installed Codex `1.3.0` production task-proposal
+  materializer and native MCP form review; deterministic source behavior,
+  installed-runtime protocol preflight, the reference host-side seam, and
+  normalized Core admission are implemented;
 - production Coding Agent materializers for the implemented natural-language
   alignment Adapter boundary; only the independent offline rehearsal exists;
 - a successful live uncoached Codex session using the packaged MCP
@@ -322,7 +334,7 @@ Not yet implemented:
 
 Do not select the next slice automatically. Review the completed
 natural-language Alignment Adapter rehearsal with the human product owner.
-Remaining candidates include production Adapter-side materialization, natural
-language task-proposal materialization, a native authenticated decision
-surface, full-journey wall-clock/interrupt observation, or explicit
-protection-resolution links; their order must follow that review.
+The selected Codex production materialization/native review source slice is now
+implemented. Remaining candidates include installing and freshly replaying it,
+another host, full-journey wall-clock/interrupt observation, or explicit
+protection-resolution links; their order must follow product-owner review.

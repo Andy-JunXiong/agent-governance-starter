@@ -1,0 +1,56 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-mcp-alignment-drift-semantics-contract",
+  "title": "Align MCP drift semantics with Core",
+  "requirement": {
+    "summary": "Reproduce and correct the remaining unclassified alignment-start rejection caused by the MCP drift-semantics schema accepting a normalized value that Core rejects.",
+    "source_refs": ["docs/experiments/live-codex-mcp-rehearsal.md", "docs/governance-mcp-adapter.md", "docs/development-log/2026-08-06.md", "STATUS.md"]
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": ["docs/adr/0013-make-automatic-governance-and-dashboard-primary.md", "docs/adr/0014-route-semantic-review-through-host-providers.md"],
+    "rationale": "The post-guidance replay selected alignment correctly but a schema-valid deterministic business, requirement, or architecture drift reaches Core, which requires those judgment-bearing kinds to remain advisory; the unmapped rejection prevents safe host correction."
+  },
+  "goal": "Make the public MCP input schema match the Core advisory-semantics rule, classify the exact rejection without private values, and prove a failed start is atomic and a corrected retry succeeds.",
+  "non_goals": [
+    "Do not weaken the Core rule that business, requirement, and architecture drift remains advisory.",
+    "Do not retain or reconstruct the live raw prompt, tool payload, transcript, source content, credentials, or host paths.",
+    "Do not change unrelated CLI UX, README punctuation, NYC coverage, another host Adapter, or independent review.",
+    "Do not commit, push, publish, release, deploy, or mutate a consumer repository."
+  ],
+  "scope": {
+    "include_paths": ["DEVELOPMENT_PLAN.md", "README.md", "STATUS.md", "docs/development-plan.md", "docs/development-log/2026-08-07.md", "docs/experiments/live-codex-mcp-rehearsal.md", "docs/governance-mcp-adapter.md", "governance/tasks", "src/agentgov/governance_mcp.py", "tests/test_governance_mcp.py", "tests/test_task_contract.py"],
+    "exclude_paths": [".codex", "docs/assets/linkedin-github-repository-cover.png", ".github/workflows", "release"]
+  },
+  "architecture_refs": ["docs/adr/0013-make-automatic-governance-and-dashboard-primary.md", "docs/adr/0014-route-semantic-review-through-host-providers.md", "docs/adr/INVARIANTS.md", "docs/governance-mcp-adapter.md"],
+  "acceptance_signals": [
+    "Normalized fixtures reproduce Core rejection for deterministic business, requirement, and architecture drift without using retained live payloads.",
+    "The MCP input schema requires advisory semantics for those three judgment-bearing drift kinds while preserving deterministic semantics for scope and implementation drift.",
+    "The known rejection returns alignment_invalid_field, drift.semantics, advisory_required, and retryable true without echoing the rejected value or exception text.",
+    "Each failed start creates no journey and a corrected advisory retry succeeds in the same MCP server process.",
+    "Focused tests, the official Python 3.12 suite, task/scope/repository governance, schema parsing, compilation, and diff validation complete before a new live replay."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_governance_mcp tests.test_task_contract -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-mcp-alignment-drift-semantics-contract.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-mcp-alignment-drift-semantics-contract.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "high",
+    "items": ["A broad error mapping could misclassify an internal fault as user-correctable.", "A schema-only correction could leave direct MCP calls inconsistent unless Adapter classification is tested too.", "A rejected start could accidentally retain partial journey state unless retry is tested on the same server."]
+  },
+  "approval": {"required": true, "status": "approved", "owner": "Human product owner", "evidence_refs": ["docs/development-log/2026-08-07.md"]},
+  "stop_conditions": [
+    "Stop if diagnosis requires raw/private host evidence or unrestricted exception output.",
+    "Stop if correction would permit deterministic business, requirement, or architecture judgment in Core.",
+    "Stop if a rejected call advances state or corrected retry crosses a journey boundary.",
+    "Stop before host installation, live replay, Git write, publication, release, deployment, NYC work, or consumer mutation."
+  ],
+  "decision": {"state": "paused", "decided_by": "Human product owner", "rationale": "The drift-semantics correction completed implementation and validation. The user reviewed its five-part completion handoff and explicitly requested the next installed-runtime replay step on 2026-08-07."}
+}

@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-08-06
+Last verified: 2026-08-07
 
 ## Current state
 
@@ -43,9 +43,20 @@ Last verified: 2026-08-06
   source.
   A vendor-neutral host-interaction capability/request contract now makes
   delivery and decision-recording support explicit. A strict task-proposal and
-  human-admission fallback now converts an already normalized low-risk Coding
-  Agent interpretation into one reviewed task without raw-prompt retention or
-  session start. Risk-based routing now keeps no-write requests and verified
+  human-admission fallback converts a normalized low-risk Coding Agent
+  interpretation into one reviewed task without raw-prompt retention or
+  session start. A reference host Adapter now accepts ordinary request text,
+  invokes a replaceable semantic materializer once, adds Adapter-owned identity
+  and denied authority, and returns that existing read-only admission plan.
+  Development Codex Adapter `1.3.0` now connects that seam to the current Agent
+  and a capability-gated native MCP form; only exact native admission creates
+  the reviewed task. Local installation and installed-runtime proof pass.
+  External proposal-review proof remains unmeasured because the corrected
+  App Server bridge reached `turn/start` and then closed before a form or tool
+  result; the same standalone Codex binary subsequently reported
+  `Not logged in`. Authentication repair and another replay are separate,
+  unapproved actions.
+  Risk-based routing now keeps no-write requests and verified
   active-task iteration at zero interruptions, permits bounded low-risk
   fast-track only under clean human-owned standing policy, and reserves review
   for real ambiguity or material risk. Proactive digest-bound decision prompts
@@ -65,9 +76,9 @@ Last verified: 2026-08-06
   selection, and exposes privacy-safe interaction-burden evidence. The
   independent rehearsal uses an offline fixture materializer and is not a
   claim of general Core language understanding or a production host UI.
-  Automatic host-side task-proposal generation, production semantic
-  materializers, Claude Code/IDE adapters,
-  native authenticated recording for custom
+  Local installation and installed-runtime protocol proof for Codex proposal
+  materialization and native review now pass. External live proof, additional
+  production task-proposal hosts, Claude Code/IDE adapters, native authenticated recording for custom
   governance controls, protection resolution, and Benefit/Learning remain.
 - ADR-0014 and three strict development contracts now implement the Revision 4
   model-free boundary: Provider capability declaration, low/medium/high risk
@@ -76,8 +87,8 @@ Last verified: 2026-08-06
   qualifying independent Reviewer or returns exactly human review, explicit
   lower-assurance self-review, and Provider setup as unselected choices; it
   never silently downgrades. Four cross-host fixtures pass one vendor-neutral
-  parser. No real model, credential, network call, production materializer, or
-  host UI is included yet.
+  parser. AgentGov includes no model, credential, network call, or independent
+  Reviewer host UI; Codex proposal materialization reuses the current Agent.
 - `ReferenceAlignmentAdapter.self_review(...)` now connects a resolved
   human-alignment journey to the active-host medium-risk route and one
   host-neutral `ActiveAgentSelfReviewMaterializer` callback. It supplies only
@@ -124,11 +135,146 @@ Last verified: 2026-08-06
   and fail-closed behavior explicit in both `AGENTS.md` and MCP metadata.
 - The post-guidance uncoached replay automatically selected alignment, left the
   final direction to the human, and stopped without repository mutation when
-  alignment start returned an unclassified non-retryable Core rejection. This
-  confirms the selection-guidance correction while leaving the product journey
-  failed before human choice and self-review. The next bounded requirement is
-  normalized-fixture diagnosis of the remaining Adapter/Core mismatch; NYC,
-  another host, publication, release, and deployment remain gated.
+  alignment start returned an unclassified non-retryable Core rejection. The
+  admitted normalized-fixture diagnosis found the exact mismatch: the MCP
+  schema allowed deterministic business, requirement, and architecture drift,
+  while Core requires those judgment-bearing kinds to remain advisory. The
+  development Adapter now advertises that rule and safely classifies violations
+  as retryable without weakening Core or echoing rejected values. A fresh
+  installed-runtime replay remains required; NYC, another host, publication,
+  release, and deployment remain gated.
+- The drift-semantics correction passed 29 focused tests. The official Python
+  3.12 suite passed 728 tests with two platform-limited skips. The admitted task
+  reported `PASS=6 WARN=0 FAIL=0 ADVISORY=1`; repository governance reported
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; all 56 schemas parsed, source/tests
+  compiled, and `git diff --check` passed. Combined working-copy scope reported
+  `PASS=11 FAIL=2 ADVISORY=1`; both failures are preserved excluded files from
+  prior work, not changes made by this requirement.
+- The exact corrected source was locally built and hash-recorded, then installed
+  into the existing isolated Python 3.12.10 pipx runtime after stopping only two
+  read-only-identified AgentGov governance-MCP child-process chains. Installed
+  preflight reports Adapter `1.2.1`, five tools, the advisory-only drift schema,
+  retryable `advisory_required`, and a successful corrected retry into
+  `exploring`. A fresh Codex session remains required for measured end-to-end
+  replay; this active session did not claim that evidence.
+- The required fresh Adapter `1.2.1` replay selected alignment without named-tool
+  coaching, corrected one retryable drift error, and then stopped fail-closed
+  on a second unclassified Core rejection without changing the repository. The
+  normalized diagnosis found a second cross-field mismatch: MCP allowed a
+  no-unknown context without Core's required two stable options and non-null
+  recommendation. Development Adapter `1.2.2` now advertises that condition and
+  returns precise retryable `stable_options_required` or
+  `recommendation_required` diagnostics. Static validation is complete; no
+  new installed-runtime or successful end-to-end replay claim has been made.
+- The stable-options correction passed 30 focused tests and the official Python
+  3.12 full suite passed 729 tests with two platform-limited skips. The task
+  reported `PASS=6 WARN=0 FAIL=0 ADVISORY=1`; repository governance reported
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; all 56 schemas parsed, source/tests
+  compiled, and `git diff --check` passed. Combined scope reported
+  `PASS=14 FAIL=2 ADVISORY=1`, with only the two previously excluded host-local
+  files failing. Adapter `1.2.2` is validated in development source but is not
+  installed; another replay is not yet admitted.
+- The human admitted the installed replay preparation. Exact current source was
+  built with SHA-256
+  `329790D30064103669BA231302FEF87F92C190D5401E9C4817815736825BACB8` and
+  installed into the existing Python 3.12.10 pipx environment after stopping
+  only two read-only-identified AgentGov governance-MCP child-process chains.
+  Installed Adapter `1.2.2` reports five tools, both retryable stable-options
+  diagnostics, and a successful fully corrected transition to
+  `ready_for_decision`. Only a newly created uncoached Codex session can supply
+  the remaining end-to-end replay evidence.
+- That fresh Adapter `1.2.2` session still reached an unclassified Core start
+  rejection and stopped fail-closed without repository mutation. The reviewed
+  follow-up replaces serial symptom repair with a complete Alignment Start
+  parity audit. Development Adapter `1.2.3` validates all ten model-authored
+  input families before Core, with 30 normalized repairable fixtures, and
+  reserves `alignment_rejected_internal` / `unclassified` only for the eleventh
+  generated-state family. The denominator and applicability are documented;
+  no governance coverage percentage or semantic-correctness claim is made.
+- Adapter `1.2.3` closeout passed 20 focused MCP tests, 13 current-task tests,
+  and the official 732-test Python 3.12 suite with two platform-limited skips.
+  The admitted task reported `PASS=6 WARN=0 FAIL=0 ADVISORY=1`; repository
+  governance reported `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; all 56 schemas
+  parsed, source/tests compiled, and `git diff --check` passed. Scope reported
+  `PASS=16 FAIL=2 ADVISORY=1`, limited to the two explicitly excluded local
+  files. A distinct advisory review found no new privacy, authority,
+  atomicity, schema-loosening, or compatibility issue. Development Adapter
+  `1.2.3` was then built offline with SHA-256
+  `F3F2B45B21636556FFD034C9C91370FEB790D794EDE2B2488568A8B1ADE9CECA` and
+  installed into the existing Python 3.12.10 pipx environment. Installed
+  discovery, five-tool inventory, representative retry, corrected
+  `ready_for_decision`, and private non-retryable internal fallback all passed.
+  A sandboxed Codex attempt exited before discovery because it could not reach
+  the external service and is not counted as a replay. The human then approved
+  one external transmission. That fresh session exited successfully and its
+  final output had the shape of a human-selection boundary, but the first
+  normalizer also scanned historical repository text and produced
+  contradictory state markers. Because raw events were intentionally not
+  retained, the run is `INVALID_MEASUREMENT`, not success evidence. A second
+  external transmission was separately approved and measured only completed
+  MCP tool-call events. The fresh ephemeral read-only session completed two
+  `agentgov_alignment_start` calls: one retryable input rejection, followed by
+  `ready_for_decision` and a final human-selection boundary. It produced no
+  internal/unclassified rejection or operational error and changed no
+  repository file. Alignment update, resolve, implementation, and self-review
+  were intentionally not reached, so the result proves Start recovery rather
+  than the complete post-selection journey.
+- Adapter `1.2.3` replay closeout passed 20 focused MCP tests and 13 current-task
+  tests. The task reported `PASS=6 WARN=0 FAIL=0 ADVISORY=1`; repository
+  governance reported `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; scope reported
+  `PASS=17 FAIL=2 ADVISORY=1`, limited to the two explicitly excluded local
+  files; `git diff --check` passed. A distinct advisory review found no raw
+  replay retention, repository mutation, authority expansion, or overclaim
+  beyond the measured Start/human-selection boundary.
+- The human-selected next slice is implemented in development Adapter `1.2.4`.
+  Alignment Resolve, current-Agent self-review start, and self-review completion
+  now validate repairable normalized bindings, allowed evidence, and advisory
+  observations before state mutation. Failures return privacy-safe field/rule
+  diagnostics and corrected retries can continue in the same foreground
+  journey. At that checkpoint this closed deterministic post-selection
+  contract parity only, while the fresh live implementation/self-review
+  journey remained open; the later live-replay bullet below supersedes that
+  open-gate status.
+  Final validation passed 22 focused MCP tests, 13 current-task tests, and all
+  734 Python 3.12 tests with two platform-limited skips. A distinct advisory
+  review found and closed one schema/runtime cardinality mismatch; no remaining
+  privacy, authority, atomicity, compatibility, or overclaim issue was found.
+  That conclusion is superseded by a later independent installation-gate
+  audit. The audit reproduced five remaining Adapter/Core gaps for reason
+  identifiers, evidence length, observation list bounds, evidence allow-list
+  membership, and duplicate observations. Development source now validates all
+  five before Core state mutation and exposes the same limits in the MCP
+  schema. Renewed validation passed 22 focused MCP tests, 13 current-task tests,
+  and all 734 Python 3.12 tests with two platform-limited skips. Independent
+  probes confirmed precise retryable diagnostics, atomic failure, and corrected
+  same-process completion. The exact wheel with SHA-256
+  `09CC8C54A8613E1E3100F60850EBE7BD5DF53668CCD37FBAEBBAF2C8A73BF362`
+  is now installed in the existing Python 3.12.10 pipx environment. Installed
+  discovery reports Adapter `1.2.4`, five tools, the exact published limits,
+  five precise retryable failures, atomic state, and corrected completion with
+  zero AgentGov model or network calls. At the installation checkpoint, live
+  external replay remained a separate human-controlled action; the next bullet
+  records its later explicit approval and completion.
+- The human product owner designated the current ephemeral Codex session as the
+  single approved live post-selection replay and selected the recommended
+  direction. That same session used the native MCP tools to reach the human
+  decision boundary and bind the exact selection through Alignment Resolve
+  without another session, Agent, host, or authority expansion. Focused MCP and
+  task-contract validation passed 22 and 13 tests; the unchanged full Python
+  3.12 suite passed all 734 tests with two platform-limited skips. The distinct
+  current-Agent MCP self-review completed with three bounded advisory
+  observations, zero AgentGov model/network calls, and no Adapter context
+  retention. The measured current-host post-selection slice is complete; no
+  automatic proposal-generation, cross-host, consumer, release, or deployment
+  claim is inferred.
+  The admitted task and repository checks have no deterministic failure and
+  `git diff --check` passes. During the replay, combined scope reported four
+  explicit failures because two transient `.tmp-replay` bridge files were
+  still present beside the pre-existing Codex config and user-owned cover
+  image. The outer host deleted the bridge after extracting only the normalized
+  result; independent final scope revalidation reports
+  `PASS=19 FAIL=2 ADVISORY=1`, with only those two pre-existing excluded files
+  remaining and no exception inferred.
 - Native MCP Adapter and affected governance regression passed 103 focused
   tests and the latest full Python 3.12 suite passed 724 tests with two
   platform-limited skips. The
@@ -237,6 +383,41 @@ Last verified: 2026-08-06
 - `agentgov.task-admission-plan` 1.0 exposes the complete normalized proposal,
   stable proposal/task digests, exact final compact task, sole target, and a
   fully denied preview authority boundary.
+- `ReferenceTaskProposalAdapter` now supplies the host-owned conversion seam:
+  one ordinary-language request becomes a strict proposal and the existing
+  read-only admission preview through one replaceable materializer invocation.
+  The Adapter owns proposal identity, privacy, low-risk, and denied-authority
+  fields; retains no raw request; makes zero AgentGov model/network calls; and
+  cannot admit the task or write the repository. Offline fixtures prove the
+  boundary, not production semantic quality or native host integration.
+- Development Adapter `1.3.0` now provides the first Codex production-host
+  materializer and native proposal review path. The current Codex Agent sends
+  only normalized low-risk task fields to `agentgov_task_proposal_review`;
+  AgentGov derives the strict proposal and exact admission plan, and Codex
+  collects one bound decision through MCP form elicitation. Only exact native
+  admission creates the planned task. All other decisions, interruption,
+  malformed responses, stale plans, target races, and missing elicitation
+  capability remain zero-write. Legacy clients keep the original five tools.
+  The exact source is now installed in the existing local pipx environment.
+  Installed discovery reports Adapter `1.3.0` and six tools with form
+  capability, while clients without it retain five. Installed protocol,
+  schema, extension-privacy, exclusive-admit, non-admission, malformed-response,
+  and target-race preflight passed. No valid external Codex replay has completed.
+- The first approved event-level Adapter `1.3.0` proposal-review attempt was
+  classified `INVALID_HOST_BRIDGE`: a Windows PowerShell 5.1 stderr callback
+  stalled the App Server bridge before any observable thread, native form, tool
+  result, or terminal event. The exact process was stopped, no raw material or
+  repository write was retained, and a local no-thread probe confirmed the
+  corrected null-stream drain. A separately authorized retry then exposed a
+  second host boundary: local initialization and `thread/start` passed after
+  using the runtime's verified `read-only` value, but the real request reached
+  `starting_turn` and App Server closed before returning a turn, form, tool
+  result, or error code. This result is `INVALID_APP_SERVER_EOF`, not an Adapter
+  pass or failure. No new task or other repository write occurred; live
+  proposal-review evidence remains open. Read-only follow-up found the
+  standalone Codex CLI `Not logged in` and no inherited Codex/OpenAI credential
+  environment variable, which strongly accounts for the turn-boundary EOF.
+  Authentication repair and another replay are not admitted.
 - `agentgov propose task ... --dry-run` is read-only. Its recovery fallback
   requires exact `ADMIT` from a real interactive terminal, rechecks drift and target races,
   and exclusively creates the reviewed task file. It does not create a
@@ -252,8 +433,10 @@ Last verified: 2026-08-06
   real host callback installed in a Coding Agent surface; the portable
   active-Agent materializer seam no longer needs design work.
 - Interactive-terminal presence blocks ordinary headless self-admission but is
-  an operator attestation, not cryptographic proof of human identity. A trusted
-  native host decision callback remains required for authenticated attribution.
+  an operator attestation, not cryptographic proof of human identity. Codex MCP
+  form elicitation now supplies a native bounded decision callback, but its
+  human attribution is only as strong as the host session and is not claimed as
+  cryptographic identity proof.
 - Focused active-Agent self-review, Alignment Adapter/transport,
   semantic-review, clarification, Skill, task, documentation, and portfolio
   regression passed 110 tests. The complete Python 3.11 suite passed 700 tests
@@ -610,9 +793,11 @@ Future-0.3 development-governance integration and pre-release evidence:
   implemented. Risk-based routing, clean standing low-risk delegation, active
   task reuse, and a machine-checkable friction budget are implemented in
   development source. Proactive digest-bound prompts/results and the reference
-  one-number human-review path are also implemented. Remaining work is
-  automatic host-side proposal generation, a native authenticated custom-decision
-  recording surface, explicit protection
+  one-number human-review path and the reference host-side proposal generation
+  seam are also implemented. Codex development Adapter `1.3.0` now adds the
+  production proposal materializer/native form review path, now installed and
+  locally preflighted. Remaining work includes its external live proof, native
+  authenticated recording for other custom decisions, explicit protection
   resolution links, Benefit/Learning views, an independent automatic
   rehearsal, and then a fresh uncoached human pilot. Additional host adapters
   remain optional portability work rather than a prerequisite for that gate.

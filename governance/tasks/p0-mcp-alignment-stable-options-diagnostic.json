@@ -1,0 +1,41 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-mcp-alignment-stable-options-diagnostic",
+  "title": "Classify MCP stable-options alignment rejection",
+  "requirement": {
+    "summary": "Diagnose and correct the second fresh-replay alignment rejection where a drift correction advanced to an unclassified Core rule for a normalized context with no open unknowns.",
+    "source_refs": ["docs/development-log/2026-08-07.md", "docs/experiments/live-codex-mcp-rehearsal.md", "docs/governance-mcp-adapter.md", "STATUS.md"]
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": ["docs/adr/0013-make-automatic-governance-and-dashboard-primary.md", "docs/adr/0014-route-semantic-review-through-host-providers.md"],
+    "rationale": "Core correctly requires a no-unknown context to carry at least two stable options and one recommendation, but the MCP schema does not disclose that cross-field requirement and the Adapter cannot tell the host which missing part to repair."
+  },
+  "goal": "Expose the no-unknown stable-options rule in the MCP schema, return precise privacy-safe retry diagnostics for insufficient candidates and missing recommendation, and prove rejected starts remain atomic.",
+  "non_goals": [
+    "Do not read, retain, or reconstruct the fresh session's raw tool payload, conversation, transcript, or source content.",
+    "Do not weaken Core readiness, option-count, recommendation, privacy, or human-choice rules.",
+    "Do not change product direction, implement the replay's unselected improvement, add another host, or add a second Agent.",
+    "Do not install another runtime, repeat the live replay, commit, push, publish, release, deploy, or start NYC work in this task."
+  ],
+  "scope": {
+    "include_paths": ["DEVELOPMENT_PLAN.md", "README.md", "STATUS.md", "docs/development-plan.md", "docs/development-log/2026-08-07.md", "docs/experiments/live-codex-mcp-rehearsal.md", "docs/governance-mcp-adapter.md", "governance/tasks", "src/agentgov/governance_mcp.py", "tests/test_governance_mcp.py", "tests/test_task_contract.py"],
+    "exclude_paths": [".codex/config.toml", "docs/assets/linkedin-github-repository-cover.png", ".github/workflows", "release"]
+  },
+  "architecture_refs": ["docs/adr/0013-make-automatic-governance-and-dashboard-primary.md", "docs/adr/0014-route-semantic-review-through-host-providers.md", "docs/adr/INVARIANTS.md", "docs/governance-mcp-adapter.md"],
+  "acceptance_signals": [
+    "Normalized fixtures reproduce the Core stable-options rejection without retained live payloads.",
+    "The alignment-start input schema declares that unknowns=[] requires at least two candidate resolutions and a non-null recommendation.",
+    "Direct calls with too few candidates return candidate_resolutions / stable_options_required / retryable true; calls with options but no recommendation return recommended_resolution_id / recommendation_required / retryable true.",
+    "Neither diagnostic echoes rejected values or exception text; a failed start creates no journey and a corrected retry succeeds in the same server process.",
+    "Focused/full tests, task/scope/repository governance, schema parsing, compilation, and diff validation pass before another installation or replay is proposed."
+  ],
+  "validation_commands": ["python -m unittest tests.test_governance_mcp tests.test_task_contract -v", "python -m unittest discover -s tests -v", "python -m agentgov check task governance/tasks/p0-mcp-alignment-stable-options-diagnostic.json --repository .", "python -m agentgov check scope governance/tasks/p0-mcp-alignment-stable-options-diagnostic.json --repository .", "python -m agentgov check repository .", "git diff --check"],
+  "owner": "Human product owner",
+  "risk": {"level": "high", "items": ["A composite diagnostic could point to the wrong field unless the Adapter checks candidate count and recommendation separately.", "Schema conditions could accidentally constrain contexts that still have open questions.", "A failed start could retain partial state unless same-process retry is tested."]},
+  "approval": {"required": true, "status": "approved", "owner": "Human product owner", "evidence_refs": ["docs/development-log/2026-08-07.md"]},
+  "stop_conditions": ["Stop if diagnosis needs raw/private replay evidence or unrestricted exception output.", "Stop if a context with unresolved material unknowns can become ready or a no-unknown context can omit stable human options.", "Stop if a rejected call advances state.", "Stop before runtime installation, live replay, Git write, publication, release, deployment, NYC work, or consumer mutation."],
+  "decision": {"state": "paused", "decided_by": "Human product owner", "rationale": "The stable-options diagnosis and Adapter 1.2.2 correction completed implementation and validation. The user reviewed the five-part handoff and explicitly requested the next installation and replay preparation step on 2026-08-07."}
+}

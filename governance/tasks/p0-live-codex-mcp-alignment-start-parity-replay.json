@@ -1,0 +1,30 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-live-codex-mcp-alignment-start-parity-replay",
+  "title": "Replay Codex with complete Alignment Start parity",
+  "requirement": {
+    "summary": "Build and install the exact validated Adapter 1.2.3 development source, preflight the installed Alignment Start contract, and run one fresh uncoached Codex replay.",
+    "source_refs": ["docs/development-log/2026-08-07.md", "docs/experiments/live-codex-mcp-rehearsal.md", "docs/governance-mcp-adapter.md", "STATUS.md"]
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": ["docs/adr/0013-make-automatic-governance-and-dashboard-primary.md", "docs/adr/0014-route-semantic-review-through-host-providers.md"],
+    "rationale": "Development Adapter 1.2.3 now validates the complete normalized Start boundary, but installed-runtime and fresh-host evidence are still required before claiming that automatic alignment proceeds beyond start."
+  },
+  "goal": "Build and hash the exact current source, update only the existing pipx AgentGov runtime, verify Adapter 1.2.3 discovery and representative retry/internal boundaries, then run one newly created Codex session with an ordinary uncoached multi-direction request and record only normalized outcomes.",
+  "non_goals": ["Do not present the local 0.3.0rc1-identified wheel as the immutable published v0.3.0rc1 artifact.", "Do not coach the fresh Agent with AgentGov, MCP, alignment, self-review, protocol JSON, or tool names.", "Do not retain or reconstruct raw replay prompts, tool payloads, transcripts, credentials, source content, host paths, or model-private reasoning.", "Do not add another host, second Agent, NYC work, unrelated product changes, commit, push, publish, release, deploy, or mutate a consumer repository."],
+  "scope": {
+    "include_paths": ["DEVELOPMENT_PLAN.md", "README.md", "STATUS.md", "docs/development-plan.md", "docs/development-log/2026-08-07.md", "docs/experiments/live-codex-mcp-rehearsal.md", "docs/governance-mcp-adapter.md", "governance/tasks", "src/agentgov/governance_mcp.py", "tests/test_governance_mcp.py", "tests/test_task_contract.py"],
+    "exclude_paths": [".codex/config.toml", "docs/assets/linkedin-github-repository-cover.png", ".github/workflows", "release"]
+  },
+  "architecture_refs": ["docs/adr/0013-make-automatic-governance-and-dashboard-primary.md", "docs/adr/0014-route-semantic-review-through-host-providers.md", "docs/adr/INVARIANTS.md", "docs/governance-mcp-adapter.md"],
+  "acceptance_signals": ["The exact current source is locally built with official Python 3.12, hash-recorded, and installed only into the existing isolated pipx AgentGov environment.", "Installed discovery reports Adapter 1.2.3 and exactly five tools; the Start schema retains the documented parity constraints.", "One installed foreground process demonstrates a representative retryable input rejection, a successful corrected transition, and the private non-retryable internal fallback without partial journey state.", "A newly created Codex session receives one ordinary multi-direction request without named-tool coaching and either reaches the human direction-selection boundary or stops fail-closed with an honest normalized failed result.", "No raw replay material, publication, release, deployment, NYC work, consumer mutation, second Agent, or other host is introduced."],
+  "validation_commands": ["python -m unittest discover -s tests -p test_governance_mcp.py -v", "python -m unittest discover -s tests -p test_task_contract.py -v", "python -m agentgov check task governance/tasks/p0-live-codex-mcp-alignment-start-parity-replay.json --repository .", "python -m agentgov check scope governance/tasks/p0-live-codex-mcp-alignment-start-parity-replay.json --repository .", "python -m agentgov check repository .", "git diff --check"],
+  "owner": "Human product owner",
+  "risk": {"level": "high", "items": ["The shared pipx runtime may be locked by existing AgentGov MCP child processes.", "The local package identity remains 0.3.0rc1 and must not be confused with the immutable published artifact.", "A non-fresh or coached session would invalidate product evidence, while raw output retention would violate the privacy boundary."]},
+  "approval": {"required": true, "status": "approved", "owner": "Human product owner", "evidence_refs": ["docs/development-log/2026-08-07.md"]},
+  "stop_conditions": ["Stop if installation would touch another project environment, need network access, or mutate a consumer.", "Stop unless every locking process is read-only identified as an AgentGov governance-MCP child process before termination.", "Stop if the replay cannot be run as a new uncoached Codex process or if normalized outcomes cannot be separated from raw material.", "Stop on any required governance failure before implementation and record the journey honestly."],
+  "decision": {"state": "paused", "decided_by": "Human product owner", "rationale": "The event-scoped replay reached the human-selection boundary and closed this requirement. On 2026-08-07 the product owner selected the separate deterministic post-selection contract slice."}
+}

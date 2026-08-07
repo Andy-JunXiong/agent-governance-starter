@@ -99,6 +99,7 @@ from agentgov.codex_hooks import (
     render_codex_hook_output,
     render_codex_hooks_plan_json,
     request_codex_hooks_confirmation,
+    _git_root,
 )
 from agentgov.codex_mcp import (
     CODEX_MCP_ADAPTER_ID,
@@ -873,6 +874,7 @@ def _run_governance_mcp_adapter(*, host_profile: str) -> int:
             GovernanceMcpAdapter(
                 adapter_id=CODEX_MCP_ADAPTER_ID,
                 provider=provider,
+                repository=_git_root(Path.cwd()),
             )
         )
         return server.serve(sys.stdin, sys.stdout)

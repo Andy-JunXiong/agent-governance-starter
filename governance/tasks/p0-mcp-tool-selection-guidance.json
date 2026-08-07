@@ -56,5 +56,5 @@
     "Stop if instructions let the Agent invent or select the human-owned final direction.",
     "Stop before Git writes, publication, release, deployment, NYC work, consumer mutation, a second Agent, or independent review."
   ],
-  "decision": {"state": "admitted", "decided_by": "Human product owner", "rationale": "After reviewing the failed post-correction replay, the user explicitly authorized the proposed tool-selection guidance correction on 2026-08-06."}
+  "decision": {"state": "paused", "decided_by": "Human product owner", "rationale": "The tool-selection correction completed implementation, validation, installation preflight, and a fresh replay on 2026-08-06. The user reviewed the result and explicitly requested the bounded remaining Adapter/Core mismatch diagnosis on 2026-08-07."}
 }

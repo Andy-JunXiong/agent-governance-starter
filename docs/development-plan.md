@@ -1,6 +1,6 @@
 # AgentGov remaining development plan
 
-Updated 2026-08-06. This page separates implemented development-source behavior
+Updated 2026-08-07. This page separates implemented development-source behavior
 from published and consumer-adopted behavior.
 
 ## Current checkpoint
@@ -109,14 +109,59 @@ correction is implemented: MCP question meaning no longer carries a
 model-authored protocol ID, known rejection returns bounded structured
 diagnostics, and failed start/update calls remain atomic. Complete validation
 passed. The post-correction replay still failed because the Agent bypassed the
-tools, selected the product direction itself, and omitted self-review. The only
-admitted task now adds explicit host/tool selection guidance and synchronization
-tests before another replay. NYC remains gated on replay success.
+tools, selected the product direction itself, and omitted self-review. The
+tool-selection guidance task is complete and paused after its replay.
 The post-guidance replay proved automatic selection, human direction ownership,
 and fail-closed stopping, but alignment start still returned an unclassified
-non-retryable Core rejection. The next session should diagnose that remaining
-normalized Adapter/Core mismatch before another replay. NYC remains gated on a
+non-retryable Core rejection. The admitted bounded correction diagnoses that
+remaining normalized Adapter/Core mismatch before another replay. NYC remains gated on a
 replay that completes alignment and current-Agent self-review.
+The corrected local runtime is now installed and has passed protocol, schema,
+and same-process retry preflight. The sole remaining step is the fresh uncoached
+Codex replay; this active preparation session is ineligible to supply it. That
+fresh replay corrected the drift error but exposed the next unclassified
+no-unknown/stable-options rule and stopped without mutation. Development source
+now makes the two-option and recommendation requirements explicit; validation
+and a separately reviewed reinstall/replay remain next.
+Adapter `1.2.2` is now installed and has passed the exact five-tool,
+conditional-schema, two-diagnostic, and corrected-ready preflight. Only a newly
+created uncoached Codex session was eligible for the next measured replay. It
+still stopped on an unclassified start rejection without mutation. Development
+Adapter `1.2.3` now replaces serial fixes with a complete eleven-family Start
+parity audit. Full validation and installed Python 3.12.10 pipx preflight now
+pass. One approved external fresh session completed, but its normalized result
+was contaminated by historical repository text and is not accepted as MCP-call
+evidence. A separately approved replay measured only completed MCP tool-call
+events and passed: two Alignment Start calls advanced from one retryable input
+correction to `ready_for_decision`, then stopped at the human-selection
+boundary. The product owner then selected the smallest deterministic
+post-selection slice. Development Adapter `1.2.4` now gives Resolve and
+current-Agent self-review repairable field/rule diagnostics before state
+mutation, with corrected same-process retry. At that checkpoint live
+post-selection implementation and self-review remained unproven and were not
+implied by fixture evidence; the later current-session continuation below
+supersedes that open-gate status for this host only.
+An independent installation-gate audit then found and corrected five remaining
+Adapter/Core boundary mismatches: reason identifiers, evidence length,
+observation list bounds, evidence allow-list membership, and duplicate
+observations. Renewed focused, full-suite, governance, and atomic-retry
+validation passes. The exact current wheel is installed in the existing Python
+3.12.10 pipx environment and installed-runtime protocol/schema/atomic-retry
+preflight passes. At that installation checkpoint external replay remained a
+separate human-controlled action; the following paragraph records its later
+explicit approval and completion.
+
+The human product owner then confirmed that the already-running ephemeral Codex
+session was the one approved replay and prohibited another session or Agent.
+Within that same session the native journey reached the human decision boundary,
+recorded the selected `return_to_center` direction through Alignment Resolve,
+and retained the denied authority boundary. Focused MCP/task-contract validation
+and the complete 734-test Python 3.12 suite pass. The distinct current-Agent MCP
+self-review also completed with bounded advisory observations, zero AgentGov
+model/network calls, and no Adapter context retention. This live post-selection
+slice is complete. The later human-selected reference proposal-generation seam
+is now implemented separately; another host, NYC, release, production proposal
+inference, and the next requirement remain outside it.
 
 ADR-0013 now records the next product boundary: the implemented manual
 `next/start/check/finish/Monitor/handoff` sequence is a set of internal and
@@ -143,10 +188,30 @@ first packaged Codex lifecycle-hook Adapter. Codex preserves its native tool
 permission prompt but custom governance decisions remain context-only and
 unrecorded. Development source now also implements strict structured Coding
 Agent proposal and exact human task-admission contracts without raw-prompt
-retention or session start. Strict proactive prompt/result contracts now let a
+retention or session start. A reference host Adapter now invokes one replaceable
+semantic materializer for an ordinary request and produces that same strict
+read-only admission plan. Development Codex Adapter `1.3.0` now binds the
+current Agent as production materializer and MCP form elicitation as the native
+exact-plan review surface. The exact source is now installed and locally
+preflighted. Two separately authorized external attempts did not measure the
+Adapter path: the corrected bridge reached `turn/start`, but the standalone
+Codex App Server closed before returning a form or tool result. That binary
+then reported `Not logged in`, so host authentication must be separately
+reviewed and repaired before another independently approved replay.
+Strict proactive prompt/result contracts now let a
 capable host present one recommended single-select decision and carry only its
-exact human-selected transition. Automatic host-side proposal generation, a
-native authenticated decision surface, protection resolution, and Benefit/Learning remain.
+exact human-selected transition. Additional-host materializers, stronger
+authenticated custom decision controls, protection resolution, and
+Benefit/Learning remain.
+
+The next-session gate is therefore operational rather than a new product
+feature: first restore and verify standalone Codex authentication without
+sending a task, then request approval for one fresh event-level replay. If the
+native proposal form succeeds, the human reviews the exact plan; implementation
+still requires a separate product-owner decision. Only after that evidence is
+reviewed should the next requirement be selected. Another host, the independent
+non-NYC rehearsal, NYC adoption, stable promotion, release, and deployment
+remain later gates.
 Development source now also separates multi-turn natural-language
 clarification from the final governance decision: it preserves the current
 center, records business/requirement/architecture drift as advisory, retains
@@ -241,9 +306,11 @@ the intended final UX. The canonical requirements are in
 6. Preserve the implemented vendor-neutral structured task-proposal and
    human-admission fallback. A Coding Agent proposal grants no authority;
    one proactive numeric approval can create only the exact reviewed low-risk
-   task; exact interactive `ADMIT` remains a fallback. Add
-   automatic natural-language-to-proposal generation only through a host
-   Adapter that excludes raw conversation data from Core.
+   task; exact interactive `ADMIT` remains a fallback. The reference
+   natural-language-to-proposal Adapter seam is implemented and excludes raw
+   conversation data from Core. Codex development source now connects the
+   current Agent and native MCP form; install/live proof and other hosts remain
+   open.
 7. Preserve the implemented risk-based router and friction budget. No-write,
    exact active-task continuation, and clean-policy fast-track each require
    zero interruptions; material work must never enter fast-track. Treat Git

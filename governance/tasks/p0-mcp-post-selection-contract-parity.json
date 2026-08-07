@@ -1,0 +1,30 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-mcp-post-selection-contract-parity",
+  "title": "Harden native MCP post-selection contracts",
+  "requirement": {
+    "summary": "Make Alignment Resolve and current-Agent self-review reject repairable normalized input with precise privacy-safe diagnostics while preserving atomic retry.",
+    "source_refs": ["STATUS.md", "docs/development-plan.md", "docs/governance-mcp-adapter.md"]
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": ["docs/adr/0013-make-automatic-governance-and-dashboard-primary.md", "docs/adr/0014-route-semantic-review-through-host-providers.md"],
+    "rationale": "The installed Adapter reaches the human selection boundary, but the native post-selection input boundary has only happy-path fixture evidence."
+  },
+  "goal": "Add strict Adapter-owned validation and fixture coverage for Resolve, self-review start, and self-review completion so repairable failures are classified and atomic before another live replay.",
+  "non_goals": ["Do not run another external replay.", "Do not add a host, model, credential, network call, consumer change, release, publication, or deployment.", "Do not claim semantic correctness or complete live-journey evidence."],
+  "scope": {
+    "include_paths": ["DEVELOPMENT_PLAN.md", "README.md", "STATUS.md", "docs/development-plan.md", "docs/development-log/2026-08-07.md", "docs/experiments/live-codex-mcp-rehearsal.md", "docs/governance-mcp-adapter.md", "governance/tasks", "src/agentgov/governance_mcp.py", "tests/test_governance_mcp.py", "tests/test_task_contract.py"],
+    "exclude_paths": [".codex/config.toml", "docs/assets/linkedin-github-repository-cover.png", ".github/workflows", "release"]
+  },
+  "architecture_refs": ["docs/adr/0013-make-automatic-governance-and-dashboard-primary.md", "docs/adr/0014-route-semantic-review-through-host-providers.md", "docs/adr/INVARIANTS.md", "docs/governance-mcp-adapter.md"],
+  "acceptance_signals": ["Repairable Resolve and self-review input failures return bounded field, rule, stage, and retryability metadata without rejected values.", "Rejected post-selection calls do not advance alignment or self-review state and a corrected retry succeeds in the same process.", "Codex and Claude fixtures retain the same resolved advisory self-review path with zero AgentGov model or network calls.", "Documentation distinguishes deterministic contract parity from unproven live host behavior."],
+  "validation_commands": ["python -m unittest discover -s tests -p test_governance_mcp.py -v", "python -m unittest discover -s tests -p test_task_contract.py -v", "python -m agentgov check task governance/tasks/p0-mcp-post-selection-contract-parity.json --repository .", "python -m agentgov check scope governance/tasks/p0-mcp-post-selection-contract-parity.json --repository .", "python -m agentgov check repository .", "git diff --check"],
+  "owner": "Human product owner",
+  "risk": {"level": "medium", "items": ["Over-broad diagnostics could expose normalized content or misclassify internal failures.", "Validation after state mutation could break same-process retry."]},
+  "approval": {"required": true, "status": "approved", "owner": "Human product owner", "evidence_refs": ["docs/development-log/2026-08-07.md"]},
+  "stop_conditions": ["Stop if the change requires weakening Core, retaining raw conversation or source content, or expanding project authority.", "Stop if a rejected call advances journey state or internal exception text would be returned."],
+  "decision": {"state": "admitted", "decided_by": "Human product owner", "rationale": "The product owner selected the recommended post-selection contract slice on 2026-08-07."}
+}

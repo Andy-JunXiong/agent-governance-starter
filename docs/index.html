@@ -996,16 +996,21 @@
               stream now carries a strict start/request/draft/completed
               exchange for this self-review, with no extra user confirmation,
               user-authored JSON, or second model configuration.
-              A foreground STDIO MCP Adapter now exposes that alignment and
-              self-review journey as five model-controlled tools with explicit
-              handles. Question IDs remain Adapter-owned, and known rejected
-              normalized input returns bounded field/rule/retry diagnostics
-              without advancing state. A create-missing-only Codex project
-              config is packaged; the first live run exposed this now-corrected
-              boundary, while a successful replay and another MCP-host package
-              remain open.
-              A native authenticated
-              decision surface and additional host adapters remain;
+              A foreground STDIO MCP Adapter exposes five base alignment and
+              self-review tools with explicit handles. Development Adapter
+              <code>1.3.0</code> adds the capability-gated
+              <code>agentgov_task_proposal_review</code> tool: the current Codex Agent
+              materializes normalized low-risk fields, MCP form elicitation
+              presents the exact plan, and only accept plus `admit` creates the
+              reviewed task. Question IDs remain Adapter-owned, and known
+              rejected normalized input returns bounded field/rule/retry
+              diagnostics without advancing state. A create-missing-only Codex
+              project config is packaged; Adapter <code>1.2.4</code> completed the current
+              host post-selection journey. The exact development Adapter
+              <code>1.3.0</code> source is now installed and locally preflighted;
+              a fresh external replay, stronger authenticated custom controls,
+              and another MCP-host package remain open.
+              Additional host adapters remain;
               stable 0.2.1 and v0.3.0rc1 are unchanged.
               See the <a href="{{ '/human-decision-prompts.html' | relative_url }}">minimal-input decision contract</a>.
               See <a href="{{ '/clarification-dialogue.html' | relative_url }}">governed clarification and drift re-centering</a>.

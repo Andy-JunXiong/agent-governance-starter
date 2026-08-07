@@ -258,8 +258,11 @@ human judgment, and unsupported causal claims into false precision.
   materializer, constructs the strict Core records, and records one final host
   selection. Its privacy-safe offline rehearsal reports zero user-authored
   JSON or internal commands; it does not add semantic inference to Core.
-- Natural-language task drafting, production host semantic materializers, a
-  native authenticated custom-decision surface,
+- Natural-language task drafting now has a Codex development-source production
+  materializer and native MCP form decision surface. Exact local installation
+  and installed-runtime protocol preflight now pass; external live proof,
+  broader production host semantic materializers, a cryptographically
+  authenticated custom-decision surface,
   explicit protection resolution, Benefit/Learning views, additional host
   adapters, and the independent journey remain unimplemented. Stable 0.2.1 and
   immutable `v0.3.0rc1` are unchanged.

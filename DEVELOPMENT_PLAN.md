@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Development Plan
 
-Last updated: 2026-08-06
+Last updated: 2026-08-07
 
 ## Purpose
 
@@ -97,8 +97,20 @@ human-review handoff. A generic strict JSONL foreground transport, bounded
 task/scope/completion cards, and the first packaged Codex lifecycle-hook Adapter are
 now implemented in development source. A vendor-neutral host-interaction
 request/capability contract is also implemented, with Codex custom governance
-decisions honestly limited to context-only delivery. Natural-language task
-admission remains open. Proactive prompt/result contracts and a reference
+decisions honestly limited to context-only delivery. A reference host Adapter
+now converts ordinary request text through a replaceable semantic materializer
+into the existing strict proposal and read-only admission plan. Development
+Codex Adapter `1.3.0` now connects the current Agent as the first production
+materializer and MCP form elicitation as its native exact-plan review surface;
+local installation and installed-runtime preflight now pass. The first approved
+event-level attempt stopped in its host bridge during App Server initialization
+without an observable thread or proposal form. The separately approved
+null-stream retry passed local initialization and thread probes, then its real
+turn ended at App Server EOF before a form or tool result. The standalone CLI
+then reported `Not logged in` with no inheritable credential environment
+variable. Live proposal review remains unproven; authentication repair and
+another replay are not admitted. Proactive prompt/result
+contracts and a reference
 single-selection review path are implemented; a native authenticated decision
 surface and the complete automatic
 journey remain open. A vendor-neutral governed clarification protocol now
@@ -117,12 +129,54 @@ development-loop pilot or 0.3 consumer migration has occurred.
 The 2026-08-06 native Codex MCP work now proves five-tool discovery, automatic
 alignment selection for a delegated product choice, human ownership of the
 final direction, and fail-closed stopping. The latest uncoached replay still
-failed because alignment start reached an unclassified, non-retryable
-Adapter/Core contract rejection. The next bounded work is normalized-fixture
-diagnosis and safe error classification for that mismatch, followed by one new
-installed-runtime replay. NYC, another host, stable promotion, release, and
+failed because the MCP schema allowed deterministic semantics for business,
+requirement, and architecture drift while Core requires those judgment-bearing
+kinds to remain advisory. The admitted bounded correction aligns that schema,
+adds privacy-safe retry classification, and precedes one new installed-runtime
+replay. NYC, another host, stable promotion, release, and
 deployment remain gated on completion of human direction selection and
 current-Agent advisory self-review.
+The corrected local runtime is installed and has passed Adapter `1.2.1`,
+five-tool, conditional-schema, and same-process retry preflight. A newly created
+uncoached Codex session then corrected its first drift error but stopped on a
+second unclassified rejection. Normalized diagnosis found that a no-unknown
+context could omit Core's required stable option set or recommendation.
+Development Adapter `1.2.2` now exposes and precisely classifies that rule;
+full validation precedes any separately reviewed reinstall and replay.
+Adapter `1.2.2` is now installed and its exact conditional schema plus
+same-process two-error correction path have passed preflight. The remaining
+newly created uncoached replay still stopped on another unclassified start
+rejection. Development Adapter `1.2.3` now applies a complete, documented
+eleven-family Alignment Start parity audit rather than another single-symptom
+patch. Full validation passed, and the exact source is now installed in the
+Python 3.12.10 pipx runtime with protocol preflight complete. The product owner
+approved one external fresh session, but its normalizer mixed actual events
+with historical repository text; raw events were not retained, so the outcome
+is invalid rather than successful evidence. A separately approved replay used
+an event-scoped normalizer and passed the intended Start boundary: the fresh
+session corrected one retryable Start input, reached `ready_for_decision`, and
+stopped for human selection without an internal/unclassified error. The human
+then selected a bounded deterministic post-selection slice. Development Adapter
+`1.2.4` now validates Resolve and current-Agent self-review inputs before state
+mutation and supports corrected same-process retry. At that checkpoint a live
+post-selection implementation, validation, and self-review journey remained
+separately gated; the current-session continuation below later closed that
+current-host gate.
+The independent installation-gate review found and corrected five remaining
+downstream parity gaps covering reason identifiers, evidence length and allow-
+list membership, observation list bounds, and duplicate observations.
+Renewed focused, full-suite, governance, and atomic-retry validation now passes;
+the exact current wheel is installed in the existing Python 3.12.10 pipx
+environment and installed-runtime protocol/schema/atomic-retry preflight passes.
+The human product owner designated the current ephemeral Codex session as the
+sole approved replay, selected the recommended direction, and prohibited another
+session or Agent. The current native journey bound that human selection through
+Alignment Resolve, and focused plus complete 734-test Python 3.12 validation
+passes. Current-Agent MCP self-review then completed with bounded advisory
+observations and no AgentGov model/network calls or Adapter context retention.
+This slice is complete; another host, NYC, release, and its then-undecided next
+requirement remain outside it. The later human-selected reference proposal
+generation seam is now implemented separately.
 
 ADR-0014 and the strict Provider-capability, risk-route, and advisory-result
 contracts now implement the model-free semantic-review boundary. Low risk does
@@ -785,8 +839,11 @@ Continue productizing the implemented ADR-0009 loop:
     task; exact interactive `ADMIT` remains a fallback, while a
     clean human-owned standing policy may non-interactively fast-track only its
     narrow declared envelope. No-write and exact active-task continuation need
-    no admission or interruption. Automatic host-side proposal generation and
-    native decision delivery remain separate work;
+    no admission or interruption. The reference host-side natural-language
+    proposal seam is implemented with an offline materializer fixture.
+    Development Codex `1.3.0` connects the current Agent and native MCP form;
+    local installation/preflight pass, while external live proof and other
+    hosts remain separate work;
 11. [Friction budget implemented] Preserve zero interruptions for no-write,
     active-task, and fast-track routes, at most one for ordinary bounded
     review, and full review for material characteristics;
@@ -796,16 +853,17 @@ Continue productizing the implemented ADR-0009 loop:
     and offer one digest-bound direction choice only after options stabilize.
     The foreground Adapter stream now returns those prompts automatically from
     strict normalized records, with no restart-persistence claim;
-13. [Native MCP Adapter implemented; first live rehearsal failed and diagnostic
-    correction implemented; replay remains] Preserve the five-tool normalized
-    alignment/self-review journey,
+13. [Native MCP Adapter, proposal-review installation, and local preflight
+    implemented; external replay remains] Preserve the five-tool normalized
+    alignment/self-review journey and capability-gated sixth proposal tool,
     explicit foreground handle, exact pending bindings, and create-missing-only
     Codex config. Ordinary users add no protocol JSON, protocol question IDs,
     repeat confirmation, or second-model setup. Known invalid normalized input
     now receives privacy-safe structured field/rule/retry diagnostics without
-    partial state. Replay the failed uncoached Codex journey, then prove
-    the same tool layer in another MCP host before attempting the optional
-    independent high-risk Reviewer path;
+    partial state. The exact `1.3.0` source is installed and locally preflighted;
+    run a fresh external replay only after separate human approval. Another MCP
+    host and the optional independent high-risk Reviewer path remain later
+    choices;
 14. [Per-cycle automation implemented; richer views remain] Extend the
    automatically refreshed Live Sessions, Protection Events, and Task Detail
    views with explicit resolution links, and add denominator-aware
@@ -825,6 +883,32 @@ The automatic independent rehearsal, uncoached adoption evidence, NYC feedback
 record, stable 0.3 promotion, NYC migration, and PyPI decision remain open.
 NYC feedback cannot replace general product admission, and the low-level
 command sequence cannot replace the automatic user experience as product core.
+
+### Next session after the 2026-08-07 checkpoint
+
+Development Adapter `1.3.0`, the current-Agent proposal materializer, native
+MCP proposal-review form, strict admission boundary, and installed-runtime
+preflight are complete. The first two authorized external attempts did not
+measure that Adapter path: the corrected bridge reached `turn/start`, then the
+standalone Codex App Server closed before returning a form or tool call. The
+same binary subsequently reported `Not logged in`, with no inheritable Codex or
+OpenAI credential environment variable. This is a host-authentication gate,
+not Adapter success or failure.
+
+Resume in this order:
+
+1. review and separately authorize repair of the standalone Codex host's
+   authentication; do not change AgentGov Core, repository scope, or product
+   authority to work around the host failure;
+2. verify login status and complete a local initialization/thread/MCP
+   capability preflight without sending a task;
+3. obtain separate approval for one fresh event-level proposal-review replay;
+4. if the native form appears, let the human review the exact proposal and
+   record only the selected transition; do not implement an admitted proposal
+   without another explicit product-owner decision;
+5. review the resulting evidence with the product owner before selecting the
+   next requirement. Another host, the independent non-NYC rehearsal, NYC,
+   stable promotion, release, and deployment remain later gates.
 
 Do not begin dependency risk propagation, repository profiles, governance
 scoring, or taxonomy expansion before pilot evidence justifies the change.

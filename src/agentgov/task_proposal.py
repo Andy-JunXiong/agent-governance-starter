@@ -360,7 +360,7 @@ def _build_task_document(proposal: Mapping[str, Any]) -> Mapping[str, Any]:
             "decided_by": task["owner"],
             "rationale": (
                 f"The accountable human reviewed structured proposal {proposal['proposal_id']} "
-                "and typed ADMIT in an interactive terminal."
+                "and admitted that exact task through an explicit admission control."
             ),
         },
     }

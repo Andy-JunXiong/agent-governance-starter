@@ -41,6 +41,61 @@ normalized proposal, stable proposal digest, only planned target, exact final
 Assumptions and unknowns are preserved as reviewed risk items in the resulting
 compact task instead of disappearing after admission.
 
+## Host-side generation
+
+`ReferenceTaskProposalAdapter` now supplies the missing host contract seam for
+ordinary-language requests. A host provides a replaceable
+`HostTaskProposalMaterializer`; that materializer sees the request once and
+returns only `TaskProposalDraft`, a small normalized description of the task.
+The Adapter, rather than the materializer, creates the proposal ID, Coding
+Agent source identity, low-risk classification, privacy declarations, and
+denied authority. It then calls the existing read-only admission planner.
+
+The resulting `TaskProposalPreparation` contains the same
+`TaskAdmissionPlan` used below and reports one host-materializer invocation,
+zero AgentGov model calls, zero AgentGov network calls, no raw request in the
+result or Core input, no repository mutation, and no granted authority. It does
+not expose an apply method. Hosts must continue through the existing human
+review and admission boundary.
+
+The standalone reference materializer remains a protocol exercised by an
+offline fixture. Development Adapter `1.3.0` now adds the first production-host
+binding for Codex: the current Codex Agent materializes only the normalized
+`TaskProposalDraft` fields through `agentgov_task_proposal_review`; AgentGov
+still performs no model or network call. Static code can validate the
+normalized contract but cannot prove semantic fidelity, so Codex presents the
+exact resulting plan through native MCP form elicitation before any write.
+
+## Codex native review
+
+When Codex negotiates MCP form elicitation, the foreground Adapter advertises
+`agentgov_task_proposal_review` as a sixth tool. The tool input deliberately
+omits raw conversation, repository identity, proposal identity, privacy and
+authority declarations, and the decision. The Adapter binds the local Git
+root, adds those invariant fields, builds the existing read-only admission
+plan, and sends the complete bounded plan back to Codex with three choices:
+admit the exact task, request changes, or reject.
+
+Only an MCP response with `action=accept` and `decision=admit`, bound to that
+elicitation request, may exclusively create the planned task file. Request
+changes, reject, decline, cancel, malformed responses, interruption, missing
+client capability, stale digests, and target races write nothing. Ordinary MCP
+tool permission is not task admission. Admission still does not start a
+session or authorize implementation, scope expansion, Git, release, or
+deployment. Clients without form elicitation retain the original five
+read-only governance tools and use the terminal recovery flow when needed.
+
+The tool returns the vendor-neutral
+`agentgov.task-proposal-review-result` contract. MCP clients may attach
+protocol extension fields to the elicitation result; the Adapter ignores those
+fields, never returns them, and still requires the exact action/content
+decision shape before any write.
+
+This deterministic behavior now also has installed-runtime protocol evidence,
+including extension compatibility, exclusive admission, and zero-write failure
+paths. A fresh external Codex replay and live semantic-quality evidence remain
+separate human-controlled steps.
+
 ## Preview and admission
 
 Preview a Coding Agent proposal without writing:
@@ -82,11 +137,11 @@ Starting the admitted task remains a separate reviewed action:
 agentgov govern start governance/tasks/<task-id>.json --repository . --dry-run
 ```
 
-This separation lets every host reuse the same Core contract. A future Adapter
-with a genuine native decision callback can present and record the equivalent
-human decision without adding vendor-specific fields to Core. Current Codex
-Hooks remain context-only for custom task decisions, so they do not silently
-invoke this terminal fallback.
+This separation lets every host reuse the same Core contract. Codex now uses
+MCP form elicitation for the equivalent bounded decision without adding
+vendor-specific fields to Core; other hosts may supply their own trusted
+interaction. Current Codex Hooks remain context-only for custom task decisions,
+so they do not silently invoke either admission path.
 
 ## Privacy boundary
 
@@ -96,8 +151,9 @@ scope, acceptance, validation, risks, assumptions, and unknowns. AgentGov does
 not add a raw prompt, transcript, response, source body, model identity,
 credential, or host path to the task.
 
-Adapters are responsible for producing the normalized proposal without copying
-raw conversation content into free-text summary fields. The content-boundary
-flags make that responsibility explicit; they are a contract assertion, not a
-claim that static code can infer whether two pieces of prose are semantically
-equivalent.
+Adapters and their host materializers are responsible for producing the
+normalized proposal without copying raw conversation content into free-text
+summary fields. The reference Adapter does not retain the request and does not
+pass it to the Core planner. The content-boundary flags make that responsibility
+explicit; they are a contract assertion, not a claim that static code can infer
+whether two pieces of prose are semantically equivalent.

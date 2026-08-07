@@ -19,8 +19,12 @@ process transport, bounded task/scope/completion cards, vendor-neutral host
 interaction requests, and the first packaged Codex lifecycle-hook Adapter.
 It also implements a vendor-neutral Coding Agent task-proposal and exact human
 admission fallback plus proactive digest-bound prompt/result contracts and a
-reference one-number human-review path. Automatic proposal generation, other
-host adapters, and a native authenticated custom-decision surface remain open. See
+reference one-number human-review path. A reference host Adapter connects
+ordinary request text to the strict proposal preview through a replaceable
+materializer. Development Codex Adapter `1.3.0` now uses the current Agent as
+that materializer and native MCP form elicitation for exact review. Local
+installation and protocol preflight pass; external live proof remains open, as
+do other host adapters and stronger authenticated custom-decision controls. See
 [Automatic coding-agent governance product requirements](product-requirements-automatic-governance.md).
 
 ## Foreground development cycle
@@ -141,9 +145,14 @@ agentgov propose task path/to/proposal.json --repository . --dry-run
 The proposal contract excludes raw prompts, transcripts, source content,
 credentials, absolute paths, and authority. Preview shows the exact compact
 task, assumptions, unknowns, digests, and sole target. A planned low-risk
-review may proactively accept one numbered approve/change/reject selection;
-exact interactive `ADMIT` remains a fallback. Either admission path creates
-only that task file and does not start this development session. See
+review may proactively accept one numbered approve/change/reject selection. In
+development Codex Adapter `1.3.0`, the current Agent supplies the normalized
+proposal and native MCP form elicitation is the primary exact-plan review path;
+only accept plus `admit` writes the task. Local installation and protocol
+preflight now pass; fresh external live proof remains open. Exact interactive
+`ADMIT` remains a recovery fallback. Either
+admission path creates only that task file and does not start this development
+session. See
 [task proposal and human admission](task-proposal-admission.md) and
 [minimal-input human decisions](human-decision-prompts.md).
 

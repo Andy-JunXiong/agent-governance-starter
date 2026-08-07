@@ -1,0 +1,30 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-mcp-alignment-start-contract-parity-audit",
+  "title": "Audit MCP Alignment Start contract parity",
+  "requirement": {
+    "summary": "Replace serial live-error diagnosis with a complete normalized audit of every MCP Alignment Start input boundary against Adapter and Core validation, eliminating all safely classifiable schema-valid unclassified rejections.",
+    "source_refs": ["docs/development-log/2026-08-07.md", "docs/experiments/live-codex-mcp-rehearsal.md", "docs/governance-mcp-adapter.md", "STATUS.md"]
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": ["docs/adr/0013-make-automatic-governance-and-dashboard-primary.md", "docs/adr/0014-route-semantic-review-through-host-providers.md"],
+    "rationale": "Three fresh replays advanced through successive hidden validation rules. A complete schema/Adapter/Core parity matrix is needed to distinguish repairable normalized input from genuine internal failures before another host replay."
+  },
+  "goal": "Inventory every Alignment Start validation boundary, align the public schema with Core where expressible, add bounded Adapter diagnostics where safe, retain unknown internal failures as non-retryable, and prove coverage with deterministic normalized fixtures.",
+  "non_goals": ["Do not read, retain, or reconstruct raw replay prompts, tool payloads, transcripts, source content, credentials, or host paths.", "Do not weaken Core validation or convert advisory judgment into deterministic truth.", "Do not expand the audit to alignment update/resolve, self-review, another host, a second Agent, or unrelated product work.", "Do not install a runtime, perform another live replay, commit, push, publish, release, deploy, or start NYC work."],
+  "scope": {
+    "include_paths": ["DEVELOPMENT_PLAN.md", "README.md", "STATUS.md", "docs/development-plan.md", "docs/development-log/2026-08-07.md", "docs/experiments/live-codex-mcp-rehearsal.md", "docs/governance-mcp-adapter.md", "governance/tasks", "src/agentgov/governance_mcp.py", "tests/test_governance_mcp.py", "tests/test_task_contract.py"],
+    "exclude_paths": [".codex/config.toml", "docs/assets/linkedin-github-repository-cover.png", ".github/workflows", "release"]
+  },
+  "architecture_refs": ["docs/adr/0013-make-automatic-governance-and-dashboard-primary.md", "docs/adr/0014-route-semantic-review-through-host-providers.md", "docs/adr/INVARIANTS.md", "docs/governance-mcp-adapter.md"],
+  "acceptance_signals": ["A documented deterministic matrix maps every Core validation reachable from Alignment Start to schema prevention, Adapter classification, or an explicitly justified internal-only category.", "The MCP start schema declares every Core text/list/cardinality/uniqueness and cross-field rule expressible in JSON Schema without becoming looser than Core.", "Safe Adapter diagnostics identify exact bounded fields and stable rules without echoing rejected values, exception text, source, credentials, or paths.", "Normalized fixture families cover center, drift, assumptions, unknowns, candidate resolutions, recommendation, privacy, and cross-field readiness; every repairable rejection is retryable and atomic.", "A deliberate synthetic unknown internal failure remains unclassified and non-retryable, proving the fallback is preserved.", "Focused/full tests, task/scope/repository governance, schema parsing, compilation, and diff validation pass before another installation or replay is proposed."],
+  "validation_commands": ["python -m unittest tests.test_governance_mcp tests.test_task_contract -v", "python -m unittest discover -s tests -v", "python -m agentgov check task governance/tasks/p0-mcp-alignment-start-contract-parity-audit.json --repository .", "python -m agentgov check scope governance/tasks/p0-mcp-alignment-start-contract-parity-audit.json --repository .", "python -m agentgov check repository .", "git diff --check"],
+  "owner": "Human product owner",
+  "risk": {"level": "high", "items": ["Over-broad substring mapping could misclassify internal errors as repairable input.", "Schema tightening could accidentally reject a Core-valid input or fail to express a cross-field invariant.", "A coverage claim would be misleading without a documented denominator tied to reachable start validation branches."]},
+  "approval": {"required": true, "status": "approved", "owner": "Human product owner", "evidence_refs": ["docs/development-log/2026-08-07.md"]},
+  "stop_conditions": ["Stop if classification needs raw/private replay evidence or unrestricted exception output.", "Stop if a safe field/rule cannot be established; preserve that branch as non-retryable internal instead.", "Stop if the matrix lacks a documented denominator or claims semantic correctness beyond validation parity.", "Stop before runtime installation, live replay, Git write, publication, release, deployment, NYC work, consumer mutation, another host, or second Agent."],
+  "decision": {"state": "paused", "decided_by": "Human product owner", "rationale": "The contract parity audit completed with the reviewed Adapter 1.2.3 source and validation evidence. The user explicitly requested the recommended build, installation, preflight, and fresh replay on 2026-08-07."}
+}

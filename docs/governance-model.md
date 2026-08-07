@@ -57,9 +57,14 @@ non-authoritative Coding Agent interpretation. It rejects raw-prompt fields and
 unsafe or authoritative claims, previews the exact compact task, and requires
 an explicit human decision before exclusive task creation. A planned low-risk
 review uses a digest-bound proactive single-select prompt; the exact
-interactive `ADMIT` flow remains a recovery fallback. Admission and session
-start remain separate; automatic host-side proposal generation is not yet
-claimed.
+interactive `ADMIT` flow remains a recovery fallback. Codex development source
+can instead bind the exact plan to one native MCP form decision; only explicit
+admission writes, and ordinary tool permission does not count. Admission and session
+start remain separate. A reference host Adapter now invokes one replaceable
+semantic materializer for ordinary request text and passes only its normalized
+draft into this existing preview path. The offline fixture proves the contract
+boundary. Codex development source separately binds the current Agent and its
+native MCP form; it does not prove live semantic fidelity or another host.
 
 Development source also distinguishes observation from admission through
 `agentgov.work-request`, `agentgov.admission-routing-policy`, and

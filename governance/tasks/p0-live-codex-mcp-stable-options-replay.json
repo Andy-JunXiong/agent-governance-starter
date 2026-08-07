@@ -1,0 +1,30 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-live-codex-mcp-stable-options-replay",
+  "title": "Replay Codex with stable-options diagnostics",
+  "requirement": {
+    "summary": "Install the exact validated Adapter 1.2.2 development source into the existing isolated runtime, preflight its stable-options schema and retry path, and prepare one fresh uncoached Codex replay.",
+    "source_refs": ["docs/development-log/2026-08-07.md", "docs/experiments/live-codex-mcp-rehearsal.md", "docs/governance-mcp-adapter.md", "STATUS.md"]
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": ["docs/adr/0013-make-automatic-governance-and-dashboard-primary.md", "docs/adr/0014-route-semantic-review-through-host-providers.md"],
+    "rationale": "Static fixtures now classify the second live mismatch, but installed-runtime evidence and a fresh host journey are required before claiming that human direction selection and current-Agent self-review work end to end."
+  },
+  "goal": "Build and hash the exact current source, update only the existing pipx AgentGov runtime, verify Adapter 1.2.2 and corrected stable-options retry behavior, then reserve the measured journey for a newly created uncoached Codex session.",
+  "non_goals": ["Do not present the local 0.3.0rc1-identified wheel as the immutable published v0.3.0rc1 artifact.", "Do not coach the fresh Agent with AgentGov, MCP, alignment, self-review, protocol JSON, or tool names.", "Do not add another host, second Agent, independent Reviewer, NYC work, or unrelated product change.", "Do not commit, push, publish, release, deploy, or mutate a consumer repository."],
+  "scope": {
+    "include_paths": ["DEVELOPMENT_PLAN.md", "README.md", "STATUS.md", "docs/development-plan.md", "docs/development-log/2026-08-07.md", "docs/experiments/live-codex-mcp-rehearsal.md", "docs/governance-mcp-adapter.md", "governance/tasks", "src/agentgov/governance_mcp.py", "tests/test_governance_mcp.py", "tests/test_task_contract.py"],
+    "exclude_paths": [".codex/config.toml", "docs/assets/linkedin-github-repository-cover.png", ".github/workflows", "release"]
+  },
+  "architecture_refs": ["docs/adr/0013-make-automatic-governance-and-dashboard-primary.md", "docs/adr/0014-route-semantic-review-through-host-providers.md", "docs/adr/INVARIANTS.md", "docs/governance-mcp-adapter.md"],
+  "acceptance_signals": ["The exact current source is locally built with official Python 3.12, hash-recorded, and installed only into the existing isolated pipx AgentGov environment.", "Installed discovery reports Adapter 1.2.2 and exactly five tools; its no-unknown conditional schema requires two candidates and a non-null recommendation.", "One installed foreground process returns stable_options_required, then recommendation_required, then accepts a fully corrected start into ready_for_decision without partial journey state.", "A newly created Codex session receives one ordinary multi-direction request without named-tool coaching and either completes human alignment, implementation, validation, and self-review or stops fail-closed with an honest failed result.", "No publication, release, deployment, NYC work, consumer mutation, second Agent, or other host occurs."],
+  "validation_commands": ["python -m unittest tests.test_governance_mcp tests.test_task_contract -v", "python -m agentgov check task governance/tasks/p0-live-codex-mcp-stable-options-replay.json --repository .", "python -m agentgov check scope governance/tasks/p0-live-codex-mcp-stable-options-replay.json --repository .", "python -m agentgov check repository .", "git diff --check"],
+  "owner": "Human product owner",
+  "risk": {"level": "high", "items": ["The shared pipx runtime may be locked by existing AgentGov MCP child processes.", "The local package identity remains 0.3.0rc1 and must not be confused with the immutable published artifact.", "A non-fresh or coached session would invalidate product evidence."]},
+  "approval": {"required": true, "status": "approved", "owner": "Human product owner", "evidence_refs": ["docs/development-log/2026-08-07.md"]},
+  "stop_conditions": ["Stop if installation would touch another project environment, need network access, or mutate a consumer.", "Stop unless every locking process is read-only identified as an AgentGov governance-MCP child process before termination.", "Stop this active session after installed preflight; only a newly created Codex session is eligible for measured replay.", "Stop on any required governance failure before implementation and record the journey honestly."],
+  "decision": {"state": "paused", "decided_by": "Human product owner", "rationale": "Installed Adapter 1.2.2 passed protocol preflight, but the fresh uncoached replay still reached an unclassified Core start rejection and stopped without mutation. The user reviewed the result and explicitly requested a complete Alignment Start contract parity audit on 2026-08-07."}
+}

@@ -1,0 +1,99 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-live-codex-mcp-task-proposal-review-replay",
+  "title": "Replay Codex native task proposal review",
+  "requirement": {
+    "summary": "Run one fresh event-level Codex replay against installed Adapter 1.3.0, route the native proposal form to the current human chat, and retain only normalized outcomes.",
+    "source_refs": [
+      "docs/adr/0015-use-mcp-elicitation-for-codex-task-admission.md",
+      "docs/governance-mcp-adapter.md",
+      "docs/task-proposal-admission.md"
+    ]
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": [
+      "governance/tasks/p0-codex-native-task-proposal-review.json",
+      "governance/tasks/p0-install-codex-native-task-proposal-review.json"
+    ],
+    "rationale": "Source behavior and installed-runtime preflight pass, but no fresh production-host replay has yet shown Codex materialization, native elicitation, and an exact human-bound outcome together."
+  },
+  "goal": "Prove one fresh Codex App Server journey can turn an ordinary bounded request into the installed Adapter 1.3.0 proposal-review form, return the exact choice through the current chat, and finish without unauthorized implementation or retained raw material.",
+  "non_goals": [
+    "Do not implement the proposed task, modify AgentGov source or configuration, replace the installed runtime, add another host, or run a second replay.",
+    "Do not retain the raw request, transcript, Agent messages, reasoning, command output, source content, credentials, absolute paths, or unbounded MCP payloads.",
+    "Do not treat tool permission as task admission or grant implementation, scope expansion, exception, Git, publication, release, deployment, or consumer authority.",
+    "Do not touch NYC or another project, install dependencies, create another environment, or claim semantic fidelity beyond the observed bounded journey."
+  ],
+  "scope": {
+    "include_paths": [
+      ".codex/config.toml",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "docs",
+      "governance/tasks",
+      "schemas",
+      "src/agentgov",
+      "templates/codex-mcp.template.toml",
+      "tests"
+    ],
+    "exclude_paths": [
+      "docs/assets/linkedin-github-repository-cover.png",
+      ".github/workflows",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0015-use-mcp-elicitation-for-codex-task-admission.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/governance-mcp-adapter.md",
+    "docs/task-proposal-admission.md"
+  ],
+  "acceptance_signals": [
+    "A fresh ephemeral Codex App Server thread loads the project configuration and installed Adapter 1.3.0 with the capability-gated proposal-review tool.",
+    "An ordinary bounded work request causes one completed agentgov_task_proposal_review journey and one native form is surfaced to the product owner through the current chat.",
+    "The exact human choice is bound to that form; only admit may exclusively create the displayed task, while change, reject, cancellation, malformed input, or interruption writes no task.",
+    "The bridge retains only normalized form, decision, tool-result, and terminal-status fields and removes all transient files after evidence extraction.",
+    "Task, scope, repository, documentation, and diff checks pass or report only explicitly preserved pre-existing exclusions; no proposed implementation begins."
+  ],
+  "validation_commands": [
+    "agentgov --version",
+    "agentgov adapter governance-mcp --host-profile codex",
+    "python -m unittest discover -s tests -p test_governance_mcp.py -v",
+    "python -m unittest discover -s tests -p test_task_contract.py -v",
+    "python -m agentgov check task governance/tasks/p0-live-codex-mcp-task-proposal-review-replay.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-live-codex-mcp-task-proposal-review-replay.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "high",
+    "items": [
+      "The fresh Codex process transmits repository instructions and context to the OpenAI service under the product owner's explicit approval.",
+      "A bridge bug could retain raw host output or bind the wrong decision unless it parses only exact protocol events and request identity.",
+      "Admit creates one new task file even though it grants no implementation authority; every other outcome must remain zero-write.",
+      "A host, schema, installed-runtime, or protocol mismatch could interrupt the replay and must remain fail-closed."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": ["docs/development-log/2026-08-07.md"]
+  },
+  "stop_conditions": [
+    "Stop if the fresh process does not load installed Adapter 1.3.0 and the capability-gated proposal-review tool through the existing project configuration.",
+    "Stop if a normalized form cannot be routed to the current chat or its exact request identity cannot be preserved for the response.",
+    "Stop before any proposed implementation, source/config/install change, second replay, additional external transmission, Git write, publication, release, deployment, or consumer mutation.",
+    "Stop on raw-material retention, unbounded diagnostics, unexpected repository write, stale plan, target race, or any required governance failure."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "The newly approved bridge passed local initialization and thread probes, then the real replay reached starting_turn before App Server closed without a turn response, form, tool call, or error code. Read-only follow-up found the standalone Codex CLI not logged in and no inheritable Codex/OpenAI credential environment variable. The authorization is consumed; authentication repair and another replay are not admitted."
+  }
+}

@@ -4,19 +4,28 @@ from __future__ import annotations
 
 import json
 import re
+import unicodedata
 import uuid
 from dataclasses import asdict, dataclass
-from typing import Any, Mapping, Sequence, TextIO
+from pathlib import Path
+from typing import Any, Callable, Mapping, Sequence, TextIO
 
 from agentgov.clarification_dialogue import denied_authority
 from agentgov.alignment_transport import AlignmentStreamSession
 from agentgov.host_interaction import build_host_interaction_capabilities
 from agentgov.human_decision import canonical_document_digest
+from agentgov.path_policy import scope_path_error
 from agentgov.reference_alignment_adapter import (
     AlignmentContextDraft,
     ClarificationUpdateDraft,
     ReferenceAlignmentAdapter,
     ReferenceAlignmentAdapterError,
+)
+from agentgov.reference_task_proposal_adapter import (
+    ReferenceTaskProposalAdapter,
+    ReferenceTaskProposalAdapterError,
+    TaskProposalDraft,
+    TaskProposalPreparation,
 )
 from agentgov.semantic_review import (
     SemanticReviewProviderCapabilities,
@@ -30,19 +39,27 @@ from agentgov.self_review_transport import (
     ActiveAgentSelfReviewStreamSession,
     SelfReviewTransportError,
 )
+from agentgov.task_proposal import (
+    TaskProposalPolicyError,
+    apply_task_admission_plan,
+    render_task_admission_plan_json,
+)
 
 
 MCP_PROTOCOL_VERSION = "2026-07-28"
 MCP_LEGACY_PROTOCOL_VERSIONS = ("2025-11-25", "2025-06-18")
 MCP_SERVER_NAME = "agentgov-governance"
-MCP_SERVER_VERSION = "1.2.0"
-MCP_TOOL_NAMES = (
+MCP_SERVER_VERSION = "1.3.0"
+MCP_BASE_TOOL_NAMES = (
     "agentgov_alignment_start",
     "agentgov_alignment_update",
     "agentgov_alignment_resolve",
     "agentgov_self_review_start",
     "agentgov_self_review_complete",
 )
+MCP_TASK_PROPOSAL_TOOL_NAME = "agentgov_task_proposal_review"
+MCP_TOOL_NAMES = (*MCP_BASE_TOOL_NAMES, MCP_TASK_PROPOSAL_TOOL_NAME)
+MAX_PROPOSAL_ELICITATION_MESSAGE_CHARACTERS = 24_000
 MCP_SERVER_INSTRUCTIONS = (
     "Use these tools without waiting for the user to name them. Before meaningful development "
     "with multiple reasonable product, requirement, architecture, scope, or implementation "
@@ -53,8 +70,11 @@ MCP_SERVER_INSTRUCTIONS = (
     "and validating that resolved direction, run medium-risk active-Agent self-review as a distinct "
     "advisory pass and return its observations before completion. If a required call fails, report "
     "the bounded failure and do not silently continue. Never send raw prompts, raw answers, "
-    "transcripts, assistant messages, credentials, absolute paths, or source content. The tools "
-    "grant no task, code, scope, Git, release, deployment, or external authority."
+    "transcripts, assistant messages, credentials, absolute paths, or source content. "
+    "When repository-changing work has no admitted task, use the native proposal-review tool "
+    "with normalized low-risk task meaning. That tool may create only the exact human-admitted "
+    "task after a capability-negotiated form; ordinary tool permission is not task admission. "
+    "No tool grants code, scope, exception, Git, release, deployment, or external authority."
 )
 
 _HANDLE_RE = re.compile(r"^mcpj-[0-9a-f]{32}$")
@@ -63,6 +83,12 @@ _DECISION_ID_RE = re.compile(r"^dpr-[0-9a-f]{32}$")
 _REQUEST_ID_RE = re.compile(r"^asq-[0-9a-f]{32}$")
 _DIGEST_RE = re.compile(r"^sha256:[0-9a-f]{64}$")
 _ID_RE = re.compile(r"^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$")
+_SENSITIVE_INPUT_RE = re.compile(
+    r"(?i)(?:api[_-]?key|access[_-]?token|auth[_-]?token|password|passwd|secret)\s*[:=]"
+)
+_ABSOLUTE_INPUT_PATH_RE = re.compile(
+    r"(?i)(?:^|\s)(?:[a-z]:[\\/]|/(?:users|home|var|etc|tmp)/)"
+)
 
 
 class GovernanceMcpError(ValueError):
@@ -104,6 +130,223 @@ class _NormalizedOnlyMaterializer:
     def materialize_answer(self, answer_text: str, **_: Any) -> None:
         raise GovernanceMcpError("MCP Adapter accepts only normalized answer drafts")
 
+    def materialize_task_proposal(self, request_text: str) -> None:
+        raise GovernanceMcpError("MCP Adapter accepts only normalized task-proposal drafts")
+
+
+def _alignment_input_error(*, stage: str, field_path: str, rule: str) -> None:
+    raise GovernanceMcpError(
+        "Normalized alignment input violates the indicated rule; correct it and retry",
+        code="alignment_invalid_field",
+        stage=stage,
+        field_path=field_path,
+        rule=rule,
+        retryable=True,
+    )
+
+
+def _post_selection_input_error(*, stage: str, field_path: str, rule: str) -> None:
+    raise GovernanceMcpError(
+        "Normalized post-selection input violates the indicated rule; correct it and retry",
+        code="post_selection_invalid_field",
+        stage=stage,
+        field_path=field_path,
+        rule=rule,
+        retryable=True,
+    )
+
+
+def _task_proposal_input_error(*, field_path: str, rule: str) -> None:
+    raise GovernanceMcpError(
+        "Normalized task-proposal input violates the indicated rule; correct it and retry",
+        code="task_proposal_invalid_field",
+        stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+        field_path=field_path,
+        rule=rule,
+        retryable=True,
+    )
+
+
+def _task_proposal_text(
+    value: Any,
+    *,
+    field_path: str,
+    minimum: int = 1,
+    maximum: int = 1_000,
+    repository_path: bool = False,
+) -> str:
+    if (
+        not isinstance(value, str)
+        or len(value.strip()) < minimum
+        or len(value) > maximum
+        or any(unicodedata.category(character).startswith("C") for character in value)
+    ):
+        _task_proposal_input_error(field_path=field_path, rule="normalized_text")
+    if repository_path:
+        if scope_path_error(value):
+            _task_proposal_input_error(field_path=field_path, rule="repository_relative")
+    elif _SENSITIVE_INPUT_RE.search(value) or _ABSOLUTE_INPUT_PATH_RE.search(value):
+        _task_proposal_input_error(field_path=field_path, rule="privacy_boundary")
+    return value
+
+
+def _task_proposal_text_list(
+    value: Any,
+    *,
+    field_path: str,
+    minimum_items: int = 0,
+    maximum_items: int = 25,
+    item_maximum: int = 1_000,
+    repository_paths: bool = False,
+) -> tuple[str, ...]:
+    if not isinstance(value, list):
+        _task_proposal_input_error(field_path=field_path, rule="array_required")
+    if len(value) < minimum_items:
+        _task_proposal_input_error(field_path=field_path, rule="min_items")
+    if len(value) > maximum_items:
+        _task_proposal_input_error(field_path=field_path, rule="max_items")
+    result = tuple(
+        _task_proposal_text(
+            item,
+            field_path=f"{field_path}[{index}]",
+            maximum=item_maximum,
+            repository_path=repository_paths,
+        )
+        for index, item in enumerate(value)
+    )
+    if len(result) != len(set(result)):
+        _task_proposal_input_error(field_path=field_path, rule="unique_items")
+    return result
+
+
+def _normalized_input_text(
+    value: Any,
+    *,
+    stage: str,
+    field_path: str,
+    maximum: int,
+) -> str:
+    if not isinstance(value, str) or not value.strip() or len(value) > maximum:
+        _alignment_input_error(
+            stage=stage, field_path=field_path, rule="normalized_text"
+        )
+    if any(unicodedata.category(character).startswith("C") for character in value):
+        _alignment_input_error(
+            stage=stage, field_path=field_path, rule="normalized_text"
+        )
+    if _SENSITIVE_INPUT_RE.search(value) or _ABSOLUTE_INPUT_PATH_RE.search(value):
+        _alignment_input_error(
+            stage=stage, field_path=field_path, rule="privacy_boundary"
+        )
+    return value
+
+
+def _normalized_input_text_list(
+    value: Any,
+    *,
+    stage: str,
+    field_path: str,
+    maximum_items: int = 50,
+    minimum_items: int = 0,
+    item_maximum: int = 400,
+) -> tuple[str, ...]:
+    if not isinstance(value, list):
+        _alignment_input_error(stage=stage, field_path=field_path, rule="array_required")
+    if len(value) > maximum_items:
+        _alignment_input_error(stage=stage, field_path=field_path, rule="max_items")
+    if len(value) < minimum_items:
+        _alignment_input_error(stage=stage, field_path=field_path, rule="min_items")
+    result = tuple(
+        _normalized_input_text(
+            item,
+            stage=stage,
+            field_path=f"{field_path}[{index}]",
+            maximum=item_maximum,
+        )
+        for index, item in enumerate(value)
+    )
+    if len(result) != len(set(result)):
+        _alignment_input_error(stage=stage, field_path=field_path, rule="unique_items")
+    return result
+
+
+def _validate_center_input(
+    value: Any,
+    *,
+    stage: str,
+    field_path: str,
+    patch: bool = False,
+) -> Mapping[str, Any]:
+    fields = {"outcome", "why_now", "success_signals", "constraints", "non_goals"}
+    if not isinstance(value, Mapping) or set(value) != fields:
+        _alignment_input_error(stage=stage, field_path=field_path, rule="exact_fields")
+    for key in ("outcome", "why_now"):
+        item = value[key]
+        if patch and item is None:
+            continue
+        _normalized_input_text(
+            item, stage=stage, field_path=f"{field_path}.{key}", maximum=800
+        )
+    for key in ("success_signals", "constraints", "non_goals"):
+        item = value[key]
+        if patch and item is None:
+            continue
+        _normalized_input_text_list(
+            item,
+            stage=stage,
+            field_path=f"{field_path}.{key}",
+            minimum_items=0 if patch or key != "success_signals" else 1,
+        )
+    return value
+
+
+def _validate_drift_input(
+    value: Any, *, stage: str, field_path: str
+) -> Mapping[str, Any]:
+    fields = {"kind", "semantics", "observation", "evidence_refs", "impact"}
+    if not isinstance(value, Mapping) or set(value) != fields:
+        _alignment_input_error(stage=stage, field_path=field_path, rule="exact_fields")
+    kind = value["kind"]
+    semantics = value["semantics"]
+    if kind not in {"business", "requirement", "architecture", "scope", "implementation"}:
+        _alignment_input_error(stage=stage, field_path=f"{field_path}.kind", rule="enum")
+    if semantics not in {"advisory", "deterministic"}:
+        _alignment_input_error(
+            stage=stage, field_path=f"{field_path}.semantics", rule="enum"
+        )
+    if kind in {"business", "requirement", "architecture"} and semantics != "advisory":
+        _alignment_input_error(
+            stage=stage,
+            field_path=f"{field_path}.semantics",
+            rule="advisory_required",
+        )
+    _normalized_input_text(
+        value["observation"],
+        stage=stage,
+        field_path=f"{field_path}.observation",
+        maximum=800,
+    )
+    evidence = _normalized_input_text_list(
+        value["evidence_refs"],
+        stage=stage,
+        field_path=f"{field_path}.evidence_refs",
+        maximum_items=20,
+        item_maximum=240,
+    )
+    if any(scope_path_error(item) for item in evidence):
+        _alignment_input_error(
+            stage=stage,
+            field_path=f"{field_path}.evidence_refs",
+            rule="repository_relative",
+        )
+    _normalized_input_text(
+        value["impact"],
+        stage=stage,
+        field_path=f"{field_path}.impact",
+        maximum=800,
+    )
+    return value
+
 
 @dataclass
 class _Journey:
@@ -112,6 +355,8 @@ class _Journey:
     self_review_sequence: int = 0
     review_requested: bool = False
     review_completed: bool = False
+    pending_review_request: Mapping[str, str] | None = None
+    allowed_review_evidence_refs: tuple[str, ...] = ()
 
 
 def build_active_host_self_review_provider(
@@ -161,23 +406,133 @@ def _questions_with_adapter_ids(value: Any, *, stage: str, field_path: str) -> t
             rule="array_required",
             retryable=True,
         )
+    if len(value) > 100:
+        _alignment_input_error(stage=stage, field_path=field_path, rule="max_items")
     expected = {"question", "why_matters", "material", "priority"}
     questions = []
     for index, item in enumerate(value):
+        item_path = f"{field_path}[{index}]"
         if not isinstance(item, Mapping) or set(item) != expected:
             raise GovernanceMcpError(
                 f"{field_path} item has unexpected fields",
                 code="alignment_invalid_field",
                 stage=stage,
-                field_path=f"{field_path}[{index}]",
+                field_path=item_path,
                 rule="exact_fields",
                 retryable=True,
+            )
+        _normalized_input_text(
+            item["question"],
+            stage=stage,
+            field_path=f"{item_path}.question",
+            maximum=800,
+        )
+        _normalized_input_text(
+            item["why_matters"],
+            stage=stage,
+            field_path=f"{item_path}.why_matters",
+            maximum=800,
+        )
+        if not isinstance(item["material"], bool):
+            _alignment_input_error(
+                stage=stage,
+                field_path=f"{item_path}.material",
+                rule="boolean_required",
+            )
+        priority = item["priority"]
+        if (
+            not isinstance(priority, int)
+            or isinstance(priority, bool)
+            or not 1 <= priority <= 5
+        ):
+            _alignment_input_error(
+                stage=stage,
+                field_path=f"{item_path}.priority",
+                rule="range",
             )
         questions.append({"question_id": f"qst-{uuid.uuid4().hex[:16]}", **item})
     return tuple(questions)
 
 
+def _validate_candidate_resolutions(
+    value: Any, *, stage: str, field_path: str
+) -> tuple[Mapping[str, Any], ...]:
+    if not isinstance(value, list):
+        _alignment_input_error(stage=stage, field_path=field_path, rule="array_required")
+    if len(value) > 5:
+        _alignment_input_error(stage=stage, field_path=field_path, rule="max_items")
+    allowed_ids = {
+        "return_to_center",
+        "adopt_new_center",
+        "split_new_requirement",
+        "continue_exploration",
+        "stop",
+    }
+    result: list[Mapping[str, Any]] = []
+    seen_ids: set[str] = set()
+    for index, item in enumerate(value):
+        item_path = f"{field_path}[{index}]"
+        if not isinstance(item, Mapping) or set(item) != {
+            "id", "label", "effect", "center_patch"
+        }:
+            _alignment_input_error(
+                stage=stage, field_path=item_path, rule="exact_fields"
+            )
+        option_id = item["id"]
+        if option_id not in allowed_ids:
+            _alignment_input_error(
+                stage=stage, field_path=f"{item_path}.id", rule="enum"
+            )
+        if option_id in seen_ids:
+            _alignment_input_error(
+                stage=stage, field_path=f"{item_path}.id", rule="unique_items"
+            )
+        _normalized_input_text(
+            item["label"],
+            stage=stage,
+            field_path=f"{item_path}.label",
+            maximum=120,
+        )
+        _normalized_input_text(
+            item["effect"],
+            stage=stage,
+            field_path=f"{item_path}.effect",
+            maximum=800,
+        )
+        patch = _validate_center_input(
+            item["center_patch"],
+            stage=stage,
+            field_path=f"{item_path}.center_patch",
+            patch=True,
+        )
+        has_patch = any(patch_value is not None for patch_value in patch.values())
+        if option_id == "adopt_new_center" and not has_patch:
+            _alignment_input_error(
+                stage=stage,
+                field_path=f"{item_path}.center_patch",
+                rule="adopt_patch_required",
+            )
+        if option_id != "adopt_new_center" and has_patch:
+            _alignment_input_error(
+                stage=stage,
+                field_path=f"{item_path}.center_patch",
+                rule="patch_forbidden",
+            )
+        seen_ids.add(option_id)
+        result.append(dict(item))
+    return tuple(result)
+
+
 def _alignment_rejection(exc: BaseException, *, stage: str) -> GovernanceMcpError:
+    if stage == MCP_TOOL_NAMES[0]:
+        return GovernanceMcpError(
+            "Core rejected a schema-aligned start after Adapter input validation",
+            code="alignment_rejected_internal",
+            stage=stage,
+            field_path=None,
+            rule="unclassified",
+            retryable=False,
+        )
     cause = exc.__cause__
     message = str(cause) if isinstance(cause, ValueError) else ""
     mappings = (
@@ -185,6 +540,7 @@ def _alignment_rejection(exc: BaseException, *, stage: str) -> GovernanceMcpErro
         ("alignment center requires at least one success signal", "center.success_signals", "min_items"),
         ("drift observation has unexpected fields", "drift", "exact_fields"),
         ("drift kind or semantics is unsupported", "drift", "enum"),
+        ("drift must remain advisory", "drift.semantics", "advisory_required"),
         ("drift evidence must be repository-relative", "drift.evidence_refs", "repository_relative"),
         ("assumptions", "assumptions", "normalized_text"),
         ("unknowns", "unknowns", "normalized_question"),
@@ -213,8 +569,20 @@ def _alignment_rejection(exc: BaseException, *, stage: str) -> GovernanceMcpErro
     )
 
 
-def _binding(value: Any, *, fields: set[str], identifier: re.Pattern[str], label: str) -> Mapping[str, Any]:
+def _binding(
+    value: Any,
+    *,
+    fields: set[str],
+    identifier: re.Pattern[str],
+    label: str,
+    stage: str | None = None,
+    field_path: str | None = None,
+) -> Mapping[str, Any]:
     if not isinstance(value, Mapping) or set(value) != fields:
+        if stage is not None and field_path is not None:
+            _post_selection_input_error(
+                stage=stage, field_path=field_path, rule="exact_fields"
+            )
         raise GovernanceMcpError(f"{label} binding is invalid")
     identity = value.get(next(iter(fields - {"digest"})))
     digest = value.get("digest")
@@ -224,8 +592,156 @@ def _binding(value: Any, *, fields: set[str], identifier: re.Pattern[str], label
         or not isinstance(digest, str)
         or not _DIGEST_RE.fullmatch(digest)
     ):
+        if stage is not None and field_path is not None:
+            _post_selection_input_error(
+                stage=stage, field_path=field_path, rule="digest_binding"
+            )
         raise GovernanceMcpError(f"{label} binding is invalid")
     return dict(value)
+
+
+def _post_selection_text_list(
+    value: Any,
+    *,
+    stage: str,
+    field_path: str,
+    maximum_items: int = 50,
+    minimum_items: int = 1,
+    item_maximum: int = 400,
+) -> tuple[str, ...]:
+    try:
+        return _normalized_input_text_list(
+            value,
+            stage=stage,
+            field_path=field_path,
+            maximum_items=maximum_items,
+            minimum_items=minimum_items,
+            item_maximum=item_maximum,
+        )
+    except GovernanceMcpError as exc:
+        raise GovernanceMcpError(
+            str(exc),
+            code="post_selection_invalid_field",
+            stage=stage,
+            field_path=exc.field_path,
+            rule=exc.rule,
+            retryable=True,
+        ) from exc
+
+
+def _post_selection_identifiers(
+    value: Any, *, stage: str, field_path: str, maximum_items: int = 50
+) -> tuple[str, ...]:
+    identifiers = _post_selection_text_list(
+        value,
+        stage=stage,
+        field_path=field_path,
+        maximum_items=maximum_items,
+    )
+    for index, identifier in enumerate(identifiers):
+        if len(identifier) > 120 or not _ID_RE.fullmatch(identifier):
+            _post_selection_input_error(
+                stage=stage,
+                field_path=f"{field_path}[{index}]",
+                rule="normalized_identifier",
+            )
+    return identifiers
+
+
+def _post_selection_text(value: Any, *, stage: str, field_path: str, maximum: int) -> str:
+    try:
+        return _normalized_input_text(
+            value, stage=stage, field_path=field_path, maximum=maximum
+        )
+    except GovernanceMcpError as exc:
+        raise GovernanceMcpError(
+            str(exc), code="post_selection_invalid_field", stage=stage,
+            field_path=exc.field_path, rule=exc.rule, retryable=True,
+        ) from exc
+
+
+def _validate_evidence_refs(value: Any, *, stage: str, field_path: str) -> tuple[str, ...]:
+    refs = _post_selection_text_list(
+        value,
+        stage=stage,
+        field_path=field_path,
+        maximum_items=20,
+        item_maximum=240,
+    )
+    if any(scope_path_error(item) for item in refs):
+        _post_selection_input_error(
+            stage=stage, field_path=field_path, rule="repository_relative"
+        )
+    return refs
+
+
+def _validate_review_observations(
+    value: Any,
+    *,
+    stage: str,
+    allowed_evidence_refs: Sequence[str],
+) -> tuple[Mapping[str, Any], ...]:
+    if not isinstance(value, list):
+        _post_selection_input_error(
+            stage=stage, field_path="observations", rule="array_required"
+        )
+    if not 1 <= len(value) <= 20:
+        _post_selection_input_error(
+            stage=stage, field_path="observations", rule="item_count"
+        )
+    fields = {
+        "kind", "summary", "evidence_refs", "assumptions", "unknowns",
+        "recommended_question",
+    }
+    allowed_kinds = {
+        "business", "requirement", "architecture", "scope", "implementation",
+        "security", "data",
+    }
+    result: list[Mapping[str, Any]] = []
+    for index, item in enumerate(value):
+        path = f"observations[{index}]"
+        if not isinstance(item, Mapping) or set(item) != fields:
+            _post_selection_input_error(
+                stage=stage, field_path=path, rule="exact_fields"
+            )
+        if not isinstance(item["kind"], str) or item["kind"] not in allowed_kinds:
+            _post_selection_input_error(
+                stage=stage, field_path=f"{path}.kind", rule="enum"
+            )
+        _post_selection_text(
+            item["summary"], stage=stage, field_path=f"{path}.summary", maximum=800
+        )
+        evidence_refs = _validate_evidence_refs(
+            item["evidence_refs"], stage=stage, field_path=f"{path}.evidence_refs"
+        )
+        if not set(evidence_refs) <= set(allowed_evidence_refs):
+            _post_selection_input_error(
+                stage=stage,
+                field_path=f"{path}.evidence_refs",
+                rule="allowed_evidence",
+            )
+        for field in ("assumptions", "unknowns"):
+            _post_selection_text_list(
+                item[field],
+                stage=stage,
+                field_path=f"{path}.{field}",
+                maximum_items=20,
+                minimum_items=0,
+            )
+        question = item["recommended_question"]
+        if question is not None:
+            _post_selection_text(
+                question,
+                stage=stage,
+                field_path=f"{path}.recommended_question",
+                maximum=800,
+            )
+        result.append(dict(item))
+    if len({canonical_document_digest(item) for item in result}) != len(result):
+        _post_selection_input_error(
+            stage=stage, field_path="observations", rule="unique_items"
+        )
+    return tuple(result)
 
 
 def _journey_handle(value: Any) -> str:
@@ -248,8 +764,8 @@ def _handle_schema() -> Mapping[str, Any]:
     return {"type": "string", "pattern": "^mcpj-[0-9a-f]{32}$"}
 
 
-def _text_list_schema() -> Mapping[str, Any]:
-    return {"type": "array", "maxItems": 50, "uniqueItems": True, "items": {"type": "string", "minLength": 1, "maxLength": 400}}
+def _text_list_schema(*, maximum_items: int = 50) -> Mapping[str, Any]:
+    return {"type": "array", "maxItems": maximum_items, "uniqueItems": True, "items": {"type": "string", "minLength": 1, "maxLength": 400}}
 
 
 def _center_schema(*, patch: bool = False) -> Mapping[str, Any]:
@@ -258,10 +774,13 @@ def _center_schema(*, patch: bool = False) -> Mapping[str, Any]:
     if patch:
         text = {"anyOf": [text, {"type": "null"}]}
         items = {"anyOf": [items, {"type": "null"}]}
+    success_items = dict(items)
+    if not patch:
+        success_items["minItems"] = 1
     return {
         "type": "object", "additionalProperties": False,
         "required": ["outcome", "why_now", "success_signals", "constraints", "non_goals"],
-        "properties": {"outcome": text, "why_now": text, "success_signals": items, "constraints": items, "non_goals": items},
+        "properties": {"outcome": text, "why_now": text, "success_signals": success_items, "constraints": items, "non_goals": items},
     }
 
 
@@ -276,6 +795,19 @@ def _drift_schema() -> Mapping[str, Any]:
             "evidence_refs": {"type": "array", "maxItems": 20, "uniqueItems": True, "items": {"type": "string", "minLength": 1, "maxLength": 240}},
             "impact": {"type": "string", "minLength": 1, "maxLength": 800},
         },
+        "allOf": [
+            {
+                "if": {
+                    "properties": {
+                        "kind": {
+                            "enum": ["business", "requirement", "architecture"]
+                        }
+                    },
+                    "required": ["kind"],
+                },
+                "then": {"properties": {"semantics": {"const": "advisory"}}},
+            }
+        ],
     }
 
 
@@ -292,7 +824,7 @@ def _question_schema() -> Mapping[str, Any]:
 
 
 def _resolution_schema() -> Mapping[str, Any]:
-    return {
+    schema = {
         "type": "object", "additionalProperties": False,
         "required": ["id", "label", "effect", "center_patch"],
         "properties": {
@@ -302,6 +834,36 @@ def _resolution_schema() -> Mapping[str, Any]:
             "center_patch": _center_schema(patch=True),
         },
     }
+    non_null_patch_properties = []
+    for key in ("outcome", "why_now"):
+        non_null_patch_properties.append(
+            {"properties": {"center_patch": {"properties": {key: {"type": "string"}}}}}
+        )
+    for key in ("success_signals", "constraints", "non_goals"):
+        non_null_patch_properties.append(
+            {"properties": {"center_patch": {"properties": {key: {"type": "array"}}}}}
+        )
+    null_patch = {
+        "properties": {
+            "center_patch": {
+                "properties": {
+                    key: {"const": None}
+                    for key in ("outcome", "why_now", "success_signals", "constraints", "non_goals")
+                }
+            }
+        }
+    }
+    schema["allOf"] = [
+        {
+            "if": {
+                "properties": {"id": {"const": "adopt_new_center"}},
+                "required": ["id"],
+            },
+            "then": {"anyOf": non_null_patch_properties},
+            "else": null_patch,
+        }
+    ]
+    return schema
 
 
 def _digest_binding_schema(identity: str, pattern: str) -> Mapping[str, Any]:
@@ -320,10 +882,67 @@ def _observation_schema() -> Mapping[str, Any]:
             "kind": {"enum": ["business", "requirement", "architecture", "scope", "implementation", "security", "data"]},
             "summary": {"type": "string", "minLength": 1, "maxLength": 800},
             "evidence_refs": {"type": "array", "minItems": 1, "maxItems": 20, "uniqueItems": True, "items": {"type": "string", "minLength": 1, "maxLength": 240}},
-            "assumptions": _text_list_schema(), "unknowns": _text_list_schema(),
+            "assumptions": _text_list_schema(maximum_items=20),
+            "unknowns": _text_list_schema(maximum_items=20),
             "recommended_question": {"anyOf": [{"type": "null"}, {"type": "string", "minLength": 1, "maxLength": 800}]},
         },
     }
+
+
+def _task_proposal_scope_schema() -> Mapping[str, Any]:
+    path_items = {"type": "string", "minLength": 1, "maxLength": 400}
+    return {
+        "type": "object",
+        "additionalProperties": False,
+        "required": ["include_paths", "exclude_paths"],
+        "properties": {
+            "include_paths": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 25,
+                "uniqueItems": True,
+                "items": path_items,
+            },
+            "exclude_paths": {
+                "type": "array",
+                "maxItems": 25,
+                "uniqueItems": True,
+                "items": path_items,
+            },
+        },
+    }
+
+
+def _task_proposal_input_schema() -> Mapping[str, Any]:
+    text_list = {
+        "type": "array",
+        "maxItems": 25,
+        "uniqueItems": True,
+        "items": {"type": "string", "minLength": 1, "maxLength": 1_000},
+    }
+    required_text_list = dict(text_list, minItems=1)
+    fields = {
+        "task_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+        },
+        "title": {"type": "string", "minLength": 5, "maxLength": 200},
+        "requirement_summary": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 1_000,
+        },
+        "scope": _task_proposal_scope_schema(),
+        "acceptance_signals": required_text_list,
+        "validation_commands": required_text_list,
+        "owner": {"type": "string", "minLength": 1, "maxLength": 100},
+        "risk_items": text_list,
+        "assumptions": text_list,
+        "unknowns": text_list,
+    }
+    return _tool_schema(fields, tuple(fields))
 
 
 def governance_mcp_tools() -> tuple[Mapping[str, Any], ...]:
@@ -335,24 +954,39 @@ def governance_mcp_tools() -> tuple[Mapping[str, Any], ...]:
         "idempotentHint": False,
         "openWorldHint": False,
     }
+    start_input_schema = _tool_schema(
+        {
+            "subject_type": {"enum": ["work_request", "active_task", "architecture"]},
+            "subject_id": {"type": "string", "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"},
+            "center": _center_schema(),
+            "drift": _drift_schema(),
+            "assumptions": _text_list_schema(),
+            "unknowns": {"type": "array", "maxItems": 100, "items": _question_schema()},
+            "candidate_resolutions": {"type": "array", "maxItems": 5, "items": _resolution_schema()},
+            "recommended_resolution_id": {"anyOf": [{"type": "string"}, {"type": "null"}]},
+        },
+        ("subject_type", "subject_id", "center", "drift", "assumptions", "unknowns", "candidate_resolutions", "recommended_resolution_id"),
+    )
+    start_input_schema["allOf"] = [
+        {
+            "if": {
+                "properties": {"unknowns": {"maxItems": 0}},
+                "required": ["unknowns"],
+            },
+            "then": {
+                "properties": {
+                    "candidate_resolutions": {"minItems": 2},
+                    "recommended_resolution_id": {"type": "string"},
+                }
+            },
+        }
+    ]
     tools = (
         {
             "name": MCP_TOOL_NAMES[0],
             "title": "Start governed alignment",
             "description": "Use before meaningful development when multiple reasonable directions exist or the Agent is asked to choose what to build. Start one foreground alignment journey from normalized meaning; the human must select the final direction. Do not use for read-only or fully specified low-risk work.",
-            "inputSchema": _tool_schema(
-                {
-                    "subject_type": {"enum": ["work_request", "active_task", "architecture"]},
-                    "subject_id": {"type": "string", "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"},
-                    "center": _center_schema(),
-                    "drift": _drift_schema(),
-                    "assumptions": {"type": "array", "items": {"type": "string"}},
-                    "unknowns": {"type": "array", "maxItems": 100, "items": _question_schema()},
-                    "candidate_resolutions": {"type": "array", "maxItems": 5, "items": _resolution_schema()},
-                    "recommended_resolution_id": {"anyOf": [{"type": "string"}, {"type": "null"}]},
-                },
-                ("subject_type", "subject_id", "center", "drift", "assumptions", "unknowns", "candidate_resolutions", "recommended_resolution_id"),
-            ),
+            "inputSchema": start_input_schema,
             "annotations": common_annotations,
         },
         {
@@ -389,7 +1023,22 @@ def governance_mcp_tools() -> tuple[Mapping[str, Any], ...]:
             "title": "Start active-Agent self-review",
             "description": "Use after implementing and validating a human-resolved aligned direction, before completion handoff. Prepare one distinct advisory current-Agent self-review request from allowed evidence.",
             "inputSchema": _tool_schema(
-                {"journey_handle": _handle_schema(), "reason_codes": {"type": "array", "minItems": 1, "uniqueItems": True, "items": {"type": "string"}}, "allowed_evidence_refs": {"type": "array", "minItems": 1, "uniqueItems": True, "items": {"type": "string"}}},
+                {
+                    "journey_handle": _handle_schema(),
+                    "reason_codes": {
+                        "type": "array", "minItems": 1, "maxItems": 50,
+                        "uniqueItems": True,
+                        "items": {
+                            "type": "string", "maxLength": 120,
+                            "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$",
+                        },
+                    },
+                    "allowed_evidence_refs": {
+                        "type": "array", "minItems": 1, "maxItems": 20,
+                        "uniqueItems": True,
+                        "items": {"type": "string", "minLength": 1, "maxLength": 240},
+                    },
+                },
                 ("journey_handle", "reason_codes", "allowed_evidence_refs"),
             ),
             "annotations": common_annotations,
@@ -399,10 +1048,28 @@ def governance_mcp_tools() -> tuple[Mapping[str, Any], ...]:
             "title": "Complete active-Agent self-review",
             "description": "Submit normalized observations for the exact pending self-review request.",
             "inputSchema": _tool_schema(
-                {"journey_handle": _handle_schema(), "request": _digest_binding_schema("request_id", "^asq-[0-9a-f]{32}$"), "observations": {"type": "array", "minItems": 1, "maxItems": 20, "items": _observation_schema()}},
+                {"journey_handle": _handle_schema(), "request": _digest_binding_schema("request_id", "^asq-[0-9a-f]{32}$"), "observations": {"type": "array", "minItems": 1, "maxItems": 20, "uniqueItems": True, "items": _observation_schema()}},
                 ("journey_handle", "request", "observations"),
             ),
             "annotations": common_annotations,
+        },
+        {
+            "name": MCP_TASK_PROPOSAL_TOOL_NAME,
+            "title": "Prepare and review a low-risk task proposal",
+            "description": (
+                "Use when repository-changing work has no admitted task. Materialize only "
+                "normalized low-risk task meaning from the current conversation. AgentGov "
+                "creates the strict proposal and opens one native human review form; never "
+                "supply raw chat, proposal identity, authority, repository identity, or a "
+                "human decision. The task is created only after exact native admission."
+            ),
+            "inputSchema": _task_proposal_input_schema(),
+            "annotations": {
+                "readOnlyHint": False,
+                "destructiveHint": False,
+                "idempotentHint": False,
+                "openWorldHint": False,
+            },
         },
     )
     return tools
@@ -416,6 +1083,7 @@ class GovernanceMcpAdapter:
         *,
         adapter_id: str,
         provider: SemanticReviewProviderCapabilities,
+        repository: Path | None = None,
     ) -> None:
         if not isinstance(adapter_id, str) or not _ID_RE.fullmatch(adapter_id):
             raise GovernanceMcpError("MCP adapter_id is invalid")
@@ -424,6 +1092,7 @@ class GovernanceMcpAdapter:
             raise GovernanceMcpError("MCP Provider adapter_id does not match the host Adapter")
         self.adapter_id = adapter_id
         self.provider = normalized_provider
+        self.repository = repository
         self._journeys: dict[str, _Journey] = {}
 
     def call_tool(self, name: str, arguments: Any) -> Mapping[str, Any]:
@@ -446,6 +1115,247 @@ class GovernanceMcpAdapter:
                 raise
             raise GovernanceMcpError(str(exc)) from exc
 
+    def prepare_task_proposal(self, value: Any) -> TaskProposalPreparation:
+        """Build an exact read-only plan from one Codex-materialized draft."""
+
+        fields = {
+            "task_id",
+            "title",
+            "requirement_summary",
+            "scope",
+            "acceptance_signals",
+            "validation_commands",
+            "owner",
+            "risk_items",
+            "assumptions",
+            "unknowns",
+        }
+        args = _exact_arguments(value, fields, tool=MCP_TASK_PROPOSAL_TOOL_NAME)
+        task_id = _task_proposal_text(
+            args["task_id"], field_path="task_id", maximum=100
+        )
+        if not re.fullmatch(r"^[a-z0-9]+(?:-[a-z0-9]+)*$", task_id):
+            _task_proposal_input_error(field_path="task_id", rule="kebab_case")
+        title = _task_proposal_text(
+            args["title"], field_path="title", minimum=5, maximum=200
+        )
+        summary = _task_proposal_text(
+            args["requirement_summary"],
+            field_path="requirement_summary",
+            minimum=10,
+            maximum=1_000,
+        )
+        scope = args["scope"]
+        if not isinstance(scope, Mapping) or set(scope) != {
+            "include_paths",
+            "exclude_paths",
+        }:
+            _task_proposal_input_error(field_path="scope", rule="exact_fields")
+        include_paths = _task_proposal_text_list(
+            scope["include_paths"],
+            field_path="scope.include_paths",
+            minimum_items=1,
+            item_maximum=400,
+            repository_paths=True,
+        )
+        exclude_paths = _task_proposal_text_list(
+            scope["exclude_paths"],
+            field_path="scope.exclude_paths",
+            item_maximum=400,
+            repository_paths=True,
+        )
+        if set(include_paths) & set(exclude_paths):
+            _task_proposal_input_error(field_path="scope", rule="disjoint_paths")
+        draft = TaskProposalDraft(
+            task_id=task_id,
+            title=title,
+            requirement_summary=summary,
+            include_paths=include_paths,
+            exclude_paths=exclude_paths,
+            acceptance_signals=_task_proposal_text_list(
+                args["acceptance_signals"],
+                field_path="acceptance_signals",
+                minimum_items=1,
+            ),
+            validation_commands=_task_proposal_text_list(
+                args["validation_commands"],
+                field_path="validation_commands",
+                minimum_items=1,
+            ),
+            owner=_task_proposal_text(
+                args["owner"], field_path="owner", maximum=100
+            ),
+            risk_items=_task_proposal_text_list(
+                args["risk_items"], field_path="risk_items"
+            ),
+            assumptions=_task_proposal_text_list(
+                args["assumptions"], field_path="assumptions"
+            ),
+            unknowns=_task_proposal_text_list(
+                args["unknowns"], field_path="unknowns"
+            ),
+        )
+        if self.repository is None:
+            raise GovernanceMcpError(
+                "MCP task-proposal review has no locally bound repository",
+                code="task_proposal_repository_unavailable",
+                stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+                field_path=None,
+                rule="local_repository_binding",
+                retryable=False,
+            )
+        try:
+            return ReferenceTaskProposalAdapter(
+                _NormalizedOnlyMaterializer(),
+                adapter_id=self.adapter_id,
+            ).prepare_from_draft(self.repository, draft)
+        except ReferenceTaskProposalAdapterError as exc:
+            raise GovernanceMcpError(
+                str(exc),
+                code="task_proposal_rejected",
+                stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+                field_path=None,
+                rule="strict_proposal_contract",
+                retryable=True,
+            ) from exc
+        except OSError as exc:
+            raise GovernanceMcpError(
+                "Local repository state prevented safe task-proposal preparation",
+                code="task_proposal_repository_unavailable",
+                stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+                field_path=None,
+                rule="local_repository_binding",
+                retryable=False,
+            ) from exc
+
+    def complete_task_proposal_review(
+        self,
+        preparation: TaskProposalPreparation,
+        response: Any,
+    ) -> Mapping[str, Any]:
+        """Apply only one exact native admit response to the reviewed plan."""
+
+        if not isinstance(response, Mapping):
+            raise GovernanceMcpError(
+                "Native proposal review response is malformed",
+                code="task_proposal_review_invalid",
+                stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+                field_path="elicitation_response",
+                rule="object",
+                retryable=False,
+            )
+        action = response.get("action")
+        if action not in {"accept", "decline", "cancel"}:
+            raise GovernanceMcpError(
+                "Native proposal review action is invalid",
+                code="task_proposal_review_invalid",
+                stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+                field_path="elicitation_response.action",
+                rule="enum",
+                retryable=False,
+            )
+        content = response.get("content")
+        decision: str | None = None
+        if action == "accept":
+            if not isinstance(content, Mapping) or set(content) != {"decision"}:
+                raise GovernanceMcpError(
+                    "Accepted native proposal review content is invalid",
+                    code="task_proposal_review_invalid",
+                    stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+                    field_path="elicitation_response.content",
+                    rule="exact_decision",
+                    retryable=False,
+                )
+            decision = content.get("decision")
+            if not isinstance(decision, str) or decision not in {
+                "admit", "request_changes", "reject"
+            }:
+                raise GovernanceMcpError(
+                    "Native proposal review decision is invalid",
+                    code="task_proposal_review_invalid",
+                    stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+                    field_path="elicitation_response.content.decision",
+                    rule="enum",
+                    retryable=False,
+                )
+        elif content is not None:
+            raise GovernanceMcpError(
+                "Declined or cancelled native proposal review must not include content",
+                code="task_proposal_review_invalid",
+                stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+                field_path="elicitation_response.content",
+                rule="absent",
+                retryable=False,
+            )
+
+        status = {
+            "decline": "declined",
+            "cancel": "cancelled",
+        }.get(
+            action,
+            {"admit": "admitted", "request_changes": "changes_requested", "reject": "rejected"}.get(decision),
+        )
+        modified = False
+        if action == "accept" and decision == "admit":
+            try:
+                apply_task_admission_plan(preparation.plan)
+            except TaskProposalPolicyError as exc:
+                raise GovernanceMcpError(
+                    str(exc),
+                    code="task_proposal_plan_stale",
+                    stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+                    field_path="admission_plan",
+                    rule="revalidation",
+                    retryable=False,
+                ) from exc
+            except OSError as exc:
+                raise GovernanceMcpError(
+                    "Local repository state prevented safe task admission",
+                    code="task_proposal_plan_stale",
+                    stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+                    field_path="admission_plan",
+                    rule="revalidation",
+                    retryable=False,
+                ) from exc
+            status = "admitted"
+            modified = True
+
+        return {
+            "contract": "agentgov.task-proposal-review-result",
+            "schema_version": "1.0",
+            "status": status,
+            "proposal": {
+                "proposal_id": preparation.plan.proposal["proposal_id"],
+                "proposal_digest": preparation.plan.proposal_digest,
+                "target": preparation.plan.target,
+                "task_digest": preparation.plan.task_digest,
+            },
+            "review": {
+                "surface": "mcp_form_elicitation",
+                "action": action,
+                "decision": decision,
+            },
+            "execution": {
+                "semantic_materialization_owner": "current_coding_agent_host",
+                "user_authored_structured_records": 0,
+                "agentgov_model_calls": 0,
+                "agentgov_network_calls": 0,
+                "core_received_raw_conversation": False,
+            },
+            "authority_boundary": {
+                "repository_modified": modified,
+                "task_admitted": modified,
+                "starts_session": False,
+                "authorizes_code_change": False,
+                "authorizes_scope_expansion": False,
+                "authorizes_exception": False,
+                "authorizes_git_operations": False,
+                "authorizes_publication": False,
+                "authorizes_deployment": False,
+                "authorizes_release": False,
+            },
+        }
+
     def _lookup(self, value: Any) -> tuple[str, _Journey]:
         handle = _journey_handle(value)
         journey = self._journeys.get(handle)
@@ -456,9 +1366,12 @@ class GovernanceMcpAdapter:
     def _alignment_start(self, value: Any) -> Mapping[str, Any]:
         fields = {"subject_type", "subject_id", "center", "drift", "assumptions", "unknowns", "candidate_resolutions", "recommended_resolution_id"}
         args = _exact_arguments(value, fields, tool=MCP_TOOL_NAMES[0])
+        if args["subject_type"] not in {"work_request", "active_task", "architecture"}:
+            _alignment_input_error(
+                stage=MCP_TOOL_NAMES[0], field_path="subject_type", rule="enum"
+            )
         if (
-            args["subject_type"] not in {"work_request", "active_task", "architecture"}
-            or not isinstance(args["subject_id"], str)
+            not isinstance(args["subject_id"], str)
             or not re.fullmatch(r"^[a-z0-9]+(?:[._-][a-z0-9]+)*$", args["subject_id"])
         ):
             raise GovernanceMcpError(
@@ -469,13 +1382,59 @@ class GovernanceMcpAdapter:
                 rule="normalized_identifier",
                 retryable=True,
             )
+        center = _validate_center_input(
+            args["center"], stage=MCP_TOOL_NAMES[0], field_path="center"
+        )
+        drift = _validate_drift_input(
+            args["drift"], stage=MCP_TOOL_NAMES[0], field_path="drift"
+        )
+        assumptions = _normalized_input_text_list(
+            args["assumptions"],
+            stage=MCP_TOOL_NAMES[0],
+            field_path="assumptions",
+        )
+        questions = _questions_with_adapter_ids(
+            args["unknowns"], stage=MCP_TOOL_NAMES[0], field_path="unknowns"
+        )
+        candidates = _validate_candidate_resolutions(
+            args["candidate_resolutions"],
+            stage=MCP_TOOL_NAMES[0],
+            field_path="candidate_resolutions",
+        )
+        recommendation = args["recommended_resolution_id"]
+        candidate_ids = {item["id"] for item in candidates}
+        if recommendation is not None and (
+            not isinstance(recommendation, str) or recommendation not in candidate_ids
+        ):
+            _alignment_input_error(
+                stage=MCP_TOOL_NAMES[0],
+                field_path="recommended_resolution_id",
+                rule="candidate_binding",
+            )
+        if not questions:
+            if len(candidates) < 2:
+                raise GovernanceMcpError(
+                    "A context without open questions requires at least two stable options",
+                    code="alignment_invalid_field",
+                    stage=MCP_TOOL_NAMES[0],
+                    field_path="candidate_resolutions",
+                    rule="stable_options_required",
+                    retryable=True,
+                )
+            if recommendation is None:
+                raise GovernanceMcpError(
+                    "A context without open questions requires one recommended option",
+                    code="alignment_invalid_field",
+                    stage=MCP_TOOL_NAMES[0],
+                    field_path="recommended_resolution_id",
+                    rule="recommendation_required",
+                    retryable=True,
+                )
         draft = AlignmentContextDraft(
             subject_type=args["subject_type"], subject_id=args["subject_id"],
-            center=args["center"], drift=args["drift"], assumptions=tuple(args["assumptions"]),
-            unknowns=_questions_with_adapter_ids(
-                args["unknowns"], stage=MCP_TOOL_NAMES[0], field_path="unknowns"
-            ), candidate_resolutions=tuple(args["candidate_resolutions"]),
-            recommended_resolution_id=args["recommended_resolution_id"],
+            center=center, drift=drift, assumptions=assumptions,
+            unknowns=questions, candidate_resolutions=candidates,
+            recommended_resolution_id=recommendation,
         )
         host_capabilities = build_host_interaction_capabilities(
             adapter_id=self.adapter_id,
@@ -527,10 +1486,24 @@ class GovernanceMcpAdapter:
         prompt = active.decision_prompt
         if prompt is None:
             raise GovernanceMcpError("alignment journey is not waiting for a human direction choice")
-        binding = _binding(args["decision_prompt"], fields={"prompt_id", "digest"}, identifier=_DECISION_ID_RE, label="decision prompt")
+        binding = _binding(
+            args["decision_prompt"], fields={"prompt_id", "digest"},
+            identifier=_DECISION_ID_RE, label="decision prompt",
+            stage=MCP_TOOL_NAMES[2], field_path="decision_prompt",
+        )
         expected = {"prompt_id": prompt.prompt_id, "digest": canonical_document_digest(asdict(prompt))}
         if binding != expected:
-            raise GovernanceMcpError("decision prompt binding is stale")
+            _post_selection_input_error(
+                stage=MCP_TOOL_NAMES[2], field_path="decision_prompt", rule="stale_binding"
+            )
+        offered = {item["id"] for item in asdict(prompt)["options"]}
+        if (
+            not isinstance(args["selected_option_id"], str)
+            or args["selected_option_id"] not in offered
+        ):
+            _post_selection_input_error(
+                stage=MCP_TOOL_NAMES[2], field_path="selected_option_id", rule="offered_option"
+            )
         response = journey.adapter.select(args["selected_option_id"])
         return self._alignment_result(handle, response)
 
@@ -541,21 +1514,42 @@ class GovernanceMcpAdapter:
         if journey.review_requested or journey.review_completed:
             raise GovernanceMcpError("self-review has already started for this journey")
         active = journey.adapter.journey().responses[-1]
+        if active.status != "resolved":
+            raise GovernanceMcpError(
+                "self-review requires resolved human alignment",
+                code="post_selection_state_invalid", stage=MCP_TOOL_NAMES[3],
+                field_path="journey_handle", rule="alignment_resolved_required",
+                retryable=False,
+            )
+        reason_codes = _post_selection_identifiers(
+            args["reason_codes"], stage=MCP_TOOL_NAMES[3], field_path="reason_codes"
+        )
+        evidence_refs = _validate_evidence_refs(
+            args["allowed_evidence_refs"],
+            stage=MCP_TOOL_NAMES[3],
+            field_path="allowed_evidence_refs",
+        )
         start = {
             "contract": SELF_REVIEW_START_CONTRACT,
             "schema_version": "1.0",
             "start_id": "asx-" + uuid.uuid4().hex,
             "source": {"adapter_id": self.adapter_id, "actor_class": "coding_agent"},
             "alignment": {"dialogue_id": active.dialogue.dialogue_id, "revision": active.dialogue.revision, "digest": canonical_document_digest(asdict(active.dialogue))},
-            "risk": {"level": "medium", "reason_codes": list(args["reason_codes"])},
+            "risk": {"level": "medium", "reason_codes": list(reason_codes)},
             "provider": asdict(self.provider),
-            "allowed_evidence_refs": list(args["allowed_evidence_refs"]),
+            "allowed_evidence_refs": list(evidence_refs),
             "content_boundary": semantic_content_boundary(),
             "authority_boundary": semantic_authority_boundary(),
         }
         response = journey.self_review.process_payload(
             start, sequence=1, alignment_response=active, expected_adapter_id=self.adapter_id
         )
+        materialization_request = response.materialization_request
+        journey.pending_review_request = {
+            "request_id": materialization_request["request_id"],
+            "digest": materialization_request["request_digest"],
+        }
+        journey.allowed_review_evidence_refs = evidence_refs
         journey.self_review_sequence = 1
         journey.review_requested = True
         return {"journey_handle": handle, "stage": "self_review", "response": asdict(response), "authority_boundary": semantic_authority_boundary()}
@@ -566,14 +1560,27 @@ class GovernanceMcpAdapter:
         handle, journey = self._lookup(args["journey_handle"])
         if not journey.review_requested or journey.review_completed:
             raise GovernanceMcpError("self-review completion requires one pending request")
-        request = _binding(args["request"], fields={"request_id", "digest"}, identifier=_REQUEST_ID_RE, label="self-review request")
+        request = _binding(
+            args["request"], fields={"request_id", "digest"},
+            identifier=_REQUEST_ID_RE, label="self-review request",
+            stage=MCP_TOOL_NAMES[4], field_path="request",
+        )
+        if request != journey.pending_review_request:
+            _post_selection_input_error(
+                stage=MCP_TOOL_NAMES[4], field_path="request", rule="stale_binding"
+            )
+        observations = _validate_review_observations(
+            args["observations"],
+            stage=MCP_TOOL_NAMES[4],
+            allowed_evidence_refs=journey.allowed_review_evidence_refs,
+        )
         draft = {
             "contract": SELF_REVIEW_DRAFT_CONTRACT,
             "schema_version": "1.0",
             "draft_id": "asd-" + uuid.uuid4().hex,
             "source": {"adapter_id": self.adapter_id, "actor_class": "coding_agent"},
             "request": {"request_id": request["request_id"], "request_digest": request["digest"]},
-            "observations": list(args["observations"]),
+            "observations": list(observations),
             "content_boundary": semantic_content_boundary(),
             "authority_boundary": semantic_authority_boundary(),
         }
@@ -593,8 +1600,82 @@ class GovernanceMcpAdapter:
 class GovernanceMcpServer:
     """Dependency-free JSON-RPC surface for current and legacy STDIO MCP clients."""
 
-    def __init__(self, adapter: GovernanceMcpAdapter) -> None:
+    def __init__(
+        self,
+        adapter: GovernanceMcpAdapter,
+        *,
+        request_id_factory: Callable[[], str] | None = None,
+    ) -> None:
         self.adapter = adapter
+        self._client_supports_form_elicitation = False
+        self._request_id_factory = request_id_factory or (
+            lambda: f"elc-{uuid.uuid4().hex}"
+        )
+
+    @staticmethod
+    def _supports_form_elicitation(capabilities: Any) -> bool:
+        if not isinstance(capabilities, Mapping):
+            return False
+        elicitation = capabilities.get("elicitation")
+        if not isinstance(elicitation, Mapping):
+            return False
+        return not elicitation or isinstance(elicitation.get("form"), Mapping)
+
+    def _available_tools(self) -> tuple[Mapping[str, Any], ...]:
+        tools = governance_mcp_tools()
+        if self._client_supports_form_elicitation:
+            return tools
+        return tuple(
+            tool for tool in tools if tool["name"] != MCP_TASK_PROPOSAL_TOOL_NAME
+        )
+
+    @staticmethod
+    def _tool_success(structured: Mapping[str, Any]) -> Mapping[str, Any]:
+        text = json.dumps(structured, ensure_ascii=False, sort_keys=True)
+        return {
+            "resultType": "complete",
+            "content": [{"type": "text", "text": text}],
+            "structuredContent": structured,
+            "isError": False,
+        }
+
+    @staticmethod
+    def _tool_failure(exc: GovernanceMcpError) -> Mapping[str, Any]:
+        return {
+            "resultType": "complete",
+            "content": [{"type": "text", "text": str(exc)}],
+            "structuredContent": {"error": exc.diagnostic()},
+            "isError": True,
+        }
+
+    @staticmethod
+    def _proposal_review_schema() -> Mapping[str, Any]:
+        return {
+            "type": "object",
+            "properties": {
+                "decision": {
+                    "type": "string",
+                    "title": "Task proposal decision",
+                    "description": (
+                        "Admit only this exact reviewed task, request changes without "
+                        "writing, or reject it without writing."
+                    ),
+                    "oneOf": [
+                        {"const": "admit", "title": "Admit this exact task"},
+                        {"const": "request_changes", "title": "Request changes"},
+                        {"const": "reject", "title": "Reject proposal"},
+                    ],
+                }
+            },
+            "required": ["decision"],
+        }
+
+    @staticmethod
+    def _write_payload(output_stream: TextIO, payload: Mapping[str, Any]) -> None:
+        output_stream.write(
+            json.dumps(payload, ensure_ascii=False, sort_keys=True) + "\n"
+        )
+        output_stream.flush()
 
     def dispatch(self, payload: Any) -> Mapping[str, Any] | None:
         if not isinstance(payload, Mapping):
@@ -616,31 +1697,55 @@ class GovernanceMcpServer:
         if method == "initialize":
             if not isinstance(params, Mapping) or not isinstance(params.get("protocolVersion"), str):
                 return self._error(request_id, -32602, "Invalid initialize params")
+            self._client_supports_form_elicitation = self._supports_form_elicitation(
+                params.get("capabilities")
+            )
             requested = params["protocolVersion"]
             selected = requested if requested in {MCP_PROTOCOL_VERSION, *MCP_LEGACY_PROTOCOL_VERSIONS} else MCP_LEGACY_PROTOCOL_VERSIONS[0]
             return self._result(request_id, {"protocolVersion": selected, "capabilities": {"tools": {"listChanged": False}}, "serverInfo": {"name": MCP_SERVER_NAME, "version": MCP_SERVER_VERSION}, "instructions": MCP_SERVER_INSTRUCTIONS})
         if method == "ping":
             return self._result(request_id, {})
         if method == "tools/list":
-            return self._result(request_id, {"resultType": "complete", "tools": list(governance_mcp_tools()), "ttlMs": 300000, "cacheScope": "public"})
+            return self._result(request_id, {"resultType": "complete", "tools": list(self._available_tools()), "ttlMs": 300000, "cacheScope": "public"})
         if method == "tools/call":
             if not isinstance(params, Mapping) or set(params) - {"name", "arguments", "_meta", "inputResponses", "requestState"}:
                 return self._error(request_id, -32602, "Invalid tools/call params")
             name = params.get("name")
             if name not in MCP_TOOL_NAMES:
                 return self._error(request_id, -32602, "Unknown AgentGov tool")
+            if name == MCP_TASK_PROPOSAL_TOOL_NAME:
+                if not self._client_supports_form_elicitation:
+                    return self._result(
+                        request_id,
+                        self._tool_failure(
+                            GovernanceMcpError(
+                                "Codex did not negotiate native form elicitation",
+                                code="task_proposal_elicitation_unsupported",
+                                stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+                                field_path=None,
+                                rule="client_capability",
+                                retryable=False,
+                            )
+                        ),
+                    )
+                return self._result(
+                    request_id,
+                    self._tool_failure(
+                        GovernanceMcpError(
+                            "Native proposal review requires the interactive STDIO transport",
+                            code="task_proposal_elicitation_transport_required",
+                            stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+                            field_path=None,
+                            rule="interactive_transport",
+                            retryable=False,
+                        )
+                    ),
+                )
             try:
                 structured = self.adapter.call_tool(name, params.get("arguments", {}))
             except GovernanceMcpError as exc:
-                diagnostic = exc.diagnostic()
-                return self._result(request_id, {
-                    "resultType": "complete",
-                    "content": [{"type": "text", "text": str(exc)}],
-                    "structuredContent": {"error": diagnostic},
-                    "isError": True,
-                })
-            text = json.dumps(structured, ensure_ascii=False, sort_keys=True)
-            return self._result(request_id, {"resultType": "complete", "content": [{"type": "text", "text": text}], "structuredContent": structured, "isError": False})
+                return self._result(request_id, self._tool_failure(exc))
+            return self._result(request_id, self._tool_success(structured))
         return self._error(request_id, -32601, "Method not found")
 
     @staticmethod
@@ -651,6 +1756,131 @@ class GovernanceMcpServer:
     def _error(request_id: Any, code: int, message: str) -> Mapping[str, Any]:
         return {"jsonrpc": "2.0", "id": request_id, "error": {"code": code, "message": message}}
 
+    def _serve_task_proposal_call(
+        self,
+        payload: Mapping[str, Any],
+        input_stream: TextIO,
+        output_stream: TextIO,
+    ) -> Mapping[str, Any]:
+        request_id = payload.get("id")
+        params = payload.get("params", {})
+        if (
+            not isinstance(params, Mapping)
+            or set(params)
+            - {"name", "arguments", "_meta", "inputResponses", "requestState"}
+        ):
+            return self._error(request_id, -32602, "Invalid tools/call params")
+        if not self._client_supports_form_elicitation:
+            exc = GovernanceMcpError(
+                "Codex did not negotiate native form elicitation",
+                code="task_proposal_elicitation_unsupported",
+                stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+                field_path=None,
+                rule="client_capability",
+                retryable=False,
+            )
+            return self._result(request_id, self._tool_failure(exc))
+        try:
+            preparation = self.adapter.prepare_task_proposal(
+                params.get("arguments", {})
+            )
+            message = (
+                "Review this exact bounded AgentGov task-admission plan. "
+                "Only 'Admit this exact task' may create the listed target; all "
+                "other outcomes perform no repository write.\n\n"
+                + render_task_admission_plan_json(preparation.plan)
+            )
+            if len(message) > MAX_PROPOSAL_ELICITATION_MESSAGE_CHARACTERS:
+                raise GovernanceMcpError(
+                    "Task proposal is too large for bounded native review",
+                    code="task_proposal_elicitation_too_large",
+                    stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+                    field_path="admission_plan",
+                    rule="max_characters",
+                    retryable=True,
+                )
+        except GovernanceMcpError as exc:
+            return self._result(request_id, self._tool_failure(exc))
+
+        elicitation_id = self._request_id_factory()
+        self._write_payload(
+            output_stream,
+            {
+                "jsonrpc": "2.0",
+                "id": elicitation_id,
+                "method": "elicitation/create",
+                "params": {
+                    "mode": "form",
+                    "message": message,
+                    "requestedSchema": self._proposal_review_schema(),
+                },
+            },
+        )
+
+        while True:
+            line = input_stream.readline()
+            if line == "":
+                exc = GovernanceMcpError(
+                    "Native proposal review was interrupted before a bound decision",
+                    code="task_proposal_elicitation_interrupted",
+                    stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+                    field_path=None,
+                    rule="response_required",
+                    retryable=True,
+                )
+                return self._result(request_id, self._tool_failure(exc))
+            try:
+                incoming = json.loads(line)
+            except json.JSONDecodeError:
+                self._write_payload(output_stream, self._error(None, -32700, "Parse error"))
+                continue
+            if not isinstance(incoming, Mapping):
+                self._write_payload(output_stream, self._error(None, -32600, "Invalid Request"))
+                continue
+            if incoming.get("id") == elicitation_id and "method" not in incoming:
+                if (
+                    incoming.get("jsonrpc") != "2.0"
+                    or set(incoming) - {"jsonrpc", "id", "result", "error"}
+                    or "result" not in incoming
+                    or "error" in incoming
+                ):
+                    exc = GovernanceMcpError(
+                        "Native proposal review returned no admissible result",
+                        code="task_proposal_elicitation_failed",
+                        stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+                        field_path="elicitation_response",
+                        rule="result_required",
+                        retryable=True,
+                    )
+                    return self._result(request_id, self._tool_failure(exc))
+                try:
+                    structured = self.adapter.complete_task_proposal_review(
+                        preparation, incoming["result"]
+                    )
+                except GovernanceMcpError as exc:
+                    return self._result(request_id, self._tool_failure(exc))
+                return self._result(request_id, self._tool_success(structured))
+            if incoming.get("method") == "notifications/cancelled":
+                cancelled = incoming.get("params")
+                if isinstance(cancelled, Mapping) and cancelled.get("requestId") in {
+                    elicitation_id,
+                    request_id,
+                }:
+                    exc = GovernanceMcpError(
+                        "Native proposal review was cancelled before admission",
+                        code="task_proposal_elicitation_interrupted",
+                        stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+                        field_path=None,
+                        rule="cancelled",
+                        retryable=True,
+                    )
+                    return self._result(request_id, self._tool_failure(exc))
+                continue
+            if "method" in incoming:
+                nested_response = self.dispatch(incoming)
+                if nested_response is not None:
+                    self._write_payload(output_stream, nested_response)
+
     def serve(self, input_stream: TextIO, output_stream: TextIO) -> int:
         for line in input_stream:
             try:
@@ -658,8 +1888,17 @@ class GovernanceMcpServer:
             except json.JSONDecodeError:
                 response = self._error(None, -32700, "Parse error")
             else:
-                response = self.dispatch(payload)
+                if (
+                    isinstance(payload, Mapping)
+                    and payload.get("method") == "tools/call"
+                    and isinstance(payload.get("params"), Mapping)
+                    and payload["params"].get("name") == MCP_TASK_PROPOSAL_TOOL_NAME
+                ):
+                    response = self._serve_task_proposal_call(
+                        payload, input_stream, output_stream
+                    )
+                else:
+                    response = self.dispatch(payload)
             if response is not None:
-                output_stream.write(json.dumps(response, ensure_ascii=False, sort_keys=True) + "\n")
-                output_stream.flush()
+                self._write_payload(output_stream, response)
         return 0

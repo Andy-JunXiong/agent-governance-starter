@@ -184,3 +184,235 @@ not a selected or authorized direction. The next bounded investigation is the
 remaining unclassified Adapter/Core contract mismatch, using normalized
 fixtures rather than retained raw conversation. Do not repeat the live replay
 until that cause is classified and corrected.
+
+## Normalized diagnosis after the post-guidance replay
+
+The bounded follow-up reproduced the failure without retaining or reconstructing
+the live payload. The MCP schema allowed `deterministic` semantics for every
+drift kind, while Core requires business, requirement, and architecture drift
+to remain advisory. That exact Core message was outside the safe mapping and
+therefore produced the observed unclassified rejection.
+
+Development source now makes the conditional advisory rule visible in the MCP
+schema and returns only `drift.semantics`, `advisory_required`, and a retryable
+classification for this known failure. Normalized fixtures cover all three
+judgment-bearing drift kinds and prove atomic failed start plus corrected retry
+in one server process. This is static correction evidence, not a successful
+live replay.
+
+## Drift-semantics correction installation preflight
+
+The exact current source was rebuilt locally with SHA-256
+`445FF0A3A803D1FC644A4566E4D2B68365DBA9C97C758C0876376012ED87C55D` and
+installed into the existing isolated Python 3.12.10 pipx environment. The
+local-only `0.3.0rc1` package identity is not the immutable released artifact.
+Two read-only-identified AgentGov governance-MCP child-process chains were
+stopped to release the Windows lock; unrelated processes were not targeted.
+
+Installed preflight reported Adapter `1.2.1`, exactly five tools, and the
+advisory-only conditional schema for business, requirement, and architecture
+drift. One foreground probe rejected deterministic architecture drift with
+retryable `drift.semantics` / `advisory_required`, then accepted the corrected
+advisory retry and returned an exploring journey with a valid handle. This is
+installation evidence only. A fresh uncoached Codex session remains required
+for the measured replay.
+
+## Adapter 1.2.1 fresh replay result
+
+The human opened the required fresh Codex session and supplied an ordinary
+request without named-tool coaching. The Agent selected alignment, received a
+retryable drift error, corrected it, and then received
+`alignment_rejected_internal` / `unclassified`. It stopped fail-closed without
+changing the repository. Human direction selection, implementation, and
+self-review did not begin. Normalized outcome: **FAIL**.
+
+The reviewed bounded diagnosis found the next schema/Core mismatch without
+retaining the live payload. MCP allowed `unknowns=[]` with fewer than two
+candidate resolutions or a null recommendation, while Core requires stable
+recommended resolutions before it can return the final human decision. The
+development Adapter now exposes that conditional schema rule and separately
+returns retryable `stable_options_required` or `recommendation_required` on
+the exact repairable field. Static fixtures prove atomic failures and a
+corrected same-process transition to `ready_for_decision`; another installed
+runtime replay remains a separate human-reviewed requirement.
+
+## Stable-options correction installation preflight
+
+The exact current source was locally rebuilt with SHA-256
+`329790D30064103669BA231302FEF87F92C190D5401E9C4817815736825BACB8` and
+installed into the existing isolated Python 3.12.10 pipx environment. The
+local `0.3.0rc1` identity is not the immutable published artifact. Two
+read-only-identified AgentGov governance-MCP child-process chains were stopped
+to release the shared runtime lock; unrelated processes were not targeted.
+
+Installed Adapter `1.2.2` exposed exactly five tools and the conditional
+no-unknown schema. One foreground probe returned retryable
+`stable_options_required`, then retryable `recommendation_required`, then
+accepted the complete corrected start into `ready_for_decision` with a valid
+journey handle. This proves installed protocol behavior only. The measured
+end-to-end journey still requires a newly created Codex session without
+named-tool coaching.
+
+## Adapter 1.2.2 fresh replay and parity-audit direction
+
+The next newly created session again selected governance and stopped
+fail-closed without changing the repository when Alignment Start returned an
+unclassified Core rejection. Human choice, implementation, and self-review did
+not begin. Normalized outcome: **FAIL**.
+
+The reviewed correction no longer diagnoses only the latest live symptom.
+Development Adapter `1.2.3` audits the complete start boundary using the
+documented eleven-family denominator in the MCP Adapter guide. Thirty
+normalized repairable-input fixtures cover the ten model-authored families;
+one synthetic future Core invariant proves that generated internal failures
+remain private, unclassified, and non-retryable. This is static parity evidence,
+not a successful replay result.
+
+## Adapter 1.2.3 installation preflight and replay permission boundary
+
+The exact current source was built offline with Python 3.12.10 using the
+already-installed build backend. Its local-only `0.3.0rc1` wheel had SHA-256
+`F3F2B45B21636556FFD034C9C91370FEB790D794EDE2B2488568A8B1ADE9CECA`; it is
+not the immutable published release artifact. Two precisely identified
+AgentGov governance-MCP launcher/child chains, four processes total, were
+stopped to release the existing pipx environment lock. No unrelated process
+was targeted. The wheel then replaced only the existing AgentGov pipx runtime,
+and all temporary wheel files were removed.
+
+Installed discovery reported Adapter `1.2.3` and exactly five tools. One
+foreground process confirmed the center success-signal minimum, assumptions
+maximum, retryable `center.success_signals` / `min_items`, and a corrected
+transition to `ready_for_decision`. An installed-package synthetic Core
+invariant returned private, non-retryable `alignment_rejected_internal` /
+`unclassified` without revealing its cause.
+
+The first Codex process was launched as fresh, ephemeral, and read-only, but
+the sandbox prevented it from reaching the external service. It exited before
+tool discovery and is not counted as an eligible replay; no raw prompt,
+transcript, payload, source, credential, path, or model-private reasoning was
+retained. An unsandboxed retry was denied because it may transmit repository
+instructions and context to the external Codex service. The experiment is
+paused until the human explicitly approves that data-egress risk.
+
+## Adapter 1.2.3 external replay measurement result
+
+The human explicitly approved one external Codex transmission. The fresh,
+ephemeral, read-only session exited successfully and its final normalized text
+matched a human-direction-selection boundary. However, the first normalizer
+searched all event text rather than only completed MCP tool-call events. It
+therefore mixed live state with historical terms read from this repository and
+reported contradictory readiness and internal-rejection markers.
+
+Raw events had already been intentionally discarded, so the contradiction
+cannot be safely reconstructed. Normalized outcome: **INVALID_MEASUREMENT**,
+not PASS or FAIL for Adapter behavior. No repository mutation or raw replay
+material was retained. A corrected event-scoped normalizer was prepared, but
+starting another external Codex session was denied because the original human
+approval covered one transmission only. No second external session occurred.
+
+## Adapter 1.2.3 event-scoped replay result
+
+The human separately approved one additional external transmission. The new
+Codex session was fresh, ephemeral, and read-only. Its corrected normalizer
+inspected only completed `mcp_tool_call` events and the final Agent message;
+ordinary command output and repository text were excluded.
+
+The session exited zero with no operational error. It completed two actual
+`agentgov_alignment_start` calls. The first returned a retryable input
+diagnostic; the second returned `ready_for_decision`. The final Agent message
+preserved the human-owned direction-selection boundary. No
+`alignment_rejected_internal`, `unclassified`, Alignment Update, Alignment
+Resolve, or self-review call occurred, and no repository file changed. Raw
+events were not retained.
+
+Normalized outcome: **PASS — ALIGNMENT START AND HUMAN SELECTION BOUNDARY**.
+This closes the repeated Start-rejection investigation. It does not establish
+the later human resolution, implementation, validation, or active-Agent
+self-review stages; those require a separately reviewed continuation.
+
+## Adapter 1.2.4 installed preflight
+
+After the human-selected post-selection contract slice and independent
+installation-gate correction passed full validation, the exact local source was
+built offline and installed into the existing Python 3.12.10 pipx environment.
+The local-only `0.3.0rc1` wheel had SHA-256
+`09CC8C54A8613E1E3100F60850EBE7BD5DF53668CCD37FBAEBBAF2C8A73BF362`;
+it is not an immutable published release artifact. No MCP process required
+termination, and temporary wheel staging was removed after installation.
+
+Installed discovery reported protocol `2026-07-28`, Adapter `1.2.4`, and five
+tools. A foreground probe verified the exact reason, evidence, observation,
+allow-list, and uniqueness limits; every rejected call returned bounded
+retryable metadata without advancing state, and corrected completion succeeded
+in the same process with zero AgentGov model or network calls. This is
+installed-runtime evidence only. No external Codex session was started, and
+the live post-selection journey remains unproven.
+
+## Current-session post-selection continuation
+
+The human product owner clarified that the already-running ephemeral Codex
+session was the single approved external replay and prohibited another Codex
+session, Agent, host, or replay. In that same session the native MCP journey
+reached `ready_for_decision`, presented two stable directions, and recorded the
+human-selected `return_to_center` option through Alignment Resolve. The returned
+authority boundary still denied code, Git, release, deployment, exception, and
+scope-expansion authority.
+
+The event-scoped normalizer observed six governance calls. The first Start
+failure had no safe Adapter classification marker, the second returned
+`alignment_invalid_field`, and the corrected third returned
+`ready_for_decision`. Resolve then returned `resolved`; self-review start
+returned `materialization_required`; self-review completion returned
+`completed`. Raw events and the original prompt were discarded rather than
+retained as evidence.
+
+The exact working source then passed 22 focused MCP tests, 13 task-contract
+tests, and the complete 734-test Python 3.12 suite with two platform-limited
+skips. The distinct native current-Agent self-review then completed with three
+bounded advisory observations, one materializer invocation, zero AgentGov model
+or network calls, and no Adapter context retention. This closes the measured
+current-host post-selection slice; it does not measure automatic proposal
+generation, a second host, NYC adoption, release behavior, or deployment.
+
+The live turn's scope snapshot included two transient `.tmp-replay` bridge files
+and therefore reported `PASS=19 FAIL=4 ADVISORY=1`. After normalized extraction
+and bridge cleanup, an independent read-only snapshot reported
+`PASS=19 FAIL=2 ADVISORY=1`; only the pre-existing excluded Codex config and
+user-owned social-cover image remain.
+
+## Adapter 1.3.0 proposal-review replay bridge result
+
+The product owner approved one fresh event-level external replay using the
+installed Adapter `1.3.0` and the current chat as the human decision channel.
+The exact Codex App Server process produced no observable initialization,
+thread, native form, governance tool-call, or terminal event before a bounded
+eight-minute stop. It was terminated and confirmed absent. No bridge state,
+decision, admitted task, source change, or raw replay material was created.
+
+A local-only follow-up initialized the same App Server successfully without
+starting a thread or sending a task after replacing the Windows PowerShell 5.1
+asynchronous stderr event callback with a direct null-stream drain. The measured
+result is therefore `INVALID_HOST_BRIDGE`, not a pass or failure of Adapter
+`1.3.0`. Since the stopped process cannot prove that it never crossed the
+external boundary, no automatic retry occurred; a corrected fresh replay needs
+separate human approval.
+
+The product owner supplied that separate approval. A corrected local-only
+thread probe exposed one additional host mismatch: the installed App Server
+accepted `read-only` rather than `readOnly`. After adopting the runtime-verified
+value, initialization and `thread/start` passed locally without a turn or model
+call.
+
+The real replay then reached `starting_turn` and submitted the ordinary bounded
+request, but App Server closed before a turn response. The event normalizer
+recorded no error code, elicitation, or proposal-review tool call, and no new
+task or raw output remained. This second measurement is
+`INVALID_APP_SERVER_EOF`, not Adapter evidence. Its external authorization was
+consumed at `turn/start`; another replay is not admitted.
+
+The same standalone Codex binary subsequently reported `Not logged in`, and
+presence-only checks found no `CODEX_ACCESS_TOKEN`, `CODEX_API_KEY`, or
+`OPENAI_API_KEY` available to inherit. This strongly explains the App Server
+EOF while preserving the evidence boundary: no credential value or discarded
+stderr was read. Authentication repair remains a separate human-controlled
+action.

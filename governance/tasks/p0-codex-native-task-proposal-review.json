@@ -1,0 +1,107 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-codex-native-task-proposal-review",
+  "title": "Connect Codex materialization to native proposal review",
+  "requirement": {
+    "summary": "Add a capability-gated Codex MCP tool that accepts only a normalized low-risk task draft, presents the exact proposal through native form elicitation, and creates it only after the human explicitly admits that exact preview.",
+    "source_refs": [
+      "docs/adr/0015-use-mcp-elicitation-for-codex-task-admission.md",
+      "docs/task-proposal-admission.md",
+      "docs/governance-mcp-adapter.md",
+      "docs/product-requirements-automatic-governance.md"
+    ]
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": [
+      "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+      "docs/adr/0015-use-mcp-elicitation-for-codex-task-admission.md"
+    ],
+    "rationale": "The reference proposal seam is complete, and the product owner selected its next connection to the current Codex host and a native review surface."
+  },
+  "goal": "Extend the foreground Codex MCP Adapter so the current Agent materializes normalized proposal fields and one capability-negotiated native form records the human review before exclusive task creation.",
+  "non_goals": [
+    "Do not add an OpenAI API call, API key, second model, external service, custom App Server client, web component, or another host.",
+    "Do not send raw prompts, transcripts, source content, credentials, absolute host paths, proposal IDs, authority flags, or human decisions through model-authored tool input.",
+    "Do not treat MCP tool permission, model intent, form display, action=accept alone, standing policy, or terminal presence as admission of the proposed task.",
+    "Do not admit non-low-risk tasks, start a session, implement the generated task, expand scope, grant an exception, or authorize Git, publication, release, deployment, or external writes.",
+    "Do not install the changed package, modify the existing local Codex config, run an external replay, touch NYC, commit, or push."
+  ],
+  "scope": {
+    "include_paths": [
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "docs",
+      "governance/tasks",
+      "schemas",
+      "src/agentgov",
+      "templates/codex-mcp.template.toml",
+      "tests"
+    ],
+    "exclude_paths": [
+      ".codex/config.toml",
+      "docs/assets/linkedin-github-repository-cover.png",
+      ".github/workflows",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+    "docs/adr/0015-use-mcp-elicitation-for-codex-task-admission.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/governance-mcp-adapter.md",
+    "docs/task-proposal-admission.md"
+  ],
+  "acceptance_signals": [
+    "The existing five read-only governance tools remain unchanged, while the proposal-review tool is listed only for clients that declare MCP form elicitation support.",
+    "The current Coding Agent supplies only strict normalized low-risk task meaning; Adapter-owned repository identity, proposal identity, privacy, authority, preview digests, and decision binding cannot be model-authored.",
+    "The Adapter emits one bounded elicitation/create form containing the exact reviewed plan and one admit/change/reject decision, and binds the response to the pending tool call and elicitation ID.",
+    "Only action=accept plus the exact admit decision can revalidate and exclusively create the reviewed task; decline, cancel, change, reject, malformed, stale, raced, unsupported, interrupted, and EOF paths write nothing.",
+    "The result distinguishes factual repository mutation from denied downstream authority and reports zero AgentGov model/network calls and no Core receipt of raw conversation.",
+    "The packaged Codex config enables the new tool without claiming that ordinary tool permission is governance admission; existing custom config remains create-missing-only and is not overwritten.",
+    "Focused protocol/proposal/config tests, task/scope/repository governance, documentation checks, the complete supported-Python suite, and diff checks pass."
+  ],
+  "validation_commands": [
+    "python -m unittest discover -s tests -p test_governance_mcp.py -v",
+    "python -m unittest discover -s tests -p test_reference_task_proposal_adapter.py -v",
+    "python -m unittest discover -s tests -p test_task_proposal.py -v",
+    "python -m unittest discover -s tests -p test_task_contract.py -v",
+    "python -m agentgov check task governance/tasks/p0-codex-native-task-proposal-review.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-codex-native-task-proposal-review.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "high",
+    "items": [
+      "A bidirectional STDIO implementation could misbind an elicitation response or deadlock the foreground tool call.",
+      "Generic MCP tool permission could be confused with the distinct human task-admission decision.",
+      "A malformed, cancelled, or raced review could create a task the human did not review unless validation remains atomic through the final write.",
+      "The current Codex UI may add another permission interruption or render the bounded preview poorly; fixture tests cannot establish live usability.",
+      "Existing uncommitted Adapter 1.2.4 and reference proposal work share the working copy and must remain distinguishable."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": [
+      "docs/development-log/2026-08-07.md"
+    ]
+  },
+  "stop_conditions": [
+    "Stop if the client does not explicitly advertise form elicitation or if a response cannot be bound to the exact pending request.",
+    "Stop if any non-admit, malformed, interrupted, or failed path can mutate the repository or advance task state.",
+    "Stop if the change requires raw conversation in Core, a new credential/model/network service, weakened proposal validation, hidden configuration overwrite, or expanded project authority.",
+    "Stop before installation, local config mutation, external replay, NYC work, Git writes, publication, release, or deployment."
+  ],
+  "decision": {
+    "state": "admitted",
+    "decided_by": "Human product owner",
+    "rationale": "The product owner selected Codex production materialization and native proposal review on 2026-08-07; ADR-0015 maps native review to capability-negotiated MCP form elicitation."
+  }
+}
