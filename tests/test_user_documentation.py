@@ -12,6 +12,7 @@ GENERATED_FILES_GUIDE = ROOT / "docs/generated-files-guide.md"
 TROUBLESHOOTING = ROOT / "docs/troubleshooting.md"
 CONSUMER_CI = ROOT / "docs/consumer-ci.md"
 DEVELOPMENT_MONITOR = ROOT / "docs/development-monitor.md"
+DRIFT_REVIEW_REMINDERS = ROOT / "docs/drift-review-reminders.md"
 DEVELOPMENT_SESSION = ROOT / "docs/development-session.md"
 DEVELOPMENT_PLAN = ROOT / "docs/development-plan.md"
 AUTOMATIC_PRODUCT_REQUIREMENTS = (
@@ -234,6 +235,12 @@ class UserDocumentationTests(unittest.TestCase):
             self.assertIn(phrase, governance_mcp_compact)
         for text in (automation, governance_mcp, proposal_admission):
             self.assertIn("agentgov_task_proposal_review", text)
+        for text in (governance_mcp, proposal_admission):
+            normalized_text = " ".join(text.split())
+            self.assertIn("exact requested repository change", normalized_text)
+            self.assertIn("measurement-only", normalized_text)
+            self.assertIn("Read-only work does not trigger proposal review", normalized_text)
+            self.assertIn("cannot force a model", normalized_text)
         self.assertIn("agentgov.task-proposal-review-result", proposal_admission)
         self.assertIn("five base tools", automation)
         self.assertNotIn("five fixed tools", automation)
@@ -279,7 +286,9 @@ class UserDocumentationTests(unittest.TestCase):
             self.assertIn("--prompt-human", text)
             self.assertIn("agentgov integrate codex-mcp . --dry-run", text)
             self.assertIn("1.3.0", text)
+            self.assertIn("1.4.0", text)
             self.assertIn("agentgov_task_proposal_review", text)
+            self.assertIn("agentgov_drift_review_record", text)
             self.assertTrue("clarification" in text.lower() or "澄清" in text)
             self.assertTrue("does not survive restart" in text or "重启后不会恢复" in text)
 
@@ -602,6 +611,38 @@ class UserDocumentationTests(unittest.TestCase):
         self.assertIn('button.setAttribute("aria-label"', script)
         self.assertIn("复制失败", script)
         self.assertIn(".copy-code:focus-visible", style)
+
+    def test_drift_review_reminders_preserve_advisory_and_notification_boundaries(self) -> None:
+        guide = DRIFT_REVIEW_REMINDERS.read_text(encoding="utf-8")
+        consumer = CONSUMER_CI.read_text(encoding="utf-8")
+        monitor = DEVELOPMENT_MONITOR.read_text(encoding="utf-8")
+        normalized_guide = " ".join(guide.split())
+
+        for text in (guide, consumer, monitor):
+            self.assertIn("advisory", text.lower())
+        for phrase in (
+            "three distinct verified task completions",
+            "seven days",
+            "job stays green",
+            "does not open an issue",
+            "hidden daemon",
+            "v0.3.0rc1",
+        ):
+            self.assertIn(phrase, guide)
+        self.assertIn("agentgov review drift . --format github", consumer)
+        self.assertIn("Monitor contract 1.5", monitor)
+        self.assertIn("agentgov_drift_review_record", guide)
+        self.assertIn("cannot supply the human decision", guide)
+        self.assertIn(
+            "do not negotiate native form elicitation", normalized_guide
+        )
+        self.assertIn("installed only in the existing local AgentGov pipx", guide)
+        self.assertIn("unpublished and consumer-inactive", guide)
+        self.assertIn("without a human decision or record", normalized_guide)
+        self.assertIn(
+            "live Agent selection and end-user UI presentation remain unproven",
+            normalized_guide,
+        )
 
 
 if __name__ == "__main__":

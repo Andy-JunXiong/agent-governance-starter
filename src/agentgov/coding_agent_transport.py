@@ -29,9 +29,9 @@ from agentgov.reference_adapter import build_reference_trigger
 EVENT_CONTRACT = "agentgov.coding-agent-event"
 EVENT_SCHEMA_VERSION = "1.0"
 CARD_CONTRACT = "agentgov.interaction-card"
-CARD_SCHEMA_VERSION = "1.0"
+CARD_SCHEMA_VERSION = "1.1"
 RESPONSE_CONTRACT = "agentgov.coding-agent-response"
-RESPONSE_SCHEMA_VERSION = "1.2"
+RESPONSE_SCHEMA_VERSION = "1.3"
 
 _EVENT_ID_RE = re.compile(r"^evt-[0-9a-f]{32}$")
 _ID_RE = re.compile(r"^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$")
@@ -391,6 +391,28 @@ def _scope_card(cycle: ForegroundCycle) -> InteractionCard:
     )
 
 
+def _drift_review_card(cycle: ForegroundCycle) -> InteractionCard:
+    return InteractionCard(
+        contract=CARD_CONTRACT,
+        schema_version=CARD_SCHEMA_VERSION,
+        kind="drift",
+        status="review_required",
+        title="Periodic drift review due",
+        summary=(
+            "Review requirement, architecture, and functionality alignment using bounded "
+            "repository evidence. The reminder is non-blocking and does not decide drift."
+        ),
+        facts=(
+            {"label": "dimensions", "value": "requirement, architecture, functionality"},
+            {"label": "semantics", "value": "advisory; due status is deterministic"},
+            {"label": "native_form_tool", "value": "agentgov_drift_review_record"},
+            {"label": "dashboard", "value": cycle.dashboard_ref},
+        ),
+        actions=("run_advisory_review", "snooze_configured_interval"),
+        authority_boundary=_authority_boundary(),
+    )
+
+
 def build_interaction_card(
     repository: Path,
     *,
@@ -412,6 +434,12 @@ def build_interaction_card(
         ):
             return _scope_card(cycle)
         return _completion_card(cycle)
+    if (
+        cycle.human_gate is None
+        and cycle.status in {"observed", "advanced", "handed_off"}
+        and any(finding["code"] == "drift_review_due" for finding in cycle.findings)
+    ):
+        return _drift_review_card(cycle)
     return None
 
 

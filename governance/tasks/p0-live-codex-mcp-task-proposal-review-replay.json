@@ -63,6 +63,7 @@
     "agentgov --version",
     "agentgov adapter governance-mcp --host-profile codex",
     "python -m unittest discover -s tests -p test_governance_mcp.py -v",
+    "python -m unittest tests.test_replay_event_normalizer -v",
     "python -m unittest discover -s tests -p test_task_contract.py -v",
     "python -m agentgov check task governance/tasks/p0-live-codex-mcp-task-proposal-review-replay.json --repository .",
     "python -m agentgov check scope governance/tasks/p0-live-codex-mcp-task-proposal-review-replay.json --repository .",
@@ -83,7 +84,10 @@
     "required": true,
     "status": "approved",
     "owner": "Human product owner",
-    "evidence_refs": ["docs/development-log/2026-08-07.md"]
+    "evidence_refs": [
+      "docs/development-log/2026-08-07.md",
+      "docs/development-log/2026-08-09.md"
+    ]
   },
   "stop_conditions": [
     "Stop if the fresh process does not load installed Adapter 1.3.0 and the capability-gated proposal-review tool through the existing project configuration.",
@@ -94,6 +98,6 @@
   "decision": {
     "state": "paused",
     "decided_by": "Human product owner",
-    "rationale": "The newly approved bridge passed local initialization and thread probes, then the real replay reached starting_turn before App Server closed without a turn response, form, tool call, or error code. Read-only follow-up found the standalone Codex CLI not logged in and no inheritable Codex/OpenAI credential environment variable. The authorization is consumed; authentication repair and another replay are not admitted."
+    "rationale": "On 2026-08-09 the human product owner explicitly admitted exactly one new UTF-8-safe ephemeral read-only Codex App Server replay. The replay initialized, created its thread, and completed a real turn; the structured normalizer recorded terminal status completed with state not_called, zero exact proposal-tool calls, and zero forms. No task or other repository content was created by the turn. The authorization is consumed; another replay, proposed implementation, routing/product change, Git operation, publication, release, or deployment is not admitted."
   }
 }

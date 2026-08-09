@@ -1,0 +1,100 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-native-drift-review-form-installed-rehearsal",
+  "title": "Rehearse the installed native drift-review form",
+  "requirement": {
+    "summary": "Install the exact reviewed Adapter 1.4.0 source into the existing local AgentGov environment and run one bounded Native MCP drift-review form rehearsal in an independent temporary repository.",
+    "source_refs": [
+      "docs/development-log/2026-08-09.md",
+      "docs/drift-review-reminders.md",
+      "docs/governance-mcp-adapter.md",
+      "governance/tasks/p0-native-drift-review-form.json"
+    ]
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": [
+      "governance/tasks/p0-native-drift-review-form.json"
+    ],
+    "rationale": "The development-source form is implemented and validated but remains uninstalled. Product review selected installed-runtime and one-replay evidence as the next P0 acceptance gate."
+  },
+  "goal": "Build and hash the exact current source offline, replace only the existing local AgentGov pipx runtime, prove Adapter 1.4.0 seven/five-tool negotiation, and run exactly one privacy-bounded temporary-repository replay without allowing the Agent or bridge to manufacture the human form decision.",
+  "non_goals": [
+    "Do not change Core semantics, schemas, source behavior, or the accepted foreground architecture to make the rehearsal pass.",
+    "Do not modify the project .codex/config.toml, activate a consumer, install another host Adapter, or create a persistent replay service.",
+    "Do not let the Coding Agent, bridge, transport permission, or preflight select the record, snooze, or no-record human choice.",
+    "Do not claim form emission proves live human UI clarity, semantic review quality, or runtime enforcement beyond the mediated tool.",
+    "Do not modify this project's Git state or any remote, and do not commit, push, publish, release, deploy, merge, or perform production execution; an empty git init inside the disposable replay directory is permitted only to satisfy the repository-binding precondition."
+  ],
+  "scope": {
+    "include_paths": [
+      "README.md",
+      "STATUS.md",
+      "docs",
+      "governance",
+      "tests"
+    ],
+    "exclude_paths": [
+      ".codex/config.toml",
+      ".github/workflows",
+      "release",
+      "src/agentgov",
+      "schemas",
+      "templates"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0009-govern-coding-agents-during-development.md",
+    "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+    "docs/adr/0015-use-mcp-elicitation-for-codex-task-admission.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/case-studies/0002-capability-authority-pressure-test.md"
+  ],
+  "acceptance_signals": [
+    "The exact current source is built offline, hash-recorded, and installed only into the existing AgentGov pipx runtime with no dependency download or project configuration change.",
+    "Installed identity reports package 0.3.0rc1, Adapter 1.4.0, protocol 2026-07-28, seven tools with negotiated form capability, and five base tools without it.",
+    "A fresh temporary repository has a deterministic due drift-review state and an ephemeral Codex configuration that enables the exact seven-tool surface without changing this project's configuration.",
+    "Exactly one replay either reaches the native drift-review elicitation or records a bounded terminal/error outcome that localizes the unmet stage without retaining raw prompt, model output, tool arguments, or form content.",
+    "No Agent, bridge, tool permission, or fixture selects the human form choice; if a human decision cannot be obtained through the live surface, the replay stops zero-write and records that limit honestly.",
+    "Any accepted human choice is rebound to the current due-state digest, creates at most one immutable record or no record according to that exact choice, and grants no downstream authority.",
+    "The project configuration hash, consumer state, Git state, published artifacts, and release identity remain unchanged."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_governance_mcp tests.test_drift_review tests.test_development_monitor tests.test_replay_event_normalizer -v",
+    "python -m agentgov check task governance/tasks/p0-native-drift-review-form-installed-rehearsal.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "medium",
+    "items": [
+      "Replacing the shared local AgentGov runtime can affect other open Codex sessions that use the same executable.",
+      "An App Server bridge could accidentally answer a human-owned form or retain sensitive event content.",
+      "A replay against a non-due or stale repository could produce misleading negative evidence.",
+      "A successful immutable record followed by a Monitor refresh failure could be retried incorrectly.",
+      "Installed-runtime evidence could be overstated as a stable release or consumer-adoption result."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": [
+      "docs/development-log/2026-08-09.md"
+    ]
+  },
+  "stop_conditions": [
+    "Stop if the exact source fails focused validation, cannot be built offline, or installed hashes and identities do not match the reviewed source.",
+    "Stop before terminating any process not proven to be an AgentGov governance-MCP child chain or before replacing any environment other than the existing AgentGov pipx runtime.",
+    "Stop the replay without a write if the native human decision cannot be surfaced, the repository is not due, the state digest changes, or the bridge would have to choose for the human.",
+    "Stop before source fixes, project configuration edits, another replay, consumer mutation, Git write, publication, release, deployment, or production execution."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "The product owner explicitly selected plan item 1 after reviewing that it required a separate local Adapter 1.4.0 installation and exactly one independent Native MCP drift-review form replay. The exact offline wheel is installed and hash-matched; installed discovery and regression pass. The one measured direct App Server call reached exactly one thread-bound native form request, supplied no human decision, and wrote no record. This proves installed forwarding but not live Agent selection, end-user UI presentation, or human decision application. The task is paused after its one replay; another replay, source/configuration change, consumer activation, Git write, publication, release, or deployment is unauthorized."
+  }
+}

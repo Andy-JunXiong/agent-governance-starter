@@ -27,6 +27,14 @@ installation and protocol preflight pass; external live proof remains open, as
 do other host adapters and stronger authenticated custom-decision controls. See
 [Automatic coding-agent governance product requirements](product-requirements-automatic-governance.md).
 
+Development source Adapter `1.4.0` now adds one bounded exception to that open
+custom-control gap: a capability-gated native MCP form for a due periodic drift
+review. It binds one current-Agent advisory candidate to the human's
+record/snooze/no-record selection, revalidates due state, creates at most one
+immutable record, and refreshes the local Monitor. Task, scope, and completion
+custom decisions remain context-only in Codex Hooks. Adapter `1.4.0` is not
+installed or published by this change.
+
 ## Foreground development cycle
 
 A coding-agent adapter can keep one foreground process open and send strict
@@ -114,6 +122,12 @@ vendor-neutral `agentgov.host-interaction-request` when a real human gate
 exists. The request declares delivery and decision-recording capability and
 always reports `decision_applied=false`. Current Codex Hooks deliver these
 custom gates as context only and cannot record their decision.
+
+The subordinate drift reminder is not itself a human gate: it first routes the
+Agent through a distinct advisory review. On a form-capable MCP host,
+`agentgov_drift_review_record` then presents the exact candidate and lets only
+the human record it, snooze, or create no record. This does not change the Hook
+capability declaration above.
 
 Codex `UserPromptSubmit` is no longer treated as proof that a development task
 exists. The Hook discards the prompt and tells the conversational Agent to

@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://agentgov.dev/schemas/development-monitor-v1.4.json",
+  "$id": "https://agentgov.dev/schemas/development-monitor-v1.5.json",
   "title": "AgentGov Development Monitor",
   "type": "object",
   "additionalProperties": false,
-  "required": ["contract", "schema_version", "generated_at", "observation", "overview", "live_sessions", "protection_events", "timeline", "tasks", "claim_layers", "authority_boundary"],
+  "required": ["contract", "schema_version", "generated_at", "observation", "overview", "live_sessions", "protection_events", "timeline", "tasks", "drift_review", "claim_layers", "authority_boundary"],
   "properties": {
     "contract": {"const": "agentgov.development-monitor"},
-    "schema_version": {"const": "1.4"},
+    "schema_version": {"const": "1.5"},
     "generated_at": {"type": "string", "minLength": 1},
     "observation": {
       "type": "object",
@@ -63,6 +63,7 @@
     "protection_events": {"type": "array", "items": {"$ref": "#/$defs/protectionEvent"}},
     "timeline": {"type": "array", "items": {"$ref": "#/$defs/timelineEvent"}},
     "tasks": {"type": "array", "items": {"$ref": "#/$defs/task"}},
+    "drift_review": {"$ref": "drift-review-status.schema.json"},
     "claim_layers": {
       "type": "object",
       "additionalProperties": false,

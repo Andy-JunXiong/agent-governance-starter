@@ -1,0 +1,102 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-combined-drift-review-reminders",
+  "title": "Add foreground and scheduled drift review reminders",
+  "requirement": {
+    "summary": "Add one shared, repo-native cadence contract that reminds users to review requirement, architecture, and functionality drift in active AgentGov sessions and opt-in scheduled CI.",
+    "source_refs": [
+      "docs/product-requirements-automatic-governance.md",
+      "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+      "docs/development-monitor.md",
+      "docs/development-plan.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md"
+    ],
+    "rationale": "The human product owner selected the combined foreground-plus-CI direction after reviewing the reminder, authority, and hidden-daemon trade-offs."
+  },
+  "goal": "Implement a lightweight drift-review cadence that becomes due after three completed tasks or seven days, appears non-blockingly in the foreground and Monitor, and can be surfaced by future-version scheduled CI without presenting advisory judgment as a failing check.",
+  "non_goals": [
+    "Do not create a hidden daemon, desktop service, SaaS control plane, central telemetry, or automatic local-state upload.",
+    "Do not objectively decide requirement, architecture, or functionality correctness; semantic drift conclusions remain advisory and human-owned.",
+    "Do not automatically edit requirements, ADRs, task scope, policy, application code, or governance decisions.",
+    "Do not create GitHub issues, send email or chat messages, or add any external notification write authority.",
+    "Do not change the published 0.2.1 or v0.3.0rc1 release identity or claim that an unreleased development-source command exists in those wheels.",
+    "Do not commit, push, publish, release, deploy, merge, or activate a workflow in a consumer repository."
+  ],
+  "scope": {
+    "include_paths": [
+      "AGENTS.md",
+      "README.md",
+      "STATUS.md",
+      "docs",
+      "governance",
+      "schemas",
+      "src/agentgov",
+      "templates",
+      "tests",
+      "pyproject.toml"
+    ],
+    "exclude_paths": [
+      ".codex",
+      ".github/workflows",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/product-requirements-automatic-governance.md"
+  ],
+  "acceptance_signals": [
+    "One strict repository policy and immutable review-record contract drive both foreground and CI due-state calculation with default thresholds of three completed tasks or seven days.",
+    "Due-state calculation is deterministic, while requirement, architecture, and functionality conclusions are explicitly advisory and never reported as objective failures.",
+    "An active foreground cycle surfaces one non-blocking reminder without displacing task, scope, or completion decisions; acknowledged review or seven-day snooze resets the appropriate cadence boundary.",
+    "The Development Monitor displays the current drift-review state, reasons, evidence limits, and denied authority without claiming that the user read or resolved the reminder.",
+    "A future-version managed GitHub Actions workflow can run the same read-only status command on schedule, write a warning and job summary while remaining green, and grants no issue, email, chat, merge, release, or deployment authority.",
+    "The published 0.2.1 and v0.3.0rc1 workflow renderings remain byte-compatible with their existing command surface."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_drift_review tests.test_foreground_coordinator tests.test_coding_agent_transport tests.test_development_monitor tests.test_consumer_ci -v",
+    "python -m unittest tests.test_initializer tests.test_templates tests.test_public_documentation_freshness tests.test_user_documentation tests.test_task_contract -v",
+    "python -m agentgov check task governance/tasks/p0-combined-drift-review-reminders.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-combined-drift-review-reminders.json --repository .",
+    "python -m agentgov check repository .",
+    "python -m unittest discover -s tests -v",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "medium",
+    "items": [
+      "A periodic semantic opinion could be mislabeled as a deterministic failure.",
+      "Foreground reminders could displace a higher-priority authority decision or create notification fatigue.",
+      "A scheduled workflow could imply external notification authority or break a pinned published release.",
+      "Mutable or unbounded review state could weaken repository history and privacy boundaries."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": [
+      "docs/development-log/2026-08-09.md"
+    ]
+  },
+  "stop_conditions": [
+    "Stop before any hidden daemon, external notification write, telemetry upload, automatic semantic verdict, automatic governance-file mutation, or blocking advisory result.",
+    "Stop if the foreground reminder cannot remain subordinate to task, scope, completion, and consequential authority decisions.",
+    "Stop if scheduled CI requires changing an already-published workflow contract or marking an advisory reminder as a deterministic failure.",
+    "Stop before any commit, push, publication, release, deployment, merge, or consumer workflow activation."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "On 2026-08-09, the product owner selected the combined foreground-session and scheduled-CI reminder direction after reviewing the three alternatives. The bounded slice is implemented and validated: semantic drift remains advisory, scheduled notification is read-only and non-failing, foreground reminders remain subordinate to higher-priority governance cards, and hidden daemons and external notification writes remain excluded. The task is paused for product-owner review; no follow-on requirement, Git action, publication, release, deployment, or workflow activation is authorized."
+  }
+}

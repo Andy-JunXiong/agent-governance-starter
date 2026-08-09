@@ -263,6 +263,21 @@ drift remains an advisory human judgment. A green test suite proves that the
 implemented behavior satisfies its contracts; it does not prove that the
 implementation still advances the original requirement.
 
+## Capability-authority pressure test
+
+The domain-neutral [capability and authority pressure test](case-studies/0002-capability-authority-pressure-test.md)
+checks a second boundary: an available tool or transport permission is not
+authority to apply a consequential transition. Current contracts can bind
+state, evidence, exact decisions, and human ownership for the development
+transitions they implement, but AgentGov does not claim to intercept unrelated
+host tools or act as a runtime security boundary.
+
+The same case treats an outcome as possible evidence for a learning candidate,
+not automatic admission of changed behavior. A future behavior or authority
+change would require its own validation and admitted, reconstructable
+transition. This is a later architecture validation scenario, not a new Core
+runtime-learning feature or roadmap priority.
+
 ## Report integration boundary
 
 One repository check produces one ordered findings model. Terminal output,

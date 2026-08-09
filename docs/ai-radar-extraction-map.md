@@ -19,6 +19,8 @@ Development-loop revalidation date: 2026-08-02
 
 Automatic-governance management revalidation date: 2026-08-05
 
+Git transport authentication revalidation date: 2026-08-09
+
 Current read-only reference: the `ai-radar-aws` repository at commit
 `dcc27bd8e1166bc3380d3ad75d2d2c76395106d8`. Machine-specific absolute paths
 are intentionally omitted. The 2026-08-05 management revalidation read only
@@ -26,6 +28,14 @@ committed `HEAD` content with `git show`; it did not inspect or reuse the wider
 AI Radar worktree's unrelated user and generated-data changes. The earlier
 development-loop implementation comparison used commit
 `3a9323cb2a9ef575da42d29fb17d330ef872afd3`.
+
+The 2026-08-09 Git transport revalidation read AI Radar `AGENTS.md` at commit
+`d800adc0c6585eeff2b309e80bffa99aff0e6734`, its repository-local Git remote
+configuration, and the machine's non-secret Git credential-helper selection.
+It found an HTTPS `origin` using the system Git Credential Manager and a
+separate human-controlled commit/push authority model. No stored credential,
+token, credential payload, deployment target, or repository content outside
+those bounded sources was read or copied.
 
 ## Classification rules
 
@@ -41,6 +51,7 @@ development-loop implementation comparison used commit
 | AI Radar source | Current role | Classification | Starter-kit treatment |
 |---|---|---|---|
 | `AGENTS.md` | Constitution, task modes, narrow-scope rules, context routing, security, core-file, Git, and approval boundaries | `rewrite-required` | Preserve always-loaded hard boundaries, explicit task scope and context routing; remove AWS, S3, dual-repository sync, product workflows, and repository-specific paths. |
+| `AGENTS.md` plus read-only repository/system Git configuration | Separates human commit/push authority from the HTTPS transport and delegates direct-push authentication to the configured Git Credential Manager | `rewrite-required` | Preserve separate commit and push authorization, distinguish Git transport credentials from GitHub CLI/API credentials, try the configured helper once after a real Git authentication failure, and never copy accounts, tokens, remotes, deployment coupling, or dual-repository rules. |
 | `AI_CONTEXT.md` | Selective architecture memory for ambiguous or architectural work | `rewrite-required` | Preserve the distinction between always-loaded constitution and task-selected architecture context; do not copy AI Radar services, topology, or business objects. |
 | `docs/adr/TEMPLATE.md` | ADR authoring contract | `generic-reusable` | Adapt the decision and tradeoff structure into a portable template. |
 | `docs/adr/INVARIANTS.md` | Cross-ADR invariant register and slice-to-required-reading router | `rewrite-required` | Preserve scoped invariant discovery and owning-decision references without importing AI Radar evidence, Reflection, Watch, or Project Takeaway rules. |

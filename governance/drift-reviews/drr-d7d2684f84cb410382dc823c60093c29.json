@@ -1,0 +1,26 @@
+{
+  "action": "review_completed",
+  "actor_class": "human",
+  "authority_boundary": {
+    "authorizes_commit": false,
+    "authorizes_deployment": false,
+    "authorizes_exception": false,
+    "authorizes_governance_mutation": false,
+    "authorizes_merge": false,
+    "authorizes_scope_expansion": false,
+    "decides_semantic_drift": false
+  },
+  "completed_task_baseline": 0,
+  "contract": "agentgov.drift-review-record",
+  "dimensions": [
+    "requirement",
+    "architecture",
+    "functionality"
+  ],
+  "outcome": "no_drift_evidence",
+  "record_id": "drr-d7d2684f84cb410382dc823c60093c29",
+  "recorded_at": "2026-08-09T02:54:09.478Z",
+  "schema_version": "1.0",
+  "semantics": "advisory",
+  "snoozed_until": null
+}

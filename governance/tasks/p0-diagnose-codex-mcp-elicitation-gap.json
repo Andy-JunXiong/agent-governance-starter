@@ -1,0 +1,95 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-diagnose-codex-mcp-elicitation-gap",
+  "title": "Diagnose the Codex proposal invocation-to-elicitation gap",
+  "requirement": {
+    "summary": "Determine why the exact AgentGov proposal tool started in the single authorized Codex App Server replay but no native form request was observed before the turn completed.",
+    "source_refs": [
+      "docs/experiments/live-codex-mcp-rehearsal.md",
+      "docs/adr/0015-use-mcp-elicitation-for-codex-task-admission.md",
+      "src/agentgov/governance_mcp.py",
+      "tests/replay_event_normalizer.py"
+    ]
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": [
+      "governance/tasks/p0-live-codex-mcp-matching-trigger-replay.json"
+    ],
+    "rationale": "The matching trigger now has positive exact-call-start evidence, leaving form elicitation or presentation after invocation as the only observed live-host gap."
+  },
+  "goal": "Use official Codex App Server documentation, locally generated protocol/schema evidence, Adapter source, deterministic tests, and retained normalized replay evidence to classify the most likely failing layer and identify bounded follow-up options without changing behavior.",
+  "non_goals": [
+    "Do not run another Codex turn, model request, external replay, or form interaction.",
+    "Do not infer a human proposal decision, create or admit a proposed task, or implement the replay's inner request.",
+    "Do not change Core, Adapter, protocol, schema, configuration, installed runtime, tests, release identity, or architecture.",
+    "Do not retain or reconstruct raw replay requests, transcripts, Agent messages, reasoning, tool arguments, unbounded output, credentials, source content, or absolute event paths.",
+    "Do not commit, push, publish, release, deploy, merge, or mutate a consumer repository."
+  ],
+  "scope": {
+    "include_paths": [
+      ".codex/config.toml",
+      ".tmp-diagnosis",
+      "AGENTS.md",
+      "README.md",
+      "STATUS.md",
+      "docs",
+      "governance/tasks",
+      "src/agentgov/governance_mcp.py",
+      "tests"
+    ],
+    "exclude_paths": [
+      ".github/workflows",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0015-use-mcp-elicitation-for-codex-task-admission.md",
+    "docs/governance-mcp-adapter.md",
+    "docs/adr/INVARIANTS.md"
+  ],
+  "acceptance_signals": [
+    "Official Codex App Server documentation and the local protocol/schema surface are compared for the exact MCP elicitation server-request event and capability negotiation path.",
+    "Adapter source and deterministic fixtures establish whether a direct initialized form-capable client reaches elicitation when the proposal tool is invoked with valid normalized input.",
+    "The retained normalized replay evidence is interpreted without overstating tool completion, form emission, host presentation, or Adapter failure.",
+    "The diagnosis names the most likely failing layer, confidence and residual unknowns, plus bounded follow-up options that remain separately human-controlled.",
+    "No new model turn, replay, form response, product behavior change, configuration change, installed-runtime change, or task admission occurs."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_replay_event_normalizer tests.test_governance_mcp -v",
+    "python -m agentgov check task governance/tasks/p0-diagnose-codex-mcp-elicitation-gap.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-diagnose-codex-mcp-elicitation-gap.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "medium",
+    "items": [
+      "The retained evidence records a call start and terminal turn but does not retain whether an exact completion carried a recognized success or structured AgentGov error, so the diagnosis must not claim the Adapter completed or failed.",
+      "Official App Server documentation may describe the wire contract without documenting every current-client presentation behavior.",
+      "A local direct MCP probe could prove Adapter behavior but cannot prove how the Codex Agent or UI handled the same live call."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": [
+      "docs/development-log/2026-08-09.md"
+    ]
+  },
+  "stop_conditions": [
+    "Stop before any Codex turn, external replay, native form response, model transmission, product implementation, source/config/install change, or task admission.",
+    "Stop if diagnosis requires raw replay reconstruction or evidence outside the documented allow-list.",
+    "Stop at bounded uncertainty if official and retained local evidence cannot distinguish Adapter emission from App Server forwarding or UI presentation.",
+    "Stop before any Git action, publication, release, deployment, merge, or consumer mutation."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "On 2026-08-09, the bounded diagnosis completed without a model turn or repository behavior change. Official and generated schemas support the request; two valid-input no-model direct calls proved Adapter form generation and App Server parsing through zero-write decline results. The live summary cannot distinguish a structured pre-form error from forwarding or presentation because it omits completion-presence and AgentGov-error evidence. Any normalizer correction, replay, or product fix requires a separate product-owner decision."
+  }
+}

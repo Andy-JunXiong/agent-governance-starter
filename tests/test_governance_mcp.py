@@ -24,8 +24,11 @@ from agentgov.codex_mcp import (
 )
 from agentgov.governance_mcp import (
     MCP_BASE_TOOL_NAMES,
+    MCP_DRIFT_REVIEW_TOOL_NAME,
     MCP_PROTOCOL_VERSION,
+    MCP_SERVER_VERSION,
     MCP_SERVER_INSTRUCTIONS,
+    MCP_TASK_PROPOSAL_TOOL_NAME,
     MCP_TOOL_NAMES,
     GovernanceMcpAdapter,
     GovernanceMcpError,
@@ -33,6 +36,8 @@ from agentgov.governance_mcp import (
     build_active_host_self_review_provider,
     governance_mcp_tools,
 )
+from agentgov.development_monitor import MonitorPolicyError
+from agentgov.drift_review import build_drift_review_status
 from agentgov.human_decision import canonical_document_digest
 from agentgov.reference_alignment_adapter import (
     ReferenceAlignmentAdapter,
@@ -77,6 +82,30 @@ def task_proposal_arguments(task_id: str = "native-review-fixture") -> dict:
         "risk_items": ["Native form support depends on negotiated client capability."],
         "assumptions": ["The current Codex client supports form elicitation."],
         "unknowns": [],
+    }
+
+
+def drift_review_arguments() -> dict:
+    return {
+        "candidate_outcome": "no_drift_evidence",
+        "observations": [
+            {
+                "dimension": "requirement",
+                "finding": "The implemented reminder matches the admitted development-time journey.",
+            },
+            {
+                "dimension": "architecture",
+                "finding": "The foreground and native-form boundaries remain explicit and model-free in Core.",
+            },
+            {
+                "dimension": "functionality",
+                "finding": "The shared cadence, Monitor state, and create-only records agree.",
+            },
+        ],
+        "evidence_refs": [
+            "docs/product-requirements-automatic-governance.md",
+            "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+        ],
     }
 
 
@@ -208,6 +237,19 @@ def create_git_repository(root: Path) -> None:
     subprocess.run(("git", "init", "-q", str(root)), check=True)
 
 
+def create_drift_review_repository(root: Path) -> None:
+    create_git_repository(root)
+    (root / "docs" / "adr").mkdir(parents=True)
+    (root / "docs" / "product-requirements-automatic-governance.md").write_text(
+        "# Requirements\n\nPeriodic drift review remains advisory.\n",
+        encoding="utf-8",
+    )
+    (root / "docs" / "adr" / "0013-make-automatic-governance-and-dashboard-primary.md").write_text(
+        "# ADR-0013\n\nUse an explicit foreground host interaction.\n",
+        encoding="utf-8",
+    )
+
+
 def run_cli(stdin_text: str, *args: str) -> tuple[int, str, str]:
     stdout = io.StringIO()
     stderr = io.StringIO()
@@ -230,6 +272,7 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
         listed = server.dispatch(rpc(3, "tools/list", {}))
 
         self.assertEqual(discovered["result"]["supportedVersions"][0], MCP_PROTOCOL_VERSION)
+        self.assertEqual(initialized["result"]["serverInfo"]["version"], MCP_SERVER_VERSION)
         self.assertEqual(initialized["result"]["protocolVersion"], "2025-11-25")
         self.assertEqual(
             tuple(item["name"] for item in listed["result"]["tools"]),
@@ -242,11 +285,30 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
         self.assertIn("never select it for them", MCP_SERVER_INSTRUCTIONS)
         self.assertIn("After implementing and validating", MCP_SERVER_INSTRUCTIONS)
         self.assertIn("do not silently continue", MCP_SERVER_INSTRUCTIONS)
+        self.assertIn("no matching human-admitted task", MCP_SERVER_INSTRUCTIONS)
+        self.assertIn(
+            "unrelated, measurement-only, or differently scoped",
+            MCP_SERVER_INSTRUCTIONS,
+        )
+        self.assertIn("Do not use proposal review for read-only work", MCP_SERVER_INSTRUCTIONS)
+        self.assertIn("human alone", MCP_SERVER_INSTRUCTIONS)
         descriptions = {tool["name"]: tool["description"] for tool in listed["result"]["tools"]}
         self.assertIn("multiple reasonable directions", descriptions[MCP_TOOL_NAMES[0]])
         self.assertIn("human must select", descriptions[MCP_TOOL_NAMES[0]])
         self.assertIn("before completion handoff", descriptions[MCP_TOOL_NAMES[3]])
         self.assertIn("distinct advisory", descriptions[MCP_TOOL_NAMES[3]])
+        self.assertIn(
+            "no matching human-admitted task",
+            descriptions[MCP_TASK_PROPOSAL_TOOL_NAME],
+        )
+        self.assertIn(
+            "read-only work does not need proposal review",
+            descriptions[MCP_TASK_PROPOSAL_TOOL_NAME],
+        )
+        self.assertIn(
+            "Never supply or infer the human decision",
+            descriptions[MCP_DRIFT_REVIEW_TOOL_NAME],
+        )
         for index, tool in enumerate(listed["result"]["tools"]):
             self.assertFalse(tool["inputSchema"]["additionalProperties"])
             self.assertEqual(tool["annotations"]["readOnlyHint"], index < 5)
@@ -277,6 +339,11 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
             proposal["properties"]["scope"]["properties"]["include_paths"]["items"]["maxLength"],
             400,
         )
+        drift = listed["result"]["tools"][6]["inputSchema"]
+        self.assertNotIn("decision", drift["properties"])
+        self.assertNotIn("repository", drift["properties"])
+        self.assertEqual(drift["properties"]["observations"]["minItems"], 3)
+        self.assertEqual(drift["properties"]["observations"]["maxItems"], 3)
 
     def test_legacy_client_cannot_discover_or_call_native_proposal_review(self) -> None:
         server = GovernanceMcpServer(adapter())
@@ -307,6 +374,18 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
         self.assertEqual(
             called["structuredContent"]["error"]["error_code"],
             "task_proposal_elicitation_unsupported",
+        )
+        drift_called = server.dispatch(
+            rpc(
+                4,
+                "tools/call",
+                {"name": MCP_DRIFT_REVIEW_TOOL_NAME, "arguments": drift_review_arguments()},
+            )
+        )["result"]
+        self.assertTrue(drift_called["isError"])
+        self.assertEqual(
+            drift_called["structuredContent"]["error"]["error_code"],
+            "drift_review_elicitation_unsupported",
         )
 
     def test_native_proposal_review_admits_only_exact_accept_decision(self) -> None:
@@ -511,6 +590,166 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
             diagnostic = invalid_messages[-1]["result"]["structuredContent"]["error"]
             self.assertEqual(diagnostic["rule"], "privacy_boundary")
 
+    def test_native_drift_review_records_exact_candidate_and_refreshes_monitor(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            create_drift_review_repository(root)
+            server = GovernanceMcpServer(
+                adapter(repository=root), request_id_factory=lambda: "elc-drift-fixture"
+            )
+            stream = "\n".join(
+                (
+                    json.dumps(
+                        rpc(
+                            1,
+                            "initialize",
+                            {
+                                "protocolVersion": "2025-11-25",
+                                "capabilities": {"elicitation": {"form": {}}},
+                                "clientInfo": {"name": "codex", "version": "fixture"},
+                            },
+                        )
+                    ),
+                    json.dumps(
+                        rpc(
+                            2,
+                            "tools/call",
+                            {
+                                "name": MCP_DRIFT_REVIEW_TOOL_NAME,
+                                "arguments": drift_review_arguments(),
+                            },
+                        )
+                    ),
+                    json.dumps(
+                        {
+                            "jsonrpc": "2.0",
+                            "id": "elc-drift-fixture",
+                            "result": {
+                                "action": "accept",
+                                "content": {"decision": "record_candidate"},
+                                "clientExtension": {"private": "ignored"},
+                            },
+                        }
+                    ),
+                )
+            ) + "\n"
+            output = io.StringIO()
+
+            self.assertEqual(server.serve(io.StringIO(stream), output), 0)
+            messages = [json.loads(line) for line in output.getvalue().splitlines()]
+
+            self.assertEqual(messages[1]["method"], "elicitation/create")
+            self.assertEqual(messages[1]["params"]["mode"], "form")
+            self.assertIn("Candidate outcome: no_drift_evidence", messages[1]["params"]["message"])
+            self.assertIn("Snooze interval: 7 days", messages[1]["params"]["message"])
+            self.assertIn("requirement:", messages[1]["params"]["message"])
+            choices = messages[1]["params"]["requestedSchema"]["properties"]["decision"]["oneOf"]
+            self.assertEqual(
+                [item["const"] for item in choices],
+                ["record_candidate", "snooze", "no_record"],
+            )
+            result = messages[2]["result"]["structuredContent"]
+            self.assertEqual(result["contract"], "agentgov.drift-review-form-result")
+            self.assertEqual(result["status"], "recorded")
+            self.assertEqual(result["candidate"]["outcome"], "no_drift_evidence")
+            self.assertEqual(result["drift_review"]["state"], "not_due")
+            self.assertEqual(result["monitor"]["status"], "refreshed")
+            self.assertTrue(result["authority_boundary"]["review_record_created"])
+            self.assertFalse(result["authority_boundary"]["decides_semantic_drift"])
+            self.assertNotIn("clientExtension", json.dumps(result))
+            records = list((root / "governance" / "drift-reviews").glob("*.json"))
+            self.assertEqual(len(records), 1)
+            record = json.loads(records[0].read_text(encoding="utf-8"))
+            self.assertEqual(record["outcome"], "no_drift_evidence")
+            self.assertTrue((root / ".agentgov" / "dashboard.html").is_file())
+
+    def test_native_drift_review_no_write_snooze_and_stale_retry_are_bounded(self) -> None:
+        for response, expected in (
+            ({"action": "accept", "content": {"decision": "no_record"}}, "not_recorded"),
+            ({"action": "decline"}, "declined"),
+            ({"action": "cancel"}, "cancelled"),
+        ):
+            with self.subTest(response=response), TemporaryDirectory() as temp_dir:
+                root = Path(temp_dir)
+                create_drift_review_repository(root)
+                active = adapter(repository=root)
+                preparation = active.prepare_drift_review(drift_review_arguments())
+                result = active.complete_drift_review(preparation, response)
+                self.assertEqual(result["status"], expected)
+                self.assertFalse(result["authority_boundary"]["repository_modified"])
+                self.assertFalse((root / "governance" / "drift-reviews").exists())
+
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            create_drift_review_repository(root)
+            active = adapter(repository=root)
+            preparation = active.prepare_drift_review(drift_review_arguments())
+            snoozed = active.complete_drift_review(
+                preparation,
+                {"action": "accept", "content": {"decision": "snooze"}},
+            )
+            self.assertEqual(snoozed["status"], "snoozed")
+            self.assertEqual(snoozed["drift_review"]["state"], "not_due")
+            record_count = len(list((root / "governance" / "drift-reviews").glob("*.json")))
+            with self.assertRaises(GovernanceMcpError) as stale:
+                active.complete_drift_review(
+                    preparation,
+                    {"action": "accept", "content": {"decision": "record_candidate"}},
+                )
+            self.assertEqual(stale.exception.code, "drift_review_state_stale")
+            self.assertEqual(
+                len(list((root / "governance" / "drift-reviews").glob("*.json"))),
+                record_count,
+            )
+
+    def test_native_drift_review_invalid_agent_input_is_zero_write(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            create_drift_review_repository(root)
+            active = adapter(repository=root)
+            invalid_values = []
+            duplicate = drift_review_arguments()
+            duplicate["observations"][2]["dimension"] = "architecture"
+            invalid_values.append(duplicate)
+            missing = drift_review_arguments()
+            missing["evidence_refs"] = ["docs/missing.md"]
+            invalid_values.append(missing)
+            private = drift_review_arguments()
+            private["observations"][0]["finding"] = "password=do-not-echo"
+            invalid_values.append(private)
+
+            for value in invalid_values:
+                with self.subTest(value=value), self.assertRaises(GovernanceMcpError):
+                    active.prepare_drift_review(value)
+            self.assertFalse((root / "governance" / "drift-reviews").exists())
+
+    def test_native_drift_review_monitor_failure_preserves_recorded_success(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            create_drift_review_repository(root)
+            active = adapter(repository=root)
+            preparation = active.prepare_drift_review(drift_review_arguments())
+            with patch(
+                "agentgov.governance_mcp.write_development_monitor",
+                side_effect=MonitorPolicyError("private path detail"),
+            ):
+                result = active.complete_drift_review(
+                    preparation,
+                    {"action": "accept", "content": {"decision": "record_candidate"}},
+                )
+
+            self.assertEqual(result["status"], "recorded")
+            self.assertEqual(result["monitor"]["status"], "refresh_failed")
+            self.assertEqual(
+                result["monitor"]["reason_code"], "local_monitor_refresh_failed"
+            )
+            self.assertNotIn("private path detail", json.dumps(result))
+            self.assertEqual(build_drift_review_status(root).state, "not_due")
+            self.assertEqual(
+                len(list((root / "governance" / "drift-reviews").glob("*.json"))),
+                1,
+            )
+
     def test_repository_guidance_matches_mcp_selection_boundaries(self) -> None:
         guidance = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
         self.assertIn("the human does not need to name the tools", guidance)
@@ -519,6 +758,8 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
         self.assertIn("fully specified low-risk change", guidance)
         self.assertIn("agentgov_self_review_start", guidance)
         self.assertIn("agentgov_self_review_complete", guidance)
+        self.assertIn("agentgov_drift_review_record", guidance)
+        self.assertIn("never supply or infer that choice", guidance)
         self.assertIn("remain fail-closed", guidance)
 
     def test_codex_and_claude_hosts_complete_the_same_normalized_tool_journey(self) -> None:

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/drift-review-status-v1.0.json",
+  "title": "AgentGov Drift Review Status",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "generated_at", "state", "reason_codes", "cadence", "observations", "review_request", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.drift-review-status"},
+    "schema_version": {"const": "1.0"},
+    "generated_at": {"type": "string", "minLength": 1},
+    "state": {"enum": ["due", "not_due"]},
+    "reason_codes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["initial_review_required", "completed_task_threshold_reached", "age_threshold_reached", "snoozed", "within_cadence"]}},
+    "cadence": {"type": "object", "additionalProperties": false, "required": ["max_age_days", "max_completed_tasks", "snooze_days"], "properties": {"max_age_days": {"type": "integer", "minimum": 1}, "max_completed_tasks": {"type": "integer", "minimum": 1}, "snooze_days": {"type": "integer", "minimum": 1}}},
+    "observations": {"type": "object", "additionalProperties": false, "required": ["policy_source", "history_scope", "completed_tasks_total", "completed_tasks_since_review", "last_reviewed_at", "last_review_outcome", "snoozed_until", "next_due_at"], "properties": {"policy_source": {"type": "string", "minLength": 1}, "history_scope": {"const": "visible_governance_events"}, "completed_tasks_total": {"type": "integer", "minimum": 0}, "completed_tasks_since_review": {"type": "integer", "minimum": 0}, "last_reviewed_at": {"type": ["string", "null"]}, "last_review_outcome": {"enum": ["no_drift_evidence", "candidate_drift", "insufficient_evidence", null]}, "snoozed_until": {"type": ["string", "null"]}, "next_due_at": {"type": ["string", "null"]}}},
+    "review_request": {"type": "object", "additionalProperties": false, "required": ["dimensions", "semantics", "options", "claim_limit"], "properties": {"dimensions": {"const": ["requirement", "architecture", "functionality"]}, "semantics": {"const": "advisory"}, "options": {"const": ["review_now", "snooze_configured_interval"]}, "claim_limit": {"type": "string", "minLength": 1}}},
+    "authority_boundary": {"$ref": "drift-review-policy.schema.json#/$defs/authority"}
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/drift-review-record-v1.0.json",
+  "title": "AgentGov Drift Review Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "record_id", "recorded_at", "action", "outcome", "snoozed_until", "completed_task_baseline", "dimensions", "semantics", "actor_class", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.drift-review-record"},
+    "schema_version": {"const": "1.0"},
+    "record_id": {"type": "string", "pattern": "^drr-[0-9a-f]{32}$"},
+    "recorded_at": {"type": "string", "minLength": 1},
+    "action": {"enum": ["review_completed", "snoozed"]},
+    "outcome": {"enum": ["no_drift_evidence", "candidate_drift", "insufficient_evidence", null]},
+    "snoozed_until": {"type": ["string", "null"]},
+    "completed_task_baseline": {"type": "integer", "minimum": 0},
+    "dimensions": {"const": ["requirement", "architecture", "functionality"]},
+    "semantics": {"const": "advisory"},
+    "actor_class": {"const": "human"},
+    "authority_boundary": {"$ref": "drift-review-policy.schema.json#/$defs/authority"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"action": {"const": "review_completed"}}, "required": ["action"]},
+      "then": {"properties": {"outcome": {"enum": ["no_drift_evidence", "candidate_drift", "insufficient_evidence"]}, "snoozed_until": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"action": {"const": "snoozed"}}, "required": ["action"]},
+      "then": {"properties": {"outcome": {"type": "null"}, "snoozed_until": {"type": "string", "minLength": 1}}}
+    }
+  ]
+}

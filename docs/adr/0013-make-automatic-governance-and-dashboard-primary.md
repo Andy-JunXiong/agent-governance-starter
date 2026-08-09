@@ -267,6 +267,37 @@ human judgment, and unsupported causal claims into false precision.
   adapters, and the independent journey remain unimplemented. Stable 0.2.1 and
   immutable `v0.3.0rc1` are unchanged.
 
+## Implementation note — 2026-08-09 drift review cadence
+
+Development source now applies one default three-task/seven-day cadence to a
+non-blocking foreground reminder and a future-version scheduled CI summary.
+The due calculation is deterministic, while requirement, architecture, and
+functionality conclusions remain advisory and human-confirmed. Review and
+snooze records are immutable repository evidence; writing one requires an
+explicit action and grants no further authority. Published 0.2.1 and
+v0.3.0rc1 workflows remain unchanged. This implements the accepted automatic
+notification direction without introducing the rejected hidden daemon or a new
+external notification writer.
+
+Development Adapter `1.4.0` now adds the first native host decision binding for
+that reminder. A due card routes the current Agent through a distinct advisory
+review and a capability-gated MCP form; the Agent can propose only normalized
+three-dimension observations, while the human alone chooses whether to record
+the exact candidate, snooze, or write nothing. The Adapter revalidates the due
+state, creates at most one immutable record, and refreshes the local Monitor.
+This implements one bounded instance of the accepted concise host interaction
+without changing the rejected daemon, automatic semantic judgment, or external
+write directions. At that source-implementation checkpoint, installed and
+published Adapter behavior remained unchanged.
+
+A later separately admitted installed-runtime rehearsal replaced only the
+existing local AgentGov pipx package with the exact Adapter `1.4.0` source. A
+direct App Server tool call in a disposable due repository reached one
+thread-bound native form request, supplied no human decision, and wrote no
+record. This validates installed forwarding only; live Agent selection,
+end-user UI presentation, publication, and consumer activation remain open.
+The project MCP configuration stayed byte-unchanged.
+
 ## Validation
 
 Deterministic validation must cover event ordering, idempotence, adapter input,

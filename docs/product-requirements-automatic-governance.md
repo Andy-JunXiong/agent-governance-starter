@@ -96,6 +96,8 @@ The primary product automatically performs:
 - Monitor and Dashboard refresh;
 - feedback to the coding agent;
 - notification of deterministic failures and advisory human decisions.
+- periodic requirement, architecture, and functionality review reminders from
+  one shared task-count/time cadence, without automatically deciding drift.
 
 The development implementation includes the foreground orchestrator,
 repository-state reference adapter, and a strict `agentgov dev --stream` JSONL
@@ -279,6 +281,19 @@ They must provide:
 6. **Learning** — recurring friction, false positives, missed constraints,
    overrides, consumer-local configuration needs, and candidate general
    improvements.
+
+The Monitor also keeps a periodic drift-review reminder visible. Cadence and
+due-state are deterministic; requirement, architecture, and functionality
+judgments remain advisory and require human confirmation. An advisory reminder
+must not fail CI merely to obtain a notification.
+
+Development Adapter `1.4.0` binds this reminder to the first capability-gated
+native drift-review form. The Agent submits only a normalized advisory
+candidate with all three dimension observations and repository-relative
+evidence; the human chooses record, snooze, or no record. Accepted writes are
+create-only, stale due-state bindings fail closed, and the local Monitor is
+refreshed without granting any additional project or external authority.
+Clients without native form elicitation do not see the write-capable tool.
 
 The Dashboard is a read model. It does not become a governance source of truth
 or expose merge, release, deployment, or policy-mutation controls.

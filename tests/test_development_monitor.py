@@ -147,6 +147,8 @@ class DevelopmentMonitorTests(unittest.TestCase):
         self.assertEqual(monitor.overview["events"], 4)
         self.assertEqual(monitor.overview["verified_completions"], 1)
         self.assertEqual(monitor.overview["handoffs"], 1)
+        self.assertEqual(monitor.drift_review["state"], "due")
+        self.assertEqual(monitor.drift_review["review_request"]["semantics"], "advisory")
         self.assertEqual([item["event_type"] for item in monitor.timeline], [
             "scope.checked", "validation.completed", "completion.reconciled", "session.handed_off"
         ])

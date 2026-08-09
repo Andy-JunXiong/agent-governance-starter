@@ -68,11 +68,13 @@ class DevelopmentTaskContractTests(unittest.TestCase):
             DECISION_STATES,
         )
 
-    def test_current_p0_task_is_valid_and_paused_after_host_auth_block(self) -> None:
+    def test_current_p0_task_is_valid_and_paused_after_not_called_replay(self) -> None:
         document = load_development_task(CURRENT_TASK)
 
         self.assertEqual(validate_development_task_document(document), [])
         self.assertEqual(document["decision"]["state"], "paused")
+        self.assertIn("not_called", document["decision"]["rationale"])
+        self.assertIn("authorization is consumed", document["decision"]["rationale"])
         self.assertEqual(document["profile"], "standard")
         self.assertEqual(document["objective"]["role"], "supporting")
         self.assertEqual(

@@ -38,6 +38,39 @@ Review CLI and report language and inspect workflow permissions.
 
 Stop the transition and obtain explicit authority.
 
+## Capability availability and transport permission do not grant authority
+
+- Authority: `AGENTS.md`, `docs/adr/0009-govern-coding-agents-during-development.md`, and `docs/adr/0015-use-mcp-elicitation-for-codex-task-admission.md`
+
+### Enforcement points
+
+- Advertising a command, MCP tool, hook, API, or interaction does not admit a
+  task or authorize its consequential effect.
+- A governed transition binds the applicable state, required evidence,
+  permission or decision, and responsible authority; stale or mismatched
+  bindings fail closed.
+- Deterministic structural validity, advisory reasoning, and human authority
+  remain separate. None is silently promoted into another.
+- When AgentGov does not mediate a host capability, it must not claim that the
+  capability is mechanically governed or that AgentGov is a runtime security
+  boundary.
+
+### Verification
+
+- Confirm write-capable adapters require their declared authority, decision
+  when applicable, and revalidation sequence after ordinary transport or tool
+  permission.
+- Confirm missing, declined, stale, malformed, or mismatched decisions cannot
+  apply the governed transition.
+- Review product claims and diagrams for any implication that optional AgentGov
+  tool selection intercepts unrelated host tools.
+
+### Failure response
+
+Stop the consequential transition or narrow the product claim. A new runtime
+mediation or enforcement boundary requires a separate ADR, authority model,
+threat model, and validation; it is not inferred from the current MCP Adapter.
+
 ## Development-time governance is the primary product boundary
 
 - Authority: `docs/adr/0009-govern-coding-agents-during-development.md`
@@ -120,6 +153,9 @@ consumer repository owner.
   reconciliation, and Dashboard refresh are automatic after activation.
 - Human interruption is reserved for material scope, architecture, exception,
   unapproved execution, semantic judgment, or consequential authority.
+- Periodic drift-review cadence may be deterministic, but requirement,
+  architecture, and functionality conclusions remain advisory. A reminder is
+  non-blocking and cannot manufacture an external notification-write authority.
 - `next`, `govern start/check/finish`, Monitor generation, and handoff remain
   supported internal, headless, diagnostic, CI, testing, and recovery
   interfaces rather than the intended primary daily journey.

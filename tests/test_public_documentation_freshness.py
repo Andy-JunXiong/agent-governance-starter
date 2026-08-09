@@ -53,6 +53,23 @@ class PublicDocumentationFreshnessTests(unittest.TestCase):
         ):
             self.assertIn(phrase, normalized)
 
+    def test_repository_instructions_distinguish_git_and_gh_authentication(
+        self,
+    ) -> None:
+        instructions = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        normalized = " ".join(instructions.split())
+
+        for phrase in (
+            "Direct Git transport authentication and GitHub CLI/API authentication are independent",
+            "an invalid `gh auth status` does not prove that `git push` is unauthenticated",
+            "git push origin HEAD:main",
+            "credential.helper=manager",
+            "git credential-manager github login",
+            "retry the exact same non-force push once",
+            "do not repeatedly ask the human to run `gh auth login`",
+        ):
+            self.assertIn(phrase, normalized)
+
     def test_repository_instructions_require_contextual_completion_explanations(
         self,
     ) -> None:
@@ -69,6 +86,22 @@ class PublicDocumentationFreshnessTests(unittest.TestCase):
             "Review the completed requirement with the human product owner first",
             "real unmet needs and observed drift",
             "jointly choose the next requirement",
+        ):
+            self.assertIn(phrase, normalized)
+
+    def test_repository_instructions_bind_proposal_review_to_matching_tasks(
+        self,
+    ) -> None:
+        instructions = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        normalized = " ".join(instructions.split())
+
+        for phrase in (
+            "five base `agentgov_*` governance tools",
+            "sixth `agentgov_task_proposal_review` tool",
+            "explicitly authorizes that exact requested change",
+            "An unrelated, measurement-only, or differently scoped admitted task does not count",
+            "Do not call it for read-only work",
+            "do not implement the proposed task unless the resulting task is admitted",
         ):
             self.assertIn(phrase, normalized)
 

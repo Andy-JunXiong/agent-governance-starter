@@ -55,6 +55,14 @@ The proposal tool is advertised only when the initialized client declares MCP
 form elicitation support. Existing clients retain the original five-tool
 read-only surface.
 
+For repository-changing work, the host should select this tool when no
+human-admitted task matches and explicitly authorizes the exact requested
+change. An unrelated, measurement-only, or differently scoped admitted task
+does not count; read-only work does not trigger proposal review. This clarifies
+host-routing guidance only. It does not change the Adapter protocol, form, task
+schema, decision mapping, or human authority, and deterministic validation
+cannot force model tool selection.
+
 ## Owns
 
 - Codex-host normalized task-proposal tool input;
@@ -123,8 +131,61 @@ review experience and adds a special confirmation word outside the host UI.
 
 Implementation status: the exact `1.3.0` source is now installed in the
 existing local pipx environment and installed-runtime protocol preflight
-passes. The fresh external Codex replay remains separately controlled and has
-not occurred.
+passes. Standalone authentication is repaired. One separately authorized
+UTF-8-safe App Server replay completed a real read-only turn without surfacing
+a native form, but its text-presence heuristic could not prove whether the
+proposal tool was called. That run is `INVALID_MEASUREMENT`. Test-only
+structured normalization now accepts only exact proposal-call, elicitation,
+result, and terminal events. A following authorized replay completed a real
+ephemeral read-only turn with normalized state `not_called`, zero exact
+proposal calls, and zero forms. This is valid evidence that the end-to-end
+journey did not enter the Adapter path for that request. Because the bounded
+evidence intentionally excludes tool inventory, it does not distinguish
+discovery/configuration from Agent invocation and is not evidence that the
+Adapter passed or failed. Its authorization is consumed; another replay is not
+admitted.
+
+A subsequent no-turn App Server `config/read` and `mcpServerStatus/list`
+diagnostic confirmed that the project layer loaded and all six AgentGov tools
+were exposed. That read-only result isolates the remaining observed gap to
+Agent invocation under the formerly ambiguous matching-task trigger; it does
+not convert the replay into Adapter pass/fail evidence. Development source now
+contains the clarified trigger above. A separately authorized installation-only
+step then replaced only the existing AgentGov pipx runtime with an offline-built,
+hash-recorded wheel from that exact source. Installed discovery confirms the
+same Adapter, protocol, six/five-tool negotiation, and trigger metadata. Project
+configuration remained byte-for-byte unchanged, and no replay was started.
+
+The product owner then separately authorized exactly one fresh ephemeral
+read-only replay. Its no-model preflight confirmed the project configuration,
+ready AgentGov server, all six tools, and the proposal tool. During the one
+ordinary repository-change turn, the exact proposal tool started once; the turn
+then completed without an AgentGov form-elicitation request. The bridge supplied
+no decision, created no task or implementation, changed no repository state,
+and did not retry. This demonstrates invocation under the clarified trigger but
+not the decided native journey. Diagnosis of the invocation-to-elicitation gap
+is a later requirement, not an amendment to this decision.
+
+That bounded diagnosis found no reason to amend this ADR. Current official App
+Server documentation and generated schemas support the exact standard form
+request and capability surface used here. Two no-model direct calls with the
+same valid normalized arguments caused App Server to parse the Adapter's elicitation and
+return `decline` when no active turn could host it; the Adapter produced its
+expected zero-write non-admission result. The live replay summary retained call
+start, form count, and terminal state but not whether a completed item carried
+an `agentgov.mcp-tool-error`. Therefore the live result cannot yet distinguish
+pre-elicitation input rejection from forwarding or presentation behavior. This
+is an evidence-contract gap, not a new architecture decision or proof of a
+product-layer defect.
+
+The following human-selected correction changes only the test replay evidence
+reducer. It records deduplicated completion count and status, represents an
+unrecognized completed result as `completion_unknown`, and retains at most
+eight strictly validated `agentgov.mcp-tool-error` records containing only code,
+the matching proposal-tool stage, bounded field path, rule, and retryability.
+Raw error messages, arguments, content, and extensions remain excluded. This
+does not alter the Adapter, App Server protocol, native form, admission
+authority, or this ADR, and it cannot reconstruct the historical replay.
 
 ## Validation
 

@@ -21,10 +21,11 @@ from agentgov.event_store import (
     load_governance_events,
     utc_now,
 )
+from agentgov.drift_review import build_drift_review_status
 
 
 MONITOR_CONTRACT = "agentgov.development-monitor"
-MONITOR_SCHEMA_VERSION = "1.4"
+MONITOR_SCHEMA_VERSION = "1.5"
 MONITOR_SCOPES = {"local_session", "exported_development", "ci_only", "combined"}
 
 
@@ -43,6 +44,7 @@ class DevelopmentMonitor:
     protection_events: tuple[Mapping[str, Any], ...]
     timeline: tuple[Mapping[str, Any], ...]
     tasks: tuple[Mapping[str, Any], ...]
+    drift_review: Mapping[str, Any]
     claim_layers: Mapping[str, tuple[str, ...]]
     authority_boundary: Mapping[str, bool]
 
@@ -338,6 +340,10 @@ def build_development_monitor(
         "missing_sources": list(missing_sources),
         "cross_stage_discovery_available": False,
     }
+    monitor_generated_at = generated_at or utc_now()
+    drift_review = asdict(
+        build_drift_review_status(root, as_of=monitor_generated_at, events=events)
+    )
     claim_layers = {
         "observed": (
             "Event timestamps, actor classes, task identities, trigger reason codes, outcomes, and small counters come from validated event records.",
@@ -361,13 +367,14 @@ def build_development_monitor(
     return DevelopmentMonitor(
         contract=MONITOR_CONTRACT,
         schema_version=MONITOR_SCHEMA_VERSION,
-        generated_at=generated_at or utc_now(),
+        generated_at=monitor_generated_at,
         observation=observation,
         overview=overview,
         live_sessions=live_sessions,
         protection_events=protection_events,
         timeline=timeline,
         tasks=tasks,
+        drift_review=drift_review,
         claim_layers=claim_layers,
         authority_boundary={
             "approves_governance": False,
@@ -410,6 +417,18 @@ def render_development_monitor_markdown(monitor: DevelopmentMonitor) -> str:
         "|---|---:|",
     ]
     lines.extend(f"| {key.replace('_', ' ')} | {value} |" for key, value in monitor.overview.items())
+    lines.extend(
+        [
+            "",
+            "## Drift Review Reminder",
+            "",
+            f"- State: `{monitor.drift_review['state']}`",
+            f"- Reasons: `{', '.join(monitor.drift_review['reason_codes'])}`",
+            "- Dimensions: `requirement`, `architecture`, `functionality`",
+            "- Semantics: `ADVISORY`; the deterministic due state is not a drift verdict.",
+            "- Available responses: run an evidence-bounded review or record a seven-day snooze.",
+        ]
+    )
     lines.extend(["", "## Live Sessions", ""])
     if monitor.live_sessions:
         lines.extend(
@@ -460,6 +479,7 @@ def render_development_monitor_markdown(monitor: DevelopmentMonitor) -> str:
 def render_development_monitor_html(monitor: DevelopmentMonitor) -> str:
     esc = lambda value: html.escape(_display(value), quote=True)
     observation = monitor.observation
+    drift_review = monitor.drift_review
     cards = "".join(
         f'<article class="metric"><span>{esc(key)}</span><strong>{value}</strong></article>'
         for key, value in (
@@ -548,6 +568,7 @@ def render_development_monitor_html(monitor: DevelopmentMonitor) -> str:
 </style></head><body><header><div class="shell"><div class="brand">AGENTGOV · DEVELOPMENT MONITOR</div><div class="scope">Observation scope · {esc(observation['scope'])}</div></div></header><main class="shell">
 <section class="hero"><div><div class="eyebrow">Govern → Observe → Monitor</div><h1>See governance while development is happening.</h1><p class="lede">A local, static view of when AgentGov ran, why it ran, who invoked it, and what its event records observed—without turning evidence into approval.</p></div><aside class="boundary"><span>History completeness</span><strong>{esc(observation['history_completeness'])}</strong><small>{observation['event_count']} validated events · {observation['duplicates_removed']} duplicate records removed</small></aside></section>
 <section aria-labelledby="overview"><h2 id="overview">Overview</h2><p class="sub">Observed counts within this dashboard's declared scope. They are not a governance score.</p><div class="metrics">{cards}</div></section>
+<section class="panel"><h2>Drift Review Reminder</h2><p><b>{esc(drift_review['state'])}</b> · {esc(', '.join(drift_review['reason_codes']))}</p><p class="sub">Requirement, architecture, and functionality conclusions remain ADVISORY. This deterministic cadence reminder neither decides drift nor grants scope, Git, release, or deployment authority.</p></section>
 <section class="panel limits"><div><h2>Observation boundary</h2><p><b>{esc(observation['scope'])}</b> from {esc(observation['started_at'])} to {esc(observation['ended_at'])}.</p><p class="sub">Source events: {esc(", ".join(f"{key}={value}" for key, value in observation['source_event_counts'].items()))}.</p><p class="sub">Cross-stage discovery comparison is unavailable because the event contract has no cross-stage finding identity or resolution link.</p></div><div class="missing"><h3>Missing sources</h3><ul>{missing}</ul></div></section>
 <section class="panel"><h2>Claim layers</h2><p class="sub">Facts, cautious interpretation, and unknowns stay visibly separate.</p><div class="claims">{layers}</div></section>
 <section class="panel"><h2>Live Sessions</h2><p class="sub">Current read-model state from each task's latest visible event.</p><div class="metrics">{live_sessions}</div></section>

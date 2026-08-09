@@ -161,7 +161,9 @@ class CodingAgentEventContractTests(unittest.TestCase):
         self.assertFalse(event_schema["additionalProperties"])
         self.assertNotIn("prompt", event_schema["properties"])
         self.assertNotIn("changed_paths", event_schema["properties"]["facts"]["properties"])
-        self.assertEqual(response_schema["properties"]["schema_version"]["const"], "1.2")
+        self.assertEqual(response_schema["properties"]["schema_version"]["const"], "1.3")
+        self.assertEqual(card_schema["properties"]["schema_version"]["const"], "1.1")
+        self.assertIn("drift", card_schema["properties"]["kind"]["enum"])
         self.assertIn("interaction", response_schema["required"])
         self.assertIn("decision_prompt", response_schema["required"])
         for rule in card_schema["properties"]["authority_boundary"]["properties"].values():
@@ -261,6 +263,64 @@ class CodingAgentTransportTests(unittest.TestCase):
         self.assertEqual(next_event.event_type, "session.reviewed")
         self.assertEqual(next_event.source["actor_class"], "human")
         self.assertEqual(next_event.facts["review_outcome"], "accepted")
+
+    def test_due_drift_review_uses_nonblocking_card_when_no_higher_priority_card_exists(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = create_repository(Path(temp_dir), active_task=True)
+            event = coding_agent_event_from_payload(
+                event_payload(
+                    "validation.completed",
+                    validation_outcome="passed",
+                    evidence_ref="adapter/evidence.json",
+                )
+            )
+
+            response = run_coding_agent_event(
+                root,
+                event=event,
+                sequence=1,
+                dashboard_output=Path(".agentgov/dashboard.html"),
+            )
+
+        self.assertEqual(response.cycle.status, "observed")
+        self.assertEqual(response.card.kind, "drift")
+        self.assertEqual(response.card.status, "review_required")
+        self.assertIn("run_advisory_review", response.card.actions)
+        self.assertIn(
+            {"label": "native_form_tool", "value": "agentgov_drift_review_record"},
+            response.card.facts,
+        )
+        self.assertIsNone(response.interaction)
+        self.assertIsNone(response.decision_prompt)
+        self.assertTrue(
+            any(finding["code"] == "drift_review_due" for finding in response.cycle.findings)
+        )
+
+    def test_due_drift_review_does_not_displace_task_readmission_gate(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = create_repository(Path(temp_dir), active_task=True)
+            event = coding_agent_event_from_payload(
+                event_payload(
+                    "scope.decision_recorded",
+                    actor_class="human",
+                    scope_decision="approved",
+                )
+            )
+
+            response = run_coding_agent_event(
+                root,
+                event=event,
+                sequence=1,
+                dashboard_output=Path(".agentgov/dashboard.html"),
+            )
+
+        self.assertEqual(response.cycle.status, "needs_human")
+        self.assertEqual(response.cycle.human_gate["kind"], "task_readmission")
+        self.assertIsNone(response.card)
+        self.assertIsNone(response.interaction)
+        self.assertTrue(
+            any(finding["code"] == "drift_review_due" for finding in response.cycle.findings)
+        )
 
     def test_implementation_change_derives_paths_and_blocks_out_of_scope_work(self) -> None:
         with TemporaryDirectory() as temp_dir:

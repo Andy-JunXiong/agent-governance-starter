@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-08-07
+Last verified: 2026-08-09
 
 ## Current state
 
@@ -22,6 +22,34 @@ Last verified: 2026-08-07
   preview setting; page metadata cannot change GitHub's repository card.
 - Merge, publish, release, and deployment remain separate human-authorized
   actions.
+- Development source now implements a combined drift-review reminder: one
+  strict default cadence becomes due after three verified tasks or seven days,
+  foreground cycles surface a subordinate non-blocking card, Monitor 1.5 shows
+  the same state, and future workflow versions can emit a scheduled GitHub
+  warning/summary without failing the job. Review and snooze records are
+  create-only and human-confirmed. Requirement, architecture, and functionality
+  conclusions remain `ADVISORY`; published 0.2.1 and v0.3.0rc1 workflows are
+  unchanged, and no daemon or external notification writer was added. Focused
+  regression passed 26 tests; the complete source suite passed 772 tests with
+  2 platform-limited skips, and all 59 schemas parsed.
+- Development source Adapter `1.4.0` now binds that due reminder to the
+  capability-gated `agentgov_drift_review_record` native MCP form. The current
+  Agent supplies only one advisory candidate, all three normalized dimension
+  observations, and repository-relative evidence; the human selects record,
+  snooze, or no record. Stale due state fails before a create-only write, and a
+  successful record refreshes the local Monitor while retaining all denied
+  authority. Clients without form elicitation still see only the five base
+  read-only tools. The exact Adapter `1.4.0` source is now installed only in the
+  existing local AgentGov pipx runtime; it remains unpublished and inactive in
+  consumers, and the project MCP configuration is byte-unchanged. A bounded
+  direct App Server replay in a disposable due repository advertised seven
+  tools, called the drift tool once, reached one thread-bound form request with
+  the exact record/snooze/no-record options, supplied no human decision, and
+  wrote no record. This is installed forwarding evidence, not live Agent tool
+  selection, UI presentation, semantic-review quality, or consumer proof.
+  Source focused regression passed 66 tests; installed MCP/drift regression
+  passed 40 tests. The earlier complete source suite passed 776 tests with 2
+  platform-limited skips, and all 59 schemas parsed.
 - ADR-0013 accepts an automatic, event-driven primary experience: users request
   work through a coding agent, AgentGov automatically coordinates context,
   scope, approved validation, fresh evidence, Monitor, and Dashboard updates,
@@ -31,14 +59,15 @@ Last verified: 2026-08-07
 - The first ADR-0013 implementation slice is now present in development source:
   a versioned read-only active-session state projection backs `next`, and a
   strict vendor-neutral trigger contract covers repository, task, change,
-  scope-decision, validation, completion, and review events. Monitor 1.4 adds
+  scope-decision, validation, completion, and review events. Monitor 1.5 adds
   Live Sessions and Protection Events as honest read models with unknown
   resolution unless a future explicit link exists. Development source now also
   implements one `agentgov dev` foreground cycle and minimal reference adapter:
   scope and completion events invoke the existing deterministic cores and
   refresh the Dashboard; human review can hand off verified work. Development
   source now also accepts strict privacy-bounded coding-agent events over one
-  foreground JSONL process and returns bounded task/scope/completion cards. The
+  foreground JSONL process and returns bounded task/scope/completion cards plus
+  a subordinate non-blocking drift-review reminder card. The
   first packaged Codex lifecycle-hook Adapter is now present in development
   source.
   A vendor-neutral host-interaction capability/request contract now makes
@@ -50,12 +79,37 @@ Last verified: 2026-08-07
   and denied authority, and returns that existing read-only admission plan.
   Development Codex Adapter `1.3.0` now connects that seam to the current Agent
   and a capability-gated native MCP form; only exact native admission creates
-  the reviewed task. Local installation and installed-runtime proof pass.
-  External proposal-review proof remains unmeasured because the corrected
-  App Server bridge reached `turn/start` and then closed before a form or tool
-  result; the same standalone Codex binary subsequently reported
-  `Not logged in`. Authentication repair and another replay are separate,
-  unapproved actions.
+  the reviewed task. Standalone authentication and the installed runtime are
+  now repaired. One separately authorized UTF-8-safe App Server replay
+  initialized, created an ephemeral read-only thread, and completed a real
+  turn, but surfaced no native form. Its text-search event heuristic could not
+  distinguish an actual proposal-tool call from tool inventory or
+  instructions, so the outcome is `INVALID_MEASUREMENT`, not Adapter evidence.
+  Test-only structured event normalization now recognizes only exact proposal
+  `mcpToolCall`, elicitation, and terminal events and retains no raw model or
+  tool payload. One newly authorized replay then initialized, created an
+  ephemeral read-only thread, and completed a real turn. Its normalized outcome
+  was `not_called`: zero proposal calls and zero forms. This is valid negative
+  end-to-end evidence. A later no-turn App Server configuration/status probe
+  confirmed that the project MCP layer loaded and all six AgentGov tools were
+  exposed, isolating the remaining observed gap to Agent invocation under an
+  ambiguous trigger contract rather than discovery. Development guidance now
+  requires an admitted task matching the exact requested repository change;
+  this is not Adapter pass/fail evidence. The authorization is consumed and
+  another replay is not admitted. After the clarified source was installed, a
+  separately authorized single ephemeral read-only turn started the exact
+  proposal tool once; the turn completed without a native form. It created no
+  task or implementation and changed no repository state. Invocation is now
+  demonstrated. Two no-model direct App Server probes then proved that valid
+  arguments reach the Adapter form and that App Server parses it, returning a
+  zero-write `decline` when no active turn can host the request. The replay
+  normalizer did not retain whether its live completion carried a structured
+  AgentGov error, so the remaining confirmed gap is evidence resolution between
+  call start and form presentation, not a localized product defect. The
+  selected test-only correction now records completion count/status, an
+  explicit `completion_unknown` state, and only bounded structured AgentGov
+  error fields. It cannot reconstruct or reclassify the historical replay. The
+  new one-turn authorization is also consumed.
   Risk-based routing now keeps no-write requests and verified
   active-task iteration at zero interruptions, permits bounded low-risk
   fast-track only under clean human-owned standing policy, and reserves review
@@ -352,8 +406,9 @@ Last verified: 2026-08-07
   that declared decision-recording support and binds prompt, source, option,
   and transition digests. Agent actors, substituted choices, drift, and
   unavailable hosts fail closed.
-- `agentgov.coding-agent-response` 1.2 includes the proactive prompt whenever a
-  real human gate exists. Scope/completion selections carry only their existing
+- `agentgov.coding-agent-response` 1.3 and `agentgov.interaction-card` 1.1 add
+  the subordinate non-blocking drift reminder while retaining the proactive
+  prompt whenever a real human gate exists. Scope/completion selections carry only their existing
   Core event; planned low-risk human review accepts one number and approval
   creates only the exact task. Codex Hooks remain context-only/unavailable for
   trusted custom decision recording.
@@ -402,7 +457,8 @@ Last verified: 2026-08-07
   Installed discovery reports Adapter `1.3.0` and six tools with form
   capability, while clients without it retain five. Installed protocol,
   schema, extension-privacy, exclusive-admit, non-admission, malformed-response,
-  and target-race preflight passed. No valid external Codex replay has completed.
+  and target-race preflight passed. A valid negative external replay has now
+  completed, but no successful native proposal-review journey is claimed.
 - The first approved event-level Adapter `1.3.0` proposal-review attempt was
   classified `INVALID_HOST_BRIDGE`: a Windows PowerShell 5.1 stderr callback
   stalled the App Server bridge before any observable thread, native form, tool
@@ -413,11 +469,51 @@ Last verified: 2026-08-07
   using the runtime's verified `read-only` value, but the real request reached
   `starting_turn` and App Server closed before returning a turn, form, tool
   result, or error code. This result is `INVALID_APP_SERVER_EOF`, not an Adapter
-  pass or failure. No new task or other repository write occurred; live
-  proposal-review evidence remains open. Read-only follow-up found the
-  standalone Codex CLI `Not logged in` and no inherited Codex/OpenAI credential
-  environment variable, which strongly accounts for the turn-boundary EOF.
-  Authentication repair and another replay are not admitted.
+  pass or failure. Standalone authentication and the installed runtime were
+  later repaired, and one UTF-8-safe replay completed a real read-only turn
+  without surfacing a form. Because its temporary normalizer used text
+  presence rather than exact `mcpToolCall` fields, the observed
+  `proposal_tool_seen` flag is invalid evidence. A test-only event normalizer
+  now fails closed on unrelated text and accepts only the exact server, tool,
+  form, result, and terminal shapes. No new task or other repository write
+  occurred. A following authorized structured replay completed normally with
+  `not_called`, zero exact proposal-tool calls, and zero forms. The journey did
+  not enter the Adapter path for that bounded request. The retained replay
+  evidence alone could not assign that result to tool discovery/configuration
+  or Agent invocation. A later no-turn App Server configuration/status probe
+  confirmed that the project MCP layer loaded and exposed all six AgentGov
+  tools. The remaining observed gap is therefore Agent invocation under an
+  ambiguous trigger contract, not discovery. Development instructions and MCP
+  metadata now require a human-admitted task matching the exact requested
+  repository change; unrelated, measurement-only, or differently scoped tasks
+  do not count, and read-only work does not trigger proposal review. This is
+  advisory host guidance rather than deterministic model-routing enforcement.
+  A separately authorized installation-only step built the exact reviewed
+  source offline as a local-only `0.3.0rc1` wheel with SHA-256
+  `F109E8A951605AE947374EE28BB76B569A344BC3DD20A752E1686AF8C317FDFE`
+  and updated only the existing AgentGov pipx runtime. Installed package and
+  import identity report `0.3.0rc1`; Adapter discovery reports `1.3.0`, protocol
+  `2026-07-28`, six tools with form capability and five without it, and the
+  clarified trigger metadata. The project config hash remained unchanged. The
+  pre-existing pipx management metadata still names its original `0.1.0`
+  install source, so `pipx list` is not used as installed-content identity.
+  No Codex turn or replay occurred during installation. A later separately
+  authorized replay preflight confirmed the same configuration, server, and
+  six tools, then one ordinary repository-change turn started the exact
+  proposal tool once. No AgentGov form request was observed before the turn
+  completed. No human decision was supplied, no task or implementation was
+  created, and no repository state changed. Two later local, no-model direct
+  calls supplied the same valid normalized arguments. App Server parsed the resulting form and
+  returned `decline` because no active turn hosted it; the Adapter reported its
+  normal zero-write non-admission result. This rules out discovery, valid-input
+  form generation, and schema parsing as general failures. The retained replay
+  summary cannot distinguish a structured pre-form tool error from forwarding
+  or presentation behavior because it dropped unrecognized completion results.
+  Future summaries now retain deduplicated completion count/status and a strict
+  eight-record maximum for allow-listed AgentGov error code, matching stage,
+  bounded field path, rule, and retryability. Unknown completions are explicit;
+  raw error text and payloads remain excluded. Historical evidence remains
+  unchanged, and another replay is not admitted.
 - `agentgov propose task ... --dry-run` is read-only. Its recovery fallback
   requires exact `ADMIT` from a real interactive terminal, rechecks drift and target races,
   and exclusively creates the reviewed task file. It does not create a

@@ -1,0 +1,94 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-codex-proposal-trigger-contract-clarification",
+  "title": "Clarify Codex proposal-review trigger matching",
+  "requirement": {
+    "summary": "Make the sixth Codex proposal-review tool part of the native governance journey and clarify that only a matching human-admitted task authorizes the exact requested repository change.",
+    "source_refs": [
+      "AGENTS.md",
+      "docs/adr/0015-use-mcp-elicitation-for-codex-task-admission.md",
+      "docs/governance-mcp-adapter.md",
+      "docs/task-proposal-admission.md"
+    ]
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": [
+      "governance/tasks/p0-codex-native-task-proposal-review.json",
+      "governance/tasks/p0-live-codex-mcp-task-proposal-review-replay.json"
+    ],
+    "rationale": "The structured live replay proved that Codex did not invoke proposal review, while a later no-turn App Server diagnostic proved that the project layer loaded and exposed all six AgentGov tools. The repository instructions still described only five tools, while the replay authorization task could be mistaken for an admitted task covering an unrelated proposed change."
+  },
+  "goal": "Align repository instructions, MCP guidance, tests, and replay evidence on the rule that proposal review is required only for requested repository-changing work not covered by a matching human-admitted task.",
+  "non_goals": [
+    "Do not change the task schema, Adapter protocol, elicitation form, decision mapping, task creation behavior, release identity, or installed runtime.",
+    "Do not claim deterministic control over model tool selection or treat an unrelated admitted task as authority for the requested change.",
+    "Do not run another live replay, install or replace dependencies, modify another repository, or perform Git, publication, release, or deployment actions."
+  ],
+  "scope": {
+    "include_paths": [
+      "AGENTS.md",
+      "README.md",
+      "STATUS.md",
+      "docs",
+      "governance/tasks",
+      "src/agentgov/governance_mcp.py",
+      "tests"
+    ],
+    "exclude_paths": [
+      ".codex/config.toml",
+      ".github/workflows",
+      "docs/assets/linkedin-github-repository-cover.png",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0015-use-mcp-elicitation-for-codex-task-admission.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/governance-mcp-adapter.md"
+  ],
+  "acceptance_signals": [
+    "AGENTS.md distinguishes the five base tools from the capability-gated sixth proposal-review tool and states its exact trigger without changing human authority.",
+    "MCP server instructions and proposal tool metadata require a matching human-admitted task for the exact requested repository change; unrelated or measurement-only tasks do not count.",
+    "Read-only work and work already covered by a matching admitted task remain outside proposal review, and no static check claims it can force model tool selection.",
+    "Tests protect the trigger wording and all affected documentation, task, repository, and diff checks pass; the scope check may report only the preserved pre-existing excluded .codex/config.toml change plus advisories."
+  ],
+  "validation_commands": [
+    "python -m unittest discover -s tests -p test_governance_mcp.py -v",
+    "python -m unittest discover -s tests -p test_public_documentation_freshness.py -v",
+    "python -m unittest discover -s tests -p test_user_documentation.py -v",
+    "python -m agentgov check task governance/tasks/p0-codex-proposal-trigger-contract-clarification.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-codex-proposal-trigger-contract-clarification.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "medium",
+    "items": [
+      "Over-broad wording could route read-only work through unnecessary human interruption.",
+      "Under-broad wording could let an unrelated admitted task appear to authorize a different repository change.",
+      "Prompt guidance and deterministic enforcement must remain explicitly distinct."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": [
+      "docs/development-log/2026-08-09.md"
+    ]
+  },
+  "stop_conditions": [
+    "Stop if the change requires a new task-schema field, automatic semantic matching in Core, an Adapter protocol or form change, or a release identity change.",
+    "Stop before installation, external replay, implementation of any proposed downstream task, Git write, publication, release, deployment, or consumer mutation.",
+    "Stop if the wording weakens exact human admission, privacy boundaries, or the distinction between advisory model behavior and deterministic validation."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "After reviewing the read-only diagnosis, the human product owner explicitly directed the Agent to implement the recommended minimal trigger-contract clarification. That bounded source change is implemented and validated; the task is now paused so it cannot be reused as authority for installation, replay, downstream implementation, Git, publication, release, or deployment."
+  }
+}

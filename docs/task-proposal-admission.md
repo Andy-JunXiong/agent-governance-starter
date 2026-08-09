@@ -76,6 +76,14 @@ root, adds those invariant fields, builds the existing read-only admission
 plan, and sends the complete bounded plan back to Codex with three choices:
 admit the exact task, request changes, or reject.
 
+Triggering is scoped to the exact requested repository change. A
+human-admitted task counts only when its requirement, goal, scope, and
+acceptance signals match and authorize that change. An unrelated,
+measurement-only, or differently scoped admitted task does not bypass native
+proposal review. Read-only work does not trigger proposal review. This is
+host guidance: deterministic validation protects the published wording and
+contracts but cannot force a model to select the tool.
+
 Only an MCP response with `action=accept` and `decision=admit`, bound to that
 elicitation request, may exclusively create the planned task file. Request
 changes, reject, decline, cancel, malformed responses, interruption, missing
@@ -93,8 +101,20 @@ decision shape before any write.
 
 This deterministic behavior now also has installed-runtime protocol evidence,
 including extension compatibility, exclusive admission, and zero-write failure
-paths. A fresh external Codex replay and live semantic-quality evidence remain
-separate human-controlled steps.
+paths. The later matching-task trigger clarification is now installed and its
+server/tool metadata plus capability-gated six/five-tool discovery match the
+reviewed source. Project configuration remained unchanged. In one later
+authorized Codex replay, the exact proposal tool started once; the turn
+completed without an AgentGov form request. It supplied no human decision and created no task or
+implementation. Two local no-model direct App Server calls with the same valid
+arguments then parsed the Adapter form and returned zero-write `decline` because no
+active turn hosted it. The retained replay summary cannot distinguish a
+structured pre-form error from live forwarding or presentation behavior. Live
+semantic quality and any later replay remain separate human-controlled
+follow-up questions. The selected test-only
+correction now records completion count/status, explicit unknown completion,
+and a bounded allow-list of AgentGov error fields without raw error or tool
+payloads. It cannot change the already discarded historical evidence.
 
 ## Preview and admission
 

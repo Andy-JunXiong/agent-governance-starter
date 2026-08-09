@@ -184,6 +184,25 @@ class ConsumerWorkflowTests(unittest.TestCase):
         self.assertNotIn("pull_request_target", workflow)
         self.assertNotIn("gh pr", workflow)
 
+    def test_future_version_schedule_surfaces_advisory_drift_reminder_without_failure(self) -> None:
+        workflow = render_consumer_workflow(
+            version="0.4.0",
+            wheel_sha256="f" * 64,
+        )
+        published_candidate = render_consumer_workflow(
+            version="0.3.0rc1",
+            wheel_sha256="e" * 64,
+        )
+
+        self.assertIn("Surface scheduled AgentGov drift review reminder", workflow)
+        self.assertIn("if: github.event_name == 'schedule'", workflow)
+        self.assertIn("agentgov review drift . --format github", workflow)
+        self.assertIn("intentionally leaves this job green", workflow)
+        self.assertIn("agentgov-drift-review.md", workflow)
+        self.assertNotIn("issues: write", workflow)
+        self.assertNotIn("Surface scheduled AgentGov drift review reminder", published_candidate)
+        self.assertNotIn("agentgov review drift", published_candidate)
+
     def test_version_0_3_monitor_artifact_is_explicit_source_limited_and_read_only(self) -> None:
         workflow = render_consumer_workflow(
             version="0.3.0",

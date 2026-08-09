@@ -72,6 +72,31 @@ admission plan, and requests one native approve/change/reject decision through
 `elicitation/create`. Clients without that capability continue to see exactly
 the original five tools.
 
+Development source Adapter `1.4.0` adds a seventh capability-gated tool,
+`agentgov_drift_review_record`, on that same negotiated native-form boundary.
+After the foreground card becomes due and the current Agent completes a
+distinct advisory review, the Agent supplies only one candidate outcome,
+exactly three normalized dimension observations, and repository-relative
+evidence refs. The Agent cannot supply the form decision. The human may record
+the exact displayed candidate, snooze, or create no record. Before either
+create-only write, the Adapter revalidates the due-state digest; after success
+it returns the shared `not_due` state and refreshes the AgentGov-owned local
+Monitor. A Monitor refresh error remains separate from the already-successful
+record, preventing a misleading retry. Clients without form elicitation still
+see only the five read-only base tools. This exact `1.4.0` source is now
+installed only in the existing local AgentGov pipx runtime and remains
+unpublished and consumer-inactive. A bounded direct App Server replay reached
+one thread-bound form request and stopped without a human decision or record;
+it does not prove live Agent selection or end-user UI presentation.
+
+The proposal trigger is scoped to the exact requested repository change. A
+human-admitted task counts only when its requirement, goal, scope, and
+acceptance signals match and authorize that change. An unrelated,
+measurement-only, or differently scoped admitted task does not count.
+Read-only work does not trigger proposal review. These server instructions and
+tool metadata guide host selection; deterministic checks keep the surfaces in
+sync but cannot force a model to choose the tool.
+
 Only the response bound to that elicitation with `action=accept` and
 `decision=admit` can exclusively create the reviewed task file. All other
 decisions, malformed or interrupted responses, stale plans, and target races
@@ -251,7 +276,22 @@ legacy five-tool compatibility. The exact source is now installed in the
 existing local pipx environment. Installed discovery and protocol preflight
 confirm Adapter `1.3.0`, capability-gated six/five-tool behavior, the restricted
 form schema, extension privacy, exclusive admit, and zero-write failure paths.
-No external replay is claimed here.
+The later trigger clarification was also built offline and installed into that
+same environment as a hash-recorded local-only wheel. Installed source identity,
+server instructions, proposal-tool metadata, and six/five-tool discovery match
+the reviewed source; project configuration was unchanged. During one later
+authorized ephemeral read-only replay, the exact proposal tool started once;
+the turn completed without an AgentGov form request. No decision, task, implementation, or
+repository mutation occurred. This proves current-host invocation, not a
+successful elicitation or admission journey. Two following no-model direct App
+Server calls with the same valid normalized arguments parsed the Adapter form and
+returned a zero-write `decline` because no active turn hosted it. This proves
+valid-input Adapter generation and App Server schema parsing, but the retained
+live summary cannot distinguish a structured pre-form error from forwarding or
+presentation behavior. The selected test-only correction now records exact
+completion count/status, `completion_unknown`, and at most eight strictly
+validated AgentGov error records while dropping raw messages and payloads. It
+improves future replay evidence only; historical events remain unrecoverable.
 
 ## Feature connections
 
@@ -260,6 +300,7 @@ No external replay is claimed here.
 - Current: model-controlled native alignment/self-review plus Codex production
   proposal materialization and exact native human admission over one foreground
   MCP Adapter.
-- Downstream: after separate product-owner approval, run one fresh Codex
-  proposal-review replay; another MCP host and optional independent high-risk
-  review remain separate later choices.
+- Downstream: product review must decide whether a future replay is still
+  valuable now that its completion/error evidence can be interpreted honestly.
+  Another replay, another MCP host, and optional independent high-risk review
+  remain separate later choices.

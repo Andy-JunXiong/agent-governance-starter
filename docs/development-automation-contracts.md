@@ -1,7 +1,8 @@
 # Development automation contracts
 
 Status: state/trigger contracts, the foreground coordinator, a strict live
-JSONL process transport, bounded task/scope/completion cards, a vendor-neutral
+JSONL process transport, bounded task/scope/completion cards, a subordinate
+drift-review reminder card with a capability-gated native review form, a vendor-neutral
 host-interaction contract, and the first packaged Codex lifecycle-hook Adapter
 are implemented in development source as of 2026-08-06. This is not yet the
 primary installed user experience.
@@ -23,9 +24,10 @@ The automation path now uses these contracts:
 - `agentgov.coding-agent-event` `1.0`: a smaller host-process JSONL envelope
   that never accepts task identity, changed paths, prompts, source, host paths,
   or authority claims;
-- `agentgov.coding-agent-response` `1.2` and
-  `agentgov.interaction-card` `1.0`: one result per accepted host event and an
-  optional bounded task, scope, or completion review surface;
+- `agentgov.coding-agent-response` `1.3` and
+  `agentgov.interaction-card` `1.1`: one result per accepted host event and an
+  optional bounded task, scope, completion, or subordinate drift-review
+  surface;
 - `agentgov.host-interaction-capabilities` `1.0` and
   `agentgov.host-interaction-request` `1.0`: vendor-neutral declarations of
   how a host can deliver a real human gate, whether it can record the decision,
@@ -101,8 +103,9 @@ Implemented now:
 - strict Python trigger validation;
 - privacy-bounded working-copy correlation;
 - existing `next` active-session routing backed by the projection;
-- Monitor 1.4 Live Sessions and Protection Events read models, with stable
-  source-event-derived identity and explicitly unknown resolution;
+- Monitor 1.5 Live Sessions, Protection Events, and drift-review reminder read
+  models, with stable source-event-derived identity, explicitly unknown
+  protection resolution, and advisory-only semantic drift conclusions;
 - `agentgov.foreground-cycle` 1.0 and `agentgov dev`, which run one disclosed
   foreground adapter/coordinator cycle without hand-authored JSON;
 - a minimal reference adapter that derives working-copy identity, active task
@@ -130,6 +133,13 @@ Implemented now:
 - bounded task cards for activation/task-request events and completion cards
   backed by AgentGov scope, validation, and reconciliation outcomes.
 - bounded scope-resolution cards and deterministic interaction request IDs;
+- one non-blocking drift-review reminder card only when no task, scope, or
+  completion card has priority; its due state is deterministic and its review
+  outcome remains advisory. Development Adapter `1.4.0` routes a completed
+  three-dimension advisory pass into one native form that only the human can
+  use to record the exact candidate, snooze, or write nothing. The due binding
+  is revalidated before a create-only record and the local Monitor refresh is
+  reported separately;
 - explicit `native`, `structured`, `context_only`, and `unsupported` delivery
   modes plus `adapter_event`, `host_managed`, and `unavailable` decision
   recording. Displaying a request never applies its decision;
@@ -323,9 +333,10 @@ Not yet implemented:
   no model SDK, account, endpoint, credential store, or network call is present
   in AgentGov;
 - a packaged host with native custom buttons and authenticated decision
-  callbacks. The neutral prompt/result and reference single-selection path are
-  implemented, but Codex Hooks do not expose arbitrary trusted custom-decision
-  callbacks;
+  callbacks for every governance card. The drift reminder now has one
+  capability-gated MCP form path, and task proposal admission has its existing
+  MCP form, but Codex Hooks still do not expose arbitrary trusted custom
+  task/scope/completion decision callbacks;
 - a background or cross-process session manager; stream mode is deliberately
   foreground and exists only for the lifetime of the connected host process;
 - Benefit and Learning views.

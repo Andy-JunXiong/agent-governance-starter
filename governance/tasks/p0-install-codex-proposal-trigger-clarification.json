@@ -1,0 +1,97 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-install-codex-proposal-trigger-clarification",
+  "title": "Install and preflight the clarified Codex proposal trigger",
+  "requirement": {
+    "summary": "Build and hash the exact reviewed working source, replace only the existing isolated AgentGov pipx runtime, and verify the installed Adapter exposes the six-tool proposal-review surface with the clarified matching-task trigger.",
+    "source_refs": [
+      "AGENTS.md",
+      "docs/adr/0015-use-mcp-elicitation-for-codex-task-admission.md",
+      "docs/governance-mcp-adapter.md",
+      "governance/tasks/p0-codex-proposal-trigger-contract-clarification.json"
+    ]
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": [
+      "governance/tasks/p0-codex-proposal-trigger-contract-clarification.json",
+      "governance/tasks/p0-install-codex-native-task-proposal-review.json"
+    ],
+    "rationale": "The trigger clarification is source-validated but the existing installed runtime predates that metadata change. Local installed-runtime identity and discovery must be re-established before any separately authorized external replay."
+  },
+  "goal": "Install the exact clarified Adapter 1.3.0 working source into the pre-existing AgentGov pipx environment and complete local installed-runtime preflight without starting Codex or sending a replay.",
+  "non_goals": [
+    "Do not change source behavior, task schema, MCP protocol, native form, decision mapping, project Codex configuration, release identity, or human authority.",
+    "Do not create another environment, download dependencies, modify another repository, or represent the local 0.3.0rc1-identified wheel as the immutable published artifact.",
+    "Do not start Codex, call the OpenAI service, send repository context externally, run a live replay, or implement any proposed downstream task.",
+    "Do not commit, push, publish, release, deploy, merge, or modify a consumer repository."
+  ],
+  "scope": {
+    "include_paths": [
+      ".codex/config.toml",
+      "AGENTS.md",
+      "README.md",
+      "STATUS.md",
+      "docs",
+      "governance/tasks",
+      "src/agentgov",
+      "tests"
+    ],
+    "exclude_paths": [
+      ".github/workflows",
+      "docs/assets/linkedin-github-repository-cover.png",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0015-use-mcp-elicitation-for-codex-task-admission.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/governance-mcp-adapter.md"
+  ],
+  "acceptance_signals": [
+    "The exact reviewed working source is built offline into a local-only 0.3.0rc1-identified wheel, and its size and SHA-256 are recorded.",
+    "Only the existing AgentGov pipx environment is updated, without dependency download or creation of another environment; any lock handling targets only read-only-identified AgentGov governance-MCP processes.",
+    "The installed package and source governance_mcp.py content match, and installed discovery reports package 0.3.0rc1, Adapter 1.3.0, protocol 2026-07-28, six tools with form capability, and five without it.",
+    "Installed server instructions and proposal-tool metadata contain the matching-task, unrelated measurement-only task, and read-only trigger boundaries.",
+    "The project Codex configuration is byte-for-byte unchanged, no external replay occurs, and task, scope, repository, documentation, regression, and diff validation report no new unresolved failure."
+  ],
+  "validation_commands": [
+    "agentgov --version",
+    "python -m unittest discover -s tests -p test_governance_mcp.py -v",
+    "python -m agentgov check task governance/tasks/p0-install-codex-proposal-trigger-clarification.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-install-codex-proposal-trigger-clarification.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "high",
+    "items": [
+      "Replacing the shared isolated pipx runtime may encounter a lock held by an existing AgentGov MCP process.",
+      "The local package identity remains 0.3.0rc1 and could be confused with the immutable published artifact unless the local-only boundary and exact hash are recorded.",
+      "A source/install mismatch could create false readiness evidence unless installed content and metadata are checked independently.",
+      "Starting Codex would cross the separately controlled external-replay boundary."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": [
+      "docs/development-log/2026-08-09.md"
+    ]
+  },
+  "stop_conditions": [
+    "Stop if the exact working source cannot be built offline and hash-recorded or if installation would require a dependency download or new environment.",
+    "Stop if the existing project configuration changes, an unrelated process must be stopped, or installed files cannot be tied to the exact source.",
+    "Stop on any installed version, Adapter identity, protocol, discovery, trigger-metadata, privacy, task, repository, regression, or diff failure before declaring preflight complete.",
+    "Stop before starting Codex, external replay, downstream implementation, Git write, publication, release, deployment, or consumer mutation."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "On 2026-08-09, after reviewing the completed trigger clarification and the proposed next-step boundary, the human product owner explicitly directed the Agent to perform the installation and local preflight. The exact source was built, hash-recorded, installed only into the existing AgentGov pipx environment, and passed installed and source validation without changing project configuration or starting Codex. The task is now paused so it cannot authorize a live replay, downstream implementation, Git, publication, release, or deployment."
+  }
+}

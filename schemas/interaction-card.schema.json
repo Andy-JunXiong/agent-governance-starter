@@ -1,14 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://agentgov.dev/schemas/interaction-card-v1.0.json",
+  "$id": "https://agentgov.dev/schemas/interaction-card-v1.1.json",
   "title": "AgentGov Interaction Card",
   "type": "object",
   "additionalProperties": false,
   "required": ["contract", "schema_version", "kind", "status", "title", "summary", "facts", "actions", "authority_boundary"],
   "properties": {
     "contract": {"const": "agentgov.interaction-card"},
-    "schema_version": {"const": "1.0"},
-    "kind": {"enum": ["task", "scope", "completion"]},
+    "schema_version": {"const": "1.1"},
+    "kind": {"enum": ["task", "scope", "completion", "drift"]},
     "status": {"enum": ["review_required", "active", "observed", "advanced", "blocked", "needs_human", "review_ready", "handed_off"]},
     "title": {"type": "string", "minLength": 1},
     "summary": {"type": "string", "minLength": 1},

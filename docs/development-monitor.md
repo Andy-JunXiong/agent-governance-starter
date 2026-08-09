@@ -12,6 +12,10 @@ future 0.3 line. It consumes the privacy-bounded events created by
 - Activity Timeline;
 - Task Detail.
 
+Monitor contract 1.5 also embeds the shared drift-review reminder state. It
+shows whether requirement, architecture, and functionality review is due and
+why, while keeping every semantic drift conclusion advisory.
+
 It is not part of stable 0.2.1. The explicit redacted-export slice lets it read
 one reviewed development export or combine that export with a CI-only replay
 store. The future 0.3 managed workflow template now includes a default-off,
@@ -25,7 +29,8 @@ ADR-0013 makes the Monitor and Dashboard a core automatically refreshed product
 surface rather than a command the ordinary user must remember to run. The
 current static Monitor is the validated read-model foundation. Development
 source now derives Overview, Live Sessions, Protection Events, Activity
-Timeline, and Task Detail. The accepted next slices add explicit protection
+Timeline, Task Detail, and the non-authoritative drift-review reminder. The
+accepted next slices add explicit protection
 resolution links and Benefit/Learning views. `agentgov dev` refreshes this
 Dashboard after each processed adapter event, and its strict `--stream` JSONL
 mode can process several events in one foreground coding-agent connection. The

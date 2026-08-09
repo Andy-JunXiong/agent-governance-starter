@@ -47,7 +47,7 @@ class OnboardingPlanTests(unittest.TestCase):
 
         self.assertEqual(before, after)
         self.assertTrue(plan.adoption.dry_run)
-        self.assertEqual(len(plan.adoption.planned_files), 29)
+        self.assertEqual(len(plan.adoption.planned_files), 30)
         self.assertEqual(plan.adoption.preserved_files, ())
 
     def test_existing_files_are_preserved_in_preview(self) -> None:
@@ -112,7 +112,7 @@ class OnboardingPlanTests(unittest.TestCase):
                 "authorizes_git_or_release_operations": False,
             },
         )
-        self.assertEqual(len(payload["plan"]["create"]), 29)
+        self.assertEqual(len(payload["plan"]["create"]), 30)
 
     def test_confirmation_requires_exact_adopt_from_interactive_terminal(self) -> None:
         with TemporaryDirectory() as temp_dir:
@@ -172,7 +172,7 @@ class OnboardingCliTests(unittest.TestCase):
         self.assertEqual(files_after, ())
         self.assertIn(f"TARGET onboard: {root.resolve()}", stdout)
         self.assertIn("PLAN AGENTS.md", stdout)
-        self.assertIn("SUMMARY CREATE=29 PRESERVE=0", stdout)
+        self.assertIn("SUMMARY CREATE=30 PRESERVE=0", stdout)
         self.assertIn("does not authorize a later write", stdout)
         self.assertEqual(stderr, "")
 
@@ -268,7 +268,7 @@ class OnboardingCliTests(unittest.TestCase):
         self.assertEqual(exit_code, EXIT_PASS)
         self.assertTrue(created_agents)
         self.assertTrue(created_example)
-        self.assertIn("PASS onboard: created 29 reviewed file(s)", stdout)
+        self.assertIn("PASS onboard: created 30 reviewed file(s)", stdout)
         self.assertIn(
             "CHECK onboard: running the first read-only repository check",
             stdout,

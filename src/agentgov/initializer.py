@@ -12,6 +12,9 @@ _ASSET_OUTPUTS = {
     Path("templates/repository-contract.template.json"): Path(
         "governance/contract.json"
     ),
+    Path("templates/drift-review-policy.template.json"): Path(
+        "governance/drift-review-policy.json"
+    ),
     Path("templates/AGENTS.template.md"): Path("AGENTS.md"),
     Path("templates/ADR.template.md"): Path("docs/adr/TEMPLATE.md"),
     Path("templates/INVARIANTS.template.md"): Path("docs/adr/INVARIANTS.md"),

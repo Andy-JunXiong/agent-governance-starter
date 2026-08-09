@@ -12,6 +12,19 @@ from typing import Any, Callable, Mapping, Sequence, TextIO
 
 from agentgov.clarification_dialogue import denied_authority
 from agentgov.alignment_transport import AlignmentStreamSession
+from agentgov.development_monitor import (
+    build_development_monitor,
+    write_development_monitor,
+)
+from agentgov.drift_review import (
+    DRIFT_DIMENSIONS,
+    REVIEW_OUTCOMES,
+    DriftReviewPolicyError,
+    build_drift_review_record,
+    build_drift_review_status,
+    write_drift_review_record,
+)
+from agentgov.event_store import LocalStateError
 from agentgov.host_interaction import build_host_interaction_capabilities
 from agentgov.human_decision import canonical_document_digest
 from agentgov.path_policy import scope_path_error
@@ -49,7 +62,7 @@ from agentgov.task_proposal import (
 MCP_PROTOCOL_VERSION = "2026-07-28"
 MCP_LEGACY_PROTOCOL_VERSIONS = ("2025-11-25", "2025-06-18")
 MCP_SERVER_NAME = "agentgov-governance"
-MCP_SERVER_VERSION = "1.3.0"
+MCP_SERVER_VERSION = "1.4.0"
 MCP_BASE_TOOL_NAMES = (
     "agentgov_alignment_start",
     "agentgov_alignment_update",
@@ -58,8 +71,14 @@ MCP_BASE_TOOL_NAMES = (
     "agentgov_self_review_complete",
 )
 MCP_TASK_PROPOSAL_TOOL_NAME = "agentgov_task_proposal_review"
-MCP_TOOL_NAMES = (*MCP_BASE_TOOL_NAMES, MCP_TASK_PROPOSAL_TOOL_NAME)
+MCP_DRIFT_REVIEW_TOOL_NAME = "agentgov_drift_review_record"
+MCP_FORM_TOOL_NAMES = (
+    MCP_TASK_PROPOSAL_TOOL_NAME,
+    MCP_DRIFT_REVIEW_TOOL_NAME,
+)
+MCP_TOOL_NAMES = (*MCP_BASE_TOOL_NAMES, *MCP_FORM_TOOL_NAMES)
 MAX_PROPOSAL_ELICITATION_MESSAGE_CHARACTERS = 24_000
+MAX_DRIFT_REVIEW_ELICITATION_MESSAGE_CHARACTERS = 12_000
 MCP_SERVER_INSTRUCTIONS = (
     "Use these tools without waiting for the user to name them. Before meaningful development "
     "with multiple reasonable product, requirement, architecture, scope, or implementation "
@@ -71,9 +90,14 @@ MCP_SERVER_INSTRUCTIONS = (
     "advisory pass and return its observations before completion. If a required call fails, report "
     "the bounded failure and do not silently continue. Never send raw prompts, raw answers, "
     "transcripts, assistant messages, credentials, absolute paths, or source content. "
-    "When repository-changing work has no admitted task, use the native proposal-review tool "
-    "with normalized low-risk task meaning. That tool may create only the exact human-admitted "
-    "task after a capability-negotiated form; ordinary tool permission is not task admission. "
+    "When repository-changing work is requested and no matching human-admitted task explicitly "
+    "authorizes that exact change, use the native proposal-review tool with normalized low-risk "
+    "task meaning. An unrelated, measurement-only, or differently scoped admitted task does not "
+    "count. Do not use proposal review for read-only work. That tool may create only the exact "
+    "human-admitted task after a capability-negotiated form; ordinary tool permission is not task admission. "
+    "When the periodic drift reminder is due, perform an evidence-bounded advisory review, then "
+    "use the native drift-review tool with only normalized candidate observations. The human alone "
+    "chooses whether to record that exact candidate, snooze, or write nothing. "
     "No tool grants code, scope, exception, Git, release, deployment, or external authority."
 )
 
@@ -217,6 +241,49 @@ def _task_proposal_text_list(
     if len(result) != len(set(result)):
         _task_proposal_input_error(field_path=field_path, rule="unique_items")
     return result
+
+
+def _drift_review_input_error(*, field_path: str | None, rule: str) -> None:
+    raise GovernanceMcpError(
+        "Normalized drift-review input violates the indicated rule; correct it and retry",
+        code="drift_review_invalid_field",
+        stage=MCP_DRIFT_REVIEW_TOOL_NAME,
+        field_path=field_path,
+        rule=rule,
+        retryable=True,
+    )
+
+
+def _drift_review_text(
+    value: Any,
+    *,
+    field_path: str,
+    maximum: int = 800,
+) -> str:
+    if (
+        not isinstance(value, str)
+        or not value.strip()
+        or len(value) > maximum
+        or any(unicodedata.category(character).startswith("C") for character in value)
+        or _SENSITIVE_INPUT_RE.search(value)
+        or _ABSOLUTE_INPUT_PATH_RE.search(value)
+    ):
+        _drift_review_input_error(field_path=field_path, rule="normalized_text")
+    return value
+
+
+def _drift_review_status_binding(status: Any) -> Mapping[str, Any]:
+    observations = status.observations
+    return {
+        "state": status.state,
+        "reason_codes": list(status.reason_codes),
+        "cadence": dict(status.cadence),
+        "completed_tasks_total": observations["completed_tasks_total"],
+        "completed_tasks_since_review": observations["completed_tasks_since_review"],
+        "last_reviewed_at": observations["last_reviewed_at"],
+        "snoozed_until": observations["snoozed_until"],
+        "policy_source": observations["policy_source"],
+    }
 
 
 def _normalized_input_text(
@@ -945,6 +1012,35 @@ def _task_proposal_input_schema() -> Mapping[str, Any]:
     return _tool_schema(fields, tuple(fields))
 
 
+def _drift_review_input_schema() -> Mapping[str, Any]:
+    fields = {
+        "candidate_outcome": {"enum": sorted(REVIEW_OUTCOMES)},
+        "observations": {
+            "type": "array",
+            "minItems": len(DRIFT_DIMENSIONS),
+            "maxItems": len(DRIFT_DIMENSIONS),
+            "uniqueItems": True,
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": ["dimension", "finding"],
+                "properties": {
+                    "dimension": {"enum": list(DRIFT_DIMENSIONS)},
+                    "finding": {"type": "string", "minLength": 1, "maxLength": 800},
+                },
+            },
+        },
+        "evidence_refs": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 12,
+            "uniqueItems": True,
+            "items": {"type": "string", "minLength": 1, "maxLength": 240},
+        },
+    }
+    return _tool_schema(fields, tuple(fields))
+
+
 def governance_mcp_tools() -> tuple[Mapping[str, Any], ...]:
     """Return a deterministic tool catalog with strict top-level input schemas."""
 
@@ -1057,13 +1153,36 @@ def governance_mcp_tools() -> tuple[Mapping[str, Any], ...]:
             "name": MCP_TASK_PROPOSAL_TOOL_NAME,
             "title": "Prepare and review a low-risk task proposal",
             "description": (
-                "Use when repository-changing work has no admitted task. Materialize only "
-                "normalized low-risk task meaning from the current conversation. AgentGov "
+                "Use when repository-changing work is requested and no matching human-admitted "
+                "task explicitly authorizes that exact change. Unrelated, measurement-only, or "
+                "differently scoped admitted tasks do not count; read-only work does not need "
+                "proposal review. Materialize only normalized low-risk task meaning from the "
+                "current conversation. AgentGov "
                 "creates the strict proposal and opens one native human review form; never "
                 "supply raw chat, proposal identity, authority, repository identity, or a "
                 "human decision. The task is created only after exact native admission."
             ),
             "inputSchema": _task_proposal_input_schema(),
+            "annotations": {
+                "readOnlyHint": False,
+                "destructiveHint": False,
+                "idempotentHint": False,
+                "openWorldHint": False,
+            },
+        },
+        {
+            "name": MCP_DRIFT_REVIEW_TOOL_NAME,
+            "title": "Review and record a due drift reminder",
+            "description": (
+                "Use only after the shared periodic drift reminder is due and the current "
+                "Agent has completed a distinct evidence-bounded advisory review. Supply one "
+                "normalized candidate outcome, exactly one observation for requirement, "
+                "architecture, and functionality, and only repository-relative evidence "
+                "references. Never supply or infer the human decision. AgentGov opens one "
+                "native form; only the human may record the exact candidate, snooze the "
+                "configured interval, or create no record."
+            ),
+            "inputSchema": _drift_review_input_schema(),
             "annotations": {
                 "readOnlyHint": False,
                 "destructiveHint": False,
@@ -1356,6 +1475,314 @@ class GovernanceMcpAdapter:
             },
         }
 
+    def prepare_drift_review(self, value: Any) -> Mapping[str, Any]:
+        """Bind one advisory candidate to the current due state before elicitation."""
+
+        args = _exact_arguments(
+            value,
+            {"candidate_outcome", "observations", "evidence_refs"},
+            tool=MCP_DRIFT_REVIEW_TOOL_NAME,
+        )
+        candidate = args["candidate_outcome"]
+        if candidate not in REVIEW_OUTCOMES:
+            _drift_review_input_error(field_path="candidate_outcome", rule="enum")
+        raw_observations = args["observations"]
+        if not isinstance(raw_observations, list) or len(raw_observations) != len(
+            DRIFT_DIMENSIONS
+        ):
+            _drift_review_input_error(field_path="observations", rule="item_count")
+        observations: list[Mapping[str, str]] = []
+        seen_dimensions: set[str] = set()
+        for index, item in enumerate(raw_observations):
+            path = f"observations[{index}]"
+            if not isinstance(item, Mapping) or set(item) != {"dimension", "finding"}:
+                _drift_review_input_error(field_path=path, rule="exact_fields")
+            dimension = item.get("dimension")
+            if dimension not in DRIFT_DIMENSIONS or dimension in seen_dimensions:
+                _drift_review_input_error(
+                    field_path=f"{path}.dimension", rule="dimension_set"
+                )
+            seen_dimensions.add(dimension)
+            observations.append(
+                {
+                    "dimension": dimension,
+                    "finding": _drift_review_text(
+                        item.get("finding"), field_path=f"{path}.finding"
+                    ),
+                }
+            )
+        if seen_dimensions != set(DRIFT_DIMENSIONS):
+            _drift_review_input_error(field_path="observations", rule="dimension_set")
+
+        raw_refs = args["evidence_refs"]
+        if not isinstance(raw_refs, list) or not 1 <= len(raw_refs) <= 12:
+            _drift_review_input_error(field_path="evidence_refs", rule="item_count")
+        if len(raw_refs) != len(set(raw_refs)):
+            _drift_review_input_error(field_path="evidence_refs", rule="unique_items")
+        if self.repository is None:
+            raise GovernanceMcpError(
+                "MCP drift review has no locally bound repository",
+                code="drift_review_repository_unavailable",
+                stage=MCP_DRIFT_REVIEW_TOOL_NAME,
+                field_path=None,
+                rule="local_repository_binding",
+                retryable=False,
+            )
+        try:
+            root = self.repository.resolve(strict=True)
+        except OSError as exc:
+            raise GovernanceMcpError(
+                "MCP drift review cannot resolve its locally bound repository",
+                code="drift_review_repository_unavailable",
+                stage=MCP_DRIFT_REVIEW_TOOL_NAME,
+                field_path=None,
+                rule="local_repository_binding",
+                retryable=False,
+            ) from exc
+        evidence_refs: list[str] = []
+        for index, raw_ref in enumerate(raw_refs):
+            field_path = f"evidence_refs[{index}]"
+            if (
+                not isinstance(raw_ref, str)
+                or len(raw_ref) > 240
+                or scope_path_error(raw_ref)
+            ):
+                _drift_review_input_error(
+                    field_path=field_path, rule="repository_relative"
+                )
+            try:
+                target = (root / raw_ref).resolve()
+            except OSError:
+                _drift_review_input_error(field_path=field_path, rule="readable_evidence")
+            try:
+                target.relative_to(root)
+            except ValueError:
+                _drift_review_input_error(
+                    field_path=field_path, rule="repository_relative"
+                )
+            if not target.is_file():
+                _drift_review_input_error(field_path=field_path, rule="readable_evidence")
+            evidence_refs.append(raw_ref)
+
+        try:
+            status = build_drift_review_status(root)
+        except (DriftReviewPolicyError, LocalStateError, OSError, UnicodeError) as exc:
+            raise GovernanceMcpError(
+                "Local repository state prevented safe drift-review preparation",
+                code="drift_review_repository_unavailable",
+                stage=MCP_DRIFT_REVIEW_TOOL_NAME,
+                field_path=None,
+                rule="local_repository_binding",
+                retryable=False,
+            ) from exc
+        if status.state != "due":
+            raise GovernanceMcpError(
+                "The shared drift-review cadence is not currently due",
+                code="drift_review_not_due",
+                stage=MCP_DRIFT_REVIEW_TOOL_NAME,
+                field_path=None,
+                rule="due_state_required",
+                retryable=False,
+            )
+        binding = _drift_review_status_binding(status)
+        return {
+            "candidate_outcome": candidate,
+            "observations": observations,
+            "evidence_refs": evidence_refs,
+            "due_state": binding,
+            "due_state_digest": canonical_document_digest(binding),
+        }
+
+    def complete_drift_review(
+        self,
+        preparation: Mapping[str, Any],
+        response: Any,
+    ) -> Mapping[str, Any]:
+        """Apply only the exact native human choice to one still-due review."""
+
+        if not isinstance(response, Mapping):
+            raise GovernanceMcpError(
+                "Native drift review response is malformed",
+                code="drift_review_response_invalid",
+                stage=MCP_DRIFT_REVIEW_TOOL_NAME,
+                field_path="elicitation_response",
+                rule="object",
+                retryable=False,
+            )
+        action = response.get("action")
+        if action not in {"accept", "decline", "cancel"}:
+            raise GovernanceMcpError(
+                "Native drift review action is invalid",
+                code="drift_review_response_invalid",
+                stage=MCP_DRIFT_REVIEW_TOOL_NAME,
+                field_path="elicitation_response.action",
+                rule="enum",
+                retryable=False,
+            )
+        content = response.get("content")
+        decision: str | None = None
+        if action == "accept":
+            if not isinstance(content, Mapping) or set(content) != {"decision"}:
+                raise GovernanceMcpError(
+                    "Accepted native drift review content is invalid",
+                    code="drift_review_response_invalid",
+                    stage=MCP_DRIFT_REVIEW_TOOL_NAME,
+                    field_path="elicitation_response.content",
+                    rule="exact_decision",
+                    retryable=False,
+                )
+            decision = content.get("decision")
+            if decision not in {"record_candidate", "snooze", "no_record"}:
+                raise GovernanceMcpError(
+                    "Native drift review decision is invalid",
+                    code="drift_review_response_invalid",
+                    stage=MCP_DRIFT_REVIEW_TOOL_NAME,
+                    field_path="elicitation_response.content.decision",
+                    rule="enum",
+                    retryable=False,
+                )
+        elif content is not None:
+            raise GovernanceMcpError(
+                "Declined or cancelled native drift review must not include content",
+                code="drift_review_response_invalid",
+                stage=MCP_DRIFT_REVIEW_TOOL_NAME,
+                field_path="elicitation_response.content",
+                rule="absent",
+                retryable=False,
+            )
+
+        status_name = {"decline": "declined", "cancel": "cancelled"}.get(
+            action, "not_recorded" if decision == "no_record" else decision
+        )
+        record_ref: str | None = None
+        refreshed_status: Mapping[str, Any] | None = None
+        monitor = {"status": "not_refreshed", "artifact_ref": None, "reason_code": None}
+        modified = False
+        if action == "accept" and decision in {"record_candidate", "snooze"}:
+            if self.repository is None:
+                raise GovernanceMcpError(
+                    "MCP drift review has no locally bound repository",
+                    code="drift_review_repository_unavailable",
+                    stage=MCP_DRIFT_REVIEW_TOOL_NAME,
+                    field_path=None,
+                    rule="local_repository_binding",
+                    retryable=False,
+                )
+            try:
+                root = self.repository.resolve(strict=True)
+            except OSError as exc:
+                raise GovernanceMcpError(
+                    "MCP drift review cannot resolve its locally bound repository",
+                    code="drift_review_repository_unavailable",
+                    stage=MCP_DRIFT_REVIEW_TOOL_NAME,
+                    field_path=None,
+                    rule="local_repository_binding",
+                    retryable=False,
+                ) from exc
+            try:
+                current = build_drift_review_status(root)
+            except (DriftReviewPolicyError, LocalStateError, OSError, UnicodeError) as exc:
+                raise GovernanceMcpError(
+                    "Local repository state prevented drift-review revalidation",
+                    code="drift_review_state_stale",
+                    stage=MCP_DRIFT_REVIEW_TOOL_NAME,
+                    field_path=None,
+                    rule="revalidation",
+                    retryable=False,
+                ) from exc
+            current_binding = _drift_review_status_binding(current)
+            if (
+                current.state != "due"
+                or canonical_document_digest(current_binding)
+                != preparation["due_state_digest"]
+            ):
+                raise GovernanceMcpError(
+                    "The drift-review due state changed after the native form was prepared",
+                    code="drift_review_state_stale",
+                    stage=MCP_DRIFT_REVIEW_TOOL_NAME,
+                    field_path=None,
+                    rule="revalidation",
+                    retryable=False,
+                )
+            try:
+                record = build_drift_review_record(
+                    root,
+                    action=(
+                        "review_completed" if decision == "record_candidate" else "snoozed"
+                    ),
+                    outcome=(
+                        preparation["candidate_outcome"]
+                        if decision == "record_candidate"
+                        else None
+                    ),
+                )
+                written = write_drift_review_record(root, record)
+            except (DriftReviewPolicyError, LocalStateError, OSError, UnicodeError) as exc:
+                raise GovernanceMcpError(
+                    "Local repository state prevented the create-only drift-review write",
+                    code="drift_review_state_stale",
+                    stage=MCP_DRIFT_REVIEW_TOOL_NAME,
+                    field_path=None,
+                    rule="create_only_write",
+                    retryable=False,
+                ) from exc
+            record_ref = written.relative_to(root).as_posix()
+            modified = True
+            status_name = "recorded" if decision == "record_candidate" else "snoozed"
+            try:
+                refreshed = build_drift_review_status(root, as_of=record.recorded_at)
+                refreshed_status = asdict(refreshed)
+                monitor_value = build_development_monitor(root, generated_at=record.recorded_at)
+                monitor_path = write_development_monitor(
+                    root,
+                    monitor=monitor_value,
+                    output=Path(".agentgov/dashboard.html"),
+                    output_format="html",
+                )
+                monitor = {
+                    "status": "refreshed",
+                    "artifact_ref": monitor_path.relative_to(root).as_posix(),
+                    "reason_code": None,
+                }
+            except Exception:
+                monitor = {
+                    "status": "refresh_failed",
+                    "artifact_ref": None,
+                    "reason_code": "local_monitor_refresh_failed",
+                }
+
+        return {
+            "contract": "agentgov.drift-review-form-result",
+            "schema_version": "1.0",
+            "status": status_name,
+            "candidate": {
+                "outcome": preparation["candidate_outcome"],
+                "semantics": "advisory",
+                "dimensions": list(DRIFT_DIMENSIONS),
+            },
+            "review": {
+                "surface": "mcp_form_elicitation",
+                "action": action,
+                "decision": decision,
+            },
+            "record_ref": record_ref,
+            "drift_review": refreshed_status,
+            "monitor": monitor,
+            "authority_boundary": {
+                "repository_modified": modified,
+                "review_record_created": record_ref is not None,
+                "monitor_refreshed": monitor["status"] == "refreshed",
+                "decides_semantic_drift": False,
+                "authorizes_code_change": False,
+                "authorizes_scope_expansion": False,
+                "authorizes_exception": False,
+                "authorizes_git_operations": False,
+                "authorizes_publication": False,
+                "authorizes_deployment": False,
+                "authorizes_release": False,
+            },
+        }
+
     def _lookup(self, value: Any) -> tuple[str, _Journey]:
         handle = _journey_handle(value)
         journey = self._journeys.get(handle)
@@ -1626,7 +2053,7 @@ class GovernanceMcpServer:
         if self._client_supports_form_elicitation:
             return tools
         return tuple(
-            tool for tool in tools if tool["name"] != MCP_TASK_PROPOSAL_TOOL_NAME
+            tool for tool in tools if tool["name"] not in MCP_FORM_TOOL_NAMES
         )
 
     @staticmethod
@@ -1664,6 +2091,34 @@ class GovernanceMcpServer:
                         {"const": "admit", "title": "Admit this exact task"},
                         {"const": "request_changes", "title": "Request changes"},
                         {"const": "reject", "title": "Reject proposal"},
+                    ],
+                }
+            },
+            "required": ["decision"],
+        }
+
+    @staticmethod
+    def _drift_review_schema() -> Mapping[str, Any]:
+        return {
+            "type": "object",
+            "properties": {
+                "decision": {
+                    "type": "string",
+                    "title": "Periodic drift-review decision",
+                    "description": (
+                        "Record only the exact displayed advisory candidate, snooze "
+                        "for the configured interval, or create no repository record."
+                    ),
+                    "oneOf": [
+                        {
+                            "const": "record_candidate",
+                            "title": "Record this exact advisory outcome",
+                        },
+                        {
+                            "const": "snooze",
+                            "title": "Snooze for the configured interval",
+                        },
+                        {"const": "no_record", "title": "Create no record"},
                     ],
                 }
             },
@@ -1713,15 +2168,20 @@ class GovernanceMcpServer:
             name = params.get("name")
             if name not in MCP_TOOL_NAMES:
                 return self._error(request_id, -32602, "Unknown AgentGov tool")
-            if name == MCP_TASK_PROPOSAL_TOOL_NAME:
+            if name in MCP_FORM_TOOL_NAMES:
+                is_proposal = name == MCP_TASK_PROPOSAL_TOOL_NAME
                 if not self._client_supports_form_elicitation:
                     return self._result(
                         request_id,
                         self._tool_failure(
                             GovernanceMcpError(
                                 "Codex did not negotiate native form elicitation",
-                                code="task_proposal_elicitation_unsupported",
-                                stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+                                code=(
+                                    "task_proposal_elicitation_unsupported"
+                                    if is_proposal
+                                    else "drift_review_elicitation_unsupported"
+                                ),
+                                stage=name,
                                 field_path=None,
                                 rule="client_capability",
                                 retryable=False,
@@ -1732,9 +2192,13 @@ class GovernanceMcpServer:
                     request_id,
                     self._tool_failure(
                         GovernanceMcpError(
-                            "Native proposal review requires the interactive STDIO transport",
-                            code="task_proposal_elicitation_transport_required",
-                            stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+                            "Native form review requires the interactive STDIO transport",
+                            code=(
+                                "task_proposal_elicitation_transport_required"
+                                if is_proposal
+                                else "drift_review_elicitation_transport_required"
+                            ),
+                            stage=name,
                             field_path=None,
                             rule="interactive_transport",
                             retryable=False,
@@ -1881,6 +2345,143 @@ class GovernanceMcpServer:
                 if nested_response is not None:
                     self._write_payload(output_stream, nested_response)
 
+    def _serve_drift_review_call(
+        self,
+        payload: Mapping[str, Any],
+        input_stream: TextIO,
+        output_stream: TextIO,
+    ) -> Mapping[str, Any]:
+        request_id = payload.get("id")
+        params = payload.get("params", {})
+        if (
+            not isinstance(params, Mapping)
+            or set(params)
+            - {"name", "arguments", "_meta", "inputResponses", "requestState"}
+        ):
+            return self._error(request_id, -32602, "Invalid tools/call params")
+        if not self._client_supports_form_elicitation:
+            exc = GovernanceMcpError(
+                "Codex did not negotiate native form elicitation",
+                code="drift_review_elicitation_unsupported",
+                stage=MCP_DRIFT_REVIEW_TOOL_NAME,
+                field_path=None,
+                rule="client_capability",
+                retryable=False,
+            )
+            return self._result(request_id, self._tool_failure(exc))
+        try:
+            preparation = self.adapter.prepare_drift_review(
+                params.get("arguments", {})
+            )
+            observation_lines = "\n".join(
+                f"- {item['dimension']}: {item['finding']}"
+                for item in preparation["observations"]
+            )
+            evidence_lines = "\n".join(
+                f"- {item}" for item in preparation["evidence_refs"]
+            )
+            message = (
+                "Review this evidence-bounded AgentGov drift candidate. The candidate is "
+                "ADVISORY and does not prove correctness. Only 'Record this exact advisory "
+                "outcome' creates a completed-review record; snooze creates only a configured "
+                "snooze record; all other outcomes write nothing.\n\n"
+                f"Candidate outcome: {preparation['candidate_outcome']}\n"
+                f"Due reasons: {', '.join(preparation['due_state']['reason_codes'])}\n\n"
+                f"Snooze interval: {preparation['due_state']['cadence']['snooze_days']} days\n\n"
+                f"Dimension observations:\n{observation_lines}\n\n"
+                f"Repository evidence references:\n{evidence_lines}"
+            )
+            if len(message) > MAX_DRIFT_REVIEW_ELICITATION_MESSAGE_CHARACTERS:
+                raise GovernanceMcpError(
+                    "Drift review is too large for bounded native review",
+                    code="drift_review_elicitation_too_large",
+                    stage=MCP_DRIFT_REVIEW_TOOL_NAME,
+                    field_path="observations",
+                    rule="max_characters",
+                    retryable=True,
+                )
+        except GovernanceMcpError as exc:
+            return self._result(request_id, self._tool_failure(exc))
+
+        elicitation_id = self._request_id_factory()
+        self._write_payload(
+            output_stream,
+            {
+                "jsonrpc": "2.0",
+                "id": elicitation_id,
+                "method": "elicitation/create",
+                "params": {
+                    "mode": "form",
+                    "message": message,
+                    "requestedSchema": self._drift_review_schema(),
+                },
+            },
+        )
+
+        while True:
+            line = input_stream.readline()
+            if line == "":
+                exc = GovernanceMcpError(
+                    "Native drift review was interrupted before a bound decision",
+                    code="drift_review_elicitation_interrupted",
+                    stage=MCP_DRIFT_REVIEW_TOOL_NAME,
+                    field_path=None,
+                    rule="response_required",
+                    retryable=True,
+                )
+                return self._result(request_id, self._tool_failure(exc))
+            try:
+                incoming = json.loads(line)
+            except json.JSONDecodeError:
+                self._write_payload(output_stream, self._error(None, -32700, "Parse error"))
+                continue
+            if not isinstance(incoming, Mapping):
+                self._write_payload(output_stream, self._error(None, -32600, "Invalid Request"))
+                continue
+            if incoming.get("id") == elicitation_id and "method" not in incoming:
+                if (
+                    incoming.get("jsonrpc") != "2.0"
+                    or set(incoming) - {"jsonrpc", "id", "result", "error"}
+                    or "result" not in incoming
+                    or "error" in incoming
+                ):
+                    exc = GovernanceMcpError(
+                        "Native drift review returned no admissible result",
+                        code="drift_review_elicitation_failed",
+                        stage=MCP_DRIFT_REVIEW_TOOL_NAME,
+                        field_path="elicitation_response",
+                        rule="result_required",
+                        retryable=True,
+                    )
+                    return self._result(request_id, self._tool_failure(exc))
+                try:
+                    structured = self.adapter.complete_drift_review(
+                        preparation, incoming["result"]
+                    )
+                except GovernanceMcpError as exc:
+                    return self._result(request_id, self._tool_failure(exc))
+                return self._result(request_id, self._tool_success(structured))
+            if incoming.get("method") == "notifications/cancelled":
+                cancelled = incoming.get("params")
+                if isinstance(cancelled, Mapping) and cancelled.get("requestId") in {
+                    elicitation_id,
+                    request_id,
+                }:
+                    exc = GovernanceMcpError(
+                        "Native drift review was cancelled before recording",
+                        code="drift_review_elicitation_interrupted",
+                        stage=MCP_DRIFT_REVIEW_TOOL_NAME,
+                        field_path=None,
+                        rule="cancelled",
+                        retryable=True,
+                    )
+                    return self._result(request_id, self._tool_failure(exc))
+                continue
+            if "method" in incoming:
+                nested_response = self.dispatch(incoming)
+                if nested_response is not None:
+                    self._write_payload(output_stream, nested_response)
+
     def serve(self, input_stream: TextIO, output_stream: TextIO) -> int:
         for line in input_stream:
             try:
@@ -1892,11 +2493,16 @@ class GovernanceMcpServer:
                     isinstance(payload, Mapping)
                     and payload.get("method") == "tools/call"
                     and isinstance(payload.get("params"), Mapping)
-                    and payload["params"].get("name") == MCP_TASK_PROPOSAL_TOOL_NAME
+                    and payload["params"].get("name") in MCP_FORM_TOOL_NAMES
                 ):
-                    response = self._serve_task_proposal_call(
-                        payload, input_stream, output_stream
-                    )
+                    if payload["params"].get("name") == MCP_TASK_PROPOSAL_TOOL_NAME:
+                        response = self._serve_task_proposal_call(
+                            payload, input_stream, output_stream
+                        )
+                    else:
+                        response = self._serve_drift_review_call(
+                            payload, input_stream, output_stream
+                        )
                 else:
                     response = self.dispatch(payload)
             if response is not None:

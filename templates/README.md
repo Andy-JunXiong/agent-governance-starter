@@ -12,6 +12,9 @@ rules.
   gate, ownership boundary, consequences, and implementation follow-up.
 - `INVARIANTS.template.md`: architecture-constraint register with explicit
   authority, enforcement-point, and verification metadata.
+- `drift-review-policy.template.json`: default three-task/seven-day cadence for
+  requirement, architecture, and functionality review reminders. Due-state
+  calculation is deterministic; semantic conclusions remain advisory.
 - `prompt-capability.template.json`: contract-valid starting manifest for a
   governed AI capability implemented by deterministic logic, a model, a
   prompt, or a hybrid.
@@ -47,7 +50,9 @@ rules.
 - `codex-mcp.template.toml`: exact optional project configuration for the
   foreground AgentGov MCP Adapter. Install it only through the
   create-missing-only `agentgov integrate codex-mcp` flow and preserve Codex
-  trusted-project/config review.
+  trusted-project/config review. The development template allow-lists the five
+  base tools plus the two native-form-gated task-proposal and drift-review
+  tools; unsupported clients discover only the base tools.
 
 ## Placeholder contract
 

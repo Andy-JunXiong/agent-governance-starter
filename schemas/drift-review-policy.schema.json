@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/drift-review-policy-v1.0.json",
+  "title": "AgentGov Drift Review Policy",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "cadence", "dimensions", "semantic_classification", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.drift-review-policy"},
+    "schema_version": {"const": "1.0"},
+    "cadence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_age_days", "max_completed_tasks", "snooze_days"],
+      "properties": {
+        "max_age_days": {"type": "integer", "minimum": 1, "maximum": 365},
+        "max_completed_tasks": {"type": "integer", "minimum": 1, "maximum": 365},
+        "snooze_days": {"type": "integer", "minimum": 1, "maximum": 365}
+      }
+    },
+    "dimensions": {"const": ["requirement", "architecture", "functionality"]},
+    "semantic_classification": {"const": "advisory"},
+    "authority_boundary": {"$ref": "#/$defs/authority"}
+  },
+  "$defs": {
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decides_semantic_drift", "authorizes_governance_mutation", "authorizes_scope_expansion", "authorizes_exception", "authorizes_commit", "authorizes_merge", "authorizes_deployment"],
+      "properties": {
+        "decides_semantic_drift": {"const": false},
+        "authorizes_governance_mutation": {"const": false},
+        "authorizes_scope_expansion": {"const": false},
+        "authorizes_exception": {"const": false},
+        "authorizes_commit": {"const": false},
+        "authorizes_merge": {"const": false},
+        "authorizes_deployment": {"const": false}
+      }
+    }
+  }
+}

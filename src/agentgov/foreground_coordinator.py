@@ -18,6 +18,7 @@ from agentgov.development_session import (
 )
 from agentgov.development_state import development_state_payload, project_development_state
 from agentgov.development_trigger import DevelopmentTrigger, working_copy_digest
+from agentgov.drift_review import DriftReviewPolicyError, build_drift_review_status
 from agentgov.event_store import append_governance_event
 
 
@@ -129,8 +130,8 @@ def _append_scope_observation(
     return report, event_ref
 
 
-def _refresh_dashboard(repository: Path, output: Path) -> str:
-    monitor = build_development_monitor(repository)
+def _refresh_dashboard(repository: Path, output: Path, *, generated_at: str) -> str:
+    monitor = build_development_monitor(repository, generated_at=generated_at)
     written = write_development_monitor(
         repository,
         monitor=monitor,
@@ -324,8 +325,28 @@ def run_foreground_cycle(
             project_development_state(session, events_after)
         )
 
-    dashboard_ref = _refresh_dashboard(root, dashboard_output)
+    dashboard_ref = _refresh_dashboard(
+        root,
+        dashboard_output,
+        generated_at=trigger.occurred_at,
+    )
     actions.append(_action("refresh_dashboard", "refreshed", artifact_ref=dashboard_ref))
+
+    try:
+        drift_review = build_drift_review_status(root, as_of=trigger.occurred_at)
+    except DriftReviewPolicyError as exc:
+        raise CoordinatorPolicyError(f"drift review cadence is invalid: {exc}") from exc
+    if drift_review.state == "due":
+        findings.append(
+            _finding(
+                "drift_review_due",
+                "Requirement, architecture, and functionality drift review is due: "
+                + ", ".join(drift_review.reason_codes)
+                + ". The due state is deterministic; any drift conclusion remains advisory.",
+                blocking=False,
+                semantics="advisory",
+            )
+        )
 
     blocking = any(item["blocking"] for item in findings)
     if human_gate is not None:

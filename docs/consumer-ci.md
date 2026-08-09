@@ -52,6 +52,14 @@ agentgov integrate github-actions . --dry-run
 agentgov integrate github-actions .
 ```
 
+Future workflow versions that include the drift-review contract run
+`agentgov review drift . --format github` on the existing schedule. A due
+review produces a warning annotation and job summary while the job remains
+green. Published 0.2.1 and v0.3.0rc1 workflows do not contain this unreleased
+command. The scheduled path has no issue, email, chat, pull-request comment, or
+other notification write authority; see
+[drift review reminders](drift-review-reminders.md).
+
 The second command accepts only exact `INTEGRATE` from an interactive terminal.
 Redirected input, JSON output, and `--non-interactive` execution never authorize
 writes. The command creates only `.github/workflows/agentgov.yml`; it preserves

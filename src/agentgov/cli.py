@@ -8,6 +8,7 @@ import os
 import secrets
 import subprocess
 import sys
+from dataclasses import asdict
 from tempfile import TemporaryDirectory
 from pathlib import Path
 from typing import Mapping, Sequence
@@ -121,6 +122,16 @@ from agentgov.development_context import (
     render_development_context_markdown,
     render_development_context_terminal,
     select_development_context,
+)
+from agentgov.drift_review import (
+    DriftReviewPolicyError,
+    REVIEW_OUTCOMES,
+    build_drift_review_record,
+    build_drift_review_status,
+    render_drift_review_status_github,
+    render_drift_review_status_json,
+    render_drift_review_status_terminal,
+    write_drift_review_record,
 )
 from agentgov.development_evidence import (
     EvidenceError,
@@ -2549,6 +2560,67 @@ def _monitor_development(
     return EXIT_PASS
 
 
+def _review_drift(
+    repository: Path,
+    *,
+    output_format: str,
+    as_of: str | None,
+    record_outcome: str | None,
+    snooze: bool,
+    apply_record: bool,
+) -> int:
+    if record_outcome is not None and snooze:
+        print("ERROR review drift: choose either --record-outcome or --snooze", file=sys.stderr)
+        return EXIT_ERROR
+    if apply_record and record_outcome is None and not snooze:
+        print("ERROR review drift: --apply requires --record-outcome or --snooze", file=sys.stderr)
+        return EXIT_ERROR
+    if (record_outcome is not None or snooze) and output_format == "github":
+        print("ERROR review drift: record previews do not support GitHub format", file=sys.stderr)
+        return EXIT_ERROR
+    try:
+        if record_outcome is not None or snooze:
+            record = build_drift_review_record(
+                repository,
+                action="snoozed" if snooze else "review_completed",
+                outcome=record_outcome,
+                recorded_at=as_of,
+            )
+            payload = json.dumps(asdict(record), ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+            if not apply_record:
+                print(payload, end="")
+                print("DRY_RUN no review record was written")
+                return EXIT_PASS
+            print(payload, end="")
+            if not sys.stdin.isatty():
+                print("CANCELLED review record apply requires an interactive terminal")
+                return EXIT_FAIL
+            try:
+                decision = input(
+                    f'Type RECORD to create {record.record_id}.json under governance/drift-reviews: '
+                )
+            except EOFError:
+                decision = ""
+            if decision != "RECORD":
+                print("CANCELLED review record was not created")
+                return EXIT_FAIL
+            written = write_drift_review_record(repository, record)
+            print(f"RECORDED {written.relative_to(repository.resolve()).as_posix()}")
+            print("NOTE this advisory record grants no scope, Git, release, or deployment authority")
+            return EXIT_PASS
+        status = build_drift_review_status(repository, as_of=as_of)
+    except (DriftReviewPolicyError, LocalStateError, OSError, UnicodeError, ValueError) as exc:
+        print(f"ERROR review drift: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    renderer = {
+        "terminal": render_drift_review_status_terminal,
+        "json": render_drift_review_status_json,
+        "github": render_drift_review_status_github,
+    }[output_format]
+    print(renderer(status), end="")
+    return EXIT_PASS
+
+
 def _export_development_events(
     repository: Path,
     *,
@@ -2949,6 +3021,54 @@ def build_parser() -> argparse.ArgumentParser:
     review_targets = review_parser.add_subparsers(
         dest="review_target",
         required=True,
+    )
+    drift_review_parser = review_targets.add_parser(
+        "drift",
+        help="Check or explicitly record the advisory requirement, architecture, and functionality drift-review cadence.",
+    )
+    drift_review_parser.add_argument(
+        "repository",
+        nargs="?",
+        type=Path,
+        default=Path("."),
+        help="Repository to inspect (default: current directory).",
+    )
+    drift_review_parser.add_argument(
+        "--format",
+        dest="output_format",
+        choices=("terminal", "json", "github"),
+        default="terminal",
+        help="Output format; github emits a non-failing Actions annotation and summary.",
+    )
+    drift_review_parser.add_argument(
+        "--as-of",
+        help=argparse.SUPPRESS,
+    )
+    drift_review_parser.add_argument(
+        "--record-outcome",
+        choices=tuple(sorted(REVIEW_OUTCOMES)),
+        help="Preview an immutable human-confirmed advisory review record.",
+    )
+    drift_review_parser.add_argument(
+        "--snooze",
+        action="store_true",
+        help="Preview an immutable human-confirmed snooze using the configured cadence.",
+    )
+    drift_review_parser.add_argument(
+        "--apply",
+        dest="apply_record",
+        action="store_true",
+        help="Create the exact previewed record; does not commit it or grant further authority.",
+    )
+    drift_review_parser.set_defaults(
+        handler=lambda args: _review_drift(
+            args.repository,
+            output_format=args.output_format,
+            as_of=args.as_of,
+            record_outcome=args.record_outcome,
+            snooze=args.snooze,
+            apply_record=args.apply_record,
+        )
     )
     release_review_parser = review_targets.add_parser(
         "release",

@@ -150,6 +150,8 @@ def render_consumer_workflow(
     benefit_baseline_upload = ""
     development_monitor_step = ""
     development_monitor_artifact = ""
+    drift_review_step = ""
+    drift_review_artifact = ""
     governance_job_outputs = ""
     finding_annotations_step = ""
     governance_gate_step = ""
@@ -505,6 +507,17 @@ def render_consumer_workflow(
         if: always()
         run: echo "The Draft PR does not authorize merge, release, deploy, or production execution."
 """
+    if version_tuple >= (0, 4, 0):
+        drift_review_step = """
+      - name: Surface scheduled AgentGov drift review reminder
+        if: github.event_name == 'schedule'
+        shell: bash
+        run: |
+          agentgov review drift . --format github | tee agentgov-drift-review.md
+          cat agentgov-drift-review.md >> "$GITHUB_STEP_SUMMARY"
+          echo "The reminder is advisory and intentionally leaves this job green."
+"""
+        drift_review_artifact = "            agentgov-drift-review.md\n"
     if _surface == "upgrade":
         if not supports_upgrade_writer:
             raise ValueError("upgrade proposal workflow requires AgentGov 0.3 or newer")
@@ -563,7 +576,7 @@ jobs:
         run: {update_command}
 {upgrade_review_step}
       - name: Check repository and write JSON report
-{report_continue}        run: agentgov report repository . --format json --output agentgov-report.json{benefit_monitor_step}{finding_annotations_step}{development_monitor_step}
+{report_continue}        run: agentgov report repository . --format json --output agentgov-report.json{benefit_monitor_step}{finding_annotations_step}{development_monitor_step}{drift_review_step}
 
       - name: Add visible governance summary
         if: always()
@@ -581,7 +594,7 @@ jobs:
             agentgov-report.json
             agentgov-report.md
 {status_artifact}            agentgov-update.json
-{benefit_artifact}          if-no-files-found: warn{development_monitor_artifact}{benefit_baseline_upload}{governance_gate_step}
+{benefit_artifact}{drift_review_artifact}          if-no-files-found: warn{development_monitor_artifact}{benefit_baseline_upload}{governance_gate_step}
 
       - name: Preserve human authority boundary
         if: always()

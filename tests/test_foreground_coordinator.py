@@ -137,7 +137,12 @@ class ForegroundCoordinatorTests(unittest.TestCase):
         )
         self.assertEqual(cycle.state_after["stage"], "review_ready")
         self.assertIsNone(cycle.human_gate)
-        self.assertEqual(cycle.findings, ())
+        self.assertEqual(
+            [finding["code"] for finding in cycle.findings],
+            ["drift_review_due"],
+        )
+        self.assertEqual(cycle.findings[0]["semantics"], "advisory")
+        self.assertFalse(cycle.findings[0]["blocking"])
 
     def test_human_review_event_hands_off_without_special_confirmation_text(self) -> None:
         with TemporaryDirectory() as temp_dir:

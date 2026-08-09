@@ -416,3 +416,257 @@ presence-only checks found no `CODEX_ACCESS_TOKEN`, `CODEX_API_KEY`, or
 EOF while preserving the evidence boundary: no credential value or discarded
 stderr was read. Authentication repair remains a separate human-controlled
 action.
+
+## 2026-08-09 proposal-review measurement correction
+
+The product owner separately authorized authentication and installed-runtime
+repair, project MCP configuration, and one fresh external replay. The installed
+Adapter reported `1.3.0` with all six tools. A Windows bridge defect was then
+isolated to non-UTF-8 standard input for the repository's non-ASCII path; an
+explicit UTF-8 stream completed App Server initialization, an ephemeral
+read-only thread, and one real turn. No native proposal form appeared and no
+task or other repository content was created.
+
+The temporary bridge's `proposal_tool_seen` flag searched serialized event text
+for the tool name. Tool inventory and server instructions also contain that
+name, so the flag cannot prove a call. Raw events were intentionally discarded
+and the run is therefore `INVALID_MEASUREMENT`, not Adapter pass/fail evidence.
+
+Test-only support now normalizes only `item/started` and `item/completed` events
+whose item is the exact AgentGov proposal `mcpToolCall`, exact AgentGov form
+elicitation requests, and `turn/completed`. It reduces those records to
+`not_called`, `call_started`, `call_failed`, `form_presented`, or `completed`
+while dropping arguments, model messages, unbounded tool content, error text,
+metadata, usage, and unrelated events. This is replay evidence infrastructure,
+not a product App Server client and not an amendment to ADR-0015.
+
+## 2026-08-09 structured proposal-review replay
+
+After reviewing the test-only normalizer, the product owner explicitly
+authorized the next step: exactly one new external replay. A first sandboxed
+process probe ended at App Server initialization before any turn and therefore
+did not consume the authorization. The corrected process used the installed
+Codex `0.146.0` runtime and explicit UTF-8 standard I/O.
+
+The authorized run initialized, created one ephemeral read-only thread, started
+one real turn, and completed normally. The allow-listed evidence contained one
+`turn/completed` record with status `completed`; it contained no exact AgentGov
+proposal `mcpToolCall` and no AgentGov form elicitation. The normalized outcome
+is therefore `not_called`, with zero proposal calls and zero forms.
+
+This is valid negative end-to-end journey evidence: the bounded ordinary
+request did not enter the proposal-review Adapter path. Because the allow-list
+intentionally excludes tool inventory, it cannot distinguish project
+configuration or tool discovery from Agent invocation behavior, and it does
+not show whether the Adapter would pass or fail after invocation. No raw request,
+transcript, Agent message, reasoning, tool argument, unbounded result, stderr,
+credential, or absolute path from replay events was retained. The turn created
+no task or other repository content. The bridge, decision channel, bytecode,
+and generated schema bundle were removed. The authorization is consumed;
+another replay is not admitted.
+
+## 2026-08-09 no-turn discovery diagnosis and trigger correction
+
+A later read-only App Server diagnostic used `config/read` and
+`mcpServerStatus/list` without starting a model turn. It confirmed that the
+project MCP configuration layer loaded and that the ephemeral thread exposed
+the AgentGov server with all six tools, including
+`agentgov_task_proposal_review`. This separates discovery from the earlier
+replay's `not_called` outcome without converting that outcome into Adapter
+pass/fail evidence.
+
+The remaining conflict was in the experiment preconditions and host guidance:
+the admitted replay-measurement task could be mistaken for authority covering
+the unrelated repository change proposed inside the replay. Development
+instructions and MCP metadata now state that only a human-admitted task whose
+requirement, goal, scope, and acceptance signals match the exact requested
+change counts. Unrelated, measurement-only, or differently scoped tasks do not
+count; read-only work does not trigger proposal review. Static tests protect
+that wording but cannot force model selection.
+
+This diagnosis started no model turn, presented no form, created no task, and
+made no product App Server client. Temporary diagnostic artifacts were removed.
+The installed runtime was not changed and no further replay was sent.
+
+## 2026-08-09 Adapter 1.4.0 native drift-review form rehearsal
+
+The human product owner separately admitted the next bounded step: install the
+exact development Adapter `1.4.0` source and run one independent Native MCP
+drift-review form replay. The source first passed 66 focused MCP, drift-review,
+Monitor, and replay-normalizer tests. It was copied to a new temporary build
+directory; the copied `governance_mcp.py` and `drift_review.py` SHA-256 values
+matched the workspace source exactly.
+
+The existing offline Python 3.12.10 build toolchain produced local-only
+`agent_governance_starter-0.3.0rc1-py3-none-any.whl`, 437,600 bytes, with
+SHA-256
+`DD78FDC64A235FB5D95FBE02AC5DF6F25F7DCE6384AABE841FDFD1F1DB32B575`.
+ZIP integrity passed. No AgentGov governance-MCP process was running, so no
+process termination occurred. The wheel replaced only the existing AgentGov
+pipx package through `--force-reinstall --no-deps --no-index`; no dependency or
+environment was downloaded or created.
+
+Installed identity remained package `0.3.0rc1` and now reported Adapter `1.4.0`,
+protocol `2026-07-28`, seven tools with form capability, and five base tools
+without it. Installed MCP and drift-review regression passed 40 tests. The two
+installed Python modules matched their source SHA-256 values. Project
+`.codex/config.toml` remained byte-unchanged with SHA-256
+`4CCA2D57EDEADDFE52D3E6C4DD4D774192BBDBCAB4E84E07DF73E14A861C0348`.
+
+The replay used a disposable Git worktree with no prior drift-review baseline,
+so installed `agentgov review drift` deterministically reported `due` with
+reason `initial_review_required` and zero records. The current official Codex
+manual and Codex `0.146.0` generated App Server schemas confirmed the
+`mcpServerOpenaiFormElicitation` initialize capability,
+`mcpServer/elicitation/request`, granular `mcp_elicitations`, and the current
+object-map shape of `mcpServerStatus/list` tools.
+
+Two startup-only corrections preceded the measured tool call. The first found
+the deliberate Git-worktree precondition before any tool call. The second found
+that the temporary bridge had read the current tool object map as a legacy
+array. After the bridge was corrected to the generated schema, the final
+startup preflight reported seven tools, the drift tool present, zero tool calls,
+zero forms, and zero writes.
+
+The one measured direct App Server call then invoked
+`agentgov_drift_review_record` exactly once. App Server emitted exactly one
+thread-bound `mcpServer/elicitation/request` in `form` mode with required field
+`decision` and exact options `record_candidate`, `snooze`, and `no_record`.
+The one-shot bridge did not answer the form, so no human decision was supplied,
+the before/after record count remained zero, and no repository mutation
+occurred. No `turn/start`, model call, raw prompt, model output, tool arguments,
+form message, or raw event stream was retained.
+
+This is positive installed-runtime and App Server forwarding evidence. It is
+not evidence that the current Agent will select the tool, that an end-user
+Codex UI will visibly present the form, that the human choice/application path
+works through that UI, or that semantic review is correct. Another replay,
+project configuration change, consumer activation, publication, and release
+remain separate and unauthorized.
+
+## 2026-08-09 clarified-trigger installation preflight
+
+The product owner separately authorized installation and local preflight, but
+not a Codex turn or replay. The exact reviewed working source was built offline
+with the already-present Codex runtime Python 3.12.13, setuptools 83.0.0, and
+wheel 0.47.0. The resulting local-only
+`agent_governance_starter-0.3.0rc1-py3-none-any.whl` was 423,355 bytes with
+SHA-256
+`F109E8A951605AE947374EE28BB76B569A344BC3DD20A752E1686AF8C317FDFE`.
+It is not the immutable published `v0.3.0rc1` artifact.
+
+No AgentGov governance-MCP process was running, so no process was stopped. The
+wheel was installed with `--force-reinstall --no-deps --no-index` into only the
+pre-existing Python 3.11.9 AgentGov pipx environment. The installed
+`governance_mcp.py` SHA-256 exactly matches the reviewed source. Distribution
+and import identity both report `0.3.0rc1`; the pre-existing pipx management
+metadata still records its original `0.1.0` install source, so `pipx list` is
+not treated as installed-content identity.
+
+Installed STDIO discovery reports protocol `2026-07-28`, Adapter `1.3.0`, six
+tools with form elicitation, one non-read-only proposal-review tool, and five
+tools without form capability. Server instructions and proposal-tool metadata
+contain the matching-task, unrelated measurement-only task, and read-only
+boundaries. The project `.codex/config.toml` SHA-256 remained
+`4CCA2D57EDEADDFE52D3E6C4DD4D774192BBDBCAB4E84E07DF73E14A861C0348`
+before and after installation. Installed-package MCP tests passed 26/26. No
+Codex process, model turn, external replay, dependency download, new
+environment, project-config mutation, Git action, publication, release, or
+deployment occurred.
+
+## 2026-08-09 matching-trigger single replay
+
+After reviewing the clarified installed trigger, the product owner separately
+authorized exactly one fresh external turn. A no-model preflight initialized
+Codex App Server, created an ephemeral read-only thread, loaded the project
+configuration, found the ready AgentGov server, and confirmed six tools plus
+the proposal tool. It changed neither repository status nor the task set.
+
+The bridge then sent one ordinary bounded repository-change request without
+AgentGov, MCP, tool-name, protocol, or task-file coaching. Allow-listed events
+recorded one exact `agentgov_task_proposal_review` call start and a completed
+turn. No AgentGov elicitation request appeared. Normalized outcome:
+`call_started`, one proposal call, zero forms, terminal status `completed`.
+
+The bridge supplied no form response or human decision, created no proposed
+task or implementation, and observed no repository-status or task-set change.
+It retained no raw request, transcript, Agent message, reasoning, tool
+arguments, unbounded output, stderr, credential, source content, or absolute
+event path. The result proves that the clarified trigger can reach the exact
+tool in the current host. It does not prove native form elicitation, admission,
+semantic proposal quality, or successful completion of the tool call. The
+one-turn authorization is consumed; no retry or second replay occurred. The
+one-shot bridge and generated App Server schema were removed after normalization.
+
+## 2026-08-09 invocation-to-elicitation diagnosis
+
+The product owner admitted one local diagnosis after the matching-trigger
+replay. No model turn, external replay, form response, task admission, product
+implementation, configuration change, or installed-runtime change was allowed.
+
+The current official Codex App Server manual states that an MCP server may
+interrupt a turn with `mcpServer/elicitation/request`, with standard `form` or
+extended `openai/form` mode, and that the client responds with `accept`,
+`decline`, or `cancel`. The locally generated experimental schema for Codex
+`0.146.0` exposes that request, the typed standard form schema, and the
+`mcpServerOpenaiFormElicitation` capability. AgentGov's standard `form` schema
+matches those typed fields.
+
+Two local no-model direct `mcpServer/tool/call` probes used the same valid
+normalized arguments against the installed server and tool. The first retained
+only that the result was non-error and zero-write; the second retained the
+allow-listed contract, status, action, decision, and repository-modified fields.
+Neither started a turn or model request. App Server did not forward the form to
+the diagnostic client; instead, both calls returned a successful
+`agentgov.task-proposal-review-result`, and the bounded second result recorded
+status `declined`, action `decline`, no decision, and
+`repository_modified=false`.
+This can occur only after the Adapter produced an elicitation that App Server
+parsed and answered. It proves valid-input Adapter form generation and App
+Server schema parsing, while remaining intentionally ineligible as active-turn
+presentation evidence.
+
+The retained live summary has a separate measurement blind spot. Its
+`call_started` state records the exact item start, but it does not count exact
+completion events and recognizes only the successful proposal-review result
+contract. If a completed item carried an `agentgov.mcp-tool-error` from strict
+pre-elicitation argument validation, the summary can remain `call_started`.
+Because raw events were correctly discarded, the existing evidence cannot
+distinguish that case from App Server forwarding or UI presentation behavior.
+
+Normalized diagnosis: discovery and current-host invocation pass; valid-input
+Adapter form generation and App Server schema parsing pass locally; active-turn
+form presentation remains unknown. The first confirmed correctable gap is the
+privacy-bounded replay evidence contract, not a proven Adapter, App Server, or
+UI failure. A candidate follow-up would retain only completion presence/status
+and allow-listed `agentgov.mcp-tool-error` code, stage, field path, rule, and
+retryability. That correction and any later replay require separate human
+decisions.
+
+## 2026-08-09 completion and structured-error evidence correction
+
+The product owner selected the diagnosis's smallest evidence-only follow-up.
+The test replay normalizer now counts unique exact proposal-tool completions,
+reports their sorted allow-listed statuses, and uses `completion_unknown` when
+an exact completion has neither a recognized proposal result nor a recognized
+AgentGov error. A completion with a valid structured AgentGov error resolves to
+`call_failed` even when App Server reports item status `completed`.
+
+Only `agentgov.mcp-tool-error` with a normalized error code, the exact proposal
+tool as stage, a null or bounded repository-safe field path, normalized rule,
+and boolean retryability survives. Duplicate errors are collapsed, at most
+eight records are retained, and a truncation flag preserves that evidence
+limit. Raw App Server errors, AgentGov error messages, text content, arguments,
+model output, extensions, metadata, usage, credentials, source, and absolute
+paths remain excluded. Malformed or mismatched error records fail closed into
+`completion_unknown` rather than leaking their content.
+
+Fixtures cover successful completion, structured error with App Server status
+`completed`, explicit unknown completion, duplicate completion events, multiple
+call IDs, error-record truncation, invalid stage/path rejection, form state,
+terminal state, and unrelated event rejection. This correction improves future
+replay evidence only. The historical matching-trigger result remains exactly
+`call_started`, one call, zero forms, and a completed turn because its discarded
+raw events cannot be reconstructed. No App Server process, model turn, replay,
+form interaction, Adapter or protocol change, configuration or installation
+change, task admission, or product implementation occurred.

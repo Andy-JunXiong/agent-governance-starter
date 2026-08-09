@@ -55,10 +55,49 @@ For meaningful changes:
 5. run the relevant tests and report unresolved gaps;
 6. keep commit, push, and release as separate human-controlled actions.
 
+## Git commit and push procedure
+
+Use this procedure only after the human explicitly authorizes the applicable
+commit and push. Direct Git transport authentication and GitHub CLI/API
+authentication are independent: an invalid `gh auth status` does not prove
+that `git push` is unauthenticated and must not by itself block an explicitly
+authorized direct push.
+
+1. Inspect `git status -sb`, the complete intended diff, the current branch,
+   and `git remote -v`. Preserve unrelated or ambiguous user changes rather
+   than staging them silently.
+2. Confirm that affected source-of-truth documents are current, run the
+   relevant validation and secret-safety checks, and use `git fetch origin` to
+   detect remote divergence before committing. Never discard work or
+   force-push to resolve divergence.
+3. Stage only the confirmed scope, create the authorized commit, and push it
+   with ordinary non-force Git, naming the destination explicitly, for example
+   `git push origin HEAD:main`.
+4. Let the configured Git credential helper handle HTTPS authentication. On
+   Windows, when `credential.helper=manager`, this is Git Credential Manager;
+   no valid GitHub CLI token is required for the direct Git push.
+5. Require or repair `gh` authentication only for an explicitly authorized
+   GitHub API operation that actually uses `gh`, such as creating a pull
+   request or release. Do not introduce a PR when the human requested a direct
+   push to the target branch.
+6. If and only if `git push` itself returns an authentication failure, inspect
+   the configured helper. When Git Credential Manager is installed, run its
+   supported interactive GitHub login once (`git credential-manager github
+   login`) and retry the exact same non-force push once. Treat the existing
+   push authorization as permission for this bounded credential recovery; do
+   not repeatedly ask the human to run `gh auth login`.
+7. If the helper login is rejected, cannot complete, or the single retry still
+   fails, stop without changing the remote further and report the concrete Git
+   transport failure. This recovery does not authorize force-push, a different
+   remote or branch, PR creation, release, deployment, or broader credential
+   access.
+
 ## Native governance MCP journey
 
-When the five `agentgov_*` governance tools are available, use them as part of
-the normal development workflow; the human does not need to name the tools.
+When the five base `agentgov_*` governance tools are available, use them as
+part of the normal development workflow; the human does not need to name the tools.
+A client that negotiates native form elicitation may also expose the sixth
+`agentgov_task_proposal_review` tool.
 
 - Before meaningful development where the request leaves multiple reasonable
   product, requirement, architecture, scope, or implementation directions—or
@@ -68,10 +107,23 @@ the normal development workflow; the human does not need to name the tools.
   through `agentgov_alignment_resolve`. Do not choose that direction for them.
 - Do not start alignment merely for read-only explanation, diagnosis, status,
   or a fully specified low-risk change with no material direction choice.
+- Before repository-changing work, confirm that a human-admitted task matches
+  and explicitly authorizes that exact requested change. An unrelated,
+  measurement-only, or differently scoped admitted task does not count. If no
+  matching task exists and `agentgov_task_proposal_review` is available, call
+  it with normalized low-risk task meaning and let the human decide through
+  the native form. Do not call it for read-only work, and do not implement the
+  proposed task unless the resulting task is admitted and separately taken up.
 - After implementing and validating a human-resolved aligned direction, call
   `agentgov_self_review_start`, perform a distinct advisory review pass using
   only allowed evidence, and submit normalized observations through
   `agentgov_self_review_complete` before the completion handoff.
+- When `agentgov_drift_review_record` is available and a foreground reminder
+  is due, first perform the requested evidence-bounded advisory review, then
+  call the tool with only the normalized candidate outcome, the three required
+  dimension observations, and repository-relative evidence. The human must
+  choose through the native form whether to record that exact candidate,
+  snooze, or write nothing; never supply or infer that choice for them.
 - If a required governance call fails, remain fail-closed: report the bounded
   failure and do not silently continue outside the governed journey.
 

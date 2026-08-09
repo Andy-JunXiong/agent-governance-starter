@@ -1,0 +1,102 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-native-drift-review-form",
+  "title": "Bind drift reminders to a native human review form",
+  "requirement": {
+    "summary": "Let a form-capable coding-agent host present the due drift-review choices and create exactly one human-confirmed review or snooze record without terminal command composition.",
+    "source_refs": [
+      "docs/drift-review-reminders.md",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md"
+    ]
+  },
+  "objective": {
+    "role": "core",
+    "parent_refs": [
+      "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md"
+    ],
+    "rationale": "The first real baseline review proved the cadence and record contract but required a visible terminal and exact RECORD fallback. The product owner explicitly authorized the recommended next slice: bind the existing reminder to a trusted host decision surface."
+  },
+  "goal": "Add one capability-gated native MCP drift-review form that binds a current-Agent advisory candidate and bounded evidence to a human choice, revalidates due state, creates at most one immutable review or snooze record, refreshes the local Monitor, and fails closed when native form elicitation is unavailable.",
+  "non_goals": [
+    "Do not let the coding agent select or confirm the human outcome, and do not present an advisory conclusion as objective truth.",
+    "Do not weaken or remove the interactive terminal fallback.",
+    "Do not add a hidden daemon, PR trigger, external notification writer, telemetry, upload, or central service.",
+    "Do not grant task, code, scope, exception, Git, merge, publication, release, deployment, or production authority.",
+    "Do not install or replace the local Codex Adapter, change project MCP configuration, start an external replay, or activate a consumer workflow.",
+    "Do not commit, push, publish, release, deploy, or merge."
+  ],
+  "scope": {
+    "include_paths": [
+      "AGENTS.md",
+      "README.md",
+      "STATUS.md",
+      "docs",
+      "governance",
+      "schemas",
+      "src/agentgov",
+      "templates",
+      "tests",
+      "pyproject.toml"
+    ],
+    "exclude_paths": [
+      ".codex",
+      ".github/workflows",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+    "docs/adr/0015-use-mcp-elicitation-for-codex-task-admission.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/governance-mcp-adapter.md"
+  ],
+  "acceptance_signals": [
+    "A form-capable MCP client sees one additional non-read-only drift-review tool; clients without negotiated form elicitation do not see it.",
+    "The coding agent supplies only one advisory candidate outcome, exactly three bounded dimension observations, and repository-relative evidence references; it cannot supply a human decision.",
+    "The native form offers only record the exact candidate, snooze the configured interval, or create no record, and only an accepted exact form response may write.",
+    "The Adapter revalidates the due-state binding immediately before a create-only write, rejects stale or non-due review state, and never overwrites an existing record.",
+    "A successful human choice creates at most one review or snooze record, refreshes the AgentGov-owned local Monitor when possible, returns the refreshed shared status, and grants no further authority.",
+    "Cancellation, decline, malformed input, missing form capability, unsafe evidence, stale state, and Monitor refresh failure are bounded and do not misreport the record outcome."
+  ],
+  "validation_commands": [
+    "python -m unittest tests.test_governance_mcp tests.test_drift_review tests.test_development_monitor -v",
+    "python -m unittest tests.test_user_documentation tests.test_public_documentation_freshness tests.test_task_contract -v",
+    "python -m agentgov check task governance/tasks/p0-native-drift-review-form.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-native-drift-review-form.json --repository .",
+    "python -m agentgov check repository .",
+    "python -m unittest discover -s tests -v",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "medium",
+    "items": [
+      "A coding-agent candidate could be mistaken for the human's semantic conclusion.",
+      "A stale form response could reset cadence after another review already changed the baseline.",
+      "A transport retry could create duplicate immutable records.",
+      "A Monitor refresh failure after a successful record could be misreported as total failure and invite an unsafe retry.",
+      "Advertising a write-capable tool without native form support could bypass the intended human gate."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": [
+      "docs/development-log/2026-08-09.md"
+    ]
+  },
+  "stop_conditions": [
+    "Stop if the tool cannot remain hidden without negotiated native form elicitation or if an agent can supply the human decision in tool arguments.",
+    "Stop if a stale or repeated response can overwrite or silently duplicate a review baseline.",
+    "Stop before changing Core semantic authority, the accepted foreground architecture, installed runtime/configuration, external systems, Git, release, deployment, or consumer workflows."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "After establishing the first real drift-review baseline, the product owner explicitly authorized the recommended next step: replace routine terminal confirmation with a trusted host interaction while preserving human confirmation and all existing authority boundaries. The development-source Adapter 1.4.0 slice is implemented and validated: form-capable clients receive the bounded tool, legacy clients do not, the Agent cannot supply the human choice, stale state fails closed, and record success is distinct from Monitor refresh status. This task remains paused at its source-implementation checkpoint. A later separately admitted installed-runtime rehearsal superseded only its installation/replay status, reached a zero-write form request, and did not authorize configuration change, Git, publication, release, deployment, or consumer activation."
+  }
+}

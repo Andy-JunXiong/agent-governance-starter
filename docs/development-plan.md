@@ -1,6 +1,6 @@
 # AgentGov remaining development plan
 
-Updated 2026-08-07. This page separates implemented development-source behavior
+Updated 2026-08-09. This page separates implemented development-source behavior
 from published and consumer-adopted behavior.
 
 ## Current checkpoint
@@ -14,6 +14,21 @@ from published and consumer-adopted behavior.
   manual-dispatch Development Monitor artifact path that uploads only the
   derived HTML.
 - The generated two-workflow contract and fixture review is complete.
+- Implemented in development source: a shared three-task/seven-day drift-review
+  cadence, create-only human review/snooze records, a subordinate foreground
+  reminder card, Development Monitor 1.5 state, and a future-version scheduled
+  Actions warning/summary that remains green. Published 0.2.1 and v0.3.0rc1
+  renderings remain unchanged; external notification writers remain deferred.
+- Development Adapter `1.4.0` now binds that card to a capability-gated native
+  MCP form. The Agent supplies only a normalized three-dimension advisory
+  candidate and repository-relative evidence; the human records that exact
+  candidate, snoozes, or writes nothing. Due-state revalidation, create-only
+  records, and separately reported Monitor refresh prevent silent authority or
+  retry drift. The exact source is now installed only in the existing local
+  AgentGov pipx runtime and remains unpublished and consumer-inactive. One
+  bounded direct App Server replay reached the form request and stopped without
+  a human decision or write; live Agent selection and end-user presentation
+  remain unproven.
 - ADR-0009 now makes requirement, architecture, and coding-agent governance
   during development the primary product direction. PR/CI remains a backstop.
 - Implemented in development source: compact/standard task-contract 1.1,
@@ -40,7 +55,7 @@ from published and consumer-adopted behavior.
 - Implemented in development source: ADR-0012's `govern handoff` re-establishes
   fresh verified evidence, previews one stable append-only event, requires
   exact interactive `HANDOFF`, preserves the pointer and prior artifacts, and
-  makes repeated matching handoff idempotent. Monitor 1.4 retains the 1.3
+  makes repeated matching handoff idempotent. Monitor 1.5 retains the 1.3
   separation of verified completion from handed-off routing, and `next` filters the same digest before
   offering a separate `--replace-active` rollover.
 - Not yet implemented: explicit exception records or action-loop
@@ -180,10 +195,12 @@ adapter events. Existing `next` active-session routing consumes the projection.
 adapter now perform one explicit event cycle: implementation changes trigger
 scope observation; completion requests trigger scope, admitted validation,
 reconciliation, and Dashboard refresh; human review can hand off verified work.
-Monitor 1.4 derives Live Sessions and Protection Events while keeping
-resolution unknown without an explicit link. Development source now also
+Monitor 1.5 derives Live Sessions, Protection Events, and the advisory
+drift-review reminder while keeping resolution unknown without an explicit
+link. Development source now also
 provides a strict foreground JSONL coding-agent process transport, bounded
-task/scope/completion cards, vendor-neutral host-interaction requests, and the
+task/scope/completion cards, a subordinate drift-review reminder card,
+vendor-neutral host-interaction requests, and the
 first packaged Codex lifecycle-hook Adapter. Codex preserves its native tool
 permission prompt but custom governance decisions remain context-only and
 unrecorded. Development source now also implements strict structured Coding
@@ -193,23 +210,59 @@ semantic materializer for an ordinary request and produces that same strict
 read-only admission plan. Development Codex Adapter `1.3.0` now binds the
 current Agent as production materializer and MCP form elicitation as the native
 exact-plan review surface. The exact source is now installed and locally
-preflighted. Two separately authorized external attempts did not measure the
-Adapter path: the corrected bridge reached `turn/start`, but the standalone
-Codex App Server closed before returning a form or tool result. That binary
-then reported `Not logged in`, so host authentication must be separately
-reviewed and repaired before another independently approved replay.
+preflighted, and standalone authentication is repaired. A separately
+authorized UTF-8-safe App Server replay completed a real read-only turn but
+showed no native form. Its temporary text-presence heuristic conflated tool
+inventory or instructions with a possible proposal call, so the run is
+`INVALID_MEASUREMENT`, not Adapter pass/fail evidence. Test-only normalization
+now fails closed unless exact proposal-call, elicitation, result, or terminal
+event fields are present. One following authorized replay completed a real
+ephemeral read-only turn with normalized state `not_called`, zero exact
+proposal calls, and zero forms. This is valid evidence that the current Agent
+did not enter the Adapter path for that bounded request; it is not an Adapter
+pass/fail result.
 Strict proactive prompt/result contracts now let a
 capable host present one recommended single-select decision and carry only its
 exact human-selected transition. Additional-host materializers, stronger
 authenticated custom decision controls, protection resolution, and
 Benefit/Learning remain.
 
-The next-session gate is therefore operational rather than a new product
-feature: first restore and verify standalone Codex authentication without
-sending a task, then request approval for one fresh event-level replay. If the
-native proposal form succeeds, the human reviews the exact plan; implementation
-still requires a separate product-owner decision. Only after that evidence is
-reviewed should the next requirement be selected. Another host, the independent
+After the `not_called` replay, the next-session gate was product review: decide
+whether the observed `not_called` result reflects tool discovery, invocation
+guidance, or a deliberate host-routing boundary, and whether addressing it is
+still the right requirement. A no-turn App Server configuration/status probe
+has now confirmed that the project MCP layer loaded and all six AgentGov tools
+were exposed. The selected bounded correction clarifies that only a
+human-admitted task matching the exact requested repository change suppresses
+proposal review; unrelated, measurement-only, or differently scoped tasks do
+not count, while read-only work remains outside that path. This is a guidance
+and metadata correction, not a protocol, schema, authority, or release change.
+The separately authorized installation-only step is now complete: the exact
+reviewed source was built offline, hash-recorded, installed only into the
+existing AgentGov pipx environment, and locally preflighted with six/five-tool
+capability behavior and the clarified trigger metadata. Project configuration
+was unchanged and no Codex turn was started during installation. The product
+owner then authorized exactly one fresh ephemeral read-only replay. Its
+preflight again found the ready server and all six tools. During the one
+ordinary turn, the exact proposal tool started once; the turn completed without
+presenting an AgentGov form. No decision, task, implementation, or repository mutation
+occurred, and no retry was sent. Product review must now decide whether the
+invocation-to-elicitation gap is the next requirement. The completed bounded
+diagnosis then confirmed official and generated-schema support for the form
+request and used two no-model direct calls with the same valid arguments. App Server parsed
+the Adapter elicitation and returned a zero-write `decline` because no active
+turn hosted it. The live replay summary did not retain completion presence or
+structured AgentGov tool-error fields, so it cannot localize the remaining
+behavior. At that checkpoint product review had to decide whether a
+privacy-bounded normalizer correction was next. The product owner selected that
+evidence-only slice. The
+test reducer now records deduplicated completion count/status, explicit
+`completion_unknown`, and at most eight strictly validated AgentGov error
+records while continuing to drop raw errors, arguments, content, and extensions.
+This is a future-measurement correction, not a product or architecture change,
+and it does not reclassify the historical replay. Product review must decide
+whether any later replay is still valuable; it remains separately unauthorized.
+Another host, the independent
 non-NYC rehearsal, NYC adoption, stable promotion, release, and deployment
 remain later gates.
 Development source now also separates multi-turn natural-language
@@ -520,8 +573,9 @@ Acceptance signals:
 
 ### P3 — harden only from observed use
 
-- add notification deduplication or acknowledgement only if NYC evidence shows
-  the read-only channel is insufficient;
+- add an external push-notification channel only if observed use shows the
+  foreground card and scheduled read-only summary are insufficient, and only
+  after a separate write-authority decision;
 - consider a GitHub App only with a documented authority and threat model;
 - extend retention or export only when a real low-activity history need is
   demonstrated;
