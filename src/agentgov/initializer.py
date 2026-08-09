@@ -15,6 +15,7 @@ _ASSET_OUTPUTS = {
     Path("templates/drift-review-policy.template.json"): Path(
         "governance/drift-review-policy.json"
     ),
+    Path("templates/tasks.keep"): Path("governance/tasks/.gitkeep"),
     Path("templates/AGENTS.template.md"): Path("AGENTS.md"),
     Path("templates/ADR.template.md"): Path("docs/adr/TEMPLATE.md"),
     Path("templates/INVARIANTS.template.md"): Path("docs/adr/INVARIANTS.md"),

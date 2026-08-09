@@ -22,6 +22,20 @@ Last verified: 2026-08-09
   preview setting; page metadata cannot change GitHub's repository card.
 - Merge, publish, release, and deployment remain separate human-authorized
   actions.
+- An independent AIRBNB consumer rehearsal proved that a trusted project can
+  load the configured AgentGov MCP server while still bypassing every native
+  governance tool when its generated `AGENTS.md` lacks the selection journey.
+  Development source now adds that portable journey to the generated template
+  and protects initialization output: matching task admission precedes writes,
+  material ambiguity uses human-resolved alignment, completion uses bounded
+  self-review, due drift review remains human-owned, and required call failure
+  remains fail-closed. A third replay with the stricter journey proactively
+  selected `agentgov_task_proposal_review` and made no requested write, but the
+  form could not open because the initialized consumer lacked a real
+  `governance/tasks/` directory. Initializer output now tracks
+  `governance/tasks/.gitkeep`, allowing the first proposal plan to remain
+  create-only. Existing consumers still need a reviewed adoption update and a
+  fresh replay; the earlier README fixes are not governance-success evidence.
 - Development source now implements a combined drift-review reminder: one
   strict default cadence becomes due after three verified tasks or seven days,
   foreground cycles surface a subordinate non-blocking card, Monitor 1.5 shows
@@ -483,10 +497,14 @@ Last verified: 2026-08-09
   or Agent invocation. A later no-turn App Server configuration/status probe
   confirmed that the project MCP layer loaded and exposed all six AgentGov
   tools. The remaining observed gap is therefore Agent invocation under an
-  ambiguous trigger contract, not discovery. Development instructions and MCP
-  metadata now require a human-admitted task matching the exact requested
-  repository change; unrelated, measurement-only, or differently scoped tasks
-  do not count, and read-only work does not trigger proposal review. This is
+  ambiguous trigger contract, not discovery. A subsequent consumer replay
+  loaded the generated journey but still treated direct chat authorization as
+  admission and skipped proposal review and self-review. Development
+  instructions and MCP metadata now require a readable, validated matching
+  `governance/tasks/*.json` record with a human admitted or approved decision
+  before any repository write. Direct chat authorization and tool permission
+  do not count; every repository-changing task requires self-review, and
+  read-only work remains exempt. This is
   advisory host guidance rather than deterministic model-routing enforcement.
   A separately authorized installation-only step built the exact reviewed
   source offline as a local-only `0.3.0rc1` wheel with SHA-256

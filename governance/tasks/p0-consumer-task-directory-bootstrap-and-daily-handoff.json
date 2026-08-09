@@ -1,0 +1,91 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-consumer-task-directory-bootstrap-and-daily-handoff",
+  "title": "Repair consumer task-admission bootstrap and publish the daily handoff",
+  "requirement": {
+    "summary": "Ensure initialized consumers contain a real governance/tasks directory, record the 2026-08-09 AIRBNB rehearsal outcome and remaining work, then commit and push the validated AgentGov change set to origin/main.",
+    "source_refs": [
+      "AGENTS.md",
+      "docs/development-log/2026-08-09.md",
+      "docs/generated-files-guide.md"
+    ]
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": [
+      "governance/tasks/p0-codex-proposal-trigger-contract-clarification.json"
+    ],
+    "rationale": "The third AIRBNB replay selected the native proposal tool and failed closed before writing, but the form could not open because the generated consumer had no real governance/tasks directory. The product owner explicitly directed correction, documentation, commit, and push on 2026-08-09."
+  },
+  "goal": "Remove the generated-consumer task-directory bootstrap deadlock without weakening human admission, preserve honest replay evidence, and publish the bounded validated source state.",
+  "non_goals": [
+    "Do not make chat authorization equivalent to an admitted task or let the Agent choose a human decision.",
+    "Do not change proposal fields, form choices, task schema, release identity, workflows, deployment, or published artifacts.",
+    "Do not commit unrelated .codex content, the LinkedIn/GitHub cover image, or changes from another repository."
+  ],
+  "scope": {
+    "include_paths": [
+      "AGENTS.md",
+      "README.md",
+      "STATUS.md",
+      "docs",
+      "governance/tasks",
+      "pyproject.toml",
+      "src/agentgov",
+      "templates",
+      "tests"
+    ],
+    "exclude_paths": [
+      ".codex",
+      ".github/workflows",
+      "docs/assets/linkedin-github-repository-cover.png",
+      "release"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0015-use-mcp-elicitation-for-codex-task-admission.md",
+    "docs/adr/INVARIANTS.md"
+  ],
+  "acceptance_signals": [
+    "A newly initialized repository contains a tracked governance/tasks directory before its first proposal review.",
+    "Initializer and proposal regressions prove that the first native proposal can build a valid admission plan without a preparatory manual directory write.",
+    "Documentation distinguishes the successful proactive tool call and fail-closed behavior from the remaining missing-form journey, and lists the next consumer repair/replay step.",
+    "The complete test suite, repository check, task check, and git diff check pass; scope inspection identifies only the preserved excluded .codex configuration and cover image before an ordinary non-force push to origin/main."
+  ],
+  "validation_commands": [
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-consumer-task-directory-bootstrap-and-daily-handoff.json --repository .",
+    "python -m agentgov check scope governance/tasks/p0-consumer-task-directory-bootstrap-and-daily-handoff.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "medium",
+    "items": [
+      "A placeholder file must create only the missing directory and must not look like an admitted task.",
+      "The daily handoff could overstate a tool call as a completed human form or successful task admission.",
+      "Broad staging could accidentally include unrelated local files."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": [
+      "docs/development-log/2026-08-09.md"
+    ]
+  },
+  "stop_conditions": [
+    "Stop if the change would admit a task without an exact human decision or write any task during dry-run/preview.",
+    "Stop if validation fails or origin/main has diverged; never force-push or discard local work.",
+    "Stop before release, publication, deployment, workflow change, consumer-repository commit, or any Git destination other than origin/main."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "After the fail-closed bootstrap deadlock was explained, the product owner explicitly directed the Agent to correct it, update the related daily documentation, and commit and push the validated bounded change to main on GitHub. The source and daily handoff are now implemented and validated, so the task is paused to prevent reuse; the separately granted Git authorization remains limited to the reviewed commit and ordinary non-force push to origin/main."
+  }
+}

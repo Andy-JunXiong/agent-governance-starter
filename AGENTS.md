@@ -107,17 +107,24 @@ A client that negotiates native form elicitation may also expose the sixth
   through `agentgov_alignment_resolve`. Do not choose that direction for them.
 - Do not start alignment merely for read-only explanation, diagnosis, status,
   or a fully specified low-risk change with no material direction choice.
-- Before repository-changing work, confirm that a human-admitted task matches
-  and explicitly authorizes that exact requested change. An unrelated,
-  measurement-only, or differently scoped admitted task does not count. If no
-  matching task exists and `agentgov_task_proposal_review` is available, call
-  it with normalized low-risk task meaning and let the human decide through
-  the native form. Do not call it for read-only work, and do not implement the
-  proposed task unless the resulting task is admitted and separately taken up.
-- After implementing and validating a human-resolved aligned direction, call
-  `agentgov_self_review_start`, perform a distinct advisory review pass using
-  only allowed evidence, and submit normalized observations through
-  `agentgov_self_review_complete` before the completion handoff.
+- Before any repository write, confirm that a readable, validated
+  `governance/tasks/*.json` record matches and explicitly authorizes that exact
+  requested change with a human `admitted` or `approved` decision. A direct
+  chat request, approval, authorization, tool permission, or unrelated,
+  measurement-only, or differently scoped task is not that record. If no
+  matching record exists and `agentgov_task_proposal_review` is available,
+  call it with normalized low-risk task meaning and let the human decide
+  through the native form. Do not call it for read-only work. Do not modify the
+  repository until the resulting task record exists and is separately taken
+  up. If the required proposal-review tool is unavailable or fails, stop and
+  report the bounded failure.
+- After implementing and validating any repository-changing task, perform a
+  distinct advisory review pass before the completion handoff. When the task
+  has a resolved alignment journey, call `agentgov_self_review_start` and
+  submit normalized observations through `agentgov_self_review_complete` using
+  only allowed evidence. For a fully specified task that did not start
+  alignment, do not fabricate a journey handle; perform and disclose the
+  bounded current-Agent review without claiming native self-review completion.
 - When `agentgov_drift_review_record` is available and a foreground reminder
   is due, first perform the requested evidence-bounded advisory review, then
   call the tool with only the normalized candidate outcome, the three required

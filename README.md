@@ -485,6 +485,13 @@ Clients without form elicitation keep the original five tools. AgentGov adds no
 credential, model call, network call, or second Agent, and ordinary tool
 permission is not admission. The exact source is now installed in the existing
 local pipx environment and has passed installed-runtime protocol preflight.
+Newly initialized or adopted repositories now receive the same native-tool
+selection journey in generated `AGENTS.md`: capable Agents align only when
+material direction is unsettled, require a matching admitted task before
+repository writes, complete bounded current-Agent self-review, surface due
+drift review through the human-owned form, and fail closed when a required
+governance call fails. This instruction contract does not itself prove that a
+host will select the tools; that still requires a fresh live rehearsal.
 Development source Adapter `1.4.0` adds the second capability-gated form tool,
 `agentgov_drift_review_record`. It binds one current-Agent advisory candidate
 and three dimension observations to a human record/snooze/no-record choice,
@@ -510,10 +517,14 @@ discovery/configuration from Agent invocation behavior. A later no-turn App
 Server configuration/status probe separately confirmed that the project MCP
 layer loaded and all six AgentGov tools were exposed, so the remaining observed
 gap is Agent invocation under an ambiguous trigger contract, not tool
-discovery. Development guidance now requires a human-admitted task matching
-the exact requested repository change; unrelated, measurement-only, or
-differently scoped tasks do not count, while read-only work does not trigger
-proposal review. This guidance cannot deterministically force model tool
+discovery. A later consumer replay loaded the generated journey but still
+treated direct chat authorization as admission and skipped both proposal
+review and self-review. Development guidance now requires a readable,
+validated matching `governance/tasks/*.json` record with a human admitted or
+approved decision before any repository write. Direct chat authorization and
+tool permission do not count; every repository-changing task requires the
+distinct self-review pass, while read-only work remains exempt. This guidance
+cannot deterministically force model tool
 selection and is not Adapter pass/fail evidence. The separately authorized
 installation-only step has now built the exact reviewed source offline as a
 local-only `0.3.0rc1` wheel with SHA-256
@@ -541,6 +552,15 @@ rule, and retryability. Raw errors, arguments, content, and extensions remain
 dropped. The already discarded historical events cannot be reconstructed or
 reclassified. That one-turn authorization is consumed and another replay is not
 admitted.
+
+A third independent AIRBNB replay then loaded the stricter journey and
+proactively called `agentgov_task_proposal_review` before any repository write.
+The call failed closed before form presentation because that initialized
+consumer had no real `governance/tasks/` directory; no task or requested README
+change was created. Initializer output now includes the tracked
+`governance/tasks/.gitkeep` bootstrap so a new consumer can build its first
+read-only proposal plan without a preparatory manual write. Existing consumers
+must add that directory through a reviewed adoption update before retrying.
 
 That exact `ADMIT` path is now a review fallback rather than a universal daily
 gate. Development source adds `agentgov.work-request` 1.0,

@@ -98,10 +98,12 @@ class PublicDocumentationFreshnessTests(unittest.TestCase):
         for phrase in (
             "five base `agentgov_*` governance tools",
             "sixth `agentgov_task_proposal_review` tool",
+            "readable, validated `governance/tasks/*.json` record",
             "explicitly authorizes that exact requested change",
-            "An unrelated, measurement-only, or differently scoped admitted task does not count",
+            "A direct chat request, approval, authorization, tool permission",
             "Do not call it for read-only work",
-            "do not implement the proposed task unless the resulting task is admitted",
+            "Do not modify the repository until the resulting task record exists",
+            "After implementing and validating any repository-changing task",
         ):
             self.assertIn(phrase, normalized)
 

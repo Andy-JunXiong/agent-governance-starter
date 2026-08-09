@@ -27,6 +27,7 @@ EXPECTED_OUTPUTS = {
     Path("governance/inventory.json"),
     Path("governance/contract.json"),
     Path("governance/drift-review-policy.json"),
+    Path("governance/tasks/.gitkeep"),
     Path("governance/capabilities/example-capability.json"),
     Path("governance/controls/example-capability.json"),
     Path("governance/dependencies/example-capability.json"),
@@ -82,6 +83,20 @@ class InitializerTests(unittest.TestCase):
             agents_text = (target / "AGENTS.md").read_text(encoding="utf-8")
             self.assertIn("# AGENTS.md - Demo Project", agents_text)
             self.assertNotIn("{{PROJECT_NAME}}", agents_text)
+            for phrase in (
+                "## Native governance MCP journey",
+                "five base `agentgov_*` governance tools",
+                "agentgov_task_proposal_review",
+                "`governance/tasks/*.json` record",
+                "A direct\n  chat request, approval, authorization, tool permission",
+                "After implementing and validating any repository-changing task",
+                "do not fabricate a journey handle",
+                "agentgov_self_review_start",
+                "agentgov_self_review_complete",
+                "agentgov_drift_review_record",
+                "remain fail-closed",
+            ):
+                self.assertIn(phrase, agents_text)
             capability_path = target / "governance/capabilities/example-capability.json"
             self.assertEqual(
                 validate_capability_manifest(load_capability_manifest(capability_path)),

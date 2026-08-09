@@ -283,9 +283,14 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
         self.assertIn("without waiting for the user to name them", MCP_SERVER_INSTRUCTIONS)
         self.assertIn("when asked to choose what to build", MCP_SERVER_INSTRUCTIONS)
         self.assertIn("never select it for them", MCP_SERVER_INSTRUCTIONS)
-        self.assertIn("After implementing and validating", MCP_SERVER_INSTRUCTIONS)
+        self.assertIn(
+            "After implementing and validating any repository-changing task, run a distinct advisory review",
+            MCP_SERVER_INSTRUCTIONS,
+        )
+        self.assertIn("do not fabricate a journey handle", MCP_SERVER_INSTRUCTIONS)
         self.assertIn("do not silently continue", MCP_SERVER_INSTRUCTIONS)
-        self.assertIn("no matching human-admitted task", MCP_SERVER_INSTRUCTIONS)
+        self.assertIn("governance/tasks/*.json record", MCP_SERVER_INSTRUCTIONS)
+        self.assertIn("A direct chat request, approval, authorization", MCP_SERVER_INSTRUCTIONS)
         self.assertIn(
             "unrelated, measurement-only, or differently scoped",
             MCP_SERVER_INSTRUCTIONS,
@@ -298,7 +303,7 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
         self.assertIn("before completion handoff", descriptions[MCP_TOOL_NAMES[3]])
         self.assertIn("distinct advisory", descriptions[MCP_TOOL_NAMES[3]])
         self.assertIn(
-            "no matching human-admitted task",
+            "no readable, validated governance/tasks/*.json record",
             descriptions[MCP_TASK_PROPOSAL_TOOL_NAME],
         )
         self.assertIn(
@@ -756,6 +761,9 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
         self.assertIn("asks the Agent to choose what to build", guidance)
         self.assertIn("Do not choose that direction for them", guidance)
         self.assertIn("fully specified low-risk change", guidance)
+        self.assertIn("A direct\n  chat request, approval, authorization", guidance)
+        self.assertIn("any repository-changing task", guidance)
+        self.assertIn("do not fabricate a journey handle", guidance)
         self.assertIn("agentgov_self_review_start", guidance)
         self.assertIn("agentgov_self_review_complete", guidance)
         self.assertIn("agentgov_drift_review_record", guidance)

@@ -163,7 +163,7 @@ class NextActionTests(unittest.TestCase):
             root = Path(temp_dir)
             initialize_project(root, project_name="Multiple Tasks", dry_run=False)
             task_root = root / "governance" / "tasks"
-            task_root.mkdir(parents=True)
+            task_root.mkdir(parents=True, exist_ok=True)
             for title in ("First task", "Second task"):
                 document = build_compact_task(
                     title=title,

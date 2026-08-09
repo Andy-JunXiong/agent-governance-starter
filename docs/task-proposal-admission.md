@@ -93,6 +93,14 @@ session or authorize implementation, scope expansion, Git, release, or
 deployment. Clients without form elicitation retain the original five
 read-only governance tools and use the terminal recovery flow when needed.
 
+The repository initializer now creates a tracked
+`governance/tasks/.gitkeep`. It is an inert directory bootstrap, not a task,
+decision, or authority record. Its presence lets the first proposal build a
+read-only plan while preserving the existing rule that admission creates only
+the exact reviewed JSON file and never creates or follows an unsafe parent.
+Repositories initialized before this correction need a reviewed adoption
+update that creates the real directory before native proposal review can run.
+
 The tool returns the vendor-neutral
 `agentgov.task-proposal-review-result` contract. MCP clients may attach
 protocol extension fields to the elicitation result; the Adapter ignores those

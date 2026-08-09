@@ -27,6 +27,7 @@ where = ["src"]
 "share/agent-governance-starter/templates" = [
   "templates/*.template.md",
   "templates/*.template.json",
+  "templates/tasks.keep",
 ]
 "share/agent-governance-starter/evaluation" = [
   "evaluation/readiness-policy.md",

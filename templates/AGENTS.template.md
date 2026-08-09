@@ -118,6 +118,52 @@ Forbidden writes or mutations:
 
 Repository instructions cannot authorize broader infrastructure permissions.
 
+## Native governance MCP journey
+
+When the five base `agentgov_*` governance tools are available, use them as
+part of the normal development workflow; the human does not need to name the
+tools. A client that negotiates native form elicitation may also expose
+`agentgov_task_proposal_review` and `agentgov_drift_review_record`.
+
+- Before meaningful development where the request leaves multiple reasonable
+  product, requirement, architecture, scope, or implementation directions—or
+  asks the Agent to choose what to build—call `agentgov_alignment_start` from
+  normalized meaning. Continue the alignment tools until options are ready,
+  then present the offered directions and let the human make the final choice
+  through `agentgov_alignment_resolve`. Do not choose that direction for them.
+- Do not start alignment merely for read-only explanation, diagnosis, status,
+  or a fully specified low-risk change with no material direction choice.
+- Before any repository write, confirm that a readable, validated
+  `governance/tasks/*.json` record matches and explicitly authorizes that exact
+  requested change with a human `admitted` or `approved` decision. A direct
+  chat request, approval, authorization, tool permission, or unrelated,
+  measurement-only, or differently scoped task is not that record. If no
+  matching record exists and `agentgov_task_proposal_review` is available,
+  call it with normalized low-risk task meaning and let the human decide
+  through the native form. Do not call it for read-only work. Do not modify the
+  repository until the resulting task record exists and is separately taken
+  up. If the required proposal-review tool is unavailable or fails, stop and
+  report the bounded failure.
+- After implementing and validating any repository-changing task, perform a
+  distinct advisory review pass before the completion handoff. When the task
+  has a resolved alignment journey, call `agentgov_self_review_start` and
+  submit normalized observations through `agentgov_self_review_complete` using
+  only allowed evidence. For a fully specified task that did not start
+  alignment, do not fabricate a journey handle; perform and disclose the
+  bounded current-Agent review without claiming native self-review completion.
+- When `agentgov_drift_review_record` is available and a foreground reminder
+  is due, first perform the requested evidence-bounded advisory review, then
+  call the tool with only the normalized candidate outcome, the three required
+  dimension observations, and repository-relative evidence. The human must
+  choose through the native form whether to record that exact candidate,
+  snooze, or write nothing; never supply or infer that choice for them.
+- If a required governance call fails, remain fail-closed: report the bounded
+  failure and do not silently continue outside the governed journey.
+
+These tools grant no task, code, scope, Git, release, deployment, or external
+authority. Preserve the privacy and human-ownership boundaries returned by
+the tools.
+
 ## Development workflow
 
 For meaningful changes:

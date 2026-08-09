@@ -97,6 +97,12 @@ Read-only work does not trigger proposal review. These server instructions and
 tool metadata guide host selection; deterministic checks keep the surfaces in
 sync but cannot force a model to choose the tool.
 
+New initializer output includes an inert tracked
+`governance/tasks/.gitkeep`, so the first native proposal can build its
+read-only plan without relaxing safe-parent or create-only task semantics. It
+does not represent task admission. Older consumers without the directory must
+receive a reviewed adoption repair before retrying proposal review.
+
 Only the response bound to that elicitation with `action=accept` and
 `decision=admit` can exclusively create the reviewed task file. All other
 decisions, malformed or interrupted responses, stale plans, and target races

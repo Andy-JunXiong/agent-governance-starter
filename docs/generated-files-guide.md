@@ -4,7 +4,7 @@ The scaffold is a reviewable starting point, not a completed policy. This guide 
 
 ## AGENTS.md
 
-Define repository scope, authority boundaries, required validation, stop conditions, and handoff expectations. Replace placeholders with repository-specific facts. If CLAUDE.md, Copilot instructions, Cursor rules, or similar files exist, document which file is authoritative and how conflicts are resolved; do not mechanically concatenate their text.
+Define repository scope, authority boundaries, required validation, stop conditions, and handoff expectations. Replace placeholders with repository-specific facts. The generated native-governance section tells capable Coding Agents when to use alignment, matching task admission, current-Agent self-review, and due drift review, and to fail closed when a required governance call fails. Matching admission requires a readable, validated `governance/tasks/*.json` record with a human admitted or approved decision; direct chat authorization and tool permission do not count, and every repository-changing task requires a distinct advisory review. Native self-review tools require a resolved alignment journey; a fully specified task without one must use and disclose a bounded current-Agent review instead of fabricating a journey handle. The tracked `governance/tasks/.gitkeep` creates only the safe parent directory required for the first proposal preview; it is not a task or an admission decision. Keep both surfaces current when adapting the repository. If CLAUDE.md, Copilot instructions, Cursor rules, or similar files exist, document which file is authoritative and how conflicts are resolved; do not mechanically concatenate their text.
 
 ## docs/adr/TEMPLATE.md
 

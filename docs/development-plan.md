@@ -5,6 +5,18 @@ from published and consumer-adopted behavior.
 
 ## Current checkpoint
 
+An independent AIRBNB consumer replay exposed a general adoption gap: Codex
+loaded one healthy AgentGov MCP server in a trusted project, but the generated
+consumer `AGENTS.md` lacked the native-tool selection journey, so the Agent
+implemented a low-risk README fix with zero AgentGov calls. The generated
+template and initializer protection now carry matching admission, alignment,
+self-review, drift-review, and fail-closed triggers. A third replay proactively
+selected native proposal review and made no requested write, but failed before
+the form because the consumer lacked `governance/tasks/`. New scaffolds now
+track `governance/tasks/.gitkeep`. The next bounded consumer step is to apply
+that adoption repair to AIRBNB and run one fresh form-presenting replay; the
+earlier functional changes and passing tests are not governance success evidence.
+
 - Published stable: AgentGov 0.2.1; published Pre-release: v0.3.0rc1.
 - NYC consumer: managed 0.2.1 workflow.
 - Implemented locally for the future 0.3 line: persona-aware PR and owner UI,
@@ -232,10 +244,13 @@ whether the observed `not_called` result reflects tool discovery, invocation
 guidance, or a deliberate host-routing boundary, and whether addressing it is
 still the right requirement. A no-turn App Server configuration/status probe
 has now confirmed that the project MCP layer loaded and all six AgentGov tools
-were exposed. The selected bounded correction clarifies that only a
-human-admitted task matching the exact requested repository change suppresses
-proposal review; unrelated, measurement-only, or differently scoped tasks do
-not count, while read-only work remains outside that path. This is a guidance
+were exposed. A subsequent consumer replay loaded the generated journey but
+still treated direct chat authorization as admission and skipped proposal
+review and self-review. The selected bounded correction therefore requires a
+readable, validated matching `governance/tasks/*.json` record with a human
+admitted or approved decision before any repository write. Direct chat
+authorization and tool permission do not count; every repository-changing
+task requires self-review, while read-only work remains outside that path. This is a guidance
 and metadata correction, not a protocol, schema, authority, or release change.
 The separately authorized installation-only step is now complete: the exact
 reviewed source was built offline, hash-recorded, installed only into the

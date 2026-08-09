@@ -8,6 +8,7 @@ from tempfile import TemporaryDirectory
 from unittest import mock
 
 from agentgov.cli import EXIT_ERROR, EXIT_FAIL, EXIT_PASS, main
+from agentgov.initializer import initialize_project
 from agentgov.task_contract import validate_development_task_document
 from agentgov.task_proposal import (
     TASK_ADMISSION_PLAN_CONTRACT,
@@ -83,6 +84,17 @@ def run_cli(*args: str) -> tuple[int, str, str]:
 
 
 class TaskProposalTests(unittest.TestCase):
+    def test_initialized_repository_can_plan_its_first_task(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir) / "consumer"
+            initialize_project(root, project_name="First Proposal Consumer")
+
+            plan = build_task_admission_plan(root, proposal())
+
+            self.assertEqual(plan.target, "governance/tasks/add-health-check.json")
+            self.assertTrue((root / "governance/tasks/.gitkeep").is_file())
+            self.assertFalse((root / plan.target).exists())
+
     def test_contract_is_strict_low_risk_and_non_authoritative(self) -> None:
         value = proposal()
 
