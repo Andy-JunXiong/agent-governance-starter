@@ -1,0 +1,75 @@
+{
+  "acceptance_signals": [
+    "The development log records full commit 816b663bf454b3432bccb622275a222dd838b1f7, the 28 focused tests, 779 complete tests with 2 platform-limited skips, repository check PASS=26 WARN=2 FAIL=0 ADVISORY=4, and the separate admitted Git-closeout boundary.",
+    "The log continues to state that the Kernel baseline changes no runtime, schema, release identity, consumer, required-check, branch-protection, merge, release, or deployment authority.",
+    "The unrelated .codex/config.toml remains untouched, unstaged, uncommitted, and absent from both commits.",
+    "Focused documentation tests, both relevant task checks, repository AgentGov check, git diff --check, exact two-path staged review, staged blob identity, and secret-safety review pass.",
+    "A fresh fetch confirms origin/main is still an ancestor of local main before the second commit and push.",
+    "Exactly one second ordinary non-amended commit is created with message docs: record Kernel baseline closeout and contains only the log plus this authorization record.",
+    "An ordinary non-force git push sends local HEAD to origin/main; a fresh verification confirms origin/main equals the pushed HEAD.",
+    "No pull request, release, package publication, deployment, workflow dispatch, GitHub settings change, force-push, history rewrite, AIRBNB modification, or new AgentGov capability occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Project owner",
+    "rationale": "The accountable human reviewed structured proposal prp-3beaacb834574438ac1c2bc65efec624 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Project owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Append a truthful Git-closeout section to the existing 2026-08-10 Kernel-baseline development log, commit only that log and this exact authorization record, then push the two validated documentation commits non-force to origin/main."
+  },
+  "risk": {
+    "items": [
+      "The closeout log could claim remote publication or enforcement before those transitions are actually verified.",
+      "An imprecise stage could include unrelated local Codex configuration or previously committed files.",
+      "Remote main may advance before push, requiring a stop rather than rebase, merge, reset, or force-push.",
+      "A direct push is an external publication action and must remain ordinary, non-force, and limited to the already-validated documentation commits.",
+      "A local Git or credential failure must not trigger configuration changes, a different destination, or repeated uncontrolled retries.",
+      "Reviewed assumption: The first Kernel-baseline commit 816b663bf454b3432bccb622275a222dd838b1f7 is the validated output of the separately admitted local-commit task.",
+      "Reviewed assumption: The working tree after the first commit contains only unrelated untracked .codex/config.toml before this proposal record is created.",
+      "Reviewed assumption: The human explicitly requested a direct ordinary push to the existing origin/main branch.",
+      "Reviewed assumption: No wider status, release-readiness, runtime, schema, or product-capability documentation update is required for this closeout."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "src",
+      "schemas",
+      "templates",
+      "release",
+      ".github",
+      "README.md",
+      "STATUS.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "docs/governance-model.md",
+      "docs/adr"
+    ],
+    "include_paths": [
+      "docs/development-log/2026-08-10.md",
+      "governance/tasks/p0-kernel-baseline-closeout-push.json"
+    ]
+  },
+  "task_id": "p0-kernel-baseline-closeout-push",
+  "title": "Record Kernel baseline Git closeout and push the validated commits to main",
+  "validation_commands": [
+    "git status -sb; git log -2 --oneline; git show --name-status --oneline 816b663bf454b3432bccb622275a222dd838b1f7",
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_user_documentation tests.test_published_reference_pages tests.test_public_documentation_freshness -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-record-kernel-architecture-baseline.json",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-kernel-baseline-closeout-push.json",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "git diff --check",
+    "git fetch origin; git merge-base --is-ancestor origin/main HEAD",
+    "git add -- docs/development-log/2026-08-10.md governance/tasks/p0-kernel-baseline-closeout-push.json",
+    "git diff --cached --check; git diff --cached --name-status; git diff --cached",
+    "git commit -m \"docs: record Kernel baseline closeout\"",
+    "git push origin HEAD:main",
+    "git fetch origin; git rev-parse HEAD; git rev-parse origin/main; git status -sb"
+  ]
+}
