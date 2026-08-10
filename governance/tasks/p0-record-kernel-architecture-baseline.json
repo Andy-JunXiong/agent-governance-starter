@@ -1,0 +1,75 @@
+{
+  "acceptance_signals": [
+    "The admitted p0-kernel-architecture-baseline record remains valid and the complete intended diff contains only its twelve paths plus this local-commit authorization record.",
+    "The unrelated untracked .codex/config.toml remains untouched, unstaged, and uncommitted.",
+    "Focused documentation tests, the complete Python unit suite, repository AgentGov check, and git diff --check pass without weakening tests.",
+    "A fresh fetch confirms origin/main remains an ancestor of the unchanged local main before staging.",
+    "Only the exact thirteen include paths are staged; git diff --cached --check, staged path review, complete staged diff review, and secret-safety review pass.",
+    "Exactly one ordinary non-amended local commit is created with message docs: establish minimum sufficient Kernel baseline.",
+    "The commit contains exactly the thirteen admitted paths and preserves all authority and no-runtime-change claims.",
+    "No push, pull request, release, deployment, GitHub settings change, AIRBNB modification, or broader documentation refresh occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Project owner",
+    "rationale": "The accountable human reviewed structured proposal prp-26217026438944e59ec8b14a973f94a5 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Project owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Validate and record only the already-admitted minimum sufficient Kernel architecture baseline as one ordinary local commit, preserving the unrelated local Codex configuration and deferring broader documentation synchronization and remote publication to a separate requirement."
+  },
+  "risk": {
+    "items": [
+      "An imprecise staging command could include unrelated local Codex configuration or another worktree change.",
+      "Documentation could overstate Kernel enforcement, runtime change, release identity, consumer adoption, or external authority.",
+      "A stale remote could make the local commit unsafe to publish later.",
+      "A local commit could be mistaken for remote publication even though push remains a separate requirement.",
+      "Reviewed assumption: The existing twelve-path dirty change is the completed implementation of the admitted p0-kernel-architecture-baseline task.",
+      "Reviewed assumption: The untracked .codex/config.toml is unrelated user-local configuration and must remain outside the commit.",
+      "Reviewed assumption: The human-selected split keeps broader documentation synchronization and push outside this first task."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "src",
+      "schemas",
+      "templates",
+      "release",
+      ".github"
+    ],
+    "include_paths": [
+      "docs/adr/0016-establish-minimum-sufficient-kernel-architecture.md",
+      "docs/kernel-boundary-classification-2026-08-10.md",
+      "docs/adr/INVARIANTS.md",
+      "docs/governance-model.md",
+      "README.md",
+      "STATUS.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "docs/development-log/2026-08-10.md",
+      "tests/test_user_documentation.py",
+      "tests/test_published_reference_pages.py",
+      "governance/tasks/p0-kernel-architecture-baseline.json",
+      "governance/tasks/p0-record-kernel-architecture-baseline.json"
+    ]
+  },
+  "task_id": "p0-record-kernel-architecture-baseline",
+  "title": "Record the admitted Kernel architecture baseline in one local commit",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_user_documentation tests.test_published_reference_pages tests.test_public_documentation_freshness -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "git diff --check",
+    "git fetch origin; git merge-base --is-ancestor origin/main HEAD",
+    "git add -- DEVELOPMENT_PLAN.md README.md STATUS.md docs/adr/INVARIANTS.md docs/adr/0016-establish-minimum-sufficient-kernel-architecture.md docs/development-plan.md docs/development-log/2026-08-10.md docs/governance-model.md docs/kernel-boundary-classification-2026-08-10.md tests/test_published_reference_pages.py tests/test_user_documentation.py governance/tasks/p0-kernel-architecture-baseline.json governance/tasks/p0-record-kernel-architecture-baseline.json",
+    "git diff --cached --check; git diff --cached --name-status; git diff --cached",
+    "git commit -m \"docs: establish minimum sufficient Kernel baseline\"",
+    "git status --short; git show --name-status --oneline --no-renames HEAD"
+  ]
+}

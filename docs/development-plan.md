@@ -1,9 +1,20 @@
 # AgentGov remaining development plan
 
-Updated 2026-08-09. This page separates implemented development-source behavior
+Updated 2026-08-10. This page separates implemented development-source behavior
 from published and consumer-adopted behavior.
 
 ## Current checkpoint
+
+The repository-local architecture baseline is now accepted in ADR-0016. It
+defines a minimum sufficient Kernel, keeps Policy, Application,
+Adapter, Consumer Context, Experiment, and per-transition enforcement distinct,
+and preserves Completion Verified as separate from Bounded Handoff. The dated
+2026-08-10 classification is diagnostic rather than a permanent registry. It
+adds no runtime, schema, release, consumer, or external enforcement change.
+
+New Kernel promotion is paused until a real journey supplies ADR-0016's
+structured counterexample. This pause does not block bounded Application,
+Adapter, Policy, consumer, or bug-fix work.
 
 An independent AIRBNB consumer replay exposed a general adoption gap: Codex
 loaded one healthy AgentGov MCP server in a trusted project, but the generated
@@ -114,6 +125,13 @@ earlier functional changes and passing tests are not governance success evidence
   surfaces; published JSON schema copies remain byte-checked.
 
 ## Next-session starting point
+
+First review the accepted baseline with the product owner and select the next
+requirement separately. An independent consumer journey is the preferred next
+evidence source, but no consumer, required check, branch protection, or merge
+proof is authorized by the baseline task. Reject further Kernel expansion by
+default unless a concrete transition fails the distinction-loss, substitution,
+or authority-integrity test in ADR-0016.
 
 The exact isolated `0.3.0rc1` wheel has completed the ADR-0012 rehearsal in
 three independent repositories: verified completion, Monitor guidance,

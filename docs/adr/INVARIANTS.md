@@ -1,5 +1,38 @@
 # Repository Governance Invariants
 
+## Kernel abstractions remain minimum, semantic, and evidence-admitted
+
+- Authority: `docs/adr/0016-establish-minimum-sufficient-kernel-architecture.md`
+
+### Enforcement points
+
+- The Kernel owns portable governance meaning and state semantics, not storage,
+  presentation, host mechanics, or consumer policy merely because they use its
+  contracts.
+- Capability, authority, evidence, decision, admission, completion, and handoff
+  remain distinct. In particular, Completion Verified is not Bounded Handoff.
+- Enforcement is claimed per actual transition using separate effect and
+  owner/location dimensions. Declared is not Configured, Configured is not
+  Enforced, and Detected is not Prevented.
+- A new or extended Kernel concept is paused unless a concrete counterexample
+  passes the necessity, independence, authority-integrity, and
+  evidence-sufficiency questions in ADR-0016.
+
+### Verification
+
+- Review the dated Kernel boundary classification and the exact transition
+  affected by a proposed semantic change.
+- Require a failed distinction-loss or substitution test, or an explicit
+  authority conflict, before reopening Kernel promotion.
+- Confirm Application, Policy, Adapter, Consumer Context, and Experiment cannot
+  express the required outcome by composition.
+
+### Failure response
+
+Keep the concern in its existing non-Kernel responsibility, or stop and route a
+structured reopening request through a new human-reviewed architecture decision.
+Do not infer runtime enforcement, downstream authority, or a schema migration.
+
 ## Deterministic and advisory findings remain distinct
 
 - Authority: `AGENTS.md`

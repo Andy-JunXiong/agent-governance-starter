@@ -1,0 +1,69 @@
+{
+  "acceptance_signals": [
+    "One accepted architecture decision contains a concise Kernel Constitution with the four-part philosophy, four design principles, critical distinctions, and four admission questions.",
+    "The architecture baseline distinguishes Kernel state semantics from Application storage and orchestration, Policy selection, Adapter mechanics, Consumer Context ownership, Experiment maturity, and cross-cutting per-transition enforcement claims.",
+    "Completion verification remains distinct from bounded handoff, and the minimum governed journey preserves both stages.",
+    "A lightweight dated classification covers current major contract families, records overlaps and uncertainties, and is explicitly diagnostic rather than a permanent governed ledger.",
+    "Affected README, status, governance model, development plans, invariants, and development log agree that new Kernel promotion is paused pending concrete journey evidence while Application, Adapter, and consumer work may continue.",
+    "External consumer selection, required checks, branch protection, merge proof, commit, push, release, and deployment remain outside this task.",
+    "Focused documentation tests and the complete Python unit suite pass; repository governance reports no new deterministic failure."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Project owner",
+    "rationale": "The accountable human reviewed structured proposal prp-8a4c850b7ddc47b3a5d35a1f0e03745d and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Project owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Record the converged repository-local AgentGov Kernel Constitution, add a lightweight diagnostic classification of current major contracts, and synchronize affected architecture sources of truth without changing runtime behavior, schemas, release identity, external consumers, or Git state."
+  },
+  "risk": {
+    "items": [
+      "The Constitution could become longer or more procedural than the minimum sufficient baseline.",
+      "Classification could be mistaken for a permanent runtime layer map or trigger premature module/schema movement.",
+      "Source-of-truth documents could diverge if terminology or the external-authority boundary is updated inconsistently.",
+      "Documentation could overstate control-plane or enforcement capability without real consumer proof.",
+      "Reviewed assumption: The resolved alignment authorizes only a repository-local documentation and diagnostic-classification slice.",
+      "Reviewed assumption: Existing development runtime and schema behavior remain unchanged.",
+      "Reviewed assumption: The current published stable and release-candidate identities remain unchanged.",
+      "Reviewed assumption: The pre-existing untracked .codex directory is unrelated user state and remains untouched."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "src",
+      "schemas",
+      "templates",
+      "release",
+      ".github"
+    ],
+    "include_paths": [
+      "docs/adr/0016-establish-minimum-sufficient-kernel-architecture.md",
+      "docs/kernel-boundary-classification-2026-08-10.md",
+      "docs/adr/INVARIANTS.md",
+      "docs/governance-model.md",
+      "README.md",
+      "STATUS.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "docs/development-log/2026-08-10.md",
+      "tests/test_user_documentation.py",
+      "tests/test_published_reference_pages.py",
+      "governance/tasks/p0-kernel-architecture-baseline.json"
+    ]
+  },
+  "task_id": "p0-kernel-architecture-baseline",
+  "title": "Establish the minimum sufficient Kernel architecture baseline",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_user_documentation tests.test_published_reference_pages tests.test_public_documentation_freshness -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

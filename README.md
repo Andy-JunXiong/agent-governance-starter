@@ -67,6 +67,18 @@ static Monitor are implemented in the future-0.3 development source but are
 not published in stable 0.2.1. AgentGov does not judge architecture quality,
 calculate a governance score, or approve high-risk work.
 
+The accepted minimum sufficient Kernel baseline now separates portable
+governance meaning and state semantics from Policy, Application/Product
+Surface, Adapter, Consumer Context, and Experiment responsibilities.
+Enforcement is a per-transition claim, not a universal layer or control-plane
+claim. The minimum journey preserves
+`Completion Verified -> Bounded Handoff` as two distinct transitions. New
+Kernel promotion is paused until a concrete consumer journey passes the
+evidence-backed reopening test in
+[ADR-0016](docs/adr/0016-establish-minimum-sufficient-kernel-architecture.md).
+The accompanying [dated boundary classification](docs/kernel-boundary-classification-2026-08-10.md)
+is diagnostic only and introduces no runtime or schema reorganization.
+
 The decided next lifecycle is:
 
 ```text
@@ -914,6 +926,9 @@ system, or runtime enforcement service.
   project's infrastructure or business rules.
 - **Reviewable:** governance decisions, capability metadata, checks, and reports
   are inspectable artifacts.
+- **Minimum sufficient Kernel:** seek invariants, compose existing meanings,
+  preserve authority and evidence distinctions, and promote new concepts only
+  from traceable, proportionate counterevidence.
 
 ## Current scope
 
@@ -963,6 +978,12 @@ The first usable release contains:
   that cannot be made.
 - [Remaining development plan](docs/development-plan.md) separates implemented,
   published, and consumer-adopted behavior and orders the next delivery slices.
+- [Minimum sufficient Kernel decision](docs/adr/0016-establish-minimum-sufficient-kernel-architecture.md)
+  defines the Constitution, responsibility boundaries, minimum journey, and
+  evidence required to reopen Kernel promotion.
+- [Kernel boundary classification](docs/kernel-boundary-classification-2026-08-10.md)
+  records the dated diagnostic mapping without creating a permanent registry or
+  migration plan.
 - [AgentGov product and architecture plan (Chinese Revision 4)](docs/proposals/2026-08-02-agentgov-product-and-architecture-plan.zh-CN.md)
   consolidates the GitHub distribution, AI Radar-aligned development
   governance, trigger routing, observation events, and Monitor/Dashboard

@@ -46,6 +46,14 @@ It should connect:
 - actual code changes, fresh validation evidence, deterministic repository
   findings, and advisory human judgments.
 
+ADR-0016 now constrains this direction to a minimum sufficient Kernel. The
+Kernel owns governance meaning and state semantics; Policy, Application,
+Adapter, Consumer Context, and Experiment remain separate responsibilities.
+Enforcement is proved per transition. The minimum journey is `Propose -> Admit
+-> Implement -> Scope/Evidence Check -> Completion Verified -> Bounded
+Handoff`, and new Kernel promotion is paused until a structured real-consumer
+counterexample demonstrates a lost distinction or governed outcome.
+
 ADR-0009 makes this development-time loop the product core. PR and CI remain
 an independent backstop and evidence surface, not the first point at which a
 coding agent should discover constraints.
@@ -87,6 +95,10 @@ No check result authorizes merge, publish, release, or deploy.
 ## Current State
 
 Status: published stable `0.2.1`; published Pre-release `v0.3.0rc1`. The
+repository-local minimum sufficient Kernel baseline is accepted in ADR-0016,
+with a dated diagnostic classification and no runtime, schema, release, or
+consumer change. This is an architecture stop condition, not a development
+freeze. The
 accepted automatic primary experience is not yet implemented. Its first
 internal contract slice now provides a read-only active-session state
 projection, vendor-neutral adapter trigger envelope, and Monitor 1.4 Live
@@ -777,7 +789,15 @@ Carried forward after the release:
 
 ## Next Recommended Starting Point
 
-Continue productizing the implemented ADR-0009 loop:
+Review the accepted ADR-0016 baseline with the product owner before selecting
+the next requirement. A real independent consumer journey is the next useful
+source of Kernel counterevidence, but consumer selection, repository changes,
+required checks, branch protection, and merge proof require a separate admitted
+task. Do not reopen Kernel promotion without ADR-0016's structured failure
+case.
+
+Subject to that separate decision, continue productizing the implemented
+ADR-0009 loop:
 
 1. [Completed internal pilot] Preserve the installed-build independent
    repository evidence, including actual Coding Agent context consumption,

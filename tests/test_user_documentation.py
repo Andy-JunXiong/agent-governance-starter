@@ -38,6 +38,11 @@ AUTOMATIC_EXPERIENCE_ADR = (
 SEMANTIC_REVIEW_ADR = (
     ROOT / "docs/adr/0014-route-semantic-review-through-host-providers.md"
 )
+KERNEL_BASELINE_ADR = (
+    ROOT / "docs/adr/0016-establish-minimum-sufficient-kernel-architecture.md"
+)
+KERNEL_CLASSIFICATION = ROOT / "docs/kernel-boundary-classification-2026-08-10.md"
+GOVERNANCE_MODEL = ROOT / "docs/governance-model.md"
 DEVELOPMENT_RELEASE = ROOT / "release/current.json"
 ISOLATED_EXECUTION_ADR = (
     ROOT / "docs/adr/0004-use-isolated-tool-execution-for-onboarding.md"
@@ -48,6 +53,66 @@ GUIDE_STYLE = ROOT / "docs/guide.css"
 
 
 class UserDocumentationTests(unittest.TestCase):
+    def test_minimum_sufficient_kernel_baseline_is_consistent_and_bounded(self) -> None:
+        readme = README.read_text(encoding="utf-8")
+        status = STATUS.read_text(encoding="utf-8")
+        plan = DEVELOPMENT_PLAN.read_text(encoding="utf-8")
+        governance_model = GOVERNANCE_MODEL.read_text(encoding="utf-8")
+        decision = KERNEL_BASELINE_ADR.read_text(encoding="utf-8")
+        classification = KERNEL_CLASSIFICATION.read_text(encoding="utf-8")
+
+        for path in (KERNEL_BASELINE_ADR, KERNEL_CLASSIFICATION):
+            self.assertTrue(path.is_file())
+
+        for text in (readme, status, plan, governance_model, decision):
+            self.assertIn("minimum sufficient Kernel", text)
+            self.assertIn("Completion Verified", text)
+            self.assertIn("Bounded Handoff", text)
+
+        for phrase in (
+            "Observe concretely",
+            "Use the minimum sufficient abstraction",
+            "Capability is not Authority",
+            "Declared is not Configured",
+            "Detected is not Prevented",
+            "Self-authored Semantic Assertion is not Independent Evidence",
+            "Attempted Transition is not Completed Transition",
+            "Learning Candidate is not Admitted Learning",
+            "necessity",
+            "independence",
+            "authority integrity",
+            "evidence sufficiency",
+            "Application / Product Surface",
+            "Consumer Context",
+            "Enforcement",
+            "OBSERVE",
+            "ADVISE",
+            "MEDIATE",
+            "BLOCK",
+            "not a universal control plane",
+            "structured counterexample",
+        ):
+            self.assertIn(phrase.lower(), decision.lower())
+
+        for phrase in (
+            "diagnostic snapshot",
+            "not a permanent",
+            "positive case",
+            "negative case",
+            "no current family demonstrates a missing Kernel concept",
+        ):
+            self.assertIn(phrase.lower(), classification.lower())
+
+        combined = "\n".join((decision, classification, status, plan)).lower()
+        for excluded_change in (
+            "no runtime",
+            "schema",
+            "external consumer",
+            "required-check",
+            "branch protection",
+        ):
+            self.assertIn(excluded_change, combined)
+
     def test_automatic_governance_and_dashboard_are_the_primary_direction(self) -> None:
         readme = README.read_text(encoding="utf-8")
         status = STATUS.read_text(encoding="utf-8")

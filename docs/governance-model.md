@@ -38,6 +38,31 @@ Constitution
 These stages describe responsibilities, not a requirement to install nine
 separate systems.
 
+## Minimum sufficient Kernel baseline
+
+The minimum sufficient Kernel baseline in ADR-0016 defines the current
+architecture: observe concretely,
+abstract minimally, govern explicitly, and learn cautiously. The Kernel owns
+portable governance meaning and state semantics. Policy selects valid paths;
+the Application owns journeys and product surfaces; Adapters own host and
+protocol mechanics; Consumer Context owns repository-specific trust, commands,
+and domain policy; Experiments remain provisional. Enforcement is cross-cutting
+and must be demonstrated per transition, not inferred from a layer name.
+
+The minimum governed journey is:
+
+```text
+Propose -> Admit -> Implement -> Scope/Evidence Check
+        -> Completion Verified -> Bounded Handoff
+```
+
+Completion verification and handoff remain separate. Neither grants commit,
+merge, release, deployment, or other downstream authority. New Kernel concept
+promotion is paused until a real journey supplies the structured counterexample
+required by [ADR-0016](adr/0016-establish-minimum-sufficient-kernel-architecture.md).
+The [2026-08-10 boundary classification](kernel-boundary-classification-2026-08-10.md)
+is a diagnostic snapshot, not a permanent registry or implementation migration.
+
 ### Constitution
 
 Defines repository scope, permissions, prohibited actions, approval boundaries,
@@ -235,7 +260,8 @@ runtime or organizational relationship was discovered.
 
 ```text
 Understand -> Admit -> Ground -> Bound -> Implement -> Verify
-           -> Reconcile -> Protect/Explain -> Human Decision
+           -> Reconcile -> Completion Verified -> Bounded Handoff
+           -> Protect/Explain -> Human Decision
            -> PR/CI Replay -> Observe -> Learn
 ```
 

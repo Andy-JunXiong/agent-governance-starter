@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-08-09
+Last verified: 2026-08-10
 
 ## Current state
 
@@ -22,6 +22,15 @@ Last verified: 2026-08-09
   preview setting; page metadata cannot change GitHub's repository card.
 - Merge, publish, release, and deployment remain separate human-authorized
   actions.
+- ADR-0016 now establishes the minimum sufficient Kernel baseline: the Kernel
+  owns portable governance meaning and state semantics; Policy, Application,
+  Adapter, Consumer Context, and Experiment responsibilities remain distinct;
+  and enforcement is claimed per actual transition. The minimum journey keeps
+  Completion Verified separate from Bounded Handoff. The accompanying
+  2026-08-10 classification is diagnostic only. No runtime, schema, release,
+  consumer, required-check, branch-protection, or merge-proof change is part of
+  this baseline. New Kernel promotion is paused pending a structured concrete
+  counterexample.
 - An independent AIRBNB consumer rehearsal proved that a trusted project can
   load the configured AgentGov MCP server while still bypassing every native
   governance tool when its generated `AGENTS.md` lacks the selection journey.
@@ -841,6 +850,11 @@ Last verified: 2026-08-09
 ## Current milestone
 
 Future-0.3 development-governance integration and pre-release evidence:
+
+- the repository-local architecture baseline is accepted in ADR-0016 and the
+  dated boundary diagnosis finds no current need for a new Kernel concept;
+  selecting and proving an external consumer remains a separate human-admitted
+  task;
 
 - Governance Inventory contract and zero-dependency validator implemented;
 - canonical manifest, owner, identity, exclusion, and safe-path closure;
