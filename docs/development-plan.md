@@ -1,6 +1,6 @@
 # AgentGov remaining development plan
 
-Updated 2026-08-10. This page separates implemented development-source behavior
+Updated 2026-08-11. This page separates implemented development-source behavior
 from published and consumer-adopted behavior.
 
 ## Current checkpoint
@@ -24,9 +24,16 @@ template and initializer protection now carry matching admission, alignment,
 self-review, drift-review, and fail-closed triggers. A third replay proactively
 selected native proposal review and made no requested write, but failed before
 the form because the consumer lacked `governance/tasks/`. New scaffolds now
-track `governance/tasks/.gitkeep`. The next bounded consumer step is to apply
-that adoption repair to AIRBNB and run one fresh form-presenting replay; the
-earlier functional changes and passing tests are not governance success evidence.
+track `governance/tasks/.gitkeep`. AIRBNB has now adopted that repair. A fresh
+form-presenting replay created an exact human-admitted task record, changed only
+two README demo command lines, passed static diff and task validation, and
+received a distinct advisory review with no observed scope or authority drift.
+This is partial consumer evidence only: the existing consumer virtual
+environment was not runnable, Streamlit was not installed, and the replay did
+not prove runtime execution, the complete automatic lifecycle, Completion
+Verified, Bounded Handoff, product effectiveness, commit, push, CI enforcement,
+release, deployment, or model transition. A later requirement must separately
+admit the remaining runtime-capable lifecycle proof.
 
 - Published stable: AgentGov 0.2.1; published Pre-release: v0.3.0rc1.
 - NYC consumer: managed 0.2.1 workflow.

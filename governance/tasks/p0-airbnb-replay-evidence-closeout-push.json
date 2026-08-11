@@ -1,0 +1,75 @@
+{
+  "acceptance_signals": [
+    "The dated development log gains a truthful Git-closeout section that distinguishes local validation, commit creation, and verified remote publication.",
+    "The complete intended diff contains exactly four documentation files and two matching admitted task records; the unrelated untracked .codex directory remains untouched and unstaged.",
+    "Focused documentation tests, both relevant task checks, repository governance, git diff check, scope review, staged diff review, staged path review, and secret-safety review complete with no deterministic failure.",
+    "A fresh fetch confirms origin/main remains an ancestor of local main before commit and push; divergence causes a stop without rebase, merge, reset, or force-push.",
+    "Exactly one ordinary non-amended commit is created with message docs: record AIRBNB native admission replay.",
+    "An ordinary non-force push sends local HEAD directly to origin/main and a fresh verification confirms origin/main equals the pushed HEAD.",
+    "No pull request, branch creation, GitHub API operation, release, deployment, workflow dispatch, required-check change, consumer-repository commit, force-push, history rewrite, or unrelated file change occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Project owner",
+    "rationale": "The accountable human reviewed structured proposal prp-33b314d1d182406a8c8187fddeca507e and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Project owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Finish the 2026-08-11 AIRBNB replay evidence record, validate the exact documentation scope, create one ordinary non-amended commit containing only the four synchronized documents and the two matching governance task records, then push that commit non-force directly to origin/main. Preserve the unrelated local Codex configuration and perform no pull request, release, deployment, workflow dispatch, or consumer-repository Git action."
+  },
+  "risk": {
+    "items": [
+      "An imprecise stage could include the unrelated local .codex configuration.",
+      "Remote main could advance before push and make the direct update unsafe.",
+      "The closeout could claim remote publication before the push is verified.",
+      "A Git or credential failure could tempt a different branch, PR, history rewrite, or force-push outside the request.",
+      "Reviewed assumption: The existing five-file working copy is the completed and validated output of the separately admitted evidence-record task.",
+      "Reviewed assumption: The human explicitly requested a direct commit and non-force push to the existing main branch.",
+      "Reviewed assumption: The current repository remote named origin is the intended GitHub destination.",
+      "Reviewed assumption: No tests need modification because the focused documentation suite already passed.",
+      "Reviewed unknown: Whether origin/main has advanced since the last local verification.",
+      "Reviewed unknown: Whether direct Git transport will require bounded credential-helper recovery."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "README.md",
+      "src",
+      "schemas",
+      "templates",
+      "release",
+      ".github",
+      "docs/assets",
+      "tests"
+    ],
+    "include_paths": [
+      "STATUS.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "docs/development-log/2026-08-11.md",
+      "governance/tasks/p0-record-airbnb-native-admission-replay.json",
+      "governance/tasks/p0-airbnb-replay-evidence-closeout-push.json"
+    ]
+  },
+  "task_id": "p0-airbnb-replay-evidence-closeout-push",
+  "title": "Close and publish the AIRBNB replay evidence",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_user_documentation tests.test_public_documentation_freshness -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-record-airbnb-native-admission-replay.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-airbnb-replay-evidence-closeout-push.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "git diff --check",
+    "git fetch origin; git merge-base --is-ancestor origin/main HEAD",
+    "git add -- STATUS.md DEVELOPMENT_PLAN.md docs/development-plan.md docs/development-log/2026-08-11.md governance/tasks/p0-record-airbnb-native-admission-replay.json governance/tasks/p0-airbnb-replay-evidence-closeout-push.json",
+    "git diff --cached --check; git diff --cached --name-status; git diff --cached",
+    "git commit -m \"docs: record AIRBNB native admission replay\"",
+    "git push origin HEAD:main",
+    "git fetch origin; git rev-parse HEAD; git rev-parse origin/main; git status -sb"
+  ]
+}

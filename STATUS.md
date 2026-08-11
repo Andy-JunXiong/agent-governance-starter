@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-08-10
+Last verified: 2026-08-11
 
 ## Current state
 
@@ -43,8 +43,18 @@ Last verified: 2026-08-10
   form could not open because the initialized consumer lacked a real
   `governance/tasks/` directory. Initializer output now tracks
   `governance/tasks/.gitkeep`, allowing the first proposal plan to remain
-  create-only. Existing consumers still need a reviewed adoption update and a
-  fresh replay; the earlier README fixes are not governance-success evidence.
+  create-only. AIRBNB has now adopted that repair. A fresh ordinary README
+  usability request opened the native proposal form, received the exact human
+  admission, created the matching consumer task record, changed only two
+  command lines, passed `git diff --check`, and passed a read-only task check
+  with `PASS=3 WARN=1 FAIL=0 ADVISORY=3`. A distinct advisory review found no
+  scope or authority drift. This is bounded evidence for native proposal,
+  admission, implementation, static validation, and review; it does not prove
+  runtime execution, the complete automatic lifecycle, Completion Verified,
+  Bounded Handoff, product effectiveness, or any Git or external transition.
+  The consumer change remains uncommitted and unpushed. Its existing virtual
+  environment was not runnable and Streamlit was not installed, while its
+  README already documents the dependency installation step.
 - Development source now implements a combined drift-review reminder: one
   strict default cadence becomes due after three verified tasks or seven days,
   foreground cycles surface a subordinate non-blocking card, Monitor 1.5 shows

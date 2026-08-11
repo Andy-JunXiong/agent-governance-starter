@@ -1,0 +1,68 @@
+{
+  "acceptance_signals": [
+    "A dated development log records the native proposal form, exact human admission, generated consumer task record, two-line README-only implementation, git diff check result, read-only task-check result, and distinct advisory review.",
+    "STATUS.md and both development plans agree that this is partial AIRBNB consumer evidence rather than completion of the independent automatic journey.",
+    "The documentation states that runtime validation was unavailable because the consumer virtual environment is not runnable and Streamlit is not installed, while the README already documents dependency installation.",
+    "The documentation states that no consumer commit, push, CI run, required-check change, release, deployment, model transition, or AgentGov runtime behavior change occurred.",
+    "No absolute consumer path, private data, credentials, source content, or unrelated consumer details enter AgentGov documentation.",
+    "Focused documentation tests, task validation, repository validation, and git diff check complete with no deterministic failure."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Project owner",
+    "rationale": "The accountable human reviewed structured proposal prp-8260d4f018c3475d9ce67ecb3ab950b7 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Project owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Record the 2026-08-11 AIRBNB consumer replay as bounded partial evidence: native proposal review produced an exact human-admitted task, the consumer changed only two README command lines, static scope and task validation passed without deterministic failure, and a separate advisory review found no scope or authority drift. Keep runtime execution, complete automatic lifecycle, Completion Verified, Bounded Handoff, Git publication, and product-effectiveness claims explicitly unproven."
+  },
+  "risk": {
+    "items": [
+      "Documentation could overstate one native admission replay as the complete automatic consumer journey.",
+      "A consumer-local path or private detail could leak into the portable AgentGov repository.",
+      "The absent runtime validation could be hidden or misrepresented as a passing execution test.",
+      "Documentation could imply commit, push, CI enforcement, release, deployment, model, or product-effectiveness authority that was not exercised.",
+      "Reviewed assumption: AIRBNB is the human-selected independent non-NYC consumer for this evidence slice.",
+      "Reviewed assumption: The read-only inspected consumer task record and diff are the authoritative evidence for this bounded replay.",
+      "Reviewed assumption: The consumer change remains uncommitted and unpushed and will not be modified by this AgentGov documentation task.",
+      "Reviewed assumption: Documentation tests may be adjusted only when required to protect the exact evidence and limit statements.",
+      "Reviewed unknown: Whether a later separately admitted task will run the full automatic lifecycle through Completion Verified and Bounded Handoff.",
+      "Reviewed unknown: Whether the consumer-local README change and task record will later receive separate commit or push authorization."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      "README.md",
+      "src",
+      "schemas",
+      "templates",
+      "release",
+      ".github",
+      ".codex",
+      "docs/assets"
+    ],
+    "include_paths": [
+      "STATUS.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "docs/development-log/2026-08-11.md",
+      "governance/tasks/p0-record-airbnb-native-admission-replay.json",
+      "tests/test_user_documentation.py",
+      "tests/test_public_documentation_freshness.py"
+    ]
+  },
+  "task_id": "p0-record-airbnb-native-admission-replay",
+  "title": "Record the AIRBNB native admission replay evidence",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_user_documentation tests.test_public_documentation_freshness -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-record-airbnb-native-admission-replay.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "git diff --check",
+    "git status --short; git diff -- STATUS.md DEVELOPMENT_PLAN.md docs/development-plan.md docs/development-log/2026-08-11.md tests/test_user_documentation.py tests/test_public_documentation_freshness.py governance/tasks/p0-record-airbnb-native-admission-replay.json"
+  ]
+}

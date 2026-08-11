@@ -796,6 +796,17 @@ required checks, branch protection, and merge proof require a separate admitted
 task. Do not reopen Kernel promotion without ADR-0016's structured failure
 case.
 
+The 2026-08-11 product review selected AIRBNB for the first bounded consumer
+slice. Its repaired native path has now demonstrated proposal review, exact
+human admission, create-only task recording, a two-line README implementation,
+static validation, and a distinct advisory review with no observed scope or
+authority drift. Runtime execution was unavailable, and the replay did not run
+the complete automatic lifecycle through Completion Verified and Bounded
+Handoff. The next requirement should target those remaining transitions with a
+runtime-capable low-risk consumer task; this evidence record does not admit that
+work or authorize consumer Git, CI, required-check, release, or deployment
+actions.
+
 Subject to that separate decision, continue productizing the implemented
 ADR-0009 loop:
 
