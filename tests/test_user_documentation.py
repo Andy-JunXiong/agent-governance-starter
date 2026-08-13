@@ -28,6 +28,7 @@ CLARIFICATION_DIALOGUE = ROOT / "docs/clarification-dialogue.md"
 ACTIVE_AGENT_SELF_REVIEW = ROOT / "docs/active-agent-self-review.md"
 EXTRACTION_MAP = ROOT / "docs/ai-radar-extraction-map.md"
 STATUS = ROOT / "STATUS.md"
+CONSUMER_COMPLETION_LOG = ROOT / "docs/development-log/2026-08-13.md"
 AGENT_SKILLS_README = ROOT / "agent-skills/README.md"
 GUIDED_NEXT_ADR = ROOT / "docs/adr/0010-route-next-through-development-lifecycle.md"
 BOOTSTRAP_UPDATE_ADR = ROOT / "docs/adr/0011-separate-bootstrap-from-update-routing.md"
@@ -53,6 +54,74 @@ GUIDE_STYLE = ROOT / "docs/guide.css"
 
 
 class UserDocumentationTests(unittest.TestCase):
+    def test_airbnb_completion_and_handoff_evidence_is_bounded(self) -> None:
+        surfaces = (
+            README,
+            STATUS,
+            DEVELOPMENT_PLAN,
+            ROOT / "DEVELOPMENT_PLAN.md",
+            CONSUMER_COMPLETION_LOG,
+        )
+
+        self.assertTrue(CONSUMER_COMPLETION_LOG.is_file())
+        for path in surfaces:
+            text = path.read_text(encoding="utf-8")
+            normalized = " ".join(text.split())
+            with self.subTest(path=path.name):
+                self.assertIn("AIRBNB", normalized)
+                self.assertIn("Python 3.11.9", normalized)
+                self.assertIn("Completion Verified", normalized)
+                self.assertIn("Bounded Handoff", normalized)
+                self.assertIn("product effectiveness", normalized)
+                self.assertIn("independent review", normalized)
+                self.assertIn("uncommitted and unpushed", normalized)
+
+        log = CONSUMER_COMPLETION_LOG.read_text(encoding="utf-8")
+        for phrase in (
+            "5 delivery tests",
+            "13 serving tests",
+            "79-test suite",
+            "proposal-only",
+            "bounded advisory review",
+            "not independent evidence",
+            "not yet decided",
+        ):
+            self.assertIn(phrase, log)
+
+    def test_nyc_completion_and_handoff_evidence_is_bounded(self) -> None:
+        surfaces = (
+            README,
+            STATUS,
+            DEVELOPMENT_PLAN,
+            ROOT / "DEVELOPMENT_PLAN.md",
+            CONSUMER_COMPLETION_LOG,
+        )
+
+        for path in surfaces:
+            normalized = " ".join(path.read_text(encoding="utf-8").split())
+            with self.subTest(path=path.name):
+                self.assertIn("NYC", normalized)
+                self.assertIn("Python 3.11.9", normalized)
+                self.assertIn("68", normalized)
+                self.assertIn("Completion Verified", normalized)
+                self.assertIn("Bounded Handoff", normalized)
+                self.assertIn("formal CI remains on AgentGov 0.2.1", normalized)
+                self.assertIn("not a formal upgrade", normalized)
+                self.assertIn("product effectiveness", normalized)
+                self.assertIn("uncommitted and unpushed", normalized)
+
+        log = CONSUMER_COMPLETION_LOG.read_text(encoding="utf-8")
+        for phrase in (
+            "Bronze partition",
+            "built Silver",
+            "demand quality gate",
+            "non-empty Gold lineage",
+            "complete 68-test NYC suite",
+            "already_handed_off",
+            "not yet decided",
+        ):
+            self.assertIn(phrase, log)
+
     def test_minimum_sufficient_kernel_baseline_is_consistent_and_bounded(self) -> None:
         readme = README.read_text(encoding="utf-8")
         status = STATUS.read_text(encoding="utf-8")

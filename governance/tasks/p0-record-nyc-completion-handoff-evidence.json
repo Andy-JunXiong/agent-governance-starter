@@ -1,0 +1,65 @@
+{
+  "acceptance_signals": [
+    "README, status, both development plans, and the dated development log consistently record the NYC synthetic runtime, 68-test suite, verified completion, and human handoff.",
+    "Documentation explicitly states that NYC formal CI remains on AgentGov 0.2.1 and the local 0.3.0rc1 journey is not a formal upgrade.",
+    "Documentation tests protect the NYC evidence facts and authority limits.",
+    "Focused documentation tests, task validation, repository governance validation, privacy scan, and git diff check have no deterministic failure."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-e2d92db9baa94fedbe2a84adac277900 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Add a sanitized portable record of the completed NYC synthetic Bronze-to-Silver-to-demand-quality-gate-to-Gold runtime journey, its Python 3.11 validation, Completion Verified state, and human Bounded Handoff while preserving explicit limits around production effectiveness, formal AgentGov upgrade status, Git authority, publication, release, and deployment."
+  },
+  "risk": {
+    "items": [
+      "The working tree already contains an uncommitted admitted AIRBNB evidence slice that must be preserved and not misattributed.",
+      "One consumer journey cannot prove production effectiveness, business impact, governance causality, or inventory completeness.",
+      "The NYC journey used local AgentGov 0.3.0rc1 while the consumer repository formal CI remains on 0.2.1.",
+      "Reviewed assumption: The independently inspected NYC evidence and human handoff event are the bounded factual source.",
+      "Reviewed assumption: The existing 2026-08-13 AgentGov development log can contain separate AIRBNB and NYC evidence sections."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      "src",
+      "schemas",
+      "templates",
+      "release",
+      ".github",
+      "agent-skills",
+      "evaluation",
+      "prompt-governance",
+      ".codex",
+      "docs/assets",
+      "governance/tasks/p0-airbnb-runtime-completion-handoff.json",
+      "governance/tasks/p0-record-airbnb-completion-handoff-evidence.json"
+    ],
+    "include_paths": [
+      "README.md",
+      "STATUS.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "docs/development-log/2026-08-13.md",
+      "tests/test_user_documentation.py",
+      "tests/test_public_documentation_freshness.py",
+      "governance/tasks/p0-record-nyc-completion-handoff-evidence.json"
+    ]
+  },
+  "task_id": "p0-record-nyc-completion-handoff-evidence",
+  "title": "Record bounded NYC runtime completion and handoff evidence",
+  "validation_commands": [
+    "python -m unittest tests.test_user_documentation tests.test_public_documentation_freshness -v",
+    "python -m agentgov check task governance/tasks/p0-record-nyc-completion-handoff-evidence.json",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

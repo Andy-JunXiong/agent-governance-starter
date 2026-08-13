@@ -1,0 +1,75 @@
+{
+  "acceptance_signals": [
+    "A dated development log records only sanitized facts from the independently reviewed AIRBNB journey: Python 3.11.9, scenario baseline about 266 AUD at MEDIUM evidence, delivery 5 of 5, serving 13 of 13, full suite 79 of 79, repository governance with no deterministic failure, fresh completion reconciliation, and human-confirmed bounded handoff.",
+    "README.md, STATUS.md, DEVELOPMENT_PLAN.md, and docs/development-plan.md agree that the earlier AIRBNB partial-evidence gap for runtime execution, Completion Verified, and Bounded Handoff is superseded by the new bounded consumer result.",
+    "All updated sources state that proposal-only work used a disclosed bounded current-Agent advisory review rather than fabricating native alignment self-review completion.",
+    "All updated sources preserve that product effectiveness, independent review, consumer commit or push, CI enforcement, release, deployment, and production pricing authority remain unproven or unauthorized.",
+    "No AIRBNB source, binary artifact, raw lifecycle payload, absolute path, credential, private content, or raw conversation is copied into AgentGov.",
+    "Focused documentation tests, task validation, repository validation, and git diff check complete without deterministic failure.",
+    "The existing untracked .codex directory, repository cover asset, and misdirected p0-airbnb-runtime-completion-handoff task record remain untouched and unstaged."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Project owner",
+    "rationale": "The accountable human reviewed structured proposal prp-df6b91068f3b49279c65b700dacca094 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Project owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Record the independently verified 2026-08-13 AIRBNB consumer journey as sanitized AgentGov evidence: supported Python 3.11 runtime execution, scenario smoke success, 5 delivery tests, 13 serving tests, all 79 tests passing, admitted cumulative scope reconciliation, fresh Completion Verified evidence, and a separate human-confirmed Bounded Handoff. Update current status and planning sources so the former partial-evidence limitation is superseded while retaining explicit limits on product effectiveness, native self-review applicability, Git publication, release, deployment, and production authority."
+  },
+  "risk": {
+    "items": [
+      "Documentation could overstate one consumer journey as general product effectiveness or complete automatic adoption proof.",
+      "The distinction between Completion Verified, Bounded Handoff, and semantic review assurance could be collapsed.",
+      "Consumer-local paths, source content, binary data, raw events, or private material could leak into the portable repository.",
+      "The documentation could imply Git publication, CI enforcement, release, deployment, or production pricing authority that did not occur.",
+      "An imprecise edit could overwrite or include unrelated untracked local files.",
+      "Reviewed assumption: The current session independently verified the AIRBNB event chain, fresh evidence binding, task digests, scope reconciliation, and handoff idempotence.",
+      "Reviewed assumption: A separate Python 3.11.9 rerun reproduced the scenario, 5 delivery tests, 13 serving tests, and all 79 tests without failure or skip.",
+      "Reviewed assumption: The previous 2026-08-11 AIRBNB evidence record remains historical and should be labeled as superseded rather than rewritten.",
+      "Reviewed assumption: The documentation tests may be changed only to protect the newly recorded evidence and its limits.",
+      "Reviewed unknown: Whether the AIRBNB working tree will later receive separate commit or push authorization.",
+      "Reviewed unknown: Whether another consumer will reproduce the same complete governed journey.",
+      "Reviewed unknown: Whether future evidence will support product-effectiveness or benefit claims beyond lifecycle completion."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "docs/assets",
+      "governance/tasks/p0-airbnb-runtime-completion-handoff.json",
+      "src",
+      "schemas",
+      "templates",
+      "release",
+      ".github",
+      "agent-skills",
+      "evaluation",
+      "prompt-governance"
+    ],
+    "include_paths": [
+      "README.md",
+      "STATUS.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "docs/development-log/2026-08-13.md",
+      "tests/test_user_documentation.py",
+      "tests/test_public_documentation_freshness.py",
+      "governance/tasks/p0-record-airbnb-completion-handoff-evidence.json"
+    ]
+  },
+  "task_id": "p0-record-airbnb-completion-handoff-evidence",
+  "title": "Record the completed AIRBNB governed runtime journey",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_user_documentation tests.test_public_documentation_freshness -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-record-airbnb-completion-handoff-evidence.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "git diff --check",
+    "git status --short; git diff -- README.md STATUS.md DEVELOPMENT_PLAN.md docs/development-plan.md docs/development-log/2026-08-13.md tests/test_user_documentation.py tests/test_public_documentation_freshness.py governance/tasks/p0-record-airbnb-completion-handoff-evidence.json"
+  ]
+}

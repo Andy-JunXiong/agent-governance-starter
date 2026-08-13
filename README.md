@@ -574,6 +574,36 @@ change was created. Initializer output now includes the tracked
 read-only proposal plan without a preparatory manual write. Existing consumers
 must add that directory through a reviewed adoption update before retrying.
 
+AIRBNB subsequently adopted that repair. A 2026-08-11 proposal replay reached
+exact human admission and a bounded README implementation but could not run its
+runtime. A separately admitted 2026-08-13 cumulative journey supersedes that
+specific limitation: an isolated Python 3.11.9 environment ran the documented
+research-only scenario, 5 delivery tests, 13 serving tests, and all 79 tests
+without failure or skip. AgentGov reconciled the admitted working-copy scope
+and fresh evidence as Completion Verified, after which the human separately
+confirmed Bounded Handoff; repeating the handoff preview was idempotent. The
+proposal-only tasks used a disclosed bounded current-Agent advisory review and
+did not fabricate native alignment self-review completion. This is bounded
+evidence for one consumer journey, not proof of the automatic primary
+experience, product effectiveness, independent review, consumer commit or
+push, CI enforcement, release, deployment, or production pricing authority.
+The consumer changes remain uncommitted and unpushed.
+
+NYC then supplied a second independent bounded consumer journey. Under Python
+3.11.9, its existing reviewed synthetic sample completed schema validation,
+temporary Bronze and Silver construction, the demand quality gate, and
+non-empty Gold lineage; the focused scenario passed 1 test and the complete NYC
+suite passed all 68 tests. Repository governance reported 17 PASS, 1 WARN, and
+0 FAIL, while all 4 agent-skill contracts passed. AgentGov recorded fresh
+evidence and `completion.reconciled: verified`, followed by a separate
+human-confirmed `session.handed_off: handed_off`; its repeat preview returned
+`already_handed_off`. NYC's formal CI remains on AgentGov 0.2.1: this local
+0.3.0rc1 consumer journey is not a formal upgrade. The result is another
+bounded portability example, not proof of uncoached automatic adoption,
+production forecast quality, product effectiveness, independent review,
+control effectiveness, publication, release, deployment, or external
+authority. The NYC consumer changes remain uncommitted and unpushed.
+
 That exact `ADMIT` path is now a review fallback rather than a universal daily
 gate. Development source adds `agentgov.work-request` 1.0,
 `agentgov.admission-routing-policy` 1.0, and `agentgov.admission-route` 1.0:

@@ -28,12 +28,29 @@ track `governance/tasks/.gitkeep`. AIRBNB has now adopted that repair. A fresh
 form-presenting replay created an exact human-admitted task record, changed only
 two README demo command lines, passed static diff and task validation, and
 received a distinct advisory review with no observed scope or authority drift.
-This is partial consumer evidence only: the existing consumer virtual
-environment was not runnable, Streamlit was not installed, and the replay did
-not prove runtime execution, the complete automatic lifecycle, Completion
-Verified, Bounded Handoff, product effectiveness, commit, push, CI enforcement,
-release, deployment, or model transition. A later requirement must separately
-admit the remaining runtime-capable lifecycle proof.
+That partial 2026-08-11 evidence is now superseded for the remaining bounded
+transitions. A separately admitted 2026-08-13 cumulative journey ran the
+research-only scenario and all 79 tests under Python 3.11.9, reconciled admitted
+scope and fresh evidence as Completion Verified, and recorded a separate
+human-confirmed Bounded Handoff. Because these were proposal-only tasks, the
+same Agent performed and disclosed the bounded advisory review without claiming
+native alignment self-review completion. This does not prove the automatic
+primary experience, product effectiveness, independent review, commit, push,
+CI enforcement, release, deployment, production pricing authority, or another
+consumer's result. The consumer working tree remains uncommitted and unpushed.
+
+NYC now adds a second independent consumer journey. Its existing synthetic
+sample ran schema validation, temporary Bronze and Silver construction, the
+demand quality gate, and non-empty Gold lineage under Python 3.11.9. The
+focused scenario and all 68 NYC tests passed, repository governance reported
+17 PASS, 1 WARN, and 0 FAIL, and all 4 agent-skill contracts passed. AgentGov
+reconciled fresh evidence as Completion Verified and the human separately
+confirmed Bounded Handoff; the repeat preview was idempotent. NYC's formal CI
+remains on AgentGov 0.2.1, and the local 0.3.0rc1 journey is not a formal
+upgrade. This does not prove uncoached adoption, production forecast quality,
+product effectiveness, independent review, release, deployment, or external
+authority. The NYC consumer changes remain uncommitted and unpushed. A next
+product capability has not yet been selected.
 
 - Published stable: AgentGov 0.2.1; published Pre-release: v0.3.0rc1.
 - NYC consumer: managed 0.2.1 workflow.

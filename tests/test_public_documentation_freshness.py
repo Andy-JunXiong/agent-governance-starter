@@ -13,6 +13,35 @@ STABLE_WHEEL = (
 
 
 class PublicDocumentationFreshnessTests(unittest.TestCase):
+    def test_public_readme_reports_bounded_airbnb_completion_evidence(self) -> None:
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        normalized = " ".join(readme.split())
+
+        for phrase in (
+            "Python 3.11.9",
+            "all 79 tests",
+            "Completion Verified",
+            "Bounded Handoff",
+            "not proof of the automatic primary experience",
+            "consumer changes remain uncommitted and unpushed",
+        ):
+            self.assertIn(phrase, normalized)
+
+    def test_public_readme_reports_bounded_nyc_completion_evidence(self) -> None:
+        normalized = " ".join((ROOT / "README.md").read_text(encoding="utf-8").split())
+
+        for phrase in (
+            "second independent bounded consumer journey",
+            "all 68 tests",
+            "Completion Verified",
+            "Bounded Handoff",
+            "formal CI remains on AgentGov 0.2.1",
+            "not a formal upgrade",
+            "not proof of uncoached automatic adoption",
+            "NYC consumer changes remain uncommitted and unpushed",
+        ):
+            self.assertIn(phrase, normalized)
+
     def test_current_install_surfaces_use_the_published_stable_wheel(self) -> None:
         surfaces = (
             ROOT / "README.md",

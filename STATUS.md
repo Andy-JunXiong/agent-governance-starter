@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-08-11
+Last verified: 2026-08-13
 
 ## Current state
 
@@ -48,13 +48,35 @@ Last verified: 2026-08-11
   admission, created the matching consumer task record, changed only two
   command lines, passed `git diff --check`, and passed a read-only task check
   with `PASS=3 WARN=1 FAIL=0 ADVISORY=3`. A distinct advisory review found no
-  scope or authority drift. This is bounded evidence for native proposal,
-  admission, implementation, static validation, and review; it does not prove
-  runtime execution, the complete automatic lifecycle, Completion Verified,
-  Bounded Handoff, product effectiveness, or any Git or external transition.
-  The consumer change remains uncommitted and unpushed. Its existing virtual
-  environment was not runnable and Streamlit was not installed, while its
-  README already documents the dependency installation step.
+  scope or authority drift. That 2026-08-11 partial result is now superseded by
+  a separately admitted 2026-08-13 cumulative consumer journey. In an isolated
+  Python 3.11.9 environment, the documented research-only scenario ran with an
+  illustrative 266 AUD MEDIUM result, all 5 delivery tests, all 13 serving
+  tests, and all 79 tests passed with no skip, and repository governance had no
+  deterministic failure. AgentGov reconciled the admitted cumulative scope,
+  recorded fresh evidence and `completion.reconciled: verified`, then recorded
+  a separate human-confirmed `session.handed_off: handed_off`; a repeated
+  handoff preview was idempotent. Because the work was proposal-only, it used
+  and disclosed a bounded current-Agent advisory review instead of fabricating
+  native alignment self-review completion. This proves the previously missing
+  runtime, Completion Verified, and Bounded Handoff transitions for one
+  consumer journey. It does not prove the automatic primary experience,
+  product effectiveness, independent review, consumer commit or push, CI
+  enforcement, release, deployment, or production pricing authority. The
+  consumer working tree remains uncommitted and unpushed.
+- NYC now provides a second independent bounded consumer result. In an isolated
+  Python 3.11.9 environment, its existing synthetic runtime scenario validated
+  schema and exercised temporary Bronze, Silver, the demand quality gate, and
+  non-empty Gold lineage. The focused scenario passed 1 test, the complete NYC
+  suite passed all 68 tests, repository governance reported 17 PASS, 1 WARN,
+  0 FAIL, and all 4 agent-skill contracts passed. AgentGov recorded fresh
+  evidence, `completion.reconciled: verified`, and a distinct human-confirmed
+  `session.handed_off: handed_off`; the repeat preview returned
+  `already_handed_off`. NYC's formal CI remains on AgentGov 0.2.1, so the local
+  0.3.0rc1 journey is not a formal upgrade. It does not prove uncoached
+  adoption, production forecast quality, product effectiveness, independent
+  review, control effectiveness, publication, release, deployment, or external
+  authority. Its consumer changes remain uncommitted and unpushed.
 - Development source now implements a combined drift-review reminder: one
   strict default cadence becomes due after three verified tasks or seven days,
   foreground cycles surface a subordinate non-blocking card, Monitor 1.5 shows

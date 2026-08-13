@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Development Plan
 
-Last updated: 2026-08-07
+Last updated: 2026-08-13
 
 ## Purpose
 
@@ -797,15 +797,34 @@ task. Do not reopen Kernel promotion without ADR-0016's structured failure
 case.
 
 The 2026-08-11 product review selected AIRBNB for the first bounded consumer
-slice. Its repaired native path has now demonstrated proposal review, exact
-human admission, create-only task recording, a two-line README implementation,
-static validation, and a distinct advisory review with no observed scope or
-authority drift. Runtime execution was unavailable, and the replay did not run
-the complete automatic lifecycle through Completion Verified and Bounded
-Handoff. The next requirement should target those remaining transitions with a
-runtime-capable low-risk consumer task; this evidence record does not admit that
-work or authorize consumer Git, CI, required-check, release, or deployment
-actions.
+slice. Its repaired native path first demonstrated proposal review, exact human
+admission, create-only task recording, a two-line README implementation,
+static validation, and a distinct advisory review. A separately admitted
+2026-08-13 cumulative journey has now closed the remaining bounded transition
+gap: the research-only scenario and all 79 tests passed under Python 3.11.9,
+AgentGov reconciled fresh evidence as Completion Verified, and the human
+separately confirmed Bounded Handoff. Proposal-only work used a disclosed
+bounded current-Agent advisory review and did not claim native alignment
+self-review completion. This is one consumer's lifecycle evidence, not proof of
+the automatic primary experience, product effectiveness, independent review,
+consumer Git publication, CI enforcement, release, deployment, or production
+pricing authority. The consumer working tree remains uncommitted and unpushed.
+Review this completed requirement with the product owner before selecting
+another consumer or product capability.
+
+The product owner next selected a sanitized record of the completed NYC
+consumer journey. Its existing synthetic sample exercised schema validation,
+temporary Bronze and Silver construction, the demand quality gate, and
+non-empty Gold lineage under Python 3.11.9. The focused scenario and all 68 NYC
+tests passed; repository governance reported 17 PASS, 1 WARN, and 0 FAIL, and
+all 4 agent-skill contracts passed. AgentGov reconciled fresh evidence as
+Completion Verified and the human separately confirmed Bounded Handoff, with an
+idempotent repeat preview. NYC's formal CI remains on AgentGov 0.2.1 and the
+local 0.3.0rc1 journey is not a formal upgrade. This second consumer improves
+portability evidence but does not prove automatic adoption, production forecast
+quality, product effectiveness, independent review, release, deployment, or
+external authority. Its consumer changes remain uncommitted and unpushed. The
+next product capability is not yet decided.
 
 Subject to that separate decision, continue productizing the implemented
 ADR-0009 loop:
