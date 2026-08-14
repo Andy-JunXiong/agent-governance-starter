@@ -1,0 +1,72 @@
+{
+  "acceptance_signals": [
+    "STATUS.md retains the current closeout snapshot and current capability reality while clearly superseded dated checkpoint sections are replaced by concise links to preserved historical evidence.",
+    "DEVELOPMENT_PLAN.md retains strategic direction and priority sequencing while clearly current-state and completed-session history blocks are moved out of the strategy surface.",
+    "docs/development-plan.md retains public strategic ordering while old current-checkpoint and next-session evidence is moved out of the public strategy surface.",
+    "A dated migration log preserves relocated historical facts, original section identity, and repository-relative evidence references without rewriting past outcomes.",
+    "Documentation tests protect canonical ownership, preserved history links, and the absence of the migrated historical headings from current-state and strategy surfaces.",
+    "Focused documentation and task-contract tests pass, the baseline unittest suite passes, and git diff --check reports no whitespace errors."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "On 2026-08-14 Historical Documentation Migration v1 relocated four exact section-bounded history blocks into one source-labeled dated record while current status and strategic plans retained concise ownership pointers. Exact text comparison passed after documented heading demotion; 46 focused documentation/task tests, the Harness cross-document regression, and the complete 810-test suite passed with 2 skips. Repository governance had no failure, and a distinct native current-Agent self-review found no requirement, scope, architecture, implementation, data, or authority drift requiring correction. This paused task authorizes no broader cleanup, archive automation, Git action, publication, release, deployment, or follow-on implementation.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Implement Historical Documentation Migration v1 by relocating clearly superseded checkpoint and completed-session history from current status and strategic planning surfaces into a dated, source-labeled development-log record; replace migrated blocks with concise canonical pointers, preserve historical facts and evidence references, and leave current capability, strategy, automation, runtime behavior, Git, release, and deployment semantics unchanged."
+  },
+  "risk": {
+    "items": [
+      "Over-broad section removal could discard current capability or strategic facts.",
+      "Moving text could break internal links or evidence references.",
+      "A public-plan edit could drift from the internal strategy surface if protecting tests do not cover both.",
+      "Historical material must be labeled as migrated and superseded rather than presented as a new event on the migration date.",
+      "Reviewed assumption: Only clearly section-bounded historical checkpoint and completed-session blocks will be migrated; mixed sections that still own current capability or strategy facts will remain.",
+      "Reviewed assumption: The selected migration can use one additional dated development-log file for the migration record while preserving all existing log paths.",
+      "Reviewed assumption: Public documentation changes are limited to the public development plan because product behavior, commands, release identity, and user journeys do not change.",
+      "Reviewed assumption: The existing untracked .codex directory is human-owned and remains untouched.",
+      "Reviewed unknown: The final line count reduction is unknown until section-boundary and link validation is complete."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      "AGENTS.md",
+      "README.md",
+      "src",
+      "release",
+      ".github/workflows",
+      ".codex",
+      "docs/index.html",
+      "docs/guide.html",
+      "docs/guide.zh-CN.html",
+      "docs/assets",
+      "governance/tasks/p0-airbnb-runtime-completion-handoff.json"
+    ],
+    "include_paths": [
+      "STATUS.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "docs/development-log/2026-08-14-historical-migration.md",
+      "docs/development-log/2026-08-14.md",
+      "tests/test_user_documentation.py",
+      "tests/test_public_documentation_freshness.py",
+      "tests/test_task_contract.py",
+      "governance/tasks"
+    ]
+  },
+  "task_id": "p0-historical-documentation-migration-v1",
+  "title": "Migrate historical documentation checkpoints",
+  "validation_commands": [
+    "python -m unittest discover -s tests -p test_user_documentation.py -v",
+    "python -m unittest discover -s tests -p test_public_documentation_freshness.py -v",
+    "python -m unittest discover -s tests -p test_task_contract.py -v",
+    "python -m unittest discover -s tests -v",
+    "git diff --check"
+  ]
+}

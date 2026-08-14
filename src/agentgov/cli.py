@@ -123,6 +123,13 @@ from agentgov.development_context import (
     render_development_context_terminal,
     select_development_context,
 )
+from agentgov.documentation_archive import (
+    ArchivePlanState,
+    parse_through_date,
+    plan_documentation_archive,
+    render_documentation_archive_plan_json,
+    render_documentation_archive_plan_terminal,
+)
 from agentgov.drift_review import (
     DriftReviewPolicyError,
     REVIEW_OUTCOMES,
@@ -555,6 +562,34 @@ def _plan_upgrade_pr(
             "merge, release, or deploy action was run"
         )
     return EXIT_FAIL if plan.state is UpgradePlanState.BLOCKED else EXIT_PASS
+
+
+def _plan_documentation_archive(
+    path: Path,
+    *,
+    through: str,
+    output_format: str,
+) -> int:
+    try:
+        through_date = parse_through_date(through)
+        plan = plan_documentation_archive(path, through_date=through_date)
+    except FileNotFoundError as exc:
+        print(
+            f"ERROR plan documentation-archive: path not found: {exc.filename or exc}",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    except (OSError, UnicodeError, ValueError) as exc:
+        print(f"ERROR plan documentation-archive: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    renderer = (
+        render_documentation_archive_plan_json
+        if output_format == "json"
+        else render_documentation_archive_plan_terminal
+    )
+    print(renderer(plan), end="")
+    return EXIT_FAIL if plan.state is ArchivePlanState.FAIL else EXIT_PASS
 
 
 def _create_upgrade_pr(
@@ -3282,6 +3317,37 @@ def build_parser() -> argparse.ArgumentParser:
             args.path,
             manifest=args.manifest,
             output_format=args.upgrade_pr_format,
+        )
+    )
+
+    documentation_archive_parser = plan_targets.add_parser(
+        "documentation-archive",
+        help="Plan one read-only logical archive index for dated development logs.",
+    )
+    documentation_archive_parser.add_argument(
+        "path",
+        nargs="?",
+        type=Path,
+        default=Path("."),
+        help="Repository directory to inspect (default: current directory).",
+    )
+    documentation_archive_parser.add_argument(
+        "--through",
+        required=True,
+        help="Explicit inclusive eligibility date in strict YYYY-MM-DD format.",
+    )
+    documentation_archive_parser.add_argument(
+        "--format",
+        dest="documentation_archive_format",
+        choices=("text", "json"),
+        default="text",
+        help="Archive-plan serialization format (default: text).",
+    )
+    documentation_archive_parser.set_defaults(
+        handler=lambda args: _plan_documentation_archive(
+            args.path,
+            through=args.through,
+            output_format=args.documentation_archive_format,
         )
     )
 

@@ -1,0 +1,35 @@
+{
+  "passing": {
+    "through": "2026-08-14",
+    "files": {
+      "2026-08-13.md": "# Development log - 2026-08-13\n\nEarlier evidence.\n",
+      "2026-08-14.md": "# Development log - 2026-08-14\n\nCurrent evidence.\n",
+      "2026-08-14-historical-migration.md": "# Historical documentation migration - 2026-08-14\n\nMigrated evidence.\n",
+      "2026-08-15.md": "# Development log - 2026-08-15\n\nFuture evidence.\n",
+      "notes.md": "# Notes\n\nNot a dated record.\n"
+    },
+    "state": "pass"
+  },
+  "warning": {
+    "through": "2026-08-14",
+    "files": {
+      "2026-08-14.md": "No first-level title.\n"
+    },
+    "state": "warn"
+  },
+  "failing": {
+    "through": "2026-08-14",
+    "files": {
+      "2026-02-30.md": "# Impossible date\n"
+    },
+    "state": "fail"
+  },
+  "not_applicable": {
+    "through": "2026-08-14",
+    "files": {
+      "2026-08-15.md": "# Future record\n",
+      "notes.md": "# Notes\n"
+    },
+    "state": "not_applicable"
+  }
+}

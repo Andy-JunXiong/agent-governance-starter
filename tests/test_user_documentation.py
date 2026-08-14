@@ -26,9 +26,13 @@ ADMISSION_ROUTING = ROOT / "docs/admission-routing.md"
 HUMAN_DECISIONS = ROOT / "docs/human-decision-prompts.md"
 CLARIFICATION_DIALOGUE = ROOT / "docs/clarification-dialogue.md"
 ACTIVE_AGENT_SELF_REVIEW = ROOT / "docs/active-agent-self-review.md"
+DOCUMENTATION_ARCHIVE_PLAN = ROOT / "docs/documentation-archive-plan.md"
 EXTRACTION_MAP = ROOT / "docs/ai-radar-extraction-map.md"
 STATUS = ROOT / "STATUS.md"
 CONSUMER_COMPLETION_LOG = ROOT / "docs/development-log/2026-08-13.md"
+HISTORICAL_MIGRATION_LOG = (
+    ROOT / "docs/development-log/2026-08-14-historical-migration.md"
+)
 AGENT_SKILLS_README = ROOT / "agent-skills/README.md"
 GUIDED_NEXT_ADR = ROOT / "docs/adr/0010-route-next-through-development-lifecycle.md"
 BOOTSTRAP_UPDATE_ADR = ROOT / "docs/adr/0011-separate-bootstrap-from-update-routing.md"
@@ -54,6 +58,28 @@ GUIDE_STYLE = ROOT / "docs/guide.css"
 
 
 class UserDocumentationTests(unittest.TestCase):
+    def test_documentation_archive_plan_is_read_only_and_explicit(self) -> None:
+        readme = README.read_text(encoding="utf-8")
+        guide = DOCUMENTATION_ARCHIVE_PLAN.read_text(encoding="utf-8")
+        normalized = " ".join(guide.split())
+
+        self.assertIn("docs/documentation-archive-plan.md", readme)
+        for text in (readme, guide):
+            self.assertIn(
+                "agentgov plan documentation-archive . --through 2026-08-14",
+                text,
+            )
+        for phrase in (
+            "never consults the host clock",
+            "logical inclusion",
+            "never moves, renames, deletes, or rewrites",
+            "deterministic",
+            "advisory",
+            "performs no repository write",
+            "grants no apply, scheduling, Git, publication, release, or deployment authority",
+        ):
+            self.assertIn(phrase, normalized)
+
     def test_documentation_state_separation_contract_is_consistent(self) -> None:
         instructions = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
         plan = (ROOT / "DEVELOPMENT_PLAN.md").read_text(encoding="utf-8")
@@ -77,7 +103,7 @@ class UserDocumentationTests(unittest.TestCase):
             "Pending validation",
             "Incomplete",
             "Next product review",
-            "does not migrate the existing historical sections",
+            "Historical Documentation Migration v1",
         ):
             self.assertIn(phrase, normalized_status)
 
@@ -86,12 +112,59 @@ class UserDocumentationTests(unittest.TestCase):
             self.assertIn("governance/tasks", normalized)
             self.assertIn("docs/development-log/", normalized)
 
+    def test_historical_documentation_migration_preserves_ownership(self) -> None:
+        plan = (ROOT / "DEVELOPMENT_PLAN.md").read_text(encoding="utf-8")
+        public_plan = DEVELOPMENT_PLAN.read_text(encoding="utf-8")
+        status = STATUS.read_text(encoding="utf-8")
+        migration_log = HISTORICAL_MIGRATION_LOG.read_text(encoding="utf-8")
+        normalized_migration_log = " ".join(migration_log.split())
+
+        self.assertIn("## Historical checkpoint index", status)
+        self.assertIn("## Current-state reference", plan)
+        self.assertIn("## Next product review reference", plan)
+        self.assertIn("## Current checkpoint reference", public_plan)
+        self.assertIn("## Next product review reference", public_plan)
+
+        for heading in (
+            "## Development checkpoint - 2026-08-06",
+            "## Development checkpoint - 2026-08-05",
+        ):
+            self.assertNotIn(heading, status)
+        for heading in (
+            "## Current State",
+            "## Foundation implementation history",
+            "## Next Recommended Starting Point",
+        ):
+            self.assertNotIn(heading, plan)
+        for heading in (
+            "## Current checkpoint",
+            "## Next-session starting point",
+        ):
+            self.assertNotIn(f"{heading}\n", public_plan)
+
+        for phrase in (
+            "not a claim that the older events occurred on this date",
+            "No existing development-log path was renamed or rewritten",
+            "grants no task or external authority",
+        ):
+            self.assertIn(phrase, normalized_migration_log)
+
+        for phrase in (
+            "### Development checkpoint - 2026-08-06",
+            "### Development checkpoint - 2026-08-05",
+            "### Current State",
+            "### Foundation implementation history",
+            "### Next Recommended Starting Point",
+            "### Current checkpoint",
+            "### Next-session starting point",
+        ):
+            self.assertIn(phrase, migration_log)
+
     def test_airbnb_completion_and_handoff_evidence_is_bounded(self) -> None:
         surfaces = (
             README,
             STATUS,
-            DEVELOPMENT_PLAN,
-            ROOT / "DEVELOPMENT_PLAN.md",
+            HISTORICAL_MIGRATION_LOG,
             CONSUMER_COMPLETION_LOG,
         )
 
@@ -124,8 +197,7 @@ class UserDocumentationTests(unittest.TestCase):
         surfaces = (
             README,
             STATUS,
-            DEVELOPMENT_PLAN,
-            ROOT / "DEVELOPMENT_PLAN.md",
+            HISTORICAL_MIGRATION_LOG,
             CONSUMER_COMPLETION_LOG,
         )
 
@@ -275,8 +347,19 @@ class UserDocumentationTests(unittest.TestCase):
         ):
             self.assertIn(phrase, requirements)
 
-        self.assertIn("independent non-NYC", plan)
-        self.assertLess(plan.index("independent non-NYC"), plan.index("NYC shadow"))
+        primary_p0 = " ".join(
+            plan[
+                plan.index("### P0 — automate the primary product experience") :
+                plan.index(
+                    "### P0 foundation — govern the coding agent during development"
+                )
+            ].split()
+        )
+        self.assertIn("independent non-NYC", primary_p0)
+        self.assertLess(
+            primary_p0.index("independent non-NYC"),
+            primary_p0.index("NYC shadow"),
+        )
         self.assertIn("not yet implemented as the primary", requirements)
         self.assertIn("not yet implemented", decision)
         self.assertIn("not yet implemented", monitor)

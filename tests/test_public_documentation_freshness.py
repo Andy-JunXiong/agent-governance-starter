@@ -13,6 +13,23 @@ STABLE_WHEEL = (
 
 
 class PublicDocumentationFreshnessTests(unittest.TestCase):
+    def test_public_plan_routes_historical_checkpoints_to_dated_evidence(self) -> None:
+        public_plan = (ROOT / "docs/development-plan.md").read_text(
+            encoding="utf-8"
+        )
+        migration_log = (
+            ROOT / "docs/development-log/2026-08-14-historical-migration.md"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn("## Current checkpoint reference", public_plan)
+        self.assertIn("## Next product review reference", public_plan)
+        self.assertIn("2026-08-14-historical-migration.md", public_plan)
+        self.assertNotIn("## Current checkpoint\n", public_plan)
+        self.assertNotIn("## Next-session starting point", public_plan)
+        self.assertIn("## Relocated from `docs/development-plan.md`", migration_log)
+        self.assertIn("### Current checkpoint", migration_log)
+        self.assertIn("### Next-session starting point", migration_log)
+
     def test_public_readme_reports_bounded_airbnb_completion_evidence(self) -> None:
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         normalized = " ".join(readme.split())

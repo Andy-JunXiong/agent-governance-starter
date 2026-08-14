@@ -30,48 +30,57 @@ action.
 `governance/tasks/*.json` remains the exact task scope and admission record;
 `docs/adr/` and durable contracts remain the architecture owners; and dated
 files under `docs/development-log/` remain append-only session evidence at
-stable paths. Documentation State Separation v1 does not migrate the existing
-historical sections below or add archive automation; those are separate,
-not-yet-authorized changes.
+stable paths. Historical Documentation Migration v1 moves only clearly
+section-bounded checkpoint material into a source-labeled dated record and
+leaves current capability sections in place. Documentation Archive and Index
+Plan v1 now adds a read-only logical-index candidate over those stable paths;
+it does not create the index or add apply or scheduling authority.
 
 ### Current closeout snapshot
 
-- **Active slice**: Documentation State Separation v1, establishing the
-  repository's document ownership, update-trigger, validation-state, and
-  authority-separation contract.
-- **Codex-run validation**: 44 targeted user-documentation, public-freshness,
-  and task-contract tests passed. The complete Python 3.12 suite passed all
-  808 tests with 2 skips. The task's module-style targeted command could not
-  import this repository's non-package `tests/` directory, so the same files
-  were rerun successfully through `unittest discover -p`. An initial verbose
-  complete-suite run reached the 240-second tool limit without an observed
-  failure; the quiet rerun completed successfully in about 250 seconds.
-- **User-reported validation**: none for this documentation-only slice.
-- **Pending validation**: human product-owner review of this completed
-  requirement and its proposed connection to any later migration slice.
-- **Incomplete**: none within the admitted v1 scope. Historical content
-  migration and archive automation were explicit non-goals and remain
-  separately gated work rather than hidden incompleteness.
-- **Blocker / stop condition**: stop before historical migration, archive
-  automation, Git, publication, release, or deployment without separate human
-  admission or authorization as applicable.
-- **Next product review**: confirm whether the ownership contract is sufficient
-  and jointly choose historical status migration, a smaller observed-drift
-  correction, or no immediate follow-on. This entry authorizes none of them.
+- **Active slice**: Documentation Archive and Index Plan v1, a deterministic
+  development-preview command that renders the exact logical index candidate
+  for dated development logs without modifying any repository path.
+- **Codex-run validation**: the 10 archive-planner, 24 user-documentation, and
+  13 task-contract tests passed. A real-repository run found 16 eligible logs,
+  classified the absent index as `create`, kept the two 2026-08-14 records in
+  stable path order, and left the complete development-log SHA-256 snapshot
+  unchanged. The complete suite passed all 821 tests with 2 platform-limited
+  skips. The admitted task reported `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; after
+  closeout pause it reported `PASS=2 WARN=2 FAIL=0 ADVISORY=3`, with the added
+  warning correctly denying further implementation. Repository governance
+  reported `PASS=26 WARN=2 FAIL=0 ADVISORY=4`.
+  Admitted-state scope inspection accepted all 11 current-task paths; its six
+  failures identify only separately authorized Historical Migration changes
+  and the pre-existing excluded `.codex/config.toml`. JSON parsing and final
+  `git diff --check` passed.
+- **User-reported validation**: none.
+- **Pending validation**: human product-owner review of whether the logical
+  index candidate is useful. No applied or rendered `INDEX.md` exists.
+- **Incomplete**: none within the admitted read-only v1 scope.
+- **Blocker / stop condition**: stop before creating or updating the index,
+  adding an apply path, scheduling or reminders, moving or renaming logs, Git,
+  publication, release, or deployment without separate human admission or
+  authorization as applicable.
+- **Next product review**: review the exact candidate and jointly decide
+  whether to propose a separate create/update workflow, investigate a smaller
+  evidence-backed need, or make no immediate follow-on. This entry authorizes
+  none of them.
 
 ### Unfinished and deferred work record
 
 - **Incomplete inside the admitted task**: none.
-- **Pending review**: the human product owner has not yet reviewed the completed
-  ownership contract as a delivered requirement.
-- **Deferred candidate — historical migration**: the accumulated checkpoint and
-  implementation-history material in `STATUS.md` and `DEVELOPMENT_PLAN.md` has
-  not been migrated. Any migration must preserve evidence references and needs
-  a separate admitted task.
-- **Deferred candidate — weekly archive/index automation**: no weekly summary,
-  archive index, first-closeout-of-week reminder, or freshness check has been
-  implemented. Its deterministic versus advisory semantics and non-destructive
-  path rules remain to be designed and separately admitted.
+- **Pending review**: the human product owner has not yet reviewed the
+  logical archive-index candidate as a delivered requirement.
+- **Deferred candidate — broader historical cleanup**: mixed sections that
+  still contain current capability or strategic facts were intentionally not
+  split at bullet level. Any broader cleanup must preserve evidence references
+  and needs a separate admitted task.
+- **Deferred candidate — index application**: no command creates or updates
+  `docs/development-log/INDEX.md`; any writer needs a separate product decision,
+  task admission, and create/update safety contract.
+- **Deferred candidate — scheduling**: no weekly schedule, first-closeout-of-
+  week reminder, freshness check, daemon, or external notification exists.
 
 These entries record known unfinished or deferred work; they are not an
 authorized queue and do not select the next requirement.
@@ -514,340 +523,15 @@ authorized queue and do not select the next requirement.
   all 51 schemas parsed, `git diff --check` passed, and the full suite passed
   700 tests with two platform-limited skips.
 
-## Development checkpoint - 2026-08-06
+## Historical checkpoint index
 
-- The development CLI now treats a bare `agentgov` invocation as a safe
-  first-time orientation surface instead of a missing-command error. It prints
-  help, recommends the read-only `doctor`, `next`, and `status` entry points,
-  performs no repository inspection or write, and exits successfully.
-
-- `ReferenceAlignmentAdapter` now connects a host's natural-language request,
-  one natural-language clarification answer, and one final single-select to
-  the existing strict in-memory Core flow. The human authors no JSON, IDs,
-  digests, timestamps, actor metadata, confirmation words, or internal
-  commands.
-- `HostSemanticMaterializer` is an explicit replaceable host boundary. It
-  returns only `AlignmentContextDraft` and `ClarificationUpdateDraft`; the
-  Adapter creates and validates the strict contracts. Core still performs no
-  arbitrary semantic inference.
-- The privacy-safe journey retains only normalized Core responses and reports
-  natural-language inputs, clarification turns, governance-decision episodes,
-  selections, and zero user-authored structured records/internal commands.
-  Invalid drafts and out-of-order or non-offered choices do not advance Core
-  state or burden metrics.
-
-- `agentgov.coding-agent-alignment-response` 1.0 now exposes the exact current
-  dialogue and exactly one next clarification prompt or final decision prompt.
-  It declares `foreground_memory`, `survives_restart=false`, and fully denied
-  project authority.
-- `agentgov dev --stream` now dispatches alignment context, human clarification
-  update, and final human decision result records alongside unchanged lifecycle
-  events. Duplicate, stale, wrong-prompt, cross-dialogue, cross-Adapter,
-  missing-state, and out-of-order records fail before the session advances.
-- Alignment-only records do not run the foreground development coordinator,
-  update the Dashboard, or write the repository. The host's declared decision
-  capability binds the final choice; Core remains vendor-neutral.
-
-- `agentgov.alignment-context`, `agentgov.clarification-dialogue`,
-  `agentgov.clarification-prompt`, and `agentgov.clarification-update` 1.0
-  separate advisory drift observation, natural-language clarification, and
-  final authority. Raw chat, transcripts, source content, host paths, and
-  project-change authority are excluded.
-- Clarification asks exactly one highest-priority material question, binds
-  each normalized human answer to the exact dialogue/prompt revision, and
-  keeps clarification turns separate from governance decision episodes. A
-  100-record rolling snapshot does not cap the cumulative turn count.
-- Final re-centering reuses the existing digest-bound single-select decision
-  contracts only after material unknowns are resolved and at least two stable
-  effects exist. It changes only structured dialogue state; task, architecture,
-  scope, code, Git, deployment, and release authority remain denied.
-
-- `agentgov.human-decision-prompt` 1.0 proactively explains the exact decision,
-  why it is needed, one safe recommendation, every bounded option effect, and
-  a one-selection/no-free-text input contract. Display grants no authority.
-- `agentgov.human-decision-result` 1.0 records one human selection from a host
-  that declared decision-recording support and binds prompt, source, option,
-  and transition digests. Agent actors, substituted choices, drift, and
-  unavailable hosts fail closed.
-- `agentgov.coding-agent-response` 1.3 and `agentgov.interaction-card` 1.1 add
-  the subordinate non-blocking drift reminder while retaining the proactive
-  prompt whenever a real human gate exists. Scope/completion selections carry only their existing
-  Core event; planned low-risk human review accepts one number and approval
-  creates only the exact task. Codex Hooks remain context-only/unavailable for
-  trusted custom decision recording.
-
-- `agentgov.work-request` 1.0 classifies questions, explanations, status
-  queries, read-only diagnosis, active-task continuation, and new repository
-  changes without raw prompt/transcript content or authority.
-- `agentgov.admission-routing-policy` 1.0 makes low-risk delegation explicitly
-  human-owned, path/validation/risk bounded, Git-tracked and clean. The shipped
-  template is a draft with fast-track disabled.
-- `agentgov.admission-route` 1.0 deterministically selects `observe_only`,
-  `continue_active`, `fast_track`, `human_review`, or `full_review` and reports
-  the numeric human-interruption budget. The first three routes budget zero;
-  ordinary bounded review budgets one.
-- Non-interactive `--apply-fast-track` revalidates policy, request, route, task,
-  and target identity and creates only the task. It does not start a session,
-  run validation, modify code, or grant downstream authority.
-- The portable requirement-admission Skill and missing-task cards now route
-  before proposing. Codex `UserPromptSubmit` discards the prompt and returns
-  routing context instead of forcing every prompt through task admission.
-
-- `agentgov.task-proposal` 1.0 now accepts only a normalized low-risk Coding
-  Agent interpretation with explicit assumptions, unknowns, privacy boundary,
-  and denied authority. Unknown fields, raw-prompt-shaped fields, sensitive or
-  host-local content, unsafe scope, missing validation, and non-low risk fail
-  before an admission plan exists.
-- `agentgov.task-admission-plan` 1.0 exposes the complete normalized proposal,
-  stable proposal/task digests, exact final compact task, sole target, and a
-  fully denied preview authority boundary.
-- `ReferenceTaskProposalAdapter` now supplies the host-owned conversion seam:
-  one ordinary-language request becomes a strict proposal and the existing
-  read-only admission preview through one replaceable materializer invocation.
-  The Adapter owns proposal identity, privacy, low-risk, and denied-authority
-  fields; retains no raw request; makes zero AgentGov model/network calls; and
-  cannot admit the task or write the repository. Offline fixtures prove the
-  boundary, not production semantic quality or native host integration.
-- Development Adapter `1.3.0` now provides the first Codex production-host
-  materializer and native proposal review path. The current Codex Agent sends
-  only normalized low-risk task fields to `agentgov_task_proposal_review`;
-  AgentGov derives the strict proposal and exact admission plan, and Codex
-  collects one bound decision through MCP form elicitation. Only exact native
-  admission creates the planned task. All other decisions, interruption,
-  malformed responses, stale plans, target races, and missing elicitation
-  capability remain zero-write. Legacy clients keep the original five tools.
-  The exact source is now installed in the existing local pipx environment.
-  Installed discovery reports Adapter `1.3.0` and six tools with form
-  capability, while clients without it retain five. Installed protocol,
-  schema, extension-privacy, exclusive-admit, non-admission, malformed-response,
-  and target-race preflight passed. A valid negative external replay has now
-  completed, but no successful native proposal-review journey is claimed.
-- The first approved event-level Adapter `1.3.0` proposal-review attempt was
-  classified `INVALID_HOST_BRIDGE`: a Windows PowerShell 5.1 stderr callback
-  stalled the App Server bridge before any observable thread, native form, tool
-  result, or terminal event. The exact process was stopped, no raw material or
-  repository write was retained, and a local no-thread probe confirmed the
-  corrected null-stream drain. A separately authorized retry then exposed a
-  second host boundary: local initialization and `thread/start` passed after
-  using the runtime's verified `read-only` value, but the real request reached
-  `starting_turn` and App Server closed before returning a turn, form, tool
-  result, or error code. This result is `INVALID_APP_SERVER_EOF`, not an Adapter
-  pass or failure. Standalone authentication and the installed runtime were
-  later repaired, and one UTF-8-safe replay completed a real read-only turn
-  without surfacing a form. Because its temporary normalizer used text
-  presence rather than exact `mcpToolCall` fields, the observed
-  `proposal_tool_seen` flag is invalid evidence. A test-only event normalizer
-  now fails closed on unrelated text and accepts only the exact server, tool,
-  form, result, and terminal shapes. No new task or other repository write
-  occurred. A following authorized structured replay completed normally with
-  `not_called`, zero exact proposal-tool calls, and zero forms. The journey did
-  not enter the Adapter path for that bounded request. The retained replay
-  evidence alone could not assign that result to tool discovery/configuration
-  or Agent invocation. A later no-turn App Server configuration/status probe
-  confirmed that the project MCP layer loaded and exposed all six AgentGov
-  tools. The remaining observed gap is therefore Agent invocation under an
-  ambiguous trigger contract, not discovery. A subsequent consumer replay
-  loaded the generated journey but still treated direct chat authorization as
-  admission and skipped proposal review and self-review. Development
-  instructions and MCP metadata now require a readable, validated matching
-  `governance/tasks/*.json` record with a human admitted or approved decision
-  before any repository write. Direct chat authorization and tool permission
-  do not count; every repository-changing task requires self-review, and
-  read-only work remains exempt. This is
-  advisory host guidance rather than deterministic model-routing enforcement.
-  A separately authorized installation-only step built the exact reviewed
-  source offline as a local-only `0.3.0rc1` wheel with SHA-256
-  `F109E8A951605AE947374EE28BB76B569A344BC3DD20A752E1686AF8C317FDFE`
-  and updated only the existing AgentGov pipx runtime. Installed package and
-  import identity report `0.3.0rc1`; Adapter discovery reports `1.3.0`, protocol
-  `2026-07-28`, six tools with form capability and five without it, and the
-  clarified trigger metadata. The project config hash remained unchanged. The
-  pre-existing pipx management metadata still names its original `0.1.0`
-  install source, so `pipx list` is not used as installed-content identity.
-  No Codex turn or replay occurred during installation. A later separately
-  authorized replay preflight confirmed the same configuration, server, and
-  six tools, then one ordinary repository-change turn started the exact
-  proposal tool once. No AgentGov form request was observed before the turn
-  completed. No human decision was supplied, no task or implementation was
-  created, and no repository state changed. Two later local, no-model direct
-  calls supplied the same valid normalized arguments. App Server parsed the resulting form and
-  returned `decline` because no active turn hosted it; the Adapter reported its
-  normal zero-write non-admission result. This rules out discovery, valid-input
-  form generation, and schema parsing as general failures. The retained replay
-  summary cannot distinguish a structured pre-form tool error from forwarding
-  or presentation behavior because it dropped unrecognized completion results.
-  Future summaries now retain deduplicated completion count/status and a strict
-  eight-record maximum for allow-listed AgentGov error code, matching stage,
-  bounded field path, rule, and retryability. Unknown completions are explicit;
-  raw error text and payloads remain excluded. Historical evidence remains
-  unchanged, and another replay is not admitted.
-- `agentgov propose task ... --dry-run` is read-only. Its recovery fallback
-  requires exact `ADMIT` from a real interactive terminal, rechecks drift and target races,
-  and exclusively creates the reviewed task file. It does not create a
-  session/event, execute validation, or authorize code, scope, Git,
-  deployment, or release actions.
-- Assumptions and unknowns are preserved in the admitted compact task as
-  reviewed risk items. Static validation still cannot prove that the Coding
-  Agent's normalized summary perfectly represents the user's meaning; human
-  semantic review remains authoritative.
-- Semantic-review contracts likewise validate declared capability, routing,
-  assurance, privacy, result identity, and denied authority; they do not prove
-  that an LLM observation is correct. The next implementation boundary is one
-  real host callback installed in a Coding Agent surface; the portable
-  active-Agent materializer seam no longer needs design work.
-- Interactive-terminal presence blocks ordinary headless self-admission but is
-  an operator attestation, not cryptographic proof of human identity. Codex MCP
-  form elicitation now supplies a native bounded decision callback, but its
-  human attribution is only as strong as the host session and is not claimed as
-  cryptographic identity proof.
-- Focused active-Agent self-review, Alignment Adapter/transport,
-  semantic-review, clarification, Skill, task, documentation, and portfolio
-  regression passed 110 tests. The complete Python 3.11 suite passed 700 tests
-  with two platform-limited skips.
-  The current task check reported `PASS=6 WARN=0 FAIL=0 ADVISORY=1`; combined
-  working-copy scope reported `PASS=97 FAIL=0 ADVISORY=1`; repository governance reported
-  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; all 51 repository schemas parsed,
-  source/tests compiled, and `git diff --check` passed.
-
-- `agentgov dev --stream` now consumes multiple strict
-  `agentgov.coding-agent-event` 1.0 JSONL records in one foreground process and
-  emits one `agentgov.coding-agent-response` per accepted event.
-- The host envelope deliberately excludes raw prompts, responses, source,
-  absolute host paths, changed-path claims, task identity, and authority flags.
-  Unknown fields and unsafe evidence references stop the stream at the exact
-  input line before that event reaches the coordinator.
-- AgentGov derives working-copy identity, active task identity, and actual Git
-  changes locally. Adapter validation remains context only; scope decisions
-  and completion review still require human-originated events.
-- Repository activation and task request events return concise task cards.
-  Completion requests return concise completion cards sourced from AgentGov's
-  scope, validation, and reconciliation results. Offered actions grant no
-  scope, exception, commit, merge, release, or deployment authority.
-- The existing single-cycle `agentgov dev` interface and headless lifecycle
-  fallbacks remain compatible. Stable 0.2.1 and immutable `v0.3.0rc1` are
-  unchanged; no consumer repository or external system was modified.
-- Focused transport, coordinator, trigger, task, and documentation validation
-  passed 56 tests. The complete supported-Python 3.11 suite passed 576 tests
-  with one platform-limited skip. Repository governance reported
-  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; the admitted task reported
-  `PASS=6 FAIL=0 ADVISORY=1`; final changed-file scope reported
-  `PASS=25 FAIL=0 ADVISORY=1`; all schemas parsed as JSON; and
-  `git diff --check` passed.
-- The follow-on Codex Adapter maps official `SessionStart`,
-  `UserPromptSubmit`, `PostToolUse`, and `Stop` hook events to the existing
-  vendor-neutral lifecycle. It hashes host session/turn identity and discards
-  prompt, tool input/output, transcript, assistant-message, model, and absolute
-  host-path values before producing AgentGov events or Codex hook output.
-- `PostToolUse` reports scope failures as after-the-fact observations and never
-  claims the completed tool side effect was undone. `Stop` uses
-  `stop_hook_active` to prevent automatic completion-continuation loops.
-- `agentgov integrate codex-hooks . --dry-run` previews an exact project
-  `.codex/hooks.json`. Apply is create-missing-only with exact interactive
-  confirmation, refuses overwrite/merge, installs no plugin, and leaves Codex
-  hook trust as a separate user action.
-- `agentgov.host-interaction-capabilities` 1.0 and
-  `agentgov.host-interaction-request` 1.0 now separate Core human gates from
-  host presentation. Missing admission, material scope resolution, and
-  review-ready completion receive deterministic request IDs, bounded options,
-  and an explicit delivery/recording mode; no displayed action applies a
-  decision or grants consequential authority.
-- The Codex binding declares task, scope, and completion interactions as
-  `context_only` with decision recording `unavailable`. Its official
-  `PermissionRequest` hook remains `native` and host-managed: AgentGov returns
-  neither allow nor deny, so Codex keeps its normal human permission prompt.
-  Tool permission is not treated as AgentGov task, scope, exception, or
-  completion approval.
-- Host-interaction closeout passed 599 Python 3.11 tests with one
-  platform-limited skip. Repository governance reported
-  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; the admitted task reported
-  `PASS=6 WARN=0 FAIL=0 ADVISORY=1`; final scope reported
-  `PASS=40 FAIL=0 ADVISORY=1`; 36 schemas parsed; the updated Codex integration
-  preview remained read-only; and `git diff --check` passed.
-- Codex Adapter closeout passed 589 Python 3.11 tests with one platform-limited
-  skip. Repository governance reported `PASS=26 WARN=2 FAIL=0 ADVISORY=4`;
-  the admitted task reported `PASS=6 WARN=0 FAIL=0 ADVISORY=1`; final scope
-  reported `PASS=32 FAIL=0 ADVISORY=1`; 34 schemas parsed; the create-only
-  integration preview stayed read-only; and `git diff --check` passed.
-
-## Development checkpoint - 2026-08-05
-
-- The future 0.3 managed governance workflow template now exposes a
-  default-off `publish_development_monitor` manual-dispatch input and an
-  optional repository-relative `development_export` input.
-- An explicitly requested run renders `ci_only` by default,
-  `exported_development` from a validated metadata-only export, or `combined`
-  only when actor-validated CI event files are also present. The separate
-  artifact uploads only `agentgov-development-monitor.html`, never the input
-  export, raw events, or `.agentgov/` local state.
-- Stable 0.1/0.2 rendered workflow bytes remain unchanged. No live workflow,
-  release identity, consumer repository, NYC project, AI Radar runtime, merge
-  automation, or deployment was changed.
-- Read-only `agentgov next` now preserves adoption conflict, missing-scaffold,
-  and repository-FAIL precedence, then selects exactly one dry-run start,
-  check, finish, or Monitor action from the strict active session and its
-  current immutable events. It never executes the selected command.
-- ADR-0010 records the refined precedence. Multiple admitted tasks require an
-  explicit human choice; old events cannot establish current progress; invalid
-  sessions, missing starts, task drift, invalid events, and failed scope fail
-  closed as one blocking action.
-- Focused guided-next, session, and documentation validation passed 46 tests.
-  The full source suite passed 527 tests with one platform-limited skip.
-- The exact-wheel independent-repository rehearsal of this route is complete.
-  The isolated `0.3.0.dev0` wheel moved from onboarding through explicit task
-  choice, start, check, verified finish, and a four-event local Monitor while
-  every `next` invocation left normalized Git status unchanged.
-- ADR-0011 now separates the reviewed fixed-wheel public bootstrap from the
-  installed `agentgov update --check` surface. Development metadata still has
-  no release artifact, and a read-only update check alone cannot advance the
-  action loop.
-- ADR-0012's verified-session handoff/rollover is now implemented in
-  development source. `govern handoff` re-establishes fresh evidence, previews
-  one stable append-only `session.handed_off` event, requires exact interactive
-  `HANDOFF`, retains the pointer and immutable evidence, and is idempotent.
-- Monitor schema 1.4 retains schema 1.3's separation of verified completion
-  from handed-off routing while adding Live Sessions and Protection Events.
-  Read-only `next` excludes the same digest and offers a separate
-  `--replace-active` preview for zero, one, or several remaining task choices.
-- The exact `0.3.0rc1` wheel completed the independent terminal-route rehearsal
-  in three disposable repositories. Verified finish, Monitor guidance, exact
-  `HANDOFF`, pointer preservation, idempotence, zero/one/many rollover, and
-  exact `REPLACE` passed without `next` changing Git state or importing from
-  the source checkout.
-- All 17 previously admitted delivered task contracts are now paused so they
-  no longer compete in automatic discovery. Their rationales explicitly state
-  that this is routing hygiene, not semantic completion or release evidence;
-  one admitted RC closeout task remains discoverable.
-- Source, bundled metadata, and release notes agree on `0.3.0rc1`. The tag and
-  GitHub Pre-release were published from commit `66efecc`; the release workflow
-  and its artifact-bound immutable manifest passed. The public rc1 manifest
-  conservatively lists only `0.1.0` in `supported_from` because the candidate
-  workflow omitted the reviewed metadata input. The source workflow now passes
-  `release/current.json` for later candidates; immutable `v0.3.0rc1` is not
-  rewritten. Stable promotion and consumer migration remain later work.
-- Bootstrap/update documentation, `next`, and updater validation passed 56
-  focused tests. The final full source suite passed 528 tests with one
-  platform-limited skip.
-- Verified-session handoff contract validation passed 65 focused tests. After
-  recording the decision, the final full source suite passed 529 tests with
-  one platform-limited skip.
-- Verified-session handoff implementation validation passed 81 focused tests.
-  The final full source suite passed 539 tests with one platform-limited skip.
-- Installed RC handoff rehearsal evidence is recorded in
-  `docs/experiments/handoff-installed-rc-rehearsal.md`; the exact wheel was
-  266304 bytes with SHA-256
-  `069d9470ef7acabe0cd827f7957be31f261fd8f39e2053935ee664b7b0a06540`.
-- Final local RC gates: all 18 task contracts valid; closeout scope
-  `PASS=63 FAIL=0 ADVISORY=1`; repository governance
-  `PASS=16 WARN=2 FAIL=0 ADVISORY=4`; 539 tests passed with one
-  platform-limited skip; bundled and generated RC manifests valid; diff check
-  clean.
-- The development-governance drift-correction slice adds three installable
-  protocols and one provisional capability, preserves exactly one admitted
-  task after routing cleanup, and changes no consumer repository, workflow,
-  tag, release, or external system. Current validation passes 544 tests with
-  one platform-limited skip and the repository check reports
-  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`.
-
+The superseded 2026-08-05 and 2026-08-06 checkpoint blocks now live in the
+source-labeled [historical migration record](docs/development-log/2026-08-14-historical-migration.md).
+Their original dated evidence remains in
+[`docs/development-log/2026-08-05.md`](docs/development-log/2026-08-05.md) and
+[`docs/development-log/2026-08-06.md`](docs/development-log/2026-08-06.md).
+This index is historical evidence only and grants no task or external
+authority.
 ## Product direction
 
 - ADR-0009 makes development-time governance of coding-agent requirements,

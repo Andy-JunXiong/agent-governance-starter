@@ -696,6 +696,22 @@ The scope command separately inventories staged, unstaged, deleted, renamed,
 and non-ignored untracked paths and applies segment-aware include/exclude
 rules. It is read-only and currently covers working-tree changes, not already
 committed task changes.
+
+Preview a deterministic logical index for dated development logs without
+writing, moving, renaming, or deleting any record:
+
+```powershell
+agentgov plan documentation-archive . --through 2026-08-14
+agentgov plan documentation-archive . --through 2026-08-14 --format json
+```
+
+The explicit through-date avoids host-clock dependence. The output includes
+stable same-day ordering, source hashes, the exact `INDEX.md` candidate and
+create/update/no-op classification, while usefulness remains an advisory human
+decision. This is a development preview and grants no apply, scheduling, Git,
+publication, release, or deployment authority. See
+[documentation archive-index planning](docs/documentation-archive-plan.md).
+
 The higher-level development preview records `govern check` observations in
 untracked `.agentgov/` local state. `govern finish --base` runs the admitted
 task's declared validation commands, binds them to committed, staged,
@@ -993,7 +1009,9 @@ The first usable release contains:
 8. an experimental development-source task contract and `check task` command
    that preserve human-owned requirement, architecture, scope, approval, and
    stop boundaries before implementation;
-9. AI Radar as a documented origin reference, plus isolated consumer pilots;
+9. a read-only development-preview planner for a deterministic logical index
+   of dated development logs, with no apply or scheduling path;
+10. AI Radar as a documented origin reference, plus isolated consumer pilots;
    neither is a runtime dependency.
 
 ## Project navigation
@@ -1019,6 +1037,9 @@ The first usable release contains:
   proposal contract, bounded Draft PR writer, and one-time 0.3 bootstrap.
 - [Consumer upgrade review](docs/consumer-upgrade-review.md) explains the
   adopting-project UI, exact workflow patch, gates, and approval boundary.
+- [Documentation archive-index planning](docs/documentation-archive-plan.md)
+  explains dated-log eligibility, exact candidate output, deterministic versus
+  advisory findings, and the non-destructive authority boundary.
 - [Benefit evidence](docs/benefit-monitor.md) explains report comparison,
   trusted main baselines, the continuous monitor UI, denominators, and claims
   that cannot be made.

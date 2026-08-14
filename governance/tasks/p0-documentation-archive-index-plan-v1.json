@@ -1,0 +1,84 @@
+{
+  "acceptance_signals": [
+    "A strict agentgov.documentation-archive-plan 1.0 schema and dependency-free planner classify dated development-log files against an explicit through-date without using the current clock.",
+    "The planner treats archiving as logical index inclusion only, preserves every existing log path, and produces an exact candidate index with target path, create-or-update action, prior and candidate digests, and candidate Markdown.",
+    "The command agentgov plan documentation-archive PATH --through YYYY-MM-DD renders terminal or JSON output and performs no repository write in success, warning, failure, advisory, or not-applicable scenarios.",
+    "Deterministic filename, date, title, path, and digest findings remain separate from the advisory human decision about whether the candidate index is useful or should ever be applied.",
+    "Fixture-based tests cover passing, warning, failing, advisory, not-applicable, stable ordering, multiple same-day records, existing-index update, and filesystem no-mutation behavior.",
+    "README, a dedicated guide, STATUS, the dated development log, and protecting documentation tests describe the development-preview command and its denied Git, publication, release, deployment, deletion, rename, and write authority.",
+    "Focused tests, the baseline unittest suite, task and repository checks, and git diff --check pass; any pre-existing changes from the separately completed migration task remain separately attributed."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "On 2026-08-14 Documentation Archive and Index Plan v1 delivered the admitted read-only CLI, strict 1.0 contract, deterministic logical eligibility, exact candidate output, protecting fixtures, and user documentation. The real-repository no-mutation check, 47 focused tests, complete 821-test suite with 2 skips, task and repository checks, JSON parsing, and git diff --check passed. A distinct native current-Agent self-review found no correction-required requirement, architecture, scope, implementation, security, data, or authority drift. This paused task authorizes no index write, apply path, schedule, reminder, source-log mutation, Git action, publication, release, deployment, or follow-on implementation.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Implement Documentation Archive and Index Plan v1 as a read-only development-preview CLI and strict contract: scan repository dated development logs through an explicit date, classify logical index eligibility without moving files, render an exact candidate docs/development-log/INDEX.md plan in terminal or JSON, separate deterministic findings from advisory human usefulness judgment, and provide no apply, schedule, Git, publication, release, deployment, deletion, rename, or external-write capability."
+  },
+  "risk": {
+    "items": [
+      "A planner could accidentally imply that eligible files may be moved or deleted, breaking stable evidence paths.",
+      "Using the host clock would make output and tests non-deterministic.",
+      "Loose filename or path handling could include traversal, symlink escapes, or unrelated Markdown files.",
+      "Candidate index ordering or title extraction could drift across platforms or duplicate same-day records.",
+      "The dirty working tree could blur attribution between this task and the separately completed migration task unless paths and evidence remain explicit.",
+      "Reviewed assumption: Logical archive eligibility means inclusion in a generated index candidate, never moving or renaming a dated log.",
+      "Reviewed assumption: An explicit through-date is required so planning remains deterministic and independent of the host clock.",
+      "Reviewed assumption: The canonical index target is docs/development-log/INDEX.md, but this slice only renders its candidate content and never creates or updates it.",
+      "Reviewed assumption: A dated Markdown record uses a strict YYYY-MM-DD.md or YYYY-MM-DD-descriptor.md filename and one first-level title; future or non-dated files are not applicable.",
+      "Reviewed assumption: README and the dedicated guide are the affected user surfaces for this advanced development-preview command; Quickstart, public HTML, localized pages, release metadata, and workflows remain unchanged because the ten-minute adoption journey and release identity do not change.",
+      "Reviewed assumption: The working tree contains separately completed, uncommitted Historical Documentation Migration v1 changes; this task neither replaces their admission nor authorizes Git operations.",
+      "Reviewed unknown: Whether users will find a logical weekly archive index useful is not established until later product-owner review.",
+      "Reviewed unknown: Any future apply mode, scheduled reminder, or index publication workflow remains undecided and requires separate admission."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "docs/development-log/2026-08-14-historical-migration.md",
+      "tests/test_public_documentation_freshness.py",
+      "docs/index.html",
+      "docs/quickstart.html",
+      "docs/quickstart.zh-CN.html",
+      "docs/quickstart.zh-CN.md",
+      "docs/assets",
+      ".github/workflows",
+      "release",
+      "governance/tasks/p0-historical-documentation-migration-v1.json"
+    ],
+    "include_paths": [
+      "src/agentgov/documentation_archive.py",
+      "src/agentgov/cli.py",
+      "schemas/documentation-archive-plan.schema.json",
+      "tests/test_documentation_archive.py",
+      "tests/fixtures/documentation-archive",
+      "README.md",
+      "docs/documentation-archive-plan.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-14.md",
+      "tests/test_user_documentation.py",
+      "tests/test_task_contract.py",
+      "governance/tasks"
+    ]
+  },
+  "task_id": "p0-documentation-archive-index-plan-v1",
+  "title": "Implement documentation archive and index plan v1",
+  "validation_commands": [
+    "python -m unittest discover -s tests -p test_documentation_archive.py -v",
+    "python -m unittest discover -s tests -p test_user_documentation.py -v",
+    "python -m unittest discover -s tests -p test_task_contract.py -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-documentation-archive-index-plan-v1.json",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}
