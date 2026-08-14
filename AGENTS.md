@@ -141,19 +141,26 @@ tools.
 ## Completion communication
 
 After completing any development item, explain the result to the human product
-owner in plain language. The completion handoff must answer all four questions:
+owner in plain language. The completion handoff must answer all seven questions:
 
 1. What is this, and what can the user or project now do with it?
-2. What previous capability does it connect to or build on?
-3. What is the next capability expected to connect to it?
-4. How does it help the project as a whole?
+2. What are the short-term benefits?
+3. What are the long-term benefits?
+4. What previous capability does it connect to or build on?
+5. What feature should be developed next?
+6. How does the completed feature connect to that next feature?
+7. How does it help the project as a whole?
 
 Keep this product context separate from implementation details and validation
-results so a non-specialist can understand it. Name the concrete upstream and
-downstream capabilities when repository evidence establishes them. When no
-connection exists, or the next step has not been decided, say `none`,
-`foundation`, `unknown`, or `not yet decided` explicitly instead of inventing a
-relationship or roadmap commitment.
+results so a non-specialist can understand it. Keep short-term and long-term
+benefit claims evidence-bounded; say `unknown` when the available evidence does
+not establish a benefit. Name the concrete upstream and downstream capabilities
+when repository evidence establishes them. When no connection exists, or the
+next feature has not been decided, say `none`, `foundation`, `unknown`, or `not
+yet decided` explicitly instead of inventing a relationship or roadmap
+commitment. A proposed next feature is a product-review input only and does not
+authorize the Agent to create a task, start implementation, or perform Git,
+release, deployment, publication, or external actions.
 
 Completion is not the point where the coding agent independently selects and
 starts the next requirement. Review the completed requirement with the human

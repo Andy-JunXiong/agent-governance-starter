@@ -589,6 +589,22 @@ experience, product effectiveness, independent review, consumer commit or
 push, CI enforcement, release, deployment, or production pricing authority.
 The consumer changes remain uncommitted and unpushed.
 
+On 2026-08-14 one separately admitted uncoached AIRBNB baseline then selected
+the expected proposal-review tool without governance or protocol coaching. Its
+first two normalized proposals failed atomically on non-repository-relative
+scope paths, a third call completed declined without a human form reaching the
+client, and no consumer task or source change occurred. Development source now
+turns that bounded result into Harness Contract v1: a strict
+`agentgov.harness-run` 1.0 schema, dependency-free offline validator and First
+Deviation evaluator, and sanitized matching/AIRBNB fixtures. The evaluator
+keeps Agent selection, AgentGov decision correctness, and intervention outcome
+as separate channels and identifies proposal materialization before the later
+form-mediation gap. It rejects raw replay material, false post-action `BLOCK`
+claims, invalid ordering, duplicate transition identity, and authority drift.
+This fixture-backed contract does not rerun a model, prove causality or product
+effectiveness, publish a percentage, or provide a live host Adapter or public
+CLI. See the [Harness Contract v1 guide](docs/harness-contract-v1.md).
+
 NYC then supplied a second independent bounded consumer journey. Under Python
 3.11.9, its existing reviewed synthetic sample completed schema validation,
 temporary Bronze and Silver construction, the demand quality gate, and

@@ -1,0 +1,58 @@
+{
+  "acceptance_signals": [
+    "The audit separately covers Codex, Claude Code, and identifiable DeepSeek coding-host surfaces using official primary documentation where available.",
+    "The capability matrix records each transition, timing, mechanism, trusted decision path, evidence, bypass or failure behavior, confidence, and an honest OBSERVE, ADVISE, MEDIATE, BLOCK, or UNKNOWN ceiling.",
+    "Post-action observation is not described as blocking an already completed side effect, while any block claim names the exact future transition it can prevent.",
+    "The report proposes minimum Harness Contract v1 fields without introducing or changing Kernel semantics.",
+    "Unknown or undocumented host behavior is marked UNKNOWN rather than inferred.",
+    "The report recommends Codex only as the first conformance implementation and does not implement or configure a host adapter."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-a14b1a49355b47e2b493b033682fada1 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Create a repository-native Host Enforcement Capability Audit v1 for Codex, Claude Code, and DeepSeek using current official documentation and bounded local evidence. Record transition-level capabilities, honest enforcement ceilings, unknowns, and the minimum fields required by a future vendor-neutral Harness Contract v1."
+  },
+  "risk": {
+    "items": [
+      "Vendor documentation may have changed and must be cited with access context.",
+      "A hook that returns a decision may still be bypassable or limited to selected tools, so enforcement must not be overstated.",
+      "General model APIs must not be conflated with an execution harness.",
+      "Reviewed assumption: This is a documentation-only technical audit and does not change product behavior or release identity.",
+      "Reviewed assumption: Official vendor documentation is primary evidence; repository contracts and tests are supporting evidence for current AgentGov behavior.",
+      "Reviewed assumption: DeepSeek may refer to more than one product or host surface, so conclusions are scoped to specifically documented surfaces.",
+      "Reviewed unknown: Whether DeepSeek publishes a canonical coding-agent host with lifecycle hooks comparable to Codex or Claude Code.",
+      "Reviewed unknown: Whether every documented pre-action hook is synchronous and authoritative enough to support a truthful BLOCK claim for an exact transition.",
+      "Reviewed unknown: Whether host capabilities differ between CLI, IDE, desktop, and API surfaces."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      "src",
+      "tests",
+      "schemas",
+      "templates",
+      ".codex",
+      ".github",
+      "release"
+    ],
+    "include_paths": [
+      "docs/host-enforcement-capability-audit-v1.md",
+      "governance/tasks/p0-host-enforcement-capability-audit-v1.json"
+    ]
+  },
+  "task_id": "p0-host-enforcement-capability-audit-v1",
+  "title": "Audit host enforcement capabilities for Harness Contract v1",
+  "validation_commands": [
+    "python -m unittest discover -s tests -v",
+    "git diff --check"
+  ]
+}

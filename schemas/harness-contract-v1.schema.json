@@ -1,0 +1,445 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/harness-contract-v1.0.json",
+  "title": "AgentGov Harness Contract v1 Run",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "schema_version",
+    "run_id",
+    "scenario",
+    "host",
+    "expected_transitions",
+    "observed_transitions",
+    "channels",
+    "first_deviation",
+    "harness_result",
+    "terminal",
+    "privacy_boundary",
+    "claim_limits",
+    "authority_boundary"
+  ],
+  "properties": {
+    "contract": {"const": "agentgov.harness-run"},
+    "schema_version": {"const": "1.0"},
+    "run_id": {"type": "string", "pattern": "^hrn-[0-9a-f]{16}$"},
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scenario_id", "title", "evidence_strength", "source_refs"],
+      "properties": {
+        "scenario_id": {"$ref": "#/$defs/normalizedId"},
+        "title": {"type": "string", "minLength": 5, "maxLength": 200},
+        "evidence_strength": {
+          "enum": [
+            "observed",
+            "paired_counterfactual",
+            "repeated_intervention",
+            "cross_context_replication"
+          ]
+        },
+        "source_refs": {"$ref": "#/$defs/nonEmptyEvidenceRefs"}
+      }
+    },
+    "host": {"$ref": "#/$defs/host"},
+    "expected_transitions": {"$ref": "#/$defs/transitions"},
+    "observed_transitions": {"$ref": "#/$defs/transitions"},
+    "channels": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["agent_selection", "governance_decision", "intervention_outcome"],
+      "properties": {
+        "agent_selection": {"$ref": "#/$defs/channel"},
+        "governance_decision": {"$ref": "#/$defs/channel"},
+        "intervention_outcome": {"$ref": "#/$defs/channel"}
+      }
+    },
+    "first_deviation": {"$ref": "#/$defs/firstDeviation"},
+    "harness_result": {"$ref": "#/$defs/harnessResult"},
+    "terminal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "repository_modified", "external_side_effect_completed"],
+      "properties": {
+        "status": {"enum": ["completed", "failed", "interrupted", "unknown"]},
+        "repository_modified": {"type": "boolean"},
+        "external_side_effect_completed": {"type": "boolean"}
+      }
+    },
+    "privacy_boundary": {"$ref": "#/$defs/privacyBoundary"},
+    "claim_limits": {"$ref": "#/$defs/claimBoundary"},
+    "authority_boundary": {"$ref": "#/$defs/authorityBoundary"}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "harness_result": {
+            "properties": {"effect": {"const": "BLOCK"}},
+            "required": ["effect"]
+          }
+        },
+        "required": ["harness_result"]
+      },
+      "then": {
+        "properties": {
+          "host": {
+            "properties": {
+              "capabilities": {
+                "properties": {
+                  "block_mode": {"const": "supported"},
+                  "pre_action_hook": {"const": true},
+                  "block_action": {"const": true}
+                },
+                "required": ["block_mode", "pre_action_hook", "block_action"]
+              }
+            }
+          },
+          "harness_result": {
+            "properties": {
+              "prevented_transition": {"$ref": "#/$defs/stage"},
+              "already_completed_effect": {"const": false}
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "harness_result": {
+            "properties": {"prevented_transition": {"const": null}}
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "harness_result": {
+            "properties": {"effect": {"const": "MEDIATE"}},
+            "required": ["effect"]
+          }
+        },
+        "required": ["harness_result"]
+      },
+      "then": {
+        "properties": {
+          "host": {
+            "properties": {
+              "capabilities": {
+                "properties": {"mediate_action": {"const": true}},
+                "required": ["mediate_action"]
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "normalizedId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120,
+      "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$"
+    },
+    "evidenceRef": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 400,
+      "pattern": "^(?!/)(?![A-Za-z]:[\\\\/])(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "maxItems": 20,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/evidenceRef"}
+    },
+    "nonEmptyEvidenceRefs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/evidenceRef"}
+    },
+    "stage": {
+      "enum": [
+        "session_start",
+        "work_request",
+        "agent_selection",
+        "proposal_materialization",
+        "governance_decision",
+        "human_decision_mediation",
+        "before_action",
+        "after_action",
+        "scope_observation",
+        "validation",
+        "intervention_outcome",
+        "completion_request",
+        "handoff",
+        "terminal"
+      ]
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observation_mode",
+        "mediation_mode",
+        "block_mode",
+        "observe_action",
+        "pre_action_hook",
+        "human_decision_ui",
+        "mediate_action",
+        "block_action",
+        "post_action_evidence",
+        "semantic_materializer",
+        "coverage",
+        "execution_mode",
+        "decision_delivery",
+        "decision_recording",
+        "human_origin_assurance",
+        "failure_behavior",
+        "timeout_behavior",
+        "bypass_conditions",
+        "configuration_requirements",
+        "confidence",
+        "evidence_refs"
+      ],
+      "properties": {
+        "observation_mode": {"enum": ["event_stream", "lifecycle_hook", "mcp", "mixed", "unknown"]},
+        "mediation_mode": {"enum": ["none", "human_form", "host_permission", "custom", "unknown"]},
+        "block_mode": {"enum": ["supported", "unsupported", "unknown"]},
+        "observe_action": {"type": "boolean"},
+        "pre_action_hook": {"type": "boolean"},
+        "human_decision_ui": {"type": "boolean"},
+        "mediate_action": {"type": "boolean"},
+        "block_action": {"type": "boolean"},
+        "post_action_evidence": {"type": "boolean"},
+        "semantic_materializer": {"type": "boolean"},
+        "coverage": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/normalizedId"}
+        },
+        "execution_mode": {"enum": ["synchronous", "asynchronous", "mixed", "unknown"]},
+        "decision_delivery": {"enum": ["native", "structured", "context_only", "unsupported"]},
+        "decision_recording": {"enum": ["adapter_event", "host_managed", "unavailable"]},
+        "human_origin_assurance": {"enum": ["bound_native_form", "host_asserted", "unavailable", "unknown"]},
+        "failure_behavior": {"enum": ["fail_open", "fail_closed", "host_default", "unknown"]},
+        "timeout_behavior": {"enum": ["fail_open", "fail_closed", "host_default", "unknown"]},
+        "bypass_conditions": {
+          "type": "array",
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1, "maxLength": 400}
+        },
+        "configuration_requirements": {
+          "type": "array",
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1, "maxLength": 400}
+        },
+        "confidence": {"enum": ["documented", "locally_demonstrated", "externally_demonstrated", "unknown"]},
+        "evidence_refs": {"$ref": "#/$defs/nonEmptyEvidenceRefs"}
+      }
+    },
+    "host": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adapter_id",
+        "adapter_version",
+        "host_family",
+        "host_surface",
+        "host_version",
+        "provider_family",
+        "repository_correlation",
+        "capabilities"
+      ],
+      "properties": {
+        "adapter_id": {"$ref": "#/$defs/normalizedId"},
+        "adapter_version": {"type": "string", "minLength": 1, "maxLength": 80},
+        "host_family": {"$ref": "#/$defs/normalizedId"},
+        "host_surface": {"$ref": "#/$defs/normalizedId"},
+        "host_version": {"type": "string", "minLength": 1, "maxLength": 80},
+        "provider_family": {"$ref": "#/$defs/normalizedId"},
+        "repository_correlation": {"$ref": "#/$defs/normalizedId"},
+        "capabilities": {"$ref": "#/$defs/capabilities"}
+      }
+    },
+    "transition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sequence",
+        "transition_id",
+        "stage",
+        "actor_class",
+        "outcome",
+        "effect",
+        "disposition",
+        "side_effect_completed",
+        "reason_code",
+        "evidence_refs"
+      ],
+      "properties": {
+        "sequence": {"type": "integer", "minimum": 1, "maximum": 64},
+        "transition_id": {"type": "string", "pattern": "^trn-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "stage": {"$ref": "#/$defs/stage"},
+        "actor_class": {"enum": ["host", "agent", "agentgov", "human", "ci_scm"]},
+        "outcome": {"$ref": "#/$defs/normalizedId"},
+        "effect": {"enum": ["OBSERVE", "ADVISE", "MEDIATE", "BLOCK"]},
+        "disposition": {"enum": ["continue", "pause", "abort", "no_op"]},
+        "side_effect_completed": {"type": "boolean"},
+        "reason_code": {
+          "anyOf": [{"$ref": "#/$defs/normalizedId"}, {"type": "null"}]
+        },
+        "evidence_refs": {"$ref": "#/$defs/nonEmptyEvidenceRefs"}
+      }
+    },
+    "transitions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {"$ref": "#/$defs/transition"}
+    },
+    "channel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reason_code", "summary", "evidence_refs"],
+      "properties": {
+        "status": {"enum": ["conforming", "deviating", "not_reached", "unknown"]},
+        "reason_code": {"$ref": "#/$defs/normalizedId"},
+        "summary": {"type": "string", "minLength": 1, "maxLength": 400},
+        "evidence_refs": {"$ref": "#/$defs/nonEmptyEvidenceRefs"}
+      }
+    },
+    "firstDeviation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["present", "sequence", "stage", "code", "expected_outcome", "observed_outcome"],
+      "properties": {
+        "present": {"type": "boolean"},
+        "sequence": {"anyOf": [{"type": "integer", "minimum": 1, "maximum": 64}, {"type": "null"}]},
+        "stage": {"anyOf": [{"$ref": "#/$defs/stage"}, {"type": "null"}]},
+        "code": {"anyOf": [{"$ref": "#/$defs/normalizedId"}, {"type": "null"}]},
+        "expected_outcome": {"anyOf": [{"$ref": "#/$defs/normalizedId"}, {"type": "null"}]},
+        "observed_outcome": {"anyOf": [{"$ref": "#/$defs/normalizedId"}, {"type": "null"}]}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"present": {"const": false}}, "required": ["present"]},
+          "then": {
+            "properties": {
+              "sequence": {"const": null},
+              "stage": {"const": null},
+              "code": {"const": null},
+              "expected_outcome": {"const": null},
+              "observed_outcome": {"const": null}
+            }
+          },
+          "else": {
+            "properties": {
+              "sequence": {"type": "integer", "minimum": 1, "maximum": 64},
+              "stage": {"$ref": "#/$defs/stage"},
+              "code": {"$ref": "#/$defs/normalizedId"},
+              "expected_outcome": {"$ref": "#/$defs/normalizedId"},
+              "observed_outcome": {"$ref": "#/$defs/normalizedId"}
+            }
+          }
+        }
+      ]
+    },
+    "harnessResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "disposition",
+        "effect",
+        "status",
+        "reason_code",
+        "affected_transition",
+        "prevented_transition",
+        "already_completed_effect"
+      ],
+      "properties": {
+        "disposition": {"enum": ["continue", "pause", "abort", "no_op"]},
+        "effect": {"enum": ["OBSERVE", "ADVISE", "MEDIATE", "BLOCK"]},
+        "status": {"enum": ["accepted", "denied", "unavailable", "invalid", "stale", "duplicate", "error"]},
+        "reason_code": {"$ref": "#/$defs/normalizedId"},
+        "affected_transition": {"$ref": "#/$defs/stage"},
+        "prevented_transition": {"anyOf": [{"$ref": "#/$defs/stage"}, {"type": "null"}]},
+        "already_completed_effect": {"type": "boolean"}
+      }
+    },
+    "privacyBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contains_raw_prompt",
+        "contains_transcript",
+        "contains_model_output",
+        "contains_tool_input_output",
+        "contains_source_content",
+        "contains_credentials",
+        "contains_absolute_paths",
+        "contains_unbounded_payloads"
+      ],
+      "properties": {
+        "contains_raw_prompt": {"const": false},
+        "contains_transcript": {"const": false},
+        "contains_model_output": {"const": false},
+        "contains_tool_input_output": {"const": false},
+        "contains_source_content": {"const": false},
+        "contains_credentials": {"const": false},
+        "contains_absolute_paths": {"const": false},
+        "contains_unbounded_payloads": {"const": false}
+      }
+    },
+    "claimBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "claims_causality",
+        "publishes_effectiveness_percentage",
+        "claims_cross_context_replication",
+        "publishes_coverage_percentage"
+      ],
+      "properties": {
+        "claims_causality": {"const": false},
+        "publishes_effectiveness_percentage": {"const": false},
+        "claims_cross_context_replication": {"const": false},
+        "publishes_coverage_percentage": {"const": false}
+      }
+    },
+    "authorityBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "admits_task",
+        "authorizes_code_change",
+        "authorizes_exception",
+        "authorizes_git_operations",
+        "authorizes_publication",
+        "authorizes_release",
+        "authorizes_deployment",
+        "authorizes_external_write",
+        "starts_session"
+      ],
+      "properties": {
+        "admits_task": {"const": false},
+        "authorizes_code_change": {"const": false},
+        "authorizes_exception": {"const": false},
+        "authorizes_git_operations": {"const": false},
+        "authorizes_publication": {"const": false},
+        "authorizes_release": {"const": false},
+        "authorizes_deployment": {"const": false},
+        "authorizes_external_write": {"const": false},
+        "starts_session": {"const": false}
+      }
+    }
+  }
+}

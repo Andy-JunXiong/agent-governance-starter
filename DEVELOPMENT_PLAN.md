@@ -826,6 +826,30 @@ quality, product effectiveness, independent review, release, deployment, or
 external authority. Its consumer changes remain uncommitted and unpushed. The
 next product capability is not yet decided.
 
+On 2026-08-14 the product owner selected one fresh live AIRBNB uncoached
+baseline after a governed comparison with an offline Harness-first route. The
+single session discovered all seven configured tools and selected the correct
+proposal-review capability without coaching. Its first two normalized proposal
+drafts failed safely on non-repository-relative excluded scope paths; the third
+completed with a bounded declined result, while no native form reached the
+client and no human decision, task creation, README/source change, or aggregate
+runtime-state metadata change occurred. The First Deviation is Agent
+materialization, followed by incomplete host-form mediation. This is observed
+no-write evidence only and does not close the automatic independent-rehearsal
+gate. Harness Contract v1 is the next candidate connection for deterministic
+transition and deviation fixtures; another live replay remains unauthorized.
+The product owner subsequently selected and admitted that offline route.
+Development source now implements `agentgov.harness-run` 1.0 as a strict schema,
+dependency-free validator and First Deviation evaluator, plus sanitized
+matching and AIRBNB fixtures. This first vertical slice keeps Agent selection,
+AgentGov decision correctness, and intervention outcome separate; rejects raw
+replay material and false host-enforcement claims; and names four bounded
+evidence-strength levels without promoting fixture results into causal or
+aggregate-effectiveness claims. A public CLI, live host Adapter, controlled
+ablation, Dashboard integration, consumer adoption, release, and deployment
+remain outside this requirement. The next product connection is not yet
+decided.
+
 Subject to that separate decision, continue productizing the implemented
 ADR-0009 loop:
 

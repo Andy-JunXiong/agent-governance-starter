@@ -1,0 +1,284 @@
+{
+  "contract": "agentgov.harness-run",
+  "schema_version": "1.0",
+  "run_id": "hrn-1111111111111111",
+  "scenario": {
+    "scenario_id": "matching-no-write",
+    "title": "Matching mediated decline remains no-write",
+    "evidence_strength": "observed",
+    "source_refs": ["docs/harness-contract-v1.md"]
+  },
+  "host": {
+    "adapter_id": "fixture.codex-mcp",
+    "adapter_version": "1.0",
+    "host_family": "codex",
+    "host_surface": "app-server-fixture",
+    "host_version": "fixture-v1",
+    "provider_family": "fixture-provider",
+    "repository_correlation": "synthetic-repository",
+    "capabilities": {
+      "observation_mode": "event_stream",
+      "mediation_mode": "human_form",
+      "block_mode": "unsupported",
+      "observe_action": true,
+      "pre_action_hook": false,
+      "human_decision_ui": true,
+      "mediate_action": true,
+      "block_action": false,
+      "post_action_evidence": true,
+      "semantic_materializer": true,
+      "coverage": ["proposal_review"],
+      "execution_mode": "synchronous",
+      "decision_delivery": "native",
+      "decision_recording": "adapter_event",
+      "human_origin_assurance": "bound_native_form",
+      "failure_behavior": "fail_closed",
+      "timeout_behavior": "host_default",
+      "bypass_conditions": [],
+      "configuration_requirements": ["mcp_form_elicitation"],
+      "confidence": "locally_demonstrated",
+      "evidence_refs": ["docs/harness-contract-v1.md"]
+    }
+  },
+  "expected_transitions": [
+    {
+      "sequence": 1,
+      "transition_id": "trn-work-request",
+      "stage": "work_request",
+      "actor_class": "host",
+      "outcome": "work_request_received",
+      "effect": "OBSERVE",
+      "disposition": "continue",
+      "side_effect_completed": false,
+      "reason_code": null,
+      "evidence_refs": ["docs/harness-contract-v1.md"]
+    },
+    {
+      "sequence": 2,
+      "transition_id": "trn-agent-selection",
+      "stage": "agent_selection",
+      "actor_class": "agent",
+      "outcome": "selected_expected_tool",
+      "effect": "OBSERVE",
+      "disposition": "continue",
+      "side_effect_completed": false,
+      "reason_code": null,
+      "evidence_refs": ["docs/harness-contract-v1.md"]
+    },
+    {
+      "sequence": 3,
+      "transition_id": "trn-proposal-materialization",
+      "stage": "proposal_materialization",
+      "actor_class": "agent",
+      "outcome": "valid_input",
+      "effect": "OBSERVE",
+      "disposition": "continue",
+      "side_effect_completed": false,
+      "reason_code": null,
+      "evidence_refs": ["docs/harness-contract-v1.md"]
+    },
+    {
+      "sequence": 4,
+      "transition_id": "trn-governance-decision",
+      "stage": "governance_decision",
+      "actor_class": "agentgov",
+      "outcome": "proposal_prepared",
+      "effect": "MEDIATE",
+      "disposition": "continue",
+      "side_effect_completed": false,
+      "reason_code": null,
+      "evidence_refs": ["docs/harness-contract-v1.md"]
+    },
+    {
+      "sequence": 5,
+      "transition_id": "trn-human-decision",
+      "stage": "human_decision_mediation",
+      "actor_class": "human",
+      "outcome": "human_decision_declined",
+      "effect": "MEDIATE",
+      "disposition": "pause",
+      "side_effect_completed": false,
+      "reason_code": null,
+      "evidence_refs": ["docs/harness-contract-v1.md"]
+    },
+    {
+      "sequence": 6,
+      "transition_id": "trn-intervention-outcome",
+      "stage": "intervention_outcome",
+      "actor_class": "agentgov",
+      "outcome": "no_write",
+      "effect": "OBSERVE",
+      "disposition": "no_op",
+      "side_effect_completed": false,
+      "reason_code": null,
+      "evidence_refs": ["docs/harness-contract-v1.md"]
+    },
+    {
+      "sequence": 7,
+      "transition_id": "trn-terminal",
+      "stage": "terminal",
+      "actor_class": "host",
+      "outcome": "completed",
+      "effect": "OBSERVE",
+      "disposition": "no_op",
+      "side_effect_completed": false,
+      "reason_code": null,
+      "evidence_refs": ["docs/harness-contract-v1.md"]
+    }
+  ],
+  "observed_transitions": [
+    {
+      "sequence": 1,
+      "transition_id": "trn-work-request",
+      "stage": "work_request",
+      "actor_class": "host",
+      "outcome": "work_request_received",
+      "effect": "OBSERVE",
+      "disposition": "continue",
+      "side_effect_completed": false,
+      "reason_code": null,
+      "evidence_refs": ["docs/harness-contract-v1.md"]
+    },
+    {
+      "sequence": 2,
+      "transition_id": "trn-agent-selection",
+      "stage": "agent_selection",
+      "actor_class": "agent",
+      "outcome": "selected_expected_tool",
+      "effect": "OBSERVE",
+      "disposition": "continue",
+      "side_effect_completed": false,
+      "reason_code": null,
+      "evidence_refs": ["docs/harness-contract-v1.md"]
+    },
+    {
+      "sequence": 3,
+      "transition_id": "trn-proposal-materialization",
+      "stage": "proposal_materialization",
+      "actor_class": "agent",
+      "outcome": "valid_input",
+      "effect": "OBSERVE",
+      "disposition": "continue",
+      "side_effect_completed": false,
+      "reason_code": null,
+      "evidence_refs": ["docs/harness-contract-v1.md"]
+    },
+    {
+      "sequence": 4,
+      "transition_id": "trn-governance-decision",
+      "stage": "governance_decision",
+      "actor_class": "agentgov",
+      "outcome": "proposal_prepared",
+      "effect": "MEDIATE",
+      "disposition": "continue",
+      "side_effect_completed": false,
+      "reason_code": null,
+      "evidence_refs": ["docs/harness-contract-v1.md"]
+    },
+    {
+      "sequence": 5,
+      "transition_id": "trn-human-decision",
+      "stage": "human_decision_mediation",
+      "actor_class": "human",
+      "outcome": "human_decision_declined",
+      "effect": "MEDIATE",
+      "disposition": "pause",
+      "side_effect_completed": false,
+      "reason_code": "human_declined",
+      "evidence_refs": ["docs/harness-contract-v1.md"]
+    },
+    {
+      "sequence": 6,
+      "transition_id": "trn-intervention-outcome",
+      "stage": "intervention_outcome",
+      "actor_class": "agentgov",
+      "outcome": "no_write",
+      "effect": "OBSERVE",
+      "disposition": "no_op",
+      "side_effect_completed": false,
+      "reason_code": "human_declined",
+      "evidence_refs": ["docs/harness-contract-v1.md"]
+    },
+    {
+      "sequence": 7,
+      "transition_id": "trn-terminal",
+      "stage": "terminal",
+      "actor_class": "host",
+      "outcome": "completed",
+      "effect": "OBSERVE",
+      "disposition": "no_op",
+      "side_effect_completed": false,
+      "reason_code": null,
+      "evidence_refs": ["docs/harness-contract-v1.md"]
+    }
+  ],
+  "channels": {
+    "agent_selection": {
+      "status": "conforming",
+      "reason_code": "selected_expected_tool",
+      "summary": "The Agent selected the expected proposal-review capability.",
+      "evidence_refs": ["docs/harness-contract-v1.md"]
+    },
+    "governance_decision": {
+      "status": "conforming",
+      "reason_code": "proposal_prepared",
+      "summary": "AgentGov prepared the bounded proposal for human review.",
+      "evidence_refs": ["docs/harness-contract-v1.md"]
+    },
+    "intervention_outcome": {
+      "status": "conforming",
+      "reason_code": "human_declined_no_write",
+      "summary": "The bound human decline left the repository unchanged.",
+      "evidence_refs": ["docs/harness-contract-v1.md"]
+    }
+  },
+  "first_deviation": {
+    "present": false,
+    "sequence": null,
+    "stage": null,
+    "code": null,
+    "expected_outcome": null,
+    "observed_outcome": null
+  },
+  "harness_result": {
+    "disposition": "pause",
+    "effect": "MEDIATE",
+    "status": "denied",
+    "reason_code": "human_declined",
+    "affected_transition": "human_decision_mediation",
+    "prevented_transition": null,
+    "already_completed_effect": false
+  },
+  "terminal": {
+    "status": "completed",
+    "repository_modified": false,
+    "external_side_effect_completed": false
+  },
+  "privacy_boundary": {
+    "contains_raw_prompt": false,
+    "contains_transcript": false,
+    "contains_model_output": false,
+    "contains_tool_input_output": false,
+    "contains_source_content": false,
+    "contains_credentials": false,
+    "contains_absolute_paths": false,
+    "contains_unbounded_payloads": false
+  },
+  "claim_limits": {
+    "claims_causality": false,
+    "publishes_effectiveness_percentage": false,
+    "claims_cross_context_replication": false,
+    "publishes_coverage_percentage": false
+  },
+  "authority_boundary": {
+    "admits_task": false,
+    "authorizes_code_change": false,
+    "authorizes_exception": false,
+    "authorizes_git_operations": false,
+    "authorizes_publication": false,
+    "authorizes_release": false,
+    "authorizes_deployment": false,
+    "authorizes_external_write": false,
+    "starts_session": false
+  }
+}

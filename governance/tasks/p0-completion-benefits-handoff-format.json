@@ -1,0 +1,67 @@
+{
+  "acceptance_signals": [
+    "AGENTS.md requires every completed feature handoff to state what was completed, the short-term benefits, the long-term benefits, the next proposed feature, and how the two features connect.",
+    "The instructions keep the next feature human-controlled and require explicit unknown or not-yet-decided wording when repository evidence does not establish it.",
+    "A deterministic documentation test protects the required completion-handoff phrases.",
+    "STATUS.md and the current development log record the workflow change without changing runtime, product contract, release identity, or consumer behavior.",
+    "Relevant tests, task and repository checks, scope review, and git diff validation pass before any explicitly authorized commit and ordinary non-force push to origin main."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "On 2026-08-14 the completion handoff contract was extended from four to seven required questions covering the completed capability, short-term benefits, long-term benefits, upstream capability, proposed next feature, feature-to-feature connection, and whole-project benefit. Evidence-bounded and human-owned roadmap language is protected by documentation tests. Eight focused tests, 42 combined documentation/task tests, and the complete 806-test suite passed with 2 skips; repository governance had no failure. A bounded current-Agent review found no requirement, scope, or authority drift. This paused task authorizes no follow-on implementation; the separately explicit human Git authorization is handled only through the repository Git procedure.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Update the repository Agent instructions so every completed feature handoff states what was completed, its short-term benefits, its long-term benefits, the next proposed feature, and how the completed and next features connect."
+  },
+  "risk": {
+    "items": [
+      "Ambiguous wording could let an Agent invent long-term benefits or an unauthorized roadmap commitment.",
+      "The new template could duplicate or contradict the existing four-question completion communication contract.",
+      "A mixed working tree could cause unrelated human-owned files to be staged unless Git scope is inspected and explicit.",
+      "Reviewed assumption: The new benefit-linked handoff extends rather than replaces the existing completion communication requirements.",
+      "Reviewed assumption: Short-term and long-term benefits must remain evidence-bounded and may be unknown when not established.",
+      "Reviewed assumption: The user's explicit Git authorization applies only to the reviewed intended changes and an ordinary non-force push to origin main.",
+      "Reviewed unknown: The next product feature after Harness Contract v1 has not yet been selected.",
+      "Reviewed unknown: Existing untracked .codex content, the LinkedIn cover image, and the unrelated runtime-completion task remain outside this change and must not be staged."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github/workflows",
+      "docs/assets",
+      "release",
+      "src",
+      "schemas",
+      "governance/fixtures",
+      "tests/test_harness_contract.py",
+      "tests/replay_event_normalizer.py",
+      "tests/test_replay_event_normalizer.py"
+    ],
+    "include_paths": [
+      "AGENTS.md",
+      "tests/test_public_documentation_freshness.py",
+      "STATUS.md",
+      "docs/development-log/2026-08-14.md",
+      "governance/tasks"
+    ]
+  },
+  "task_id": "p0-completion-benefits-handoff-format",
+  "title": "Require benefit-linked completion handoffs",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_public_documentation_freshness -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_public_documentation_freshness tests.test_user_documentation tests.test_task_contract -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-completion-benefits-handoff-format.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check scope governance/tasks/p0-completion-benefits-handoff-format.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

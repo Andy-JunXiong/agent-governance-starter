@@ -1,0 +1,74 @@
+{
+  "acceptance_signals": [
+    "A strict versioned contract and matching JSON Schema define scenario identity, host capability facts, ordered expected and observed transitions, the three separate evidence channels, First Deviation, terminal outcome, evidence strength, privacy boundary, and denied authority without introducing parallel Kernel meanings.",
+    "A dependency-free deterministic Python module validates normalized fixtures and derives the earliest deviation from ordered transition evidence without model inference.",
+    "Sanitized fixtures include a no-deviation path and the observed AIRBNB path with correct tool selection, invalid proposal materialization, atomic rejection, absent human-form mediation, and fail-safe no-write outcome.",
+    "Negative fixtures or tests reject raw prompts, transcripts, model output, tool input or output, credentials, absolute paths, unbounded payloads, invalid ordering, stale or duplicate transition identity, and unsupported enforcement claims.",
+    "Documentation distinguishes observed evidence, paired counterfactual evidence, repeated intervention evidence, and cross-context replication, and does not publish an aggregate effectiveness percentage.",
+    "Focused and full repository tests pass, repository governance checks have no new failure, and no AIRBNB session, consumer mutation, Git operation, release, deployment, or publication occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "On 2026-08-14 the admitted offline Harness Contract v1 slice completed with a strict schema, dependency-free validator and First Deviation evaluator, sanitized matching and AIRBNB fixtures, bounded documentation, 76 focused tests passing, and the complete 806-test suite passing with 2 skips. Repository governance had no failure. Scope review identified only four pre-existing human-owned paths outside or excluded from this task. No model or network call, AIRBNB replay or mutation, Git action, release, deployment, publication, CLI, host Adapter, controlled ablation, or Dashboard integration occurred. This paused record authorizes no follow-on capability.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Define and implement a dependency-free offline Harness Contract v1 that consumes privacy-bounded normalized transition fixtures, keeps Agent selection, AgentGov decision correctness, and intervention outcome as separate evidence channels, and deterministically identifies the earliest observed deviation."
+  },
+  "risk": {
+    "items": [
+      "A new Harness vocabulary could drift from existing Kernel, host-interaction, task-admission, and authority semantics unless the contract composes those meanings explicitly.",
+      "An incorrect transition ordering rule could misidentify First Deviation and over-attribute a later host presentation symptom.",
+      "A fixture could retain disallowed replay material unless fields are allow-listed and privacy-negative cases are tested.",
+      "A deterministic fixture demonstrates contract behavior only; it cannot prove causal product effectiveness or host enforcement capability.",
+      "Reviewed assumption: The completed AIRBNB baseline is the upstream observed fixture source.",
+      "Reviewed assumption: Harness Contract v1 is an offline contract and classifier slice, not a live execution harness or host adapter.",
+      "Reviewed assumption: The repository remains dependency-free and Python 3.11 or newer compatible.",
+      "Reviewed assumption: Existing untracked files outside the admitted task remain human-owned and untouched.",
+      "Reviewed unknown: The exact Adapter, App Server, or UI layer responsible for absent native-form mediation remains outside this task.",
+      "Reviewed unknown: Codex pre-action blocking support and other host implementations remain separate future requirements.",
+      "Reviewed unknown: The future user-facing CLI or dashboard surface has not yet been selected."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".github/workflows",
+      ".codex",
+      "release",
+      "docs/assets",
+      "src/agentgov/governance_mcp.py",
+      "src/agentgov/codex_mcp.py",
+      "tests/replay_event_normalizer.py",
+      "tests/test_replay_event_normalizer.py"
+    ],
+    "include_paths": [
+      "src/agentgov/harness_contract.py",
+      "schemas/harness-contract-v1.schema.json",
+      "governance/fixtures/harness-contract-v1",
+      "tests/test_harness_contract.py",
+      "docs/harness-contract-v1.md",
+      "docs/development-log",
+      "README.md",
+      "STATUS.md",
+      "DEVELOPMENT_PLAN.md",
+      "governance/tasks"
+    ]
+  },
+  "task_id": "p0-harness-contract-v1",
+  "title": "Implement deterministic Harness Contract v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_harness_contract -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_harness_contract tests.test_replay_event_normalizer tests.test_user_documentation tests.test_public_documentation_freshness tests.test_task_contract -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-harness-contract-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check scope governance/tasks/p0-harness-contract-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

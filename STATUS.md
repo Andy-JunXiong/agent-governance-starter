@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-08-13
+Last verified: 2026-08-14
 
 ## Current state
 
@@ -22,6 +22,13 @@ Last verified: 2026-08-13
   preview setting; page metadata cannot change GitHub's repository card.
 - Merge, publish, release, and deployment remain separate human-authorized
   actions.
+- Repository completion handoffs now require seven plain-language answers:
+  what completed, short-term benefits, long-term benefits, the upstream
+  capability, the proposed next feature, how the two features connect, and the
+  whole-project benefit. Benefit claims must remain evidence-bounded, and an
+  unknown next feature must be labeled rather than invented. Naming a proposed
+  next feature remains product-review input only; it does not authorize task
+  creation, implementation, Git, publication, release, or deployment.
 - ADR-0016 now establishes the minimum sufficient Kernel baseline: the Kernel
   owns portable governance meaning and state semantics; Policy, Application,
   Adapter, Consumer Context, and Experiment responsibilities remain distinct;
@@ -64,6 +71,33 @@ Last verified: 2026-08-13
   product effectiveness, independent review, consumer commit or push, CI
   enforcement, release, deployment, or production pricing authority. The
   consumer working tree remains uncommitted and unpushed.
+- A separately admitted 2026-08-14 uncoached AIRBNB baseline has now exercised
+  one fresh external Codex session with no governance or protocol coaching. A
+  no-model preflight found all seven configured AgentGov tools. The Agent
+  selected `agentgov_task_proposal_review`, but its first two normalized drafts
+  failed atomically because excluded scope paths were not repository-relative.
+  The third call completed with a bounded declined result; no native form
+  reached the client and no human proposal decision was supplied. No consumer
+  task, README/source change, or aggregate runtime-state metadata change
+  occurred. The First Deviation is therefore Agent materialization after
+  correct tool selection, with missing human-form mediation as a later gap.
+  This is one observed no-write baseline, not a successful automatic journey,
+  controlled ablation, causal benefit result, repeated intervention, or
+  cross-context replication. The one-session authorization is consumed and no
+  replay is authorized by this record.
+- Development source now implements the bounded offline Harness Contract v1
+  selected after that baseline. The strict `agentgov.harness-run` 1.0 schema,
+  dependency-free validator/evaluator, and two sanitized fixtures preserve
+  ordered expected/observed transitions, three separate evidence channels,
+  honest host capability and Harness-result claims, First Deviation, terminal
+  facts, privacy limits, and denied authority. The AIRBNB fixture derives
+  `proposal_materialization` / `normalized_scope_path_rejected` before the
+  later absent-form symptom; the matching fixture derives no deviation. The
+  contract rejects raw replay fields, absolute evidence paths, invalid order,
+  duplicate identity, unsupported `BLOCK`, post-action prevention claims, and
+  terminal fact mismatches. It makes no model or network call and is not yet a
+  CLI, live host Adapter, controlled-ablation runner, Dashboard feed, release,
+  or consumer integration.
 - NYC now provides a second independent bounded consumer result. In an isolated
   Python 3.11.9 environment, its existing synthetic runtime scenario validated
   schema and exercised temporary Bronze, Silver, the demand quality gate, and

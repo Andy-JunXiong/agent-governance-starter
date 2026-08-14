@@ -1,0 +1,102 @@
+{
+  "contract": "agentgov.development-task",
+  "schema_version": "1.1",
+  "profile": "standard",
+  "task_id": "p0-airbnb-uncoached-e2e-baseline",
+  "title": "Run one AIRBNB uncoached E2E baseline",
+  "requirement": {
+    "summary": "Run exactly one fresh external Codex session against the human-selected isolated AIRBNB worktree and record truthful normalized evidence for Agent tool selection, AgentGov decisions, intervention outcomes, and the first observed deviation.",
+    "source_refs": [
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "STATUS.md",
+      "docs/host-enforcement-capability-audit-v1.md"
+    ]
+  },
+  "objective": {
+    "role": "supporting",
+    "parent_refs": [
+      "governance/tasks/p0-host-enforcement-capability-audit-v1.json"
+    ],
+    "rationale": "The host capability audit is complete, and the human product owner selected a live AIRBNB replay as the next evidence step before Harness automation or benefit claims."
+  },
+  "goal": "Measure one ordinary low-risk AIRBNB development journey without protocol coaching, preserve only normalized transition evidence, and identify the first point where observed behavior diverges from the expected AgentGov journey.",
+  "non_goals": [
+    "Do not treat this measurement task as authority to modify the AIRBNB repository; AIRBNB writes require their own exact native task admission and separate take-up.",
+    "Do not retain raw prompts, transcripts, reasoning, source content, credentials, command output, unbounded tool payloads, or absolute paths.",
+    "Do not run a second external replay, expose a governance bypass flag, or weaken a failed check.",
+    "Do not claim causality, general product effectiveness, cross-context replication, or a governance coverage percentage.",
+    "Do not commit, push, merge, publish, release, deploy, change CI, or grant production authority."
+  ],
+  "scope": {
+    "include_paths": [
+      ".codex/config.toml",
+      ".tmp-replay",
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "STATUS.md",
+      "docs",
+      "governance/tasks",
+      "tests/replay_event_normalizer.py",
+      "tests/test_replay_event_normalizer.py"
+    ],
+    "exclude_paths": [
+      ".github/workflows",
+      "docs/assets/linkedin-github-repository-cover.png",
+      "release",
+      "src"
+    ]
+  },
+  "architecture_refs": [
+    "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+    "docs/adr/0015-use-mcp-elicitation-for-codex-task-admission.md",
+    "docs/adr/INVARIANTS.md",
+    "docs/governance-mcp-adapter.md"
+  ],
+  "acceptance_signals": [
+    "Preflight confirms the selected AIRBNB Git worktree, installed AgentGov identity, Codex authentication, expected native governance tools, and normalized replay evidence path.",
+    "Exactly one fresh external Codex session receives an ordinary low-risk request without hand-authored protocol JSON, internal tool names, manual lifecycle commands, repeated state queries, or special confirmation words.",
+    "The evidence separately records Agent selection, AgentGov decision correctness, intervention outcome, terminal status, and the first observed deviation.",
+    "Any AIRBNB mutation occurs only after its own native proposal form creates an exact human-admitted consumer task and that task is separately taken up.",
+    "Only normalized metadata is retained, temporary raw replay material is removed, and negative or interrupted results are reported honestly.",
+    "No commit, push, merge, publication, release, deployment, CI change, or second replay occurs."
+  ],
+  "validation_commands": [
+    "agentgov --version",
+    "& \"$env:LOCALAPPDATA\\Programs\\Python\\Python312\\python.exe\" -m unittest tests.test_replay_event_normalizer -v",
+    "agentgov check task governance/tasks/p0-airbnb-uncoached-e2e-baseline.json --repository .",
+    "agentgov check scope governance/tasks/p0-airbnb-uncoached-e2e-baseline.json --repository .",
+    "agentgov check repository .",
+    "git diff --check"
+  ],
+  "owner": "Human product owner",
+  "risk": {
+    "level": "high",
+    "items": [
+      "The replay transmits bounded AIRBNB repository instructions and context to the OpenAI Codex service.",
+      "The live Agent may select an incorrect governance path or attempt a write before matching AIRBNB task admission.",
+      "A replay bridge defect could retain disallowed raw material unless collection remains allow-listed and temporary.",
+      "One unsuccessful run is valid baseline evidence and must not trigger an unauthorized retry."
+    ]
+  },
+  "approval": {
+    "required": true,
+    "status": "approved",
+    "owner": "Human product owner",
+    "evidence_refs": [
+      "DEVELOPMENT_PLAN.md",
+      "docs/host-enforcement-capability-audit-v1.md"
+    ]
+  },
+  "stop_conditions": [
+    "Stop before external transmission if the AIRBNB target, authentication, installed Adapter, native tools, or evidence normalization path cannot be verified.",
+    "Stop before any AIRBNB write unless its own matching task has been created through exact human admission and separately taken up.",
+    "Consume authorization when the first external session starts; do not start another session regardless of outcome.",
+    "Stop on raw-material retention, unexpected repository mutation, scope expansion, governance failure, Git action, publication, release, deployment, or request for a second replay."
+  ],
+  "decision": {
+    "state": "paused",
+    "decided_by": "Human product owner",
+    "rationale": "On 2026-08-14 the one-session authorization was consumed. The fresh Agent selected the expected proposal-review tool; two invalid repository-scope drafts were rejected atomically, and the third call completed declined without a native form or human proposal decision. No AIRBNB task, source change, or aggregate runtime-state metadata change occurred. Normalized evidence was recorded and temporary raw material was removed. This paused record authorizes no replay, Harness implementation, Git action, release, deployment, or consumer mutation."
+  }
+}
