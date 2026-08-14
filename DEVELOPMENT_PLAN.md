@@ -1,22 +1,32 @@
 # Agent Governance Starter Kit Development Plan
 
-Last updated: 2026-08-13
+Last updated: 2026-08-14
 
 ## Purpose
 
-This is the top-level development plan for the repository.
+This is the strategic development plan for the repository. It owns product
+direction, priority sequencing, and strategic acceptance and stop conditions;
+it is not the current execution dashboard or the historical evidence ledger.
 
 Use it to answer:
 
 1. What is the project building?
-2. What has already been completed?
-3. What should be implemented next?
+2. Which top-level product priorities and capability tracks come first?
+3. What strategic acceptance and stop conditions constrain those tracks?
 4. What evidence is required before a version is considered stable?
 
-Daily execution details belong in
-[`STATUS.md`](STATUS.md). Historical daily records live under
-`docs/development-log/`. Durable
-architecture decisions belong in `docs/adr/`.
+Current capability facts, the active slice, validation state, incomplete work,
+blockers, and the next product review belong in [`STATUS.md`](STATUS.md).
+Append-only session evidence lives under `docs/development-log/`. Exact task
+scope and admission live in `governance/tasks/`; durable architecture decisions
+belong in `docs/adr/`. None of these planning statements grants execution or
+external authority.
+
+Documentation State Separation v1 establishes these ownership rules going
+forward. Existing checkpoint and implementation-history passages are preserved
+in place in this slice so their evidence links are not rewritten; migrating
+that accumulated history is a separate, not-yet-authorized change. Do not add
+new session-level history to this plan.
 
 ## Product Direction
 
@@ -1001,9 +1011,19 @@ interpreter is not a release baseline.
 
 ## Documentation Rule
 
-- `DEVELOPMENT_PLAN.md` owns top-level direction and sequencing.
-- `STATUS.md` owns concise current state; dated files under
-  `docs/development-log/` preserve historical execution records.
-- `docs/adr/` owns durable architecture decisions.
+- `AGENTS.md` owns operating rules, authority boundaries, and development
+  protocol; update it only when those rules change.
+- `governance/tasks/*.json` owns exact task scope, admission, and recorded task
+  decisions; it grants no broader authority.
+- `docs/adr/` and durable contracts own architecture decisions and invariants.
+- `DEVELOPMENT_PLAN.md` owns strategic direction, priority sequencing, and
+  strategic acceptance or stop conditions; update it only when those change.
+- `STATUS.md` owns concise current repository reality and is updated at each
+  formal development closeout.
+- dated files under `docs/development-log/` preserve append-only session
+  evidence at stable paths.
 - Other `docs/` files own detailed guidance, pilots, migrations, and reports.
-- Update this plan only when priorities, scope, or acceptance criteria change.
+
+Plans, status entries, logs, and roadmap items do not authorize tasks, Git,
+publication, release, deployment, or external actions. Historical migration
+and archive automation remain outside Documentation State Separation v1.

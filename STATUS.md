@@ -2,6 +2,80 @@
 
 Last verified: 2026-08-14
 
+## Current-status contract
+
+`STATUS.md` is the repository's single current-execution status surface. It
+owns current release and capability facts, the active slice, validation state,
+incomplete work, blockers, and the next product review. It is updated at every
+formal development closeout.
+
+Every closeout must make these states distinguishable:
+
+- **Codex-run validation**: commands and checks the current coding Agent
+  actually executed, with their observed results.
+- **User-reported validation**: browser, production, operational, or other
+  checks the human reports completing; it is never presented as Agent-run.
+- **Pending validation**: implemented behavior that still awaits an identified
+  validation step.
+- **Incomplete**: code, documentation, design, or evidence that is genuinely
+  unfinished within the admitted requirement.
+
+The current closeout snapshot should name the active slice, those four
+validation states, blockers or stop conditions, and the **Next product review**.
+That review entry is decision input only: it does not authorize a new task,
+implementation, Git operation, publication, release, deployment, or external
+action.
+
+`DEVELOPMENT_PLAN.md` remains the strategic direction owner;
+`governance/tasks/*.json` remains the exact task scope and admission record;
+`docs/adr/` and durable contracts remain the architecture owners; and dated
+files under `docs/development-log/` remain append-only session evidence at
+stable paths. Documentation State Separation v1 does not migrate the existing
+historical sections below or add archive automation; those are separate,
+not-yet-authorized changes.
+
+### Current closeout snapshot
+
+- **Active slice**: Documentation State Separation v1, establishing the
+  repository's document ownership, update-trigger, validation-state, and
+  authority-separation contract.
+- **Codex-run validation**: 44 targeted user-documentation, public-freshness,
+  and task-contract tests passed. The complete Python 3.12 suite passed all
+  808 tests with 2 skips. The task's module-style targeted command could not
+  import this repository's non-package `tests/` directory, so the same files
+  were rerun successfully through `unittest discover -p`. An initial verbose
+  complete-suite run reached the 240-second tool limit without an observed
+  failure; the quiet rerun completed successfully in about 250 seconds.
+- **User-reported validation**: none for this documentation-only slice.
+- **Pending validation**: human product-owner review of this completed
+  requirement and its proposed connection to any later migration slice.
+- **Incomplete**: none within the admitted v1 scope. Historical content
+  migration and archive automation were explicit non-goals and remain
+  separately gated work rather than hidden incompleteness.
+- **Blocker / stop condition**: stop before historical migration, archive
+  automation, Git, publication, release, or deployment without separate human
+  admission or authorization as applicable.
+- **Next product review**: confirm whether the ownership contract is sufficient
+  and jointly choose historical status migration, a smaller observed-drift
+  correction, or no immediate follow-on. This entry authorizes none of them.
+
+### Unfinished and deferred work record
+
+- **Incomplete inside the admitted task**: none.
+- **Pending review**: the human product owner has not yet reviewed the completed
+  ownership contract as a delivered requirement.
+- **Deferred candidate — historical migration**: the accumulated checkpoint and
+  implementation-history material in `STATUS.md` and `DEVELOPMENT_PLAN.md` has
+  not been migrated. Any migration must preserve evidence references and needs
+  a separate admitted task.
+- **Deferred candidate — weekly archive/index automation**: no weekly summary,
+  archive index, first-closeout-of-week reminder, or freshness check has been
+  implemented. Its deterministic versus advisory semantics and non-destructive
+  path rules remain to be designed and separately admitted.
+
+These entries record known unfinished or deferred work; they are not an
+authorized queue and do not select the next requirement.
+
 ## Current state
 
 - Version: published stable `0.2.1`; published Pre-release `v0.3.0rc1`.

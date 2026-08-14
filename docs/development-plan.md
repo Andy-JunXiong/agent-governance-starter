@@ -1,7 +1,22 @@
 # AgentGov remaining development plan
 
-Updated 2026-08-11. This page separates implemented development-source behavior
+Updated 2026-08-14. This page separates implemented development-source behavior
 from published and consumer-adopted behavior.
+
+## Documentation state contract
+
+This page is a public strategic-plan surface. It owns top-level direction,
+priority sequencing, and strategic acceptance or stop conditions; update it
+when those change. Current execution facts and validation state belong in the
+repository `STATUS.md`, exact task scope and admission belong in
+`governance/tasks/`, durable architecture decisions belong in `docs/adr/`, and
+append-only session evidence belongs in dated `docs/development-log/` files at
+stable paths.
+
+Planning and roadmap text does not authorize a task, implementation, Git
+operation, publication, release, deployment, or external action. Documentation
+State Separation v1 preserves the accumulated passages below; historical
+migration and archive automation require a separate admitted change.
 
 ## Current checkpoint
 

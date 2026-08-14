@@ -1,0 +1,61 @@
+{
+  "acceptance_signals": [
+    "AGENTS.md defines one owner and one update trigger for each documentation state layer and makes clear that planning, status, and logs do not grant authority.",
+    "DEVELOPMENT_PLAN.md describes strategy only and points current execution and historical evidence to their existing canonical surfaces.",
+    "STATUS.md documents a concise current-state closeout structure that distinguishes Codex-run, user-reported, pending-validation, and incomplete states.",
+    "The change explicitly preserves existing development-log paths and defers historical migration and archive automation.",
+    "Documentation tests protect the new responsibility and validation-state contract.",
+    "Relevant targeted tests and the baseline unittest suite pass."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-9086b4fb8a1e4ba4be23739c21db006a and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Define unique responsibilities, update triggers, and precedence boundaries for repository operating rules, strategic planning, current status, durable task and architecture records, and append-only development evidence; keep STATUS.md as the single current-status surface and add a concise closeout template without migrating historical content."
+  },
+  "risk": {
+    "items": [
+      "Documentation drift could remain if public mirrors and documentation tests are not updated together.",
+      "Over-broad cleanup could accidentally become historical migration, which is excluded.",
+      "Reviewed assumption: The accepted scope is the first recommended slice only.",
+      "Reviewed assumption: STATUS.md remains the current-status filename to avoid adding a duplicate current-state source.",
+      "Reviewed assumption: Existing development logs and task evidence references remain at their current paths."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      "docs/development-log files dated before 2026-08-14",
+      "docs/archive",
+      "src",
+      "release",
+      ".github/workflows",
+      ".codex",
+      "docs/assets/linkedin-github-repository-cover.png",
+      "governance/tasks/p0-airbnb-runtime-completion-handoff.json"
+    ],
+    "include_paths": [
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "STATUS.md",
+      "docs/development-plan.md",
+      "docs/development-log/2026-08-14.md",
+      "tests/test_user_documentation.py",
+      "tests/test_public_documentation_freshness.py",
+      "governance/tasks"
+    ]
+  },
+  "task_id": "p0-documentation-state-separation-v1",
+  "title": "Define documentation state separation contract",
+  "validation_commands": [
+    "python -m unittest tests.test_user_documentation tests.test_public_documentation_freshness tests.test_task_contract -v",
+    "python -m unittest discover -s tests -v"
+  ]
+}

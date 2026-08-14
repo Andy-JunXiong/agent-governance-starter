@@ -54,6 +54,38 @@ GUIDE_STYLE = ROOT / "docs/guide.css"
 
 
 class UserDocumentationTests(unittest.TestCase):
+    def test_documentation_state_separation_contract_is_consistent(self) -> None:
+        instructions = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        plan = (ROOT / "DEVELOPMENT_PLAN.md").read_text(encoding="utf-8")
+        public_plan = DEVELOPMENT_PLAN.read_text(encoding="utf-8")
+        status = STATUS.read_text(encoding="utf-8")
+
+        self.assertIn("## Documentation state ownership", instructions)
+        self.assertIn("strategic development plan", plan)
+        self.assertIn(
+            "Do not add new session-level history to this plan",
+            " ".join(plan.split()),
+        )
+        self.assertIn("## Documentation state contract", public_plan)
+        self.assertIn("## Current-status contract", status)
+
+        normalized_status = " ".join(status.split())
+        for phrase in (
+            "single current-execution status surface",
+            "Codex-run validation",
+            "User-reported validation",
+            "Pending validation",
+            "Incomplete",
+            "Next product review",
+            "does not migrate the existing historical sections",
+        ):
+            self.assertIn(phrase, normalized_status)
+
+        for surface in (instructions, plan, public_plan, status):
+            normalized = " ".join(surface.split())
+            self.assertIn("governance/tasks", normalized)
+            self.assertIn("docs/development-log/", normalized)
+
     def test_airbnb_completion_and_handoff_evidence_is_bounded(self) -> None:
         surfaces = (
             README,

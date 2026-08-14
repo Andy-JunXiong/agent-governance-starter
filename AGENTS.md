@@ -55,6 +55,34 @@ For meaningful changes:
 5. run the relevant tests and report unresolved gaps;
 6. keep commit, push, and release as separate human-controlled actions.
 
+## Documentation state ownership
+
+Each documentation surface owns one kind of truth and has one update trigger:
+
+- `AGENTS.md` owns repository operating rules, authority boundaries, and the
+  development protocol. Update it only when those rules or boundaries change.
+- `governance/tasks/*.json` owns exact task scope, admission, and recorded task
+  decisions. Update it only through the applicable task transition; a task
+  record grants no authority beyond its exact admitted or approved scope.
+- `docs/adr/` and durable contracts own architecture decisions and invariants.
+  Update them when the durable decision or contract changes.
+- `DEVELOPMENT_PLAN.md` owns strategic direction, priority sequencing, and
+  strategic acceptance or stop conditions. Update it only when that top-level
+  direction, priority, or acceptance model changes.
+- `STATUS.md` owns current repository reality: release and capability state,
+  the active slice, validation state, incomplete work, blockers, and the next
+  product review. Update it at every formal development closeout.
+- dated files under `docs/development-log/` own append-only session evidence,
+  including actions, decisions, validation, and remaining gaps. Write the
+  applicable dated record for a formal development session and preserve its
+  path because task evidence may refer to it.
+
+No plan, status entry, development log, roadmap item, or proposed next feature
+grants task, Git, publication, release, deployment, or external authority. If
+two surfaces disagree, correct the surface that owns that kind of truth rather
+than copying the conflict into every document. Preserve historical facts and
+mark superseded material clearly instead of rewriting the historical record.
+
 ## Git commit and push procedure
 
 Use this procedure only after the human explicitly authorizes the applicable

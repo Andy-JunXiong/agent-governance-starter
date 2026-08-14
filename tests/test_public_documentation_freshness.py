@@ -82,6 +82,24 @@ class PublicDocumentationFreshnessTests(unittest.TestCase):
         ):
             self.assertIn(phrase, normalized)
 
+    def test_repository_instructions_define_documentation_state_ownership(
+        self,
+    ) -> None:
+        instructions = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        normalized = " ".join(instructions.split())
+
+        for phrase in (
+            "## Documentation state ownership",
+            "Each documentation surface owns one kind of truth and has one update trigger",
+            "`DEVELOPMENT_PLAN.md` owns strategic direction",
+            "`STATUS.md` owns current repository reality",
+            "Update it at every formal development closeout",
+            "dated files under `docs/development-log/` own append-only session evidence",
+            "No plan, status entry, development log, roadmap item, or proposed next feature grants",
+            "Preserve historical facts",
+        ):
+            self.assertIn(phrase, normalized)
+
     def test_repository_instructions_distinguish_git_and_gh_authentication(
         self,
     ) -> None:
