@@ -125,10 +125,13 @@ from agentgov.development_context import (
 )
 from agentgov.documentation_archive import (
     ArchivePlanState,
+    DocumentationArchiveApplyError,
+    apply_documentation_archive_plan,
     parse_through_date,
     plan_documentation_archive,
     render_documentation_archive_plan_json,
     render_documentation_archive_plan_terminal,
+    request_documentation_archive_confirmation,
 )
 from agentgov.drift_review import (
     DriftReviewPolicyError,
@@ -569,7 +572,14 @@ def _plan_documentation_archive(
     *,
     through: str,
     output_format: str,
+    apply_index: bool,
 ) -> int:
+    if apply_index and output_format != "text":
+        print(
+            "ERROR plan documentation-archive: --apply requires text format",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
     try:
         through_date = parse_through_date(through)
         plan = plan_documentation_archive(path, through_date=through_date)
@@ -589,7 +599,58 @@ def _plan_documentation_archive(
         else render_documentation_archive_plan_terminal
     )
     print(renderer(plan), end="")
-    return EXIT_FAIL if plan.state is ArchivePlanState.FAIL else EXIT_PASS
+    if plan.state is ArchivePlanState.FAIL:
+        return EXIT_FAIL
+    if not apply_index:
+        return EXIT_PASS
+    if plan.change is None:
+        print(
+            "ERROR plan documentation-archive: plan has no index change",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    if plan.change.action == "none":
+        result = apply_documentation_archive_plan(plan)
+        print(
+            f"UNCHANGED {result.path.as_posix()} sha256:{result.sha256}"
+        )
+        return EXIT_PASS
+    if not sys.stdin.isatty():
+        print(
+            "CANCELLED documentation-archive apply requires an interactive terminal",
+            file=sys.stderr,
+        )
+        return EXIT_FAIL
+    try:
+        confirmed = request_documentation_archive_confirmation(
+            plan,
+            decision_reader=input,
+            is_interactive_terminal=True,
+        )
+    except (EOFError, KeyboardInterrupt):
+        confirmed = False
+    if not confirmed:
+        print(
+            "CANCELLED documentation-archive apply confirmation did not match",
+            file=sys.stderr,
+        )
+        return EXIT_FAIL
+    try:
+        result = apply_documentation_archive_plan(plan)
+    except DocumentationArchiveApplyError as exc:
+        print(f"FAIL plan documentation-archive apply: {exc}", file=sys.stderr)
+        return EXIT_FAIL
+    except OSError as exc:
+        print(f"ERROR plan documentation-archive apply: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    print(
+        f"APPLIED {result.action} {result.path.as_posix()} sha256:{result.sha256}"
+    )
+    print(
+        "NOTE documentation-archive apply: dated logs were not opened for write; "
+        "no scheduling, Git, publication, release, or deployment action was run"
+    )
+    return EXIT_PASS
 
 
 def _create_upgrade_pr(
@@ -3343,11 +3404,21 @@ def build_parser() -> argparse.ArgumentParser:
         default="text",
         help="Archive-plan serialization format (default: text).",
     )
+    documentation_archive_parser.add_argument(
+        "--apply",
+        dest="apply_documentation_archive",
+        action="store_true",
+        help=(
+            "Interactively create or update the exact revalidated index; "
+            "does not modify dated logs or grant external authority."
+        ),
+    )
     documentation_archive_parser.set_defaults(
         handler=lambda args: _plan_documentation_archive(
             args.path,
             through=args.through,
             output_format=args.documentation_archive_format,
+            apply_index=args.apply_documentation_archive,
         )
     )
 

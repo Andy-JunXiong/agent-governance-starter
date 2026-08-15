@@ -72,11 +72,16 @@ class UserDocumentationTests(unittest.TestCase):
         for phrase in (
             "never consults the host clock",
             "logical inclusion",
+            "human-facing candidate",
+            "machine-verifiable",
             "never moves, renames, deletes, or rewrites",
             "deterministic",
             "advisory",
-            "performs no repository write",
-            "grants no apply, scheduling, Git, publication, release, or deployment authority",
+            "read-only by default",
+            "requires a real interactive terminal",
+            "APPLY INDEX",
+            "never opens a dated log for write",
+            "grants no scheduling, Git, publication, release, or deployment authority",
         ):
             self.assertIn(phrase, normalized)
 

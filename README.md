@@ -703,13 +703,19 @@ writing, moving, renaming, or deleting any record:
 ```powershell
 agentgov plan documentation-archive . --through 2026-08-14
 agentgov plan documentation-archive . --through 2026-08-14 --format json
+agentgov plan documentation-archive . --through 2026-08-15 --apply
 ```
 
-The explicit through-date avoids host-clock dependence. The output includes
-stable same-day ordering, source hashes, the exact `INDEX.md` candidate and
-create/update/no-op classification, while usefulness remains an advisory human
-decision. This is a development preview and grants no apply, scheduling, Git,
-publication, release, or deployment authority. See
+The explicit through-date avoids host-clock dependence. The human-facing
+candidate uses compact date, title, and link entries, while source hashes stay
+in JSON and terminal diagnostics as machine-verifiable evidence. The output
+retains stable same-day ordering and exact create/update/no-op classification,
+while usefulness remains an advisory human decision. Planning is read-only by
+default. `--apply` prints the exact plan, requires a real interactive terminal
+and `APPLY INDEX`, then regenerates the full source-hash-bound plan before it
+exclusively creates or atomically updates only `docs/development-log/INDEX.md`.
+It never opens dated logs for write and grants no scheduling, Git, publication,
+release, or deployment authority. See
 [documentation archive-index planning](docs/documentation-archive-plan.md).
 
 The higher-level development preview records `govern check` observations in

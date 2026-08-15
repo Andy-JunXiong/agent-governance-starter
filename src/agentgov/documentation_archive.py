@@ -1,15 +1,17 @@
-"""Read-only planning for a logical development-log archive index."""
+"""Planning and explicit safe apply for a development-log archive index."""
 
 from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
+import tempfile
 from dataclasses import dataclass
 from datetime import date
 from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from agentgov import __version__
 
@@ -36,6 +38,10 @@ class ArchiveFindingStatus(str, Enum):
     FAIL = "fail"
     ADVISORY = "advisory"
     NOT_APPLICABLE = "not_applicable"
+
+
+class DocumentationArchiveApplyError(ValueError):
+    """Raised when an archive-index plan is unsafe or stale at apply time."""
 
 
 @dataclass(frozen=True)
@@ -72,6 +78,14 @@ class DocumentationArchivePlan:
     entries: tuple[ArchiveEntry, ...]
     change: ArchiveIndexChange | None
     findings: tuple[ArchiveFinding, ...]
+
+
+@dataclass(frozen=True)
+class DocumentationArchiveApplyResult:
+    root: Path
+    path: Path
+    action: str
+    sha256: str
 
 
 def parse_through_date(value: str) -> date:
@@ -136,8 +150,7 @@ def _render_candidate_index(
         for entry in entries:
             link = entry.path.name
             lines.append(
-                f"- {entry.record_date.isoformat()} — [{entry.title}]({link}) "
-                f"(`sha256:{entry.sha256}`)"
+                f"- {entry.record_date.isoformat()} — [{entry.title}]({link})"
             )
     return "\n".join(lines) + "\n"
 
@@ -401,6 +414,127 @@ def plan_documentation_archive(
         entries=ordered_entries,
         change=change,
         findings=tuple(findings),
+    )
+
+
+def request_documentation_archive_confirmation(
+    plan: DocumentationArchivePlan,
+    *,
+    decision_reader: Callable[[str], str],
+    is_interactive_terminal: bool,
+) -> bool:
+    """Return write authority only for one exact interactive confirmation."""
+
+    if not is_interactive_terminal or plan.change is None:
+        return False
+    decision = decision_reader(
+        f'Type APPLY INDEX to {plan.change.action} '
+        f'"{plan.change.path.as_posix()}" with candidate '
+        f'sha256:{plan.change.after_sha256}: '
+    )
+    return decision == "APPLY INDEX"
+
+
+def _require_current_plan(
+    preview: DocumentationArchivePlan,
+) -> DocumentationArchivePlan:
+    current = plan_documentation_archive(
+        preview.root,
+        through_date=preview.through_date,
+    )
+    if current != preview:
+        raise DocumentationArchiveApplyError(
+            "documentation archive plan is stale; run the preview again"
+        )
+    return current
+
+
+def _write_exclusive(target: Path, content: bytes) -> None:
+    created = False
+    try:
+        with target.open("xb") as handle:
+            created = True
+            handle.write(content)
+            handle.flush()
+            os.fsync(handle.fileno())
+    except FileExistsError as exc:
+        raise DocumentationArchiveApplyError(
+            "documentation archive plan is stale; index target appeared"
+        ) from exc
+    except BaseException:
+        if created:
+            try:
+                target.unlink()
+            except OSError:
+                pass
+        raise
+
+
+def _replace_atomically(
+    preview: DocumentationArchivePlan,
+    *,
+    target: Path,
+    content: bytes,
+) -> None:
+    descriptor, temp_name = tempfile.mkstemp(
+        prefix=".INDEX.md.agentgov-",
+        suffix=".tmp",
+        dir=target.parent,
+    )
+    temporary = Path(temp_name)
+    try:
+        with os.fdopen(descriptor, "wb") as handle:
+            handle.write(content)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.chmod(temporary, target.stat().st_mode)
+        _require_current_plan(preview)
+        os.replace(temporary, target)
+    finally:
+        try:
+            temporary.unlink()
+        except FileNotFoundError:
+            pass
+
+
+def apply_documentation_archive_plan(
+    preview: DocumentationArchivePlan,
+) -> DocumentationArchiveApplyResult:
+    """Apply one exact preview without opening any dated source log for write."""
+
+    if preview.state is ArchivePlanState.FAIL or preview.change is None:
+        raise DocumentationArchiveApplyError(
+            "failed documentation archive plans cannot be applied"
+        )
+    current = _require_current_plan(preview)
+    change = current.change
+    if change is None:
+        raise DocumentationArchiveApplyError(
+            "documentation archive plan has no applicable index change"
+        )
+    if change.action == "none":
+        return DocumentationArchiveApplyResult(
+            root=current.root,
+            path=change.path,
+            action="none",
+            sha256=change.after_sha256,
+        )
+
+    target = current.root / change.path
+    content = change.content.encode("utf-8")
+    if change.action == "create":
+        _write_exclusive(target, content)
+    elif change.action == "update":
+        _replace_atomically(current, target=target, content=content)
+    else:
+        raise DocumentationArchiveApplyError(
+            f"unsupported documentation archive action: {change.action}"
+        )
+    return DocumentationArchiveApplyResult(
+        root=current.root,
+        path=change.path,
+        action=change.action,
+        sha256=change.after_sha256,
     )
 
 

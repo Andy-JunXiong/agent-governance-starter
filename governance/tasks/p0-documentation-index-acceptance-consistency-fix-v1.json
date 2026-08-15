@@ -1,0 +1,56 @@
+{
+  "acceptance_signals": [
+    "The Safe Documentation Index Writer self-review no longer contradicts the later screenshot-backed user-operated no-op validation in the same 2026-08-15 record.",
+    "The corrected wording preserves that confirmed create/update and other-platform behavior remain unknown.",
+    "Only docs/development-log/2026-08-15.md and the correction task record change.",
+    "Task-contract validation, JSON parsing, secret-safety inspection, and git diff --check pass.",
+    "The correction task is paused after validation and grants no commit, push, publication, release, deployment, automatic refresh, or follow-on authority."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The single evidence inconsistency is corrected and the task is paused. The dated record now preserves the original review chronology, recognizes the later screenshot-backed PowerShell no-op run, and retains confirmed create/update and other-platform behavior as unknown. All 13 task-contract tests passed; the task check, JSON parsing, and git diff --check had no failures. A bounded current-Agent review found no broader rewrite, evidence overclaim, scope drift, or authority expansion. No product behavior, index, status, source log, user-owned configuration, Git, publication, release, deployment, automatic refresh, or follow-on action was authorized or changed.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Correct the single stale statement in the 2026-08-15 Safe Documentation Index Writer self-review that says the product owner has not exercised the CLI. Replace it with bounded current truth: the product owner later exercised the documented no-op apply command in PowerShell, while confirmed create/update and other-platform behavior remain untested. Record the correction task and change no product behavior, index, source log, status, or Git state."
+  },
+  "risk": {
+    "items": [
+      "Rewriting the original review as if it had known later evidence would distort chronology.",
+      "Broadening the correction beyond the one stale current-state statement would exceed the commit-review finding.",
+      "The correction must not imply Git or follow-on authority.",
+      "Reviewed assumption: The later screenshot-backed user-operated PowerShell result supersedes only the earlier statement that no manual CLI run had occurred.",
+      "Reviewed assumption: The original native self-review result remains historically valid at the time it completed; only its now-stale current-unknown wording needs a supersession note.",
+      "Reviewed unknown: The user has not exercised a confirmed create or update path.",
+      "Reviewed unknown: No other terminal platform was user-tested."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "STATUS.md",
+      "README.md",
+      "docs/documentation-archive-plan.md",
+      "docs/development-log/INDEX.md",
+      "src",
+      "tests"
+    ],
+    "include_paths": [
+      "docs/development-log/2026-08-15.md",
+      "governance/tasks"
+    ]
+  },
+  "task_id": "p0-documentation-index-acceptance-consistency-fix-v1",
+  "title": "Correct documentation index acceptance evidence consistency",
+  "validation_commands": [
+    "python -m unittest discover -s tests -p test_task_contract.py -v",
+    "python -m agentgov check task governance/tasks/p0-documentation-index-acceptance-consistency-fix-v1.json",
+    "git diff --check"
+  ]
+}

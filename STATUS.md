@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-08-14
+Last verified: 2026-08-15
 
 ## Current-status contract
 
@@ -33,54 +33,64 @@ files under `docs/development-log/` remain append-only session evidence at
 stable paths. Historical Documentation Migration v1 moves only clearly
 section-bounded checkpoint material into a source-labeled dated record and
 leaves current capability sections in place. Documentation Archive and Index
-Plan v1 now adds a read-only logical-index candidate over those stable paths;
-it does not create the index or add apply or scheduling authority.
+Plan v1 adds a read-only logical-index candidate over those stable paths.
+Compact Documentation Index Candidate v1 now separates the concise
+human-facing date/title/link list from machine-verifiable source hashes. Safe
+Documentation Index Writer v1 now maintains that exact index through explicit
+interactive confirmation and stale-plan revalidation; it adds no automatic
+scheduling authority.
 
 ### Current closeout snapshot
 
-- **Active slice**: Documentation Archive and Index Plan v1, a deterministic
-  development-preview command that renders the exact logical index candidate
-  for dated development logs without modifying any repository path.
-- **Codex-run validation**: the 10 archive-planner, 24 user-documentation, and
-  13 task-contract tests passed. A real-repository run found 16 eligible logs,
-  classified the absent index as `create`, kept the two 2026-08-14 records in
-  stable path order, and left the complete development-log SHA-256 snapshot
-  unchanged. The complete suite passed all 821 tests with 2 platform-limited
-  skips. The admitted task reported `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; after
-  closeout pause it reported `PASS=2 WARN=2 FAIL=0 ADVISORY=3`, with the added
-  warning correctly denying further implementation. Repository governance
-  reported `PASS=26 WARN=2 FAIL=0 ADVISORY=4`.
-  Admitted-state scope inspection accepted all 11 current-task paths; its six
-  failures identify only separately authorized Historical Migration changes
-  and the pre-existing excluded `.codex/config.toml`. JSON parsing and final
-  `git diff --check` passed.
-- **User-reported validation**: none.
-- **Pending validation**: human product-owner review of whether the logical
-  index candidate is useful. No applied or rendered `INDEX.md` exists.
-- **Incomplete**: none within the admitted read-only v1 scope.
-- **Blocker / stop condition**: stop before creating or updating the index,
-  adding an apply path, scheduling or reminders, moving or renaming logs, Git,
-  publication, release, or deployment without separate human admission or
-  authorization as applicable.
-- **Next product review**: review the exact candidate and jointly decide
-  whether to propose a separate create/update workflow, investigate a smaller
-  evidence-backed need, or make no immediate follow-on. This entry authorizes
-  none of them.
+- **Active slice**: Safe Documentation Index Writer v1, an explicit bounded
+  apply path that creates or updates only `docs/development-log/INDEX.md` after
+  exact interactive confirmation and complete plan revalidation.
+- **Codex-run validation**: all 16 archive planner/writer, 24 user-
+  documentation, and 13 task-contract tests passed. The complete suite passed
+  all 827 tests with 2 platform-limited skips. Tests cover exclusive create,
+  atomic update, no-op, non-interactive and incorrect-confirmation refusal,
+  JSON/apply refusal, interrupted input, stale source and target rejection,
+  unsafe targets, temporary-file cleanup, and dated-log byte preservation.
+  The current repository apply created a 17-link index with SHA-256
+  `8d4017d8af05b7d975742a79b7263b6f63c339e8b9768002a974136a6c8504c4`;
+  the next plan returned `none`, all 17 dated logs remained byte-identical, and
+  no temporary file remained. The admitted task reported
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3` while admitted and
+  `PASS=2 WARN=2 FAIL=0 ADVISORY=3` after closeout pause; repository governance
+  reported `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. The final admitted-state scope
+  check accepted all 11 task paths and identified only the pre-existing
+  excluded `.codex/config.toml`. `git diff --check` passed. Native current-Agent
+  self-review found no correction-required requirement, architecture, scope,
+  implementation, data, or security drift.
+- **User-reported validation**: the product owner ran the documented PowerShell
+  apply command in the repository. The supplied screenshots show `STATE pass`,
+  17 dated records through 2026-08-15, `CHANGE none`, and `UNCHANGED` with the
+  expected index digest. Unicode rendered normally in that terminal. Because
+  the plan was a no-op, the command correctly did not request `APPLY INDEX`.
+- **Pending validation**: user-operated confirmed create or update remains
+  unexercised because the current index was already up to date. Cross-platform
+  crash durability beyond flushed same-directory replacement also remains
+  unknown.
+- **Incomplete**: none within the admitted writer v1 scope.
+- **Blocker / stop condition**: stop before automatic closeout refresh,
+  scheduling or reminders, moving or rewriting dated logs, Git, publication,
+  release, or deployment without separate human admission or authorization.
+- **Next product review**: decide whether the explicit manual writer is
+  sufficient after ordinary use or whether automatic closeout refresh merits a
+  separate requirement. This entry authorizes neither follow-on.
 
 ### Unfinished and deferred work record
 
 - **Incomplete inside the admitted task**: none.
-- **Pending review**: the human product owner has not yet reviewed the
-  logical archive-index candidate as a delivered requirement.
+- **Pending review**: decide whether the now-observed manual no-op workflow is
+  sufficient or whether automatic closeout refresh merits a separate task.
 - **Deferred candidate — broader historical cleanup**: mixed sections that
   still contain current capability or strategic facts were intentionally not
   split at bullet level. Any broader cleanup must preserve evidence references
   and needs a separate admitted task.
-- **Deferred candidate — index application**: no command creates or updates
-  `docs/development-log/INDEX.md`; any writer needs a separate product decision,
-  task admission, and create/update safety contract.
-- **Deferred candidate — scheduling**: no weekly schedule, first-closeout-of-
-  week reminder, freshness check, daemon, or external notification exists.
+- **Deferred candidate — automatic refresh**: no closeout integration, weekly
+  schedule, first-closeout-of-week reminder, freshness job, daemon, or external
+  notification exists.
 
 These entries record known unfinished or deferred work; they are not an
 authorized queue and do not select the next requirement.

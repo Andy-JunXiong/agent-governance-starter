@@ -1,0 +1,59 @@
+{
+  "acceptance_signals": [
+    "STATUS.md replaces the pending user-operated CLI validation with the bounded screenshot-backed acceptance result.",
+    "docs/development-log/2026-08-15.md appends or updates only the current session evidence to record the same bounded human-operated result.",
+    "The evidence does not claim a separately displayed exit code, a confirmed create or update, or broader cross-platform compatibility.",
+    "The safe writer implementation, tests, README, guide, index, historical dated logs, and user-owned .codex configuration remain unchanged.",
+    "Focused user-documentation and task-contract tests, task and repository governance checks, JSON parsing, and git diff --check pass.",
+    "The closeout task is paused after validation and grants no commit, push, publication, release, deployment, automatic refresh, or follow-on authority."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The bounded acceptance closeout is complete and paused. STATUS.md and the current 2026-08-15 log now record only the screenshot-supported PowerShell no-op result and retain the untested create/update and cross-platform unknowns. All 24 user-documentation and 13 task-contract tests passed; task and repository checks had no failures; JSON parsing and git diff --check passed. A distinct bounded current-Agent review found no evidence overclaim, scope drift, or authority expansion. No product behavior, index, source log, user-owned configuration, Git, publication, release, deployment, automatic refresh, or follow-on action was authorized or changed.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Record the human-operated PowerShell acceptance evidence for Safe Documentation Index Writer v1 in the current status and the existing 2026-08-15 development log. State only what the screenshots establish: the command ran in the repository, reported pass, inventoried 17 dated records through 2026-08-15, found change none, returned unchanged with the expected index digest, displayed Unicode normally in the user's terminal, and did not request confirmation because the plan was a no-op. Do not change product behavior, the index, dated source logs other than the current session record, or Git state."
+  },
+  "risk": {
+    "items": [
+      "The closeout could overstate screenshot evidence as proof of confirmed create/update behavior or universal terminal compatibility.",
+      "Editing historical records beyond the current session log would violate append-only evidence ownership.",
+      "Accidentally including implementation, index, Git, publication, release, deployment, or automatic-refresh work would exceed the requested closeout scope.",
+      "Reviewed assumption: The screenshots supplied by the human product owner depict one ordinary PowerShell run of the documented apply command in this repository.",
+      "Reviewed assumption: The visible UNCHANGED result and returned shell prompt are sufficient to record successful no-op user acceptance, but not a separate numeric exit-code observation.",
+      "Reviewed unknown: The screenshots do not exercise the APPLY INDEX confirmation path because the current index was already up to date.",
+      "Reviewed unknown: No additional terminal environments or platforms were user-tested."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "README.md",
+      "docs/documentation-archive-plan.md",
+      "docs/development-log/INDEX.md",
+      "src",
+      "tests"
+    ],
+    "include_paths": [
+      "STATUS.md",
+      "docs/development-log/2026-08-15.md",
+      "governance/tasks"
+    ]
+  },
+  "task_id": "p0-documentation-index-user-acceptance-closeout-v1",
+  "title": "Record documentation index user acceptance closeout",
+  "validation_commands": [
+    "python -m unittest discover -s tests -p test_user_documentation.py -v",
+    "python -m unittest discover -s tests -p test_task_contract.py -v",
+    "python -m agentgov check task governance/tasks/p0-documentation-index-user-acceptance-closeout-v1.json",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

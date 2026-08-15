@@ -1,0 +1,85 @@
+{
+  "acceptance_signals": [
+    "The existing plan command remains read-only by default and retains the strict agentgov.documentation-archive-plan 1.0 JSON shape.",
+    "An explicit apply option prints the exact plan and requires a real interactive terminal plus the exact confirmation phrase before any repository write.",
+    "Non-interactive input, declined or incorrect confirmation, deterministic failure plans, unsafe targets, and no-op plans produce no unintended write.",
+    "Apply regenerates the plan immediately before writing and rejects any difference in through-date, ordered entries, source hashes, findings, action, target before digest, target after digest, or candidate content.",
+    "An absent index is created with exclusive file creation; an existing index is updated through a flushed same-directory temporary file and atomic replacement after final target revalidation; temporary artifacts are removed after success or failure.",
+    "Fixture tests cover confirmed create, confirmed update, no-op, non-interactive refusal, incorrect confirmation, stale source content, stale target content, unsafe target, write failure cleanup, and complete dated-log byte preservation.",
+    "README and the dedicated guide document preview, exact confirmation, create, update, no-op, stale-plan refusal, source preservation, and the absence of scheduling, Git, publication, release, or deployment authority.",
+    "After focused and complete validation pass, the exact current repository candidate is applied to create docs/development-log/INDEX.md; a follow-up plan reports no-op and every dated development-log hash remains unchanged.",
+    "Focused archive, user-documentation, and task-contract tests, the complete unittest suite, task and repository governance checks, admitted-scope inspection, JSON parsing, and git diff --check pass."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The admitted writer v1 scope is complete and paused after 16 archive, 24 user-documentation, and 13 task-contract tests passed; the full suite passed 827 tests with 2 platform-limited skips; the real 17-link index was created with a no-op follow-up plan and all dated logs preserved; and native current-Agent self-review found no correction-required drift. Automatic refresh, scheduling, source-log mutation, Git, publication, release, deployment, and follow-on implementation remain unauthorized.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Extend the compact documentation archive planner with an explicit safe apply path that can create or update docs/development-log/INDEX.md only after a real interactive confirmation and exact plan revalidation, including every source-log hash and the target before and after digests. Preserve the default read-only behavior, use exclusive creation for an absent target and same-directory temporary-file atomic replacement for an existing target, clean temporary artifacts on failure, keep every dated development record byte-identical at its stable path, and create the current repository index only after the implementation and safety validation pass."
+  },
+  "risk": {
+    "items": [
+      "A stale plan could overwrite an index derived from different source-log bytes unless the complete plan is regenerated and compared.",
+      "A target race could replace an unexpected index unless the target before digest and path safety are revalidated immediately before replacement.",
+      "A failed update could leave a temporary artifact unless cleanup is deterministic.",
+      "An apply path could accidentally mutate dated logs unless tests snapshot every source record before and after create and update.",
+      "Adding apply to a formerly read-only command could blur authority unless default, non-interactive, confirmation, and external-action boundaries remain explicit.",
+      "The dirty working tree could blur attribution between the completed compact-candidate slice and this writer unless overlapping paths and prior task evidence remain explicit.",
+      "Reviewed assumption: The compact candidate and retained JSON source hashes from the completed predecessor task are the approved presentation and integrity foundations.",
+      "Reviewed assumption: Interactive confirmation belongs in the CLI while the lower-level apply function enforces deterministic plan and filesystem revalidation.",
+      "Reviewed assumption: Same-directory os.replace provides the repository-local atomic replacement primitive for an existing index; arbitrary non-AgentGov external writers cannot be transactionally controlled.",
+      "Reviewed assumption: The schema shape remains version 1.0 because apply behavior does not add or remove plan-document fields.",
+      "Reviewed assumption: Creating docs/development-log/INDEX.md is inside this task, while automatically refreshing it during future closeouts is not.",
+      "Reviewed assumption: The working tree contains the completed compact-candidate task and a pre-existing user-owned .codex configuration; this task builds on the former and excludes the latter.",
+      "Reviewed unknown: Cross-platform crash durability beyond flushed file content and same-directory replacement is not established.",
+      "Reviewed unknown: A future scheduling or formal-closeout integration remains undecided and requires separate product review and admission."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "schemas/documentation-archive-plan.schema.json",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "docs/index.html",
+      "docs/quickstart.html",
+      "docs/quickstart.zh-CN.html",
+      "docs/quickstart.zh-CN.md",
+      "docs/assets",
+      ".github/workflows",
+      "release"
+    ],
+    "include_paths": [
+      "src/agentgov/documentation_archive.py",
+      "src/agentgov/cli.py",
+      "tests/test_documentation_archive.py",
+      "README.md",
+      "docs/documentation-archive-plan.md",
+      "docs/development-log/INDEX.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-15.md",
+      "tests/test_user_documentation.py",
+      "tests/test_task_contract.py",
+      "governance/tasks"
+    ]
+  },
+  "task_id": "p0-safe-documentation-index-writer-v1",
+  "title": "Implement safe documentation index writer v1",
+  "validation_commands": [
+    "python -m unittest discover -s tests -p test_documentation_archive.py -v",
+    "python -m unittest discover -s tests -p test_user_documentation.py -v",
+    "python -m unittest discover -s tests -p test_task_contract.py -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-safe-documentation-index-writer-v1.json",
+    "python -m agentgov check repository .",
+    "python -m agentgov check scope governance/tasks/p0-safe-documentation-index-writer-v1.json --repository . --format terminal",
+    "git diff --check"
+  ]
+}

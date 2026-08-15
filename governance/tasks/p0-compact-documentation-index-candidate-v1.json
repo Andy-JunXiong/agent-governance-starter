@@ -1,0 +1,80 @@
+{
+  "acceptance_signals": [
+    "The exact Markdown candidate lists each eligible record using only its date, title, and stable relative link, with no inline source SHA-256 value.",
+    "The strict agentgov.documentation-archive-plan 1.0 JSON entries retain every source SHA-256 value, and the candidate change retains before and after content digests.",
+    "Stable newest-date and same-day path ordering, explicit through-date behavior, title warnings, create, update, no-op, failure, advisory, and not-applicable states remain unchanged.",
+    "Fixture tests prove compact Markdown rendering, retained machine-readable integrity evidence, existing-index update and no-op behavior, and filesystem no-mutation behavior.",
+    "README and the dedicated guide explain the human-readable versus machine-verifiable evidence split without claiming that usefulness is deterministic.",
+    "A real-repository read-only run through 2026-08-15 produces 16 linked entries without inline source hashes and does not create docs/development-log/INDEX.md.",
+    "Focused archive, user-documentation, and task-contract tests, the complete unittest suite, task and repository governance checks, and git diff --check pass."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "On 2026-08-15 Compact Documentation Index Candidate v1 delivered the admitted compact Markdown presentation while retaining machine-readable source hashes, candidate-content digests, deterministic states, and all read-only authority boundaries. The focused archive, user-documentation, and task-contract tests passed; the complete suite passed all 821 tests with 2 platform-limited skips; the real-repository no-mutation run, task and repository checks, admitted-state scope inspection, and git diff --check completed with only the pre-existing excluded local configuration outside task scope. A distinct native current-Agent self-review found no correction-required requirement, architecture, scope, implementation, or data drift. This paused task authorizes no index write, writer, schedule, reminder, Git action, publication, release, deployment, or follow-on implementation.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Refine the read-only documentation archive planner so its exact human-facing INDEX.md candidate renders compact date, title, and relative-link bullets without inline source hashes, while preserving per-record SHA-256 values in the strict JSON entries and preserving all existing deterministic ordering, change digests, no-mutation behavior, advisory usefulness semantics, and denied writer, scheduling, Git, publication, release, and deployment authority."
+  },
+  "risk": {
+    "items": [
+      "Removing hashes from both human and machine surfaces would weaken existing integrity evidence.",
+      "Changing candidate bytes alters create, update, no-op, and after-digest expectations and requires focused regression coverage.",
+      "Documentation could overstate usefulness as objective rather than advisory.",
+      "A planner change could accidentally create the index or mutate dated logs if no-mutation protection regresses.",
+      "Unrelated user-owned workspace changes could be misattributed unless scope remains explicit.",
+      "Reviewed assumption: Removing inline source hashes from candidate Markdown improves scanability while JSON entries remain the machine-verifiable integrity surface.",
+      "Reviewed assumption: The strict schema shape and version remain unchanged because all existing fields and semantics are preserved; only the rendered Markdown presentation becomes compact.",
+      "Reviewed assumption: Terminal diagnostic ENTRY lines may retain hashes because this task targets the proposed human-facing INDEX.md artifact, not diagnostic output.",
+      "Reviewed assumption: The existing read-only command and ten-minute adoption journey remain unchanged.",
+      "Reviewed assumption: The pre-existing untracked .codex configuration is human-owned and excluded.",
+      "Reviewed unknown: Whether product owners find the compact candidate sufficiently useful remains a later human review outcome.",
+      "Reviewed unknown: Any repository writer, concurrency contract, scheduling, reminder, or publication workflow remains undecided and separately gated."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "docs/development-log/INDEX.md",
+      "src/agentgov/cli.py",
+      "schemas/documentation-archive-plan.schema.json",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "docs/index.html",
+      "docs/quickstart.html",
+      "docs/quickstart.zh-CN.html",
+      "docs/quickstart.zh-CN.md",
+      "docs/assets",
+      ".github/workflows",
+      "release"
+    ],
+    "include_paths": [
+      "src/agentgov/documentation_archive.py",
+      "tests/test_documentation_archive.py",
+      "README.md",
+      "docs/documentation-archive-plan.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-15.md",
+      "tests/test_user_documentation.py",
+      "tests/test_task_contract.py",
+      "governance/tasks"
+    ]
+  },
+  "task_id": "p0-compact-documentation-index-candidate-v1",
+  "title": "Refine compact documentation index candidate v1",
+  "validation_commands": [
+    "python -m unittest discover -s tests -p test_documentation_archive.py -v",
+    "python -m unittest discover -s tests -p test_user_documentation.py -v",
+    "python -m unittest discover -s tests -p test_task_contract.py -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-compact-documentation-index-candidate-v1.json",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

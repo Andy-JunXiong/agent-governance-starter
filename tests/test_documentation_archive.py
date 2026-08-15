@@ -5,6 +5,7 @@ import json
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from unittest.mock import patch
 
 from agentgov.cli import EXIT_ERROR, EXIT_FAIL, EXIT_PASS, main
 from agentgov.documentation_archive import (
@@ -12,7 +13,9 @@ from agentgov.documentation_archive import (
     ARCHIVE_PLAN_SCHEMA_VERSION,
     ArchiveFindingStatus,
     ArchivePlanState,
+    DocumentationArchiveApplyError,
     DEVELOPMENT_LOG_INDEX,
+    apply_documentation_archive_plan,
     documentation_archive_plan_document,
     parse_through_date,
     plan_documentation_archive,
@@ -53,6 +56,13 @@ def snapshot(root: Path) -> dict[str, bytes]:
     }
 
 
+def dated_log_snapshot(root: Path) -> dict[str, bytes]:
+    return {
+        path.name: path.read_bytes()
+        for path in sorted((root / "docs/development-log").glob("20*.md"))
+    }
+
+
 class DocumentationArchivePlanTests(unittest.TestCase):
     def test_passing_plan_is_stable_read_only_and_same_day_safe(self) -> None:
         with TemporaryDirectory() as temp_dir:
@@ -80,6 +90,7 @@ class DocumentationArchivePlanTests(unittest.TestCase):
         self.assertIsNone(plan.change.before_sha256)
         self.assertIn("(2026-08-14-historical-migration.md)", plan.change.content)
         self.assertIn("(2026-08-14.md)", plan.change.content)
+        self.assertNotIn("sha256:", plan.change.content)
         self.assertNotIn("No repository file was written", plan.change.content)
         self.assertFalse(index_exists)
         self.assertEqual(
@@ -161,6 +172,159 @@ class DocumentationArchivePlanTests(unittest.TestCase):
         self.assertEqual(current.change.before_sha256, current.change.after_sha256)
         self.assertEqual(before, after)
 
+    def test_apply_exclusively_creates_then_noops_without_mutating_logs(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            case = materialize_case(root, "passing")
+            before_logs = dated_log_snapshot(root)
+            create = plan_documentation_archive(
+                root, through_date=parse_through_date(case["through"])
+            )
+
+            created = apply_documentation_archive_plan(create)
+            after_create_logs = dated_log_snapshot(root)
+            current = plan_documentation_archive(
+                root, through_date=parse_through_date(case["through"])
+            )
+            before_noop = snapshot(root)
+            unchanged = apply_documentation_archive_plan(current)
+            after_noop = snapshot(root)
+
+        self.assertEqual(created.action, "create")
+        self.assertEqual(unchanged.action, "none")
+        self.assertEqual(before_logs, after_create_logs)
+        self.assertEqual(before_noop, after_noop)
+        self.assertEqual(current.change.before_sha256, current.change.after_sha256)
+
+    def test_apply_atomically_updates_and_removes_temporary_file(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            case = materialize_case(root, "passing")
+            index = root / DEVELOPMENT_LOG_INDEX
+            index.write_text("# Stale index\n", encoding="utf-8")
+            before_logs = dated_log_snapshot(root)
+            update = plan_documentation_archive(
+                root, through_date=parse_through_date(case["through"])
+            )
+
+            result = apply_documentation_archive_plan(update)
+
+            self.assertEqual(result.action, "update")
+            self.assertEqual(index.read_text(encoding="utf-8"), update.change.content)
+            self.assertEqual(before_logs, dated_log_snapshot(root))
+            self.assertEqual(list(index.parent.glob(".INDEX.md.agentgov-*.tmp")), [])
+
+    def test_apply_rejects_stale_source_and_target_without_writing(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            case = materialize_case(root, "passing")
+            create = plan_documentation_archive(
+                root, through_date=parse_through_date(case["through"])
+            )
+            source = root / "docs/development-log/2026-08-13.md"
+            source.write_text("# Changed after preview\n", encoding="utf-8")
+
+            with self.assertRaisesRegex(DocumentationArchiveApplyError, "stale"):
+                apply_documentation_archive_plan(create)
+            self.assertFalse((root / DEVELOPMENT_LOG_INDEX).exists())
+
+            index = root / DEVELOPMENT_LOG_INDEX
+            index.write_text("# First stale index\n", encoding="utf-8")
+            update = plan_documentation_archive(
+                root, through_date=parse_through_date(case["through"])
+            )
+            index.write_text("# Competing index\n", encoding="utf-8")
+
+            with self.assertRaisesRegex(DocumentationArchiveApplyError, "stale"):
+                apply_documentation_archive_plan(update)
+            self.assertEqual(index.read_text(encoding="utf-8"), "# Competing index\n")
+
+    def test_update_failure_preserves_target_and_cleans_temporary_file(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            case = materialize_case(root, "passing")
+            index = root / DEVELOPMENT_LOG_INDEX
+            index.write_text("# Stale index\n", encoding="utf-8")
+            update = plan_documentation_archive(
+                root, through_date=parse_through_date(case["through"])
+            )
+
+            with patch("agentgov.documentation_archive.os.replace", side_effect=OSError("blocked")):
+                with self.assertRaisesRegex(OSError, "blocked"):
+                    apply_documentation_archive_plan(update)
+
+            self.assertEqual(index.read_text(encoding="utf-8"), "# Stale index\n")
+            self.assertEqual(list(index.parent.glob(".INDEX.md.agentgov-*.tmp")), [])
+
+    def test_apply_rejects_unsafe_index_target_without_writing(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            case = materialize_case(root, "passing")
+            index = root / DEVELOPMENT_LOG_INDEX
+            index.mkdir()
+            before = snapshot(root)
+            failed = plan_documentation_archive(
+                root, through_date=parse_through_date(case["through"])
+            )
+
+            with self.assertRaisesRegex(
+                DocumentationArchiveApplyError, "failed.*cannot be applied"
+            ):
+                apply_documentation_archive_plan(failed)
+
+            self.assertEqual(before, snapshot(root))
+            self.assertTrue(index.is_dir())
+
+    def test_cli_apply_requires_interactive_exact_confirmation(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            case = materialize_case(root, "passing")
+            before = snapshot(root)
+
+            json_apply = run_cli(
+                "plan", "documentation-archive", str(root),
+                "--through", case["through"], "--format", "json", "--apply",
+            )
+            with patch("sys.stdin.isatty", return_value=False):
+                noninteractive = run_cli(
+                    "plan", "documentation-archive", str(root),
+                    "--through", case["through"], "--apply",
+                )
+            with patch("sys.stdin.isatty", return_value=True), patch(
+                "builtins.input", return_value="NO"
+            ):
+                declined = run_cli(
+                    "plan", "documentation-archive", str(root),
+                    "--through", case["through"], "--apply",
+                )
+            with patch("sys.stdin.isatty", return_value=True), patch(
+                "builtins.input", side_effect=EOFError
+            ):
+                interrupted = run_cli(
+                    "plan", "documentation-archive", str(root),
+                    "--through", case["through"], "--apply",
+                )
+            after_decline = snapshot(root)
+            with patch("sys.stdin.isatty", return_value=True), patch(
+                "builtins.input", return_value="APPLY INDEX"
+            ):
+                confirmed = run_cli(
+                    "plan", "documentation-archive", str(root),
+                    "--through", case["through"], "--apply",
+                )
+
+        self.assertEqual(json_apply[0], EXIT_ERROR)
+        self.assertIn("requires text format", json_apply[2])
+        self.assertEqual(noninteractive[0], EXIT_FAIL)
+        self.assertIn("interactive terminal", noninteractive[2])
+        self.assertEqual(declined[0], EXIT_FAIL)
+        self.assertIn("CANCELLED", declined[2])
+        self.assertEqual(interrupted[0], EXIT_FAIL)
+        self.assertIn("CANCELLED", interrupted[2])
+        self.assertEqual(before, after_decline)
+        self.assertEqual(confirmed[0], EXIT_PASS)
+        self.assertIn("APPLIED create docs/development-log/INDEX.md", confirmed[1])
+
     def test_contract_document_separates_findings_and_denies_authority(self) -> None:
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
@@ -181,6 +345,8 @@ class DocumentationArchivePlanTests(unittest.TestCase):
         self.assertTrue(all(value is False for value in document["authority_boundary"].values()))
         self.assertIn("apply_authorized", document["authority_boundary"])
         self.assertIn("scheduling_authorized", document["authority_boundary"])
+        self.assertTrue(all(len(entry["sha256"]) == 64 for entry in document["entries"]))
+        self.assertNotIn("sha256:", document["change"]["content"])
         self.assertEqual(json.loads(render_documentation_archive_plan_json(plan)), document)
 
     def test_schema_is_strict_and_matches_runtime_authority(self) -> None:
