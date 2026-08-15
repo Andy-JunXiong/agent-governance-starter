@@ -66,15 +66,24 @@ still performs no model or network call. Static code can validate the
 normalized contract but cannot prove semantic fidelity, so Codex presents the
 exact resulting plan through native MCP form elicitation before any write.
 
+Development Adapter `1.5.0` narrows that native input relative to the generic
+draft: the Codex Agent no longer supplies `owner`. The Adapter injects the
+canonical `Human product owner` role into the exact plan, where the existing
+task builder uses it for both `owner` and `decided_by`. The generic proposal
+contract, reference materializer, and terminal recovery path continue to carry
+an explicit accountable owner because those non-native paths have separate
+operator-attestation boundaries.
+
 ## Codex native review
 
 When Codex negotiates MCP form elicitation, the foreground Adapter advertises
 `agentgov_task_proposal_review` as a sixth tool. The tool input deliberately
 omits raw conversation, repository identity, proposal identity, privacy and
-authority declarations, and the decision. The Adapter binds the local Git
-root, adds those invariant fields, builds the existing read-only admission
-plan, and sends the complete bounded plan back to Codex with three choices:
-admit the exact task, request changes, or reject.
+authority declarations, the accountable-owner identity, and the decision. The
+Adapter binds the local Git root, adds those invariant fields and the canonical
+`Human product owner` role, builds the existing read-only admission plan, and
+sends the complete bounded plan back to Codex with three choices: admit the
+exact task, request changes, or reject.
 
 Triggering is scoped to the exact requested repository change. A
 human-admitted task counts only when its requirement, goal, scope, and
@@ -92,6 +101,10 @@ tool permission is not task admission. Admission still does not start a
 session or authorize implementation, scope expansion, Git, release, or
 deployment. Clients without form elicitation retain the original five
 read-only governance tools and use the terminal recovery flow when needed.
+An Agent-supplied `owner` is an unsupported native input and fails before the
+form or any write. Native form mediation supports attribution to the human
+product-owner role; it does not cryptographically authenticate the individual
+operator or their account.
 
 The repository initializer now creates a tracked
 `governance/tasks/.gitkeep`. It is an inert directory bootstrap, not a task,

@@ -114,6 +114,21 @@ One bounded direct App Server replay reached the form request and stopped with
 no human decision and no record; this proves installed forwarding, not live
 Agent tool selection or end-user form presentation. It is not published or
 activated in a consumer, and this project's MCP configuration remains unchanged.
+Development source Adapter `1.5.0` now removes accountable-owner identity from
+the native proposal tool input. The Adapter injects the canonical
+`Human product owner` role into the exact reviewed plan, and only bound native
+acceptance can persist it as both `owner` and `decided_by`; an Agent-supplied
+owner fails before the form and writes nothing. This is human-role mediation,
+not cryptographic identification of the individual operator. The generic
+proposal and terminal fallback contracts remain unchanged, and `1.5.0` is not
+published, released, or active in a consumer. The exact reviewed module is now
+installed only in the existing local AgentGov pipx development runtime. Its
+unchanged configured command and isolated no-model preflight confirm Adapter
+`1.5.0`, protocol `2026-07-28`, seven/form and five/base tool discovery,
+pre-elicitation hostile-owner rejection, and human-owned admitted output. The
+local repair retained byte-verified `1.4.0` module and launcher backups; it did
+not build a wheel, change project configuration, run a model, or start a
+consumer replay.
 See the [automatic governance product requirements](docs/product-requirements-automatic-governance.md)
 and [ADR-0013](docs/adr/0013-make-automatic-governance-and-dashboard-primary.md).
 ADR-0014 separately owns semantic-review Provider and assurance routing.
@@ -514,6 +529,14 @@ One temporary-repository direct App Server replay advertised seven tools,
 called the drift tool exactly once, reached one bound `form` request with the
 three declared options, supplied no human decision, and wrote no record. It is
 installed-protocol evidence, not live Agent selection or UI-usability proof.
+Development source Adapter `1.5.0` corrects the proposal form's human-owner
+binding. The current Agent can no longer supply `owner`; the Adapter-owned
+`Human product owner` role appears in the exact preview and may be persisted
+only by the bound admit response. This does not authenticate the individual
+operator or alter the generic proposal contract. The exact module is now
+installed only in the existing local pipx development runtime and passed an
+isolated no-model preflight; it remains unpublished, unreleased, and inactive
+in consumers, and this does not authorize a consumer replay.
 The following proposal replay evidence remains specific to Adapter `1.3.0`.
 Standalone authentication is repaired. A separately authorized UTF-8-safe
 App Server replay completed one real read-only turn without surfacing a native

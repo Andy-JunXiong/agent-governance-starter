@@ -34,7 +34,11 @@ Sources:
 Extend the existing foreground Codex MCP Adapter with one host-materialization
 tool. The current Codex Agent supplies only a normalized low-risk proposal
 draft; it does not supply proposal identity, privacy declarations, authority,
-repository identity, or a human decision.
+repository identity, an accountable-owner identity, or a human decision. The
+native Adapter supplies the repository's canonical `Human product owner` role
+to the reviewed plan. This role attribution is grounded in the native decision
+boundary but is not cryptographic proof of which individual operates the
+client.
 
 The Adapter derives the repository locally, creates and validates the strict
 proposal plus exact admission plan, and then issues one MCP form elicitation
@@ -186,6 +190,41 @@ the matching proposal-tool stage, bounded field path, rule, and retryability.
 Raw error messages, arguments, content, and extensions remain excluded. This
 does not alter the Adapter, App Server protocol, native form, admission
 authority, or this ADR, and it cannot reconstruct the historical replay.
+
+## Implementation correction — 2026-08-15 human-owner role binding
+
+The fresh uncoached AIRBNB heading replay reached native form acceptance but
+persisted `current-agent` as both task `owner` and `decided_by`. The cause was
+inside the native proposal boundary: Adapter `1.4.0` accepted `owner` from the
+Coding Agent's normalized tool arguments, and the shared task builder correctly
+copied that untrusted value into both durable fields.
+
+Development Adapter `1.5.0` removes `owner` from the capability-gated native
+tool schema and exact argument parser. It injects the Adapter-owned canonical
+role `Human product owner` before rendering the exact admission plan. A client-
+bound `accept` plus `admit` response may therefore create only the reviewed task
+with that human role in both `owner` and `decided_by`; an Agent-supplied owner
+is rejected before elicitation and writes nothing. Missing capability and every
+non-admission or invalid response remain zero-write.
+
+This correction is deliberately native-Adapter-specific. It does not change
+the vendor-neutral `agentgov.task-proposal` 1.0 contract, the reference host
+materializer, the terminal `ADMIT` fallback, the development-task schema, or
+the task validator. Native form mediation establishes the human decision role,
+not the personal or account identity of the operator. Published package and
+release identities remain unchanged.
+
+A separately admitted local installation step has now placed the exact
+reviewed `1.5.0` module into the existing AgentGov pipx development runtime and
+repaired only its exposed launcher from the working inner launcher. The
+project configuration hash remained unchanged, and byte-verified `1.4.0`
+module and launcher backups were retained. Installed no-model preflight
+confirmed protocol `2026-07-28`, seven/form and five/base tool discovery,
+owner-free proposal schema, pre-elicitation hostile-owner zero-write, and one
+accepted disposable task with `Human product owner` as both `owner` and
+`decided_by`. This direct file repair is not a wheel, publication, release,
+consumer activation, live replay, or personal identity proof. A new consumer
+replay still requires separate authority.
 
 ## Validation
 

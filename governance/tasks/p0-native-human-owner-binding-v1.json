@@ -1,0 +1,84 @@
+{
+  "acceptance_signals": [
+    "The capability-gated native proposal tool input schema and exact parser no longer accept owner or any other Agent-supplied accountable identity.",
+    "Native proposal preparation injects the Adapter-owned role Human product owner into the exact reviewed task plan; an accepted admit creates a task whose owner and decided_by both use that role.",
+    "Supplying owner or another unsupported identity field fails before elicitation and performs no repository write.",
+    "Missing form capability, decline, cancel, request changes, reject, malformed response, stale plan, and target race remain zero-write; ordinary tool permission remains non-authoritative.",
+    "The generic agentgov.task-proposal 1.0 contract, ReferenceTaskProposalAdapter, terminal ADMIT fallback, development-task schema, and existing task validator remain unchanged.",
+    "Documentation states that native form mediation supports a human role attribution but does not cryptographically authenticate the individual operator.",
+    "The development MCP Adapter version advances from 1.4.0 to 1.5.0 and affected ADR, README, guides, public HTML, localized page, STATUS, dated log, and documentation tests remain consistent; published package and release identities remain unchanged.",
+    "Focused MCP and documentation tests, the complete unittest suite, task and repository governance checks, scope reconciliation, secret-safety inspection, and git diff --check pass.",
+    "A distinct native current-Agent self-review completes before the task is paused, with no Airbnb or NYC modification, live replay, completion or handoff fix, Git operation, publication, release, deployment, or external action."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-ee57b3e8f2804aebb1494e71aca69437 and admitted that exact task through an explicit admission control. The native-only owner binding, Adapter 1.5.0 identity update, focused and complete validation, scope reconciliation, documentation synchronization, and distinct native current-Agent advisory self-review are complete. The task is paused at source closeout and grants no installation, configuration change, consumer modification, replay, lifecycle-continuation fix, Git, publication, release, deployment, or follow-on authority.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Correct the native MCP task-proposal path so the Coding Agent can no longer supply the durable accountable-owner identity. Remove owner from the native tool input and exact argument parser, have the Adapter inject the canonical Human product owner role into the reviewed plan, and continue deriving decided_by from that Adapter-owned role only when the bound native form returns accept plus admit. Preserve zero-write failure behavior, the generic task-proposal and terminal fallback contracts, and the distinction between native human decision mediation and cryptographic personal identity. Update the development Adapter identity and all affected architecture, public documentation, status, log, and tests. Do not modify consumers or repair completion and handoff continuation."
+  },
+  "risk": {
+    "items": [
+      "Treating form mediation as cryptographic proof of an individual would overstate identity assurance.",
+      "Leaving owner in the native Agent-controlled input would preserve the observed authority misattribution.",
+      "Changing the shared generic task-proposal contract would unnecessarily break terminal and reference-host paths outside the selected slice.",
+      "Changing a tool input contract without updating the development Adapter version and public documentation would create source-of-truth drift.",
+      "Existing uncommitted evidence changes and the human-owned local configuration must remain untouched and unstaged.",
+      "Reviewed assumption: Human product owner is the repository's canonical accountable role label for native low-risk task admission.",
+      "Reviewed assumption: The native elicitation response is a trusted host decision callback for role attribution but not cryptographic personal identity.",
+      "Reviewed assumption: The observed Airbnb current-agent owner and decided_by values arose from the current native tool accepting the Coding Agent supplied owner field.",
+      "Reviewed assumption: Adapter version 1.5.0 is an unreleased development identity and does not alter published package or release metadata.",
+      "Reviewed unknown: The available native response does not identify or cryptographically authenticate the individual who selected admit.",
+      "Reviewed unknown: A later separately authorized live replay is required to determine whether an uncoached Agent uses the revised owner-free tool input successfully.",
+      "Reviewed unknown: The separate automatic Completion Verified and Bounded Handoff continuation gap remains unexplained and out of scope."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "src/agentgov/task_proposal.py",
+      "schemas",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "docs/product-requirements-automatic-governance.md",
+      "governance/fixtures",
+      "docs/experiments",
+      "docs/development-log/INDEX.md",
+      "release",
+      ".github"
+    ],
+    "include_paths": [
+      "src/agentgov/governance_mcp.py",
+      "tests/test_governance_mcp.py",
+      "tests/test_user_documentation.py",
+      "docs/adr/0015-use-mcp-elicitation-for-codex-task-admission.md",
+      "docs/governance-mcp-adapter.md",
+      "docs/task-proposal-admission.md",
+      "README.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-15.md",
+      "docs/index.html",
+      "docs/quickstart.html",
+      "docs/quickstart.zh-CN.html",
+      "governance/tasks"
+    ]
+  },
+  "task_id": "p0-native-human-owner-binding-v1",
+  "title": "Bind native task admission to the human owner role",
+  "validation_commands": [
+    "python -m unittest discover -s tests -p test_governance_mcp.py -v",
+    "python -m unittest discover -s tests -p test_user_documentation.py -v",
+    "python -m unittest discover -s tests -p test_task_contract.py -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-native-human-owner-binding-v1.json",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

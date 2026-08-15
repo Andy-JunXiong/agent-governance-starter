@@ -129,19 +129,33 @@ percentage.
 
 ## Reference fixtures
 
-Two sanitized fixtures establish the first vertical slice:
+Three sanitized fixtures now cover the first vertical slice and one later
+observed replay:
 
 - `matching-no-write.json` supplies a no-deviation mediated human decline that
   leaves the repository unchanged;
 - `airbnb-uncoached-baseline.json` records correct Agent selection, invalid
   proposal materialization, AgentGov's atomic rejection, later absent form
   mediation, and a fail-safe no-write terminal outcome.
+- `airbnb-uncoached-heading-replay.json` records a later fresh AIRBNB session
+  that reached a user-reported native form acceptance, exact admitted task
+  creation, one bounded repository write, and passing diff validation, but
+  persisted `current-agent` as both owner and decider and did not reach
+  Completion Verified or Bounded Handoff.
 
 The AIRBNB fixture deterministically locates the First Deviation at
 `proposal_materialization` with code `normalized_scope_path_rejected`. The
 later `human_form_not_presented` result remains visible but cannot overwrite
 the earlier deviation. The fixture retains no consumer source or replay
 payload.
+
+The later heading-replay fixture also locates its First Deviation at
+`proposal_materialization`, now with code `human_owner_misattributed`. The
+product owner's native-form acceptance is explicitly user-reported because no
+retained event independently authenticates its human origin. Later missing
+Completion Verified and Bounded Handoff transitions remain visible without
+replacing the earlier identity mismatch. A structurally passing compact task
+check does not by itself prove correct human accountability.
 
 ## Python use
 
@@ -165,8 +179,9 @@ print(evaluation.first_deviation)
 
 This slice builds on the host-enforcement capability audit, the existing
 host-interaction and authority contracts, the privacy-bounded replay normalizer,
-and the 2026-08-14 uncoached AIRBNB baseline. It makes the baseline repeatable
-without another model call or consumer mutation.
+the 2026-08-14 uncoached AIRBNB baseline, and the bounded 2026-08-15 heading
+replay. It makes both observed First Deviation results repeatable without
+another model call or consumer mutation.
 
 The next capability is not yet decided. Reasonable later connections include a
 read-only CLI, additional deterministic mechanism fixtures, Codex pre-action

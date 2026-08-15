@@ -89,6 +89,23 @@ unpublished and consumer-inactive. A bounded direct App Server replay reached
 one thread-bound form request and stopped without a human decision or record;
 it does not prove live Agent selection or end-user UI presentation.
 
+Development source Adapter `1.5.0` corrects the accountable-owner boundary of
+the existing proposal tool. Its native input no longer contains `owner`, and
+the exact parser rejects an Agent-supplied owner before elicitation. The
+Adapter injects the canonical `Human product owner` role into the reviewed
+plan, so only the bound native `accept` plus `admit` decision can persist that
+role as both `owner` and `decided_by`. This is trusted human-role mediation,
+not cryptographic authentication of the individual operator. The generic task-
+proposal contract and terminal fallback remain unchanged. This development
+module is now installed only in the existing local AgentGov pipx development
+runtime. The unchanged configured command starts, and isolated no-model
+preflight confirms protocol `2026-07-28`, seven/form and five/base tool
+discovery, owner-free schema, pre-elicitation hostile-owner zero-write, and an
+accepted task with `Human product owner` in both durable fields. Byte-verified
+`1.4.0` module and launcher backups are retained. This was a direct local
+module/launcher repair, not a wheel build, publication, release, consumer
+activation, model run, or live replay.
+
 The proposal trigger is scoped to the exact requested repository change. A
 human-admitted task counts only when its requirement, goal, scope, and
 acceptance signals match and authorize that change. An unrelated,
@@ -108,7 +125,9 @@ Only the response bound to that elicitation with `action=accept` and
 decisions, malformed or interrupted responses, stale plans, and target races
 are zero-write. A tool permission prompt does not count as task admission, and
 admission grants no implementation, scope, Git, release, or deployment
-authority.
+authority. The current Agent supplies no accountable-owner identity through
+this native tool; the Adapter-owned human role is visible in the exact plan
+before the decision.
 
 Server instructions and tool descriptions also disclose the host selection
 boundary. Meaningful development with multiple reasonable directions—or a

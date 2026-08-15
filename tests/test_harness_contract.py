@@ -25,6 +25,7 @@ SCHEMA = ROOT / "schemas/harness-contract-v1.schema.json"
 FIXTURES = ROOT / "governance/fixtures/harness-contract-v1"
 MATCHING = FIXTURES / "matching-no-write.json"
 AIRBNB = FIXTURES / "airbnb-uncoached-baseline.json"
+AIRBNB_HEADING = FIXTURES / "airbnb-uncoached-heading-replay.json"
 
 
 class HarnessContractTests(unittest.TestCase):
@@ -40,7 +41,7 @@ class HarnessContractTests(unittest.TestCase):
                 result[key] = value
             return result
 
-        for path in (SCHEMA, MATCHING, AIRBNB):
+        for path in (SCHEMA, MATCHING, AIRBNB, AIRBNB_HEADING):
             with self.subTest(path=path.name):
                 json.loads(
                     path.read_text(encoding="utf-8"),
@@ -156,6 +157,40 @@ class HarnessContractTests(unittest.TestCase):
             derive_first_deviation(document)["stage"],
             "proposal_materialization",
         )
+
+    def test_airbnb_heading_replay_preserves_identity_first_deviation_and_later_gaps(self) -> None:
+        document = self.fixture(AIRBNB_HEADING)
+        observed = document["observed_transitions"]
+
+        self.assertEqual(validate_harness_run_document(document), [])
+        self.assertEqual(
+            derive_first_deviation(document),
+            {
+                "present": True,
+                "sequence": 3,
+                "stage": "proposal_materialization",
+                "code": "human_owner_misattributed",
+                "expected_outcome": "human_accountable_owner",
+                "observed_outcome": "agent_accountable_owner",
+            },
+        )
+        self.assertEqual(
+            evaluate_harness_run(document).channel_statuses,
+            {
+                "agent_selection": "conforming",
+                "governance_decision": "deviating",
+                "intervention_outcome": "deviating",
+            },
+        )
+        self.assertEqual(observed[4]["reason_code"], "user_reported_native_accept")
+        self.assertEqual(observed[10]["outcome"], "not_reached")
+        self.assertEqual(observed[11]["outcome"], "not_reached")
+        self.assertEqual(
+            document["host"]["capabilities"]["human_origin_assurance"],
+            "unavailable",
+        )
+        self.assertTrue(document["terminal"]["repository_modified"])
+        self.assertTrue(document["terminal"]["external_side_effect_completed"])
 
     def test_declared_first_deviation_must_match_derived_result(self) -> None:
         document = self.fixture(AIRBNB)

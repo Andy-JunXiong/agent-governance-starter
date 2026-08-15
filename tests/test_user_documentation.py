@@ -7,6 +7,7 @@ README = ROOT / "README.md"
 QUICKSTART_ZH = ROOT / "docs/quickstart.zh-CN.md"
 QUICKSTART_WEB = ROOT / "docs/quickstart.html"
 QUICKSTART_ZH_WEB = ROOT / "docs/quickstart.zh-CN.html"
+INDEX_WEB = ROOT / "docs/index.html"
 ADOPTION_GUIDE = ROOT / "docs/existing-repository-adoption.md"
 GENERATED_FILES_GUIDE = ROOT / "docs/generated-files-guide.md"
 TROUBLESHOOTING = ROOT / "docs/troubleshooting.md"
@@ -29,6 +30,14 @@ ACTIVE_AGENT_SELF_REVIEW = ROOT / "docs/active-agent-self-review.md"
 DOCUMENTATION_ARCHIVE_PLAN = ROOT / "docs/documentation-archive-plan.md"
 EXTRACTION_MAP = ROOT / "docs/ai-radar-extraction-map.md"
 STATUS = ROOT / "STATUS.md"
+HARNESS_GUIDE = ROOT / "docs/harness-contract-v1.md"
+AIRBNB_HEADING_REPLAY = (
+    ROOT / "docs/experiments/airbnb-uncoached-readme-heading-replay-2026-08-15.md"
+)
+ADAPTER_1_5_INSTALLED_PREFLIGHT = (
+    ROOT / "docs/experiments/adapter-1-5-installed-preflight-2026-08-15.md"
+)
+CURRENT_DEVELOPMENT_LOG = ROOT / "docs/development-log/2026-08-15.md"
 CONSUMER_COMPLETION_LOG = ROOT / "docs/development-log/2026-08-13.md"
 HISTORICAL_MIGRATION_LOG = (
     ROOT / "docs/development-log/2026-08-14-historical-migration.md"
@@ -42,6 +51,9 @@ AUTOMATIC_EXPERIENCE_ADR = (
 )
 SEMANTIC_REVIEW_ADR = (
     ROOT / "docs/adr/0014-route-semantic-review-through-host-providers.md"
+)
+TASK_ADMISSION_ADR = (
+    ROOT / "docs/adr/0015-use-mcp-elicitation-for-codex-task-admission.md"
 )
 KERNEL_BASELINE_ADR = (
     ROOT / "docs/adr/0016-establish-minimum-sufficient-kernel-architecture.md"
@@ -58,6 +70,62 @@ GUIDE_STYLE = ROOT / "docs/guide.css"
 
 
 class UserDocumentationTests(unittest.TestCase):
+    def test_native_proposal_owner_binding_is_adapter_owned_and_bounded(self) -> None:
+        sources = tuple(
+            path.read_text(encoding="utf-8")
+            for path in (
+                README,
+                GOVERNANCE_MCP_ADAPTER,
+                TASK_PROPOSAL_ADMISSION,
+                TASK_ADMISSION_ADR,
+                INDEX_WEB,
+                QUICKSTART_WEB,
+                QUICKSTART_ZH_WEB,
+            )
+        )
+        for text in sources:
+            with self.subTest(source=text[:40]):
+                self.assertIn("1.5.0", text)
+                self.assertIn("Human product owner", text)
+                self.assertIn("owner", text)
+                self.assertIn("decided_by", text)
+        for text in sources[:-1]:
+            self.assertIn("cryptographic", text.lower())
+        self.assertIn("Agent", sources[-1])
+
+    def test_adapter_1_5_local_installation_is_evidenced_without_overclaim(self) -> None:
+        evidence = ADAPTER_1_5_INSTALLED_PREFLIGHT.read_text(encoding="utf-8")
+        surfaces = tuple(
+            path.read_text(encoding="utf-8")
+            for path in (
+                README,
+                GOVERNANCE_MCP_ADAPTER,
+                TASK_ADMISSION_ADR,
+                INDEX_WEB,
+                QUICKSTART_WEB,
+                QUICKSTART_ZH_WEB,
+            )
+        )
+        for text in surfaces:
+            with self.subTest(source=text[:40]):
+                self.assertIn("1.5.0", text)
+                self.assertIn("pipx", text)
+                self.assertIn("Human product owner", text)
+        for phrase in (
+            "local-only",
+            "no-model",
+            "seven/form",
+            "five/base",
+            "hostile-owner",
+            "accepted-admit",
+            "project configuration",
+            "backups",
+            "live replay",
+        ):
+            self.assertIn(phrase, " ".join(evidence.split()))
+        self.assertIn("unpublished", README.read_text(encoding="utf-8"))
+        self.assertIn("consumer", evidence)
+
     def test_documentation_archive_plan_is_read_only_and_explicit(self) -> None:
         readme = README.read_text(encoding="utf-8")
         guide = DOCUMENTATION_ARCHIVE_PLAN.read_text(encoding="utf-8")
@@ -197,6 +265,33 @@ class UserDocumentationTests(unittest.TestCase):
             "not yet decided",
         ):
             self.assertIn(phrase, log)
+
+    def test_airbnb_uncoached_heading_replay_keeps_evidence_sources_and_gaps_separate(self) -> None:
+        surfaces = (
+            STATUS,
+            HARNESS_GUIDE,
+            AIRBNB_HEADING_REPLAY,
+            CURRENT_DEVELOPMENT_LOG,
+        )
+
+        self.assertTrue(AIRBNB_HEADING_REPLAY.is_file())
+        for path in surfaces:
+            normalized = " ".join(path.read_text(encoding="utf-8").split())
+            with self.subTest(path=path.name):
+                self.assertIn("human_owner_misattributed", normalized)
+                self.assertIn("Completion Verified", normalized)
+                self.assertIn("Bounded Handoff", normalized)
+                self.assertIn("not", normalized.lower())
+
+        experiment = AIRBNB_HEADING_REPLAY.read_text(encoding="utf-8")
+        for phrase in (
+            "Codex-read repository facts",
+            "Human-reported interaction fact",
+            "human_origin_assurance: unavailable",
+            "First Deviation",
+            "does not authorize a fix or another replay",
+        ):
+            self.assertIn(phrase, experiment)
 
     def test_nyc_completion_and_handoff_evidence_is_bounded(self) -> None:
         surfaces = (

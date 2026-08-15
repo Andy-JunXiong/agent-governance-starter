@@ -1,0 +1,89 @@
+{
+  "acceptance_signals": [
+    "Before any runtime replacement, SHA-256 values are recorded for the reviewed source module, installed Adapter 1.4.0 module, broken exposed launcher, working inner launcher, and project .codex/config.toml.",
+    "Create-only backups of the installed module and exposed launcher are made inside their existing pipx locations, verified byte-identical, never overwritten, and retained for rollback.",
+    "Only the installed governance_mcp.py and exposed agentgov.exe are replaced: the module matches the reviewed source SHA-256 and the exposed launcher matches the working inner launcher SHA-256.",
+    "No dependency, build tool, package, wheel, or network resource is downloaded; no new Python or pipx environment is created.",
+    "The unchanged project-configured command starts successfully and installed discovery reports protocol 2026-07-28, Adapter 1.5.0, seven tools with form capability and five base tools without it.",
+    "Installed proposal discovery omits owner from the Agent-controlled schema; an Agent-supplied owner fails before elicitation and creates no task in a disposable Git repository.",
+    "A no-model installed Adapter fixture with a bound accepted admit response creates exactly one disposable task whose owner and decided_by are both Human product owner.",
+    "The project .codex/config.toml hash is unchanged; Airbnb, NYC, repository source behavior, Git state, publication, release, deployment, model execution, live replay, and external systems remain unchanged.",
+    "A sanitized experiment record, ADR implementation status, README, guides, public HTML, localized page, STATUS, dated log, and documentation tests distinguish local-only installation from publication, consumer activation, live replay, personal identity authentication, and product effectiveness.",
+    "Focused documentation and task-contract tests, the complete unittest suite, installed no-model checks, task and repository governance checks, scope reconciliation, secret-safety inspection, and git diff --check pass.",
+    "A distinct native current-Agent self-review completes before the task is paused; backup removal, rollback, another installation, configuration change, consumer replay, Git, publication, release, deployment, or follow-on work remains unauthorized."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-ad838b4c79d4419685660d6237fa920f and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Install the exact reviewed Adapter 1.5.0 module into the existing local AgentGov pipx development environment without downloading or building dependencies. Before replacement, exclusively create verified backups of the installed Adapter 1.4.0 module and the broken exposed agentgov launcher. Replace only the installed governance_mcp.py with the reviewed source and refresh only the exposed launcher from the working inner pipx launcher. Verify hashes, configured-command startup, installed discovery, owner-free native proposal schema, hostile-owner pre-elicitation zero-write behavior, and Adapter-owned Human product owner materialization in disposable repositories. Record sanitized installed-runtime evidence and synchronize affected status and public documentation. Preserve project configuration and all consumer, Git, release, and external boundaries."
+  },
+  "risk": {
+    "items": [
+      "Replacing files outside the repository is a local runtime mutation and must stay limited to the two exact verified pipx targets.",
+      "Overwriting or deleting an existing backup would destroy rollback evidence; the operation must fail closed if either backup target appears.",
+      "Copying the wrong launcher could keep the project-configured MCP command broken; installed startup and hash equality must be verified immediately.",
+      "A failed post-copy check must restore both byte-identical backups before any further action.",
+      "Direct module replacement is local development installation evidence, not a reproducible wheel, published package, stable release, or consumer upgrade.",
+      "Native form mediation attributes the Human product owner role but does not cryptographically authenticate the individual operator.",
+      "Pre-existing uncommitted repository evidence changes and the human-owned project configuration must remain untouched and unstaged.",
+      "Reviewed assumption: The existing pipx environment internal launcher is the correct working launcher for its installed Python 3.11.9 environment.",
+      "Reviewed assumption: governance_mcp.py is the only installed runtime module changed by the reviewed Adapter 1.5.0 source correction.",
+      "Reviewed assumption: The current local pipx environment is disposable development infrastructure owned by the product owner.",
+      "Reviewed assumption: The source and installed package both retain distribution version 0.3.0rc1 while MCP Adapter identity changes from 1.4.0 to 1.5.0.",
+      "Reviewed unknown: The reason the exposed launcher became invalid is not established.",
+      "Reviewed unknown: Direct file replacement does not prove that a future wheel build or published installation contains the same bytes.",
+      "Reviewed unknown: No live Codex turn or uncoached consumer replay is authorized, so live tool selection and UI presentation remain unknown.",
+      "Reviewed unknown: The Completion Verified and Bounded Handoff continuation gap remains outside scope."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "src",
+      "schemas",
+      "governance/fixtures",
+      "docs/harness-contract-v1.md",
+      "docs/experiments/airbnb-uncoached-readme-heading-replay-2026-08-15.md",
+      "tests/test_governance_mcp.py",
+      "tests/test_harness_contract.py",
+      "release",
+      ".github",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/development-log/INDEX.md"
+    ],
+    "include_paths": [
+      "docs/experiments/adapter-1-5-installed-preflight-2026-08-15.md",
+      "README.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-15.md",
+      "docs/adr/0015-use-mcp-elicitation-for-codex-task-admission.md",
+      "docs/governance-mcp-adapter.md",
+      "docs/index.html",
+      "docs/quickstart.html",
+      "docs/quickstart.zh-CN.html",
+      "tests/test_user_documentation.py",
+      "governance/tasks"
+    ]
+  },
+  "task_id": "p0-install-adapter-1-5-offline-preflight",
+  "title": "Install Adapter 1.5.0 with offline preflight",
+  "validation_commands": [
+    "python -m unittest discover -s tests -p test_user_documentation.py -v",
+    "python -m unittest discover -s tests -p test_task_contract.py -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-install-adapter-1-5-offline-preflight.json",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

@@ -42,48 +42,67 @@ scheduling authority.
 
 ### Current closeout snapshot
 
-- **Active slice**: Safe Documentation Index Writer v1, an explicit bounded
-  apply path that creates or updates only `docs/development-log/INDEX.md` after
-  exact interactive confirmation and complete plan revalidation.
-- **Codex-run validation**: all 16 archive planner/writer, 24 user-
-  documentation, and 13 task-contract tests passed. The complete suite passed
-  all 827 tests with 2 platform-limited skips. Tests cover exclusive create,
-  atomic update, no-op, non-interactive and incorrect-confirmation refusal,
-  JSON/apply refusal, interrupted input, stale source and target rejection,
-  unsafe targets, temporary-file cleanup, and dated-log byte preservation.
-  The current repository apply created a 17-link index with SHA-256
-  `8d4017d8af05b7d975742a79b7263b6f63c339e8b9768002a974136a6c8504c4`;
-  the next plan returned `none`, all 17 dated logs remained byte-identical, and
-  no temporary file remained. The admitted task reported
-  `PASS=3 WARN=1 FAIL=0 ADVISORY=3` while admitted and
-  `PASS=2 WARN=2 FAIL=0 ADVISORY=3` after closeout pause; repository governance
-  reported `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. The final admitted-state scope
-  check accepted all 11 task paths and identified only the pre-existing
-  excluded `.codex/config.toml`. `git diff --check` passed. Native current-Agent
-  self-review found no correction-required requirement, architecture, scope,
-  implementation, data, or security drift.
-- **User-reported validation**: the product owner ran the documented PowerShell
-  apply command in the repository. The supplied screenshots show `STATE pass`,
-  17 dated records through 2026-08-15, `CHANGE none`, and `UNCHANGED` with the
-  expected index digest. Unicode rendered normally in that terminal. Because
-  the plan was a no-op, the command correctly did not request `APPLY INDEX`.
-- **Pending validation**: user-operated confirmed create or update remains
-  unexercised because the current index was already up to date. Cross-platform
-  crash durability beyond flushed same-directory replacement also remains
-  unknown.
-- **Incomplete**: none within the admitted writer v1 scope.
-- **Blocker / stop condition**: stop before automatic closeout refresh,
-  scheduling or reminders, moving or rewriting dated logs, Git, publication,
-  release, or deployment without separate human admission or authorization.
-- **Next product review**: decide whether the explicit manual writer is
-  sufficient after ordinary use or whether automatic closeout refresh merits a
-  separate requirement. This entry authorizes neither follow-on.
+- **Active slice**: install the exact reviewed Adapter `1.5.0` module into the
+  existing local AgentGov pipx development runtime, repair only its exposed
+  launcher, and prove the installed human-owner boundary without a model or
+  consumer replay.
+- **Codex-run validation**: pre-change hashes were recorded for source,
+  installed module, exposed and inner launchers, and project configuration.
+  Create-only `1.4.0` module and launcher backups are retained and match their
+  original hashes. The first replacement attempt encountered a locked exposed
+  launcher and rolled both targets back. After explicit human authorization,
+  only the two wrapper `agentgov.exe` processes were stopped; the second
+  replacement produced the reviewed module hash and made the exposed launcher
+  byte-identical to the working inner launcher. The unchanged configured
+  command starts, reports distribution `0.3.0rc1`, and loads Adapter `1.5.0`
+  with protocol `2026-07-28`. Installed no-model preflight returned seven tools
+  with form capability and five without it, omitted `owner` from the proposal
+  schema, rejected hostile owner input before elicitation with zero write, and
+  created exactly one disposable admitted task with `Human product owner` as
+  both `owner` and `decided_by`. All 27 documentation and 13 task-contract tests
+  pass; the complete suite passed all 832 tests with 2 platform-limited skips.
+  Task governance reported `PASS=3 WARN=1 FAIL=0 ADVISORY=3`, and repository
+  governance reported `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. The task JSON parsed,
+  the intended-path credential-pattern scan found no match, and
+  `git diff --check` passed. Scope reconciliation accepted all 13 paths covered
+  by this task and reported 8 pre-existing excluded or outside-scope source,
+  harness, AIRBNB, and human-owned configuration paths; no exception was
+  inferred.
+- **User-reported validation**: the human explicitly authorized stopping only
+  the two locked wrapper processes and continuing the approved installation.
+  This is authorization evidence, not a user-run behavior test. The earlier
+  AIRBNB form acceptance remains separate historical evidence.
+- **Pending validation**: the required distinct native current-Agent advisory
+  self-review remains before this installation task can be paused. Two calls
+  to the resolved journey returned `Transport closed` after the approved
+  wrapper-process stop. Local inspection confirms the configured server is
+  still enabled, but the running Codex host has no in-session MCP reload
+  command. A fresh Codex host session is required. A live Codex turn, consumer
+  replay, UI behavior, personal identity authentication, and wheel/publication
+  reproducibility remain outside this task.
+- **Incomplete**: none in the installation or no-model preflight behavior;
+  formal closeout is blocked on the required advisory review and task pause.
+- **Blocker / stop condition**: the native review transport is closed, so task
+  `p0-install-adapter-1-5-offline-preflight` remains `admitted` rather than
+  being falsely paused or completed. Stop before removing backups, rolling
+  back or reinstalling, changing project MCP configuration, modifying AIRBNB
+  or NYC, starting a live replay, repairing Completion Verified or Bounded
+  Handoff continuation, publication, release, deployment, or other external
+  actions. The human separately authorized one exact documentation checkpoint,
+  commit, and ordinary non-force push to `origin/main`; that Git authorization
+  does not complete the task or authorize any other downstream action.
+- **Next product review**: first restore the AgentGov MCP connection in a fresh
+  Codex host session, complete the required advisory review, and pause the
+  installation task. Only then decide whether one fresh AIRBNB replay is
+  valuable enough to authorize. This entry does not authorize that replay; the
+  lifecycle-continuation gap remains deferred.
 
 ### Unfinished and deferred work record
 
-- **Incomplete inside the admitted task**: none.
-- **Pending review**: decide whether the now-observed manual no-op workflow is
-  sufficient or whether automatic closeout refresh merits a separate task.
+- **Incomplete inside the admitted task**: native current-Agent self-review and
+  the resulting task pause remain blocked by the closed MCP transport.
+- **Pending review**: a fresh consumer replay remains a separate decision after
+  the local-only installation closes.
 - **Deferred candidate — broader historical cleanup**: mixed sections that
   still contain current capability or strategic facts were intentionally not
   split at bullet level. Any broader cleanup must preserve evidence references
@@ -178,9 +197,35 @@ authorized queue and do not select the next requirement.
   controlled ablation, causal benefit result, repeated intervention, or
   cross-context replication. The one-session authorization is consumed and no
   replay is authorized by this record.
+- A fresh 2026-08-15 uncoached AIRBNB README-heading replay progressed further:
+  automatic tool selection, native form presentation, user-reported personal
+  acceptance, task creation, one-heading implementation, and diff validation
+  were observed. The persisted admitted task nevertheless named
+  `current-agent` as both `owner` and `decided_by`; the sanitized Harness record
+  therefore derives `proposal_materialization` /
+  `human_owner_misattributed` as First Deviation. Completion Verified and
+  Bounded Handoff were not reached. Human-origin assurance remains unavailable
+  because no retained native event authenticates the reported click. This is
+  one observed partial journey, not proof of causality, recurrence, product or
+  control effectiveness, or cross-context replication; it grants no fix,
+  replay, Git, publication, release, or deployment authority.
+- The human-selected source correction is now implemented in development
+  Adapter `1.5.0`. The capability-gated proposal tool no longer exposes or
+  accepts `owner`; the Adapter injects `Human product owner` into the exact
+  reviewed plan, and the existing task builder therefore uses that role for
+  both `owner` and `decided_by`. An Agent-supplied owner is rejected before
+  elicitation and writes nothing. Native form mediation still does not
+  cryptographically identify the individual operator. The generic proposal,
+  terminal fallback, task schema, and validator remain unchanged. This source
+  is now installed only in the existing local AgentGov pipx development
+  runtime and passed isolated no-model preflight. It is not built as a new
+  wheel, published, released, or active in AIRBNB, NYC, or another consumer,
+  and no replay is authorized by this installation record. Project
+  configuration is unchanged and the byte-verified `1.4.0` module and launcher
+  backups are retained.
 - Development source now implements the bounded offline Harness Contract v1
   selected after that baseline. The strict `agentgov.harness-run` 1.0 schema,
-  dependency-free validator/evaluator, and two sanitized fixtures preserve
+  dependency-free validator/evaluator, and three sanitized fixtures preserve
   ordered expected/observed transitions, three separate evidence channels,
   honest host capability and Harness-result claims, First Deviation, terminal
   facts, privacy limits, and denied authority. The AIRBNB fixture derives

@@ -25,6 +25,7 @@ from agentgov.codex_mcp import (
 from agentgov.governance_mcp import (
     MCP_BASE_TOOL_NAMES,
     MCP_DRIFT_REVIEW_TOOL_NAME,
+    MCP_NATIVE_ACCOUNTABLE_OWNER,
     MCP_PROTOCOL_VERSION,
     MCP_SERVER_VERSION,
     MCP_SERVER_INSTRUCTIONS,
@@ -78,7 +79,6 @@ def task_proposal_arguments(task_id: str = "native-review-fixture") -> dict:
         },
         "acceptance_signals": ["Only exact native admission creates the task."],
         "validation_commands": ["python -m unittest discover -s tests -v"],
-        "owner": "Human product owner",
         "risk_items": ["Native form support depends on negotiated client capability."],
         "assumptions": ["The current Codex client supports form elicitation."],
         "unknowns": [],
@@ -272,6 +272,7 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
         listed = server.dispatch(rpc(3, "tools/list", {}))
 
         self.assertEqual(discovered["result"]["supportedVersions"][0], MCP_PROTOCOL_VERSION)
+        self.assertEqual(MCP_SERVER_VERSION, "1.5.0")
         self.assertEqual(initialized["result"]["serverInfo"]["version"], MCP_SERVER_VERSION)
         self.assertEqual(initialized["result"]["protocolVersion"], "2025-11-25")
         self.assertEqual(
@@ -340,6 +341,12 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
         self.assertNotIn("raw_prompt", proposal["properties"])
         self.assertNotIn("decision", proposal["properties"])
         self.assertNotIn("repository", proposal["properties"])
+        self.assertNotIn("owner", proposal["properties"])
+        self.assertNotIn("owner", proposal["required"])
+        self.assertIn(
+            "canonical human owner role",
+            descriptions[MCP_TASK_PROPOSAL_TOOL_NAME],
+        )
         self.assertEqual(
             proposal["properties"]["scope"]["properties"]["include_paths"]["items"]["maxLength"],
             400,
@@ -458,6 +465,61 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
             self.assertTrue(target.is_file())
             document = json.loads(target.read_text(encoding="utf-8"))
             self.assertEqual(document["decision"]["state"], "admitted")
+            self.assertEqual(document["owner"], MCP_NATIVE_ACCOUNTABLE_OWNER)
+            self.assertEqual(
+                document["decision"]["decided_by"], MCP_NATIVE_ACCOUNTABLE_OWNER
+            )
+
+    def test_native_proposal_rejects_agent_supplied_owner_before_elicitation(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            (root / "governance" / "tasks").mkdir(parents=True)
+            server = GovernanceMcpServer(
+                adapter(repository=root), request_id_factory=lambda: "elc-unused"
+            )
+            arguments = task_proposal_arguments("native-agent-owner")
+            arguments["owner"] = "current-agent"
+            stream = "\n".join(
+                (
+                    json.dumps(
+                        rpc(
+                            1,
+                            "initialize",
+                            {
+                                "protocolVersion": "2025-11-25",
+                                "capabilities": {"elicitation": {"form": {}}},
+                                "clientInfo": {"name": "codex", "version": "fixture"},
+                            },
+                        )
+                    ),
+                    json.dumps(
+                        rpc(
+                            2,
+                            "tools/call",
+                            {
+                                "name": MCP_TASK_PROPOSAL_TOOL_NAME,
+                                "arguments": arguments,
+                            },
+                        )
+                    ),
+                )
+            ) + "\n"
+            output = io.StringIO()
+
+            self.assertEqual(server.serve(io.StringIO(stream), output), 0)
+            messages = [json.loads(line) for line in output.getvalue().splitlines()]
+            self.assertEqual(len(messages), 2)
+            result = messages[1]["result"]
+            self.assertTrue(result["isError"])
+            error = result["structuredContent"]["error"]
+            self.assertEqual(error["error_code"], "tool_arguments_invalid")
+            self.assertEqual(error["stage"], MCP_TASK_PROPOSAL_TOOL_NAME)
+            self.assertEqual(error["field_path"], "$")
+            self.assertEqual(error["rule"], "exact_fields")
+            self.assertTrue(error["retryable"])
+            self.assertFalse(
+                (root / "governance" / "tasks" / "native-agent-owner.json").exists()
+            )
 
     def test_native_proposal_non_admission_and_stale_plan_are_zero_write(self) -> None:
         outcomes = (

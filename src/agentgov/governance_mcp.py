@@ -62,7 +62,8 @@ from agentgov.task_proposal import (
 MCP_PROTOCOL_VERSION = "2026-07-28"
 MCP_LEGACY_PROTOCOL_VERSIONS = ("2025-11-25", "2025-06-18")
 MCP_SERVER_NAME = "agentgov-governance"
-MCP_SERVER_VERSION = "1.4.0"
+MCP_SERVER_VERSION = "1.5.0"
+MCP_NATIVE_ACCOUNTABLE_OWNER = "Human product owner"
 MCP_BASE_TOOL_NAMES = (
     "agentgov_alignment_start",
     "agentgov_alignment_update",
@@ -1009,7 +1010,6 @@ def _task_proposal_input_schema() -> Mapping[str, Any]:
         "scope": _task_proposal_scope_schema(),
         "acceptance_signals": required_text_list,
         "validation_commands": required_text_list,
-        "owner": {"type": "string", "minLength": 1, "maxLength": 100},
         "risk_items": text_list,
         "assumptions": text_list,
         "unknowns": text_list,
@@ -1165,8 +1165,10 @@ def governance_mcp_tools() -> tuple[Mapping[str, Any], ...]:
                 "work does not need proposal review. Materialize only normalized low-risk task meaning from the "
                 "current conversation. AgentGov "
                 "creates the strict proposal and opens one native human review form; never "
-                "supply raw chat, proposal identity, authority, repository identity, or a "
-                "human decision. The task is created only after exact native admission."
+                "supply raw chat, proposal identity, authority, repository identity, an "
+                "accountable-owner identity, or a human decision. The Adapter binds the "
+                "canonical human owner role, and the task is created only after exact "
+                "native admission."
             ),
             "inputSchema": _task_proposal_input_schema(),
             "annotations": {
@@ -1250,7 +1252,6 @@ class GovernanceMcpAdapter:
             "scope",
             "acceptance_signals",
             "validation_commands",
-            "owner",
             "risk_items",
             "assumptions",
             "unknowns",
@@ -1307,9 +1308,7 @@ class GovernanceMcpAdapter:
                 field_path="validation_commands",
                 minimum_items=1,
             ),
-            owner=_task_proposal_text(
-                args["owner"], field_path="owner", maximum=100
-            ),
+            owner=MCP_NATIVE_ACCOUNTABLE_OWNER,
             risk_items=_task_proposal_text_list(
                 args["risk_items"], field_path="risk_items"
             ),

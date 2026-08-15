@@ -1,0 +1,79 @@
+{
+  "acceptance_signals": [
+    "A new sanitized agentgov.harness-run 1.0 fixture represents the expected and observed Airbnb transition sequence without raw prompt, transcript, model output, tool payload, source content, credentials, absolute paths, or unbounded data.",
+    "The fixture records conforming automatic tool selection, native form presentation and human acceptance as user-reported evidence, exact admitted task creation, the one-heading README implementation, and git diff --check success.",
+    "The fixture deterministically derives proposal_materialization with code human_owner_misattributed as the First Deviation because the task persisted owner and decided_by as current-agent instead of a human accountable owner.",
+    "Later observed gaps remain visible: the task is still admitted, no .agentgov lifecycle evidence exists, Completion Verified was not reached, Bounded Handoff was not reached, and a generic chat completion does not replace those transitions.",
+    "The experiment record separates Codex-read repository facts from the product owner's form-interaction report and does not claim human-origin event authentication, causality, product effectiveness, independent review, prevention, control effectiveness, or cross-context replication.",
+    "The Harness guide and STATUS distinguish the earlier 2026-08-14 invalid-scope baseline from this later partial journey and preserve the automatic independent-rehearsal gate as not passed.",
+    "Focused Harness, user-documentation, and task-contract tests, the complete unittest suite, task and repository governance checks, JSON parsing, fixture validation, secret-safety inspection, and git diff --check pass.",
+    "After a distinct bounded current-Agent review, the evidence task is paused and grants no Airbnb change, AgentGov fix, task-validator change, Git operation, publication, release, deployment, NYC action, automatic retry, or follow-on authority."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-fb12b31948af4ee5aa672578d9b35862 and admitted that exact task through an explicit admission control. The bounded evidence record, focused and complete validation, scope reconciliation, and distinct native current-Agent advisory self-review are complete. The task is paused at evidence closeout; it grants no Airbnb change, AgentGov correction, replay, Git, publication, release, deployment, or follow-on authority.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Record the 2026-08-15 fresh uncoached Airbnb README-heading replay as privacy-bounded observed evidence in AgentGov. Add one sanitized Harness Contract v1 fixture and experiment record, update the Harness guide, STATUS, and the existing 2026-08-15 development log, and add focused fixture tests. Distinguish Codex-read repository facts from the product owner's report that the native form appeared and was personally accepted. The fixture must deterministically identify the earliest deviation at proposal materialization because the persisted admitted task records both owner and decided_by as current-agent despite a real human form decision, while retaining the later missing Completion Verified and Bounded Handoff transitions. Do not modify Airbnb, AgentGov runtime behavior, schemas, adapters, task validators, product code, release identity, Git state, or external systems."
+  },
+  "risk": {
+    "items": [
+      "Combining user-reported form interaction with repository-inspected facts without labeling their sources would overstate evidence strength.",
+      "Treating a structurally passing task check as proof of correct human accountability would hide the semantic ownership deviation.",
+      "Letting the later completion gap replace the earlier identity deviation would violate deterministic First Deviation ordering.",
+      "Recording raw consumer content, absolute paths, task payloads, screenshots, or conversation would violate Harness privacy boundaries.",
+      "Changing AgentGov or Airbnb while recording evidence would contaminate the measurement and exceed the selected scope.",
+      "Reviewed assumption: The supplied screenshot represents the fresh Airbnb Codex session selected through resolved alignment journey mcpj-9e1b688cc0f84948bcc61737802a53b1.",
+      "Reviewed assumption: The product owner's explicit follow-up that they personally clicked accept is reliable user-reported evidence of form presentation and human admission.",
+      "Reviewed assumption: The Airbnb task file and README diff inspected read-only after the replay belong to that same session.",
+      "Reviewed assumption: The existing Harness Contract v1 can represent the additional transitions without a schema or runtime change.",
+      "Reviewed unknown: No retained native event payload independently authenticates the human-origin form decision.",
+      "Reviewed unknown: The exact reason the fresh Agent supplied current-agent as owner is not established by this evidence-only task.",
+      "Reviewed unknown: The exact coordinator reason for stopping before Completion Verified and Bounded Handoff is not established.",
+      "Reviewed unknown: No controlled ablation, repeat replay, other host, or cross-context reproduction was performed."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "README.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "docs/product-requirements-automatic-governance.md",
+      "schemas",
+      "src",
+      "release",
+      ".github",
+      "docs/development-log/INDEX.md"
+    ],
+    "include_paths": [
+      "governance/fixtures/harness-contract-v1/airbnb-uncoached-heading-replay.json",
+      "docs/experiments/airbnb-uncoached-readme-heading-replay-2026-08-15.md",
+      "tests/test_harness_contract.py",
+      "docs/harness-contract-v1.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-15.md",
+      "tests/test_user_documentation.py",
+      "tests/test_task_contract.py",
+      "governance/tasks"
+    ]
+  },
+  "task_id": "p0-record-airbnb-uncoached-heading-replay-v1",
+  "title": "Record Airbnb uncoached README heading replay evidence",
+  "validation_commands": [
+    "python -m unittest discover -s tests -p test_harness_contract.py -v",
+    "python -m unittest discover -s tests -p test_user_documentation.py -v",
+    "python -m unittest discover -s tests -p test_task_contract.py -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-record-airbnb-uncoached-heading-replay-v1.json",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}
