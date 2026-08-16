@@ -1037,15 +1037,21 @@ class UserDocumentationTests(unittest.TestCase):
         for phrase in (
             "agentgov.replay-preflight-plan",
             "agentgov check replay-preflight",
+            "agentgov.replay-correlation-reservation-preview",
+            "agentgov.replay-correlation-reservation-result",
+            "agentgov reserve replay-correlation",
             "READY",
             "BLOCKED",
             "UNKNOWN",
             "does not authorize",
             "does not create or reserve a marker",
+            "exclusive file create",
         ):
             self.assertIn(phrase, normalized_guide)
         self.assertIn("clean-target replay preflight guide", readme)
         self.assertIn("implemented upstream gate", harness)
+        self.assertIn("preflight -> reservation", harness)
+        self.assertIn("First Deviation rules", harness)
 
 
 if __name__ == "__main__":

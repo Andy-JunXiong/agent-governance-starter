@@ -70,6 +70,17 @@ class CapabilityCliTests(unittest.TestCase):
         self.assertIn("replay-preflight", stdout.getvalue())
         self.assertEqual(stderr.getvalue(), "")
 
+    def test_reserve_help_includes_replay_correlation(self) -> None:
+        stdout = io.StringIO()
+        stderr = io.StringIO()
+        with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+            with self.assertRaises(SystemExit) as raised:
+                main(["reserve", "--help"])
+
+        self.assertEqual(raised.exception.code, EXIT_PASS)
+        self.assertIn("replay-correlation", stdout.getvalue())
+        self.assertEqual(stderr.getvalue(), "")
+
     def test_valid_manifest_returns_pass(self) -> None:
         exit_code, stdout, stderr = run_cli("check", "capability", str(VALID_MANIFEST))
 

@@ -1,0 +1,65 @@
+{
+  "acceptance_signals": [
+    "One newly created local disposable Git consumer has a committed baseline, an unchanged named target, no related task collision, one strict local Adapter metadata file, and one unused rpf correlation identifier before the check.",
+    "The development-source replay-preflight CLI is invoked exactly once against that disposable consumer and returns a machine-readable READY result with exit code 0, or the rehearsal stops and records the exact BLOCKED, UNKNOWN, malformed-input, or operational result without retry.",
+    "No model session, consumer replay, task admission in the disposable consumer, cleanup of a real consumer, Adapter installation, network call, Git remote operation, publication, release, or deployment occurs.",
+    "Sanitized evidence records only the synthetic plan facts, stable result and reason codes, command outcome, authority boundary, and temporary-environment disposition; it contains no raw prompt, transcript, credentials, private data, or unrelated absolute path.",
+    "The task record, dated development log, experiment record, and STATUS remain consistent; JSON parsing, focused preflight tests, task and repository governance, secret-safety inspection, and git diff check complete with unresolved gaps reported."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-92a52945ef8d4d3f8f614535b4d2330a and admitted that exact task through an explicit admission control. On 2026-08-16 the synthetic no-remote consumer was created, the development-source preflight was invoked exactly once, and it returned READY with six PASS findings and no reason codes while granting no authority. Focused tests and the complete supported-Python suite passed, sanitized evidence was recorded, and bounded current-Agent review found no correction-required drift. The task is paused so it cannot authorize a second preflight, replay, cleanup, real-consumer change, Git operation, publication, release, deployment, or follow-on work.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Create one local disposable Git consumer with an explicit clean target state and trustworthy local Adapter metadata, construct one strict replay-preflight plan, run the development-source preflight exactly once without launching a replay, and record only sanitized readiness evidence in the starter repository."
+  },
+  "risk": {
+    "items": [
+      "Temporary setup writes must remain confined to a newly created disposable directory and must not alter a real consumer or Git remote.",
+      "Running the check more than once would violate the one-shot measurement boundary.",
+      "Evidence could overstate READY as replay authorization or product-effectiveness proof.",
+      "Existing unrelated untracked .codex content, cover image, and AIRBNB task record must remain untouched.",
+      "Reviewed assumption: A synthetic disposable repository under a local temporary directory is sufficient to exercise the implemented preflight without representing a real consumer.",
+      "Reviewed assumption: Adapter id openai.codex-mcp, version 1.5.0, and protocol 2026-07-28 are the intended synthetic metadata values for this rehearsal.",
+      "Reviewed assumption: A READY result establishes only that the exact named prerequisites hold at check time and grants no replay or write authority.",
+      "Reviewed unknown: Whether the first real disposable-consumer invocation will return READY on this Windows host.",
+      "Reviewed unknown: Whether any platform-specific Git or path behavior will produce an UNKNOWN result.",
+      "Reviewed unknown: Whether a future separate product decision should add correlation reservation or run an actual consumer replay."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "release",
+      "src",
+      "tests",
+      "schemas",
+      "README.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "docs/assets"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-disposable-consumer-preflight-rehearsal-v1.json",
+      "docs/experiments/disposable-consumer-preflight-2026-08-16.md",
+      "docs/development-log/2026-08-16.md",
+      "STATUS.md"
+    ]
+  },
+  "task_id": "p0-disposable-consumer-preflight-rehearsal-v1",
+  "title": "Rehearse one disposable-consumer replay preflight",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_replay_preflight tests.test_cli -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-disposable-consumer-preflight-rehearsal-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

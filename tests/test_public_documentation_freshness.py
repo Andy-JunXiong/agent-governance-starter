@@ -23,6 +23,9 @@ class PublicDocumentationFreshnessTests(unittest.TestCase):
         self.assertIn("BLOCKED", normalized)
         self.assertIn("UNKNOWN", normalized)
         self.assertIn("Harness still evaluates normalized evidence after it", normalized)
+        self.assertIn("agentgov reserve replay-correlation", normalized)
+        self.assertIn("requires an interactive `RESERVE`", normalized)
+        self.assertIn("Preflight, reservation, separately authorized replay", normalized)
 
     def test_public_plan_routes_historical_checkpoints_to_dated_evidence(self) -> None:
         public_plan = (ROOT / "docs/development-plan.md").read_text(

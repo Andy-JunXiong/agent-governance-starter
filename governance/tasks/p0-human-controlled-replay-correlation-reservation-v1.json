@@ -1,0 +1,80 @@
+{
+  "acceptance_signals": [
+    "A strict versioned reservation marker and preview/result contract bind the existing replay-preflight plan digest, correlation identifier, expected and observed Git revision, Adapter identity and protocol, repository-relative marker path, and an all-denied replay, task, Git, release, deployment, and publication authority boundary.",
+    "Default CLI behavior is read-only and shows the exact create-only marker; non-interactive input, cancellation, malformed input, non-READY state, absent or unsafe registry directory, stale plan or repository state, and an existing marker create no marker and modify no repository content.",
+    "Only exact interactive human confirmation can request apply; apply re-evaluates the same replay-preflight plan immediately before writing and uses exclusive file creation so a race collision never overwrites an existing marker.",
+    "A successful apply creates exactly one bounded local marker and returns reserved status while explicitly stating that reservation does not admit a task, authorize a replay, launch a model session, or grant repository, Git, publication, release, or deployment authority.",
+    "Fixture tests cover preview, successful reservation, cancellation, redirected input, stale revision or target state, Adapter mismatch, missing registry directory, pre-existing marker, and exclusive-create race behavior.",
+    "Documentation connects preflight, reservation, replay, and DS Harness Contract v1 as separate stages sharing correlation identity without changing Harness Contract v1 semantics or claiming real-consumer or product-effectiveness evidence.",
+    "Focused and complete supported-Python tests, task and repository governance, pre-pause scope reconciliation, JSON and Schema checks, secret-safety inspection, bounded current-Agent self-review, and git diff check complete with unresolved gaps reported."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-b20b289a71e94fb2b3973df17178b113 and admitted that exact task through an explicit admission control. On 2026-08-16 the bounded development-source preview, marker, result, CLI, Schema, tests, and documentation completed. All 868 supported-Python tests passed with 2 platform-limited skips, governance had no deterministic failure, and native current-Agent advisory review srv-6a3f3d55584e3cfce3da1893f9851d46 found no correction-required drift. The task is paused so it cannot authorize installation, a real-consumer marker, replay, Harness semantic change, Git operation, publication, release, deployment, or follow-on work.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Add a dependency-free, versioned, local correlation-reservation contract and low-level CLI that previews one exact marker after a READY replay preflight, requires explicit interactive human confirmation, revalidates the same plan and repository state immediately before an exclusive create, and never launches or authorizes a replay."
+  },
+  "risk": {
+    "items": [
+      "Reservation could be misrepresented as replay authorization or task admission.",
+      "A stale preview or race could overwrite or bind the wrong marker unless apply revalidates and writes exclusively.",
+      "Creating a missing registry directory during apply could violate zero-write failure semantics, so the directory must pre-exist.",
+      "Broad documentation edits could accidentally merge preflight, reservation, and DS Harness responsibilities.",
+      "Existing unrelated .codex content, cover image, AIRBNB task, disposable-preflight task, and experiment record must remain untouched.",
+      "Reviewed assumption: The registry directory must already exist as a trustworthy local directory so failure paths never need to create scaffolding before the exclusive marker write.",
+      "Reviewed assumption: A low-level exact interactive confirmation is an acceptable development and recovery interface while final product UX remains a native human decision surface.",
+      "Reviewed assumption: Re-evaluating the plan immediately before exclusive creation is sufficient for this bounded slice even though it cannot make repository state and later replay execution one atomic transaction.",
+      "Reviewed assumption: DS Harness Contract v1 remains the downstream post-run evaluator and requires no schema or runtime change in this task.",
+      "Reviewed unknown: The final public command spelling may require a small implementation choice while preserving separate preview and apply semantics.",
+      "Reviewed unknown: A future host-native form may replace the low-level terminal confirmation without changing the reservation contract.",
+      "Reviewed unknown: A later replay launcher may require a separate consume or release transition for a reservation marker."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "release",
+      "src/agentgov/harness_contract.py",
+      "schemas/harness-contract-v1.schema.json",
+      "governance/fixtures/harness-contract-v1",
+      "docs/assets",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md"
+    ],
+    "include_paths": [
+      "src/agentgov/replay_reservation.py",
+      "src/agentgov/cli.py",
+      "schemas/replay-correlation-reservation-v1.schema.json",
+      "tests/test_replay_reservation.py",
+      "tests/test_cli.py",
+      "tests/test_user_documentation.py",
+      "tests/test_public_documentation_freshness.py",
+      "docs/clean-target-replay-preflight.md",
+      "docs/harness-contract-v1.md",
+      "README.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-16.md",
+      "governance/tasks/p0-human-controlled-replay-correlation-reservation-v1.json"
+    ]
+  },
+  "task_id": "p0-human-controlled-replay-correlation-reservation-v1",
+  "title": "Implement human-controlled replay correlation reservation",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -p \"test_replay_reservation.py\" -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -p \"test_replay_preflight.py\" -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-human-controlled-replay-correlation-reservation-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check scope governance/tasks/p0-human-controlled-replay-correlation-reservation-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

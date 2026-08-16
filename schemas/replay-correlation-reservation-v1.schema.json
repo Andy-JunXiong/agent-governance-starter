@@ -1,0 +1,255 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/replay-correlation-reservation-v1.0.json",
+  "title": "AgentGov replay correlation reservation contracts",
+  "oneOf": [
+    {"$ref": "#/$defs/marker"},
+    {"$ref": "#/$defs/preview"},
+    {"$ref": "#/$defs/result"}
+  ],
+  "$defs": {
+    "authorityBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authorizes_cleanup",
+        "authorizes_deployment",
+        "authorizes_git_operations",
+        "authorizes_publication",
+        "authorizes_release",
+        "authorizes_replay",
+        "authorizes_repository_write",
+        "authorizes_task_admission"
+      ],
+      "properties": {
+        "authorizes_cleanup": {"const": false},
+        "authorizes_deployment": {"const": false},
+        "authorizes_git_operations": {"const": false},
+        "authorizes_publication": {"const": false},
+        "authorizes_release": {"const": false},
+        "authorizes_replay": {"const": false},
+        "authorizes_repository_write": {"const": false},
+        "authorizes_task_admission": {"const": false}
+      }
+    },
+    "correlationId": {
+      "type": "string",
+      "pattern": "^rpf-[0-9a-f]{16}$"
+    },
+    "markerPath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 440,
+      "pattern": "^(?!/)(?![A-Za-z]:[\\\\/])(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$)).+/rpf-[0-9a-f]{16}\\.json$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "gitSha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40,64}$"
+    },
+    "adapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adapter_id", "adapter_version", "protocol_version"],
+      "properties": {
+        "adapter_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$"
+        },
+        "adapter_version": {
+          "type": "string",
+          "pattern": "^[0-9]+(?:\\.[0-9]+){1,3}(?:(?:a|b|rc)[0-9]+)?$"
+        },
+        "protocol_version": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        }
+      }
+    },
+    "marker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract",
+        "schema_version",
+        "reservation_id",
+        "correlation_id",
+        "marker_path",
+        "preflight",
+        "adapter",
+        "status",
+        "authority_boundary"
+      ],
+      "properties": {
+        "contract": {"const": "agentgov.replay-correlation-reservation"},
+        "schema_version": {"const": "1.0"},
+        "reservation_id": {
+          "type": "string",
+          "pattern": "^rrv-[0-9a-f]{16}$"
+        },
+        "correlation_id": {"$ref": "#/$defs/correlationId"},
+        "marker_path": {"$ref": "#/$defs/markerPath"},
+        "preflight": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "plan_digest",
+            "expected_head_sha",
+            "observed_head_sha"
+          ],
+          "properties": {
+            "plan_digest": {"$ref": "#/$defs/sha256"},
+            "expected_head_sha": {"$ref": "#/$defs/gitSha"},
+            "observed_head_sha": {"$ref": "#/$defs/gitSha"}
+          }
+        },
+        "adapter": {"$ref": "#/$defs/adapter"},
+        "status": {"const": "reserved"},
+        "authority_boundary": {"$ref": "#/$defs/authorityBoundary"}
+      }
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "check_id", "reason_code", "message"],
+      "properties": {
+        "status": {"enum": ["PASS", "BLOCKED", "UNKNOWN"]},
+        "check_id": {"type": "string", "minLength": 1, "maxLength": 500},
+        "reason_code": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "string", "minLength": 1, "maxLength": 120}
+          ]
+        },
+        "message": {"type": "string", "minLength": 1, "maxLength": 1000}
+      }
+    },
+    "preflightReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract",
+        "schema_version",
+        "correlation_id",
+        "status",
+        "preconditions_ready",
+        "observed_head_sha",
+        "findings",
+        "reason_codes",
+        "known_limits",
+        "authority_boundary"
+      ],
+      "properties": {
+        "contract": {"const": "agentgov.replay-preflight-report"},
+        "schema_version": {"const": "1.0"},
+        "correlation_id": {"$ref": "#/$defs/correlationId"},
+        "status": {"enum": ["READY", "BLOCKED", "UNKNOWN"]},
+        "preconditions_ready": {"type": "boolean"},
+        "observed_head_sha": {
+          "oneOf": [{"type": "null"}, {"$ref": "#/$defs/gitSha"}]
+        },
+        "findings": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 200,
+          "items": {"$ref": "#/$defs/finding"}
+        },
+        "reason_codes": {
+          "type": "array",
+          "maxItems": 200,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1, "maxLength": 120}
+        },
+        "known_limits": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "items": {"type": "string", "minLength": 1, "maxLength": 1000}
+        },
+        "authority_boundary": {"$ref": "#/$defs/authorityBoundary"}
+      }
+    },
+    "preview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract",
+        "schema_version",
+        "status",
+        "correlation_id",
+        "marker_path",
+        "marker",
+        "preflight",
+        "reason_codes",
+        "known_limits",
+        "authority_boundary"
+      ],
+      "properties": {
+        "contract": {"const": "agentgov.replay-correlation-reservation-preview"},
+        "schema_version": {"const": "1.0"},
+        "status": {"enum": ["READY_TO_RESERVE", "BLOCKED", "UNKNOWN"]},
+        "correlation_id": {"$ref": "#/$defs/correlationId"},
+        "marker_path": {"$ref": "#/$defs/markerPath"},
+        "marker": {
+          "oneOf": [{"type": "null"}, {"$ref": "#/$defs/marker"}]
+        },
+        "preflight": {"$ref": "#/$defs/preflightReport"},
+        "reason_codes": {
+          "type": "array",
+          "maxItems": 200,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1, "maxLength": 120}
+        },
+        "known_limits": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "items": {"type": "string", "minLength": 1, "maxLength": 1000}
+        },
+        "authority_boundary": {"$ref": "#/$defs/authorityBoundary"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "READY_TO_RESERVE"}}},
+          "then": {"properties": {"marker": {"$ref": "#/$defs/marker"}}},
+          "else": {"properties": {"marker": {"type": "null"}}}
+        }
+      ]
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract",
+        "schema_version",
+        "status",
+        "correlation_id",
+        "marker_path",
+        "marker_digest",
+        "effect",
+        "authority_boundary"
+      ],
+      "properties": {
+        "contract": {"const": "agentgov.replay-correlation-reservation-result"},
+        "schema_version": {"const": "1.0"},
+        "status": {"const": "RESERVED"},
+        "correlation_id": {"$ref": "#/$defs/correlationId"},
+        "marker_path": {"$ref": "#/$defs/markerPath"},
+        "marker_digest": {"$ref": "#/$defs/sha256"},
+        "effect": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["repository_modified", "reservation_created"],
+          "properties": {
+            "repository_modified": {"const": true},
+            "reservation_created": {"const": true}
+          }
+        },
+        "authority_boundary": {"$ref": "#/$defs/authorityBoundary"}
+      }
+    }
+  }
+}

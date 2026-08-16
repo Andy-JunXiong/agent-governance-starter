@@ -643,7 +643,23 @@ This fixture-backed contract does not rerun a model, prove causality or product
 effectiveness, publish a percentage, or provide a live host Adapter or public
 CLI. A separate development-source clean-target replay preflight now checks
 explicit local prerequisites before a replay; Harness still evaluates
-normalized evidence after it. See the
+normalized evidence after it. Development source also provides a separate
+human-controlled correlation reservation: default execution previews one
+exact marker, while `--apply` requires an interactive `RESERVE`, repeats the
+same preflight immediately before an exclusive create, and still grants no
+replay authority.
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m agentgov reserve replay-correlation path/to/plan.json `
+  --repository path/to/consumer --format json
+python -m agentgov reserve replay-correlation path/to/plan.json `
+  --repository path/to/consumer --apply
+```
+
+The plan's registry directory must already exist; the reservation command does
+not create scaffolding on a failure path. Preflight, reservation, separately
+authorized replay, and Harness evaluation remain distinct stages. See the
 [Harness Contract v1 guide](docs/harness-contract-v1.md) and
 [clean-target replay preflight guide](docs/clean-target-replay-preflight.md).
 

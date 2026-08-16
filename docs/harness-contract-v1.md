@@ -199,11 +199,17 @@ observed First Deviation results repeatable without another model call or
 consumer mutation.
 
 The read-only [clean-target replay preflight](clean-target-replay-preflight.md)
-is now the implemented upstream gate: it checks the named repository, target,
-task, Adapter, and correlation prerequisites before execution, while Harness
-Contract v1 continues to classify normalized evidence after execution. The
-next capability after that connection is not yet decided. Reasonable later
-candidates include a human-controlled correlation reservation, additional
-deterministic mechanism fixtures, restart-safe native journey persistence,
-Codex pre-action conformance, or a separately designed controlled-ablation
-runner. None of those remaining candidates is authorized by this contract.
+is the implemented upstream gate: it checks the named repository, target,
+task, Adapter, and correlation prerequisites before execution. A separate
+human-controlled reservation layer can now preview the exact local marker,
+repeat the preflight after confirmation, and create that marker exclusively.
+Reservation still does not launch or authorize a replay. Harness Contract v1
+continues to classify normalized evidence only after execution; its schema,
+First Deviation rules, and fixtures are unchanged by reservation.
+
+The intended separation is `preflight -> reservation -> separately authorized
+replay -> Harness Contract v1`. The reserved `rpf-` identifier is bounded
+upstream evidence; no automatic mapping into a Harness field is claimed in
+this slice. Later candidates remain restart-safe native journey persistence,
+Codex pre-action conformance, additional deterministic mechanism fixtures, or
+a separately designed controlled-ablation runner. None is authorized here.

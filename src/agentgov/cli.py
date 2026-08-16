@@ -227,6 +227,18 @@ from agentgov.replay_preflight import (
     render_replay_preflight_json,
     render_replay_preflight_terminal,
 )
+from agentgov.replay_reservation import (
+    ReplayReservationConflictError,
+    ReplayReservationError,
+    ReplayReservationPreviewStatus,
+    ReplayReservationStaleError,
+    apply_replay_reservation,
+    prepare_replay_reservation,
+    render_replay_reservation_preview_json,
+    render_replay_reservation_preview_terminal,
+    render_replay_reservation_result_terminal,
+    request_replay_reservation_confirmation,
+)
 from agentgov.refresh import (
     RefreshAction,
     RefreshConflictError,
@@ -1972,6 +1984,62 @@ def _check_replay_preflight(
         if report.status is ReplayPreflightStatus.READY
         else EXIT_FAIL
     )
+
+
+def _reserve_replay_correlation(
+    plan_path: Path,
+    *,
+    repository: Path,
+    apply_reservation: bool,
+    output_format: str,
+) -> int:
+    """Preview or human-confirm one create-only replay correlation marker."""
+
+    if apply_reservation and output_format != "terminal":
+        print(
+            "ERROR reserve replay-correlation: --apply requires terminal format for human confirmation",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    try:
+        plan = load_replay_preflight_plan(plan_path)
+        preview = prepare_replay_reservation(plan, repository=repository)
+    except (ReplayPreflightPlanError, ReplayReservationError) as exc:
+        print(f"ERROR reserve replay-correlation: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    renderer = {
+        "terminal": render_replay_reservation_preview_terminal,
+        "json": render_replay_reservation_preview_json,
+    }[output_format]
+    print(renderer(preview), end="")
+    if preview.status is not ReplayReservationPreviewStatus.READY:
+        return EXIT_FAIL
+    if not apply_reservation:
+        return EXIT_PASS
+    try:
+        confirmed = request_replay_reservation_confirmation(
+            preview,
+            decision_reader=input,
+            is_interactive_terminal=sys.stdin.isatty(),
+        )
+    except EOFError:
+        confirmed = False
+    if not confirmed:
+        print(
+            "CANCELLED replay correlation reservation requires exact RESERVE confirmation from an interactive terminal"
+        )
+        print("NOTE no reservation marker was written")
+        return EXIT_PASS
+    try:
+        result = apply_replay_reservation(preview, plan, repository=repository)
+    except (ReplayReservationConflictError, ReplayReservationStaleError) as exc:
+        print(f"FAIL reserve replay-correlation: {exc}")
+        return EXIT_FAIL
+    except (ReplayReservationError, OSError, UnicodeError) as exc:
+        print(f"ERROR reserve replay-correlation: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    print(render_replay_reservation_result_terminal(result), end="")
+    return EXIT_PASS
 
 
 def _dev_foreground(
@@ -4480,6 +4548,51 @@ def build_parser() -> argparse.ArgumentParser:
             actor_label=args.actor_label,
             dry_run=args.dry_run,
             output_format=args.govern_format,
+        )
+    )
+
+    reserve_parser = commands.add_parser(
+        "reserve",
+        help="Preview or explicitly create one bounded local reservation.",
+    )
+    reserve_targets = reserve_parser.add_subparsers(
+        dest="reserve_target",
+        required=True,
+    )
+    replay_reservation_parser = reserve_targets.add_parser(
+        "replay-correlation",
+        help="Reserve one READY replay correlation without authorizing a replay.",
+    )
+    replay_reservation_parser.add_argument(
+        "plan",
+        type=Path,
+        help="Versioned replay-preflight plan JSON.",
+    )
+    replay_reservation_parser.add_argument(
+        "--repository",
+        type=Path,
+        default=Path("."),
+        help="Consumer Git worktree root containing the existing marker registry.",
+    )
+    replay_reservation_parser.add_argument(
+        "--apply",
+        dest="apply_replay_reservation",
+        action="store_true",
+        help="After exact interactive confirmation, revalidate and exclusively create the marker.",
+    )
+    replay_reservation_parser.add_argument(
+        "--format",
+        dest="replay_reservation_format",
+        choices=("terminal", "json"),
+        default="terminal",
+        help="Preview serialization format; apply requires terminal format.",
+    )
+    replay_reservation_parser.set_defaults(
+        handler=lambda args: _reserve_replay_correlation(
+            args.plan,
+            repository=args.repository,
+            apply_reservation=args.apply_replay_reservation,
+            output_format=args.replay_reservation_format,
         )
     )
 

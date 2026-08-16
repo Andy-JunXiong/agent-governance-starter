@@ -1,0 +1,74 @@
+{
+  "acceptance_signals": [
+    "STATUS and the dated development log record the explicit bounded direct-main publication authorization while preserving the paused product-task boundaries.",
+    "The intended commit contains only the completed disposable-preflight evidence, correlation-reservation implementation, associated documentation and tests, and this closeout task record.",
+    "The local Codex configuration, social cover image, and misdirected AIRBNB task record remain untracked and unstaged.",
+    "Relevant focused and complete supported-Python tests, task and repository governance, JSON parsing, credential-pattern inspection, and Git diff checks have no unresolved deterministic failure.",
+    "The exact intended paths are staged, committed once with a terse descriptive message, and pushed non-force to origin main after a remote-divergence fetch check.",
+    "No pull request, release, deployment, publication beyond the requested Git push, force-push, or external mutation occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-6e7ccf923fa944b9bc979aec7be40dcd and admitted that exact task through an explicit admission control. On 2026-08-16 the bounded status and development-log closeout completed, all 79 focused tests and all 868 supported-Python tests passed with 2 platform-limited skips, governance had no deterministic failure, and bounded current-Agent review found no correction-required drift. The task is paused before Git operations because it grants no Git or publication authority; the human separately authorized one exact bounded commit and non-force direct push to origin main.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Update current status and the dated development log to record the human-authorized bounded session closeout, validate the exact completed disposable-preflight and correlation-reservation change set, then commit and directly push only those intended files to origin main without a pull request, release, deployment, or unrelated local files."
+  },
+  "risk": {
+    "items": [
+      "A mixed working tree could stage unrelated human-owned files.",
+      "The remote main branch may have diverged since the local checkout.",
+      "Status text could falsely claim a push before Git confirms it.",
+      "Direct-main publication must not be broadened into a pull request, release, deployment, or force-push.",
+      "Reviewed assumption: The user explicitly authorized updating related closeout documentation, committing the bounded completed work, and pushing it directly to GitHub main.",
+      "Reviewed assumption: The completed disposable-preflight and correlation-reservation files listed in scope are the intended session deliverables.",
+      "Reviewed assumption: The local Codex configuration, social cover image, and misdirected AIRBNB task are unrelated and must remain unstaged.",
+      "Reviewed unknown: Whether origin main has advanced since the last local observation.",
+      "Reviewed unknown: Whether the configured Git credential helper can complete the authorized direct push."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "docs/assets",
+      "governance/tasks/p0-airbnb-runtime-completion-handoff.json",
+      ".github",
+      "release"
+    ],
+    "include_paths": [
+      "README.md",
+      "STATUS.md",
+      "docs/clean-target-replay-preflight.md",
+      "docs/development-log/2026-08-16.md",
+      "docs/harness-contract-v1.md",
+      "docs/experiments/disposable-consumer-preflight-2026-08-16.md",
+      "src/agentgov/cli.py",
+      "src/agentgov/replay_reservation.py",
+      "schemas/replay-correlation-reservation-v1.schema.json",
+      "tests/test_cli.py",
+      "tests/test_replay_reservation.py",
+      "tests/test_user_documentation.py",
+      "tests/test_public_documentation_freshness.py",
+      "governance/tasks/p0-disposable-consumer-preflight-rehearsal-v1.json",
+      "governance/tasks/p0-human-controlled-replay-correlation-reservation-v1.json",
+      "governance/tasks/p0-record-and-publish-2026-08-16-session-closeout.json"
+    ]
+  },
+  "task_id": "p0-record-and-publish-2026-08-16-session-closeout",
+  "title": "Record and publish the 2026-08-16 bounded closeout",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-record-and-publish-2026-08-16-session-closeout.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "git diff --check",
+    "git status -sb",
+    "git diff --cached --check"
+  ]
+}
