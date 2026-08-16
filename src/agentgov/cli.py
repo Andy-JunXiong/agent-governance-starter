@@ -219,6 +219,14 @@ from agentgov.references import (
     ReferenceStatus,
     check_capability_references,
 )
+from agentgov.replay_preflight import (
+    ReplayPreflightPlanError,
+    ReplayPreflightStatus,
+    evaluate_replay_preflight,
+    load_replay_preflight_plan,
+    render_replay_preflight_json,
+    render_replay_preflight_terminal,
+)
 from agentgov.refresh import (
     RefreshAction,
     RefreshConflictError,
@@ -1937,6 +1945,33 @@ def _check_scope(
     }[scope_format]
     print(renderer(report), end="")
     return EXIT_FAIL if report.has_failures else EXIT_PASS
+
+
+def _check_replay_preflight(
+    plan_path: Path,
+    *,
+    repository: Path,
+    output_format: str,
+) -> int:
+    """Evaluate one read-only clean-target replay plan."""
+
+    try:
+        plan = load_replay_preflight_plan(plan_path)
+        report = evaluate_replay_preflight(plan, repository=repository)
+    except ReplayPreflightPlanError as exc:
+        print(f"ERROR replay-preflight: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    renderer = {
+        "terminal": render_replay_preflight_terminal,
+        "json": render_replay_preflight_json,
+    }[output_format]
+    rendered = renderer(report)
+    print(rendered, end="" if rendered.endswith("\n") else "\n")
+    return (
+        EXIT_PASS
+        if report.status is ReplayPreflightStatus.READY
+        else EXIT_FAIL
+    )
 
 
 def _dev_foreground(
@@ -4519,6 +4554,36 @@ def build_parser() -> argparse.ArgumentParser:
     )
     task_parser.set_defaults(
         handler=lambda args: _check_task(args.task, repository=args.repository)
+    )
+
+    replay_preflight_parser = check_targets.add_parser(
+        "replay-preflight",
+        help="Check deterministic clean-target prerequisites before a replay.",
+    )
+    replay_preflight_parser.add_argument(
+        "plan",
+        type=Path,
+        help="Versioned replay-preflight plan JSON.",
+    )
+    replay_preflight_parser.add_argument(
+        "--repository",
+        type=Path,
+        default=Path("."),
+        help="Consumer Git worktree root to inspect read-only (default: current directory).",
+    )
+    replay_preflight_parser.add_argument(
+        "--format",
+        dest="replay_preflight_format",
+        choices=("terminal", "json"),
+        default="terminal",
+        help="Replay-preflight result format (default: terminal).",
+    )
+    replay_preflight_parser.set_defaults(
+        handler=lambda args: _check_replay_preflight(
+            args.plan,
+            repository=args.repository,
+            output_format=args.replay_preflight_format,
+        )
     )
 
     scope_parser = check_targets.add_parser(

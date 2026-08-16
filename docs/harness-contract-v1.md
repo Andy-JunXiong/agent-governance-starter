@@ -3,6 +3,8 @@
 Status: implemented as a dependency-free offline contract, evaluator, and
 fixture suite in development source. It is not yet a CLI, live host Adapter,
 controlled-ablation runner, Dashboard feed, release, or consumer integration.
+A separate clean-target replay preflight CLI now checks explicit local
+prerequisites before a replay; it does not change this post-replay contract.
 
 ## Purpose
 
@@ -196,7 +198,12 @@ and the consumed 2026-08-16 owner-regression attempt. It makes all three
 observed First Deviation results repeatable without another model call or
 consumer mutation.
 
-The next capability is not yet decided. Reasonable later connections include a
-read-only CLI, additional deterministic mechanism fixtures, Codex pre-action
-conformance, or a separately designed controlled-ablation runner. None is
-authorized by this contract.
+The read-only [clean-target replay preflight](clean-target-replay-preflight.md)
+is now the implemented upstream gate: it checks the named repository, target,
+task, Adapter, and correlation prerequisites before execution, while Harness
+Contract v1 continues to classify normalized evidence after execution. The
+next capability after that connection is not yet decided. Reasonable later
+candidates include a human-controlled correlation reservation, additional
+deterministic mechanism fixtures, restart-safe native journey persistence,
+Codex pre-action conformance, or a separately designed controlled-ablation
+runner. None of those remaining candidates is authorized by this contract.

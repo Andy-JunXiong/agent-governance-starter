@@ -13,6 +13,17 @@ STABLE_WHEEL = (
 
 
 class PublicDocumentationFreshnessTests(unittest.TestCase):
+    def test_public_readme_connects_clean_target_preflight_to_harness(self) -> None:
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        normalized = " ".join(readme.split())
+
+        self.assertIn("agentgov check replay-preflight", normalized)
+        self.assertIn("clean-target replay preflight guide", normalized)
+        self.assertIn("READY", normalized)
+        self.assertIn("BLOCKED", normalized)
+        self.assertIn("UNKNOWN", normalized)
+        self.assertIn("Harness still evaluates normalized evidence after it", normalized)
+
     def test_public_plan_routes_historical_checkpoints_to_dated_evidence(self) -> None:
         public_plan = (ROOT / "docs/development-plan.md").read_text(
             encoding="utf-8"

@@ -1026,6 +1026,27 @@ class UserDocumentationTests(unittest.TestCase):
             normalized_guide,
         )
 
+    def test_clean_target_replay_preflight_is_documented_as_a_non_authorizing_gate(self) -> None:
+        guide = (ROOT / "docs/clean-target-replay-preflight.md").read_text(
+            encoding="utf-8"
+        )
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        harness = (ROOT / "docs/harness-contract-v1.md").read_text(encoding="utf-8")
+        normalized_guide = " ".join(guide.split())
+
+        for phrase in (
+            "agentgov.replay-preflight-plan",
+            "agentgov check replay-preflight",
+            "READY",
+            "BLOCKED",
+            "UNKNOWN",
+            "does not authorize",
+            "does not create or reserve a marker",
+        ):
+            self.assertIn(phrase, normalized_guide)
+        self.assertIn("clean-target replay preflight guide", readme)
+        self.assertIn("implemented upstream gate", harness)
+
 
 if __name__ == "__main__":
     unittest.main()

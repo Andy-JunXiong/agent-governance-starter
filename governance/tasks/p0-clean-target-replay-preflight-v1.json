@@ -1,0 +1,77 @@
+{
+  "acceptance_signals": [
+    "A strict versioned replay-preflight contract and JSON Schema bind repository revision, exact target paths, explicit expected pre-state, related-task collision rules, local Adapter identity and protocol, and one unique correlation identifier.",
+    "A dependency-free deterministic evaluator reports READY, BLOCKED, or UNKNOWN with stable reason codes and never performs a model call, network call, repository write, task admission, cleanup, or replay launch.",
+    "Every non-READY result explicitly blocks replay consumption while granting no authority to clean, reset, stash, modify, commit, push, release, deploy, or publish.",
+    "A read-only CLI exposes terminal and JSON results without changing existing doctor, admitted-task scope, or Harness semantics.",
+    "Fixture-based tests cover clean readiness, dirty or already-satisfied target state, related-task collision, Adapter mismatch, stale revision, duplicate correlation identity, and unavailable Git or Adapter facts.",
+    "Affected user documentation, Harness relationship text, current status, and the dated development log remain consistent, focused tests and the complete suite pass, and no consumer replay or mutation occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human admitted structured proposal prp-0ef7c19f6ecd4bd3814d6a6455306b4d. On 2026-08-16 the bounded implementation completed with the strict plan Schema, dependency-free evaluator, read-only CLI, 25 focused tests, the complete 852-test suite with 2 skips, no deterministic task or repository governance failure, and native advisory review srv-a55b5f23db61a1fe7c1ec440a132e10c. No consumer replay, mutation, Git action, release, deployment, or publication occurred. Pausing records closeout and grants no follow-on authority.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Implement a dependency-free, deterministic, read-only replay preflight contract, evaluator, and CLI that binds one replay plan to repository revision, explicit target pre-state, related-task collision rules, local Adapter identity and protocol, and a unique correlation identifier; report READY, BLOCKED, or UNKNOWN before a governed consumer replay begins."
+  },
+  "risk": {
+    "items": [
+      "An underspecified expected pre-state could falsely classify a contaminated target as ready.",
+      "Reusing task-scope or doctor vocabulary could silently change established command semantics.",
+      "Git parsing or Windows path handling could omit dirty, renamed, untracked, or unavailable target facts.",
+      "Adapter identity may be unavailable or ambiguous; the evaluator must return UNKNOWN rather than infer readiness.",
+      "A preflight result is a replay-readiness gate only and must not be presented as task admission, host enforcement, or proof of product effectiveness.",
+      "Reviewed assumption: A replay operator can provide exact target paths and explicit machine-checkable pre-state conditions.",
+      "Reviewed assumption: Git is authoritative for repository revision and working-tree facts when available.",
+      "Reviewed assumption: Adapter identity and protocol can be discovered locally without network access.",
+      "Reviewed assumption: The current Python 3.11-compatible, dependency-free implementation model remains applicable.",
+      "Reviewed unknown: The final public CLI noun and option spelling may require a small implementation-level choice while preserving the admitted contract.",
+      "Reviewed unknown: The exact local Adapter metadata source may require discovery; if no trustworthy source exists, the evaluator will report UNKNOWN."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "release",
+      "src/agentgov/doctor.py",
+      "src/agentgov/change_scope.py",
+      "src/agentgov/harness_contract.py",
+      "src/agentgov/governance_mcp.py",
+      "src/agentgov/codex_mcp.py"
+    ],
+    "include_paths": [
+      "src/agentgov/replay_preflight.py",
+      "src/agentgov/cli.py",
+      "schemas/replay-preflight-v1.schema.json",
+      "tests/test_replay_preflight.py",
+      "tests/test_cli.py",
+      "tests/test_user_documentation.py",
+      "tests/test_public_documentation_freshness.py",
+      "docs/clean-target-replay-preflight.md",
+      "docs/harness-contract-v1.md",
+      "docs/development-log/2026-08-16.md",
+      "README.md",
+      "STATUS.md",
+      "governance/tasks/p0-clean-target-replay-preflight-v1.json"
+    ]
+  },
+  "task_id": "p0-clean-target-replay-preflight-v1",
+  "title": "Implement deterministic clean-target replay preflight",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_replay_preflight tests.test_cli -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_user_documentation tests.test_public_documentation_freshness tests.test_task_contract -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-clean-target-replay-preflight-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check scope governance/tasks/p0-clean-target-replay-preflight-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

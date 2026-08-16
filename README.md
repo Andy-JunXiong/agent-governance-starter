@@ -266,6 +266,21 @@ python -m agentgov govern finish governance/tasks/p0-context-selection.json `
 python -m agentgov monitor development .
 ```
 
+Before a separately authorized consumer replay, development source can now
+check one explicit clean-target plan without modifying the consumer:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m agentgov check replay-preflight path/to/plan.json `
+  --repository path/to/consumer --format terminal
+```
+
+The result is `READY`, `BLOCKED`, or `UNKNOWN`. `READY` establishes only the
+named Git revision, target pre-state, related-task absence, local Adapter
+identity/protocol, and correlation-marker prerequisites; it does not authorize
+the replay. Every other result says not to consume it. See the
+[clean-target replay preflight guide](docs/clean-target-replay-preflight.md).
+
 The current low-level guided path removes repeated task and base arguments:
 
 ```powershell
@@ -626,7 +641,11 @@ form-mediation gap. It rejects raw replay material, false post-action `BLOCK`
 claims, invalid ordering, duplicate transition identity, and authority drift.
 This fixture-backed contract does not rerun a model, prove causality or product
 effectiveness, publish a percentage, or provide a live host Adapter or public
-CLI. See the [Harness Contract v1 guide](docs/harness-contract-v1.md).
+CLI. A separate development-source clean-target replay preflight now checks
+explicit local prerequisites before a replay; Harness still evaluates
+normalized evidence after it. See the
+[Harness Contract v1 guide](docs/harness-contract-v1.md) and
+[clean-target replay preflight guide](docs/clean-target-replay-preflight.md).
 
 NYC then supplied a second independent bounded consumer journey. Under Python
 3.11.9, its existing reviewed synthetic sample completed schema validation,

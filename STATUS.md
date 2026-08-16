@@ -42,6 +42,48 @@ scheduling authority.
 
 ### Current closeout snapshot
 
+- **Active slice**: none. The deterministic clean-target replay preflight is
+  implemented, and task `p0-clean-target-replay-preflight-v1` is paused after
+  validation and advisory review.
+- **Codex-run validation**: all 25 replay-preflight and CLI tests passed; the
+  broader replay, CLI, user-documentation, and public-freshness set passed all
+  64 tests, and the final post-closeout focused set passed all 78 tests. The
+  complete suite passed all 852 tests with 2 platform-limited skips. Before
+  pause, task governance reported `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; after the
+  intentional pause it reported `PASS=2 WARN=2 FAIL=0 ADVISORY=3`. Repository
+  governance reported `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. The task and
+  replay-preflight Schema parse as JSON, the exact intended-file
+  credential-pattern scan found no match, and `git diff --check` passed.
+  Pre-pause scope reconciliation accepted all 11 then-current task paths; its
+  only failure was the pre-existing, explicitly excluded, human-owned
+  `.codex/config.toml`, which remains untouched. The later `STATUS.md` and
+  dated-log closeout changes are both explicitly included by the task; the
+  paused state correctly prevents rerunning an admitted-task scope check.
+  Native current-Agent advisory review
+  `srv-a55b5f23db61a1fe7c1ec440a132e10c` found no correction-required
+  requirement, architecture, security, implementation, or scope drift.
+- **User-reported validation**: the human selected the dedicated contract,
+  evaluator, and CLI direction and admitted the exact task through the native
+  task-proposal form. No consumer behavior result was user-reported.
+- **Pending validation**: no real consumer replay-preflight plan has yet been
+  evaluated outside temporary test repositories. No AIRBNB replay is needed
+  to perform that future read-only validation.
+- **Incomplete**: none inside the paused preflight task.
+- **Blocker / stop condition**: no closeout blocker remains. Stop before
+  creating a correlation marker, cleaning or changing AIRBNB, launching a
+  replay, installing Adapter metadata into a consumer, or performing commit,
+  push, publication, release, or deployment actions.
+- **Next product review**: consider one separately admitted disposable-consumer
+  preflight rehearsal without launching a replay. This would test portable
+  plan and Adapter-metadata setup before considering a human-controlled
+  correlation reservation or restart-safe native journey persistence. This
+  entry grants no follow-on authority.
+
+### Superseded closeout snapshot - AIRBNB owner-regression replay
+
+The following snapshot is preserved as superseded historical context; the
+dated 2026-08-16 development log owns the detailed session evidence.
+
 - **Active slice**: none. The consumed AIRBNB Adapter `1.5.0`
   owner-regression replay is recorded as privacy-bounded Harness evidence, and
   task `p0-airbnb-adapter-1-5-owner-regression-replay-v1` is paused.
@@ -104,9 +146,10 @@ scheduling authority.
 
 ### Unfinished and deferred work record
 
-- **Incomplete inside the paused installation task**: none.
-- **Pending review**: clean-target replay preflight and restart-safe journey
-  resumability are unselected candidates, not an authorized queue.
+- **Incomplete inside the paused preflight task**: none.
+- **Pending review**: a disposable-consumer preflight rehearsal,
+  human-controlled correlation reservation, and restart-safe journey
+  resumability remain unselected candidates, not an authorized queue.
 - **Deferred candidate — broader historical cleanup**: mixed sections that
   still contain current capability or strategic facts were intentionally not
   split at bullet level. Any broader cleanup must preserve evidence references

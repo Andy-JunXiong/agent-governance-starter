@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/replay-preflight-v1.0.json",
+  "title": "AgentGov clean-target replay preflight plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "schema_version",
+    "correlation",
+    "repository",
+    "targets",
+    "related_tasks",
+    "adapter",
+    "authority_boundary"
+  ],
+  "properties": {
+    "contract": {"const": "agentgov.replay-preflight-plan"},
+    "schema_version": {"const": "1.0"},
+    "correlation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["correlation_id", "registry_directory"],
+      "properties": {
+        "correlation_id": {
+          "type": "string",
+          "pattern": "^rpf-[0-9a-f]{16}$"
+        },
+        "registry_directory": {"$ref": "#/$defs/repositoryPath"}
+      }
+    },
+    "repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expected_head_sha"],
+      "properties": {
+        "expected_head_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40,64}$"
+        }
+      }
+    },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 50,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "precondition"],
+        "properties": {
+          "path": {"$ref": "#/$defs/repositoryPath"},
+          "precondition": {"$ref": "#/$defs/precondition"}
+        }
+      }
+    },
+    "related_tasks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["directory", "absent_task_ids"],
+      "properties": {
+        "directory": {"$ref": "#/$defs/repositoryPath"},
+        "absent_task_ids": {
+          "type": "array",
+          "maxItems": 50,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          }
+        }
+      }
+    },
+    "adapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "metadata_path",
+        "expected_adapter_id",
+        "expected_adapter_version",
+        "expected_protocol_version"
+      ],
+      "properties": {
+        "metadata_path": {"$ref": "#/$defs/repositoryPath"},
+        "expected_adapter_id": {"$ref": "#/$defs/normalizedId"},
+        "expected_adapter_version": {
+          "type": "string",
+          "pattern": "^[0-9]+(?:\\.[0-9]+){1,3}(?:(?:a|b|rc)[0-9]+)?$"
+        },
+        "expected_protocol_version": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        }
+      }
+    },
+    "authority_boundary": {"$ref": "#/$defs/authorityBoundary"}
+  },
+  "$defs": {
+    "normalizedId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120,
+      "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$"
+    },
+    "repositoryPath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 400,
+      "pattern": "^(?!/)(?![A-Za-z]:[\\\\/])(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+    },
+    "precondition": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "value"],
+          "properties": {
+            "kind": {"const": "path_absent"},
+            "value": {"type": "null"}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "value"],
+          "properties": {
+            "kind": {"enum": ["text_absent", "text_present"]},
+            "value": {"type": "string", "minLength": 1, "maxLength": 400}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "value"],
+          "properties": {
+            "kind": {"const": "sha256_equals"},
+            "value": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          }
+        }
+      ]
+    },
+    "authorityBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authorizes_cleanup",
+        "authorizes_deployment",
+        "authorizes_git_operations",
+        "authorizes_publication",
+        "authorizes_release",
+        "authorizes_replay",
+        "authorizes_repository_write",
+        "authorizes_task_admission"
+      ],
+      "properties": {
+        "authorizes_cleanup": {"const": false},
+        "authorizes_deployment": {"const": false},
+        "authorizes_git_operations": {"const": false},
+        "authorizes_publication": {"const": false},
+        "authorizes_release": {"const": false},
+        "authorizes_replay": {"const": false},
+        "authorizes_repository_write": {"const": false},
+        "authorizes_task_admission": {"const": false}
+      }
+    }
+  }
+}
