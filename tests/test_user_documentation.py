@@ -34,10 +34,15 @@ HARNESS_GUIDE = ROOT / "docs/harness-contract-v1.md"
 AIRBNB_HEADING_REPLAY = (
     ROOT / "docs/experiments/airbnb-uncoached-readme-heading-replay-2026-08-15.md"
 )
+AIRBNB_OWNER_REGRESSION_REPLAY = (
+    ROOT
+    / "docs/experiments/airbnb-adapter-1-5-owner-regression-replay-2026-08-16.md"
+)
 ADAPTER_1_5_INSTALLED_PREFLIGHT = (
     ROOT / "docs/experiments/adapter-1-5-installed-preflight-2026-08-15.md"
 )
 CURRENT_DEVELOPMENT_LOG = ROOT / "docs/development-log/2026-08-15.md"
+CURRENT_OWNER_REPLAY_LOG = ROOT / "docs/development-log/2026-08-16.md"
 CONSUMER_COMPLETION_LOG = ROOT / "docs/development-log/2026-08-13.md"
 HISTORICAL_MIGRATION_LOG = (
     ROOT / "docs/development-log/2026-08-14-historical-migration.md"
@@ -290,6 +295,34 @@ class UserDocumentationTests(unittest.TestCase):
             "human_origin_assurance: unavailable",
             "First Deviation",
             "does not authorize a fix or another replay",
+        ):
+            self.assertIn(phrase, experiment)
+
+    def test_airbnb_owner_regression_replay_preserves_precondition_failure(self) -> None:
+        surfaces = (
+            STATUS,
+            HARNESS_GUIDE,
+            AIRBNB_OWNER_REGRESSION_REPLAY,
+            CURRENT_OWNER_REPLAY_LOG,
+        )
+
+        self.assertTrue(AIRBNB_OWNER_REGRESSION_REPLAY.is_file())
+        for path in surfaces:
+            normalized = " ".join(path.read_text(encoding="utf-8").split())
+            with self.subTest(path=path.name):
+                self.assertIn("preexisting_replay_state_not_cleared", normalized)
+                self.assertIn("form", normalized.lower())
+                self.assertIn("Completion Verified", normalized)
+                self.assertIn("Bounded Handoff", normalized)
+
+        experiment = AIRBNB_OWNER_REGRESSION_REPLAY.read_text(encoding="utf-8")
+        for phrase in (
+            "Human-visible completion evidence",
+            "Human-reported interaction fact",
+            "Codex-read repository facts",
+            "no identifiable new repository state",
+            "cannot evaluate whether installed Adapter 1.5.0",
+            "authorizes no AIRBNB correction",
         ):
             self.assertIn(phrase, experiment)
 

@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-08-15
+Last verified: 2026-08-16
 
 ## Current-status contract
 
@@ -42,10 +42,9 @@ scheduling authority.
 
 ### Current closeout snapshot
 
-- **Active slice**: install the exact reviewed Adapter `1.5.0` module into the
-  existing local AgentGov pipx development runtime, repair only its exposed
-  launcher, and prove the installed human-owner boundary without a model or
-  consumer replay.
+- **Active slice**: none. The consumed AIRBNB Adapter `1.5.0`
+  owner-regression replay is recorded as privacy-bounded Harness evidence, and
+  task `p0-airbnb-adapter-1-5-owner-regression-replay-v1` is paused.
 - **Codex-run validation**: pre-change hashes were recorded for source,
   installed module, exposed and inner launchers, and project configuration.
   Create-only `1.4.0` module and launcher backups are retained and match their
@@ -67,42 +66,47 @@ scheduling authority.
   `git diff --check` passed. Scope reconciliation accepted all 13 paths covered
   by this task and reported 8 pre-existing excluded or outside-scope source,
   harness, AIRBNB, and human-owned configuration paths; no exception was
-  inferred.
+  inferred. On 2026-08-16 the human selected a fresh exact-task alignment
+  binding after the prior foreground journey was lost with the closed Adapter
+  transport. Native current-Agent advisory review
+  `srv-c2faed363079120c1eaf5023fc1de2e4` then found no correction-required
+  implementation or scope drift. This is a new binding over unchanged admitted
+  evidence, not recovery or continuation of the old in-memory journey. The
+  later owner-regression fixture passed all 25 Harness, 28 documentation, and
+  13 task-contract tests; the complete suite passed all 834 tests with 2
+  platform-limited skips. Task and repository governance had no deterministic
+  failure, both new JSON documents parsed, the intended-path credential scan
+  found no match, and `git diff --check` passed. Scope reconciliation accepted
+  nine current-task paths and identified only the prior 2026-08-15 log change
+  and human-owned `.codex/config.toml` as pre-existing excluded state; no
+  exception was inferred. Native review
+  `srv-30ea1e5eff4681e6a2edc7dba6d30573` found no correction-required evidence,
+  privacy, implementation, or scope drift.
 - **User-reported validation**: the human explicitly authorized stopping only
   the two locked wrapper processes and continuing the approved installation.
   This is authorization evidence, not a user-run behavior test. The earlier
-  AIRBNB form acceptance remains separate historical evidence.
-- **Pending validation**: the required distinct native current-Agent advisory
-  self-review remains before this installation task can be paused. Two calls
-  to the resolved journey returned `Transport closed` after the approved
-  wrapper-process stop. Local inspection confirms the configured server is
-  still enabled, but the running Codex host has no in-session MCP reload
-  command. A fresh Codex host session is required. A live Codex turn, consumer
-  replay, UI behavior, personal identity authentication, and wheel/publication
-  reproducibility remain outside this task.
-- **Incomplete**: none in the installation or no-model preflight behavior;
-  formal closeout is blocked on the required advisory review and task pause.
-- **Blocker / stop condition**: the native review transport is closed, so task
-  `p0-install-adapter-1-5-offline-preflight` remains `admitted` rather than
-  being falsely paused or completed. Stop before removing backups, rolling
-  back or reinstalling, changing project MCP configuration, modifying AIRBNB
-  or NYC, starting a live replay, repairing Completion Verified or Bounded
-  Handoff continuation, publication, release, deployment, or other external
-  actions. The human separately authorized one exact documentation checkpoint,
-  commit, and ordinary non-force push to `origin/main`; that Git authorization
-  does not complete the task or authorize any other downstream action.
-- **Next product review**: first restore the AgentGov MCP connection in a fresh
-  Codex host session, complete the required advisory review, and pause the
-  installation task. Only then decide whether one fresh AIRBNB replay is
-  valuable enough to authorize. This entry does not authorize that replay; the
-  lifecycle-continuation gap remains deferred.
+  AIRBNB form acceptance remains separate historical evidence. For the
+  2026-08-16 replay, the human supplied one completion view and reported that
+  no native task form appeared; neither fact proves a new repository write or
+  native tool selection.
+- **Pending validation**: none inside the paused replay-evidence task. A real
+  clean-target consumer owner-regression result remains unknown.
+- **Incomplete**: none inside the paused replay-evidence task.
+- **Blocker / stop condition**: no closeout blocker remains. The selected
+  single replay is consumed. Stop before cleaning or resetting AIRBNB,
+  retrying, changing AgentGov source or configuration, repairing Completion
+  Verified or Bounded Handoff, performing Git operations, publication,
+  release, deployment, or other external actions.
+- **Next product review**: decide whether the higher-value next requirement is
+  a read-only clean-target replay preflight or restart-safe native journey
+  resumability. Neither candidate is authorized by this entry, and another
+  AIRBNB replay is not admitted.
 
 ### Unfinished and deferred work record
 
-- **Incomplete inside the admitted task**: native current-Agent self-review and
-  the resulting task pause remain blocked by the closed MCP transport.
-- **Pending review**: a fresh consumer replay remains a separate decision after
-  the local-only installation closes.
+- **Incomplete inside the paused installation task**: none.
+- **Pending review**: clean-target replay preflight and restart-safe journey
+  resumability are unselected candidates, not an authorized queue.
 - **Deferred candidate — broader historical cleanup**: mixed sections that
   still contain current capability or strategic facts were intentionally not
   split at bullet level. Any broader cleanup must preserve evidence references
@@ -209,6 +213,17 @@ authorized queue and do not select the next requirement.
   one observed partial journey, not proof of causality, recurrence, product or
   control effectiveness, or cross-context replication; it grants no fix,
   replay, Git, publication, release, or deployment authority.
+- The selected 2026-08-16 Adapter `1.5.0` owner-regression replay did not
+  exercise a new proposal. Read-only inspection found that the target README
+  heading diff and old `current-agent` task were already present from
+  2026-08-15; no new task or `.agentgov` state exists, and the product owner
+  reports that no native form appeared. Harness Contract v1 therefore derives
+  `session_start` / `preexisting_replay_state_not_cleared` as First Deviation.
+  Later unobserved tool selection, absent proposal and form, missing Completion
+  Verified, and missing Bounded Handoff remain visible. The result is
+  `unavailable`: it neither proves nor disproves the real-consumer owner fix,
+  and it authorizes no cleanup, reset, retry, correction, Git action,
+  publication, release, deployment, or follow-on work.
 - The human-selected source correction is now implemented in development
   Adapter `1.5.0`. The capability-gated proposal tool no longer exposes or
   accepts `owner`; the Adapter injects `Human product owner` into the exact
@@ -225,7 +240,7 @@ authorized queue and do not select the next requirement.
   backups are retained.
 - Development source now implements the bounded offline Harness Contract v1
   selected after that baseline. The strict `agentgov.harness-run` 1.0 schema,
-  dependency-free validator/evaluator, and three sanitized fixtures preserve
+  dependency-free validator/evaluator, and four sanitized fixtures preserve
   ordered expected/observed transitions, three separate evidence channels,
   honest host capability and Harness-result claims, First Deviation, terminal
   facts, privacy limits, and denied authority. The AIRBNB fixture derives

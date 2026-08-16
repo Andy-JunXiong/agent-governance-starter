@@ -1,0 +1,83 @@
+{
+  "acceptance_signals": [
+    "Before any new starter-repository evidence write, the three existing uncommitted closeout files and untracked human-owned .codex path are recorded as pre-existing state and preserved without staging or reinterpretation.",
+    "The measured replay begins in one fresh AIRBNB Codex host and receives one comparable ordinary bounded README request without governance, protocol, task-schema, owner-field, tool-name, or recovery coaching.",
+    "Before any AIRBNB write, AIRBNB independently materializes and human-admits its exact consumer task through its own native proposal form; this starter task and direct chat do not substitute for consumer admission.",
+    "The replay is attempted exactly once and is not automatically retried, corrected, coached, or extended if tool selection, form mediation, owner attribution, implementation, validation, Completion Verified, or Bounded Handoff deviates.",
+    "Read-only post-replay inspection separates Codex-read repository facts, human-reported form interaction, and retained native event evidence; a user-reported click is not presented as authenticated human-origin evidence.",
+    "One sanitized agentgov.harness-run 1.0 fixture and experiment record preserve expected and observed transition order, owner and decided_by outcome, First Deviation, terminal facts, privacy limits, and denied authority without raw prompts, transcripts, model output, tool payloads, source content, credentials, screenshots, or absolute paths.",
+    "Focused Harness, documentation, and task-contract tests, the complete unittest suite, fixture validation, task and repository governance checks, JSON parsing, scope reconciliation, secret-safety inspection, and git diff --check pass.",
+    "A distinct native current-Agent advisory self-review completes before the task is paused; no AIRBNB correction, second replay, AgentGov source or configuration change, journey-persistence work, lifecycle repair, Git action, publication, release, deployment, or follow-on work is authorized."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-54efc599b72746b9839408fbeb9e16f5 and admitted that exact task through an explicit admission control. The selected single replay was consumed without retry. Read-only consumer inspection found only the pre-existing target diff and old task, while the product owner reported that no native form appeared. The sanitized Harness fixture deterministically records session_start / preexisting_replay_state_not_cleared as First Deviation and reports the owner-regression measurement as unavailable. Focused and complete validation, governance checks, scope reconciliation, secret safety, and native current-Agent advisory review srv-30ea1e5eff4681e6a2edc7dba6d30573 completed without correction-required drift. The task is paused and grants no cleanup, reset, retry, second replay, consumer or AgentGov correction, Git operation, publication, release, deployment, or follow-on authority.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Measure and record exactly one fresh uncoached AIRBNB consumer replay that tests whether the installed AgentGov Adapter 1.5.0 corrects the prior native task owner-attribution First Deviation. Use one comparable ordinary bounded README request in a fresh Codex host without governance, protocol, or tool-name coaching. The AIRBNB repository must independently create and admit its own exact consumer task before any consumer write; this starter-repository task grants no AIRBNB write authority. Observe automatic tool selection, native form mediation, persisted owner and decided_by, bounded implementation, validation, and terminal lifecycle state through separate evidence channels. Record the outcome regardless of pass or failure as one sanitized Harness Contract v1 fixture and experiment record, preserve the earliest deviation, and stop after the single replay without correction or retry."
+  },
+  "risk": {
+    "items": [
+      "A starter-repository task cannot authorize a write in AIRBNB; the consumer must independently admit its exact task before modification.",
+      "Coaching the fresh Agent about AgentGov, owner fields, MCP tools, or the expected transition would contaminate the uncoached measurement.",
+      "Retrying after a failure would consume more than the selected single replay and hide the observed First Deviation.",
+      "Combining owner regression with an in-session lifecycle fix would prevent isolation of the Adapter 1.5.0 outcome.",
+      "Mixing human-reported form interaction with repository facts or native events would overstate evidence strength.",
+      "The current starter worktree already contains three validated uncommitted closeout files and an untracked human-owned .codex path that must remain attributable to the prior task.",
+      "Sanitized evidence must not retain consumer source content, raw prompts, transcripts, model output, native payloads, screenshots, credentials, private data, or absolute paths.",
+      "Reviewed assumption: AIRBNB still contains the generated native governance journey and a governance/tasks directory.",
+      "Reviewed assumption: The installed local MCP runtime remains Adapter 1.5.0 with the owner-free native proposal schema.",
+      "Reviewed assumption: A comparable bounded README request is safe for an independently admitted consumer task.",
+      "Reviewed assumption: The existing Harness Contract v1 can express the replay without a schema change.",
+      "Reviewed unknown: Whether a fresh uncoached AIRBNB Agent automatically selects the native proposal tool.",
+      "Reviewed unknown: Whether the native form is presented and personally accepted in the new host session.",
+      "Reviewed unknown: Whether persisted owner and decided_by are both Human product owner in the real consumer task.",
+      "Reviewed unknown: Whether the journey continues through validation, Completion Verified, and Bounded Handoff without coaching.",
+      "Reviewed unknown: Whether retained native evidence can authenticate the human origin of the form decision."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "README.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "docs/product-requirements-automatic-governance.md",
+      "src",
+      "schemas",
+      "release",
+      ".github",
+      "docs/development-log/2026-08-15.md",
+      "docs/development-log/INDEX.md"
+    ],
+    "include_paths": [
+      "governance/fixtures/harness-contract-v1/airbnb-adapter-1-5-owner-regression-replay.json",
+      "docs/experiments/airbnb-adapter-1-5-owner-regression-replay-2026-08-16.md",
+      "docs/harness-contract-v1.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-16.md",
+      "tests/test_harness_contract.py",
+      "tests/test_user_documentation.py",
+      "tests/test_task_contract.py",
+      "governance/tasks"
+    ]
+  },
+  "task_id": "p0-airbnb-adapter-1-5-owner-regression-replay-v1",
+  "title": "Measure one AIRBNB Adapter 1.5 owner regression replay",
+  "validation_commands": [
+    "python -m unittest discover -s tests -p test_harness_contract.py -v",
+    "python -m unittest discover -s tests -p test_user_documentation.py -v",
+    "python -m unittest discover -s tests -p test_task_contract.py -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-airbnb-adapter-1-5-owner-regression-replay-v1.json",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

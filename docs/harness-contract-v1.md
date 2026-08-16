@@ -129,8 +129,8 @@ percentage.
 
 ## Reference fixtures
 
-Three sanitized fixtures now cover the first vertical slice and one later
-observed replay:
+Four sanitized fixtures now cover the first vertical slice and two later
+observed replays:
 
 - `matching-no-write.json` supplies a no-deviation mediated human decline that
   leaves the repository unchanged;
@@ -142,6 +142,10 @@ observed replay:
   creation, one bounded repository write, and passing diff validation, but
   persisted `current-agent` as both owner and decider and did not reach
   Completion Verified or Bounded Handoff.
+- `airbnb-adapter-1-5-owner-regression-replay.json` records the selected
+  Adapter 1.5 owner-regression attempt whose target heading diff and old task
+  were already present. No new proposal or task was observed, and the product
+  owner reports that no native form appeared.
 
 The AIRBNB fixture deterministically locates the First Deviation at
 `proposal_materialization` with code `normalized_scope_path_rejected`. The
@@ -156,6 +160,14 @@ retained event independently authenticates its human origin. Later missing
 Completion Verified and Bounded Handoff transitions remain visible without
 replacing the earlier identity mismatch. A structurally passing compact task
 check does not by itself prove correct human accountability.
+
+The Adapter 1.5 owner-regression fixture locates its First Deviation earlier at
+`session_start`, with code `preexisting_replay_state_not_cleared`. The existing
+target diff made the run unable to exercise a new proposal, so the later absent
+form, missing task materialization, and missing lifecycle transitions remain
+visible without being misclassified as evidence that the owner correction
+failed. The result is `unavailable`, not a successful or failed owner-binding
+effect measurement.
 
 ## Python use
 
@@ -179,9 +191,10 @@ print(evaluation.first_deviation)
 
 This slice builds on the host-enforcement capability audit, the existing
 host-interaction and authority contracts, the privacy-bounded replay normalizer,
-the 2026-08-14 uncoached AIRBNB baseline, and the bounded 2026-08-15 heading
-replay. It makes both observed First Deviation results repeatable without
-another model call or consumer mutation.
+the 2026-08-14 uncoached AIRBNB baseline, the bounded 2026-08-15 heading replay,
+and the consumed 2026-08-16 owner-regression attempt. It makes all three
+observed First Deviation results repeatable without another model call or
+consumer mutation.
 
 The next capability is not yet decided. Reasonable later connections include a
 read-only CLI, additional deterministic mechanism fixtures, Codex pre-action

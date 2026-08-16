@@ -26,6 +26,9 @@ FIXTURES = ROOT / "governance/fixtures/harness-contract-v1"
 MATCHING = FIXTURES / "matching-no-write.json"
 AIRBNB = FIXTURES / "airbnb-uncoached-baseline.json"
 AIRBNB_HEADING = FIXTURES / "airbnb-uncoached-heading-replay.json"
+AIRBNB_OWNER_REGRESSION = (
+    FIXTURES / "airbnb-adapter-1-5-owner-regression-replay.json"
+)
 
 
 class HarnessContractTests(unittest.TestCase):
@@ -41,7 +44,13 @@ class HarnessContractTests(unittest.TestCase):
                 result[key] = value
             return result
 
-        for path in (SCHEMA, MATCHING, AIRBNB, AIRBNB_HEADING):
+        for path in (
+            SCHEMA,
+            MATCHING,
+            AIRBNB,
+            AIRBNB_HEADING,
+            AIRBNB_OWNER_REGRESSION,
+        ):
             with self.subTest(path=path.name):
                 json.loads(
                     path.read_text(encoding="utf-8"),
@@ -191,6 +200,39 @@ class HarnessContractTests(unittest.TestCase):
         )
         self.assertTrue(document["terminal"]["repository_modified"])
         self.assertTrue(document["terminal"]["external_side_effect_completed"])
+
+    def test_airbnb_owner_regression_preserves_contaminated_precondition_first(self) -> None:
+        document = self.fixture(AIRBNB_OWNER_REGRESSION)
+        observed = document["observed_transitions"]
+
+        self.assertEqual(validate_harness_run_document(document), [])
+        self.assertEqual(
+            derive_first_deviation(document),
+            {
+                "present": True,
+                "sequence": 1,
+                "stage": "session_start",
+                "code": "preexisting_replay_state_not_cleared",
+                "expected_outcome": "replay_preconditions_ready",
+                "observed_outcome": "preexisting_target_change_present",
+            },
+        )
+        self.assertEqual(
+            evaluate_harness_run(document).channel_statuses,
+            {
+                "agent_selection": "unknown",
+                "governance_decision": "not_reached",
+                "intervention_outcome": "deviating",
+            },
+        )
+        self.assertEqual(observed[5]["reason_code"], "user_reported_form_absent")
+        self.assertEqual(document["harness_result"]["status"], "unavailable")
+        self.assertEqual(
+            document["harness_result"]["reason_code"],
+            "replay_precondition_contaminated",
+        )
+        self.assertFalse(document["terminal"]["repository_modified"])
+        self.assertFalse(document["terminal"]["external_side_effect_completed"])
 
     def test_declared_first_deviation_must_match_derived_result(self) -> None:
         document = self.fixture(AIRBNB)
