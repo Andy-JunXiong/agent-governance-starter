@@ -42,6 +42,51 @@ scheduling authority.
 
 ### Current closeout snapshot
 
+- **Active slice**: none. The bounded publication closeout task
+  `p0-pages-publication-closeout` recorded the completed Git and GitHub Pages
+  evidence without changing product behavior or public-site source.
+- **Codex-run validation**: implementation commit
+  `61e0df9c8315624089fb1c9478242f2aafc70762` (`docs: unify public Pages
+  journey`) was committed on `main` and pushed normally to `origin/main`.
+  GitHub Pages build `1156356511` reported `built` with no error for that exact
+  commit. The deployed crawl opened all 14 standalone journey pages and all 17
+  Jekyll-rendered reference pages without an observed 404. The reference pages
+  exposed the shared Home, Evidence portfolio, Interview, Quickstart, source,
+  and release-boundary surfaces. The root SVG favicon was available online.
+  The deployed English and Chinese immutable reports matched their protected
+  SHA-256 values, respectively
+  `fc5acb2392fcbea5787716e2e101d2236d85c76f1a6f76094b9a6b3c9a3cbb2c`
+  and
+  `09473875c7bd64201e20d22e56f2cf35fc12763e35c1e442e49a0888fa890d69`.
+  Desktop browser inspection covered the evidence portfolio, a generated
+  clean-target replay reference page, and the Chinese existing-repository
+  adoption page; no visible navigation, content, encoding, or layout defect
+  was observed.
+- **User-reported validation**: the human explicitly authorized the bounded
+  commit, direct push to `main`, online Pages acceptance, and this final
+  documentation closeout commit and push.
+- **Pending validation**: the connected browser still exposes no narrow-width
+  viewport emulation, so a real online mobile-width visual capture remains
+  pending. Deterministic responsive-template checks passed, but they are not
+  represented as a substitute for that visual evidence. No evidence
+  establishes improved interview outcomes.
+- **Incomplete**: none inside the admitted Pages synchronization or publication
+  closeout. The narrow-width capture is an explicit remaining validation item,
+  not hidden implementation work.
+- **Publication boundary**: commit `61e0df9` is published on `origin/main` and
+  its Pages output is live. This closeout authorizes only its own three recorded
+  paths and a normal push to `origin/main`; it grants no pull request, release,
+  force-push, generated-report rewrite, deployment to another target, or
+  follow-on product authority. The user-owned `.codex` directory remains
+  excluded and unstaged.
+- **Blocker / stop condition**: none for today's work. Stop after committing and
+  pushing this closeout record.
+- **Next product review**: the next product feature is not yet decided. A later
+  review may consider real narrow-width visual acceptance and an end-to-end
+  interview rehearsal, but this entry grants no authority to start either.
+
+### Superseded closeout snapshot - complete public Pages journey synchronization
+
 - **Active slice**: none. Task `p0-public-pages-comprehensive-sync` is paused
   after the complete local GitHub Pages interview and adoption journey was
   synchronized.

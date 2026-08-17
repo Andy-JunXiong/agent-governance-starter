@@ -1,0 +1,57 @@
+{
+  "acceptance_signals": [
+    "STATUS.md reflects commit 61e0df9 as pushed and the matching GitHub Pages build as successful.",
+    "The dated development log records the 31-page online crawl, favicon availability, two matching immutable report hashes, desktop visual checks, and the unavailable narrow-viewport emulation without overstating it.",
+    "Only the two closeout documents and this task record are committed, and .codex remains excluded.",
+    "The closeout commit is pushed normally to origin/main without a pull request, release, force push, or unrelated publication."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-9e79abc8d7b14f7395586467f06db593 and admitted that exact task through an explicit admission control. The bounded status and dated-log closeout now records the already completed implementation push, matching GitHub Pages build, 31-page online crawl, immutable report hashes, desktop visual acceptance, and remaining narrow-viewport limitation. The task is paused before any follow-on work, pull request, release, force push, other deployment, or product change.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Update the current status and dated development log with the already completed main-branch commit, push, GitHub Pages build, online crawl, report-hash verification, visual acceptance, and remaining narrow-viewport limitation, then commit only those closeout records and the admitted task record and push normally to origin/main."
+  },
+  "risk": {
+    "items": [
+      "The closeout could overstate mobile visual coverage unless the viewport limitation is retained explicitly.",
+      "A broad staging command could accidentally include the user-owned .codex directory.",
+      "The second push will trigger another Pages build even though public site source is unchanged.",
+      "Reviewed assumption: The completed Pages acceptance evidence from the immediately preceding authorized workflow remains current.",
+      "Reviewed assumption: The existing 61e0df9 implementation commit is already present on origin/main.",
+      "Reviewed assumption: No product behavior, release identity, generated report, or public HTML needs further change.",
+      "Reviewed unknown: The exact future product feature remains undecided.",
+      "Reviewed unknown: A real narrow-viewport online visual capture remains unavailable in the connected browser."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "src",
+      "tests",
+      ".github",
+      "pyproject.toml",
+      "CHANGELOG.md"
+    ],
+    "include_paths": [
+      "STATUS.md",
+      "docs/development-log/2026-08-17.md",
+      "governance/tasks/p0-pages-publication-closeout.json"
+    ]
+  },
+  "task_id": "p0-pages-publication-closeout",
+  "title": "Record public Pages publication closeout",
+  "validation_commands": [
+    "git diff --check",
+    "python -m agentgov check task governance/tasks/p0-pages-publication-closeout.json --repository .",
+    "git status -sb",
+    "git diff --cached --name-status"
+  ]
+}
