@@ -1,8 +1,9 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="在已有仓库中安全检查、预演并接入 Agent Governance。"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'"><title>已有仓库接入指南 · Agent Governance</title><link rel="stylesheet" href="guide.css"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="在已有仓库中安全检查、预演并接入 Agent Governance。"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; img-src 'self'"><title>已有仓库接入指南 · Agent Governance</title><link rel="icon" href="favicon.ico" type="image/svg+xml"><link rel="stylesheet" href="guide.css"></head>
 <body>
-<nav class="shell"><a class="brand" href="index.html"><span class="mark">AG</span>Agent Governance</a><div class="nav-links"><a href="quickstart.zh-CN.html">← 返回中文快速入门</a></div></nav>
+<nav class="shell"><a class="brand" href="index.html"><span class="mark">AG</span>Agent Governance</a><div class="nav-links"><a href="index.html">首页</a><a href="portfolio.html">作品集</a><a href="interview-guide.zh-CN.html">面试</a><a href="quickstart.zh-CN.html">快速入门</a><span class="language-switch" aria-label="语言"><a href="existing-repository-adoption.html" lang="en" hreflang="en">EN</a><a href="existing-repository-adoption.zh-CN.html" lang="zh-CN" aria-current="page">中文</a></span></div></nav>
+<p class="release-strip"><strong>版本边界：</strong>稳定版 <code>0.2.1</code> 可安装；公开预发行版 <code>0.3.0rc1</code> 与开发源继续扩展 Coding Agent 旅程。</p>
 <header class="shell"><span class="eyebrow">已有项目 · 安全接入</span><h1>在不覆盖仓库的情况下接入治理。</h1><p class="lead">先进行只读检查，再预览每次计划写入，保留现有文件，并明确解决指令权威关系。</p></header>
 <main class="shell">
 <section class="emphasis"><h2>可选制品输出</h2><p><code>governance/artifacts</code> 是显式导出产生的可选输出，不是核心接入路径。该目录不存在时，<code>inspect</code> 和 <code>doctor</code> 不会把基础接入标记为未完成。</p></section>

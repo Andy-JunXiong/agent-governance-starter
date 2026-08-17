@@ -1,3 +1,9 @@
+---
+layout: reference
+title: "Governed clarification and drift re-centering"
+source_path: docs/clarification-dialogue.md
+---
+
 # Governed clarification and drift re-centering
 
 AgentGov treats substantive discussion as part of governance, but not as an

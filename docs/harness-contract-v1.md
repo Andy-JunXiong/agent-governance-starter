@@ -1,3 +1,9 @@
+---
+layout: reference
+title: "Harness Contract v1"
+source_path: docs/harness-contract-v1.md
+---
+
 # Harness Contract v1
 
 Status: implemented as a dependency-free offline contract, evaluator, and

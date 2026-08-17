@@ -1,0 +1,62 @@
+{
+  "acceptance_signals": [
+    "Every current public page reachable from the homepage, portfolio, quickstarts, interview guides, replay contract, and Harness contract uses consistent branded navigation, readable styling, and a valid favicon.",
+    "Affected current pages state the stable 0.2.1, published 0.3.0rc1, and development-source boundaries consistently without rewriting historical release facts.",
+    "Deterministic tests crawl the published document graph and reject internal 404s, unresolved templates, missing shared assets, or broken bilingual navigation.",
+    "Distinct desktop and narrow-width checks cover each public page template, and the full supported test suite passes before completion."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-cbfdc577c554439a8593cf0882f18b82 and admitted that exact task through an explicit admission control. The aligned complete public Pages journey synchronization, deterministic and visual validation, native current-Agent self-review, and documentation closeout completed; the bounded local task is now paused without Git, publication, release, deployment, historical-rewrite, generated-report-rewrite, or follow-on authority.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Apply one coherent branded shell, navigation, favicon, release-boundary presentation, and deterministic internal-resource protection to every current GitHub Pages surface reachable through the interview and adoption journey, while preserving current product behavior and historical evidence."
+  },
+  "risk": {
+    "items": [
+      "A shared Jekyll layout could unintentionally restyle historical documents outside the current public journey.",
+      "Repository Pages base-path handling could break root-relative links.",
+      "Static HTML and Markdown-generated pages can drift unless tests cover both render paths.",
+      "Publication, Git operations, release, and deployment are outside this task and require separate human authorization.",
+      "Reviewed assumption: GitHub Pages continues to build the docs directory with Jekyll for Markdown-backed pages.",
+      "Reviewed assumption: The current standalone page visual identity is the shared baseline.",
+      "Reviewed assumption: Generated sample-report bytes and historical ADR, release, experiment, and dated-log facts remain unchanged.",
+      "Reviewed unknown: The exact minimal layout and asset set will be confirmed by repository inspection.",
+      "Reviewed unknown: Local Jekyll rendering may be unavailable, so source checks and available HTTP rendering evidence will be reported separately."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "src",
+      "governance/schemas",
+      ".github/workflows",
+      "pyproject.toml",
+      "CHANGELOG.md"
+    ],
+    "include_paths": [
+      "docs",
+      "tests/test_user_documentation.py",
+      "tests/test_portfolio_docs.py",
+      "tests/test_demo_report.py",
+      "STATUS.md",
+      "governance/tasks/p0-public-pages-comprehensive-sync.json"
+    ]
+  },
+  "task_id": "p0-public-pages-comprehensive-sync",
+  "title": "Unify the complete public Pages interview journey",
+  "validation_commands": [
+    "python -m unittest tests.test_user_documentation tests.test_portfolio_docs tests.test_demo_report -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check governance --repository .",
+    "python -m agentgov check scope governance/tasks/p0-public-pages-comprehensive-sync.json --repository .",
+    "git diff --check"
+  ]
+}

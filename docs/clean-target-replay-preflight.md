@@ -1,3 +1,9 @@
+---
+layout: reference
+title: "Clean-target replay preflight"
+source_path: docs/clean-target-replay-preflight.md
+---
+
 # Clean-target replay preflight
 
 Status: implemented in development source as a deterministic, dependency-free,

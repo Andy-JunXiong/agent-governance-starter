@@ -42,6 +42,65 @@ scheduling authority.
 
 ### Current closeout snapshot
 
+- **Active slice**: none. Task `p0-public-pages-comprehensive-sync` is paused
+  after the complete local GitHub Pages interview and adoption journey was
+  synchronized.
+- **Codex-run validation**: all 14 standalone journey pages now share the
+  repository favicon, core product navigation, bilingual routes where
+  applicable, and the stable `0.2.1` / published `0.3.0rc1` / development-source
+  boundary. The four previously unthemed replay, Harness, human-decision, and
+  clarification Markdown pages now opt into the same branded reference layout
+  already used by the other 13 direct reference sources. The layout adds
+  project-base-aware Home, Evidence portfolio, Interview, Quickstart, source,
+  release-boundary, favicon, responsive table, and authority surfaces. The
+  deterministic journey test resolves every local `href` and `src` from all 14
+  standalone pages, checks the 17 direct Markdown reference sources, validates
+  bilingual cross-links, parses the SVG favicon, rejects unresolved Liquid
+  openings, and protects all distinct responsive templates. The 61 focused
+  documentation, portfolio, interview, product-site, and report tests passed.
+  The complete supported-Python 3.11 suite passed all 925 tests with 3
+  platform-limited skips. Task governance reported
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance reported
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Pre-pause scope reconciliation accepted
+  24 implementation and closeout paths and reported only the deliberately excluded,
+  user-owned `.codex/config.toml`; no exception or ownership transfer was
+  inferred. `git diff --check` passed. Desktop browser inspection covered the
+  homepage, portfolio, English quickstart, and Chinese existing-repository
+  guide. Native current-Agent review
+  `srv-08a633e7cc71a0a5cc0b5f9bb1e71b87` found and corrected one CSP gap that
+  could have blocked the same-origin favicon, then found no remaining
+  correction-required requirement, architecture, implementation, authority,
+  data, security, or scope drift.
+- **User-reported validation**: the human selected the full current Pages
+  journey through native alignment, admitted the exact task through the native
+  form, and separately took it up. The earlier interview-docs commit and push
+  authorization did not authorize this new change.
+- **Pending validation**: local Jekyll is unavailable, and browser security
+  policy rejected an in-memory rendered-layout preview, so the exact generated
+  reference-page output awaits the next separately authorized Pages build.
+  The connected browser exposed no narrow-viewport emulation. The two
+  byte-pinned sample reports remain unchanged; the new root favicon removes
+  the prior missing-resource response, but report-tab icon display remains a
+  publication-time check because their immutable CSP was not changed. The live
+  Pages URL still serves the prior pushed snapshot until a new commit, push,
+  and Pages publication are separately authorized. No evidence establishes
+  improved interview outcomes.
+- **Incomplete**: none inside the admitted local implementation. The listed
+  publication and visual checks remain pending validation rather than hidden
+  completion claims.
+- **Publication boundary**: no commit, push, pull request, publication,
+  release, or deployment is authorized for this slice. The user-owned
+  `.codex` configuration remains excluded and unstaged.
+- **Blocker / stop condition**: no local implementation blocker remains. Stop
+  before Git, GitHub Pages publication, generated-report rewriting, historical
+  record rewriting, release, deployment, or follow-on product implementation.
+- **Next product review**: decide whether to authorize the bounded commit and
+  push, then verify the deployed crawl plus desktop and narrow-width reference
+  rendering. The next product feature is not yet decided; this entry grants no
+  follow-on authority.
+
+### Superseded closeout snapshot - interview documentation and demo sync
+
 - **Active slice**: none. Task `p0-interview-docs-demo-sync-v1` is paused after
   the interview-ready current-documentation and local GitHub Pages source
   synchronization completed.

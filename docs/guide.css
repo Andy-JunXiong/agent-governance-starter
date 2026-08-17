@@ -64,6 +64,16 @@ nav {
   background: var(--ink);
   color: #fff;
 }
+.release-strip {
+  width: min(1040px, calc(100% - 36px));
+  margin: 14px auto 0;
+  padding: 10px 14px;
+  border-left: 4px solid var(--purple);
+  background: #eeeaff;
+  color: #393343;
+  font-size: 13px;
+}
+.release-strip code { font-family: var(--mono); }
 header { padding: 64px 0 42px; }
 .eyebrow {
   display: inline-flex;
@@ -187,8 +197,9 @@ footer {
   font-size: 13px;
 }
 @media (max-width: 680px) {
-  nav { align-items: flex-start; padding: 15px 0; }
-  .nav-links > a { display: none; }
+  nav { align-items: flex-start; flex-direction: column; padding: 15px 0; }
+  .nav-links { width: 100%; flex-wrap: wrap; gap: 10px 14px; }
+  .nav-links > a { display: inline-flex; min-height: 32px; align-items: center; }
   .language-switch a { display: block; }
   .states { grid-template-columns: 1fr; }
   .platforms { grid-template-columns: 1fr; }

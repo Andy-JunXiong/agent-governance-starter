@@ -1,3 +1,9 @@
+---
+layout: reference
+title: "Proactive minimal-input human decisions"
+source_path: docs/human-decision-prompts.md
+---
+
 # Proactive minimal-input human decisions
 
 AgentGov keeps consequential judgment with the user while moving mechanical

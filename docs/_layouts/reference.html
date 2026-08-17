@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="en">
+<html lang="{{ page.lang | default: 'en' }}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'none'; style-src 'self'"
+      content="default-src 'none'; style-src 'self'; img-src 'self'"
     />
     <meta name="description" content="{{ page.title | escape }} · Agent Governance reference" />
     <link
@@ -48,14 +48,17 @@
       content="Agent Governance — From task intent to verified evidence"
     />
     <title>{{ page.title | escape }} · Agent Governance</title>
+    <link rel="icon" href="{{ '/favicon.ico' | relative_url }}" type="image/svg+xml" />
     <link rel="stylesheet" href="{{ '/reference.css' | relative_url }}" />
   </head>
   <body>
     <nav>
       <div class="shell nav-inner">
         <a class="brand" href="{{ '/index.html' | relative_url }}"><span class="mark">AG</span>Agent Governance</a>
-        <div class="nav-links">
-          <a href="{{ '/portfolio.html' | relative_url }}">← Evidence portfolio</a>
+        <div class="nav-links" aria-label="Primary navigation">
+          <a href="{{ '/index.html' | relative_url }}">Home</a>
+          <a href="{{ '/portfolio.html' | relative_url }}">Evidence portfolio</a>
+          <a href="{{ '/interview-guide.html' | relative_url }}">Interview</a>
           <a href="{{ '/quickstart.html' | relative_url }}">Quickstart</a>
           <a href="https://github.com/Andy-JunXiong/agent-governance-starter/blob/main/{{ page.source_path }}">Source on GitHub ↗</a>
         </div>
@@ -65,6 +68,7 @@
       <span class="eyebrow">Repository reference</span>
       <h1>{{ page.title | escape }}</h1>
       <p>Rendered from the repository source below. The source remains the contract; this page is its readable public view.</p>
+      <p class="release-boundary"><strong>Release boundary:</strong> stable <code>0.2.1</code> is the installable CLI; published <code>0.3.0rc1</code> and current development source extend the coding-agent governance journey.</p>
     </header>
     <main class="shell">
       <article class="reference-document">

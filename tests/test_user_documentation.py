@@ -1,5 +1,8 @@
+import re
 import unittest
+import xml.etree.ElementTree as ET
 from pathlib import Path
+from urllib.parse import urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -81,6 +84,41 @@ ISOLATED_EXECUTION_ADR = (
 ISOLATED_EXECUTION_REHEARSAL = ROOT / "docs/isolated-tool-execution-rehearsal.md"
 GUIDE_SCRIPT = ROOT / "docs/guide.js"
 GUIDE_STYLE = ROOT / "docs/guide.css"
+PUBLIC_JOURNEY_HTML = (
+    "index.html",
+    "portfolio.html",
+    "quickstart.html",
+    "quickstart.zh-CN.html",
+    "interview-guide.html",
+    "interview-guide.zh-CN.html",
+    "existing-repository-adoption.html",
+    "existing-repository-adoption.zh-CN.html",
+    "generated-files-guide.html",
+    "generated-files-guide.zh-CN.html",
+    "troubleshooting.html",
+    "troubleshooting.zh-CN.html",
+    "demo-governance-report.html",
+    "demo-governance-report.zh-CN.html",
+)
+PUBLIC_REFERENCE_SOURCES = (
+    "drift-review-reminders.md",
+    "human-decision-prompts.md",
+    "clarification-dialogue.md",
+    "product-requirements-automatic-governance.md",
+    "development-task-contract.md",
+    "development-context.md",
+    "development-scope-check.md",
+    "development-evidence.md",
+    "specs/fresh-validation-evidence-v1.md",
+    "consumer-ci.md",
+    "clean-target-replay-preflight.md",
+    "harness-contract-v1.md",
+    "case-studies/0001-pr-center-architecture-drift.md",
+    "adr/0009-govern-coding-agents-during-development.md",
+    "governance-model.md",
+    "ai-radar-extraction-map.md",
+    "specs/development-trigger-routing-v1.md",
+)
 
 
 class UserDocumentationTests(unittest.TestCase):
@@ -1160,6 +1198,110 @@ class UserDocumentationTests(unittest.TestCase):
             "does not consume the reservation",
         ):
             self.assertIn(phrase, normalized)
+
+    def test_complete_public_journey_has_resolvable_internal_resources(self) -> None:
+        docs = ROOT / "docs"
+        for name in PUBLIC_JOURNEY_HTML:
+            page = docs / name
+            text = page.read_text(encoding="utf-8")
+            with self.subTest(page=name):
+                self.assertNotIn("{{", text)
+                self.assertNotIn("C:\\Users", text)
+                for reference in re.findall(r'(?:href|src)="([^"]+)"', text):
+                    parsed = urlsplit(reference)
+                    if parsed.scheme or parsed.netloc:
+                        continue
+                    target = (page.parent / parsed.path).resolve() if parsed.path else page
+                    self.assertTrue(target.is_relative_to(docs.resolve()))
+                    rendered_source = (
+                        target.with_suffix(".md") if target.suffix == ".html" else target
+                    )
+                    self.assertTrue(
+                        target.exists() or rendered_source.exists(),
+                        f"{name}: missing internal resource {reference}",
+                    )
+                    if parsed.fragment and target == page.resolve():
+                        self.assertRegex(
+                            text,
+                            rf'id=["\']{re.escape(parsed.fragment)}["\']',
+                            f"{name}: missing internal anchor {reference}",
+                        )
+
+    def test_public_reference_pages_share_brand_navigation_and_release_boundary(self) -> None:
+        docs = ROOT / "docs"
+        for relative in PUBLIC_REFERENCE_SOURCES:
+            with self.subTest(source=relative):
+                text = (docs / relative).read_text(encoding="utf-8")
+                front_matter = text.split("---", 2)
+                self.assertGreaterEqual(len(front_matter), 3)
+                self.assertIn("layout: reference", front_matter[1])
+                self.assertIn("title:", front_matter[1])
+                self.assertIn("source_path:", front_matter[1])
+
+        layout = (docs / "_layouts/reference.html").read_text(encoding="utf-8")
+        for target in (
+            "/index.html",
+            "/portfolio.html",
+            "/interview-guide.html",
+            "/quickstart.html",
+            "/favicon.ico",
+        ):
+            self.assertIn(f"'{target}' | relative_url", layout)
+        for release in ("0.2.1", "0.3.0rc1", "development source"):
+            self.assertIn(release, layout)
+        self.assertIn("@media (max-width: 720px)", (docs / "reference.css").read_text(encoding="utf-8"))
+
+    def test_mutable_public_pages_share_favicon_navigation_and_version_boundary(self) -> None:
+        docs = ROOT / "docs"
+        favicon = docs / "favicon.ico"
+        root = ET.fromstring(favicon.read_text(encoding="utf-8"))
+        self.assertTrue(root.tag.endswith("svg"))
+        self.assertEqual(root.attrib["viewBox"], "0 0 64 64")
+
+        mutable_pages = PUBLIC_JOURNEY_HTML[:-2]
+        for name in mutable_pages:
+            with self.subTest(page=name):
+                text = (docs / name).read_text(encoding="utf-8")
+                self.assertIn('rel="icon" href="favicon.ico"', text)
+                self.assertIn("img-src 'self'", text)
+                self.assertIn("0.2.1", text)
+                self.assertIn("0.3.0rc1", text)
+                if name != "portfolio.html":
+                    self.assertIn('href="portfolio.html"', text)
+                self.assertIn('href="interview-guide', text)
+                self.assertIn('href="quickstart', text)
+
+        for page in PUBLIC_JOURNEY_HTML[-2:]:
+            with self.subTest(report=page):
+                self.assertIn('href="index.html"', (docs / page).read_text(encoding="utf-8"))
+
+    def test_bilingual_guides_cross_link_and_templates_keep_narrow_layouts(self) -> None:
+        docs = ROOT / "docs"
+        for english, chinese in (
+            ("quickstart.html", "quickstart.zh-CN.html"),
+            ("interview-guide.html", "interview-guide.zh-CN.html"),
+            ("existing-repository-adoption.html", "existing-repository-adoption.zh-CN.html"),
+            ("generated-files-guide.html", "generated-files-guide.zh-CN.html"),
+            ("troubleshooting.html", "troubleshooting.zh-CN.html"),
+        ):
+            with self.subTest(pair=english):
+                en_text = (docs / english).read_text(encoding="utf-8")
+                zh_text = (docs / chinese).read_text(encoding="utf-8")
+                self.assertIn(f'href="{chinese}"', en_text)
+                self.assertIn(f'href="{english}"', zh_text)
+                self.assertIn('aria-current="page"', en_text)
+                self.assertIn('aria-current="page"', zh_text)
+
+        for template in (
+            "index.html",
+            "portfolio.css",
+            "guide.css",
+            "reference.css",
+            "demo-governance-report.html",
+            "demo-governance-report.zh-CN.html",
+        ):
+            with self.subTest(template=template):
+                self.assertIn("@media", (docs / template).read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

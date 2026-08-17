@@ -48,9 +48,10 @@
     />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'none'; style-src 'self'"
+      content="default-src 'none'; style-src 'self'; img-src 'self'"
     />
     <title>AgentGov Evidence Portfolio</title>
+    <link rel="icon" href="favicon.ico" type="image/svg+xml" />
     <link rel="stylesheet" href="portfolio.css" />
   </head>
   <body>
@@ -61,11 +62,13 @@
           <span>Agent Governance<small>Evidence Portfolio</small></span>
         </a>
         <nav class="header-nav" aria-label="Portfolio navigation">
+          <a href="index.html">Home</a>
           <a href="#lifecycle">Lifecycle</a>
           <a href="#recovery">Recovery chain</a>
           <a href="#cases">Cases</a>
           <a href="#boundary">Evidence boundary</a>
           <a href="interview-guide.html">Interview</a>
+          <a href="quickstart.html">Quickstart</a>
         </nav>
       </div>
     </header>
@@ -160,8 +163,9 @@
                 <div><dt>Fresh evidence</dt><dd>Declared commands passed against a bound snapshot; not that the commands were sufficient.</dd></div>
               </dl>
               <p class="release-boundary">
-                <strong>Release boundary:</strong> the development loop is implemented in current development
-                source for the future 0.3 line. It is not represented here as part of stable 0.2.1.
+                <strong>Release boundary:</strong> stable <code>0.2.1</code> is the installable CLI.
+                Published prerelease <code>0.3.0rc1</code> and current development source extend that
+                foundation into the coding-agent governance loop shown here.
               </p>
             </aside>
           </div>
