@@ -1,0 +1,96 @@
+{
+  "acceptance_signals": [
+    "The README opens with a compact interview-oriented product summary and links a bilingual interview walkthrough, live Pages demo, evidence portfolio, sample report, and stable quickstart without overstating unpublished development behavior.",
+    "The GitHub Pages homepage replaces the stale milestone wall with a concise problem, differentiator, architecture, latest governed journey, validated evidence, limitations, and interview navigation while retaining accessible responsive design and the stable 0.2.1 versus development-source boundary.",
+    "The evidence portfolio adds the exact reservation to claim to immutable recovery evidence chain, links repository evidence, distinguishes deterministic facts from human abandonment and authority decisions, and preserves existing lineage and scope boundaries.",
+    "English and Chinese quickstart surfaces consistently identify stable install commands, development-source replay reservation, claim, and recovery previews, and the fact that no step authorizes replay, Git, release, or deployment.",
+    "A bilingual HTML interview walkthrough plus repository Markdown source provides a five-to-ten-minute narrative, architecture map, demo script, evidence references, likely interviewer questions, honest limitations, and next product decision.",
+    "Every public relative link in the affected standalone HTML pages resolves locally, no unresolved template expression remains in standalone public HTML, and English and Chinese interview pages cross-link correctly.",
+    "The generated sample governance report files remain unchanged and are labeled elsewhere as an illustrative 0.3.0rc1 report snapshot rather than proof of the newest development-source workflow.",
+    "Focused documentation and site tests, an automated local link and freshness test, browser inspection at desktop and mobile widths, the complete supported-Python suite, task and repository governance, strict scope reconciliation, secret-safety inspection, native current-Agent self-review, and git diff validation complete with gaps reported.",
+    "STATUS and the dated development log record the completed documentation synchronization without rewriting historical evidence or granting publication authority."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-708266791bd3411e993989ce3df1ed2f and admitted that exact task through an explicit admission control. The interview-ready current-documentation synchronization, validation, native current-Agent self-review, and closeout completed; the bounded local task is now paused without Git, publication, release, deployment, or follow-on authority.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Implement the human-selected interview-ready comprehensive synchronization. Reframe the current repository README, GitHub Pages homepage, evidence portfolio, English and Chinese quickstarts, and a new bilingual interview walkthrough around a concise product problem, architecture, live governance journey, latest reservation-claim-immutable-recovery evidence chain, validation facts, honest release boundaries, and reproducible demo steps. Remove unresolved template links, ensure all public relative links resolve, preserve generated sample-report semantics and historical records, and add deterministic tests that keep the public demo aligned with current source-of-truth documentation. This task prepares local repository content only and grants no commit, push, publication, release, deployment, or external-write authority."
+  },
+  "risk": {
+    "items": [
+      "Interview-oriented wording could overstate unpublished development features as stable product behavior.",
+      "Editing every historical document would destroy ownership boundaries and append-only evidence; only affected current truth surfaces are included.",
+      "The generated sample report could be mistaken for proof of the latest development workflow unless its snapshot boundary is explicit.",
+      "A GitHub Pages source fix is not visible online until a separately authorized commit, push, and Pages deployment occur.",
+      "The existing dirty worktree contains changes from prior admitted tasks and user-owned .codex content that must remain preserved and outside this task.",
+      "Responsive or navigation regressions could make the polished demo weaker during an interview.",
+      "Public HTML must not expose local paths, credentials, private data, or raw recovery evidence.",
+      "Reviewed assumption: The current visual identity remains suitable for interviews.",
+      "Reviewed assumption: Historical ADRs, release notes, experiments, and prior dated logs remain factually owned by their original context and are not rewritten.",
+      "Reviewed assumption: The stable distribution remains 0.2.1, the published prerelease remains 0.3.0rc1, and the latest claim-recovery chain remains development-source capability.",
+      "Reviewed assumption: GitHub Pages serves the docs directory from the main repository branch.",
+      "Reviewed assumption: The generated sample report remains a sanitized illustrative fixture snapshot.",
+      "Reviewed unknown: The exact date when the updated GitHub Pages content will become public depends on later human-authorized Git and Pages operations.",
+      "Reviewed unknown: Interview audience preferences and time available per interview remain variable.",
+      "Reviewed unknown: No external analytics establish whether the revised story improves interview outcomes."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "release",
+      "src",
+      "schemas",
+      "governance/fixtures",
+      "docs/adr",
+      "docs/releases",
+      "docs/experiments",
+      "docs/case-studies",
+      "docs/demo-governance-report.html",
+      "docs/demo-governance-report.zh-CN.html",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "pyproject.toml"
+    ],
+    "include_paths": [
+      "README.md",
+      "docs/index.html",
+      "docs/portfolio.html",
+      "docs/portfolio.css",
+      "docs/quickstart.html",
+      "docs/quickstart.zh-CN.html",
+      "docs/quickstart.zh-CN.md",
+      "docs/interview-guide.html",
+      "docs/interview-guide.zh-CN.html",
+      "docs/interview-guide.md",
+      "tests/test_product_site.py",
+      "tests/test_portfolio_page.py",
+      "tests/test_portfolio_docs.py",
+      "tests/test_public_documentation_freshness.py",
+      "tests/test_user_documentation.py",
+      "tests/test_interview_documentation.py",
+      "STATUS.md",
+      "docs/development-log/2026-08-17.md",
+      "governance/tasks/p0-interview-docs-demo-sync-v1.json"
+    ]
+  },
+  "task_id": "p0-interview-docs-demo-sync-v1",
+  "title": "Synchronize interview documentation and public demo",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_interview_documentation tests.test_product_site tests.test_portfolio_page tests.test_portfolio_docs tests.test_public_documentation_freshness tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-interview-docs-demo-sync-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check scope governance/tasks/p0-interview-docs-demo-sync-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

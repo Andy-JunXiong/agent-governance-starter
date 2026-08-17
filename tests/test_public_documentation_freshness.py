@@ -25,7 +25,17 @@ class PublicDocumentationFreshnessTests(unittest.TestCase):
         self.assertIn("Harness still evaluates normalized evidence after it", normalized)
         self.assertIn("agentgov reserve replay-correlation", normalized)
         self.assertIn("requires an interactive `RESERVE`", normalized)
-        self.assertIn("Preflight, reservation, separately authorized replay", normalized)
+        self.assertIn("agentgov claim replay-correlation", normalized)
+        self.assertIn("requires a pre-existing claim registry", normalized)
+        self.assertIn("interactive exact `CLAIM`", normalized)
+        self.assertIn("Preflight, reservation, claim, separately authorized replay", normalized)
+        self.assertIn("agentgov recover replay-claim", normalized)
+        self.assertIn("interactive exact `RECOVER`", normalized)
+        self.assertIn("pre-existing recovery registry", normalized)
+        self.assertIn("does not create replacement ownership", normalized)
+        self.assertIn("agentgov.replay-correlation-bridge", normalized)
+        self.assertIn("host.repository_correlation", normalized)
+        self.assertIn("post-run correlation evidence", normalized)
 
     def test_public_plan_routes_historical_checkpoints_to_dated_evidence(self) -> None:
         public_plan = (ROOT / "docs/development-plan.md").read_text(
@@ -84,6 +94,9 @@ class PublicDocumentationFreshnessTests(unittest.TestCase):
             ROOT / "docs/troubleshooting.html",
             ROOT / "docs/troubleshooting.zh-CN.html",
             ROOT / "docs/troubleshooting.md",
+            ROOT / "docs/interview-guide.html",
+            ROOT / "docs/interview-guide.zh-CN.html",
+            ROOT / "docs/interview-guide.md",
         )
 
         for surface in surfaces:

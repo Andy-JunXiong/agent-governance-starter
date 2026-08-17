@@ -1,0 +1,37 @@
+{
+  "contract": "agentgov.replay-claim-recovery",
+  "schema_version": "1.0",
+  "recovery_id": "rcr-0123456789abcdef",
+  "correlation_id": "rpf-0123456789abcdef",
+  "recovery_path": ".agentgov/replay-claim-recoveries/rpf-0123456789abcdef.json",
+  "reservation": {
+    "reservation_id": "rrv-0123456789abcdef",
+    "marker_path": ".agentgov/replay-correlations/rpf-0123456789abcdef.json",
+    "marker_digest": "sha256:6dddc26fdbc76f36efd3d1543fd1d99823e01cb930bb399fef185a758300e86f"
+  },
+  "abandoned_claim": {
+    "marker_path": ".agentgov/replay-claims/rpf-0123456789abcdef.json",
+    "marker_digest": "sha256:cc86947a7a925d7215311cbde9788a929146cd8acd0490e9f48129f5f1d6596e",
+    "byte_length": 1050,
+    "classification": "VALID"
+  },
+  "repository_head": "2222222222222222222222222222222222222222",
+  "adapter": {
+    "adapter_id": "openai.codex-mcp",
+    "adapter_version": "1.5.0",
+    "protocol_version": "2026-07-28"
+  },
+  "recovered_by": "human.product-owner",
+  "reason_code": "claimant_abandoned",
+  "status": "recovered",
+  "authority_boundary": {
+    "authorizes_cleanup": false,
+    "authorizes_deployment": false,
+    "authorizes_git_operations": false,
+    "authorizes_publication": false,
+    "authorizes_release": false,
+    "authorizes_replay": false,
+    "authorizes_repository_write": false,
+    "authorizes_task_admission": false
+  }
+}

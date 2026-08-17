@@ -835,7 +835,8 @@
           ><span class="mark">AG</span>Agent Governance</a
         >
         <div class="links">
-          <a href="portfolio.html">Evidence portfolio</a
+          <a href="interview-guide.html">Interview walkthrough</a
+          ><a href="portfolio.html">Evidence portfolio</a
           ><a href="#example">Example</a><a href="#how">How it works</a
           ><a href="#evidence">Evidence</a><a href="#adopt">Adopt</a
           ><a
@@ -866,12 +867,17 @@
               >See what the CLI finds</a
             ><a class="button light" href="portfolio.html"
               >Explore the evidence story</a
+            ><a class="button light" href="interview-guide.html"
+              >Use the interview walkthrough</a
             >
           </div>
           <p class="sample-note">
-            Opens a generated report that explains PASS, WARN, FAIL and
+            Opens a generated sample report that explains PASS, WARN, FAIL and
             ADVISORY findings, required follow-up and decisions that still need
-            a human.
+            a human. It is a sanitized illustrative <code>0.3.0rc1</code>
+            snapshot; the interview walkthrough links it to newer
+            development-source evidence without presenting that evidence as
+            stable release behavior.
           </p>
           <div class="trust">
             <span>Local and read only by default</span
@@ -941,17 +947,26 @@
       <section>
         <div class="shell">
           <div class="section-head">
-            <span class="kicker">Accepted product direction · not current stable behavior</span>
-            <h2>Automatic governance around the coding agent.</h2>
+            <span class="kicker">Interview snapshot · development source</span>
+            <h2>One governed coding-agent journey, visible end to end.</h2>
             <p>
-              The approved next experience lets a developer request work
-              through a coding agent while AgentGov automatically coordinates
-              relevant context, bounded scope, pre-approved validation, fresh
-              evidence and a live protection Dashboard. People are interrupted
-              only for material scope, architecture, exception, semantic or
-              consequential authority decisions.
+              A human selects the direction and admits an exact task. AgentGov
+              keeps repository-owned architecture context, changed-file scope,
+              fresh validation, advisory review, and closeout evidence bound to
+              that task. Deterministic checks report facts; semantic and
+              consequential decisions remain human-owned.
             </p>
             <p>
+              The latest development-source safety slice makes interrupted
+              replay ownership inspectable without mutation:
+              <strong>immutable reservation → create-only claim → separate
+              immutable recovery evidence</strong>. Recovery preserves the
+              original claim, creates no replacement owner, and grants no replay
+              authority.
+            </p>
+            <details>
+              <summary>Inspect the detailed development milestone history</summary>
+              <p>
               Development source now implements a strict foreground JSONL
               coding-agent transport through <code>agentgov dev --stream</code>,
               locally derived scope/completion facts, per-event Dashboard
@@ -1031,33 +1046,36 @@
               activation, model run, or live replay; project configuration is
               unchanged and the previous module/launcher backups are retained.
               Development source also includes a combined three-task/seven-day
-              <a href="{{ '/drift-review-reminders.html' | relative_url }}">drift-review reminder</a>:
+              <a href="drift-review-reminders.html">drift-review reminder</a>:
               foreground and Monitor surfaces stay non-blocking, while future
               scheduled CI emits an advisory warning without failing the job.
               Additional host adapters remain;
               stable 0.2.1 and v0.3.0rc1 are unchanged.
-              See the <a href="{{ '/human-decision-prompts.html' | relative_url }}">minimal-input decision contract</a>.
-              See <a href="{{ '/clarification-dialogue.html' | relative_url }}">governed clarification and drift re-centering</a>.
-            </p>
+              See the <a href="human-decision-prompts.html">minimal-input decision contract</a>.
+              See <a href="clarification-dialogue.html">governed clarification and drift re-centering</a>.
+              </p>
+            </details>
           </div>
           <div class="proof">
             <article>
               <span class="num">01</span>
-              <h3>Govern automatically</h3>
-              <p>No repeated state queries or manual lifecycle command chain.</p>
+              <h3>Align and admit</h3>
+              <p>The human chooses the direction and reviews the exact task boundary.</p>
             </article>
             <article>
               <span class="num">02</span>
-              <h3>Protect both sides</h3>
-              <p>Make user authority and coding-agent responsibility bounded and visible.</p>
+              <h3>Bound and verify</h3>
+              <p>Scope and validation are checked against current repository facts.</p>
             </article>
             <article>
               <span class="num">03</span>
-              <h3>Explain benefit honestly</h3>
-              <p>Separate observed protection, comparable improvement, human feedback and unknowns.</p>
+              <h3>Review and pause</h3>
+              <p>Advisory review records unknowns; completion does not auto-start the next task.</p>
             </article>
           </div>
           <div class="actions">
+            <a class="button dark" href="interview-guide.html">Open the interview walkthrough</a>
+            <a class="button light" href="portfolio.html#recovery">Trace the latest evidence chain</a>
             <a class="button light" href="product-requirements-automatic-governance.html">Read the approved product requirements</a>
           </div>
         </div>
@@ -1384,6 +1402,7 @@
             href="https://github.com/Andy-JunXiong/agent-governance-starter/blob/main/README.md"
             >README on GitHub ↗</a
           ><a href="quickstart.html">Quickstart</a
+          ><a href="interview-guide.html">Interview walkthrough</a
           ><a href="portfolio.html">Evidence portfolio</a
           ><a href="quickstart.zh-CN.html" hreflang="zh-CN">中文快速入门</a
           ><a

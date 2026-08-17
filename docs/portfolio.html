@@ -62,10 +62,10 @@
         </a>
         <nav class="header-nav" aria-label="Portfolio navigation">
           <a href="#lifecycle">Lifecycle</a>
+          <a href="#recovery">Recovery chain</a>
           <a href="#cases">Cases</a>
           <a href="#boundary">Evidence boundary</a>
-          <a href="#lineage">Reference</a>
-          <a href="quickstart.html">Quickstart</a>
+          <a href="interview-guide.html">Interview</a>
         </nav>
       </div>
     </header>
@@ -82,7 +82,7 @@
           </p>
           <div class="hero-actions">
             <a class="button" href="#lifecycle">Trace the lifecycle →</a>
-            <a class="button secondary" href="demo-governance-report.html">Inspect a sample report</a>
+            <a class="button secondary" href="interview-guide.html">Use the interview walkthrough</a>
           </div>
         </div>
         <aside class="hero-ledger" aria-label="Portfolio evidence index">
@@ -91,8 +91,8 @@
             <strong>A compact map of what can be inspected.</strong>
           </div>
           <div class="ledger-stats">
-            <div><b>06</b><span>Governance moments</span></div>
-            <div><b>03</b><span>Repository cases</span></div>
+            <div><b>07</b><span>Governance moments</span></div>
+            <div><b>04</b><span>Evidence stories</span></div>
             <div><b>01</b><span>Human authority boundary</span></div>
           </div>
           <div class="ledger-boundary">
@@ -164,6 +164,59 @@
                 source for the future 0.3 line. It is not represented here as part of stable 0.2.1.
               </p>
             </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="section recovery-section" id="recovery" aria-labelledby="recovery-title">
+        <div class="shell">
+          <div class="section-intro">
+            <p class="eyebrow">Latest development-source safety slice</p>
+            <h2 id="recovery-title">Recover ownership evidence without rewriting history.</h2>
+            <p>
+              The replay-safety chain separates correlation identity, active ownership, and
+              human-owned recovery evidence. Each record is immutable and each transition keeps
+              replay authority denied.
+            </p>
+            <p>
+              In short: <strong>immutable reservation → create-only claim → immutable recovery</strong>.
+              The final record creates no replacement owner and grants no replay authority.
+            </p>
+          </div>
+          <ol class="recovery-flow">
+            <li>
+              <span>01</span>
+              <div><strong>Reserve correlation</strong><small>One exact immutable marker identifies the intended repository, task, target, HEAD, and Adapter.</small></div>
+              <code>READY_TO_RESERVE</code>
+            </li>
+            <li>
+              <span>02</span>
+              <div><strong>Claim ownership</strong><small>Exclusive create lets one local contender bind durable pre-run ownership without changing the reservation.</small></div>
+              <code>READY_TO_CLAIM</code>
+            </li>
+            <li>
+              <span>03</span>
+              <div><strong>Inspect abandoned evidence</strong><small>Bounded raw bytes are classified as valid, partial, malformed, missing, inconsistent, unknown, or recovered.</small></div>
+              <code>READY_TO_RECOVER</code>
+            </li>
+            <li>
+              <span>04</span>
+              <div><strong>Record immutable recovery</strong><small>Exact human <code>RECOVER</code> confirmation creates a separate marker and preserves the original claim.</small></div>
+              <code>RECOVERED</code>
+            </li>
+          </ol>
+          <div class="recovery-boundary">
+            <strong>What the chain does not do</strong>
+            <p>
+              It does not infer abandonment, delete or repair a claim, creates no replacement owner,
+              does not consume evidence or authenticate an individual, and does not authorize replay.
+              Real-consumer recovery, network-filesystem exclusivity, and power-loss durability
+              remain unvalidated.
+            </p>
+          </div>
+          <div class="evidence-links">
+            <a href="clean-target-replay-preflight.html">Read the reservation, claim, and recovery contract →</a>
+            <a href="harness-contract-v1.html">Inspect the downstream Harness boundary →</a>
           </div>
         </div>
       </section>
@@ -370,6 +423,7 @@
           evidence contracts into the repository.
         </p>
         <div class="final-actions">
+          <a class="button" href="interview-guide.html">Use the interview walkthrough</a>
           <a class="button" href="demo-governance-report.html">Open sample report</a>
           <a class="button secondary" href="quickstart.html">Read the quickstart</a>
           <a class="button secondary" href="https://github.com/Andy-JunXiong/agent-governance-starter" target="_blank" rel="noreferrer">Inspect GitHub ↗</a>
@@ -382,6 +436,7 @@
         <span>Agent Governance · Evidence portfolio · No governance score</span>
         <span class="footer-links">
           <a href="index.html">Product home</a>
+          <a href="interview-guide.html">Interview walkthrough</a>
           <a href="quickstart.html">Quickstart</a>
           <a href="demo-governance-report.html">Sample report</a>
           <a href="https://github.com/Andy-JunXiong/agent-governance-starter" target="_blank" rel="noreferrer">GitHub</a>

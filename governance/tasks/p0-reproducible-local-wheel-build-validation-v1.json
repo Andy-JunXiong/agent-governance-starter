@@ -1,0 +1,64 @@
+{
+  "acceptance_signals": [
+    "The source archive is derived from exact commit 514f5023d7883aeee648ddda63b3e944d4116eac and excludes working-tree-only files.",
+    "An isolated Python 3.11 build environment reports setuptools version 69 or newer before the build.",
+    "Exactly one wheel is built locally without publication, and its filename, SHA256 digest, and member inventory are recorded.",
+    "A separate disposable environment installs the built wheel with --no-index --no-deps and the installed agentgov command successfully returns help for reserve replay-correlation.",
+    "No reservation command with RESERVE is invoked, no reservation marker is created, and the existing global agentgov launcher and package hashes remain unchanged.",
+    "Focused documentation tests and the full baseline test suite pass, or any bounded validation gap is recorded."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-a1b201aa143b4eaba2ac217fb95dfb78 and admitted that exact task through an explicit admission control. On 2026-08-17 fixed setuptools 80.9.0 enabled a short-path disposable build from exact committed revision 514f5023d7883aeee648ddda63b3e944d4116eac to emit one unpublished wheel. A separate environment installed it offline, and the installed reserve replay-correlation help exited successfully. No reservation apply, RESERVE input, marker, consumer, replay, global-installation change, Git operation, publication, release, deployment, or cleanup occurred. The full wheel inventory, hashes, path-length first-attempt failure, and authority boundaries are recorded in sanitized evidence. All 883 supported-Python tests passed with 2 platform-limited skips, governance had no deterministic failure, and a distinct bounded current-Agent advisory review found and corrected an incomplete inventory listing before finding no remaining correction-required requirement, authority, privacy, implementation, or scope drift. The task is paused so it cannot authorize a reservation rehearsal or other follow-on work.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "From exact Git commit 514f502, create a disposable source archive that excludes working-tree changes, prepare an isolated Python 3.11 build environment with setuptools 69 or newer, build one unpublished wheel, record its SHA256 and member inventory, install that wheel offline into a second disposable environment, and verify that the installed CLI exposes reserve replay-correlation help. Do not invoke RESERVE, create a reservation marker, modify the existing global installation, publish, commit, push, or delete retained prior evidence. If the required build prerequisite cannot be obtained or verified safely, stop and record the bounded blocker without retrying the reservation rehearsal."
+  },
+  "risk": {
+    "items": [
+      "Obtaining setuptools 69 or newer may require a network download into a disposable temporary directory; no package may be installed into the global environment.",
+      "Temporary artifacts may contain absolute local paths, which must be normalized or omitted from repository evidence.",
+      "The working tree already contains uncommitted changes from earlier admitted tasks and user-owned .codex content; these must be preserved and excluded from this task.",
+      "Reviewed assumption: The human request to proceed applies to the previously proposed wheel-build validation and does not authorize the later reservation rehearsal.",
+      "Reviewed assumption: The existing Python 3.11 interpreter may be used only to create disposable virtual environments.",
+      "Reviewed assumption: Temporary build and install artifacts may be retained rather than destructively cleaned up.",
+      "Reviewed unknown: Whether a trusted setuptools 69 or newer artifact is already available locally.",
+      "Reviewed unknown: Whether restricted network access will allow downloading the build prerequisite if no local artifact exists."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "src",
+      "schemas",
+      "governance/fixtures",
+      "README.md",
+      "docs/clean-target-replay-preflight.md",
+      "docs/harness-contract-v1.md",
+      "tests/test_public_documentation_freshness.py",
+      "pyproject.toml"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-reproducible-local-wheel-build-validation-v1.json",
+      "docs/experiments/reproducible-local-wheel-build-2026-08-17.md",
+      "docs/development-log/2026-08-17.md",
+      "STATUS.md",
+      "tests/test_user_documentation.py"
+    ]
+  },
+  "task_id": "p0-reproducible-local-wheel-build-validation-v1",
+  "title": "Reproducible local wheel build and installed CLI validation",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "git diff --check",
+    "git status -sb"
+  ]
+}

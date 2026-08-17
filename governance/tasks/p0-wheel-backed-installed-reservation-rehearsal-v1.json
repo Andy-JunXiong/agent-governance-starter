@@ -1,0 +1,79 @@
+{
+  "acceptance_signals": [
+    "The retained wheel hash exactly matches 78D6A216FE7344A2E3DA01086A7A92B9F3310BE61DAD2E690B0705003221FDE6 before installation.",
+    "A fresh Python 3.11 environment installs the wheel with --no-index --no-deps and exposes agentgov reserve replay-correlation.",
+    "A fresh no-remote disposable Git consumer has a committed unchanged target, no related task collision, a pre-existing marker registry directory, strict local Adapter metadata, and one unused rpf correlation identifier before invocation.",
+    "The installed reservation CLI is invoked exactly once with --apply in a visible interactive terminal; the human must type exact RESERVE, and cancellation, nonzero exit, BLOCKED, UNKNOWN, or uncertain outcome stops without retry.",
+    "A successful invocation creates exactly one marker matching the plan, committed target revision, Adapter identity, reservation contract, all-denied authority boundary, and exclusive marker path while leaving all other consumer content unchanged.",
+    "The development-source bridge validator accepts one in-memory reserved bridge bound to the exact created marker and no Harness run, without changing source or consumer content.",
+    "No replay, consume transition, real consumer, existing-installation mutation, network call, starter Git operation, publication, release, deployment, or cleanup occurs.",
+    "Sanitized evidence, synchronized current status and log, documentation tests, the full suite, governance, scope, JSON, privacy, advisory review, and diff checks complete with unresolved gaps reported."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-457de1ae00ba4ee4afc07b2fac5b0de1 and admitted that exact task through an explicit admission control, then separately authorized one baseline commit only in the no-remote disposable consumer. On 2026-08-17 the retained validated wheel installed offline into a fresh Python 3.11 environment, the synthetic consumer returned READY_TO_RESERVE with six passing checks, and one visible terminal apply received exact human RESERVE confirmation and exited successfully. Exactly one valid reserved marker was created, and one in-memory reserved correlation bridge bound to its exact identity and digest passed with no Harness run. No retry, replay, consume transition, real consumer, network call, existing-installation change, starter Git operation, cleanup, publication, release, or deployment occurred. All 884 supported-Python tests passed with 2 platform-limited skips, governance had no deterministic failure, and a distinct bounded current-Agent advisory review corrected one current-status wording contradiction before finding no remaining correction-required requirement, authority, privacy, implementation, or scope drift. The task is paused so the reservation cannot be retried, reused, consumed, or treated as follow-on authority.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Use the retained wheel with SHA256 78D6A216FE7344A2E3DA01086A7A92B9F3310BE61DAD2E690B0705003221FDE6 to create one fresh disposable Python 3.11 installation and one fresh no-remote disposable Git consumer, prepare one synthetic READY replay-preflight plan with strict local Adapter metadata and an unused rpf correlation identifier, then invoke the installed reservation apply exactly once in a visible interactive terminal. The human must type exact RESERVE. Cancellation, terminal closure, nonzero exit, BLOCKED, UNKNOWN, or uncertain outcome stops without retry. On success, verify the exclusive marker against the plan and validate one in-memory reserved correlation bridge using the development-source validator. Do not launch or consume a replay, modify the existing global installation, use network access, clean retained temporary evidence, commit or push the starter repository, publish, release, or deploy."
+  },
+  "risk": {
+    "items": [
+      "The visible terminal requires a real human confirmation; automated input would invalidate the rehearsal claim.",
+      "A retry after an uncertain terminal outcome could create duplicate or ambiguous reservation evidence, so only one apply invocation is permitted.",
+      "The disposable consumer must remain isolated, contain no remote, and use only synthetic data.",
+      "Reservation and reserved-bridge validation must not be represented as replay authorization, consumption, Harness evidence, or product effectiveness.",
+      "Temporary absolute paths and raw terminal transcripts must not enter repository evidence.",
+      "The working tree already contains prior admitted-task changes and user-owned .codex content that must remain untouched.",
+      "Reviewed assumption: The human request to continue selects the previously recommended one-shot wheel-backed installed reservation rehearsal.",
+      "Reviewed assumption: The retained wheel and its temporary directory remain readable and unchanged.",
+      "Reviewed assumption: A visible PowerShell terminal can provide interactive standard input and return a reliable process exit code.",
+      "Reviewed assumption: Temporary consumer and installation artifacts may be retained because cleanup is excluded.",
+      "Reviewed unknown: The human may cancel or close the visible terminal instead of entering exact RESERVE.",
+      "Reviewed unknown: The host may not return a reliable terminal exit result.",
+      "Reviewed unknown: Network-filesystem exclusive-create behavior remains outside this local rehearsal."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "release",
+      "src",
+      "schemas",
+      "governance/fixtures",
+      "README.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "docs/clean-target-replay-preflight.md",
+      "docs/harness-contract-v1.md",
+      "tests/test_public_documentation_freshness.py",
+      "pyproject.toml"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-wheel-backed-installed-reservation-rehearsal-v1.json",
+      "docs/experiments/wheel-backed-installed-reservation-2026-08-17.md",
+      "docs/development-log/2026-08-17.md",
+      "STATUS.md",
+      "tests/test_user_documentation.py"
+    ]
+  },
+  "task_id": "p0-wheel-backed-installed-reservation-rehearsal-v1",
+  "title": "Rehearse one wheel-backed installed replay reservation",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -p \"test_replay_reservation.py\" -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -p \"test_replay_correlation_bridge.py\" -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -p \"test_user_documentation.py\" -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-wheel-backed-installed-reservation-rehearsal-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check scope governance/tasks/p0-wheel-backed-installed-reservation-rehearsal-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

@@ -43,6 +43,15 @@ ADAPTER_1_5_INSTALLED_PREFLIGHT = (
 )
 CURRENT_DEVELOPMENT_LOG = ROOT / "docs/development-log/2026-08-15.md"
 CURRENT_OWNER_REPLAY_LOG = ROOT / "docs/development-log/2026-08-16.md"
+DISPOSABLE_INSTALLED_RESERVATION = (
+    ROOT / "docs/experiments/disposable-installed-reservation-2026-08-17.md"
+)
+REPRODUCIBLE_LOCAL_WHEEL_BUILD = (
+    ROOT / "docs/experiments/reproducible-local-wheel-build-2026-08-17.md"
+)
+WHEEL_BACKED_INSTALLED_RESERVATION = (
+    ROOT / "docs/experiments/wheel-backed-installed-reservation-2026-08-17.md"
+)
 CONSUMER_COMPLETION_LOG = ROOT / "docs/development-log/2026-08-13.md"
 HISTORICAL_MIGRATION_LOG = (
     ROOT / "docs/development-log/2026-08-14-historical-migration.md"
@@ -1040,6 +1049,13 @@ class UserDocumentationTests(unittest.TestCase):
             "agentgov.replay-correlation-reservation-preview",
             "agentgov.replay-correlation-reservation-result",
             "agentgov reserve replay-correlation",
+            "agentgov.replay-correlation-claim",
+            "agentgov claim replay-correlation",
+            "READY_TO_CLAIM",
+            "exact `CLAIM`",
+            "agentgov recover replay-claim",
+            "READY_TO_RECOVER",
+            "exact `RECOVER`",
             "READY",
             "BLOCKED",
             "UNKNOWN",
@@ -1051,7 +1067,99 @@ class UserDocumentationTests(unittest.TestCase):
         self.assertIn("clean-target replay preflight guide", readme)
         self.assertIn("implemented upstream gate", harness)
         self.assertIn("preflight -> reservation", harness)
+        self.assertIn("reservation -> claim", harness)
+        self.assertIn("Abandoned-claim recovery is a separate side branch", harness)
         self.assertIn("First Deviation rules", harness)
+        for surface in (normalized_guide, readme, harness):
+            self.assertIn("agentgov.replay-correlation-bridge", surface)
+            self.assertIn("host.repository_correlation", surface)
+        self.assertIn("reserved", normalized_guide)
+        self.assertIn("consumed", normalized_guide)
+        self.assertIn("invalidated", normalized_guide)
+        self.assertIn("unavailable", normalized_guide)
+        self.assertIn("does not reserve, consume, invalidate", normalized_guide)
+        for surface in (normalized_guide, " ".join(readme.split()), " ".join(harness.split())):
+            self.assertIn("does not authorize, launch, consume, expire, recover", surface)
+        for phrase in (
+            "VALID",
+            "PARTIAL",
+            "MALFORMED",
+            "MISSING",
+            "INCONSISTENT",
+            "RECOVERED",
+            "raw claim content is not copied",
+            "not identity authentication",
+            "does not create replacement ownership",
+        ):
+            self.assertIn(phrase, normalized_guide)
+
+    def test_disposable_installed_reservation_records_install_block_without_retry(self) -> None:
+        evidence = DISPOSABLE_INSTALLED_RESERVATION.read_text(encoding="utf-8")
+        normalized = " ".join(evidence.split())
+
+        for phrase in (
+            "BLOCKED_INSTALLATION_PRECONDITION",
+            "setuptools 65.5.0",
+            "reservation invocation count: `0`",
+            "visible terminal started: `false`",
+            "marker created: `false`",
+            "no retry",
+            "existing pipx installation remained byte-unchanged",
+            "does not establish reservation behavior",
+        ):
+            self.assertIn(phrase, normalized)
+
+    def test_reproducible_local_wheel_build_records_installed_help_boundary(self) -> None:
+        evidence = REPRODUCIBLE_LOCAL_WHEEL_BUILD.read_text(encoding="utf-8")
+        normalized = " ".join(evidence.split())
+        member_lines = [
+            line
+            for line in evidence.splitlines()
+            if line.startswith(
+                (
+                    "agentgov/",
+                    "agent_governance_starter-0.3.0rc1.data/",
+                    "agent_governance_starter-0.3.0rc1.dist-info/",
+                )
+            )
+        ]
+
+        for phrase in (
+            "514f5023d7883aeee648ddda63b3e944d4116eac",
+            "setuptools 80.9.0",
+            "exactly one unpublished wheel",
+            "78D6A216FE7344A2E3DA01086A7A92B9F3310BE61DAD2E690B0705003221FDE6",
+            "member count: `173`",
+            "2BB649EB6EF281260C083E567CC8F92DDE0F50BB6975C700DE17C075115DF5AC",
+            "agentgov reserve replay-correlation --help",
+            "Reservation apply invocation count was `0`",
+            "marker created was `false`",
+            "existing installation therefore remained byte-unchanged",
+            "does not revive or retry that paused one-shot task",
+        ):
+            self.assertIn(phrase, normalized)
+        self.assertEqual(len(member_lines), 173)
+        self.assertEqual(len(set(member_lines)), 173)
+
+    def test_wheel_backed_installed_reservation_records_one_bounded_apply(self) -> None:
+        evidence = WHEEL_BACKED_INSTALLED_RESERVATION.read_text(encoding="utf-8")
+        normalized = " ".join(evidence.split())
+
+        for phrase in (
+            "78D6A216FE7344A2E3DA01086A7A92B9F3310BE61DAD2E690B0705003221FDE6",
+            "READY_TO_RESERVE",
+            "All six checks passed",
+            "invoked exactly once",
+            "exact interactive `RESERVE` confirmation",
+            "registry contained exactly one JSON marker",
+            "rrv-8727d1e62d0fde6e",
+            "9cbd4cdb06486a78a554ec208c39d00cdba5bddd4b41c178f957c5106989c268",
+            "Bridge validation returned zero errors",
+            "Harness run and evidence fields remained null",
+            "existing installation therefore remained byte-unchanged",
+            "does not consume the reservation",
+        ):
+            self.assertIn(phrase, normalized)
 
 
 if __name__ == "__main__":

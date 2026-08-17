@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/replay-correlation-bridge-v1.0.json",
+  "title": "AgentGov replay correlation consumption and Harness evidence bridge",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "schema_version",
+    "bridge_id",
+    "correlation_id",
+    "state",
+    "reservation",
+    "harness_mapping",
+    "reason_code",
+    "privacy_boundary",
+    "claim_limits",
+    "authority_boundary"
+  ],
+  "properties": {
+    "contract": {"const": "agentgov.replay-correlation-bridge"},
+    "schema_version": {"const": "1.0"},
+    "bridge_id": {"type": "string", "pattern": "^rcb-[0-9a-f]{16}$"},
+    "correlation_id": {"$ref": "#/$defs/correlationId"},
+    "state": {"enum": ["reserved", "consumed", "invalidated", "unavailable"]},
+    "reservation": {"$ref": "#/$defs/reservation"},
+    "harness_mapping": {"$ref": "#/$defs/harnessMapping"},
+    "reason_code": {
+      "anyOf": [
+        {"type": "null"},
+        {"$ref": "#/$defs/normalizedId"}
+      ]
+    },
+    "privacy_boundary": {"$ref": "#/$defs/privacyBoundary"},
+    "claim_limits": {"$ref": "#/$defs/claimLimits"},
+    "authority_boundary": {"$ref": "#/$defs/authorityBoundary"}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"state": {"const": "consumed"}},
+        "required": ["state"]
+      },
+      "then": {
+        "properties": {
+          "reason_code": {"const": null},
+          "harness_mapping": {
+            "properties": {
+              "run_id": {"type": "string", "pattern": "^hrn-[0-9a-f]{16}$"},
+              "evidence_ref": {"$ref": "#/$defs/evidenceRef"}
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "harness_mapping": {
+            "properties": {
+              "run_id": {"const": null},
+              "evidence_ref": {"const": null}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"state": {"enum": ["reserved", "consumed"]}},
+        "required": ["state"]
+      },
+      "then": {"properties": {"reason_code": {"const": null}}},
+      "else": {"properties": {"reason_code": {"$ref": "#/$defs/normalizedId"}}}
+    },
+    {
+      "properties": {
+        "harness_mapping": {
+          "properties": {
+            "expected_value": {"$ref": "#/$defs/correlationId"}
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "normalizedId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120,
+      "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$"
+    },
+    "correlationId": {
+      "type": "string",
+      "pattern": "^rpf-[0-9a-f]{16}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "evidenceRef": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 400,
+      "pattern": "^(?!/)(?![A-Za-z]:[\\\\/])(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+    },
+    "reservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract", "schema_version", "reservation_id", "marker_path", "marker_digest"],
+      "properties": {
+        "contract": {"const": "agentgov.replay-correlation-reservation"},
+        "schema_version": {"const": "1.0"},
+        "reservation_id": {"type": "string", "pattern": "^rrv-[0-9a-f]{16}$"},
+        "marker_path": {"$ref": "#/$defs/evidenceRef"},
+        "marker_digest": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "harnessMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract", "schema_version", "field", "expected_value", "run_id", "evidence_ref"],
+      "properties": {
+        "contract": {"const": "agentgov.harness-run"},
+        "schema_version": {"const": "1.0"},
+        "field": {"const": "host.repository_correlation"},
+        "expected_value": {"$ref": "#/$defs/correlationId"},
+        "run_id": {
+          "anyOf": [
+            {"type": "null"},
+            {"type": "string", "pattern": "^hrn-[0-9a-f]{16}$"}
+          ]
+        },
+        "evidence_ref": {
+          "anyOf": [
+            {"type": "null"},
+            {"$ref": "#/$defs/evidenceRef"}
+          ]
+        }
+      }
+    },
+    "privacyBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contains_raw_prompt",
+        "contains_transcript",
+        "contains_model_output",
+        "contains_tool_input_output",
+        "contains_source_content",
+        "contains_credentials",
+        "contains_absolute_paths",
+        "contains_unbounded_payloads"
+      ],
+      "properties": {
+        "contains_raw_prompt": {"const": false},
+        "contains_transcript": {"const": false},
+        "contains_model_output": {"const": false},
+        "contains_tool_input_output": {"const": false},
+        "contains_source_content": {"const": false},
+        "contains_credentials": {"const": false},
+        "contains_absolute_paths": {"const": false},
+        "contains_unbounded_payloads": {"const": false}
+      }
+    },
+    "claimLimits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "proves_replay_authorized",
+        "proves_replay_launched",
+        "proves_replay_completed",
+        "proves_product_effectiveness"
+      ],
+      "properties": {
+        "proves_replay_authorized": {"const": false},
+        "proves_replay_launched": {"const": false},
+        "proves_replay_completed": {"const": false},
+        "proves_product_effectiveness": {"const": false}
+      }
+    },
+    "authorityBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authorizes_cleanup",
+        "authorizes_deployment",
+        "authorizes_git_operations",
+        "authorizes_publication",
+        "authorizes_release",
+        "authorizes_replay",
+        "authorizes_repository_write",
+        "authorizes_task_admission"
+      ],
+      "properties": {
+        "authorizes_cleanup": {"const": false},
+        "authorizes_deployment": {"const": false},
+        "authorizes_git_operations": {"const": false},
+        "authorizes_publication": {"const": false},
+        "authorizes_release": {"const": false},
+        "authorizes_replay": {"const": false},
+        "authorizes_repository_write": {"const": false},
+        "authorizes_task_admission": {"const": false}
+      }
+    }
+  }
+}

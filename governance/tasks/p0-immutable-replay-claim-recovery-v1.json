@@ -1,0 +1,98 @@
+{
+  "acceptance_signals": [
+    "A strict version 1 plan, inspection report, recovery marker, preview, and result contract binds one recovery identity and repository-relative recovery path to one valid immutable reservation, exact observed claim path, raw claim digest and bounded byte length, repository HEAD, Adapter identity, human recovery actor and reason, and all-denied authority boundary.",
+    "A dependency-free validator rejects extra fields, malformed identifiers, unsafe paths, unbounded claim evidence, non-recovered status, reservation, claim-digest, Adapter, recovery, or authority mismatch without filesystem or network side effects.",
+    "Read-only inspection classifies valid, partial, malformed, missing, inconsistent, unknown, and already-recovered evidence without writing, deleting, repairing, expiring, mutating, or taking over the reservation or claim.",
+    "Recovery readiness is READY_TO_RECOVER only for bounded exact claim bytes under the intended correlation with valid unchanged reservation evidence, matching current HEAD and Adapter, a pre-existing safe recovery registry, no recovery collision, and an explicitly declared human recovery reason; missing, inconsistent, unsafe, or uncertain evidence fails closed.",
+    "Apply revalidates the exact reviewed inputs, requires terminal format and exact interactive RECOVER, and uses exclusive file creation so exactly one recovery marker can succeed; collision, stale evidence, cancellation, invalid input, race, or uncertain write never overwrites the reservation, claim, or an existing recovery marker.",
+    "A pure ownership evaluation reports RECOVERED only when the recovery marker strictly binds the exact reservation and raw claim digest; it does not modify existing claim creation behavior, create a replacement claim, consume evidence, or authorize replay.",
+    "Fixtures and tests cover every inspection classification, valid recovery, passing preview, blocked, unknown, collision, stale claim and reservation evidence, exclusive-create race, cancellation, malformed documents, partial recovery-marker write retention, source immutability, ownership binding, and all denied authority states.",
+    "Existing claim, reservation, bridge, preflight, and Harness source, schemas, fixtures, behavior, and authority semantics remain unchanged.",
+    "Documentation states that recovery is immutable human-owned supersession evidence only and does not delete or repair the claim, create new ownership, authorize or prove replay, or grant cleanup, Git, publication, release, deployment, or task authority.",
+    "Focused and complete supported-Python tests, task and repository governance, pre-pause scope reconciliation, strict JSON and schema checks, secret-safety inspection, native current-Agent self-review, git diff check, status and dated log closeout, and final task pause complete with unresolved gaps reported."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-f29ec0903f5f4fb3b823c9ffeff33d6b and admitted that exact task through an explicit admission control. The aligned implementation, validation, native current-Agent self-review, and closeout completed; the bounded task is now paused without follow-on authority.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Implement the aligned first recovery slice for replay claims. Add dependency-free strict version 1 plan, inspection, recovery marker, preview, and result contracts; pure validation and binding to one immutable reservation and the exact observed claim bytes; read-only inspection that classifies valid, partial, malformed, missing, inconsistent, unknown, and already-recovered evidence; and an agentgov recover replay-claim CLI. Recovery apply requires a pre-existing recovery registry, terminal format, exact interactive RECOVER, fresh revalidation, and exclusive creation of one immutable recovery marker. The original reservation and claim remain untouched. A valid bound recovery marker may classify that exact abandoned claim as recovered for later ownership checks, but creates no replacement claim and grants no replay or other authority."
+  },
+  "risk": {
+    "items": [
+      "A recovery marker could be mistaken for replay, replacement-claim, cleanup, or takeover authority unless every contract and message preserves the all-denied boundary.",
+      "A complete valid claim may still represent a live owner; abandonment is a human-owned fact and must not be inferred deterministically.",
+      "Malformed or partial claim bytes must be bounded and digest-bound without retaining source content in recovery evidence.",
+      "In-place repair, deletion, overwrite, automatic expiry, or automatic takeover would violate the resolved direction.",
+      "Filesystem races must preserve the original reservation, claim, and any competing recovery marker.",
+      "The working tree contains changes from prior admitted tasks and user-owned .codex content that must remain preserved and outside this task.",
+      "Reviewed assumption: The immutable reservation marker remains the root evidence for recovery inspection.",
+      "Reviewed assumption: The intended claim path and correlation are declared in the recovery plan so malformed bytes can still be bounded and identified without parsing them successfully.",
+      "Reviewed assumption: A recovery marker binds the raw observed claim digest rather than copying claim content.",
+      "Reviewed assumption: Local exclusive file creation is the bounded atomic primitive for one recovery marker.",
+      "Reviewed assumption: A pre-existing recovery registry is required and the tool creates no scaffolding.",
+      "Reviewed assumption: Exact RECOVER confirmation records human recovery intent but remains distinct from replay authorization.",
+      "Reviewed unknown: Network-filesystem exclusive-create semantics remain unvalidated.",
+      "Reviewed unknown: Power-loss durability beyond the file synchronization boundary remains unvalidated.",
+      "Reviewed unknown: A later workflow must decide how a recovered correlation may obtain new ownership without weakening the create-only claim contract.",
+      "Reviewed unknown: A future native host may require a nonterminal human recovery decision surface."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "release",
+      "src/agentgov/replay_claim.py",
+      "src/agentgov/replay_reservation.py",
+      "src/agentgov/replay_correlation_bridge.py",
+      "src/agentgov/replay_preflight.py",
+      "src/agentgov/harness_contract.py",
+      "schemas/replay-correlation-claim-v1.schema.json",
+      "schemas/replay-correlation-reservation-v1.schema.json",
+      "schemas/replay-correlation-bridge-v1.schema.json",
+      "schemas/harness-contract-v1.schema.json",
+      "governance/fixtures/replay-correlation-claim-v1",
+      "governance/fixtures/replay-correlation-bridge-v1",
+      "governance/fixtures/harness-contract-v1",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "pyproject.toml"
+    ],
+    "include_paths": [
+      "src/agentgov/replay_claim_recovery.py",
+      "src/agentgov/cli.py",
+      "schemas/replay-claim-recovery-v1.schema.json",
+      "governance/fixtures/replay-claim-recovery-v1",
+      "tests/test_replay_claim_recovery.py",
+      "tests/test_user_documentation.py",
+      "tests/test_public_documentation_freshness.py",
+      "README.md",
+      "docs/clean-target-replay-preflight.md",
+      "docs/harness-contract-v1.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-17.md",
+      "governance/tasks/p0-immutable-replay-claim-recovery-v1.json"
+    ]
+  },
+  "task_id": "p0-immutable-replay-claim-recovery-v1",
+  "title": "Add immutable replay claim recovery evidence",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -p \"test_replay_claim_recovery.py\" -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -p \"test_replay_claim.py\" -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -p \"test_replay_reservation.py\" -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -p \"test_replay_correlation_bridge.py\" -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-immutable-replay-claim-recovery-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check scope governance/tasks/p0-immutable-replay-claim-recovery-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

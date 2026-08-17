@@ -227,6 +227,34 @@ from agentgov.replay_preflight import (
     render_replay_preflight_json,
     render_replay_preflight_terminal,
 )
+from agentgov.replay_claim import (
+    ReplayClaimConflictError,
+    ReplayClaimError,
+    ReplayClaimPlanError,
+    ReplayClaimPreviewStatus,
+    ReplayClaimStaleError,
+    apply_replay_claim,
+    load_replay_claim_plan,
+    prepare_replay_claim,
+    render_replay_claim_preview_json,
+    render_replay_claim_preview_terminal,
+    render_replay_claim_result_terminal,
+    request_replay_claim_confirmation,
+)
+from agentgov.replay_claim_recovery import (
+    RecoveryPreviewStatus,
+    ReplayClaimRecoveryConflictError,
+    ReplayClaimRecoveryError,
+    ReplayClaimRecoveryPlanError,
+    ReplayClaimRecoveryStaleError,
+    apply_replay_claim_recovery,
+    load_replay_claim_recovery_plan,
+    prepare_replay_claim_recovery,
+    render_replay_claim_recovery_preview_json,
+    render_replay_claim_recovery_preview_terminal,
+    render_replay_claim_recovery_result_terminal,
+    request_replay_claim_recovery_confirmation,
+)
 from agentgov.replay_reservation import (
     ReplayReservationConflictError,
     ReplayReservationError,
@@ -2039,6 +2067,130 @@ def _reserve_replay_correlation(
         print(f"ERROR reserve replay-correlation: {exc}", file=sys.stderr)
         return EXIT_ERROR
     print(render_replay_reservation_result_terminal(result), end="")
+    return EXIT_PASS
+
+
+def _claim_replay_correlation(
+    plan_path: Path,
+    *,
+    repository: Path,
+    apply_claim: bool,
+    output_format: str,
+) -> int:
+    """Preview or human-confirm one create-only replay claim."""
+
+    if apply_claim and output_format != "terminal":
+        print(
+            "ERROR claim replay-correlation: --apply requires terminal format for human confirmation",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    try:
+        plan = load_replay_claim_plan(plan_path)
+        preview = prepare_replay_claim(plan, repository=repository)
+    except (ReplayClaimPlanError, ReplayClaimError, OSError, UnicodeError) as exc:
+        print(f"ERROR claim replay-correlation: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    renderer = {
+        "terminal": render_replay_claim_preview_terminal,
+        "json": render_replay_claim_preview_json,
+    }[output_format]
+    print(renderer(preview), end="")
+    if preview.status is not ReplayClaimPreviewStatus.READY:
+        return EXIT_FAIL
+    if not apply_claim:
+        return EXIT_PASS
+    try:
+        confirmed = request_replay_claim_confirmation(
+            preview,
+            decision_reader=input,
+            is_interactive_terminal=sys.stdin.isatty(),
+        )
+    except EOFError:
+        confirmed = False
+    if not confirmed:
+        print(
+            "CANCELLED replay correlation claim requires exact CLAIM confirmation from an interactive terminal"
+        )
+        print("NOTE no claim marker was written")
+        return EXIT_PASS
+    try:
+        result = apply_replay_claim(preview, plan, repository=repository)
+    except (ReplayClaimConflictError, ReplayClaimStaleError) as exc:
+        print(f"FAIL claim replay-correlation: {exc}")
+        return EXIT_FAIL
+    except (ReplayClaimError, OSError, UnicodeError) as exc:
+        print(f"ERROR claim replay-correlation: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    print(render_replay_claim_result_terminal(result), end="")
+    return EXIT_PASS
+
+
+def _recover_replay_claim(
+    plan_path: Path,
+    *,
+    repository: Path,
+    apply_recovery: bool,
+    output_format: str,
+) -> int:
+    """Inspect or human-confirm one immutable replay-claim recovery."""
+
+    if apply_recovery and output_format != "terminal":
+        print(
+            "ERROR recover replay-claim: --apply requires terminal format for human confirmation",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    try:
+        plan = load_replay_claim_recovery_plan(plan_path)
+        preview = prepare_replay_claim_recovery(plan, repository=repository)
+    except (
+        ReplayClaimRecoveryPlanError,
+        ReplayClaimRecoveryError,
+        OSError,
+        UnicodeError,
+    ) as exc:
+        print(f"ERROR recover replay-claim: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    renderer = {
+        "terminal": render_replay_claim_recovery_preview_terminal,
+        "json": render_replay_claim_recovery_preview_json,
+    }[output_format]
+    print(renderer(preview), end="")
+    if preview.status is RecoveryPreviewStatus.ALREADY_RECOVERED:
+        return EXIT_FAIL if apply_recovery else EXIT_PASS
+    if preview.status is not RecoveryPreviewStatus.READY:
+        return EXIT_FAIL
+    if not apply_recovery:
+        return EXIT_PASS
+    try:
+        confirmed = request_replay_claim_recovery_confirmation(
+            preview,
+            decision_reader=input,
+            is_interactive_terminal=sys.stdin.isatty(),
+        )
+    except EOFError:
+        confirmed = False
+    if not confirmed:
+        print(
+            "CANCELLED replay claim recovery requires exact RECOVER confirmation from an interactive terminal"
+        )
+        print("NOTE no recovery marker was written; the original claim was preserved")
+        return EXIT_PASS
+    try:
+        result = apply_replay_claim_recovery(
+            preview, plan, repository=repository
+        )
+    except (
+        ReplayClaimRecoveryConflictError,
+        ReplayClaimRecoveryStaleError,
+    ) as exc:
+        print(f"FAIL recover replay-claim: {exc}")
+        return EXIT_FAIL
+    except (ReplayClaimRecoveryError, OSError, UnicodeError) as exc:
+        print(f"ERROR recover replay-claim: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    print(render_replay_claim_recovery_result_terminal(result), end="")
     return EXIT_PASS
 
 
@@ -4548,6 +4700,96 @@ def build_parser() -> argparse.ArgumentParser:
             actor_label=args.actor_label,
             dry_run=args.dry_run,
             output_format=args.govern_format,
+        )
+    )
+
+    claim_parser = commands.add_parser(
+        "claim",
+        help="Preview or explicitly create one bounded local claim.",
+    )
+    claim_targets = claim_parser.add_subparsers(
+        dest="claim_target",
+        required=True,
+    )
+    replay_claim_parser = claim_targets.add_parser(
+        "replay-correlation",
+        help="Claim one valid reservation without authorizing a replay.",
+    )
+    replay_claim_parser.add_argument(
+        "plan",
+        type=Path,
+        help="Versioned replay-correlation claim plan JSON.",
+    )
+    replay_claim_parser.add_argument(
+        "--repository",
+        type=Path,
+        default=Path("."),
+        help="Consumer Git worktree root containing reservation and claim registries.",
+    )
+    replay_claim_parser.add_argument(
+        "--apply",
+        dest="apply_replay_claim",
+        action="store_true",
+        help="After exact interactive confirmation, revalidate and exclusively create the claim.",
+    )
+    replay_claim_parser.add_argument(
+        "--format",
+        dest="replay_claim_format",
+        choices=("terminal", "json"),
+        default="terminal",
+        help="Preview serialization format; apply requires terminal format.",
+    )
+    replay_claim_parser.set_defaults(
+        handler=lambda args: _claim_replay_correlation(
+            args.plan,
+            repository=args.repository,
+            apply_claim=args.apply_replay_claim,
+            output_format=args.replay_claim_format,
+        )
+    )
+
+    recover_parser = commands.add_parser(
+        "recover",
+        help="Inspect or explicitly record one bounded local recovery.",
+    )
+    recover_targets = recover_parser.add_subparsers(
+        dest="recover_target",
+        required=True,
+    )
+    replay_claim_recovery_parser = recover_targets.add_parser(
+        "replay-claim",
+        help="Inspect and recover one abandoned claim without replacing it.",
+    )
+    replay_claim_recovery_parser.add_argument(
+        "plan",
+        type=Path,
+        help="Versioned replay-claim recovery plan JSON.",
+    )
+    replay_claim_recovery_parser.add_argument(
+        "--repository",
+        type=Path,
+        default=Path("."),
+        help="Consumer Git worktree root containing reservation, claim, and recovery registries.",
+    )
+    replay_claim_recovery_parser.add_argument(
+        "--apply",
+        dest="apply_replay_claim_recovery",
+        action="store_true",
+        help="After exact interactive confirmation, revalidate and exclusively create recovery evidence.",
+    )
+    replay_claim_recovery_parser.add_argument(
+        "--format",
+        dest="replay_claim_recovery_format",
+        choices=("terminal", "json"),
+        default="terminal",
+        help="Inspection and preview format; apply requires terminal format.",
+    )
+    replay_claim_recovery_parser.set_defaults(
+        handler=lambda args: _recover_replay_claim(
+            args.plan,
+            repository=args.repository,
+            apply_recovery=args.apply_replay_claim_recovery,
+            output_format=args.replay_claim_recovery_format,
         )
     )
 

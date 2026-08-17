@@ -1,0 +1,49 @@
+{
+  "contract": "agentgov.replay-correlation-bridge",
+  "schema_version": "1.0",
+  "bridge_id": "rcb-1111111111111111",
+  "correlation_id": "rpf-0123456789abcdef",
+  "state": "reserved",
+  "reservation": {
+    "contract": "agentgov.replay-correlation-reservation",
+    "schema_version": "1.0",
+    "reservation_id": "rrv-0123456789abcdef",
+    "marker_path": ".agentgov/replay-correlations/rpf-0123456789abcdef.json",
+    "marker_digest": "sha256:6dddc26fdbc76f36efd3d1543fd1d99823e01cb930bb399fef185a758300e86f"
+  },
+  "harness_mapping": {
+    "contract": "agentgov.harness-run",
+    "schema_version": "1.0",
+    "field": "host.repository_correlation",
+    "expected_value": "rpf-0123456789abcdef",
+    "run_id": null,
+    "evidence_ref": null
+  },
+  "reason_code": null,
+  "privacy_boundary": {
+    "contains_raw_prompt": false,
+    "contains_transcript": false,
+    "contains_model_output": false,
+    "contains_tool_input_output": false,
+    "contains_source_content": false,
+    "contains_credentials": false,
+    "contains_absolute_paths": false,
+    "contains_unbounded_payloads": false
+  },
+  "claim_limits": {
+    "proves_replay_authorized": false,
+    "proves_replay_launched": false,
+    "proves_replay_completed": false,
+    "proves_product_effectiveness": false
+  },
+  "authority_boundary": {
+    "authorizes_cleanup": false,
+    "authorizes_deployment": false,
+    "authorizes_git_operations": false,
+    "authorizes_publication": false,
+    "authorizes_release": false,
+    "authorizes_replay": false,
+    "authorizes_repository_write": false,
+    "authorizes_task_admission": false
+  }
+}

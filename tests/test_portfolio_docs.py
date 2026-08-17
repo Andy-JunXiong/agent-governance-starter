@@ -28,6 +28,7 @@ class PortfolioDocumentationTests(unittest.TestCase):
 
         self.assertTrue(text.startswith(expected_opening))
         for heading in (
+            "## Interview snapshot",
             "## Why this exists",
             "## Architecture at a glance",
             "## What makes it different",

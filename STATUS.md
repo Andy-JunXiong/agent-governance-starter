@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-08-16
+Last verified: 2026-08-17
 
 ## Current-status contract
 
@@ -42,56 +42,51 @@ scheduling authority.
 
 ### Current closeout snapshot
 
-- **Active slice**: none. Development source now implements the separately
-  admitted human-controlled replay correlation reservation, and task
-  `p0-human-controlled-replay-correlation-reservation-v1` is paused after
-  validation and native current-Agent advisory review. The bounded session-
-  closeout record is complete, and task
-  `p0-record-and-publish-2026-08-16-session-closeout` is paused after final
-  validation and bounded current-Agent review.
-- **Codex-run validation**: all 15 reservation, 15 replay-preflight, 11 CLI,
-  and 40 targeted documentation tests passed. The complete supported-Python
-  suite passed all 868 tests with 2 platform-limited skips. Before pause, task
-  governance reported `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance
-  reported `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. The reservation Schema and task
-  parsed as JSON, the bounded credential-pattern scan found no match, and
-  `git diff --check` passed. Pre-pause scope reconciliation accepted all 13
-  current-task paths and rejected five preserved user-owned or preceding-task
-  paths: `.codex/config.toml`, the social cover image, the AIRBNB task, and the
-  prior disposable-preflight task and experiment record. No exception was
-  inferred. Native current-Agent advisory review
-  `srv-6a3f3d55584e3cfce3da1893f9851d46` found no correction-required authority,
-  security, architecture, implementation, or scope drift. Final publication-
-  closeout validation passed all 79 focused tests and reran all 868 tests on
-  Python 3.11.9 with 2 skips and no failure. The closeout task reported
-  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`, repository governance remained
-  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`, and scope accepted all 16 intended paths
-  while rejecting only the three explicitly excluded local paths.
-- **User-reported validation**: the human selected correlation reservation
-  through native alignment and admitted the exact implementation task through
-  the native task-proposal form. On 2026-08-16 the human also explicitly
-  authorized one bounded commit and non-force direct push to `origin/main` for
-  the completed disposable-preflight and reservation change set. No separate
-  consumer behavior result was user-reported.
-- **Pending validation**: no installed or real-consumer reservation has run.
-  Host-native confirmation, reservation consumption, and an explicit mapping
-  into later Harness run evidence remain undefined. Network-filesystem
-  exclusive-create behavior is also untested.
-- **Incomplete**: none inside the paused reservation implementation task.
-- **Publication boundary**: the exact intended session files may be committed
-  once and pushed non-force directly to `origin/main` under the human's
-  explicit authorization. The local `.codex` configuration, social cover
-  image, and misdirected AIRBNB task remain excluded and unstaged. This
-  pre-commit status records the authorization; the Git command result belongs
-  to Git history and the completion handoff, not a prewritten success claim.
-- **Blocker / stop condition**: stop before installing this development source,
-  creating a marker in a real consumer, launching a replay, changing Harness
-  Contract v1 semantics, creating a pull request, force-pushing, publishing a
-  release, or deploying. After the exact authorized push, no further Git or
-  external action is authorized.
-- **Next product review**: decide whether to validate this exact reservation
-  through one disposable installed rehearsal or first define its consume and
-  Harness-evidence mapping contract. This entry grants no follow-on authority.
+- **Active slice**: none. Task `p0-interview-docs-demo-sync-v1` is paused after
+  the interview-ready current-documentation and local GitHub Pages source
+  synchronization completed.
+- **Codex-run validation**: the README, homepage, evidence portfolio, English
+  and Chinese quickstarts, and new bilingual interview walkthrough now share
+  one evidence-bounded story. They distinguish stable `0.2.1`, published
+  prerelease `0.3.0rc1`, and newer development-source behavior; expose the
+  immutable reservation to create-only claim to immutable recovery chain; and
+  state that recovery creates no replacement owner or replay authority. The
+  homepage no longer contains unresolved template links, and the generated
+  sample reports remain byte-identical illustrative `0.3.0rc1` snapshots.
+  Focused documentation and site validation passed all 71 tests. The complete
+  supported-Python 3.11 suite passed all 921 tests with 3 platform-limited
+  skips. Desktop browser inspection of the homepage, portfolio recovery
+  section, and both interview walkthroughs found no visible layout, encoding,
+  or navigation regression. Before pause, task governance reported
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance reported
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Scope accepted 19 current-task paths and
+  rejected 30 preserved paths owned by earlier admitted tasks or the
+  user-owned excluded `.codex/config.toml`; no exception or ownership transfer
+  was inferred. The task JSON parsed, bounded credential and host-path scans
+  found no match, and `git diff --check` passed. Native current-Agent advisory
+  review `srv-5c89045052ce8a1d6b0a583d484f1ca6` found no
+  correction-required requirement, architecture, implementation, authority,
+  security, data, or scope drift.
+- **User-reported validation**: the human selected the comprehensive
+  interview-ready synchronization through native alignment and admitted the
+  exact local documentation task. No Git, publication, release, deployment, or
+  external-write authorization was supplied.
+- **Pending validation**: mobile-width visual browser inspection remains
+  pending because the connected browser exposed no viewport-emulation
+  capability. The public GitHub Pages URL remains on its prior content until a
+  separately authorized commit, push, and Pages publication complete. No
+  external evidence establishes improved interview outcomes.
+- **Incomplete**: none inside the paused local documentation synchronization.
+- **Publication boundary**: no commit, push, pull request, publication, release,
+  or deployment is authorized for this slice. The user-owned `.codex`
+  configuration remains excluded and unstaged.
+- **Blocker / stop condition**: stop before Git, GitHub Pages publication,
+  release, deployment, generated-report rewriting, historical-record
+  rewriting, or any follow-on product implementation.
+- **Next product review**: first decide whether to authorize the bounded Git and
+  GitHub Pages publication handoff. The next product feature is not yet
+  decided; recovered-correlation re-ownership before a claim-to-Harness consume
+  transition remains a candidate only. Neither action is authorized here.
 
 ### Superseded closeout snapshot - AIRBNB owner-regression replay
 

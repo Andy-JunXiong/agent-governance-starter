@@ -13,7 +13,9 @@ developing; pull requests and CI remain an independent backstop.
 [![Agent Governance — From task intent to verified evidence](docs/assets/agentgov-social-preview.jpg)](https://andy-junxiong.github.io/agent-governance-starter/)
 
 <p align="center">
-  <strong>Follow one coding-agent task from human-owned intent to reviewable evidence.</strong><br />
+  <strong>Interview-ready: explain one governed coding-agent task in 5–10 minutes.</strong><br />
+  <a href="https://andy-junxiong.github.io/agent-governance-starter/interview-guide.html">Open the interview walkthrough →</a> ·
+  <a href="https://andy-junxiong.github.io/agent-governance-starter/interview-guide.zh-CN.html">中文面试讲解</a> ·
   <a href="https://andy-junxiong.github.io/agent-governance-starter/">Explore the AgentGov product story →</a> ·
   <a href="https://andy-junxiong.github.io/agent-governance-starter/portfolio.html">Inspect the evidence portfolio</a> ·
   <a href="https://andy-junxiong.github.io/agent-governance-starter/demo-governance-report.html">Open the sample report</a> ·
@@ -23,9 +25,39 @@ developing; pull requests and CI remain an independent backstop.
 > The portfolio links claims to repository evidence and states where that evidence stops. It does not authorize commit, merge, publish, release, or deployment.
 
 [Explore the repository product page](docs/index.html) ·
+[Use the interview walkthrough](docs/interview-guide.md) ·
 [Open the repository sample report](docs/demo-governance-report.html) ·
 [Run the quickstart](#runnable-cli-example) ·
 [Inspect the architecture](#detailed-architecture)
+
+## Interview snapshot
+
+**Problem.** Coding agents can produce locally correct changes while the human
+requirement, architecture constraints, allowed file scope, fresh evidence, and
+consequential authority remain implicit.
+
+**Approach.** Agent Governance stores those boundaries in the repository,
+checks deterministic facts with a dependency-free Python CLI, and reports
+semantic uncertainty as `ADVISORY` instead of pretending a static check can
+approve the work.
+
+**Current evidence.** The development source now demonstrates a governed path
+from alignment and exact task admission through scope reconciliation, fresh
+validation, current-Agent advisory review, status closeout, and task pause. Its
+latest replay-safety slice separates immutable correlation reservation,
+create-only ownership claim, and immutable abandoned-claim recovery evidence.
+Recovery preserves the original claim, creates no replacement owner, and
+grants no replay authority.
+
+**Release boundary.** Stable `0.2.1` remains the installable repository-
+governance CLI. Published prerelease `0.3.0rc1` and newer development source
+contain different slices of the coding-agent lifecycle. The
+[sample report](docs/demo-governance-report.html) is a sanitized illustrative
+`0.3.0rc1` snapshot, not proof of the newest development-source workflow.
+
+Use the [five-to-ten-minute interview walkthrough](docs/interview-guide.md) for
+the presentation order, demo commands, evidence links, likely questions, and
+honest limitations.
 
 ## Why this exists
 
@@ -168,6 +200,8 @@ invalidates the generated review artifact._
 - source, manifest, and generated-artifact drift detection;
 - combined foreground and scheduled drift-review reminders for requirement,
   architecture, and functionality alignment in development source;
+- preview-first replay safety with immutable reservation, create-only claim,
+  and separately recorded immutable recovery evidence in development source;
 - repository-level `PASS`, `WARN`, `FAIL`, and `ADVISORY` findings;
 - deterministic Markdown and versioned JSON governance reports;
 - an installable Python CLI with stable exit-code semantics;
@@ -658,10 +692,56 @@ python -m agentgov reserve replay-correlation path/to/plan.json `
 ```
 
 The plan's registry directory must already exist; the reservation command does
-not create scaffolding on a failure path. Preflight, reservation, separately
-authorized replay, and Harness evaluation remain distinct stages. See the
+not create scaffolding on a failure path. A separate create-only claim can
+then bind durable pre-run ownership to that exact immutable reservation:
+
+```powershell
+python -m agentgov claim replay-correlation path/to/claim-plan.json `
+  --repository path/to/consumer --format json
+python -m agentgov claim replay-correlation path/to/claim-plan.json `
+  --repository path/to/consumer --apply
+```
+
+Claim preview is read-only and reports `READY_TO_CLAIM`, `BLOCKED`, or
+`UNKNOWN`. Apply requires a pre-existing claim registry, an interactive exact
+`CLAIM`, fresh reservation-digest, Git HEAD, and Adapter checks, and exclusive
+file creation. A claim is durable ownership evidence only: it does not
+authorize, launch, consume, expire, recover, take over, or prove a replay.
+Preflight, reservation, claim, separately authorized replay, and Harness
+evaluation remain distinct stages. See the
 [Harness Contract v1 guide](docs/harness-contract-v1.md) and
 [clean-target replay preflight guide](docs/clean-target-replay-preflight.md).
+
+If a claim is abandoned or a write was interrupted, a separate recovery path
+can inspect it without mutation:
+
+```powershell
+python -m agentgov recover replay-claim path/to/recovery-plan.json `
+  --repository path/to/consumer --format json
+python -m agentgov recover replay-claim path/to/recovery-plan.json `
+  --repository path/to/consumer --apply
+```
+
+Inspection classifies exact bounded claim bytes as `VALID`, `PARTIAL`,
+`MALFORMED`, `MISSING`, `INCONSISTENT`, `UNKNOWN`, or `RECOVERED`. Apply is
+available only for exact bounded `VALID`, `PARTIAL`, or `MALFORMED` evidence;
+it requires a pre-existing recovery registry, interactive exact `RECOVER`,
+fresh reservation, claim-digest, Git HEAD, and Adapter checks, then exclusively
+creates one immutable recovery marker. The original claim and reservation are
+never deleted or repaired. Recovery records human-owned supersession evidence;
+it does not create replacement ownership, authorize or prove replay, or grant
+cleanup, Git, publication, release, deployment, or task authority. The
+`recovered_by` label records a declaration and is not identity authentication.
+
+Development source now also defines the additive
+`agentgov.replay-correlation-bridge` `1.0` contract. Its dependency-free pure
+validator represents `reserved`, `consumed`, `invalidated`, and `unavailable`
+states and binds the reservation's `rpf-` identity to the unchanged Harness v1
+field `host.repository_correlation`. A `consumed` bridge is valid only with an
+exact matching reservation marker and valid Harness run; it is post-run
+correlation evidence, not permission to consume, authorize, launch, or complete
+a replay. The bridge adds no CLI, marker mutation, consumer integration, or
+Harness v1 schema change.
 
 NYC then supplied a second independent bounded consumer journey. Under Python
 3.11.9, its existing reviewed synthetic sample completed schema validation,
@@ -1080,6 +1160,12 @@ The first usable release contains:
 
 ## Project navigation
 
+- [Interview walkthrough](docs/interview-guide.html) presents the current
+  English interview story, evidence path, commands, limits, and likely questions.
+- [中文面试演示](docs/interview-guide.zh-CN.html) presents the same bounded
+  interview path for Chinese-speaking reviewers.
+- [Interview guide source](docs/interview-guide.md) keeps both walkthroughs in
+  one reviewable Markdown source.
 - [Web quickstart](docs/quickstart.html) provides a copyable PowerShell and
   Bash/zsh adoption path.
 - [中文 Web 快速开始](docs/quickstart.zh-CN.html) provides the equivalent

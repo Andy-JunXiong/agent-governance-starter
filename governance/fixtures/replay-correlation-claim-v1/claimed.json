@@ -1,0 +1,30 @@
+{
+  "contract": "agentgov.replay-correlation-claim",
+  "schema_version": "1.0",
+  "claim_id": "rcl-0123456789abcdef",
+  "correlation_id": "rpf-0123456789abcdef",
+  "claim_path": ".agentgov/replay-claims/rpf-0123456789abcdef.json",
+  "reservation": {
+    "reservation_id": "rrv-0123456789abcdef",
+    "marker_path": ".agentgov/replay-correlations/rpf-0123456789abcdef.json",
+    "marker_digest": "sha256:6dddc26fdbc76f36efd3d1543fd1d99823e01cb930bb399fef185a758300e86f"
+  },
+  "repository_head": "2222222222222222222222222222222222222222",
+  "adapter": {
+    "adapter_id": "openai.codex-mcp",
+    "adapter_version": "1.5.0",
+    "protocol_version": "2026-07-28"
+  },
+  "claimant_id": "openai.codex-mcp",
+  "status": "claimed",
+  "authority_boundary": {
+    "authorizes_cleanup": false,
+    "authorizes_deployment": false,
+    "authorizes_git_operations": false,
+    "authorizes_publication": false,
+    "authorizes_release": false,
+    "authorizes_replay": false,
+    "authorizes_repository_write": false,
+    "authorizes_task_admission": false
+  }
+}

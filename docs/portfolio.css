@@ -261,6 +261,64 @@ h1 span {
   background: color-mix(in srgb, var(--coral), transparent 91%);
 }
 
+.recovery-section {
+  background: #f1edff;
+}
+
+.recovery-flow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 34px 0 24px;
+  padding: 0;
+  list-style: none;
+}
+
+.recovery-flow li {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.recovery-flow > li > span {
+  color: var(--blue);
+  font-size: 0.72rem;
+  font-weight: 820;
+  letter-spacing: 0.13em;
+}
+
+.recovery-flow strong,
+.recovery-flow small {
+  display: block;
+}
+
+.recovery-flow small {
+  margin-top: 8px;
+  color: var(--muted);
+}
+
+.recovery-flow code {
+  margin-top: auto;
+  color: var(--blue-dark);
+  font-size: 0.72rem;
+  font-weight: 820;
+}
+
+.recovery-boundary {
+  padding: 20px 22px;
+  border-left: 4px solid var(--coral);
+  background: var(--surface);
+}
+
+.recovery-boundary p {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
 .ledger-boundary strong,
 .ledger-boundary span {
   display: block;
@@ -855,6 +913,10 @@ footer {
     grid-template-columns: repeat(2, 1fr);
   }
 
+  .recovery-flow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .context-grid article:nth-child(2n) {
     border-right: 0;
   }
@@ -943,6 +1005,10 @@ footer {
 
   .boundary-grid,
   .context-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .recovery-flow {
     grid-template-columns: 1fr;
   }
 

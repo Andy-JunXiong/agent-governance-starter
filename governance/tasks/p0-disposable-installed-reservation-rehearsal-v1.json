@@ -1,0 +1,80 @@
+{
+  "acceptance_signals": [
+    "A fresh temporary Python 3.11 environment is populated offline from a git archive of the exact committed starter HEAD, exposes agentgov reserve replay-correlation, and leaves the existing global and pipx installations byte-unchanged.",
+    "One new no-remote disposable Git consumer has a committed unchanged target, no related task collision, a pre-existing marker registry directory, strict local Adapter metadata, and one unused rpf correlation identifier before invocation.",
+    "The installed reservation CLI is invoked exactly once with --apply in a visible interactive terminal; the human must type exact RESERVE, and cancellation, nonzero exit, BLOCKED, UNKNOWN, or operational failure stops the rehearsal without retry.",
+    "A successful invocation creates exactly one marker that matches the plan, committed consumer revision, Adapter identity, reservation contract, all-denied authority boundary, and exclusive marker path while leaving all other consumer content unchanged.",
+    "The development-source bridge validator accepts one in-memory reserved bridge bound to the exact created marker and no Harness run; this validates correlation compatibility only and does not claim consumption or replay evidence.",
+    "No model session, replay, task admission in the disposable consumer, real-consumer change, existing installation mutation, network call, Git remote operation, cleanup, publication, release, or deployment occurs.",
+    "Sanitized evidence records only synthetic facts, installed-source identity, stable command outcome, marker and bridge validation facts, authority boundaries, and temporary-environment disposition; it retains no transcript, credentials, private data, or unrelated absolute path.",
+    "The task record, experiment record, dated development log, STATUS, and documentation tests remain consistent; focused and complete supported-Python tests, task and repository governance, pre-pause scope reconciliation, JSON checks, secret-safety inspection, bounded current-Agent advisory review, and git diff check complete with unresolved gaps reported."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-a689e69661c34ac8aa7c92b3ad03ebb3 and admitted that exact task through an explicit admission control. On 2026-08-17 the one permitted offline installation attempt stopped during metadata preparation because disposable setuptools 65.5.0 could not process the current project license metadata. No installed entry point, consumer setup, terminal, reservation invocation, marker, bridge validation, network call, or existing-installation change occurred. All 882 supported-Python tests passed with 2 platform-limited skips, governance had no deterministic failure, and a distinct bounded current-Agent advisory review found no correction-required requirement, authority, privacy, implementation, or scope drift. The task is paused so it cannot authorize a retry, build-tool upgrade, fallback installer, cleanup, installation, marker mutation, replay, Git operation, publication, release, deployment, or follow-on work.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Create one no-remote disposable Git consumer and one disposable Python 3.11 environment from the exact committed starter HEAD, perform one offline local installation without changing the existing pipx installation, invoke the installed replay-correlation reservation CLI exactly once through a visible interactive terminal, and record sanitized reservation plus reserved-bridge validation evidence without launching a replay."
+  },
+  "risk": {
+    "items": [
+      "A disposable installation could accidentally mutate the existing pipx environment unless every target is confined to the new temporary directory.",
+      "A copied worktree could include unrelated untracked content, so the source must come only from git archive HEAD.",
+      "Automated input would defeat the interactive human-confirmation claim, so exact RESERVE must be entered in the visible terminal by the human.",
+      "Retrying after an uncertain result could create duplicate or ambiguous evidence; the task permits one installed apply invocation only.",
+      "Reservation or bridge validation could be misrepresented as replay authorization, consumption, Harness evidence, or product effectiveness.",
+      "Temporary absolute paths, transcripts, and environment details must not enter repository evidence.",
+      "Existing user-owned .codex content and all source, schema, Harness, release, and workflow files must remain untouched.",
+      "Reviewed assumption: A git archive of the committed starter HEAD excludes the user-owned untracked Codex configuration and provides the exact reservation implementation under rehearsal.",
+      "Reviewed assumption: An offline no-build-isolation local installation can use the host's existing build backend without downloading dependencies.",
+      "Reviewed assumption: A visible PowerShell terminal can provide the real interactive standard input required by the installed reservation CLI.",
+      "Reviewed assumption: One reserved bridge validation against the created marker is sufficient to check the newly defined upstream correlation mapping without a Harness run.",
+      "Reviewed unknown: The offline installation may fail if the disposable environment cannot satisfy the local build backend requirement.",
+      "Reviewed unknown: The host may not permit the visible terminal or may not expose its exit result reliably.",
+      "Reviewed unknown: The human may cancel or close the terminal instead of entering exact RESERVE.",
+      "Reviewed unknown: Network-filesystem exclusive-create behavior remains outside this local temporary rehearsal."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "release",
+      "src",
+      "schemas",
+      "governance/fixtures",
+      "README.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "docs/assets",
+      "docs/harness-contract-v1.md",
+      "docs/clean-target-replay-preflight.md"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-disposable-installed-reservation-rehearsal-v1.json",
+      "docs/experiments/disposable-installed-reservation-2026-08-17.md",
+      "docs/development-log/2026-08-17.md",
+      "STATUS.md",
+      "tests/test_user_documentation.py"
+    ]
+  },
+  "task_id": "p0-disposable-installed-reservation-rehearsal-v1",
+  "title": "Rehearse one disposable installed replay reservation",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -p \"test_replay_reservation.py\" -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -p \"test_replay_correlation_bridge.py\" -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -p \"test_user_documentation.py\" -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-disposable-installed-reservation-rehearsal-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check scope governance/tasks/p0-disposable-installed-reservation-rehearsal-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

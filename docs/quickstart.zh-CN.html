@@ -13,6 +13,7 @@
     <a class="brand" href="index.html"><span class="mark">AG</span>Agent Governance Starter Kit</a>
     <div class="nav-links">
       <a href="index.html">← 返回首页</a>
+      <a href="interview-guide.zh-CN.html">面试讲解</a>
       <a href="https://github.com/Andy-JunXiong/agent-governance-starter/blob/main/README.md">GitHub 上的 README ↗</a>
       <span class="language-switch" aria-label="语言"><a href="quickstart.html" lang="en" hreflang="en">EN</a><a href="quickstart.zh-CN.html" lang="zh-CN" aria-current="page">中文</a></span>
     </div>
@@ -113,6 +114,10 @@ agentgov report repository path/to/project \
           <strong>查看示例报告</strong>
           了解检查结果和人工审阅边界。
         </a>
+        <a class="state" href="interview-guide.zh-CN.html">
+          <strong>面试讲解</strong>
+          用 5–10 分钟讲清产品、证据、最新安全链和限制。
+        </a>
       </div>
     </section>
     <section>
@@ -141,6 +146,16 @@ agentgov next .</code></pre>
       <h2>开发版 Adapter 1.4.0 状态</h2>
       <p>五工具仍指五个基础只读对齐/自审工具；Adapter <code>1.3.0</code> 增加了按表单能力开放的 <code>agentgov_task_proposal_review</code>，开发源 <code>1.4.0</code> 又在相同原生表单边界增加 <code>agentgov_drift_review_record</code>。当前 Agent 只能提交 advisory 候选、需求/架构/功能三项规范化观察和仓库相对证据；只有用户能选择记录该候选、延后或不写入。写入前会重新核对到期状态，成功后刷新本地 Monitor；不支持表单的客户端仍只发现五个基础工具。精确的 <code>1.3.0</code> 仍是已安装并预检的运行时，<code>1.4.0</code> 在本次变更中没有安装或发布。</p>
       <p>开发源 Adapter <code>1.5.0</code> 从原生任务提案输入中移除了 <code>owner</code>，并由 Adapter 在完整预览中注入规范的 <code>Human product owner</code> 角色。只有绑定的原生接受与准入决定才能把该角色写入 <code>owner</code> 和 <code>decided_by</code>；Agent 提供 owner 会在表单出现前失败且不写入。这是人类角色边界，不是对具体操作者的密码学身份认证。精确模块现仅安装在现有本地 AgentGov pipx 开发运行时中，并通过了隔离、无模型的七工具/五工具发现、恶意 owner 和接受准入预检。它仍未发布、未释出且未在消费者仓库启用；项目配置未变，旧模块和启动器备份继续保留，也没有运行模型或实时重放。</p>
+    </section>
+    <section class="checklist">
+      <h2>开发源 replay 安全预览</h2>
+      <p>最新开发源把 replay 前的所有权证据拆成三个不可变步骤。以下命令没有使用 <code>--apply</code>，因此只做预览：</p>
+      <pre><code>$env:PYTHONPATH = "src"
+python -m agentgov reserve replay-correlation path/to/reservation-plan.json --repository path/to/consumer --format json
+python -m agentgov claim replay-correlation path/to/claim-plan.json --repository path/to/consumer --format json
+python -m agentgov recover replay-claim path/to/recovery-plan.json --repository path/to/consumer --format json</code></pre>
+      <p>Reservation 建立唯一 correlation；claim 用 exclusive create 记录持久的运行前 ownership；recovery 只读检查精确、有界的 claim bytes，并且只有终端中准确输入 <code>RECOVER</code> 后才能创建单独的不可变 supersession record。它保留原 reservation 和 claim，不创建 replacement owner，也不授权 replay、Git、发布、release 或部署。</p>
+      <p>Claim 与 recovery registry 必须预先存在；失败路径不会创建脚手架。详见<a href="clean-target-replay-preflight.html">完整 replay 安全指南</a>和<a href="interview-guide.zh-CN.html">中文面试讲解</a>。</p>
     </section>
   </main>
   <footer class="shell">Agent Governance Starter Kit · 本地运行 · 仓库原生 · 人工控制</footer>

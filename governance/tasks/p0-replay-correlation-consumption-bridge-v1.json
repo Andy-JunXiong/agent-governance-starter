@@ -1,0 +1,84 @@
+{
+  "acceptance_signals": [
+    "A strict versioned bridge document represents exactly reserved, consumed, invalidated, or unavailable and binds one rpf correlation identifier to one existing reservation identity, marker path and digest.",
+    "The bridge names the unchanged Harness v1 target field host.repository_correlation and requires its expected value to equal the bridge correlation identifier; a consumed record requires one exact Harness run identity and repository-relative evidence.",
+    "A dependency-free pure validator rejects extra fields, malformed identifiers, unsafe evidence paths, mismatched reservation facts, invalid lifecycle combinations, mismatched Harness run identity or correlation, and an invalid Harness document without reading or writing a repository.",
+    "Fixture coverage includes valid reserved, consumed, invalidated, and unavailable states plus malformed, mismatch, and missing-evidence cases.",
+    "Existing replay preflight, reservation marker, CLI, Harness Contract v1 schema, First Deviation evaluator, fixtures, and authority semantics remain unchanged.",
+    "Documentation states that the bridge records and verifies correlation evidence but does not reserve, consume, invalidate, launch, authorize, or prove the effectiveness of a replay.",
+    "Focused and complete supported-Python tests, task and repository governance, pre-pause scope reconciliation, JSON and Schema checks, secret-safety inspection, native current-Agent self-review, and git diff check complete with unresolved gaps reported."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-f878bbc7bef4478a8b9c7d47d0045cff and admitted that exact task through an explicit admission control. On 2026-08-17 the additive bridge contract, pure validator, four lifecycle fixtures, tests, and synchronized documentation completed. All 881 supported-Python tests passed with 2 platform-limited skips, governance had no deterministic failure, and native current-Agent advisory review srv-a418a942620ba8a1e88722debf583840 found no correction-required drift. The task is paused so it cannot authorize installation, marker mutation, a consume transition, replay, Git operation, publication, release, deployment, or follow-on work.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Add a dependency-free, versioned, additive replay-correlation consumption bridge contract and pure validator that binds one existing reservation marker to the existing Harness v1 host.repository_correlation field, represents reserved, consumed, invalidated, and unavailable lifecycle states, and validates optional reservation and Harness evidence without modifying either source contract or any consumer."
+  },
+  "risk": {
+    "items": [
+      "A bridge record could be mistaken for permission to launch or consume a replay unless every authority remains explicitly denied.",
+      "Changing Harness v1 to carry bridge-specific fields would expand a stable contract and is excluded.",
+      "Treating a reserved record as consumed without valid bound Harness evidence would overstate what occurred.",
+      "Broad documentation edits could blur preflight, reservation, consumption evidence, replay execution, and Harness evaluation responsibilities.",
+      "Existing user-owned .codex content must remain untouched.",
+      "Reviewed assumption: An additive bridge contract is sufficient to define correlation lifecycle and evidence mapping without changing Harness Contract v1.",
+      "Reviewed assumption: The existing Harness v1 host.repository_correlation field is the canonical target for the rpf correlation identifier.",
+      "Reviewed assumption: A consumed bridge record can require an existing valid Harness run and therefore remains post-run evidence rather than replay authorization.",
+      "Reviewed assumption: The validator can accept already-loaded mappings and remain free of filesystem, network, model, Git, and consumer side effects.",
+      "Reviewed unknown: A future launcher may need a separate atomic consume transition before replay execution.",
+      "Reviewed unknown: A future host-native decision surface may create or invalidate bridge records.",
+      "Reviewed unknown: Installed-consumer and network-filesystem behavior remain untested by this contract-only slice."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "release",
+      "src/agentgov/replay_reservation.py",
+      "src/agentgov/replay_preflight.py",
+      "src/agentgov/harness_contract.py",
+      "src/agentgov/cli.py",
+      "schemas/replay-correlation-reservation-v1.schema.json",
+      "schemas/harness-contract-v1.schema.json",
+      "governance/fixtures/harness-contract-v1",
+      "docs/assets",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md"
+    ],
+    "include_paths": [
+      "src/agentgov/replay_correlation_bridge.py",
+      "schemas/replay-correlation-bridge-v1.schema.json",
+      "governance/fixtures/replay-correlation-bridge-v1",
+      "tests/test_replay_correlation_bridge.py",
+      "tests/test_user_documentation.py",
+      "tests/test_public_documentation_freshness.py",
+      "docs/clean-target-replay-preflight.md",
+      "docs/harness-contract-v1.md",
+      "README.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-17.md",
+      "governance/tasks/p0-replay-correlation-consumption-bridge-v1.json"
+    ]
+  },
+  "task_id": "p0-replay-correlation-consumption-bridge-v1",
+  "title": "Define replay correlation consumption and Harness evidence bridge",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -p \"test_replay_correlation_bridge.py\" -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -p \"test_harness_contract.py\" -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -p \"test_replay_reservation.py\" -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-replay-correlation-consumption-bridge-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check scope governance/tasks/p0-replay-correlation-consumption-bridge-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

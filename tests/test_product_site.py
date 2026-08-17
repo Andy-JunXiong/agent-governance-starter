@@ -33,6 +33,8 @@ class ProductSiteTests(unittest.TestCase):
         content = SITE.read_text(encoding="utf-8")
 
         self.assertIn('href="demo-governance-report.html"', content)
+        self.assertIn('href="interview-guide.html"', content)
+        self.assertTrue((ROOT / "docs/interview-guide.html").is_file())
         self.assertTrue((ROOT / "docs/demo-governance-report.html").is_file())
         self.assertIn("https://github.com/Andy-JunXiong/agent-governance-starter", content)
         self.assertNotIn("script-src 'unsafe-inline'", content)
@@ -59,6 +61,8 @@ class ProductSiteTests(unittest.TestCase):
         self.assertIn("No autonomous approval", content)
         self.assertIn("WARN</span> evaluation:needs_seed_cases", content)
         self.assertNotIn("Open live governance report", content)
+        self.assertNotIn("{{", content)
+        self.assertNotIn("}}", content)
         self.assertNotIn('role="img"', content)
         self.assertIn('<figcaption class="sr-only">', content)
         self.assertIn(
@@ -119,6 +123,8 @@ class ProductSiteTests(unittest.TestCase):
 
         self.assertIn("](docs/index.html)", readme)
         self.assertIn("](docs/demo-governance-report.html)", readme)
+        self.assertIn("](docs/interview-guide.md)", readme)
+        self.assertIn("Interview snapshot", readme)
 
 
 if __name__ == "__main__":

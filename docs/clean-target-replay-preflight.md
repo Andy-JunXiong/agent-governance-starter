@@ -188,18 +188,128 @@ replay, or grant cleanup, Git, publication, release, or deployment authority.
 The exact-word terminal interaction is a development and recovery surface; a
 future host-native decision surface may carry the same contract separately.
 
+## Create-only pre-run claim
+
+Development source also implements strict version `1.0` plan, marker, preview,
+and result contracts in `schemas/replay-correlation-claim-v1.schema.json`. A
+claim plan names one immutable reservation marker and digest, one pre-existing
+claim registry, one normalized claimant, and the local Adapter metadata path.
+
+The default command is a read-only preview:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m agentgov claim replay-correlation path/to/claim-plan.json `
+  --repository path/to/consumer --format terminal
+```
+
+Preview reports `READY_TO_CLAIM`, `BLOCKED`, or `UNKNOWN`. It requires the
+reservation marker to remain valid and byte-digest-equivalent, the consumer's
+current `HEAD` to match the reservation, the local Adapter identity to match,
+the declared claim registry to exist as a real directory, and the derived
+claim path to be absent. It creates no directory or marker.
+
+Create-only apply is a separate terminal action:
+
+```powershell
+python -m agentgov claim replay-correlation path/to/claim-plan.json `
+  --repository path/to/consumer --apply
+```
+
+The CLI displays the exact claim, accepts only interactive exact `CLAIM`,
+revalidates the reviewed facts, and uses an exclusive local file create. A
+collision, stale input, malformed evidence, or uncertain state fails closed
+without overwriting the reservation or any existing claim. If creation begins
+but writing becomes uncertain, the path is retained to block automatic reuse;
+there is no automatic deletion, expiry, recovery, or takeover.
+
+`agentgov.replay-correlation-claim` is durable pre-run ownership evidence. It
+does not authorize, launch, consume, expire, recover, take over, or prove a
+replay, and it grants no task, cleanup, Git, publication, release, or
+deployment authority. The optional pure bridge binding accepts only the exact
+matching `reserved` bridge; neither contract is mutated.
+
+## Immutable abandoned-claim recovery
+
+An interrupted claim write is deliberately retained, so recovery is a
+separate side path rather than mutation of the claim. Development source
+defines strict `1.0` plan, inspection, recovery marker, preview, and result
+contracts in `schemas/replay-claim-recovery-v1.schema.json`.
+
+The default CLI is read-only:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m agentgov recover replay-claim path/to/recovery-plan.json `
+  --repository path/to/consumer --format terminal
+```
+
+Inspection reads at most 1 MiB of claim evidence and records only its digest,
+byte length, and classification. It reports `VALID`, `PARTIAL`, `MALFORMED`,
+`MISSING`, `INCONSISTENT`, `UNKNOWN`, or `RECOVERED`; raw claim content is not
+copied into the report or recovery marker. Missing and inconsistent evidence
+is blocked, while unsafe, unreadable, oversized, or invalid recovery evidence
+is unknown. A valid claim is not automatically considered abandoned:
+abandonment remains a human-owned fact.
+
+Create-only recovery requires a pre-existing safe recovery registry:
+
+```powershell
+python -m agentgov recover replay-claim path/to/recovery-plan.json `
+  --repository path/to/consumer --apply
+```
+
+Only exact bounded `VALID`, `PARTIAL`, or `MALFORMED` bytes can reach
+`READY_TO_RECOVER`. The CLI displays the exact marker, accepts only interactive
+exact `RECOVER`, repeats reservation, raw claim digest, consumer `HEAD`,
+Adapter, registry, and collision checks, then uses exclusive local file
+creation. Cancellation and stale, conflicting, or uncertain evidence write
+nothing. If recovery-marker creation begins but its write becomes uncertain,
+the path remains to block automatic reuse.
+
+The recovery marker preserves the original reservation and claim bytes and
+can classify only that exact digest as `RECOVERED` in the pure ownership
+evaluator. It does not delete, repair, expire, replace, or transfer a claim; it
+does not create replacement ownership, authorize or prove replay, or grant cleanup, Git,
+publication, release, deployment, or task authority. `recovered_by` and
+`reason_code` are human-declared labels, not identity authentication. Network-
+filesystem exclusive-create and power-loss behavior remain unvalidated.
+
 ## Product connection
 
 The bounded sequence is now:
 
 ```text
-read-only preflight -> human-controlled reservation -> separately authorized replay -> Harness Contract v1
+read-only preflight -> human-controlled reservation -> create-only claim -> separately authorized replay -> correlation bridge -> Harness Contract v1
 ```
+
+Abandoned-claim inspection and immutable recovery form a side branch from the
+claim. Recovery is not a substitute step that advances into replay.
 
 Harness Contract v1 remains the offline post-replay evidence contract that
 derives First Deviation from normalized expected and observed transitions.
-The reservation's `rpf-` identity is upstream evidence; this slice does not
-change or automatically populate the Harness schema. `doctor` still checks
+The additive `agentgov.replay-correlation-bridge` `1.0` contract now makes the
+mapping explicit without changing or automatically populating the Harness
+schema. It represents exactly `reserved`, `consumed`, `invalidated`, or
+`unavailable`, preserves the reservation identity, marker path, and marker
+digest, and fixes the downstream mapping to the existing Harness v1 field
+`host.repository_correlation`.
+
+The dependency-free bridge validator accepts already-loaded normalized JSON
+only. `reserved` and `consumed` require the exact matching reservation marker;
+`consumed` additionally requires a valid Harness run whose `run_id` and
+`host.repository_correlation` match the bridge. Invalidated or unavailable
+records retain an explicit reason and cannot name Harness evidence. Strict
+fixtures for all four states live under
+`governance/fixtures/replay-correlation-bridge-v1/`.
+
+The bridge records and verifies correlation lifecycle evidence. It does not
+reserve, consume, invalidate, authorize, launch, or complete a replay; write a
+marker or Harness record; prove product effectiveness; or grant task, cleanup,
+Git, publication, release, or deployment authority. The separate pre-run claim
+closes only the local ownership race, while recovery preserves exact abandoned
+evidence without creating replacement ownership. A future launcher still needs a
+separately designed claim-to-Harness consume transition. `doctor` still checks
 repository and installation readiness, while `check scope` still compares
 existing changes with one admitted development task. Their meanings are
 unchanged.

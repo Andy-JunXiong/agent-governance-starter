@@ -81,6 +81,26 @@ class EvidencePortfolioTests(unittest.TestCase):
         self.assertIn("does not authorize commit, merge, publish, release, or deployment", self.portfolio)
         self.assertNotIn("governance coverage percentage", self.portfolio.lower())
 
+    def test_portfolio_traces_immutable_claim_recovery_without_authority_drift(self) -> None:
+        for phrase in (
+            'id="recovery"',
+            "Reserve correlation",
+            "Claim ownership",
+            "Inspect abandoned evidence",
+            "Record immutable recovery",
+            "READY_TO_RESERVE",
+            "READY_TO_CLAIM",
+            "READY_TO_RECOVER",
+            "RECOVERED",
+            "does not infer abandonment",
+            "creates no replacement owner",
+            "authorize replay",
+        ):
+            self.assertIn(phrase, self.portfolio)
+
+        self.assertIn('href="interview-guide.html"', self.portfolio)
+        self.assertIn('href="clean-target-replay-preflight.html"', self.portfolio)
+
 
 if __name__ == "__main__":
     unittest.main()

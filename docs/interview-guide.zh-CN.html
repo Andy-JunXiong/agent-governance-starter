@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Agent Governance Starter Kit 的 5–10 分钟中文面试讲解。">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'">
+  <title>面试讲解 — Agent Governance Starter Kit</title>
+  <link rel="stylesheet" href="guide.css">
+</head>
+<body>
+  <nav class="shell">
+    <a class="brand" href="index.html"><span class="mark">AG</span>Agent Governance Starter Kit</a>
+    <div class="nav-links">
+      <a href="portfolio.html">证据作品集</a>
+      <a href="quickstart.zh-CN.html">快速入门</a>
+      <span class="language-switch" aria-label="语言"><a href="interview-guide.html" lang="en" hreflang="en">EN</a><a href="interview-guide.zh-CN.html" lang="zh-CN" aria-current="page">中文</a></span>
+    </div>
+  </nav>
+  <header class="shell">
+    <span class="eyebrow">5–10 分钟讲解路径</span>
+    <h1>讲清产品，展示证据，主动说明边界。</h1>
+    <p class="lead">面试演示顺序：问题、架构、可视化报告、最新治理旅程，以及项目不会掩盖的限制。</p>
+  </header>
+  <main class="shell">
+    <section class="emphasis">
+      <h2>30 秒定位</h2>
+      <p>Agent Governance 是面向 AI 辅助开发的仓库原生控制层。它把人工拥有的任务意图、架构上下文、允许修改的文件范围、新鲜验证证据和明确复核连接起来。确定性检查只报告事实；语义判断和高后果权限继续由人掌握。</p>
+      <p><strong>版本边界：</strong>稳定版 <code>0.2.1</code> 提供可安装的仓库治理 CLI；公开预发行版 <code>0.3.0rc1</code> 与更新开发源继续扩展 Coding Agent 生命周期治理。</p>
+    </section>
+    <section>
+      <h2>面试故事线</h2>
+      <ol>
+        <li><strong>问题：</strong>AI 写代码很快，但需求归属、范围、证据和权限经常仍是隐含的。</li>
+        <li><strong>架构：</strong>仓库文件拥有事实，无依赖 Python CLI 检查契约，宿主 Adapter 协调交互，人保留判断。</li>
+        <li><strong>可视化：</strong>打开经过清洗的 <code>0.3.0rc1</code> <a href="demo-governance-report.zh-CN.html">示例报告</a>，筛选 PASS、WARN、FAIL、ADVISORY。</li>
+        <li><strong>当前证据：</strong>在<a href="portfolio.html">证据作品集</a>中追踪任务的对齐、范围、验证、自审、状态和暂停。</li>
+        <li><strong>最新安全切片：</strong>解释不可变 reservation、create-only claim 和单独的 immutable recovery evidence。</li>
+        <li><strong>诚实收尾：</strong>说明仍未知的事实和必须由人决定的事项。</li>
+      </ol>
+    </section>
+    <section>
+      <h2>一张图理解架构</h2>
+      <div class="states">
+        <div class="state"><strong>Core 契约</strong>可移植的任务、finding、evidence 和 authority 语义。</div>
+        <div class="state"><strong>仓库 Policy</strong>风险、路由、架构上下文和已准入范围。</div>
+        <div class="state"><strong>宿主 Adapter</strong>原生交互和精确的人类决定协调。</div>
+        <div class="state"><strong>产品界面</strong>CLI、Monitor、HTML 报告和公开证据页面。</div>
+      </div>
+      <p><strong>人类权限保持独立：</strong>需求、架构判断、例外、Git、发布、release 和部署。</p>
+    </section>
+    <section class="checklist">
+      <h2>最新开发源证据链</h2>
+      <ol>
+        <li><strong>Reserve：</strong>在精确人工确认下创建一个不可变 correlation reservation。</li>
+        <li><strong>Claim：</strong>独占创建一个持久的运行前 owner claim，不修改 reservation。</li>
+        <li><strong>Recover：</strong>只读检查有界的精确 claim bytes，并单独记录不可变 supersession evidence。</li>
+        <li><strong>继续受限：</strong>恢复保留原 claim，不创建 replacement owner，也不授予 replay 权限。</li>
+      </ol>
+      <a class="button" href="clean-target-replay-preflight.html">阅读完整 replay 安全契约</a>
+    </section>
+    <section>
+      <h2>可复现命令</h2>
+      <h3>已发布稳定版 CLI</h3>
+      <pre><code>pipx install "https://github.com/Andy-JunXiong/agent-governance-starter/releases/download/v0.2.1/agent_governance_starter-0.2.1-py3-none-any.whl"
+agentgov --version
+agentgov inspect .
+agentgov check repository .</code></pre>
+      <h3>当前开发源</h3>
+      <pre><code>$env:PYTHONPATH = "src"
+python -m agentgov --help
+python -m unittest discover -s tests -v</code></pre>
+      <p>Replay 安全命令默认只预览。面试时不要使用 <code>--apply</code>，除非另有准入的 disposable-consumer 任务和精确人工确认。</p>
+    </section>
+    <section>
+      <h2>建议打开的证据</h2>
+      <div class="states">
+        <a class="state" href="index.html"><strong>产品首页</strong>问题、差异、架构和当前边界。</a>
+        <a class="state" href="portfolio.html"><strong>证据作品集</strong>生命周期、案例、契约和非声明。</a>
+        <a class="state" href="demo-governance-report.zh-CN.html"><strong>示例报告</strong><code>0.3.0rc1</code> finding 语义快照。</a>
+        <a class="state" href="quickstart.zh-CN.html"><strong>快速入门</strong>稳定安装和开发预览。</a>
+      </div>
+    </section>
+    <section>
+      <h2>常见面试问题</h2>
+      <h3>为什么不只是另一个 linter？</h3>
+      <p>它同时绑定人工拥有的任务、架构上下文、路径范围、验证快照、建议性复核和权限边界，并拒绝从静态检查推断语义正确性。</p>
+      <h3>为什么不做治理评分？</h3>
+      <p>单一分数会掩盖“契约满足、诚实不完整、确定性失败、只能由人判断”之间的差别。</p>
+      <h3>下一步做什么？</h3>
+      <p>尚未决定或授权。最强候选是在 claim-to-Harness consume 之前定义 recovered-correlation re-ownership 契约。</p>
+    </section>
+    <section>
+      <h2>主动说明的限制</h2>
+      <ul>
+        <li>静态检查不能证明需求价值、架构质量、审阅者理解程度或测试充分性。</li>
+        <li>示例报告是清洗后的说明性快照，不是最新开发工作流的证明。</li>
+        <li>Recovery 不认证具体操作者，也不授权 replay。</li>
+        <li>网络文件系统独占语义、断电耐久性和真实消费者恢复仍未验证。</li>
+        <li>没有外部证据证明这些文档能改善面试结果。</li>
+      </ul>
+    </section>
+    <div class="next"><a class="button dark" href="portfolio.html">追踪证据</a><a class="button" href="demo-governance-report.zh-CN.html">打开示例报告</a></div>
+  </main>
+  <footer class="shell">Agent Governance Starter Kit · 中文面试讲解 · 先有证据，再作声明</footer>
+  <script src="guide.js" defer></script>
+</body>
+</html>

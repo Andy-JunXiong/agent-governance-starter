@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A five-to-ten-minute interview walkthrough for Agent Governance Starter Kit.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'">
+  <title>Interview walkthrough — Agent Governance Starter Kit</title>
+  <link rel="stylesheet" href="guide.css">
+</head>
+<body>
+  <nav class="shell">
+    <a class="brand" href="index.html"><span class="mark">AG</span>Agent Governance Starter Kit</a>
+    <div class="nav-links">
+      <a href="portfolio.html">Evidence portfolio</a>
+      <a href="quickstart.html">Quickstart</a>
+      <span class="language-switch" aria-label="Language"><a href="interview-guide.html" lang="en" aria-current="page">EN</a><a href="interview-guide.zh-CN.html" lang="zh-CN" hreflang="zh-CN">中文</a></span>
+    </div>
+  </nav>
+  <header class="shell">
+    <span class="eyebrow">Five-to-ten-minute walkthrough</span>
+    <h1>Explain the product, show the evidence, name the boundary.</h1>
+    <p class="lead">A presentation path for interviews: problem, architecture, live report, latest governed journey, and the limitations the project refuses to hide.</p>
+  </header>
+  <main class="shell">
+    <section class="emphasis">
+      <h2>Thirty-second positioning</h2>
+      <p>Agent Governance is a repository-native control layer for AI-assisted software development. It connects human-owned task intent to architecture context, bounded file scope, fresh validation evidence, and explicit review. Deterministic checks report facts; people retain semantic and consequential authority.</p>
+      <p><strong>Release boundary:</strong> stable <code>0.2.1</code> provides the installable repository-governance CLI. Published prerelease <code>0.3.0rc1</code> and newer development source extend that foundation into coding-agent lifecycle governance.</p>
+    </section>
+    <section>
+      <h2>The interview story</h2>
+      <ol>
+        <li><strong>Problem:</strong> AI coding is fast while task ownership, scope, evidence, and authority can remain implicit.</li>
+        <li><strong>Architecture:</strong> repository files own truth, a dependency-free Python CLI checks facts, host adapters mediate interaction, and humans retain judgment.</li>
+        <li><strong>Visible demo:</strong> filter the illustrative <code>0.3.0rc1</code> <a href="demo-governance-report.html">sample report</a> by PASS, WARN, FAIL, and ADVISORY.</li>
+        <li><strong>Current evidence:</strong> trace one admitted task through alignment, scope, validation, self-review, status, and pause in the <a href="portfolio.html">evidence portfolio</a>.</li>
+        <li><strong>Latest safety slice:</strong> explain immutable reservation, create-only claim, and separate immutable recovery evidence.</li>
+        <li><strong>Close honestly:</strong> identify what remains unknown and what still requires a human decision.</li>
+      </ol>
+    </section>
+    <section>
+      <h2>Architecture in one view</h2>
+      <div class="states">
+        <div class="state"><strong>Core contracts</strong>Portable task, finding, evidence, and authority semantics.</div>
+        <div class="state"><strong>Repository policy</strong>Risk, routing, architecture context, and accepted scope.</div>
+        <div class="state"><strong>Host adapters</strong>Native interaction and exact human-decision mediation.</div>
+        <div class="state"><strong>Product surfaces</strong>CLI, Monitor, HTML report, and public evidence pages.</div>
+      </div>
+      <p><strong>Human authority remains separate:</strong> requirements, architecture judgment, exceptions, Git, publication, release, and deployment.</p>
+    </section>
+    <section class="checklist">
+      <h2>Latest development-source evidence chain</h2>
+      <ol>
+        <li><strong>Reserve:</strong> create one immutable correlation reservation under exact human confirmation.</li>
+        <li><strong>Claim:</strong> exclusively create one durable pre-run owner claim without mutating the reservation.</li>
+        <li><strong>Recover:</strong> inspect exact bounded claim bytes and separately record immutable supersession evidence.</li>
+        <li><strong>Remain bounded:</strong> recovery preserves the original claim, creates no replacement owner, and grants no replay authority.</li>
+      </ol>
+      <a class="button" href="clean-target-replay-preflight.html">Read the exact replay-safety contract</a>
+    </section>
+    <section>
+      <h2>Reproducible commands</h2>
+      <h3>Published stable CLI</h3>
+      <pre><code>pipx install "https://github.com/Andy-JunXiong/agent-governance-starter/releases/download/v0.2.1/agent_governance_starter-0.2.1-py3-none-any.whl"
+agentgov --version
+agentgov inspect .
+agentgov check repository .</code></pre>
+      <h3>Development source</h3>
+      <pre><code>$env:PYTHONPATH = "src"
+python -m agentgov --help
+python -m unittest discover -s tests -v</code></pre>
+      <p>The replay-safety CLI is preview-first. Do not use <code>--apply</code> in an interview without a separately admitted disposable-consumer task and exact human confirmation.</p>
+    </section>
+    <section>
+      <h2>Evidence to open</h2>
+      <div class="states">
+        <a class="state" href="index.html"><strong>Product home</strong>Problem, differentiator, architecture, and current boundary.</a>
+        <a class="state" href="portfolio.html"><strong>Evidence portfolio</strong>Lifecycle, cases, contracts, and non-claims.</a>
+        <a class="state" href="demo-governance-report.html"><strong>Sample report</strong>Illustrative <code>0.3.0rc1</code> finding semantics.</a>
+        <a class="state" href="quickstart.html"><strong>Quickstart</strong>Stable installation and development preview.</a>
+      </div>
+    </section>
+    <section>
+      <h2>Likely questions</h2>
+      <h3>Why is this not just another linter?</h3>
+      <p>It binds the human-owned task, architecture context, path scope, validation snapshot, advisory review, and authority boundary while refusing to infer semantic correctness from static checks.</p>
+      <h3>Why no governance score?</h3>
+      <p>A score would hide the difference between a satisfied contract, honest incompleteness, a deterministic failure, and a judgment only a person can make.</p>
+      <h3>What comes next?</h3>
+      <p>Not yet decided or authorized. The strongest candidate is a recovered-correlation re-ownership contract before any claim-to-Harness consume transition.</p>
+    </section>
+    <section>
+      <h2>Honest limitations</h2>
+      <ul>
+        <li>Static checks cannot prove requirement value, architecture quality, reviewer comprehension, or test sufficiency.</li>
+        <li>The sample report is a sanitized illustrative snapshot, not proof of the newest development workflow.</li>
+        <li>Recovery does not authenticate the individual operator or authorize replay.</li>
+        <li>Network-filesystem exclusivity, power-loss durability, and real-consumer recovery remain unvalidated.</li>
+        <li>No external evidence proves that this documentation improves interview outcomes.</li>
+      </ul>
+    </section>
+    <div class="next"><a class="button dark" href="portfolio.html">Trace the evidence</a><a class="button" href="demo-governance-report.html">Open the sample report</a></div>
+  </main>
+  <footer class="shell">Agent Governance Starter Kit · Interview walkthrough · Evidence before assertion</footer>
+  <script src="guide.js" defer></script>
+</body>
+</html>

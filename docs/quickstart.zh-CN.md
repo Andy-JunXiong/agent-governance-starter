@@ -9,6 +9,10 @@
 > stable 0.2.1 或 v0.3.0rc1 的主要界面，详见
 > [自动治理产品需求](product-requirements-automatic-governance.md)。
 
+面试展示可直接使用[中文面试讲解](interview-guide.zh-CN.html)，其中按
+“问题 → 架构 → 示例报告 → 当前证据 → 最新安全链 → 限制”的顺序组织了
+5–10 分钟演示。
+
 ## 1. 安装
 
 在需要治理的仓库根目录打开终端，把已发布的稳定版安装到隔离的
@@ -93,8 +97,26 @@ agentgov report repository $Project --output "$Project/governance-report.md"
 4. 添加经过审阅的 evaluation cases 和 evidence；
 5. 对合并、发布、release 和 deploy 分别取得明确人工授权。
 
+## 5. 开发源 replay 安全预览
+
+最新开发源把 replay 前的证据拆成不可变 reservation、create-only claim 和
+单独的 immutable recovery record。以下命令省略 `--apply`，因此只读预览：
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m agentgov reserve replay-correlation path/to/reservation-plan.json --repository path/to/consumer --format json
+python -m agentgov claim replay-correlation path/to/claim-plan.json --repository path/to/consumer --format json
+python -m agentgov recover replay-claim path/to/recovery-plan.json --repository path/to/consumer --format json
+```
+
+Recovery 保留原 reservation 和 claim，不创建 replacement owner，也不授权
+replay、Git、发布、release 或部署。Claim 与 recovery registry 必须预先存在；
+失败路径不会创建脚手架。详见
+[clean-target replay preflight 与 recovery 指南](clean-target-replay-preflight.md)。
+
 更完整的说明见：
 
 - [已有仓库接入指南](existing-repository-adoption.md)
 - [生成文件填写指南](generated-files-guide.md)
 - [故障排查](troubleshooting.md)
+- [中文面试讲解](interview-guide.zh-CN.html)

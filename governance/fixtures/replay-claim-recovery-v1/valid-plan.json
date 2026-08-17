@@ -1,0 +1,30 @@
+{
+  "contract": "agentgov.replay-claim-recovery-plan",
+  "schema_version": "1.0",
+  "correlation_id": "rpf-0123456789abcdef",
+  "reservation": {
+    "marker_path": ".agentgov/replay-correlations/rpf-0123456789abcdef.json",
+    "marker_digest": "sha256:6dddc26fdbc76f36efd3d1543fd1d99823e01cb930bb399fef185a758300e86f"
+  },
+  "claim": {
+    "marker_path": ".agentgov/replay-claims/rpf-0123456789abcdef.json"
+  },
+  "recovery": {
+    "registry_directory": ".agentgov/replay-claim-recoveries",
+    "recovered_by": "human.product-owner",
+    "reason_code": "claimant_abandoned"
+  },
+  "adapter": {
+    "metadata_path": ".agentgov/adapter.json"
+  },
+  "authority_boundary": {
+    "authorizes_cleanup": false,
+    "authorizes_deployment": false,
+    "authorizes_git_operations": false,
+    "authorizes_publication": false,
+    "authorizes_release": false,
+    "authorizes_replay": false,
+    "authorizes_repository_write": false,
+    "authorizes_task_admission": false
+  }
+}

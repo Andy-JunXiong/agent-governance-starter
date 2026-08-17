@@ -1,0 +1,90 @@
+{
+  "acceptance_signals": [
+    "A strict version 1 claim marker, preview, and result contract binds one rcl claim identity and repository-relative claim path to one valid immutable reservation id, correlation id, marker path, marker digest, Adapter identity, and all-denied authority boundary.",
+    "A dependency-free validator rejects extra fields, malformed identifiers, unsafe paths, non-claimed status, reservation or Adapter mismatch, invalid reservation evidence, invalid or non-reserved bridge evidence, and authority drift without filesystem or network side effects.",
+    "Read-only preview reports READY_TO_CLAIM, BLOCKED, or UNKNOWN, requires a pre-existing claim registry, a valid unchanged reservation marker, matching current repository HEAD, matching local Adapter identity, no existing claim, and an exact reserved bridge when supplied.",
+    "Apply revalidates the exact reviewed inputs and uses exclusive file creation so exactly one contender succeeds; collision, stale input, invalid evidence, or uncertain filesystem state fails closed without overwriting the reservation or any existing claim.",
+    "The CLI exposes agentgov claim replay-correlation with JSON or terminal preview; --apply requires terminal format, an interactive terminal, and exact CLAIM, and cancellation writes nothing.",
+    "Fixtures and tests cover valid claimed evidence, passing preview, blocked, unknown, collision, stale input, race, cancellation, malformed documents, marker immutability, bridge binding, and all denied authority states.",
+    "Existing reservation, bridge, Harness v1, preflight behavior, schemas, fixtures, and authority semantics remain unchanged.",
+    "Documentation states that a claim is durable pre-run ownership evidence but does not authorize, launch, consume, expire, recover, or prove a replay.",
+    "Focused and complete supported-Python tests, task and repository governance, pre-pause scope reconciliation, JSON and schema checks, secret-safety inspection, native current-Agent self-review, and git diff check complete with unresolved gaps reported."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-d3d7de17a0214f32b3d4ad936630e2b9 and admitted that exact task through an explicit admission control. The aligned implementation, validation, native current-Agent self-review, and closeout completed; the bounded task is now paused without follow-on authority.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Implement the aligned first vertical slice for a separate immutable pre-run replay claim. Add a dependency-free strict version 1 claim contract, pure validation and reservation/bridge binding, read-only preview, exclusive create-only apply with fresh revalidation, and an agentgov claim replay-correlation CLI using exact interactive CLAIM confirmation. One claim path is derived from one valid immutable reservation correlation under a pre-existing .agentgov/replay-claims registry; exactly one contender may create it and collisions or uncertain state fail closed without overwrite. The reservation marker and correlation bridge remain unchanged. No expiry, takeover, recovery, deletion, marker mutation, consume-to-Harness transition, replay, real-consumer operation, installation, Git operation, publication, release, or deployment is included."
+  },
+  "risk": {
+    "items": [
+      "A claim could be mistaken for replay or consume authority unless every contract and message preserves the all-denied boundary.",
+      "In-place marker mutation, overwrite, deletion, automatic expiry, takeover, or recovery would violate the selected create-only direction.",
+      "Filesystem race handling must preserve any competing claim and fail closed without partial overwrite.",
+      "CLI apply confirmation must remain genuinely interactive and cannot be inferred from task admission.",
+      "The working tree contains prior admitted-task changes and user-owned .codex content that must remain preserved and outside this task.",
+      "Reviewed assumption: Local exclusive file creation is the atomic primitive for the first slice.",
+      "Reviewed assumption: A claim registry must already exist and the tool must not create scaffolding.",
+      "Reviewed assumption: The reservation marker remains the authoritative immutable source and its observed repository HEAD must still match the consumer HEAD.",
+      "Reviewed assumption: The existing reserved bridge can be validated as optional correlation evidence without changing its schema.",
+      "Reviewed assumption: Claim recovery and expiry require a later separately aligned requirement.",
+      "Reviewed unknown: Network-filesystem exclusive-create semantics remain unvalidated.",
+      "Reviewed unknown: A future launcher may require a noninteractive host-native claim confirmation surface.",
+      "Reviewed unknown: A later recovery contract must decide how an abandoned durable claim can be inspected or superseded."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "release",
+      "src/agentgov/replay_reservation.py",
+      "src/agentgov/replay_correlation_bridge.py",
+      "src/agentgov/replay_preflight.py",
+      "src/agentgov/harness_contract.py",
+      "schemas/replay-correlation-reservation-v1.schema.json",
+      "schemas/replay-correlation-bridge-v1.schema.json",
+      "schemas/harness-contract-v1.schema.json",
+      "governance/fixtures/replay-correlation-bridge-v1",
+      "governance/fixtures/harness-contract-v1",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "pyproject.toml"
+    ],
+    "include_paths": [
+      "src/agentgov/replay_claim.py",
+      "src/agentgov/cli.py",
+      "schemas/replay-correlation-claim-v1.schema.json",
+      "governance/fixtures/replay-correlation-claim-v1",
+      "tests/test_replay_claim.py",
+      "tests/test_user_documentation.py",
+      "tests/test_public_documentation_freshness.py",
+      "README.md",
+      "docs/clean-target-replay-preflight.md",
+      "docs/harness-contract-v1.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-17.md",
+      "governance/tasks/p0-create-only-replay-claim-v1.json"
+    ]
+  },
+  "task_id": "p0-create-only-replay-claim-v1",
+  "title": "Add atomic create-only replay claim",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -p \"test_replay_claim.py\" -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -p \"test_replay_reservation.py\" -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -p \"test_replay_correlation_bridge.py\" -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-create-only-replay-claim-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check scope governance/tasks/p0-create-only-replay-claim-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

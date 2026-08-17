@@ -207,9 +207,36 @@ Reservation still does not launch or authorize a replay. Harness Contract v1
 continues to classify normalized evidence only after execution; its schema,
 First Deviation rules, and fixtures are unchanged by reservation.
 
-The intended separation is `preflight -> reservation -> separately authorized
-replay -> Harness Contract v1`. The reserved `rpf-` identifier is bounded
-upstream evidence; no automatic mapping into a Harness field is claimed in
-this slice. Later candidates remain restart-safe native journey persistence,
-Codex pre-action conformance, additional deterministic mechanism fixtures, or
-a separately designed controlled-ablation runner. None is authorized here.
+A separate create-only claim layer now binds durable pre-run ownership to one
+unchanged reservation. Its preview requires matching reservation digest,
+consumer `HEAD`, Adapter identity, a pre-existing claim registry, and no prior
+claim. Exact interactive `CLAIM` plus fresh revalidation performs one exclusive
+local create. The claim does not authorize, launch, consume, expire, recover,
+take over, or prove a replay, and it does not modify this Harness contract or
+the reservation and bridge contracts.
+
+Abandoned-claim recovery is a separate side branch. Its read-only inspector
+classifies bounded exact claim bytes, and exact interactive `RECOVER` may
+create one immutable marker bound to the reservation and raw claim digest.
+The original claim and reservation remain unchanged. A recovery marker can
+identify only those exact bytes as `RECOVERED`; it does not create replacement
+ownership, authorize or prove replay, populate `host.repository_correlation`,
+or modify this Harness contract, bridge, First Deviation logic, or fixtures.
+
+The additive `agentgov.replay-correlation-bridge` `1.0` contract now binds the
+reserved `rpf-` identifier to this contract's existing
+`host.repository_correlation` field. The separate bridge validator can verify
+an exact reservation marker and, for `consumed`, one valid Harness run with the
+same `run_id` and correlation value. It also keeps `reserved`, `invalidated`,
+and `unavailable` explicit rather than treating missing run evidence as
+consumption.
+
+The intended separation is `preflight -> reservation -> claim -> separately
+authorized replay -> correlation bridge -> Harness Contract v1`. The bridge records and
+verifies post-run correlation evidence only. It does not reserve, consume,
+invalidate, authorize, launch, or complete a replay, and it does not modify
+this schema, First Deviation logic, or reference fixtures. A future launcher
+still needs a separate claim-to-Harness consume transition. Later candidates remain
+restart-safe native journey persistence, Codex pre-action conformance,
+additional deterministic mechanism fixtures, or a separately designed
+controlled-ablation runner. None is authorized here.
