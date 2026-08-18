@@ -19,6 +19,24 @@ def run_cli(*args: str) -> tuple[int, str, str]:
 
 
 class HtmlReportTests(unittest.TestCase):
+    def test_generator_and_shipped_demos_contain_narrow_grid_content(self) -> None:
+        containment_rule = ".hero>*,.grid>*,.compare>*,.orientation>*{min-width:0}"
+        command_rule = ".command{background:#101827;color:#dce8ff;border-radius:13px;padding:15px 18px;margin-top:18px;overflow:auto}.command code{white-space:nowrap}"
+
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir) / "project"
+            initialize_project(root, project_name="Responsive Report")
+            generated = render_repository_report_html(check_repository(root))
+
+        samples = (
+            Path(__file__).resolve().parents[1] / "docs/demo-governance-report.html",
+            Path(__file__).resolve().parents[1]
+            / "docs/demo-governance-report.zh-CN.html",
+        )
+        for content in (generated, *(path.read_text(encoding="utf-8") for path in samples)):
+            self.assertEqual(content.count(containment_rule), 1)
+            self.assertEqual(content.count(command_rule), 1)
+
     def test_shipped_demo_is_sanitized_and_matches_real_report_semantics(self) -> None:
         demo = (
             Path(__file__).resolve().parents[1] / "docs/demo-governance-report.html"

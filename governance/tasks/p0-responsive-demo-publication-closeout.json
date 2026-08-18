@@ -1,0 +1,93 @@
+{
+  "acceptance_signals": [
+    "Read-only Git inspection confirms the exact combined task paths, current main branch, configured origin, and no unresolved remote divergence before staging.",
+    "One implementation commit contains only the completed landing-page and generated-report task paths, both task records, current STATUS, and the dated log; user-owned configuration is not staged.",
+    "Focused tests, the completed full-suite evidence, task and repository governance checks, protected-report hashes, scope reconciliation, secret-safety inspection, and git diff validation support the commit with gaps reported.",
+    "The implementation commit is pushed normally without force from main to origin main, with no pull request or release.",
+    "The Pages build succeeds for the exact implementation commit and the live homepage, English report, and Chinese report are available.",
+    "At phone width all three live pages keep root and body within the content viewport and report commands scroll internally; at desktop width the intended navigation and report columns remain visible.",
+    "The live English and Chinese report bytes match the repository-protected SHA-256 values.",
+    "A neutral test pack gives an unbriefed human only the public site and comprehension questions; no result is recorded before human answers arrive.",
+    "Current status, the dated log, and this task record the exact publication evidence in one documentation-only closeout commit that is pushed normally and receives a successful Pages build.",
+    "A distinct native current-Agent review finds no correction-required drift before the publication task is paused."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-85af5a5efb664f1f84c88ff437ce4bd0 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Publish the two completed visual tasks as one scoped implementation commit to the configured main Pages source, excluding user configuration. Inspect the intended diff, branch, remotes, and remote divergence; rerun bounded validation and protected hashes; then push normally without force or pull request. Wait for the exact Pages build and verify the live homepage plus both report languages at desktop and phone widths, including document containment and protected bytes. Record the commit, build, online results, and pending real-human comprehension boundary in current status, the dated log, and this task, then push one documentation-only closeout commit. Provide a neutral public-site-only question pack for an unbriefed human, but do not claim the test complete before human answers arrive. No package release, non-Pages deployment, force push, agent-proxy substitution, or product-scope change is authorized."
+  },
+  "risk": {
+    "items": [
+      "A mixed dirty worktree could stage user configuration or omit one reviewed task slice.",
+      "Remote divergence could make a direct push unsafe.",
+      "A Pages build can succeed before CDN edges serve the exact new bytes.",
+      "Protected report hashes could differ online if publication or caching serves the wrong snapshot.",
+      "A responsive rule could behave differently online than through the local server.",
+      "A closeout commit could accidentally include implementation changes.",
+      "Reader questions could coach the participant or overstate one response as product validation.",
+      "GitHub CLI authentication status must not be mistaken for direct Git transport authentication.",
+      "Reviewed assumption: The two paused tasks and their current source-of-truth updates together define the intended implementation commit.",
+      "Reviewed assumption: The repository remains on main with origin main as the direct Pages publication path.",
+      "Reviewed assumption: Git transport authentication can use the configured credential helper independently of GitHub CLI authentication.",
+      "Reviewed assumption: The docs directory remains the configured Pages source and its build status can be verified after each push.",
+      "Reviewed assumption: The connected browser viewport capability can validate the live Pages site at phone and desktop dimensions.",
+      "Reviewed assumption: A real unbriefed human is not available inside this coding session, so only the neutral test pack can be completed now.",
+      "Reviewed unknown: Pages build and CDN propagation time is not known in advance.",
+      "Reviewed unknown: The real human reader's comprehension remains unknown until the separate evidence step occurs.",
+      "Reviewed unknown: One future reader result will not establish hiring, adoption, or population-level usability outcomes."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "pyproject.toml",
+      "CHANGELOG.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/adr",
+      "docs/releases",
+      "governance/schemas",
+      "governance/fixtures"
+    ],
+    "include_paths": [
+      "README.md",
+      "STATUS.md",
+      "docs/index.html",
+      "docs/demo-governance-report.html",
+      "docs/demo-governance-report.zh-CN.html",
+      "src/agentgov/html_reporting.py",
+      "tests/test_product_site.py",
+      "tests/test_user_documentation.py",
+      "tests/test_report_html.py",
+      "tests/test_interview_documentation.py",
+      "docs/development-log/2026-08-18.md",
+      "governance/tasks/p0-landing-page-narrative-compression-v1.json",
+      "governance/tasks/p0-generated-report-narrow-width-containment-v1.json",
+      "governance/tasks/p0-responsive-demo-publication-closeout.json"
+    ]
+  },
+  "task_id": "p0-responsive-demo-publication-closeout",
+  "title": "Publish and validate the responsive demo",
+  "validation_commands": [
+    "git status -sb",
+    "git diff --check",
+    "git diff -- README.md STATUS.md docs/index.html docs/demo-governance-report.html docs/demo-governance-report.zh-CN.html src/agentgov/html_reporting.py tests/test_product_site.py tests/test_user_documentation.py tests/test_report_html.py tests/test_interview_documentation.py docs/development-log/2026-08-18.md governance/tasks",
+    "git fetch origin",
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_product_site tests.test_user_documentation tests.test_report_html tests.test_interview_documentation -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-responsive-demo-publication-closeout.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check scope governance/tasks/p0-responsive-demo-publication-closeout.json --repository .",
+    "Verify repository and live SHA-256 values for both protected reports.",
+    "Inspect the live homepage and both reports at phone and desktop browser viewports.",
+    "Verify each Pages build status and exact commit."
+  ]
+}

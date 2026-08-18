@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-08-17
+Last verified: 2026-08-18
 
 ## Current-status contract
 
@@ -41,6 +41,125 @@ interactive confirmation and stale-plan revalidation; it adds no automatic
 scheduling authority.
 
 ### Current closeout snapshot
+
+- **Active slice**: none. Task
+  `p0-generated-report-narrow-width-containment-v1` is paused after the bounded
+  local report-template containment, protected-snapshot synchronization,
+  validation, and distinct native review completed.
+- **Codex-run validation**: the canonical HTML generator and both protected
+  English and Chinese illustrative reports now give direct grid children a
+  zero minimum width. This lets the existing nowrap command remain copyable
+  and scroll inside its own container instead of widening the document. The
+  protected report diffs contain only that one CSS rule; report text, counts,
+  links, sanitized data, and illustrative `0.3.0rc1` identity are unchanged.
+  At a 390 x 844 browser override, both reports used a 375-pixel content
+  viewport with 375-pixel root/body widths, 343-pixel orientation panels, and
+  a 565-pixel command scroll area contained by a 289-pixel command viewport.
+  At 1440 x 900, both retained two 570-pixel orientation columns with no
+  document overflow. Mobile and desktop screenshots showed no observed
+  clipping or material layout regression. All 12 focused report and interview
+  tests passed; the complete supported-Python 3.11 suite passed all 926 tests
+  with 3 platform-limited skips. Task governance reported `PASS=3 WARN=1
+  FAIL=0 ADVISORY=3`; repository governance reported `PASS=26 WARN=2 FAIL=0
+  ADVISORY=4`; and `git diff --check` passed. Current protected SHA-256 values
+  are
+  `a899b3c6039693fee01b93ca6fb08adf229d2d3854a29322c6b5c5b489e3bec3`
+  for English and
+  `94136427db9f6ed4390a28283b7c772be27a9a50ed7b13e691618485b294c8ec`
+  for Chinese. Scope reconciliation accepted all eight paths owned by this
+  task and rejected the five preserved landing-task paths plus the excluded
+  user-owned `.codex/config.toml`; no exception or ownership transfer was
+  inferred. The first attempt to reuse the split-level journey correctly failed
+  because that journey had already completed the landing-task review. The human
+  then selected a fresh active-task review journey
+  `mcpj-8684361306c54feeaa97c09e6e3dcdf1`. Native current-Agent review
+  `srv-1da30ad9f242b97c9cc39f1ef7cae6da` found no correction-required
+  requirement, architecture, scope, implementation, security, or data drift;
+  it retained public Pages validation and real reader outcomes as explicit
+  unknowns.
+- **User-reported validation**: the human selected this as the second half of
+  the two-task split and admitted the exact protected-artifact task through the
+  native proposal form. When the shared alignment journey could not host a
+  second review, the human explicitly selected a fresh task-specific review
+  journey without changing the admitted implementation or its authority. No
+  separate user-run browser, production, or outcome validation was reported.
+- **Pending validation**: the changed landing page and reports are local and
+  uncommitted, so online acceptance awaits separately authorized Git and Pages
+  publication. No evidence establishes improved reader outcomes.
+- **Incomplete**: none inside the admitted report slice.
+- **Publication boundary**: no commit, push, pull request, publication, release,
+  or deployment is authorized. The user-owned `.codex` directory and all
+  preserved first-task changes remain unstaged and outside this task.
+- **Blocker / stop condition**: no local implementation or governance blocker
+  remains. Stop before Git, Pages publication, release, deployment, or
+  follow-on implementation.
+- **Next product review**: decide whether the two completed local visual slices
+  should be committed and published together. After any publication, an
+  uncoached reader check may assess comprehension without inferring hiring or
+  adoption outcomes. Neither action is authorized by this entry.
+
+### Superseded closeout snapshot - landing-page narrative compression
+
+- **Active slice**: none. Task
+  `p0-landing-page-narrative-compression-v1` is paused after the bounded local
+  landing-page narrative and narrow-width containment slice completed.
+- **Codex-run validation**: the homepage now leads with the concrete refund
+  approval-review question, links directly to that example, orders the product
+  journey before the guided walkthrough, compresses the sample-report boundary,
+  and links detailed development evidence to existing portfolio and repository
+  status surfaces instead of embedding the former Adapter milestone wall. The
+  malformed Adapter 1.5.0 sentence was removed with that wall. README entry
+  links now use the same product-first order. At a 390 x 844 browser override,
+  the 375-pixel content viewport retained a 375-pixel root and body width at the
+  hero, refund example, and evidence sections. The terminal remained 341 pixels
+  wide while its 465-pixel command content scrolled inside the 293-pixel inner
+  viewport instead of widening the document. At 1440 x 900 all six desktop
+  navigation entries were visible and the document had no horizontal overflow.
+  The 64 directly related documentation and portfolio tests passed. The complete
+  supported-Python 3.11 suite passed all 925 tests with 3 platform-limited
+  skips. The English and Chinese protected sample reports remained byte-exact
+  at SHA-256
+  `fc5acb2392fcbea5787716e2e101d2236d85c76f1a6f76094b9a6b3c9a3cbb2c`
+  and
+  `09473875c7bd64201e20d22e56f2cf35fc12763e35c1e442e49a0888fa890d69`.
+  The admitted plan's recorded `agentgov check governance` command is not a
+  current CLI subcommand; it failed before implementation, and the supported
+  task and repository checks were used without rewriting the admitted record.
+  Final scope reconciliation accepted all seven current-task paths and rejected
+  only the preserved user-owned excluded `.codex/config.toml`; no exception or
+  ownership transfer was inferred. `git diff --check` passed. Native
+  current-Agent advisory review `srv-36e5dd02da20bee026f32390fa72766f`
+  found no correction-required requirement, architecture, scope,
+  implementation, security, or data drift; it retained publication and real
+  reader-outcome validation as explicit unknowns.
+- **User-reported validation**: the human selected the two-task split through
+  native alignment and admitted this exact first task through the native form.
+  No separate user-run visual, browser, production, or outcome validation was
+  reported.
+- **Pending validation**: the changed landing page is local and uncommitted, so
+  public Pages still serves the preceding snapshot. Online narrow-width and
+  desktop acceptance therefore await a separately authorized commit, push, and
+  Pages build. The English and Chinese illustrative reports still exhibit the
+  separately observed narrow-width overflow and require their own admitted
+  generator/artifact task. No evidence establishes improved hiring, interview,
+  or adoption outcomes.
+- **Incomplete**: none inside the admitted landing-page slice. The report
+  responsive defect belongs to the explicitly split follow-up requirement, not
+  hidden work inside this task.
+- **Publication boundary**: no commit, push, pull request, publication, release,
+  deployment, protected-report regeneration, or report-generator change is
+  authorized. The user-owned `.codex` directory remains excluded and unstaged.
+- **Blocker / stop condition**: no local landing-page blocker remains. Stop
+  before Git, Pages publication, generated-report changes, release, deployment,
+  or follow-on implementation.
+- **Next product review**: decide whether to admit the separate generated-report
+  narrow-width containment and protected-sample regeneration task, and decide
+  independently whether to publish this completed landing-page slice. After any
+  publication, an uncoached reader check may assess comprehension without
+  inferring hiring or adoption outcomes. None of these actions is authorized by
+  this entry.
+
+### Superseded closeout snapshot - Pages publication closeout
 
 - **Active slice**: none. The bounded publication closeout task
   `p0-pages-publication-closeout` recorded the completed Git and GitHub Pages

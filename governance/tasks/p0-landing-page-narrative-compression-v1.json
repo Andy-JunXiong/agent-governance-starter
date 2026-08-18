@@ -1,0 +1,73 @@
+{
+  "acceptance_signals": [
+    "The hero explains value through the refund-approval review problem and links directly to the concrete example while retaining the evidence-bounded product claim.",
+    "The landing page keeps only a concise current development safety slice and links durable milestone or status evidence without creating another manually maintained source of truth.",
+    "The sample-report caveat remains honest about stable, prerelease, illustrative, and development-source boundaries but is compressed for first-layer scanning.",
+    "Product-oriented navigation precedes the renamed guided walkthrough, and any affected README entry ordering remains consistent.",
+    "The confirmed Adapter 1.5.0 sentence defect is removed.",
+    "At a 390 by 844 browser viewport, the homepage has no document-level horizontal overflow and representative navigation, refund, evidence, and terminal content remains readable.",
+    "The report generator and both protected sample report files remain byte-unchanged."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-3741f5bc00fc40bfb6947f710cc29fec and admitted that exact task through an explicit admission control. The bounded local landing-page narrative, product-first navigation, evidence layering, sentence cleanup, narrow-width containment, protecting tests, browser validation, and documentation closeout completed. Final scope reconciliation accepted all seven current-task paths and rejected only the preserved user-owned excluded .codex/config.toml path; no exception or ownership transfer was inferred. The recorded agentgov check governance command was unsupported by the current CLI; the supported task and repository checks supplied the corresponding evidence without rewriting the admitted plan. Native current-Agent advisory review srv-36e5dd02da20bee026f32390fa72766f found no correction-required drift and retained publication and reader-outcome validation as unknowns. The task is paused without Git, publication, release, deployment, report generation, protected-report rewriting, or follow-on authority.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Reframe the public landing page around the concrete refund-risk example, compress milestone and release caveats into linked evidence layers, present the product journey before interview-specific framing, correct the confirmed Adapter sentence defect, and prevent document-level homepage overflow at a narrow viewport without changing generated report artifacts."
+  },
+  "risk": {
+    "items": [
+      "Compressing caveats could accidentally overstate stable or prerelease capability boundaries.",
+      "Removing the milestone wall could duplicate or orphan evidence if links do not point to existing durable truth surfaces.",
+      "Product-first navigation could conflict with the current interview-oriented README journey unless affected entry links are checked.",
+      "A narrow-width CSS fix could hide rather than contain long terminal content unless document and inner-container overflow are distinguished.",
+      "Publication, Git operations, release, deployment, report regeneration, and follow-up report-template work are outside this task.",
+      "Reviewed assumption: The current refund example is the strongest evidence-bounded first-layer explanation of product value.",
+      "Reviewed assumption: Existing portfolio, status, and development records remain the durable evidence surfaces for detailed milestones.",
+      "Reviewed assumption: The README substantive interview snapshot remains valid; only directly affected entry ordering or wording may change.",
+      "Reviewed assumption: The two sample report hashes recorded in current status must remain unchanged."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "src",
+      "docs/demo-governance-report.html",
+      "docs/demo-governance-report.zh-CN.html",
+      "docs/portfolio.html",
+      "docs/interview-guide.html",
+      "docs/interview-guide.zh-CN.html",
+      "governance/schemas",
+      ".github/workflows",
+      "pyproject.toml",
+      "CHANGELOG.md"
+    ],
+    "include_paths": [
+      "README.md",
+      "docs/index.html",
+      "tests/test_product_site.py",
+      "tests/test_interview_documentation.py",
+      "tests/test_public_documentation_freshness.py",
+      "tests/test_user_documentation.py",
+      "STATUS.md",
+      "docs/development-log/2026-08-18.md",
+      "governance/tasks/p0-landing-page-narrative-compression-v1.json"
+    ]
+  },
+  "task_id": "p0-landing-page-narrative-compression-v1",
+  "title": "Compress the landing-page story and fix narrow-width containment",
+  "validation_commands": [
+    "py -3.11 -m unittest tests.test_product_site tests.test_interview_documentation tests.test_public_documentation_freshness tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check governance --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check scope governance/tasks/p0-landing-page-narrative-compression-v1.json --repository .",
+    "git diff --check"
+  ]
+}

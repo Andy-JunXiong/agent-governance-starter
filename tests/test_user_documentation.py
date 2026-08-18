@@ -123,46 +123,54 @@ PUBLIC_REFERENCE_SOURCES = (
 
 class UserDocumentationTests(unittest.TestCase):
     def test_native_proposal_owner_binding_is_adapter_owned_and_bounded(self) -> None:
-        sources = tuple(
+        detailed_sources = tuple(
             path.read_text(encoding="utf-8")
             for path in (
                 README,
                 GOVERNANCE_MCP_ADAPTER,
                 TASK_PROPOSAL_ADMISSION,
                 TASK_ADMISSION_ADR,
-                INDEX_WEB,
                 QUICKSTART_WEB,
                 QUICKSTART_ZH_WEB,
             )
         )
-        for text in sources:
+        for text in detailed_sources:
             with self.subTest(source=text[:40]):
                 self.assertIn("1.5.0", text)
                 self.assertIn("Human product owner", text)
                 self.assertIn("owner", text)
                 self.assertIn("decided_by", text)
-        for text in sources[:-1]:
+        for text in detailed_sources[:-1]:
             self.assertIn("cryptographic", text.lower())
-        self.assertIn("Agent", sources[-1])
+        self.assertIn("Agent", detailed_sources[-1])
+
+        landing = INDEX_WEB.read_text(encoding="utf-8")
+        self.assertNotIn("Adapter <code>1.5.0</code>", landing)
+        self.assertNotIn("cryptographic personal identity", landing)
+        self.assertIn("portfolio.html#boundary", landing)
+        self.assertIn("blob/main/STATUS.md", landing)
 
     def test_adapter_1_5_local_installation_is_evidenced_without_overclaim(self) -> None:
         evidence = ADAPTER_1_5_INSTALLED_PREFLIGHT.read_text(encoding="utf-8")
-        surfaces = tuple(
+        detailed_surfaces = tuple(
             path.read_text(encoding="utf-8")
             for path in (
                 README,
                 GOVERNANCE_MCP_ADAPTER,
                 TASK_ADMISSION_ADR,
-                INDEX_WEB,
                 QUICKSTART_WEB,
                 QUICKSTART_ZH_WEB,
             )
         )
-        for text in surfaces:
+        for text in detailed_surfaces:
             with self.subTest(source=text[:40]):
                 self.assertIn("1.5.0", text)
                 self.assertIn("pipx", text)
                 self.assertIn("Human product owner", text)
+        landing = INDEX_WEB.read_text(encoding="utf-8")
+        self.assertNotIn("Adapter <code>1.5.0</code>", landing)
+        self.assertIn("Current development evidence", landing)
+        self.assertIn("Trace the latest evidence chain", landing)
         for phrase in (
             "local-only",
             "no-model",

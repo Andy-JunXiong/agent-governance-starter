@@ -12,6 +12,8 @@ class ProductSiteTests(unittest.TestCase):
 
         for phrase in (
             "Make AI-assisted repositories reviewable by default.",
+            "When an AI changes how refunds get approved",
+            "See the refund example",
             "An AI drafts customer refund replies.",
             "Before governance",
             "With Agent Governance",
@@ -28,6 +30,32 @@ class ProductSiteTests(unittest.TestCase):
             "Team lead or CI",
         ):
             self.assertIn(phrase, content)
+
+        nav = content.split("<nav>", 1)[1].split("</nav>", 1)[0]
+        product_journey = (
+            "How it works",
+            "Example",
+            "Evidence",
+            "Quickstart",
+            "Guided walkthrough",
+        )
+        positions = [nav.index(label) for label in product_journey]
+        self.assertEqual(positions, sorted(positions))
+
+        self.assertNotIn("Inspect the detailed development milestone history", content)
+        self.assertNotIn("Adapter <code>1.5.0</code>", content)
+        self.assertNotIn("cryptographic personal identity,", content)
+        self.assertIn('href="portfolio.html#boundary"', content)
+        self.assertIn("Illustrative published <code>0.3.0rc1</code> sample report", content)
+        self.assertIn("stable\n            <code>0.2.1</code> remains installable", content)
+        self.assertIn("newer development-source\n            behavior is separate", content)
+        self.assertIn(
+            ".hero > *,\n"
+            "      .evidence > * {\n"
+            "        min-width: 0;\n"
+            "      }",
+            content,
+        )
 
     def test_product_site_is_local_only_and_links_the_real_demo(self) -> None:
         content = SITE.read_text(encoding="utf-8")
@@ -75,8 +103,7 @@ class ProductSiteTests(unittest.TestCase):
         self.assertNotIn("v0.1 technical preview", content)
         self.assertNotIn("python -m pip install --no-deps .", content)
         self.assertIn("See what the CLI finds", content)
-        self.assertIn("PASS, WARN, FAIL and", content)
-        self.assertIn("decisions that still need", content)
+        self.assertIn("Inspect the evidence boundary", content)
         quickstart_html = ROOT / "docs/quickstart.zh-CN.html"
         self.assertTrue(quickstart_html.is_file())
         quickstart = quickstart_html.read_text(encoding="utf-8")

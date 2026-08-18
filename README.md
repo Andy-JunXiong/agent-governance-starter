@@ -13,13 +13,14 @@ developing; pull requests and CI remain an independent backstop.
 [![Agent Governance — From task intent to verified evidence](docs/assets/agentgov-social-preview.jpg)](https://andy-junxiong.github.io/agent-governance-starter/)
 
 <p align="center">
-  <strong>Interview-ready: explain one governed coding-agent task in 5–10 minutes.</strong><br />
-  <a href="https://andy-junxiong.github.io/agent-governance-starter/interview-guide.html">Open the interview walkthrough →</a> ·
-  <a href="https://andy-junxiong.github.io/agent-governance-starter/interview-guide.zh-CN.html">中文面试讲解</a> ·
+  <strong>Product-first: understand the problem, inspect the evidence, then rehearse the walkthrough.</strong><br />
   <a href="https://andy-junxiong.github.io/agent-governance-starter/">Explore the AgentGov product story →</a> ·
+  <a href="https://andy-junxiong.github.io/agent-governance-starter/#example">See the refund example</a> ·
   <a href="https://andy-junxiong.github.io/agent-governance-starter/portfolio.html">Inspect the evidence portfolio</a> ·
   <a href="https://andy-junxiong.github.io/agent-governance-starter/demo-governance-report.html">Open the sample report</a> ·
-  <a href="https://andy-junxiong.github.io/agent-governance-starter/quickstart.html">Read the quickstart</a>
+  <a href="https://andy-junxiong.github.io/agent-governance-starter/quickstart.html">Read the quickstart</a> ·
+  <a href="https://andy-junxiong.github.io/agent-governance-starter/interview-guide.html">Open the guided walkthrough →</a> ·
+  <a href="https://andy-junxiong.github.io/agent-governance-starter/interview-guide.zh-CN.html">中文面试讲解</a>
 </p>
 
 > The portfolio links claims to repository evidence and states where that evidence stops. It does not authorize commit, merge, publish, release, or deployment.

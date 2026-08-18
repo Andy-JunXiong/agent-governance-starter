@@ -1,0 +1,86 @@
+{
+  "acceptance_signals": [
+    "At a 390 by 844 browser viewport, each English and Chinese sample report keeps the document root and body within the content viewport, with the orientation panels contained and the long command scrolling only inside its command region.",
+    "At a desktop viewport, both sample reports retain their existing two-column orientation layout and no material visual regression is observed.",
+    "The canonical generator owns the narrow-width containment rule, and both protected sample files contain the same exact CSS contract without hand-authored semantic divergence.",
+    "The English and Chinese sample reports retain the same sanitized repository identity, finding counts, report data, wording, links, and illustrative 0.3.0rc1 version identity; only presentation bytes change.",
+    "Current expected SHA-256 values are updated for both regenerated sample files while superseded status snapshots and dated historical records retain their original hash facts.",
+    "Focused report and interview-documentation tests, the complete supported-Python suite, task and repository governance checks, strict scope reconciliation, hash verification, browser inspection, and git diff validation complete with gaps reported.",
+    "STATUS and the 2026-08-18 development log record the bounded report-containment closeout without granting Git, publication, release, deployment, or follow-on authority."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-621356419b7642e8ae4514a9dd1ac5e8 and admitted that exact task through an explicit admission control. The bounded presentation-only implementation, protected-snapshot synchronization, focused and complete tests, mobile and desktop browser inspection, hash verification, governance checks, admitted-path reconciliation, and final documentation checks completed locally. After the shared split-level journey could not host a second review, the human selected fresh active-task journey mcpj-8684361306c54feeaa97c09e6e3dcdf1 solely for this task's distinct review context. Native current-Agent review srv-1da30ad9f242b97c9cc39f1ef7cae6da found no correction-required drift and retained publication and reader outcomes as unknowns. The task is paused without Git, publication, release, deployment, or follow-on authority; preserved landing-task changes and user-owned .codex content remain outside this task.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Implement the separately selected generated-report narrow-width follow-up. Add presentation-only CSS containment to the canonical HTML report generator so grid children and panels can shrink within a phone viewport while existing nowrap commands scroll inside their own command region. Synchronize that exact presentation change into the protected English and Chinese sanitized illustrative 0.3.0rc1 sample reports, update only the current expected hashes, preserve historical hash evidence, and add deterministic regression coverage. Keep report data, findings, wording, release identity, product behavior, and authority semantics unchanged. This task prepares and validates local repository changes only and grants no commit, push, publication, release, deployment, or external-write authority."
+  },
+  "risk": {
+    "items": [
+      "Changing protected sample bytes without exact human admission would violate the repository's artifact boundary.",
+      "A broad CSS selector could conceal content or regress the desktop report layout.",
+      "Manual synchronization could accidentally change report semantics, counts, wording, links, or version identity.",
+      "Updating every old hash occurrence would rewrite historical evidence instead of updating only current truth.",
+      "The dirty worktree contains prior-task changes that must remain preserved and clearly outside this task's ownership.",
+      "A local fix could be mistaken for a published correction unless the publication boundary remains explicit.",
+      "Reviewed assumption: The previously resolved split direction remains current: landing-page work is complete locally and generated-report responsiveness is the next separately governed requirement.",
+      "Reviewed assumption: The two sample reports are protected illustrative snapshots rather than signed release artifacts, so an explicitly admitted presentation-only regeneration may replace their bytes and current expected hashes.",
+      "Reviewed assumption: The long command should remain unwrapped for copyability and should scroll inside its own container on narrow screens.",
+      "Reviewed assumption: The current visual identity, report copy, counts, sanitized data, links, and 0.3.0rc1 illustrative version identity remain unchanged.",
+      "Reviewed assumption: Existing uncommitted changes from the prior admitted landing-page task and user-owned .codex content must be preserved and not absorbed into this task.",
+      "Reviewed unknown: No external analytics establish which phone widths are most common among report readers.",
+      "Reviewed unknown: The effect of the responsive fix on hiring, adoption, or reader comprehension is not measured.",
+      "Reviewed unknown: The local report changes will not become public unless a later separately authorized Git and Pages publication workflow completes."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "README.md",
+      "docs/index.html",
+      "docs/portfolio.html",
+      "docs/quickstart.html",
+      "docs/quickstart.zh-CN.html",
+      "docs/interview-guide.html",
+      "docs/interview-guide.zh-CN.html",
+      "tests/test_product_site.py",
+      "tests/test_user_documentation.py",
+      "governance/schemas",
+      "docs/adr",
+      "docs/releases",
+      "CHANGELOG.md",
+      "DEVELOPMENT_PLAN.md",
+      "pyproject.toml"
+    ],
+    "include_paths": [
+      "src/agentgov/html_reporting.py",
+      "docs/demo-governance-report.html",
+      "docs/demo-governance-report.zh-CN.html",
+      "tests/test_report_html.py",
+      "tests/test_interview_documentation.py",
+      "STATUS.md",
+      "docs/development-log/2026-08-18.md",
+      "governance/tasks/p0-generated-report-narrow-width-containment-v1.json"
+    ]
+  },
+  "task_id": "p0-generated-report-narrow-width-containment-v1",
+  "title": "Contain generated reports at narrow widths",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_report_html tests.test_interview_documentation -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-generated-report-narrow-width-containment-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check scope governance/tasks/p0-generated-report-narrow-width-containment-v1.json --repository .",
+    "Verify both sample-report SHA-256 values and preserve superseded historical hash records.",
+    "Inspect both reports locally at 390 by 844 and 1440 by 900 browser viewports.",
+    "git diff --check"
+  ]
+}

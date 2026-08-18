@@ -24,10 +24,10 @@ STABLE_WHEEL = (
 )
 DEMO_HASHES = {
     "demo-governance-report.html": (
-        "fc5acb2392fcbea5787716e2e101d2236d85c76f1a6f76094b9a6b3c9a3cbb2c"
+        "a899b3c6039693fee01b93ca6fb08adf229d2d3854a29322c6b5c5b489e3bec3"
     ),
     "demo-governance-report.zh-CN.html": (
-        "09473875c7bd64201e20d22e56f2cf35fc12763e35c1e442e49a0888fa890d69"
+        "94136427db9f6ed4390a28283b7c772be27a9a50ed7b13e691618485b294c8ec"
     ),
 }
 

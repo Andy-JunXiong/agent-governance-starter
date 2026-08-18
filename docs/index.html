@@ -223,6 +223,17 @@
         color: var(--muted);
         max-width: 650px;
       }
+      .hero .hero-question {
+        margin: 0 0 12px;
+        color: var(--ink);
+        font-size: clamp(22px, 2.6vw, 29px);
+        font-weight: 700;
+        line-height: 1.32;
+        letter-spacing: -0.02em;
+      }
+      .hero .hero-support {
+        margin-top: 0;
+      }
       .actions {
         display: flex;
         flex-wrap: wrap;
@@ -235,6 +246,11 @@
         color: #716b7a;
         font-size: 13px;
         line-height: 1.55;
+      }
+      .sample-note a {
+        color: var(--purple-text);
+        text-decoration: underline;
+        text-underline-offset: 3px;
       }
       .trust {
         display: flex;
@@ -648,6 +664,10 @@
         gap: 28px;
         align-items: center;
       }
+      .hero > *,
+      .evidence > * {
+        min-width: 0;
+      }
       .terminal {
         margin: 0;
         background: #17131f;
@@ -836,11 +856,10 @@
           ><span class="mark">AG</span>Agent Governance</a
         >
         <div class="links">
-          <a href="interview-guide.html">Interview walkthrough</a
-          ><a href="portfolio.html">Evidence portfolio</a
+          <a href="#how">How it works</a><a href="#example">Example</a
+          ><a href="portfolio.html" aria-label="Explore the evidence story">Evidence</a
           ><a href="quickstart.html">Quickstart</a
-          ><a href="#example">Example</a><a href="#how">How it works</a
-          ><a href="#evidence">Evidence</a><a href="#adopt">Adopt</a
+          ><a href="interview-guide.html">Guided walkthrough</a
           ><a
             class="button dark"
             href="https://github.com/Andy-JunXiong/agent-governance-starter"
@@ -854,32 +873,29 @@
         <div>
           <span class="pill">Stable 0.2.1 · 0.3 development preview</span>
           <h1>Make AI-assisted repositories reviewable by default.</h1>
-          <p>
-            A repository-native control layer that connects human-owned task
-            intent, architecture context, bounded implementation, fresh
-            evidence and accountable review—while high-risk decisions remain
-            human-controlled.
+          <p class="hero-question">
+            When an AI changes how refunds get approved, who reviewed it—and
+            is that review still valid?
+          </p>
+          <p class="hero-support">
+            Agent Governance connects human-owned task intent, architecture
+            context, bounded implementation, fresh evidence and accountable
+            review—while high-risk decisions remain human-controlled.
           </p>
           <div class="actions">
-            <a
-              class="button dark"
-              href="https://github.com/Andy-JunXiong/agent-governance-starter"
-              >View on GitHub</a
+            <a class="button dark" href="#example">See the refund example</a
+            ><a class="button light" href="#how">See how it works</a
             ><a class="button light" href="demo-governance-report.html"
               >See what the CLI finds</a
-            ><a class="button light" href="portfolio.html"
-              >Explore the evidence story</a
-            ><a class="button light" href="interview-guide.html"
-              >Use the interview walkthrough</a
+            ><a class="button light" href="quickstart.html"
+              >Try the quickstart</a
             >
           </div>
           <p class="sample-note">
-            Opens a generated sample report that explains PASS, WARN, FAIL and
-            ADVISORY findings, required follow-up and decisions that still need
-            a human. It is a sanitized illustrative <code>0.3.0rc1</code>
-            snapshot; the interview walkthrough links it to newer
-            development-source evidence without presenting that evidence as
-            stable release behavior.
+            Illustrative published <code>0.3.0rc1</code> sample report; stable
+            <code>0.2.1</code> remains installable, and newer development-source
+            behavior is separate.
+            <a href="portfolio.html#boundary">Inspect the evidence boundary →</a>
           </p>
           <div class="trust">
             <span>Local and read only by default</span
@@ -949,7 +965,7 @@
       <section>
         <div class="shell">
           <div class="section-head">
-            <span class="kicker">Interview snapshot · development source</span>
+            <span class="kicker">Current development evidence</span>
             <h2>One governed coding-agent journey, visible end to end.</h2>
             <p>
               A human selects the direction and admits an exact task. AgentGov
@@ -966,97 +982,6 @@
               original claim, creates no replacement owner, and grants no replay
               authority.
             </p>
-            <details>
-              <summary>Inspect the detailed development milestone history</summary>
-              <p>
-              Development source now implements a strict foreground JSONL
-              coding-agent transport through <code>agentgov dev --stream</code>,
-              locally derived scope/completion facts, per-event Dashboard
-              refresh, bounded task/scope/completion cards, and the first packaged
-              Codex lifecycle-hook Adapter. A vendor-neutral host-interaction
-              contract now distinguishes displayed requests from recorded
-              human decisions. Codex keeps its native tool permission prompt,
-              but custom task/scope/completion decisions remain context-only.
-              Risk-based routing now leaves no-write requests and exact active
-              task iteration at zero interruptions. Only a tracked, clean,
-              human-owned standing policy can fast-track its bounded low-risk
-              envelope; material work still stops for review. The exact
-              admission flow remains a fallback and never starts a session.
-              Every real gate now carries a digest-bound proactive prompt with
-              one safe recommendation and one required selection. The reference
-              review accepts a number instead of a special word; Codex Hooks
-              still cannot record trusted custom buttons. When meaning is not
-              stable, the vendor-neutral clarification protocol keeps the
-              current center and advisory drift visible, asks one natural-language
-              question per turn, and delays that final selection until material
-              unknowns are resolved. The same foreground stream now accepts
-              strict normalized alignment and human-update records, then
-              automatically returns the next question or stable choice from
-              memory-only state that does not survive restart. Discussion
-              applies no project change.
-              A host-side reference Alignment Adapter now rehearses an
-              ordinary request, one natural-language answer, and one final
-              selection while retaining only normalized evidence. A
-              replaceable host materializer performs semantic interpretation;
-              Core still does not understand arbitrary raw chat.
-              Development source now implements the vendor-neutral Provider,
-              risk-route, and advisory-result contracts: medium risk binds the
-              active Coding Agent's disclosed self-review, while high risk
-              binds an optional independent Reviewer or returns three explicit
-              human choices without silent downgrade. Cross-host fixtures make
-              no real model or network call; production materializers remain.
-              The resolved Alignment Adapter now also exposes one host-neutral
-              active-Agent self-review callback with normalized ephemeral
-              context, an evidence allow-list, and exact advisory-result
-              binding. Codex and Claude Code fixtures share this path; a native
-              production host callback is still open. The same foreground
-              stream now carries a strict start/request/draft/completed
-              exchange for this self-review, with no extra user confirmation,
-              user-authored JSON, or second model configuration.
-              A foreground STDIO MCP Adapter exposes five base alignment and
-              self-review tools with explicit handles. Development Adapter
-              <code>1.3.0</code> adds the capability-gated
-              <code>agentgov_task_proposal_review</code> tool: the current Codex Agent
-              materializes normalized low-risk fields, MCP form elicitation
-              presents the exact plan, and only accept plus `admit` creates the
-              reviewed task. Question IDs remain Adapter-owned, and known
-              rejected normalized input returns bounded field/rule/retry
-              diagnostics without advancing state. A create-missing-only Codex
-              project config is packaged; Adapter <code>1.2.4</code> completed the current
-              host post-selection journey. The exact development Adapter
-              <code>1.3.0</code> source is now installed and locally preflighted;
-              a fresh external replay, stronger authenticated custom controls,
-              and another MCP-host package remain open.
-              Development source Adapter <code>1.4.0</code> adds a second
-              capability-gated form tool,
-              <code>agentgov_drift_review_record</code>. The Agent supplies only
-              a normalized three-dimension advisory candidate; the human
-              chooses record, snooze, or no record. Due-state revalidation and
-              local Monitor refresh preserve the existing authority boundary.
-              Adapter <code>1.4.0</code> is not installed or published here.
-              Development source Adapter <code>1.5.0</code> removes
-              accountable-owner identity from the native proposal input and
-              injects the canonical <code>Human product owner</code> role into
-              the exact reviewed plan. Only the bound native admit response
-              may persist that role as both <code>owner</code> and
-              <code>decided_by</code>; an Agent-supplied owner fails before the
-              form. This role mediation is not cryptographic personal identity,
-              The exact module is now installed only in the existing local
-              AgentGov pipx development runtime and passed isolated no-model
-              seven/form, five/base, hostile-owner, and accepted-admit
-              preflight. It is not a wheel, publication, release, consumer
-              activation, model run, or live replay; project configuration is
-              unchanged and the previous module/launcher backups are retained.
-              Development source also includes a combined three-task/seven-day
-              <a href="drift-review-reminders.html">drift-review reminder</a>:
-              foreground and Monitor surfaces stay non-blocking, while future
-              scheduled CI emits an advisory warning without failing the job.
-              Additional host adapters remain;
-              stable 0.2.1 and v0.3.0rc1 are unchanged.
-              See the <a href="human-decision-prompts.html">minimal-input decision contract</a>.
-              See <a href="clarification-dialogue.html">governed clarification and drift re-centering</a>.
-              </p>
-            </details>
           </div>
           <div class="proof">
             <article>
@@ -1076,9 +1001,10 @@
             </article>
           </div>
           <div class="actions">
-            <a class="button dark" href="interview-guide.html">Open the interview walkthrough</a>
-            <a class="button light" href="portfolio.html#recovery">Trace the latest evidence chain</a>
+            <a class="button dark" href="portfolio.html#recovery">Trace the latest evidence chain</a>
+            <a class="button light" href="interview-guide.html">Open the guided walkthrough</a>
             <a class="button light" href="product-requirements-automatic-governance.html">Read the approved product requirements</a>
+            <a class="button light" href="https://github.com/Andy-JunXiong/agent-governance-starter/blob/main/STATUS.md">Read current repository status ↗</a>
           </div>
         </div>
       </section>
