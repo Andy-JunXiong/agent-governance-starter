@@ -42,6 +42,65 @@ scheduling authority.
 
 ### Current closeout snapshot
 
+- **Active slice**: none. Task `p0-responsive-demo-publication-closeout` is
+  paused after the combined implementation publication, online acceptance,
+  distinct native current-Agent review, and documentation closeout. The
+  combined implementation is live.
+- **Codex-run validation**: implementation commit
+  `6fba1ebe670dc1b45c2a3c6a568655a7a005dba0` (`fix: improve responsive
+  demo journey`) contains exactly the 14 reviewed paths from the landing,
+  report-responsive, and publication-task scopes. It was pushed normally from
+  `main` to `origin/main` without force or a pull request. GitHub Deployments
+  shows that exact commit as the active `github-pages` deployment with status
+  `Deployed (completed)` via `pages-build-deployment #29`, Actions run
+  `32099732000`, job `95597874886`. The public homepage contains the new refund
+  question and no former embedded milestone wall. Online English and Chinese
+  report bytes match SHA-256
+  `a899b3c6039693fee01b93ca6fb08adf229d2d3854a29322c6b5c5b489e3bec3`
+  and
+  `94136427db9f6ed4390a28283b7c772be27a9a50ed7b13e691618485b294c8ec`.
+  At a 390 x 844 browser override, all three public pages kept 375-pixel root
+  and body widths. Each report kept a 343-pixel orientation panel and contained
+  its 565-pixel command scroll area inside a 289-pixel command viewport. At
+  1440 x 900, the homepage showed all six product navigation destinations and
+  the report retained two 570-pixel columns without document overflow. Visual
+  screenshots showed no observed clipping or material regression. Before the
+  implementation commit, all 51 focused tests passed; the complete supported-
+  Python suite evidence remained 926 passing tests with 3 platform-limited
+  skips. Task governance reported `PASS=3 WARN=1 FAIL=0 ADVISORY=3`, repository
+  governance reported `PASS=26 WARN=2 FAIL=0 ADVISORY=4`, and `git diff
+  --check` passed. Scope reconciliation accepted all 14 publication paths and
+  rejected only the explicitly excluded user-owned `.codex/config.toml`; no
+  exception or ownership transfer was inferred.
+- **User-reported validation**: the human explicitly authorized the combined
+  commit, direct publication, online responsive acceptance, and an uncoached
+  reader test. Through native alignment, the human selected a genuinely
+  unbriefed human reader as a separate evidence step rather than substituting an
+  Agent proxy. No human reader answers have yet been reported.
+- **Advisory review**: native current-Agent self-review
+  `srv-cc8efe8cbf4895e3978e51ee99cc7d6c` completed as a distinct pass and found
+  no correction-required drift. It preserved actual unbriefed-reader
+  comprehension and downstream hiring or adoption outcomes as unknown.
+- **Pending validation**: only the separately selected neutral
+  public-site-only human comprehension test remains pending until an unbriefed
+  reader returns answers. One response will not establish hiring, adoption, or
+  population-level usability outcomes.
+- **Incomplete**: no item inside the publication closeout is known to be
+  incomplete. Genuine human-reader evidence remains a separate pending
+  requirement.
+- **Publication boundary**: the Pages publication above is complete. No pull
+  request, package release, force push, non-Pages deployment, or follow-on
+  product implementation is authorized. The user-owned `.codex` directory
+  remains untracked and unstaged.
+- **Blocker / stop condition**: no publication or responsive-acceptance blocker
+  remains. Stop before recording reader comprehension until genuine answers
+  exist.
+- **Next product review**: give an unbriefed human only the public site and
+  neutral test questions. Review the returned answers before choosing any next
+  feature.
+
+### Superseded closeout snapshot - local report responsiveness
+
 - **Active slice**: none. Task
   `p0-generated-report-narrow-width-containment-v1` is paused after the bounded
   local report-template containment, protected-snapshot synchronization,

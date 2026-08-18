@@ -14,8 +14,8 @@
   "contract": "agentgov.development-task",
   "decision": {
     "decided_by": "Human product owner",
-    "rationale": "The accountable human reviewed structured proposal prp-85af5a5efb664f1f84c88ff437ce4bd0 and admitted that exact task through an explicit admission control.",
-    "state": "admitted"
+    "rationale": "The accountable human reviewed structured proposal prp-85af5a5efb664f1f84c88ff437ce4bd0 and admitted that exact task through an explicit admission control. Implementation commit 6fba1ebe670dc1b45c2a3c6a568655a7a005dba0 was pushed normally to main and became the active GitHub Pages deployment through pages-build-deployment #29, Actions run 32099732000, job 95597874886. Online phone and desktop acceptance passed for the homepage and both protected report languages, whose deployed bytes matched their repository hashes. Distinct native current-Agent review srv-cc8efe8cbf4895e3978e51ee99cc7d6c found no correction-required drift. The task is paused after its documentation-only closeout; genuine unbriefed-human comprehension remains a separate pending evidence step, no pull request or release was created, and excluded user-owned .codex configuration remained unstaged.",
+    "state": "paused"
   },
   "owner": "Human product owner",
   "profile": "compact",
