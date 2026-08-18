@@ -42,58 +42,62 @@ scheduling authority.
 
 ### Current closeout snapshot
 
-- **Active slice**: none. Task `p0-landing-product-copy-polish-v2` is paused
-  after one surgical landing-page copy cleanup, semantic test migration,
-  complete validation, and a bounded current-Agent advisory review.
-- **Delivered copy**: the frozen landing structure, section order, CSS,
-  responsive rules, accessibility attributes, and URLs are unchanged. The Hero
-  now says `See a concrete example`; both public labels say `Guided
-  walkthrough`; the dashboard remains `Illustrative example` and now links to
-  evidence and limits without exposing version detail; and the expandable
-  development note explains interruption and recovery in plain language.
+- **Active slice**: none. Task `p0-landing-copy-publish-v1` is paused after the
+  frozen landing copy commit was published through the existing direct-main
+  GitHub Pages path and checked online.
+- **Delivered copy**: the public landing now says `See a concrete example` and
+  uses `Guided walkthrough` for both links to the unchanged
+  `interview-guide.html` URL. The dashboard remains `Illustrative example`, its
+  note links to current evidence and limits, and the expanded development note
+  explains interruption and recovery in plain language.
 - **Progressive disclosure**: exact stable `0.2.1`, published `0.3.0rc1`, and
   development-source provenance remains on the portfolio. Quickstart retains
-  the stable wheel, while opted-in evidence surfaces retain the detailed
-  reservation, claim, recovery, and denied-authority terminology.
-- **Codex-run validation**: all 55 directly affected product-site,
-  public-freshness, interview-documentation, and user-documentation tests pass.
-  The first complete-suite run exposed three legacy assertions that still
-  required wheel/version or low-level recovery wording on the landing. Their
-  coverage was re-anchored to the progressive-disclosure journey rather than
-  deleted. The corrected complete-suite rerun passes all 926 tests with 3
-  platform-limited skips. Exact copy counts, preserved links, and `git diff
-  --check` pass.
-- **Governance validation**: v1 was paused fail-closed when the first full
-  suite identified three directly affected test files outside its scope. Under
-  corrected v2, task governance reported `PASS=3 WARN=1 FAIL=0 ADVISORY=3` and
-  repository governance reported `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Scope
-  accepted every task-owned path and rejected only excluded, untouched
-  `.codex/config.toml`; no exception or ownership transfer was inferred. The
-  final paused task check reports `PASS=2 WARN=2 FAIL=0 ADVISORY=3`, and
-  post-pause scope checking correctly refuses because implementation is no
-  longer admitted.
-- **Advisory review**: the copy cleanup introduces no new product claim,
-  removes no evidence owner, changes no governance or runtime behavior, and
-  preserves the human-authority boundary. No correction-required requirement,
-  architecture, scope, implementation, security, or data drift was observed.
-  The task was fully specified and did not start alignment, so this does not
-  claim native self-review or an independent reviewer.
-- **Pending validation**: whether an unbriefed reader understands the revised
-  page better remains unknown. No adoption, hiring, or conversion effect is
-  established.
-- **Incomplete**: none inside the admitted copy-cleanup scope.
-- **Git and publication boundary**: one focused local commit contains only the
-  nine admitted page, test, status, log, and task paths. It is not pushed or
-  published. No pull request, release, deployment, Sites hosting, new feature,
-  or user-configuration action is authorized. `.codex` remains local,
-  untracked, and unchanged.
-- **Blocker / stop condition**: the landing is frozen after this commit. Stop
-  further copy polishing unless genuine reader evidence identifies a concrete
-  comprehension problem; stop before any push or publication without a new
-  human decision.
-- **Next product review**: run one neutral unbriefed-reader test. The stronger
-  governed-task demonstration remains product-review input only and is not
-  authorized as follow-on implementation.
+  the stable wheel, while opted-in evidence surfaces retain detailed recovery
+  and denied-authority terminology.
+- **Codex-run validation**: before publication, the unchanged source had 55
+  directly affected tests passing and the complete suite passing 926 tests
+  with 3 platform-limited skips. A fresh fetch showed remote/local divergence
+  `0 1`; commit `96d6899` was then pushed by ordinary non-force Git. After
+  Pages propagation, the online landing contained one concrete-example CTA,
+  two guided-walkthrough labels, no old CTA or public interview label, the
+  illustrative dashboard label, both evidence deep links, and the expected
+  expanded plain-language recovery copy. Quickstart, walkthrough, sample
+  report, portfolio boundary, and recovery destinations all loaded with
+  non-empty bodies. The final documentation-closeout rerun passes all 926
+  tests with 3 platform-limited skips; task governance reports `PASS=2 WARN=2
+  FAIL=0 ADVISORY=3`, repository governance reports `PASS=26 WARN=2 FAIL=0
+  ADVISORY=4`, and JSON plus `git diff --check` pass.
+- **Responsive evidence**: at the available online 1730 x 1205 viewport, body
+  client and scroll widths both measured 1715 pixels, so no horizontal
+  overflow was observed. The controlled browser did not expose a supported
+  viewport-resize operation; no new 390px online or actual-device result is
+  claimed. The freshly passing responsive tests remain applicable because the
+  published source is exactly the validated commit.
+- **Governance validation**: the human admitted the exact publication and
+  three-file closeout task. No exception, ownership transfer, force push, PR,
+  package release, Sites migration, new hosting project, or product change was
+  introduced.
+- **Advisory review**: the published source matches the reviewed local commit,
+  deeper provenance remains discoverable, and passing checks still do not
+  authorize merge, release, publication, or deployment. This fully specified
+  task did not start alignment, so the bounded current-Agent review does not
+  claim native self-review completion or an independent reviewer.
+- **Pending validation**: genuine unbriefed-reader comprehension and a new
+  phone-width or actual-device online pass remain unknown. No adoption,
+  hiring, or conversion effect is established.
+- **Incomplete**: none in the copy or desktop-publication scope; phone-width
+  browser acceptance remains pending because the available browser could not
+  resize.
+- **Git and publication boundary**: source commit `96d6899` is on
+  `origin/main`. The documentation-only closeout records only publication
+  evidence. `.codex` remains local, untracked, and unchanged.
+- **Blocker / stop condition**: the landing remains frozen. Stop further copy
+  polishing unless genuine reader evidence identifies a concrete
+  comprehension problem; do not treat the desktop check or automated tests as
+  an actual-device result.
+- **Next product review**: run one neutral unbriefed-reader test on the public
+  landing, ideally on a phone. The stronger governed-task demonstration
+  remains product-review input only and is not authorized as follow-on work.
 
 ### Superseded closeout snapshot - bilingual Quickstart publication
 

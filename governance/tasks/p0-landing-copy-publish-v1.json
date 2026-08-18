@@ -1,0 +1,65 @@
+{
+  "acceptance_signals": [
+    "Remote main has not diverged before publication.",
+    "The validated source commit is pushed to origin main using an ordinary non-force push without a pull request or release.",
+    "The live English landing page shows See a concrete example, Guided walkthrough, Illustrative example, the plain-language Development evidence summary, and discoverable evidence links.",
+    "The live page does not show See a real example or Interview walkthrough.",
+    "Desktop and mobile-width checks show no horizontal overflow and retain usable navigation and evidence links.",
+    "Publication evidence is recorded only in STATUS.md, the dated development log, and this task record, then committed and pushed as a separate documentation-only closeout commit.",
+    "Final local HEAD equals origin main and unrelated .codex content remains untouched."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-ab28c8a9a311416cbc9dc656a7bf9f35 and admitted that exact task through an explicit admission control. A fresh fetch showed no remote divergence, and source commit 96d6899 was pushed to origin/main with ordinary non-force Git. After GitHub Pages propagation, the live landing served the requested copy, preserved both evidence deep links, removed the old public labels, and loaded all five checked internal destinations. Desktop width had no horizontal overflow. The final complete-suite rerun passed 926 tests with 3 platform-limited skips; task and repository governance had no FAIL, and JSON plus diff checks passed. The controlled browser could not resize, so no new phone-width or actual-device result is claimed; genuine unbriefed-reader comprehension also remains unknown. The existing Pages path and human-authority boundary were preserved, and no PR, release, force push, Sites migration, new hosting project, product change, or user-configuration change occurred. The task is paused after the documentation-only closeout.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Publish the already validated landing copy cleanup through the existing direct-main GitHub Pages path, verify the live English page at desktop and mobile widths, and record a documentation-only publication closeout."
+  },
+  "risk": {
+    "items": [
+      "Remote main may have advanced.",
+      "GitHub Pages propagation may briefly serve cached content.",
+      "Exact mobile viewport control may be unavailable in the browser session.",
+      "Reviewed assumption: The existing GitHub Pages publication path remains origin main.",
+      "Reviewed assumption: The earlier complete validation remains applicable because publication does not alter the validated landing source.",
+      "Reviewed assumption: Detailed version provenance remains discoverable on deeper evidence surfaces.",
+      "Reviewed unknown: GitHub Pages propagation delay.",
+      "Reviewed unknown: Whether exact viewport resizing is supported in the current browser."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "docs/index.html",
+      "tests",
+      "src",
+      "README.md",
+      "docs/quickstart.html",
+      "docs/quickstart.zh-CN.html",
+      ".github"
+    ],
+    "include_paths": [
+      "STATUS.md",
+      "docs/development-log/2026-08-18.md",
+      "governance/tasks/p0-landing-copy-publish-v1.json"
+    ]
+  },
+  "task_id": "p0-landing-copy-publish-v1",
+  "title": "Publish and verify landing copy cleanup",
+  "validation_commands": [
+    "git status -sb",
+    "git fetch origin",
+    "git rev-list --left-right --count origin/main...HEAD",
+    "git show --stat --oneline HEAD",
+    "git push origin HEAD:main",
+    "Inspect the public GitHub Pages URL at desktop and mobile widths.",
+    "git diff --check"
+  ]
+}
