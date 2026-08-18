@@ -16,8 +16,8 @@
   "contract": "agentgov.development-task",
   "decision": {
     "decided_by": "Human product owner",
-    "rationale": "The accountable human reviewed structured proposal prp-07dc25ee7b5b4610b7af1c197a107cd9 and admitted that exact task through an explicit admission control.",
-    "state": "admitted"
+    "rationale": "The accountable human reviewed structured proposal prp-07dc25ee7b5b4610b7af1c197a107cd9 and admitted that exact task through an explicit admission control. Publication task v1 was preserved paused after its self-referential one-commit evidence model was found before staging. Under v2, all 55 directly affected tests and all 926 repository tests passed with 3 platform-limited skips; task and repository governance had no FAIL; scope accepted all 16 intended paths and rejected only excluded, untouched .codex configuration; and secret-pattern and diff checks passed. Source commit fb9771d0b30299075f4eb2d58ac82f46243df5c0 was pushed by ordinary non-force Git to origin/main. After propagation, the existing public Pages landing served Set the boundaries, and both Quickstarts served their goal-first content, real stable output, development boundary, Adapter link, and replay-safety link at the available desktop viewport. Online phone-width behavior and genuine unbriefed-reader comprehension remain unknown. The task is paused after the documentation-only closeout with no further Git, publication, release, deployment, hosting, PR, or user-configuration authority.",
+    "state": "paused"
   },
   "owner": "Human product owner",
   "profile": "compact",

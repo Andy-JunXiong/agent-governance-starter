@@ -42,9 +42,10 @@ scheduling authority.
 
 ### Current closeout snapshot
 
-- **Active slice**: none. Task `p0-quickstart-ia-cleanup-v3` is paused after
-  the bilingual Quickstart information-architecture cleanup, validation, local
-  desktop browser acceptance, and a bounded current-Agent advisory review.
+- **Active slice**: none. Publication task
+  `p0-quickstart-ia-publication-v2` is paused after the bilingual Quickstart
+  cleanup, direct-main publication, online desktop acceptance, evidence
+  closeout, and a bounded current-Agent advisory review.
 - **Delivered journey**: the landing page keeps its existing Hero, report
   preview, four-section narrative, and visual structure; its first workflow
   step now says `Set the boundaries`. English and Chinese Quickstarts now lead
@@ -63,21 +64,30 @@ scheduling authority.
   English and Chinese HTML expose the same ten-section semantic order, and the
   existing public-journey tests confirm internal-link targets. `git diff
   --check` passes.
-- **Browser acceptance**: at the available 1730 x 1205 local browser viewport,
-  the landing page and both Quickstarts loaded with the expected titles,
-  headings, navigation, version boundary, goal cards, stable commands, human
-  boundary, development links, and readable English and Chinese rendering. No
-  material desktop clipping or encoding regression was observed. The browser
-  exposed no supported viewport-resize operation, so this session does not
-  claim a new phone-width Quickstart result.
-- **Governance validation**: before pause, task governance reported `PASS=3
-  WARN=1 FAIL=0 ADVISORY=3`; repository governance reported `PASS=26 WARN=2
-  FAIL=0 ADVISORY=4`. Scope accepted 11 task-owned changed paths and rejected
-  only four explicitly excluded, preserved paths: user-owned `.codex`, the
-  prior publication-closeout record, and paused Quickstart tasks v1 and v2. No
-  exception or ownership transfer was inferred. The final paused task check
-  reports `PASS=2 WARN=2 FAIL=0 ADVISORY=3`; post-pause scope checking correctly
-  refuses because implementation is no longer admitted.
+- **Publication**: human-authorized source commit
+  `fb9771d0b30299075f4eb2d58ac82f46243df5c0` was pushed by ordinary
+  non-force Git to `origin/main`. Local `HEAD` and `origin/main` then matched.
+  The existing GitHub Pages site propagated that content; no pull request,
+  package release, force push, Sites deployment, new hosting project, or
+  non-Pages deployment was created.
+- **Browser acceptance**: after Pages propagation, the public landing served
+  `Set the boundaries`. At the available 1730 x 1205 online viewport, its root
+  and body client widths and scroll widths all matched at 1715 pixels. The
+  English and Chinese Quickstarts served their expected titles and headings,
+  four goal choices, real stable `SUMMARY CREATE=26 PRESERVE=0` output,
+  development preview, Adapter link, replay-safety link, and non-empty bodies.
+  The rendered Chinese screenshot showed no observed clipping or encoding
+  regression. The browser exposed no supported viewport-resize operation, so
+  this session does not claim a new online phone-width result.
+- **Governance validation**: before source publication, task v2 governance
+  reported `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance reported
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Scope accepted all 16 intended paths and
+  rejected only the explicitly excluded, preserved `.codex/config.toml`; no
+  exception or ownership transfer was inferred. Publication v1 was paused
+  before staging when its one-commit acceptance model proved self-referential.
+  The final paused v2 task check reports `PASS=2 WARN=2 FAIL=0 ADVISORY=3`;
+  post-pause scope checking correctly refuses because implementation is no
+  longer admitted.
 - **Advisory review**: the cleanup preserves stable/prerelease/development
   maturity distinctions, provenance deep links, exact non-authority wording,
   bilingual order, and the frozen landing-page structure. No
@@ -89,10 +99,11 @@ scheduling authority.
   unknown. A new phone-width or actual-device pass over both Quickstarts also
   remains pending because the available browser could not change viewport.
 - **Incomplete**: none inside the admitted local implementation scope.
-- **Git and publication boundary**: this cleanup is local and uncommitted. It
-  authorizes no commit, push, pull request, Pages publication, package release,
-  deployment, or Sites hosting. Existing unrelated and user-owned local
-  changes remain preserved.
+- **Git and publication boundary**: the simplified landing and bilingual
+  Quickstarts are public through the existing Pages site. This closeout grants
+  no further commit, push, pull request, publication, package release,
+  deployment, hosting, or user-configuration authority. User-owned `.codex`
+  remains local, untracked, and unchanged.
 - **Blocker / stop condition**: stop before claiming improved comprehension,
   adoption, hiring, or conversion without real reader evidence; stop before
   Git or publication action without a separate human decision.
