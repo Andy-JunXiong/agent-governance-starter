@@ -1,0 +1,74 @@
+{
+  "acceptance_signals": [
+    "STATUS records commit a75b4456ee8e9f0a43501cfc00bd9d54ebfcd76b as pushed to origin/main and the public Pages URL as serving the new title and hero.",
+    "STATUS and the dated log record the online desktop viewport, no-horizontal-overflow result, four-section structure, five visible navigation destinations, and successful navigation to six internal targets.",
+    "The closeout clearly distinguishes the previously completed local 390 by 844 responsive acceptance from the blocked online mobile emulation attempt and does not claim online phone-width acceptance.",
+    "The closeout records that genuine unbriefed-reader comprehension remains unknown and that no Agent simulation was substituted for a human.",
+    "The task pauses after task governance, repository governance, scope reconciliation, and git diff validation report no unresolved deterministic failure.",
+    "No homepage, report, test, README, runtime, release, deployment configuration, user configuration, or historical record is modified."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-80343b61405146ffa9c38a17600e5586 and admitted that exact task through an explicit admission control. STATUS and the dated log now record that human-authorized commit a75b4456ee8e9f0a43501cfc00bd9d54ebfcd76b was pushed by ordinary non-force Git to origin/main and is served by the public Pages URL. Online desktop acceptance found no horizontal overflow, the expected four-section journey and five navigation destinations, and six working internal targets. The prior local 390 by 844 result remains distinct: online mobile emulation was blocked by the browser security policy, so actual online phone behavior remains unknown. No unbriefed human reader participated and no Agent proxy was substituted. Before pause, task governance reported PASS=3 WARN=1 FAIL=0 ADVISORY=3, repository governance reported PASS=26 WARN=2 FAIL=0 ADVISORY=4, and git diff validation passed. Scope accepted all three task-owned paths and rejected only excluded, untouched .codex configuration. The task is paused with no further commit, push, publication, release, deployment, PR, or user-configuration authority.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Update only the current status, dated development log, and this task record to reflect the already completed direct-main publication of the validated plain-language landing page, its evidence-bounded online acceptance, the browser security-policy limitation on online mobile emulation, and the still-unknown genuine unbriefed-reader result."
+  },
+  "risk": {
+    "items": [
+      "A closeout record could overstate desktop browser evidence as online mobile acceptance.",
+      "A closeout could imply genuine reader understanding without any human answers.",
+      "The publication commit contains pre-publication wording that must be superseded, not rewritten as if it had never been true.",
+      "The unrelated user-owned .codex directory must remain untouched.",
+      "This task authorizes only local closeout documentation edits and its own task record; it does not authorize another commit, push, publication, release, deployment, or PR.",
+      "Reviewed assumption: The direct Git push and public Pages rendering are already completed external facts.",
+      "Reviewed assumption: The browser security policy is an environmental limitation, not a product failure.",
+      "Reviewed assumption: The prior local 390 by 844 and 1440 by 900 acceptance remains valid evidence for the committed page content.",
+      "Reviewed assumption: A separate human reader is required for the unbriefed comprehension test.",
+      "Reviewed unknown: Whether the public page behaves correctly on an actual phone remains unknown in this session.",
+      "Reviewed unknown: Whether an unbriefed ordinary reader can explain AgentGov accurately remains unknown until a human responds.",
+      "Reviewed unknown: No hiring, adoption, or conversion improvement is established."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "README.md",
+      "docs/index.html",
+      "docs/demo-governance-report.html",
+      "tests",
+      "src",
+      "governance/tasks/p0-plain-language-landing-page-v1.json",
+      "governance/tasks/p0-plain-language-landing-page-closeout-correction-v1.json",
+      "docs/adr",
+      "docs/releases",
+      "pyproject.toml",
+      "CHANGELOG.md",
+      "DEVELOPMENT_PLAN.md"
+    ],
+    "include_paths": [
+      "STATUS.md",
+      "docs/development-log/2026-08-18.md",
+      "governance/tasks/p0-plain-language-landing-publication-closeout-v1.json"
+    ]
+  },
+  "task_id": "p0-plain-language-landing-publication-closeout-v1",
+  "title": "Record plain-language landing publication closeout",
+  "validation_commands": [
+    "git diff --check",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-plain-language-landing-publication-closeout-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check scope governance/tasks/p0-plain-language-landing-publication-closeout-v1.json --repository .",
+    "git status -sb",
+    "Confirm the public Pages URL serves the new title and hero and that the six recorded internal targets load.",
+    "Confirm no online mobile-width result is claimed beyond available evidence."
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "acceptance_signals": [
+    "The landing page keeps its current Hero, four-section main journey, CTAs, report preview, and visual structure; only the first workflow step is clarified as setting boundaries with equally compact supported wording.",
+    "Both Quickstart languages open with concise goal-oriented entry points for adopting an existing repository, starting a new repository, generating a report, and inspecting development features.",
+    "Stable install, inspect or preview, adopt or initialize, check, report, human-review boundary, and continue-reading paths appear before any detailed development material.",
+    "The existing long automatic-product, Adapter-version, MCP, and replay-safety prose no longer interrupts the stable onboarding path and remains reachable through accurate existing deep links rather than being deleted as provenance.",
+    "The development preview is one compact, clearly separated notice that distinguishes stable 0.2.1, published 0.3.0rc1, development source, installed state, and unproven state without presenting a development capability as stable.",
+    "One or at most two short expected-output examples use output captured from real current supported commands; dry-run output uses PLAN rather than invented CREATE action lines and explicitly states that no repository files were changed.",
+    "The one-command update material is secondary to the stable first-adoption journey rather than interrupting it.",
+    "Passing checks remain visibly non-authoritative for merge, release, publication, or deployment, and unrelated repository instructions or files are not described as silently overwritten.",
+    "English and Chinese pages remain semantically aligned, all internal links resolve, accessibility basics remain present, and no unrendered template or encoding regression is introduced.",
+    "The Quickstart main prose is materially shorter than the current approximately 1662-word English surface without replacing development prose with a terminal wall.",
+    "Relevant site and documentation tests, the complete suite, repository and task governance, scope reconciliation, git diff validation, and phone and desktop browser acceptance complete with unresolved gaps reported.",
+    "README current entry, STATUS current reality, and the dated development log are updated only where the user journey or closeout state requires it."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-0a37494230c441f6971848782e3f081c and admitted that exact task through an explicit admission control. Pre-implementation inspection found that the proposed scope and validation command named nonexistent tests/test_public_surface_freshness.py instead of the repository's actual tests/test_public_documentation_freshness.py. No page, README, test, status, log, Git, publication, release, deployment, PR, Sites-hosting, or user-configuration change was made under this task. The task is paused fail-closed and must not authorize the corrected path; a separately reviewed replacement is required.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Preserve the current low-density landing-page structure while changing only its first workflow label from recording a request to setting boundaries. Reorganize the English and Chinese Quickstart pages around stable user goals, exact commands, and short expected results; move development roadmap, Adapter history, and replay-safety detail out of the primary onboarding path into one concise development-preview disclosure with accurate deep links. Use real supported command output and preserve every provenance and human-authority boundary."
+  },
+  "risk": {
+    "items": [
+      "Moving development detail could accidentally delete provenance or make maturity boundaries harder to find.",
+      "A goal-oriented command chain could combine commands whose stable availability or syntax differs.",
+      "Dry-run output could be copied from the wrong repository state or imply that planned files were created.",
+      "English and Chinese Quickstart pages could drift semantically.",
+      "The previous dense homepage could be reintroduced through proof blocks or engineering badges.",
+      "Existing uncommitted publication-closeout records and user-owned .codex configuration must remain preserved and outside new Git authority.",
+      "Reviewed assumption: Stable 0.2.1 remains the supported installation and adoption path.",
+      "Reviewed assumption: Existing documentation pages are sufficient destinations for moved development, Adapter, automatic-product, and replay-safety detail.",
+      "Reviewed assumption: Existing guide CSS components can express the goal-oriented structure without a new visual redesign.",
+      "Reviewed assumption: No homepage terminal output or engineering proof strip is part of this task.",
+      "Reviewed assumption: This task authorizes local repository edits and validation only, not commit, push, publication, release, deployment, PR, or Sites hosting.",
+      "Reviewed unknown: Genuine first-time-reader comprehension remains unknown until a human test occurs.",
+      "Reviewed unknown: Whether every development detail has one ideal deeper owner may require evidence-bounded link selection during implementation.",
+      "Reviewed unknown: No adoption, hiring, conversion, or population-level usability improvement is established by this change.",
+      "Reviewed assumption: The user's instruction to proceed adopts the previously recommended Quickstart-first execution order and defers homepage proof additions.",
+      "Reviewed assumption: The current landing-page narrative and visual design remain frozen.",
+      "Reviewed assumption: The existing stable commands can be verified from the current source and tests without changing CLI behavior.",
+      "Reviewed assumption: Both English and Chinese public Quickstart pages are required sources of truth.",
+      "Reviewed unknown: A real unbriefed-reader result is not available in this session.",
+      "Reviewed unknown: Publication of the completed local change will require a separate explicit human decision."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "src",
+      "pyproject.toml",
+      "CHANGELOG.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/demo-governance-report.html",
+      "docs/guide.css",
+      "docs/guide.js",
+      "docs/adr",
+      "docs/releases",
+      "governance/schemas",
+      "governance/fixtures",
+      "governance/tasks/p0-plain-language-landing-publication-closeout-v1.json"
+    ],
+    "include_paths": [
+      "docs/index.html",
+      "docs/quickstart.html",
+      "docs/quickstart.zh-CN.html",
+      "tests/test_product_site.py",
+      "tests/test_user_documentation.py",
+      "tests/test_public_surface_freshness.py",
+      "README.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-18.md",
+      "governance/tasks/p0-quickstart-ia-cleanup-v1.json"
+    ]
+  },
+  "task_id": "p0-quickstart-ia-cleanup-v1",
+  "title": "Simplify the bilingual Quickstart journey",
+  "validation_commands": [
+    "git status -sb",
+    "git diff --check",
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_product_site tests.test_user_documentation tests.test_public_surface_freshness -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-quickstart-ia-cleanup-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check scope governance/tasks/p0-quickstart-ia-cleanup-v1.json --repository .",
+    "Run the supported adopt dry-run and first repository check against temporary fixtures and capture exact output.",
+    "Verify every Quickstart internal link and compare English and Chinese section order.",
+    "Inspect the landing and both Quickstart pages at phone and desktop browser viewports."
+  ]
+}

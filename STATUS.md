@@ -42,6 +42,135 @@ scheduling authority.
 
 ### Current closeout snapshot
 
+- **Active slice**: none. Task `p0-quickstart-ia-cleanup-v3` is paused after
+  the bilingual Quickstart information-architecture cleanup, validation, local
+  desktop browser acceptance, and a bounded current-Agent advisory review.
+- **Delivered journey**: the landing page keeps its existing Hero, report
+  preview, four-section narrative, and visual structure; its first workflow
+  step now says `Set the boundaries`. English and Chinese Quickstarts now lead
+  with four user goals, keep the stable install/adopt/check/report path ahead
+  of development material, and route automatic-product, Adapter, drift-review,
+  and replay detail to a compact development preview with exact deep links.
+  The Chinese Markdown guide follows the same order.
+- **Command evidence**: stable `0.2.1` was exported from its Git tag into an
+  isolated temporary directory. Its real empty-repository adopt preview
+  reported `SUMMARY CREATE=26 PRESERVE=0`, used `PLAN` lines, stated that the
+  dry run changed no repository files, and retained the non-authority note.
+  No temporary fixture remains.
+- **Codex-run validation**: all 55 directly affected product-site,
+  user-documentation, public-freshness, and interview-documentation tests pass.
+  The complete suite passes all 926 tests with 3 platform-limited skips.
+  English and Chinese HTML expose the same ten-section semantic order, and the
+  existing public-journey tests confirm internal-link targets. `git diff
+  --check` passes.
+- **Browser acceptance**: at the available 1730 x 1205 local browser viewport,
+  the landing page and both Quickstarts loaded with the expected titles,
+  headings, navigation, version boundary, goal cards, stable commands, human
+  boundary, development links, and readable English and Chinese rendering. No
+  material desktop clipping or encoding regression was observed. The browser
+  exposed no supported viewport-resize operation, so this session does not
+  claim a new phone-width Quickstart result.
+- **Governance validation**: before pause, task governance reported `PASS=3
+  WARN=1 FAIL=0 ADVISORY=3`; repository governance reported `PASS=26 WARN=2
+  FAIL=0 ADVISORY=4`. Scope accepted 11 task-owned changed paths and rejected
+  only four explicitly excluded, preserved paths: user-owned `.codex`, the
+  prior publication-closeout record, and paused Quickstart tasks v1 and v2. No
+  exception or ownership transfer was inferred. The final paused task check
+  reports `PASS=2 WARN=2 FAIL=0 ADVISORY=3`; post-pause scope checking correctly
+  refuses because implementation is no longer admitted.
+- **Advisory review**: the cleanup preserves stable/prerelease/development
+  maturity distinctions, provenance deep links, exact non-authority wording,
+  bilingual order, and the frozen landing-page structure. No
+  correction-required requirement, architecture, scope, implementation,
+  security, or data drift was observed. The task was fully specified and did
+  not start an alignment journey, so this does not claim native self-review or
+  an independent reviewer.
+- **Pending validation**: genuine unbriefed-reader comprehension remains
+  unknown. A new phone-width or actual-device pass over both Quickstarts also
+  remains pending because the available browser could not change viewport.
+- **Incomplete**: none inside the admitted local implementation scope.
+- **Git and publication boundary**: this cleanup is local and uncommitted. It
+  authorizes no commit, push, pull request, Pages publication, package release,
+  deployment, or Sites hosting. Existing unrelated and user-owned local
+  changes remain preserved.
+- **Blocker / stop condition**: stop before claiming improved comprehension,
+  adoption, hiring, or conversion without real reader evidence; stop before
+  Git or publication action without a separate human decision.
+- **Next product review**: give the revised Quickstart to one genuinely
+  unbriefed reader and ask what they would run first, what the dry run changes,
+  and who approves the result. Use the observed misunderstanding, if any, to
+  decide the next requirement with the human product owner.
+
+### Superseded closeout snapshot - plain-language landing publication
+
+- **Active slice**: none. Documentation-only task
+  `p0-plain-language-landing-publication-closeout-v1` is paused after recording
+  the completed direct-main publication, evidence-bounded online acceptance,
+  validation, and remaining human/device unknowns. It owned only this status,
+  the dated development log, and its task record.
+- **Publication**: human-selected commit
+  `a75b4456ee8e9f0a43501cfc00bd9d54ebfcd76b` was created from the eight
+  confirmed landing, test, documentation, and task-record paths and pushed by
+  ordinary non-force Git to `origin/main`. Local `HEAD` and `origin/main` both
+  resolve to that commit. The public Pages URL now serves the title
+  `AgentGov — Keep humans in control of AI-written code` and the matching Hero.
+  No pull request, package release, force push, or non-Pages deployment was
+  created.
+- **Online acceptance**: at the available 1730 x 1205 online browser viewport,
+  the rendered page had matching 1715-pixel root/body client and scroll widths,
+  no document-level horizontal overflow, the expected two-column Hero, four
+  main sections, and five visible navigation destinations. The six checked
+  internal targets loaded with their expected final URLs and non-empty page
+  bodies: Quickstart, evidence boundary, sample report, interview walkthrough,
+  Chinese Quickstart, and recovery evidence. The rendered desktop screenshot
+  showed no observed clipping or material visual regression.
+- **Mobile boundary**: the committed page content had already passed local
+  browser acceptance at 390 x 844 and 1440 x 900 before publication. The
+  in-app browser available for online acceptance exposed a 1730-pixel viewport
+  and no supported viewport-resize operation. Its security policy rejected the
+  attempted isolated 390 x 844 browsing context and explicitly prohibited
+  alternate-browser or indirect circumvention. Therefore this closeout does
+  not claim online phone-width or actual-device acceptance; that result remains
+  unknown.
+- **Governance validation**: before documentation closeout, the admitted task
+  reported `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance reported
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; and `git diff --check` passed. Scope
+  accepted the task-owned record and rejected only the explicitly excluded,
+  user-owned `.codex/config.toml`; no exception or ownership transfer was
+  inferred. After the documentation edits, scope reported `PASS=3 FAIL=1`,
+  accepting all three task-owned paths and rejecting only that excluded user
+  configuration. The final paused task check reports `PASS=2 WARN=2 FAIL=0
+  ADVISORY=3`; post-pause scope checking correctly refuses because
+  implementation is no longer admitted.
+- **User-reported validation**: the human selected the publish direction and
+  explicitly authorized the bounded commit, direct push to `origin/main`, and
+  existing GitHub Pages publication. No user-run phone or reader result has
+  been reported.
+- **Advisory review**: the publication and closeout preserved the admitted page
+  content, direct-main Pages boundary, excluded `.codex` configuration, and
+  the distinction between deterministic rendering evidence and human
+  comprehension. No correction-required requirement, architecture, scope,
+  implementation, security, or data drift was observed. This does not claim
+  an independent reviewer or a genuine-reader result.
+- **Pending validation**: genuine unbriefed-reader comprehension remains
+  unknown until a person sees the public page without coaching and answers the
+  neutral reader questions. An Agent simulation was not substituted. Actual
+  online phone-width behavior also remains unknown in this session.
+- **Incomplete**: none inside the publication action or admitted documentation
+  closeout.
+- **Publication boundary**: the simplified landing is public at the existing
+  Pages URL. No further commit, push, publication, package release, deployment,
+  PR, or user-configuration action is authorized by the closeout task.
+- **Blocker / stop condition**: stop before claiming improved comprehension,
+  phone acceptance, hiring, adoption, or conversion without the corresponding
+  human or device evidence. Stop before any further Git or publication action.
+- **Next product review**: run one genuine unbriefed-reader test using the
+  public URL, then decide with the human product owner whether any remaining
+  misunderstanding warrants a new requirement. That review grants no
+  follow-on authority.
+
+### Superseded closeout snapshot - local plain-language landing
+
 - **Active slice**: none. Task `p0-plain-language-landing-page-v1` is paused
   after implementation, complete validation, local responsive acceptance, and
   a distinct bounded current-Agent review. Documentation-only correction task

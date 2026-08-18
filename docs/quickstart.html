@@ -29,78 +29,55 @@
   <main class="shell">
     <section class="emphasis">
       <h2>Before you start</h2>
-      <p>Open a terminal at the root of the repository you want to govern. Use Python 3.11 or newer and ensure <code>pipx</code> is available. A passing static check means a declared deterministic contract ran successfully; it does not authorize merge, release or deployment.</p>
+      <p>Open a terminal at the repository root. Use Python 3.11 or newer and ensure <code>pipx</code> is available. A passing check means a declared deterministic contract ran; it does not authorize merge, publication, release, or deployment.</p>
     </section>
     <section>
-      <h2>1. Install</h2>
-      <p>Run these commands from the repository you want to govern. They install the published stable 0.2.1 package without copying the starter source tree into your repository.</p>
+      <h2>Choose your goal</h2>
+      <div class="states">
+        <a class="state" href="#existing"><strong>Adopt AgentGov in an existing repository</strong><code>inspect → adopt --dry-run → adopt → check</code></a>
+        <a class="state" href="#new"><strong>Start a new governed repository</strong><code>init → check</code></a>
+        <a class="state" href="#report"><strong>Generate a governance report</strong><code>check → report</code></a>
+        <a class="state" href="#development"><strong>Inspect development features</strong>Skip the stable path and open the separate maturity and evidence links.</a>
+      </div>
+    </section>
+    <section id="install">
+      <h2>1. Install stable 0.2.1</h2>
+      <p>Install the published stable package without copying this starter source tree into the repository you want to govern.</p>
       <pre><code>python --version
 pipx install "https://github.com/Andy-JunXiong/agent-governance-starter/releases/download/v0.2.1/agent_governance_starter-0.2.1-py3-none-any.whl"
 agentgov --version
-agentgov --help</code></pre><p>Running <code>agentgov</code> without arguments is also a safe, read-only orientation surface. It points first-time users to <code>doctor</code>, <code>next</code>, and <code>status</code> without inspecting or modifying the repository.</p>
-      <h3>Run without installing</h3>
-      <p>For starter-kit development, clone it into a separate, short path. Then run one of these alternatives from that clone's root, where the <code>src</code> directory exists. Do not clone the starter inside the repository being governed.</p>
+agentgov --help</code></pre>
+      <h3>Run from source only when developing the starter</h3>
+      <p>Clone the starter into a separate short path. Do not clone the starter inside the governed repository. Then run from the clone root:</p>
       <div class="platforms">
         <div><strong>PowerShell</strong><pre><code>$env:PYTHONPATH = "src"
 python -m agentgov --help</code></pre></div>
         <div><strong>Bash / zsh</strong><pre><code>PYTHONPATH=src python -m agentgov --help</code></pre></div>
       </div>
     </section>
-    <section>
-      <h2>Guided onboarding development preview</h2>
-      <p>After installation, the current development build also provides a state-dependent path. It has passed an isolated automated Windows rehearsal, but it has not yet completed a fresh uncoached human pilot and therefore does not replace the primary steps that follow.</p>
-      <pre><code>agentgov doctor .
-agentgov onboard . --project-name "My Project" --dry-run
-agentgov onboard . --project-name "My Project"
-agentgov next .</code></pre>
-      <p><code>doctor</code> and <code>next</code> are read-only. Interactive <code>onboard</code> writes only after exact <code>ADOPT</code> from a real terminal, runs the first repository check, and never treats redirected or non-interactive input as write authority.</p>
-    </section>
-    <section class="emphasis">
-      <h2>Accepted automatic product direction</h2>
-      <p>The manual development command sequence is a development and fallback interface, not the intended ordinary-user journey. The approved next product lets a user request work through a coding agent while AgentGov automatically coordinates context, scope, pre-approved validation, fresh evidence, Monitor and Dashboard updates, and interrupts only at real semantic or authority boundaries.</p>
-      <p>This automatic experience and its Live Sessions, Protection Events, Benefit and Learning views are not implemented in stable 0.2.1 or as the primary v0.3.0rc1 UI. See the <a href="product-requirements-automatic-governance.html">approved product requirements</a>.</p>
-      <p>Development source also includes the combined drift-review reminder. After three verified tasks or seven days, the foreground surface and Monitor show a non-blocking advisory review request; future workflow versions add the same scheduled GitHub warning and summary without failing the job. Published 0.2.1 and v0.3.0rc1 remain unchanged. See <a href="drift-review-reminders.html">drift review reminders</a>.</p>
-      <p>Development source now includes the <code>agentgov dev</code> coordinator, a strict foreground <code>--stream</code> JSONL transport, locally derived scope observations, admitted validation, completion reconciliation, human-reviewed handoff, Dashboard refresh, bounded task/scope/completion cards, a vendor-neutral host-interaction request, and the first packaged Codex lifecycle-hook Adapter. It also includes risk-based request routing: questions, explanations, status queries, and read-only diagnosis need no task; exact active-task iteration is not readmitted; a Git-tracked clean human-owned policy can fast-track only its bounded low-risk envelope with zero interruptions; material work requires review. Preview with <code>agentgov route request request.json --policy governance/admission-policy.json --repository .</code>. For planned low-risk review, add <code>--prompt-human</code>: AgentGov proactively explains the decision and accepts one number for approve, change, or reject, without requiring <code>ADMIT</code> or free text. When meaning is unsettled, the vendor-neutral clarification protocol keeps the current center and advisory drift visible, asks one natural-language question per turn, stores only normalized rolling summaries, and waits for stable options before that final selection. The same <code>agentgov dev --stream</code> connection now accepts strict normalized alignment context and human updates, then automatically returns the next question or final choice; its dialogue is foreground-memory-only and does not survive restart. A host-side reference Alignment Adapter now rehearses an ordinary request, one natural-language answer, and one final selection with zero user-authored JSON or internal commands; its replaceable host materializer performs semantic interpretation, not Core. Development source now also implements strict vendor-neutral Provider-capability, low/medium/high risk-route, and digest-bound advisory-result contracts. Medium risk binds the active Coding Agent self-review with no new account; high risk binds a qualifying independent Reviewer or returns exactly three unselected human choices without silent downgrade. The resolved Alignment Adapter can now invoke one host-neutral active-Agent self-review callback with normalized ephemeral context and an evidence allow-list, then accept only the exact advisory result. Codex and Claude Code fixtures use the same path. AgentGov makes no model, credential, or network call; a native production host callback remains open. The exact <code>ADMIT</code> proposal path remains a recovery fallback and does not start development. Codex Prompt Hooks discard the prompt and return routing and decision context rather than forcing every message through admission; they still cannot record trusted custom buttons. Native authenticated decision recording and additional host adapters remain open.</p>
-      <p>The active-Agent self-review is carried by the same foreground stream as a strict start/request/draft/completed exchange. These are host Adapter records: ordinary users provide no extra confirmation or JSON and configure no second model. AgentGov makes no model or network call. Adapter <code>1.2.4</code> completed this journey in the current Codex host; additional native host installations remain open.</p>
-      <p>Development source now also includes a foreground STDIO MCP Adapter with five base alignment and current-Agent self-review tools. Capability-gated Adapter <code>1.3.0</code> added <code>agentgov_task_proposal_review</code>; development source <code>1.4.0</code> adds <code>agentgov_drift_review_record</code> on the same native-form boundary. For drift review, the Agent supplies only one advisory candidate, exactly three normalized dimension observations, and repository-relative evidence. The human alone records that exact candidate, snoozes, or writes nothing; stale due state fails before a create-only record and success refreshes the local Monitor. Clients without form support still discover only the five base tools. Preview the create-missing-only Codex project config with <code>agentgov integrate codex-mcp . --dry-run</code>. Existing custom config is never overwritten and Codex trust remains separate. The exact <code>1.3.0</code> source remains the installed preflighted runtime; <code>1.4.0</code> is not installed or published by this change.</p>
-      <p>Development source Adapter <code>1.5.0</code> removes <code>owner</code> from the native proposal input and injects the canonical <code>Human product owner</code> role into the exact reviewed plan. Only the bound native admit response may persist that role as both <code>owner</code> and <code>decided_by</code>; an Agent-supplied owner fails before the form and writes nothing. This is human-role mediation, not cryptographic identification of the individual operator. The exact module is now installed only in the existing local AgentGov pipx development runtime and passed isolated no-model seven/form, five/base, hostile-owner, and accepted-admit preflight. It remains unpublished, unreleased, and inactive in consumers; the project configuration is unchanged, the previous module/launcher backups are retained, and no model or live replay ran.</p>
-    </section>
-    <section class="checklist">
-      <h2>Development-source replay safety preview</h2>
-      <p>The latest source separates three immutable evidence steps. These commands are preview-only because they omit <code>--apply</code>:</p>
-      <pre><code>$env:PYTHONPATH = "src"
-python -m agentgov reserve replay-correlation path/to/reservation-plan.json --repository path/to/consumer --format json
-python -m agentgov claim replay-correlation path/to/claim-plan.json --repository path/to/consumer --format json
-python -m agentgov recover replay-claim path/to/recovery-plan.json --repository path/to/consumer --format json</code></pre>
-      <p>Reservation establishes one correlation. Claim uses exclusive create for durable pre-run ownership. Recovery inspects exact bounded claim bytes and may create a separate immutable supersession record only after exact terminal <code>RECOVER</code>. It preserves the original reservation and claim, creates no replacement owner, and does not authorize replay, Git operations, publication, release, or deployment.</p>
-      <p>The claim and recovery registries must already exist; the commands create no scaffolding on a failure path. See the <a href="clean-target-replay-preflight.html">complete replay-safety guide</a> and the <a href="interview-guide.html">interview walkthrough</a>.</p>
-    </section>
-    <section>
-      <h2>One-command update</h2>
-      <pre><code>agentgov update .
-# Read-only alternative:
-agentgov update --check .</code></pre>
-      <p>The primary command discovers the latest stable GitHub Release, reports versions and repository compatibility, requests one exact <code>UPDATE</code> confirmation, verifies the wheel SHA-256, updates pipx, relaunches the new tool, applies the bounded repository change, and reruns validation. The check alternative never writes.</p>
-      <p>Progress is labeled <code>CHECK</code>, <code>PLAN</code>, <code>APPLY</code>, and <code>VALIDATE</code>. Final states distinguish <code>SUCCESS</code>, <code>CANCELLED</code>, <code>BLOCKED</code>, <code>INTERRUPTED</code>, <code>PARTIAL</code>, and <code>ERROR</code>. If a file was created before interruption or failed validation, the CLI lists it and prints one <code>RECOVERY</code> command.</p>
-    </section>
-    <section>
+    <section id="existing">
       <h2>2. Adopt an existing repository</h2>
-      <p>If your terminal is already at the target repository root, use <code>.</code>. Run one command at a time and review its output before continuing.</p>
+      <p>Run one command at a time. Inspect first, preview every planned file, then create only what is missing.</p>
       <pre><code>agentgov inspect .
 agentgov adopt . --project-name "My Project" --dry-run
 agentgov adopt . --project-name "My Project"
 agentgov check repository .</code></pre>
+      <p><strong>Selected real lines from a stable 0.2.1 empty-repository preview:</strong></p>
+      <pre><code>PLAN governance/contract.json
+PLAN AGENTS.md
+SUMMARY CREATE=26 PRESERVE=0
+NOTE adopt dry-run: no repository files were created or modified
+NOTE adopt: adoption does not authorize merge, publish, release, or deploy</code></pre>
       <div class="states">
-        <div class="state"><strong>PRESENT</strong>Preserve and review the existing governance path.</div>
-        <div class="state"><strong>MISSING</strong>Decide whether the adoption plan should create it.</div>
-        <div class="state"><strong>DISCOVERED</strong>Review another tool's repository instructions manually.</div>
-        <div class="state"><strong>CONFLICT</strong>Resolve the path type or symbolic-link conflict first.</div>
+        <div class="state"><strong>PRESENT</strong>Preserve the existing governance path.</div>
+        <div class="state"><strong>MISSING</strong>Review what the plan proposes to create.</div>
+        <div class="state"><strong>DISCOVERED</strong>Review another tool's instructions manually.</div>
+        <div class="state"><strong>CONFLICT</strong>Resolve the path or symbolic-link conflict first.</div>
       </div>
-      <p>The CLI does not overwrite regular files, merge CLAUDE.md or vendor instructions, or run Git commands.</p>
-      <p><strong>Expected first check:</strong> a newly adopted repository can report PASS with WARN and ADVISORY findings. Placeholders, draft seed cases, missing artifacts and human approval boundaries still require project-specific review. <code>FAIL=0</code> does not mean adoption is complete.</p>
+      <p>The CLI does not overwrite regular files, merge vendor instructions, or run Git. A first check may contain PASS, WARN, and ADVISORY findings; <code>FAIL=0</code> does not mean adoption or human review is complete.</p>
     </section>
-    <section>
-      <h2>3. Start a new repository</h2>
+    <section id="new">
+      <h2>3. Start a new governed repository</h2>
       <div class="platforms">
         <div><strong>PowerShell</strong><pre><code>$Project = Join-Path $PWD "governed-project"
 agentgov init $Project --project-name "My Project"
@@ -110,7 +87,7 @@ agentgov init "$PROJECT" --project-name "My Project"
 agentgov check repository "$PROJECT"</code></pre></div>
       </div>
     </section>
-    <section>
+    <section id="report">
       <h2>4. Check and generate a report</h2>
       <div class="platforms">
         <div><strong>PowerShell</strong><pre><code>agentgov check repository path/to/project
@@ -122,20 +99,38 @@ agentgov report repository path/to/project \
   --format html \
   --output path/to/project/governance-report.html</code></pre></div>
       </div>
+      <p>Open the report to see deterministic facts, incomplete evidence, and decisions that still require a person. Report generation does not authorize merge, publication, release, or deployment.</p>
     </section>
     <section class="checklist">
-      <h2>5. Human work still required</h2>
-      <ol><li>Replace or explicitly defer placeholders.</li><li>Resolve authority relationships among instruction files.</li><li>Declare real capability ownership, risk and human-review stages.</li><li>Add reviewed evaluation evidence.</li><li>Record accountable decisions for ADVISORY findings.</li></ol>
+      <h2>5. Complete the human work</h2>
+      <ol><li>Replace or explicitly defer placeholders.</li><li>Resolve authority relationships among instruction files.</li><li>Declare real capability ownership, risk, and human-review stages.</li><li>Add reviewed evaluation evidence.</li><li>Record accountable decisions for ADVISORY findings.</li></ol>
     </section>
     <section>
-      <h2>Continue reading</h2>
+      <h2>Continue with the stable path</h2>
       <div class="states">
-        <a class="state" href="existing-repository-adoption.html"><strong>Existing repository adoption</strong>Inspect, preview, and adopt governance safely.</a>
-        <a class="state" href="generated-files-guide.html"><strong>Generated files guide</strong>Understand and complete each governance artifact.</a>
+        <a class="state" href="existing-repository-adoption.html"><strong>Existing repository adoption</strong>Inspect, preview, and adopt safely.</a>
+        <a class="state" href="generated-files-guide.html"><strong>Generated files guide</strong>Complete each governance artifact.</a>
         <a class="state" href="troubleshooting.html"><strong>Troubleshooting</strong>Resolve installation, conflict, WARN, and ADVISORY cases.</a>
-        <a class="state" href="demo-governance-report.html"><strong>Explore a sample report</strong>See findings, actions, and human-review boundaries.</a>
-        <a class="state" href="interview-guide.html"><strong>Interview walkthrough</strong>Present the product, evidence, latest safety chain, and limitations in 5–10 minutes.</a>
+        <a class="state" href="demo-governance-report.html"><strong>Sample report</strong>See findings and human-review boundaries.</a>
       </div>
+    </section>
+    <section>
+      <h2>Maintain an adopted repository</h2>
+      <pre><code>agentgov update --check .
+# After reviewing the plan:
+agentgov update .</code></pre>
+      <p>The check is read-only. The update command still requires exact interactive confirmation, verifies the stable release, applies only its bounded plan, and reruns validation.</p>
+    </section>
+    <section id="development" class="emphasis">
+      <h2>Development preview</h2>
+      <p>Stable <code>0.2.1</code> remains the supported installation and adoption path. Published <code>0.3.0rc1</code> is a separate immutable prerelease snapshot. Development source adds coding-agent lifecycle, Adapter, drift-review, and replay-safety work with separate evidence boundaries. Locally installed or preflighted modules are not stable releases or consumer-active behavior, and a fresh uncoached primary-product pilot remains unproven.</p>
+      <div class="states">
+        <a class="state" href="product-requirements-automatic-governance.html"><strong>Automatic product direction</strong>Read the accepted outcome and what remains unimplemented.</a>
+        <a class="state" href="portfolio.html#boundary"><strong>Maturity and evidence boundary</strong>Separate stable, prerelease, development, installed, and unproven claims.</a>
+        <a class="state" href="https://github.com/Andy-JunXiong/agent-governance-starter/blob/main/docs/governance-mcp-adapter.md"><strong>Adapter details</strong>Inspect the exact development contract and host limits.</a>
+        <a class="state" href="clean-target-replay-preflight.html"><strong>Replay-safety evidence</strong>Inspect reservation, claim, recovery, and non-authority boundaries.</a>
+      </div>
+      <p>See also <a href="drift-review-reminders.html">drift-review reminders</a> and the <a href="interview-guide.html">guided evidence walkthrough</a>. None of these development records authorizes Git, merge, publication, release, replay, or deployment.</p>
     </section>
   </main>
   <footer class="shell">Agent Governance Starter Kit · Local · Repository-native · Human-controlled</footer>

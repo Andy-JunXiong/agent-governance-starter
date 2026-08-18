@@ -7,7 +7,9 @@ records what a coding agent was asked to change, checks whether the
 work stayed within those limits, and shows what still needs a human decision.
 The detailed governance contracts and development evidence remain in this
 README and the linked documentation; the public homepage now leads with the
-plain-language product story. Pull requests and CI remain an independent backstop.
+plain-language product story, while the bilingual Quickstart now leads with
+stable user goals, exact commands, and expected results. Pull requests and CI
+remain an independent backstop.
 
 [![CI](https://github.com/Andy-JunXiong/agent-governance-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/Andy-JunXiong/agent-governance-starter/actions/workflows/ci.yml)
 

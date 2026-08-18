@@ -1,0 +1,100 @@
+{
+  "acceptance_signals": [
+    "The intended commit contains only the validated landing clarification, bilingual Quickstart reorganization, directly related tests and documentation, and every governance record referenced by the current closeout.",
+    "User-owned .codex configuration and all other excluded paths remain unstaged and unchanged.",
+    "The directly affected 55 tests and complete 926-test suite remain passing with the same 3 platform-limited skips before publication.",
+    "Task and repository governance have no FAIL, git diff validation passes, and pre-commit scope reconciliation accepts every intended path while rejecting only explicitly excluded preserved user configuration.",
+    "The local branch is fetched and confirmed not to have unresolved remote divergence before commit.",
+    "One intentional commit is created on main and pushed with ordinary non-force Git to origin/main; no force push or pull request is used.",
+    "The existing GitHub Pages site serves the revised landing first-step wording and the English and Chinese goal-first Quickstarts after the push.",
+    "Online checks verify expected titles, key headings, version boundaries, development deep links, and non-empty page bodies without claiming a mobile viewport or genuine-reader result that was not observed.",
+    "STATUS, the dated development log, and the publication task record capture the exact commit, remote state, online evidence, remaining phone and reader unknowns, and publication boundary.",
+    "No package release, Sites deployment, new hosting project, PR, or user-configuration change occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-09f03908a35447bd9b314b7398f28296 and admitted that exact task through an explicit admission control. Before staging or Git writes, review found that the acceptance model required one commit while also requiring files inside that same commit to record its own final commit SHA and completed online acceptance. That self-referential evidence requirement cannot be satisfied honestly. No staging, commit, push, publication, release, deployment, PR, hosting, or user-configuration action occurred under this task. The task is paused fail-closed; a separately reviewed replacement must distinguish the source publication commit from the evidence closeout commit.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Publish the completed local bilingual Quickstart information-architecture cleanup to the existing GitHub Pages site by committing the exact validated page, documentation, tests, and referenced governance records on main, pushing with ordinary non-force Git to origin/main, verifying the public Pages surfaces, and recording an evidence-bounded publication closeout. Do not create a pull request, package release, new hosting project, deployment target, force push, or change user configuration."
+  },
+  "risk": {
+    "items": [
+      "A mixed worktree could cause unrelated user configuration to be staged.",
+      "Remote main could have advanced since the local validation.",
+      "Publishing only page files while omitting referenced governance records could make public status internally inconsistent.",
+      "GitHub Pages propagation could lag or serve cached content.",
+      "A new hosting or PR workflow could accidentally replace the established direct-main Pages path.",
+      "Publication evidence could overstate mobile or reader comprehension.",
+      "Reviewed assumption: The user's request to publish authorizes the bounded commit, ordinary direct push to origin/main, and the existing GitHub Pages publication path.",
+      "Reviewed assumption: The existing repository convention and prior publication establish main as the GitHub Pages source branch.",
+      "Reviewed assumption: The current mixed documentation changes are internally related because current status references the prior closeout and v1/v2/v3 task records.",
+      "Reviewed assumption: The previously completed validation remains valid unless the intended diff changes; publication closeout edits will receive direct governance and diff checks.",
+      "Reviewed assumption: Git transport authentication may be handled by the configured Git credential helper independently of GitHub CLI authentication.",
+      "Reviewed assumption: The GitHub PR-oriented skill is used only for safe scope and staging guidance because its branch-and-PR default conflicts with the repository-specific direct-main Pages publication procedure.",
+      "Reviewed assumption: The Sites hosting skill does not authorize migrating this existing GitHub Pages project or creating .openai/hosting.json.",
+      "Reviewed unknown: The exact Pages propagation delay after push is unknown.",
+      "Reviewed unknown: Online phone-width and actual-device behavior may remain unverified if the controlled browser cannot resize.",
+      "Reviewed unknown: Genuine unbriefed-reader comprehension remains unknown.",
+      "Reviewed unknown: No adoption, hiring, or conversion effect can be established by publication alone."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "src",
+      "pyproject.toml",
+      "CHANGELOG.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/guide.css",
+      "docs/guide.js",
+      "docs/adr",
+      "docs/releases",
+      "governance/schemas",
+      "governance/fixtures"
+    ],
+    "include_paths": [
+      "README.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-18.md",
+      "docs/index.html",
+      "docs/quickstart.html",
+      "docs/quickstart.zh-CN.html",
+      "docs/quickstart.zh-CN.md",
+      "tests/test_interview_documentation.py",
+      "tests/test_product_site.py",
+      "tests/test_user_documentation.py",
+      "governance/tasks/p0-plain-language-landing-publication-closeout-v1.json",
+      "governance/tasks/p0-quickstart-ia-cleanup-v1.json",
+      "governance/tasks/p0-quickstart-ia-cleanup-v2.json",
+      "governance/tasks/p0-quickstart-ia-cleanup-v3.json",
+      "governance/tasks/p0-quickstart-ia-publication-v1.json"
+    ]
+  },
+  "task_id": "p0-quickstart-ia-publication-v1",
+  "title": "Publish the simplified bilingual Quickstart",
+  "validation_commands": [
+    "git status -sb",
+    "git diff --check",
+    "git diff --name-only",
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_product_site tests.test_user_documentation tests.test_public_documentation_freshness tests.test_interview_documentation -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-quickstart-ia-publication-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check scope governance/tasks/p0-quickstart-ia-publication-v1.json --repository .",
+    "git fetch origin",
+    "git rev-list --left-right --count HEAD...origin/main",
+    "git diff --cached --check",
+    "git diff --cached --name-only",
+    "git push origin HEAD:main",
+    "Verify the existing public Pages landing, English Quickstart, and Chinese Quickstart with the controlled browser."
+  ]
+}

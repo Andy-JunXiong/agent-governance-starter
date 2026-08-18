@@ -75,28 +75,26 @@ class InterviewDocumentationTests(unittest.TestCase):
         ):
             self.assertIn(phrase, chinese)
 
-    def test_quickstarts_share_preview_only_replay_commands_and_boundaries(self) -> None:
+    def test_quickstarts_route_replay_detail_to_deep_evidence(self) -> None:
         surfaces = (
             DOCS / "quickstart.html",
             DOCS / "quickstart.zh-CN.html",
             DOCS / "quickstart.zh-CN.md",
         )
-        commands = (
-            "reserve replay-correlation",
-            "claim replay-correlation",
-            "recover replay-claim",
-        )
         for surface in surfaces:
             with self.subTest(surface=surface.name):
                 text = _normalized(surface)
                 self.assertIn(STABLE_WHEEL, text)
-                for command in commands:
-                    self.assertIn(command, text)
-                self.assertIn("--format json", text)
-                self.assertIn("replacement owner", text)
+                self.assertIn("clean-target-replay-preflight", text)
+                self.assertIn("reservation", text)
+                self.assertIn("claim", text)
+                self.assertIn("recovery", text)
                 self.assertIn("replay", text)
                 self.assertIn("Git", text)
                 self.assertIn("release", text)
+                self.assertNotIn("reserve replay-correlation", text)
+                self.assertNotIn("claim replay-correlation", text)
+                self.assertNotIn("recover replay-claim", text)
                 self.assertNotIn("releases/download/v0.1.0/", text)
 
     def test_public_pages_have_no_unrendered_templates_and_local_links_resolve(self) -> None:

@@ -27,50 +27,56 @@
     <p class="lead">先检查，再预览每次写入，只创建缺失的治理文件，最后审阅自动化无法决定的事项。</p>
   </header>
   <main class="shell">
-    <section>
-      <h2>一条命令完成更新</h2>
-      <pre><code>agentgov update .
-# 只读检查：
-agentgov update --check .</code></pre>
-      <p>主命令会发现最新稳定 GitHub Release、报告版本和仓库兼容性、只请求一次准确的 <code>UPDATE</code> 确认、校验 wheel 的 SHA-256、更新 pipx、启动新版工具、应用有边界的仓库变化并自动复检。只读命令永不写入。</p>
-      <p>进度按 <code>CHECK</code>、<code>PLAN</code>、<code>APPLY</code> 和 <code>VALIDATE</code> 展示。最终状态明确区分 <code>SUCCESS</code>、<code>CANCELLED</code>、<code>BLOCKED</code>、<code>INTERRUPTED</code>、<code>PARTIAL</code> 和 <code>ERROR</code>。如果中断或验证失败前已经创建文件，CLI 会列出该文件并提供一条 <code>RECOVERY</code> 恢复命令。</p>
-    </section>
     <section class="emphasis">
       <h2>开始之前</h2>
-      <p>在需要治理的仓库根目录打开终端，使用 Python 3.11 或更新版本，并确认 <code>pipx</code> 可用。静态检查通过只表示声明的确定性契约成功执行；它不授权合并、发布或部署。</p>
+      <p>在仓库根目录打开终端，使用 Python 3.11 或更新版本，并确认 <code>pipx</code> 可用。检查通过只表示声明的确定性契约成功执行；它不授权合并、发布、release 或部署。</p>
     </section>
     <section>
-      <h2>1. 安装</h2>
-      <p>请从需要治理的仓库运行以下命令。它们会把已发布的稳定版 0.2.1 安装到隔离的 pipx 环境，而不会把 starter 源码复制进被治理仓库。</p>
+      <h2>选择你的目标</h2>
+      <div class="states">
+        <a class="state" href="#existing"><strong>在已有仓库接入 AgentGov</strong><code>inspect → adopt --dry-run → adopt → check</code></a>
+        <a class="state" href="#new"><strong>创建新的治理仓库</strong><code>init → check</code></a>
+        <a class="state" href="#report"><strong>生成治理报告</strong><code>check → report</code></a>
+        <a class="state" href="#development"><strong>查看开发功能</strong>跳过稳定路径，直接查看独立的成熟度与证据链接。</a>
+      </div>
+    </section>
+    <section id="install">
+      <h2>1. 安装稳定版 0.2.1</h2>
+      <p>安装已发布的稳定包，而不把 starter 源码复制进被治理仓库。</p>
       <pre><code>python --version
 pipx install "https://github.com/Andy-JunXiong/agent-governance-starter/releases/download/v0.2.1/agent_governance_starter-0.2.1-py3-none-any.whl"
 agentgov --version
-agentgov --help</code></pre><p>也可以直接运行 <code>agentgov</code>。无参数运行是安全的只读入口，会引导首次使用者选择 <code>doctor</code>、<code>next</code> 或 <code>status</code>，不会检查或修改仓库。</p>
-      <h3>不安装直接运行</h3>
-      <p>如果要开发 starter kit，请把它克隆到独立且较短的路径，再从包含 <code>src</code> 目录的 clone 根目录运行以下其中一种命令。不要把 starter clone 到被治理仓库内部。</p>
+agentgov --help</code></pre>
+      <h3>只有开发 starter 时才从源码运行</h3>
+      <p>把 starter 克隆到独立的短路径，不要把 starter clone 到被治理仓库，再从 clone 根目录运行：</p>
       <div class="platforms">
         <div><strong>PowerShell</strong><pre><code>$env:PYTHONPATH = "src"
 python -m agentgov --help</code></pre></div>
         <div><strong>Bash / zsh</strong><pre><code>PYTHONPATH=src python -m agentgov --help</code></pre></div>
       </div>
     </section>
-    <section>
+    <section id="existing">
       <h2>2. 接入已有仓库</h2>
-      <p>如果终端已经位于目标仓库根目录，请使用 <code>.</code>。每次只运行一条命令，确认输出后再继续。</p>
+      <p>每次只运行一条命令：先检查，再预览所有计划文件，最后只创建缺失项。</p>
       <pre><code>agentgov inspect .
 agentgov adopt . --project-name "My Project" --dry-run
 agentgov adopt . --project-name "My Project"
 agentgov check repository .</code></pre>
+      <p><strong>稳定版 0.2.1 针对空仓库预览的真实选取行：</strong></p>
+      <pre><code>PLAN governance/contract.json
+PLAN AGENTS.md
+SUMMARY CREATE=26 PRESERVE=0
+NOTE adopt dry-run: no repository files were created or modified
+NOTE adopt: adoption does not authorize merge, publish, release, or deploy</code></pre>
       <div class="states">
-        <div class="state"><strong>PRESENT</strong>保留并审阅现有治理路径。</div>
-        <div class="state"><strong>MISSING</strong>决定接入计划是否应创建它。</div>
+        <div class="state"><strong>PRESENT</strong>保留现有治理路径。</div>
+        <div class="state"><strong>MISSING</strong>审阅计划建议创建的内容。</div>
         <div class="state"><strong>DISCOVERED</strong>人工审阅其他工具的仓库指令。</div>
         <div class="state"><strong>CONFLICT</strong>先解决路径类型或符号链接冲突。</div>
       </div>
-      <p>CLI 不覆盖普通文件，不合并 CLAUDE.md 或厂商指令，也不运行 Git 命令。</p>
-      <p><strong>首次检查的正常结果：</strong>刚接入的仓库可能同时出现 PASS、WARN 和 ADVISORY。占位符、draft seed cases、尚未配置的 artifacts 和人工审批边界仍需按项目实际情况审阅。<code>FAIL=0</code> 不代表接入已经完成。</p>
+      <p>CLI 不覆盖普通文件、不合并厂商指令，也不运行 Git。首次检查可能同时出现 PASS、WARN 和 ADVISORY；<code>FAIL=0</code> 不表示接入或人工审阅已经完成。</p>
     </section>
-    <section>
+    <section id="new">
       <h2>3. 创建新仓库</h2>
       <div class="platforms">
         <div><strong>PowerShell</strong><pre><code>$Project = Join-Path $PWD "governed-project"
@@ -81,7 +87,7 @@ agentgov init "$PROJECT" --project-name "My Project"
 agentgov check repository "$PROJECT"</code></pre></div>
       </div>
     </section>
-    <section>
+    <section id="report">
       <h2>4. 检查并生成报告</h2>
       <div class="platforms">
         <div><strong>PowerShell</strong><pre><code>agentgov check repository path/to/project
@@ -93,13 +99,14 @@ agentgov report repository path/to/project \
   --format html \
   --output path/to/project/governance-report.html</code></pre></div>
       </div>
+      <p>打开报告即可看到确定性事实、不完整证据和仍需人类决定的事项。生成报告不授权合并、发布、release 或部署。</p>
     </section>
     <section class="checklist">
-      <h2>5. 仍需完成的人工工作</h2>
+      <h2>5. 完成人工工作</h2>
       <ol><li>替换占位符，或明确记录延期。</li><li>解决各指令文件之间的权威关系。</li><li>声明真实的能力归属、风险和人工审阅阶段。</li><li>添加经过审阅的评估证据。</li><li>为 ADVISORY 发现记录可追责的决定。</li></ol>
     </section>
     <section>
-      <h2>继续阅读</h2>
+      <h2>继续稳定路径</h2>
       <div class="states">
         <a class="state" href="existing-repository-adoption.zh-CN.html">
           <strong>已有仓库接入指南</strong>
@@ -117,48 +124,25 @@ agentgov report repository path/to/project \
           <strong>查看示例报告</strong>
           了解检查结果和人工审阅边界。
         </a>
-        <a class="state" href="interview-guide.zh-CN.html">
-          <strong>面试讲解</strong>
-          用 5–10 分钟讲清产品、证据、最新安全链和限制。
-        </a>
       </div>
     </section>
     <section>
-      <h2>引导式接入开发预览</h2>
-      <p>当前开发版本还提供按仓库状态引导的流程。它已通过隔离的 Windows 自动化演练，但尚未完成一次全新的无现场指导真人试用，因此暂不替换下面的主流程。</p>
-      <pre><code>agentgov doctor .
-agentgov onboard . --project-name "My Project" --dry-run
-agentgov onboard . --project-name "My Project"
-agentgov next .</code></pre>
-      <p><code>doctor</code> 和 <code>next</code> 始终只读。交互式 <code>onboard</code> 仅接受真实终端中精确输入的 <code>ADOPT</code>，随后自动运行首次仓库检查；重定向输入和非交互模式都不能授予写权限。</p>
+      <h2>维护已接入仓库</h2>
+      <pre><code>agentgov update --check .
+# 审阅计划后：
+agentgov update .</code></pre>
+      <p>检查命令只读。更新仍需要真实终端中的精确确认，会验证稳定 release，只应用有边界的计划并重新运行检查。</p>
     </section>
-    <section class="emphasis">
-      <h2>已接受的自动化产品方向</h2>
-      <p>当前手动开发命令链只是开发和故障恢复接口，不是普通用户的目标流程。下一阶段产品允许用户直接向 Coding Agent 提出任务，由 AgentGov 自动协调上下文、范围、预批准验证、fresh evidence、Monitor 和 Dashboard，只在真正的语义或权限边界打断用户。</p>
-      <p>这个自动体验以及 Live Sessions、Protection Events、Benefit 和 Learning 视图尚未包含在 stable 0.2.1，也不是 v0.3.0rc1 的主要界面。详见<a href="product-requirements-automatic-governance.html">已批准的产品需求</a>。</p>
-      <p>开发源还实现了组合式 drift 复核提醒：三个已验证任务或七天后，前台界面和 Monitor 显示非阻断的建议性复核请求；未来工作流版本会在定时 CI 中显示同一 GitHub warning 和摘要，同时保持作业为绿色。stable 0.2.1 与 v0.3.0rc1 未改变。详见<a href="drift-review-reminders.html">drift 复核提醒</a>。</p>
-    </section>
-    <section class="emphasis">
-      <h2>开发源自动化状态</h2>
-      <p>开发源现已实现 <code>agentgov dev</code> 协调器、严格的前台 <code>--stream</code> JSONL 实时进程接入、由本地事实驱动的范围观察、已批准验证、完成对账、人工评审后的 handoff、Dashboard 刷新、受约束的任务/范围/完成卡片、供应商中立的宿主交互请求，以及首个打包的 Codex 生命周期 Hook Adapter。现在还实现风险分级路由：提问、解释、状态查询和只读诊断不创建任务；已验证当前任务内的正常迭代不重复准入；只有 Git 已跟踪、无漂移且由真人准入的政策才能对其受限低风险范围实行零打断快速通道；材料风险必须评审。可用 <code>agentgov route request request.json --policy governance/admission-policy.json --repository .</code> 预览。对于已规划的低风险人工评审，可加 <code>--prompt-human</code>：AgentGov 会主动解释为什么现在需要决定，并让用户只输入一个数字选择批准、修改或拒绝，不要求 <code>ADMIT</code> 或自由文本。当需求含义还不稳定时，供应商中立的澄清协议会持续显示当前中心与建议性漂移，每轮只问一个自然语言问题，只保留规范化滚动摘要，并在选项稳定后才给出最后选择。同一个 <code>agentgov dev --stream</code> 连接现在可以接收严格的规范化对齐上下文和人类更新，然后自动返回下一个问题或最终选择；对话只存在于当前前台进程内，重启后不会恢复。宿主侧参考 Alignment Adapter 现在可以演练“普通需求、一次自然语言回答、一次最终单选”的完整小流程，用户无需编写 JSON 或内部命令；语义理解由可替换的宿主 materializer 完成，不属于 Core。开发源还已实现严格的供应商中立 Provider 能力、低/中/高风险路由和摘要绑定的 advisory 结果契约。中风险绑定当前 Coding Agent 自查，无需新账号；高风险绑定合格独立 Reviewer，否则返回恰好三个未选人类选项，不静默降级。Codex、Claude Code、通用 IDE 和 Provider 不可用 fixture 不调用真实模型、凭证或网络；生产语义 materializer 仍未完成。精确输入 <code>ADMIT</code> 的流程仅保留为恢复回退，并且不会启动开发。Codex Prompt Hook 会丢弃 Prompt，只返回路由和决定上下文，不再强制每条消息进入任务准入；它仍不能记录可信的自定义按钮结果。原生认证决定界面和其他宿主 Adapter 仍未完成；stable 0.2.1 与 v0.3.0rc1 未改变。</p>
-      <p>开发源现在还已把已解析的 Alignment Adapter 接到一个宿主中立的当前 Agent self-review 回调。只有用户完成最终方向选择后，才会传入规范化临时上下文和明确允许的仓库 evidence refs，并且只接受精确绑定的 advisory 结果。Codex 和 Claude Code fixture 共用同一路径。AgentGov 本身不调用模型、凭证或网络；生产宿主原生回调仍待安装。</p>
-      <p>当前 Agent 自查现在也通过同一个前台 stream 完成严格的 start/request/draft/completed 交换。这些记录由宿主 Adapter 自动生成：普通用户不用额外确认、不用编写 JSON，也不用配置第二个模型。AgentGov 本身不调用模型或网络；原生宿主安装仍待完成。</p>
-      <p>开发源现在还提供前台 STDIO MCP Adapter，通过五个模型可调用工具完成规范化对齐和当前 Agent 自查。可用 <code>agentgov integrate codex-mcp . --dry-run</code> 预览仅创建缺失文件的 Codex 项目配置；已有自定义配置不会被覆盖，Codex 信任决定仍由用户掌握。Codex 与 Claude Code fixture 共用 Core 工具路径；真实无指导宿主演练及非 Codex 安装包仍待完成。</p>
-    </section>
-    <section>
-      <h2>开发版 Adapter 1.4.0 状态</h2>
-      <p>五工具仍指五个基础只读对齐/自审工具；Adapter <code>1.3.0</code> 增加了按表单能力开放的 <code>agentgov_task_proposal_review</code>，开发源 <code>1.4.0</code> 又在相同原生表单边界增加 <code>agentgov_drift_review_record</code>。当前 Agent 只能提交 advisory 候选、需求/架构/功能三项规范化观察和仓库相对证据；只有用户能选择记录该候选、延后或不写入。写入前会重新核对到期状态，成功后刷新本地 Monitor；不支持表单的客户端仍只发现五个基础工具。精确的 <code>1.3.0</code> 仍是已安装并预检的运行时，<code>1.4.0</code> 在本次变更中没有安装或发布。</p>
-      <p>开发源 Adapter <code>1.5.0</code> 从原生任务提案输入中移除了 <code>owner</code>，并由 Adapter 在完整预览中注入规范的 <code>Human product owner</code> 角色。只有绑定的原生接受与准入决定才能把该角色写入 <code>owner</code> 和 <code>decided_by</code>；Agent 提供 owner 会在表单出现前失败且不写入。这是人类角色边界，不是对具体操作者的密码学身份认证。精确模块现仅安装在现有本地 AgentGov pipx 开发运行时中，并通过了隔离、无模型的七工具/五工具发现、恶意 owner 和接受准入预检。它仍未发布、未释出且未在消费者仓库启用；项目配置未变，旧模块和启动器备份继续保留，也没有运行模型或实时重放。</p>
-    </section>
-    <section class="checklist">
-      <h2>开发源 replay 安全预览</h2>
-      <p>最新开发源把 replay 前的所有权证据拆成三个不可变步骤。以下命令没有使用 <code>--apply</code>，因此只做预览：</p>
-      <pre><code>$env:PYTHONPATH = "src"
-python -m agentgov reserve replay-correlation path/to/reservation-plan.json --repository path/to/consumer --format json
-python -m agentgov claim replay-correlation path/to/claim-plan.json --repository path/to/consumer --format json
-python -m agentgov recover replay-claim path/to/recovery-plan.json --repository path/to/consumer --format json</code></pre>
-      <p>Reservation 建立唯一 correlation；claim 用 exclusive create 记录持久的运行前 ownership；recovery 只读检查精确、有界的 claim bytes，并且只有终端中准确输入 <code>RECOVER</code> 后才能创建单独的不可变 supersession record。它保留原 reservation 和 claim，不创建 replacement owner，也不授权 replay、Git、发布、release 或部署。</p>
-      <p>Claim 与 recovery registry 必须预先存在；失败路径不会创建脚手架。详见<a href="clean-target-replay-preflight.html">完整 replay 安全指南</a>和<a href="interview-guide.zh-CN.html">中文面试讲解</a>。</p>
+    <section id="development" class="emphasis">
+      <h2>开发预览</h2>
+      <p>稳定版 <code>0.2.1</code> 仍是受支持的安装和接入路径。公开的 <code>0.3.0rc1</code> 是独立、不可变的预发行快照。开发源继续加入 Coding Agent 生命周期、Adapter、drift review 和 replay 安全能力，并有独立证据边界。本地已安装或已预检模块不等于稳定发布或消费者已启用能力；新的无指导主要产品真人试用仍未证明。</p>
+      <div class="states">
+        <a class="state" href="product-requirements-automatic-governance.html"><strong>自动化产品方向</strong>查看已接受目标和尚未实现的部分。</a>
+        <a class="state" href="portfolio.html#boundary"><strong>成熟度与证据边界</strong>区分稳定、预发行、开发源、已安装和未证明状态。</a>
+        <a class="state" href="https://github.com/Andy-JunXiong/agent-governance-starter/blob/main/docs/governance-mcp-adapter.md"><strong>Adapter 详情</strong>检查精确开发契约和宿主限制。</a>
+        <a class="state" href="clean-target-replay-preflight.html"><strong>Replay 安全证据</strong>检查 reservation、claim、recovery 和非授权边界。</a>
+      </div>
+      <p>另见<a href="drift-review-reminders.html"> drift review 提醒</a>和<a href="interview-guide.zh-CN.html">证据讲解</a>。这些开发记录都不授权 Git、合并、发布、release、replay 或部署。</p>
     </section>
   </main>
   <footer class="shell">Agent Governance Starter Kit · 本地运行 · 仓库原生 · 人工控制</footer>

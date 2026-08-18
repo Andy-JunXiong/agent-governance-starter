@@ -1,17 +1,14 @@
 # Agent Governance Starter Kit 中文快速开始
 
-本指南帮助首次使用者在新仓库或已有仓库中完成最小接入。静态检查成功只代表契约已执行，不代表治理完成，也不授权合并、发布或部署。
+本指南帮助首次使用者完成稳定版接入。检查成功只代表确定性契约已执行，
+不代表治理完成，也不授权合并、发布、release 或部署。
 
-> 产品方向说明：当前手动 CLI 是 stable 接入和开发 fallback，不是最终
-> 日常体验。已接受的下一阶段产品允许用户直接向 Coding Agent 提出任务，
-> 由 AgentGov 自动协调上下文、范围、预批准验证、fresh evidence、Monitor
-> 和 Dashboard，只在真正的语义或权限边界打断用户。该自动体验尚未实现为
-> stable 0.2.1 或 v0.3.0rc1 的主要界面，详见
-> [自动治理产品需求](product-requirements-automatic-governance.md)。
+## 选择目标
 
-面试展示可直接使用[中文面试讲解](interview-guide.zh-CN.html)，其中按
-“问题 → 架构 → 示例报告 → 当前证据 → 最新安全链 → 限制”的顺序组织了
-5–10 分钟演示。
+- **已有仓库接入**：`inspect → adopt --dry-run → adopt → check`
+- **创建新仓库**：`init → check`
+- **生成报告**：`check → report`
+- **查看开发功能**：直接前往本文末尾的独立成熟度与证据链接。
 
 ## 1. 安装
 
@@ -25,10 +22,8 @@ agentgov --version
 agentgov --help
 ```
 
-也可以直接运行 `agentgov`。无参数运行是安全的只读入口：它会显示命令概览，
-并引导首次使用者选择 `doctor`、`next` 或 `status`，不会检查或修改仓库。
-
-只有开发 starter 本身时，才应将它克隆到独立且较短的路径，并从包含 `src` 的 starter 根目录运行：
+只有开发 starter 本身时，才应将它克隆到独立且较短的路径，不要放进被治理仓库，
+并从包含 `src` 的 starter 根目录运行：
 
 ```powershell
 $env:PYTHONPATH = "src"
@@ -56,6 +51,16 @@ agentgov inspect .
 agentgov adopt . --project-name "项目名称" --dry-run
 ```
 
+稳定版 0.2.1 针对空仓库预览的真实选取行：
+
+```text
+PLAN governance/contract.json
+PLAN AGENTS.md
+SUMMARY CREATE=26 PRESERVE=0
+NOTE adopt dry-run: no repository files were created or modified
+NOTE adopt: adoption does not authorize merge, publish, release, or deploy
+```
+
 确认计划后，创建缺失文件：
 
 ```powershell
@@ -72,7 +77,7 @@ agentgov report repository . --output governance-report.md
 agentgov report repository . --format html --output governance-report.html
 ```
 
-打开 `AGENTS.md` 和 `governance-report.html`。HTML 报告会用可视化方式解释四种状态、需要处理的事项和人工授权边界。处理或明确延后所有 `WARN`，并对 `ADVISORY` 记录人工判断。
+打开 `AGENTS.md` 和 `governance-report.html`。报告会显示确定性事实、不完整证据和仍需人类决定的事项。处理或明确延后所有 `WARN`，并对 `ADVISORY` 记录人工判断。
 
 首次检查出现 PASS、WARN 和 ADVISORY 的组合是正常的。`FAIL=0` 只说明没有确定性失败，不表示治理已经配置完成。还需要把示例 capability、占位符、evaluation cases、artifacts 和人工审批边界改成项目的真实情况。
 
@@ -97,26 +102,36 @@ agentgov report repository $Project --output "$Project/governance-report.md"
 4. 添加经过审阅的 evaluation cases 和 evidence；
 5. 对合并、发布、release 和 deploy 分别取得明确人工授权。
 
-## 5. 开发源 replay 安全预览
-
-最新开发源把 replay 前的证据拆成不可变 reservation、create-only claim 和
-单独的 immutable recovery record。以下命令省略 `--apply`，因此只读预览：
-
-```powershell
-$env:PYTHONPATH = "src"
-python -m agentgov reserve replay-correlation path/to/reservation-plan.json --repository path/to/consumer --format json
-python -m agentgov claim replay-correlation path/to/claim-plan.json --repository path/to/consumer --format json
-python -m agentgov recover replay-claim path/to/recovery-plan.json --repository path/to/consumer --format json
-```
-
-Recovery 保留原 reservation 和 claim，不创建 replacement owner，也不授权
-replay、Git、发布、release 或部署。Claim 与 recovery registry 必须预先存在；
-失败路径不会创建脚手架。详见
-[clean-target replay preflight 与 recovery 指南](clean-target-replay-preflight.md)。
-
-更完整的说明见：
+## 5. 继续稳定路径
 
 - [已有仓库接入指南](existing-repository-adoption.md)
 - [生成文件填写指南](generated-files-guide.md)
 - [故障排查](troubleshooting.md)
 - [中文面试讲解](interview-guide.zh-CN.html)
+
+## 6. 维护已接入仓库
+
+```powershell
+agentgov update --check .
+# 审阅计划后：
+agentgov update .
+```
+
+检查命令只读。更新仍需要真实终端中的精确确认，会验证稳定 release，
+只应用有边界的计划并重新运行检查。
+
+## 7. 开发预览
+
+稳定版 `0.2.1` 仍是受支持的安装和接入路径。公开的 `0.3.0rc1` 是独立、
+不可变的预发行快照。开发源继续加入 Coding Agent 生命周期、Adapter、
+drift review 和 replay 安全能力，并有独立证据边界。本地已安装或已预检模块
+不等于稳定发布或消费者已启用能力；新的无指导主要产品真人试用仍未证明。
+
+- [自动化产品方向](product-requirements-automatic-governance.md)
+- [成熟度与证据作品集](portfolio.html#boundary)
+- [Adapter 详情](governance-mcp-adapter.md)
+- [Replay 安全证据](clean-target-replay-preflight.md)
+- [Drift review 提醒](drift-review-reminders.md)
+
+Replay 安全证据覆盖 reservation、claim 和 recovery 的非授权边界。这些开发
+记录都不授权 Git、合并、发布、release、replay 或部署。

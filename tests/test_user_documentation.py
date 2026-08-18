@@ -130,8 +130,6 @@ class UserDocumentationTests(unittest.TestCase):
                 GOVERNANCE_MCP_ADAPTER,
                 TASK_PROPOSAL_ADMISSION,
                 TASK_ADMISSION_ADR,
-                QUICKSTART_WEB,
-                QUICKSTART_ZH_WEB,
             )
         )
         for text in detailed_sources:
@@ -140,9 +138,17 @@ class UserDocumentationTests(unittest.TestCase):
                 self.assertIn("Human product owner", text)
                 self.assertIn("owner", text)
                 self.assertIn("decided_by", text)
-        for text in detailed_sources[:-1]:
+        for text in detailed_sources:
             self.assertIn("cryptographic", text.lower())
-        self.assertIn("Agent", detailed_sources[-1])
+
+        for quickstart in (QUICKSTART_WEB, QUICKSTART_ZH_WEB):
+            text = quickstart.read_text(encoding="utf-8")
+            self.assertIn(
+                "blob/main/docs/governance-mcp-adapter.md",
+                text,
+            )
+            self.assertNotIn("Adapter <code>1.5.0</code>", text)
+            self.assertNotIn("decided_by", text)
 
         landing = INDEX_WEB.read_text(encoding="utf-8")
         self.assertNotIn("Adapter <code>1.5.0</code>", landing)
@@ -158,8 +164,6 @@ class UserDocumentationTests(unittest.TestCase):
                 README,
                 GOVERNANCE_MCP_ADAPTER,
                 TASK_ADMISSION_ADR,
-                QUICKSTART_WEB,
-                QUICKSTART_ZH_WEB,
             )
         )
         for text in detailed_surfaces:
@@ -167,6 +171,11 @@ class UserDocumentationTests(unittest.TestCase):
                 self.assertIn("1.5.0", text)
                 self.assertIn("pipx", text)
                 self.assertIn("Human product owner", text)
+        for quickstart in (QUICKSTART_WEB, QUICKSTART_ZH_WEB):
+            text = quickstart.read_text(encoding="utf-8")
+            self.assertIn("blob/main/docs/governance-mcp-adapter.md", text)
+            self.assertNotIn("1.5.0", text)
+            self.assertNotIn("Human product owner", text)
         landing = INDEX_WEB.read_text(encoding="utf-8")
         self.assertNotIn("Adapter <code>1.5.0</code>", landing)
         self.assertNotIn("Current development evidence", landing)
@@ -707,29 +716,22 @@ class UserDocumentationTests(unittest.TestCase):
         english = QUICKSTART_WEB.read_text(encoding="utf-8")
         chinese = QUICKSTART_ZH_WEB.read_text(encoding="utf-8")
 
-        self.assertIn("Accepted automatic product direction", english)
-        self.assertIn("not implemented in stable 0.2.1", english)
-        self.assertIn("--stream", english)
-        self.assertIn("agentgov dev", english)
-        self.assertIn("vendor-neutral host-interaction", english)
-        self.assertIn("开发源自动化状态", chinese)
-        self.assertIn("agentgov dev", chinese)
-        self.assertIn("--stream", chinese)
-        self.assertIn("宿主交互请求", chinese)
-        self.assertIn("已接受的自动化产品方向", chinese)
-        self.assertIn("尚未包含在 stable 0.2.1", chinese)
+        self.assertIn("Development preview", english)
+        self.assertIn("fresh uncoached primary-product pilot remains unproven", english)
+        self.assertIn("开发预览", chinese)
+        self.assertIn("无指导主要产品真人试用仍未证明", chinese)
         for text in (english, chinese):
             self.assertIn("product-requirements-automatic-governance.html", text)
-            self.assertIn("agentgov route request", text)
-            self.assertIn("ADMIT", text)
-            self.assertIn("--prompt-human", text)
-            self.assertIn("agentgov integrate codex-mcp . --dry-run", text)
-            self.assertIn("1.3.0", text)
-            self.assertIn("1.4.0", text)
-            self.assertIn("agentgov_task_proposal_review", text)
-            self.assertIn("agentgov_drift_review_record", text)
-            self.assertTrue("clarification" in text.lower() or "澄清" in text)
-            self.assertTrue("does not survive restart" in text or "重启后不会恢复" in text)
+            self.assertIn("portfolio.html#boundary", text)
+            self.assertIn("blob/main/docs/governance-mcp-adapter.md", text)
+            self.assertIn("clean-target-replay-preflight.html", text)
+            self.assertIn("drift-review-reminders.html", text)
+            self.assertIn("0.2.1", text)
+            self.assertIn("0.3.0rc1", text)
+            self.assertNotIn("agentgov dev", text)
+            self.assertNotIn("agentgov_task_proposal_review", text)
+            self.assertNotIn("agentgov_drift_review_record", text)
+            self.assertNotIn("Adapter <code>1.5.0</code>", text)
 
     def test_development_governance_sources_resist_pr_center_drift(self) -> None:
         readme = README.read_text(encoding="utf-8")
@@ -799,7 +801,7 @@ class UserDocumentationTests(unittest.TestCase):
 
         stable_install = 'pipx install "https://github.com/Andy-JunXiong/'
         self.assertLess(readme.index(stable_install), readme.index("python -m agentgov next ."))
-        self.assertLess(quickstart.index(stable_install), quickstart.index("agentgov next ."))
+        self.assertLess(quickstart.index(stable_install), quickstart.index('id="development"'))
         for text in (readme, decision):
             self.assertIn("agentgov update --check", text)
             self.assertIn("before `agentgov next`", text)
@@ -885,7 +887,7 @@ class UserDocumentationTests(unittest.TestCase):
             self.assertIn(status, text)
         self.assertIn("--dry-run", text)
         self.assertIn("不覆盖已有普通文件", text)
-        self.assertIn("不授权合并、发布或部署", text)
+        self.assertIn("不授权合并、发布、release 或部署", text)
 
     def test_generated_files_guide_keeps_evidence_claims_honest(self) -> None:
         text = GENERATED_FILES_GUIDE.read_text(encoding="utf-8")
@@ -1004,7 +1006,7 @@ class UserDocumentationTests(unittest.TestCase):
             self.assertIn("Do not clone", english)
             self.assertIn("不要把 starter clone", chinese)
 
-    def test_web_quickstarts_label_guided_onboarding_as_development_preview(
+    def test_web_quickstarts_route_development_detail_to_deep_evidence(
         self,
     ) -> None:
         english = QUICKSTART_WEB.read_text(encoding="utf-8")
@@ -1016,13 +1018,19 @@ class UserDocumentationTests(unittest.TestCase):
                 'agentgov onboard . --project-name "My Project" --dry-run',
                 'agentgov onboard . --project-name "My Project"',
                 "agentgov next .",
+                "agentgov reserve replay-correlation",
+                "agentgov claim replay-correlation",
+                "agentgov recover replay-claim",
             ):
-                self.assertIn(command, content)
-            self.assertIn("ADOPT", content)
-        self.assertIn("development preview", english)
-        self.assertIn("does not replace the primary steps", english)
+                self.assertNotIn(command, content)
+            self.assertIn("product-requirements-automatic-governance.html", content)
+            self.assertIn("clean-target-replay-preflight.html", content)
+            self.assertIn("blob/main/docs/governance-mcp-adapter.md", content)
+            self.assertLess(content.index("agentgov inspect ."), content.index('id="development"'))
+        self.assertIn("Development preview", english)
+        self.assertIn("not stable releases or consumer-active behavior", english)
         self.assertIn("开发预览", chinese)
-        self.assertIn("暂不替换", chinese)
+        self.assertIn("不等于稳定发布或消费者已启用能力", chinese)
 
     def test_web_guides_add_accessible_copy_controls_to_code_blocks(self) -> None:
         guide_pages = (
