@@ -1,0 +1,96 @@
+{
+  "acceptance_signals": [
+    "The landing page structure, section order, CSS, links, accessibility attributes, and responsive behavior remain unchanged apart from the requested visible copy and removal of the hero version/wheel detail.",
+    "See a real example no longer appears and the hero CTA reads See a concrete example while continuing to target #example.",
+    "No visible Interview walkthrough or Read the guided walkthrough label remains on the landing; both existing interview-guide.html links display Guided walkthrough.",
+    "The expandable Development evidence section and Inspect the evidence chain deep link remain, but the visible paragraph explains interrupted-work ownership and recovery in plain language without immutable reservation, create-only claim, immutable recovery, or replay authority.",
+    "The dashboard remains labelled Illustrative example and the note beneath it contains only the existing See current evidence and limits link to portfolio.html#boundary.",
+    "Stable 0.2.1, published 0.3.0rc1, and development-source provenance remains discoverable on the existing portfolio evidence boundary, and stable installation remains discoverable through Quickstart; no provenance source is deleted.",
+    "Product-site tests protect the new labels, absence of removed wording, preserved deep links, illustrative boundary, and deeper provenance discoverability rather than deleting coverage.",
+    "The relevant landing test file and the complete repository suite pass; internal English landing links still resolve through existing tests.",
+    "STATUS and the dated development log record the bounded local copy cleanup and remaining genuine-reader unknown without claiming publication.",
+    "One focused local commit named docs: polish landing page product copy contains only the five admitted paths.",
+    "No push, publication, release, deployment, PR, Sites hosting, user-configuration change, new feature, or follow-on killer-demo implementation occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-c10714d8a35e4dcca002966036ce690c and admitted that exact task through an explicit admission control. The requested landing and product-site test edits were made, and the focused product-site tests passed. The first complete-suite run then exposed three directly affected legacy assertions in tests/test_public_documentation_freshness.py, tests/test_interview_documentation.py, and tests/test_user_documentation.py that still required the removed Hero wheel/version text or low-level footer terminology. Those paths were explicitly excluded from v1, so no edits were made to them. No STATUS, development-log, staging, commit, push, publication, release, deployment, PR, hosting, or user-configuration action occurred under v1. The task is paused fail-closed; a separately reviewed replacement must include the three directly affected test surfaces and preserve their provenance protection semantically.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Make one small, surgical product-copy cleanup on the frozen public AgentGov landing page. Change the hero CTA from See a real example to See a concrete example; standardize the two public walkthrough labels to Guided walkthrough while preserving the existing interview-guide.html URL; rewrite the expandable Development evidence summary in plain language while retaining its deep link; and remove stable-versus-prerelease details and the wheel link from beneath the illustrative dashboard so only the existing evidence-and-limits link remains. Preserve all detailed provenance on deeper evidence surfaces, existing structure, styling, responsive behavior, accessibility, governance semantics, Quickstart logic, and runtime behavior. Validate and create one focused local commit without pushing or publishing."
+  },
+  "risk": {
+    "items": [
+      "Removing hero version detail could accidentally remove provenance protection instead of moving it behind progressive disclosure.",
+      "Changing display labels could accidentally change the existing walkthrough URL.",
+      "Plain-language footer wording could overstate recovery or continuation guarantees.",
+      "A broad formatter or site refactor could violate the frozen-page constraint.",
+      "The mixed worktree must preserve user-owned .codex configuration.",
+      "A commit could accidentally be pushed or published without separate authorization.",
+      "Reviewed assumption: The user-approved prompt authorizes one local Git commit but not push or publication.",
+      "Reviewed assumption: The current landing structure and information hierarchy are frozen.",
+      "Reviewed assumption: The existing interview-guide.html filename remains unchanged to avoid link churn.",
+      "Reviewed assumption: The existing portfolio evidence boundary already owns detailed stable, prerelease, development, installed, and unproven provenance.",
+      "Reviewed assumption: The existing Quickstart remains the stable installation entry point.",
+      "Reviewed assumption: The existing product-note container can remain with only the evidence-and-limits link without CSS changes.",
+      "Reviewed assumption: The governed-task demonstration is product-review input only and is not authorized by this task.",
+      "Reviewed unknown: Whether the revised wording improves comprehension remains unknown until an unbriefed human reader is tested.",
+      "Reviewed unknown: No adoption, hiring, or conversion effect is established by this copy change."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "src",
+      "pyproject.toml",
+      "README.md",
+      "DEVELOPMENT_PLAN.md",
+      "CHANGELOG.md",
+      "docs/quickstart.html",
+      "docs/quickstart.zh-CN.html",
+      "docs/quickstart.zh-CN.md",
+      "docs/portfolio.html",
+      "docs/interview-guide.html",
+      "docs/guide.css",
+      "docs/guide.js",
+      "docs/demo-governance-report.html",
+      "docs/adr",
+      "docs/releases",
+      "governance/schemas",
+      "governance/fixtures",
+      "tests/test_user_documentation.py",
+      "tests/test_public_documentation_freshness.py",
+      "tests/test_interview_documentation.py"
+    ],
+    "include_paths": [
+      "docs/index.html",
+      "tests/test_product_site.py",
+      "STATUS.md",
+      "docs/development-log/2026-08-18.md",
+      "governance/tasks/p0-landing-product-copy-polish-v1.json"
+    ]
+  },
+  "task_id": "p0-landing-product-copy-polish-v1",
+  "title": "Polish frozen landing product copy",
+  "validation_commands": [
+    "git status -sb",
+    "git diff --check",
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_product_site -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-landing-product-copy-polish-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check scope governance/tasks/p0-landing-product-copy-polish-v1.json --repository .",
+    "Verify the landing contains no See a real example or visible Interview walkthrough wording.",
+    "Verify the landing preserves Illustrative example, both existing walkthrough URLs, the portfolio evidence links, and the plain-language Development evidence disclosure.",
+    "Verify the portfolio still distinguishes stable 0.2.1, 0.3.0rc1, and development source and Quickstart still exposes stable installation.",
+    "Stage only the five admitted paths, inspect the cached diff, and create one local commit named docs: polish landing page product copy."
+  ]
+}

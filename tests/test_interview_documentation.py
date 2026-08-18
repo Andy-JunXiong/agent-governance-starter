@@ -51,19 +51,32 @@ class InterviewDocumentationTests(unittest.TestCase):
         chinese = _normalized(DOCS / "interview-guide.zh-CN.html")
         markdown = _normalized(DOCS / "interview-guide.md")
 
-        for text in (readme, home, portfolio, english, markdown):
+        for text in (readme, portfolio, english, markdown):
             self.assertIn("immutable reservation", text)
             self.assertIn("create-only claim", text)
             self.assertIn("immutable recovery", text)
             self.assertIn("no replacement owner", text)
             self.assertIn("no replay authority", text)
 
-        for text in (readme, home, english, markdown):
+        self.assertNotIn("immutable reservation", home)
+        self.assertNotIn("create-only claim", home)
+        self.assertNotIn("immutable recovery", home)
+        self.assertNotIn("no replay authority", home)
+        self.assertIn("If automated work is interrupted", home)
+        self.assertIn("another agent permission to continue", home)
+        self.assertIn('href="portfolio.html#recovery"', home)
+
+        for text in (readme, portfolio, english, markdown):
             self.assertIn("0.2.1", text)
             self.assertIn("stable", text.lower())
             self.assertIn("0.3.0rc1", text)
+
+        for text in (readme, english, markdown):
             self.assertIn("sample report", text.lower())
             self.assertIn("illustrative", text.lower())
+
+        self.assertIn("Illustrative example", home)
+        self.assertIn('href="portfolio.html#boundary"', home)
 
         for phrase in (
             "5–10 分钟",

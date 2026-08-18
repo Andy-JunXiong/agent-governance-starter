@@ -1283,7 +1283,12 @@ class UserDocumentationTests(unittest.TestCase):
                 self.assertIn('rel="icon" href="favicon.ico"', text)
                 self.assertIn("img-src 'self'", text)
                 self.assertIn("0.2.1", text)
-                self.assertIn("0.3.0rc1", text)
+                if name == "index.html":
+                    self.assertNotIn("0.3.0rc1", text)
+                    self.assertIn('href="portfolio.html#boundary"', text)
+                    self.assertIn("Illustrative example", text)
+                else:
+                    self.assertIn("0.3.0rc1", text)
                 if name != "portfolio.html":
                     self.assertIn('href="portfolio.html"', text)
                 self.assertIn('href="interview-guide', text)

@@ -42,6 +42,61 @@ scheduling authority.
 
 ### Current closeout snapshot
 
+- **Active slice**: none. Task `p0-landing-product-copy-polish-v2` is paused
+  after one surgical landing-page copy cleanup, semantic test migration,
+  complete validation, and a bounded current-Agent advisory review.
+- **Delivered copy**: the frozen landing structure, section order, CSS,
+  responsive rules, accessibility attributes, and URLs are unchanged. The Hero
+  now says `See a concrete example`; both public labels say `Guided
+  walkthrough`; the dashboard remains `Illustrative example` and now links to
+  evidence and limits without exposing version detail; and the expandable
+  development note explains interruption and recovery in plain language.
+- **Progressive disclosure**: exact stable `0.2.1`, published `0.3.0rc1`, and
+  development-source provenance remains on the portfolio. Quickstart retains
+  the stable wheel, while opted-in evidence surfaces retain the detailed
+  reservation, claim, recovery, and denied-authority terminology.
+- **Codex-run validation**: all 55 directly affected product-site,
+  public-freshness, interview-documentation, and user-documentation tests pass.
+  The first complete-suite run exposed three legacy assertions that still
+  required wheel/version or low-level recovery wording on the landing. Their
+  coverage was re-anchored to the progressive-disclosure journey rather than
+  deleted. The corrected complete-suite rerun passes all 926 tests with 3
+  platform-limited skips. Exact copy counts, preserved links, and `git diff
+  --check` pass.
+- **Governance validation**: v1 was paused fail-closed when the first full
+  suite identified three directly affected test files outside its scope. Under
+  corrected v2, task governance reported `PASS=3 WARN=1 FAIL=0 ADVISORY=3` and
+  repository governance reported `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Scope
+  accepted every task-owned path and rejected only excluded, untouched
+  `.codex/config.toml`; no exception or ownership transfer was inferred. The
+  final paused task check reports `PASS=2 WARN=2 FAIL=0 ADVISORY=3`, and
+  post-pause scope checking correctly refuses because implementation is no
+  longer admitted.
+- **Advisory review**: the copy cleanup introduces no new product claim,
+  removes no evidence owner, changes no governance or runtime behavior, and
+  preserves the human-authority boundary. No correction-required requirement,
+  architecture, scope, implementation, security, or data drift was observed.
+  The task was fully specified and did not start alignment, so this does not
+  claim native self-review or an independent reviewer.
+- **Pending validation**: whether an unbriefed reader understands the revised
+  page better remains unknown. No adoption, hiring, or conversion effect is
+  established.
+- **Incomplete**: none inside the admitted copy-cleanup scope.
+- **Git and publication boundary**: one focused local commit contains only the
+  nine admitted page, test, status, log, and task paths. It is not pushed or
+  published. No pull request, release, deployment, Sites hosting, new feature,
+  or user-configuration action is authorized. `.codex` remains local,
+  untracked, and unchanged.
+- **Blocker / stop condition**: the landing is frozen after this commit. Stop
+  further copy polishing unless genuine reader evidence identifies a concrete
+  comprehension problem; stop before any push or publication without a new
+  human decision.
+- **Next product review**: run one neutral unbriefed-reader test. The stronger
+  governed-task demonstration remains product-review input only and is not
+  authorized as follow-on implementation.
+
+### Superseded closeout snapshot - bilingual Quickstart publication
+
 - **Active slice**: none. Publication task
   `p0-quickstart-ia-publication-v2` is paused after the bilingual Quickstart
   cleanup, direct-main publication, online desktop acceptance, evidence

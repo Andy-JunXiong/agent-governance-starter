@@ -83,10 +83,9 @@ class PublicDocumentationFreshnessTests(unittest.TestCase):
         ):
             self.assertIn(phrase, normalized)
 
-    def test_current_install_surfaces_use_the_published_stable_wheel(self) -> None:
-        surfaces = (
+    def test_current_install_surfaces_and_landing_disclosure_are_fresh(self) -> None:
+        install_surfaces = (
             ROOT / "README.md",
-            ROOT / "docs/index.html",
             ROOT / "docs/quickstart.html",
             ROOT / "docs/quickstart.zh-CN.html",
             ROOT / "docs/quickstart.zh-CN.md",
@@ -99,12 +98,21 @@ class PublicDocumentationFreshnessTests(unittest.TestCase):
             ROOT / "docs/interview-guide.md",
         )
 
-        for surface in surfaces:
+        for surface in install_surfaces:
             with self.subTest(surface=surface.name):
                 text = surface.read_text(encoding="utf-8")
                 self.assertIn(STABLE_WHEEL, text)
                 self.assertNotIn("releases/download/v0.1.0/", text)
                 self.assertNotIn("agent-governance-starter.git@main", text)
+
+        landing = (ROOT / "docs/index.html").read_text(encoding="utf-8")
+        self.assertIn('href="portfolio.html#boundary"', landing)
+        self.assertIn("See current evidence and limits", landing)
+        self.assertNotIn(STABLE_WHEEL, landing)
+
+        portfolio = (ROOT / "docs/portfolio.html").read_text(encoding="utf-8")
+        for provenance in ("0.2.1", "0.3.0rc1", "development source"):
+            self.assertIn(provenance, portfolio)
 
     def test_public_demo_identifies_the_development_source_snapshot(self) -> None:
         for name in ("demo-governance-report.html", "demo-governance-report.zh-CN.html"):

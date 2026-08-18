@@ -15,7 +15,7 @@ class ProductSiteTests(unittest.TestCase):
         for phrase in (
             "Keep humans in control of AI-written code.",
             "AgentGov records what an AI agent was asked to change",
-            "See a real example",
+            "See a concrete example",
             "An AI changes how customer refunds are handled.",
             "Without AgentGov",
             "With AgentGov",
@@ -30,6 +30,7 @@ class ProductSiteTests(unittest.TestCase):
             "Let a person decide",
             "Start with one repository.",
             "Illustrative example",
+            "Guided walkthrough",
             "Passing checks never approve a merge, release, or deployment.",
         ):
             self.assertIn(phrase, content)
@@ -70,19 +71,56 @@ class ProductSiteTests(unittest.TestCase):
         self.assertNotIn("Adapter <code>1.5.0</code>", content)
         self.assertNotIn("cryptographic personal identity,", content)
         self.assertNotIn("Current development evidence", content)
-        self.assertNotIn("immutable reservation", main)
+        self.assertNotIn("See a real example", content)
+        self.assertNotIn("Interview walkthrough", content)
+        self.assertNotIn("Read the guided walkthrough", content)
+        self.assertNotIn("immutable reservation", content)
+        self.assertNotIn("create-only claim", content)
+        self.assertNotIn("immutable recovery", content)
+        self.assertNotIn("replay authority", content)
         self.assertNotIn("No governance score. On purpose.", content)
         self.assertNotIn("PASS · FACT SATISFIED", content)
         self.assertNotIn("Small files make the invisible contract reviewable.", content)
         self.assertNotIn("Actual fixture validation output", content)
         self.assertNotIn("pipx install", content)
         self.assertIn('href="portfolio.html#boundary"', content)
-        self.assertIn("Sanitized <code>0.3.0rc1</code> sample", content)
-        self.assertIn("Stable CLI:", content)
-        self.assertIn(
+        self.assertNotIn("Sanitized <code>0.3.0rc1</code> sample", content)
+        self.assertNotIn("Stable CLI:", content)
+        self.assertNotIn(
             "releases/download/v0.2.1/"
             "agent_governance_starter-0.2.1-py3-none-any.whl",
             content,
+        )
+        product_note = content.split('<p class="product-note">', 1)[1].split(
+            "</p>", 1
+        )[0]
+        self.assertEqual(product_note.count('href="portfolio.html#boundary"'), 1)
+        self.assertIn("See current evidence and limits →", product_note)
+
+        walkthrough_labels = re.findall(
+            r'<a[^>]+href="interview-guide\.html"[^>]*>\s*([^<]+?)\s*</a\s*>',
+            content,
+        )
+        self.assertEqual(
+            walkthrough_labels,
+            ["Guided walkthrough", "Guided walkthrough"],
+        )
+
+        footer_evidence = content.split(
+            '<details class="footer-evidence">', 1
+        )[1].split("</details>", 1)[0]
+        self.assertIn("If automated work is interrupted", footer_evidence)
+        self.assertIn("another agent permission to continue", footer_evidence)
+        self.assertIn('href="portfolio.html#recovery"', footer_evidence)
+
+        portfolio = (ROOT / "docs/portfolio.html").read_text(encoding="utf-8")
+        for provenance in ("0.2.1", "0.3.0rc1", "development source"):
+            self.assertIn(provenance, portfolio)
+        quickstart = (ROOT / "docs/quickstart.html").read_text(encoding="utf-8")
+        self.assertIn(
+            "releases/download/v0.2.1/"
+            "agent_governance_starter-0.2.1-py3-none-any.whl",
+            quickstart,
         )
         self.assertIn('<details class="footer-evidence">', content)
         self.assertIn(
