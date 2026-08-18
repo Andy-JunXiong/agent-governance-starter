@@ -42,6 +42,73 @@ scheduling authority.
 
 ### Current closeout snapshot
 
+- **Active slice**: none. Task `p0-plain-language-landing-page-v1` is paused
+  after implementation, complete validation, local responsive acceptance, and
+  a distinct bounded current-Agent review. Documentation-only correction task
+  `p0-plain-language-landing-page-closeout-correction-v1` is also paused after
+  separating pre-pause evidence from final paused-state output. No Git or
+  publication action is authorized.
+- **Codex-run validation**: the public homepage now uses a five-part journey:
+  one plain-language Hero followed by four substantive sections for the refund
+  example, report meaning, a single three-step flow, and the final adoption
+  call to action. The Hero heading and support contain 31 English words; the
+  four main sections contain 267 English words, below the 500-word boundary.
+  The former ten-section main narrative no longer teaches full finding
+  taxonomy, architecture, CLI transcripts, roles, adoption steps, or
+  development milestones before the visitor understands the product. Exact
+  stable-wheel and replay evidence remain available through a report note and
+  default-collapsed footer disclosure. At a 390 x 844 browser override, the
+  live-rendered local page used a 375-pixel content viewport with 375-pixel
+  root/body scroll widths, a 341-pixel example panel, four main sections, and
+  no duplicate mobile navigation CTA. At 1440 x 900, the page retained its
+  two-column Hero, all five desktop navigation destinations, four main
+  sections, and no document overflow. Mobile and desktop screenshots showed no
+  observed clipping or material visual regression. All 75 directly affected
+  product-site, user-documentation, portfolio, interview, and public-freshness
+  tests pass. The first complete-suite run executed 926 tests and exposed four
+  historical public-surface assertions; all four are now corrected through
+  supported low-density links or progressive disclosure, not deleted or
+  weakened. The corrected complete-suite rerun passed all 926 tests with 3
+  platform-limited skips. Before pause, task governance reported `PASS=3
+  WARN=1 FAIL=0 ADVISORY=3`; after pause, the final task check reports
+  `PASS=2 WARN=2 FAIL=0 ADVISORY=3`, with the expected warning that
+  implementation is no longer admitted. Repository governance reports
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`, and `git diff --check` passes. Scope
+  reconciliation before pause accepted all task-owned changes and rejected
+  only the explicitly excluded, untracked `.codex/config.toml`. After pause,
+  the scope checker correctly refuses to inspect implementation because the
+  task is no longer admitted. The correction task reported `PASS=3 WARN=1
+  FAIL=0 ADVISORY=3` before pause; its scope accepted its three owned records
+  and rejected six preserved paths owned by the completed landing task or the
+  user-owned `.codex` directory, with no ownership transfer inferred.
+- **User-reported validation**: the human reported that the previously
+  published page remained too complex for ordinary readers, accepted the
+  five-part plain-language direction, and admitted its exact local task scope
+  through native proposal review `prp-9f69fcc4f8f1428d9252f45cd0c36026`.
+  No separate user-run browser or reader result has been reported for this
+  local revision.
+- **Advisory review**: a distinct bounded current-Agent pass found no
+  correction-required requirement, architecture, scope, implementation,
+  security, or data drift. This was not a native self-review because the fully
+  specified task did not start an alignment journey; no journey handle or
+  native completion is claimed. The review retained actual first-time-reader
+  comprehension, hiring, adoption, and conversion outcomes as unknown.
+- **Pending validation**: genuine unbriefed-reader comprehension remains
+  unknown until a person sees a published or otherwise shared revision without
+  coaching. Local rendering and automated checks do not substitute for that
+  evidence.
+- **Incomplete**: none inside the admitted local task.
+- **Publication boundary**: this revision is local and uncommitted. The task
+  authorizes no commit, push, pull request, package release, Pages publication,
+  or deployment. The user-owned `.codex` directory remains untouched.
+- **Blocker / stop condition**: stop before Git or publication. Stop before
+  claiming improved comprehension until genuine reader answers exist.
+- **Next product review**: let the human inspect the local result and decide
+  separately whether to publish it or run another unbriefed-reader test. That
+  review grants no follow-on authority.
+
+### Superseded closeout snapshot - responsive demo publication
+
 - **Active slice**: none. Task `p0-responsive-demo-publication-closeout` is
   paused after the combined implementation publication, online acceptance,
   distinct native current-Agent review, and documentation closeout. The

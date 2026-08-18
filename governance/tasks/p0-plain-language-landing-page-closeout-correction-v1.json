@@ -1,0 +1,65 @@
+{
+  "acceptance_signals": [
+    "STATUS identifies PASS=3 WARN=1 FAIL=0 ADVISORY=3 and accepted task paths as pre-pause evidence rather than current paused-state output.",
+    "STATUS records the final paused task result PASS=2 WARN=2 FAIL=0 ADVISORY=3 and explains that post-pause scope checking correctly refuses because implementation is no longer admitted.",
+    "The dated log records the same chronology without altering historical publication evidence.",
+    "The correction task is paused after task and repository governance plus git diff validation report no unresolved deterministic failure.",
+    "No page, test, README, implementation, user configuration, Git, publication, release, or deployment state changes."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-b67235493c1e4714a102a207cdf8d867 and admitted that exact task through an explicit admission control. STATUS and the dated log now distinguish pre-pause task and scope evidence from final paused-state output. The correction task reported PASS=3 WARN=1 FAIL=0 ADVISORY=3 before pause, repository governance had no FAIL, and git diff validation passed. Scope accepted the three correction-owned records and rejected six preserved paths owned by the completed landing task or excluded user configuration; no ownership transfer was inferred. The task is paused without changing the page, tests, README, Git, publication, release, or deployment state.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Correct the completed landing-page closeout records so they distinguish the admitted pre-pause task and scope results from the final paused-state task check, without changing the completed page, tests, README, product claims, or any Git/publication state."
+  },
+  "risk": {
+    "items": [
+      "A documentation correction could accidentally imply renewed implementation authority.",
+      "The new task could be confused with reopening the completed landing task.",
+      "Unrelated user-owned .codex configuration must remain untouched.",
+      "Reviewed assumption: The already observed command outputs are sufficient evidence for this documentation-only correction.",
+      "Reviewed assumption: The completed page implementation and its 926-test baseline do not need to be rerun because this task cannot modify them.",
+      "Reviewed assumption: This task authorizes only local documentation correction and its own task record.",
+      "Reviewed unknown: Real unbriefed-reader comprehension remains unknown.",
+      "Reviewed unknown: No Git or publication action is authorized."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "README.md",
+      "docs/index.html",
+      "tests",
+      "src",
+      "governance/tasks/p0-plain-language-landing-page-v1.json",
+      "docs/adr",
+      "docs/releases",
+      "pyproject.toml",
+      "CHANGELOG.md",
+      "DEVELOPMENT_PLAN.md"
+    ],
+    "include_paths": [
+      "STATUS.md",
+      "docs/development-log/2026-08-18.md",
+      "governance/tasks/p0-plain-language-landing-page-closeout-correction-v1.json"
+    ]
+  },
+  "task_id": "p0-plain-language-landing-page-closeout-correction-v1",
+  "title": "Correct plain-language landing closeout evidence",
+  "validation_commands": [
+    "git diff --check",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-plain-language-landing-page-closeout-correction-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check scope governance/tasks/p0-plain-language-landing-page-closeout-correction-v1.json --repository .",
+    "git status -sb"
+  ]
+}

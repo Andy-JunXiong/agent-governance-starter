@@ -2,19 +2,20 @@
 
 **Make AI-assisted repositories reviewable by default.**
 
-A lightweight, repository-native governance framework that connects AI
-capabilities, implementation evidence, deterministic checks, and accountable
-human decisions. The current development core extends those foundations
-into requirement, architecture, and code governance while coding agents are
-developing; pull requests and CI remain an independent backstop.
+In plain language: AgentGov keeps humans in control of AI-written code. It
+records what a coding agent was asked to change, checks whether the
+work stayed within those limits, and shows what still needs a human decision.
+The detailed governance contracts and development evidence remain in this
+README and the linked documentation; the public homepage now leads with the
+plain-language product story. Pull requests and CI remain an independent backstop.
 
 [![CI](https://github.com/Andy-JunXiong/agent-governance-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/Andy-JunXiong/agent-governance-starter/actions/workflows/ci.yml)
 
 [![Agent Governance — From task intent to verified evidence](docs/assets/agentgov-social-preview.jpg)](https://andy-junxiong.github.io/agent-governance-starter/)
 
 <p align="center">
-  <strong>Product-first: understand the problem, inspect the evidence, then rehearse the walkthrough.</strong><br />
-  <a href="https://andy-junxiong.github.io/agent-governance-starter/">Explore the AgentGov product story →</a> ·
+  <strong>Start with the problem, see one concrete example, then inspect the evidence.</strong><br />
+  <a href="https://andy-junxiong.github.io/agent-governance-starter/">See AgentGov in plain language →</a> ·
   <a href="https://andy-junxiong.github.io/agent-governance-starter/#example">See the refund example</a> ·
   <a href="https://andy-junxiong.github.io/agent-governance-starter/portfolio.html">Inspect the evidence portfolio</a> ·
   <a href="https://andy-junxiong.github.io/agent-governance-starter/demo-governance-report.html">Open the sample report</a> ·

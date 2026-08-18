@@ -169,8 +169,10 @@ class UserDocumentationTests(unittest.TestCase):
                 self.assertIn("Human product owner", text)
         landing = INDEX_WEB.read_text(encoding="utf-8")
         self.assertNotIn("Adapter <code>1.5.0</code>", landing)
-        self.assertIn("Current development evidence", landing)
-        self.assertIn("Trace the latest evidence chain", landing)
+        self.assertNotIn("Current development evidence", landing)
+        self.assertNotIn("Trace the latest evidence chain", landing)
+        self.assertIn('href="portfolio.html#boundary"', landing)
+        self.assertIn("See current evidence and limits", landing)
         for phrase in (
             "local-only",
             "no-model",

@@ -1,0 +1,89 @@
+{
+  "acceptance_signals": [
+    "The homepage main journey has no more than five substantive content sections before the footer: hero, concrete refund example, tangible report explanation, one three-step flow, and final call to action.",
+    "A first-time technically literate reader can see within the opening viewport that AgentGov keeps humans in control of AI-written code, records intended change boundaries, checks actual changes, and identifies decisions that still require a human.",
+    "The hero uses plain language, remains under 35 English words across its heading and primary support sentence, and offers one example CTA plus GitHub.",
+    "The homepage main narrative is approximately 500 English words or fewer, excluding navigation, footer, code-like report labels, and accessibility text.",
+    "Bound Verify Decide and Task Change Evidence Review are not presented as two competing repeated frameworks; only one short three-step explanation remains.",
+    "Detailed architecture, CLI transcripts, development milestones, Adapter history, version evidence, and complete PASS WARN FAIL ADVISORY teaching do not dominate the homepage and remain accessible through existing deeper links.",
+    "The refund scenario and report preview appear early and are explained in ordinary language without implying safety certification, autonomous approval, or runtime enforcement.",
+    "Existing internal links resolve, accessibility basics remain present, and the page has no unrendered templates.",
+    "At phone and desktop widths the page has no document-level horizontal overflow and retains readable hierarchy and reachable calls to action.",
+    "Relevant product-site and user-documentation tests, repository governance, task governance, scope reconciliation, and git diff validation complete with unresolved gaps reported.",
+    "README current entry, STATUS current reality, and the dated development log are updated without rewriting historical evidence."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-9f69fcc4f8f1428d9252f45cd0c36026 and admitted that exact task through an explicit admission control. The local homepage now has a 31-word Hero and four main sections totaling 267 English words, with complex release and replay evidence retained through low-density links and default-collapsed disclosure. Local browser acceptance found no document overflow at phone or desktop widths. All 75 directly affected tests and the corrected complete suite of 926 tests passed with 3 platform-limited skips; task and repository governance had no FAIL, and scope rejected only excluded user-owned .codex configuration. A distinct bounded current-Agent review found no correction-required drift; because the fully specified task had no alignment journey, no native self-review completion is claimed. The task is paused locally with no commit, push, publication, release, or deployment authority, and real unbriefed-reader comprehension remains unknown.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Replace the dense nine-section landing page with a substantially shorter five-part plain-language journey for technically literate first-time visitors: a concrete human-control hero, one refund example, an early tangible report surface with plain explanation, one three-step flow, and a final adoption call to action. Keep rigorous evidence and capability details available through existing deeper documentation without changing governance semantics, report content, runtime behavior, release identity, or unsupported claims."
+  },
+  "risk": {
+    "items": [
+      "Simplification could overstate runtime enforcement or imply autonomous approval.",
+      "Removing detail could disconnect claims from nearby qualification or make maturity boundaries misleading.",
+      "Tests may encode the current dense structure and need semantic updates without weakening their governance assertions.",
+      "The report preview may still expose unfamiliar status labels before the reader understands their purpose.",
+      "A word-count target could be pursued mechanically at the expense of necessary accuracy.",
+      "Unrelated user-owned .codex configuration is present and must remain untouched.",
+      "Reviewed assumption: The primary landing-page reader is technically literate but has never heard of AgentGov.",
+      "Reviewed assumption: The existing refund scenario is the strongest repository-supported concrete example.",
+      "Reviewed assumption: The existing report preview can remain visually recognizable while its surrounding explanation is simplified.",
+      "Reviewed assumption: Existing Quickstart, architecture, evidence, interview, and GitHub pages remain the appropriate deeper disclosure surfaces.",
+      "Reviewed assumption: No new visual asset is necessary for this information-architecture change.",
+      "Reviewed assumption: This task authorizes local repository edits and validation only, not commit, push, publication, release, or deployment.",
+      "Reviewed unknown: Whether the new page improves genuine unbriefed-reader comprehension remains unknown until a separate human test occurs.",
+      "Reviewed unknown: Whether a recruiter, engineering manager, and adopter respond equally well to the same simplified narrative is unknown.",
+      "Reviewed unknown: No hiring, adoption, conversion, or population-level usability improvement is established by local implementation or automated validation."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "src",
+      "docs/demo-governance-report.html",
+      "docs/demo-governance-report.zh-CN.html",
+      "docs/quickstart.html",
+      "docs/quickstart.zh-CN.html",
+      "docs/interview-guide.html",
+      "docs/interview-guide.zh-CN.html",
+      "docs/adr",
+      "docs/releases",
+      "governance/schemas",
+      "governance/fixtures",
+      "pyproject.toml",
+      "CHANGELOG.md",
+      "DEVELOPMENT_PLAN.md"
+    ],
+    "include_paths": [
+      "docs/index.html",
+      "tests/test_product_site.py",
+      "tests/test_user_documentation.py",
+      "README.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-18.md",
+      "governance/tasks/p0-plain-language-landing-page-v1.json"
+    ]
+  },
+  "task_id": "p0-plain-language-landing-page-v1",
+  "title": "Rebuild the landing page for first-time readers",
+  "validation_commands": [
+    "git status -sb",
+    "git diff --check",
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_product_site tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-plain-language-landing-page-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check scope governance/tasks/p0-plain-language-landing-page-v1.json --repository .",
+    "Verify homepage internal links and word-count boundaries.",
+    "Inspect the local homepage at phone and desktop browser viewports."
+  ]
+}

@@ -1,4 +1,6 @@
+import re
 import unittest
+from html import unescape
 from pathlib import Path
 
 
@@ -7,53 +9,86 @@ SITE = ROOT / "docs/index.html"
 
 
 class ProductSiteTests(unittest.TestCase):
-    def test_product_site_explains_value_implementation_and_adoption(self) -> None:
+    def test_product_site_explains_value_in_plain_language(self) -> None:
         content = SITE.read_text(encoding="utf-8")
 
         for phrase in (
-            "Make AI-assisted repositories reviewable by default.",
-            "When an AI changes how refunds get approved",
-            "See the refund example",
-            "An AI drafts customer refund replies.",
-            "Before governance",
-            "With Agent Governance",
-            "Small files make the invisible contract reviewable.",
-            "Plain files and deterministic checks. No hidden AI judge.",
-            "No governance score. On purpose.",
+            "Keep humans in control of AI-written code.",
+            "AgentGov records what an AI agent was asked to change",
+            "See a real example",
+            "An AI changes how customer refunds are handled.",
+            "Without AgentGov",
+            "With AgentGov",
+            "See facts, gaps, and human decisions in one place.",
+            "What checks confirmed",
+            "What is still missing",
+            "What a human must decide",
+            "Three steps. The human stays in charge.",
+            "Record the request",
+            "Check the work",
+            "Let a person decide",
+            "Start with one repository.",
             "Illustrative example",
-            "ADVISORY · HUMAN JUDGMENT",
-            "A repository-native control layer",
-            "Inspect the implementation, not just the promise.",
-            "Preview first. Create only what is missing.",
-            "Developer",
-            "Reviewer",
-            "Team lead or CI",
+            "Passing checks never approve a merge, release, or deployment.",
         ):
             self.assertIn(phrase, content)
 
         nav = content.split("<nav>", 1)[1].split("</nav>", 1)[0]
         product_journey = (
-            "How it works",
             "Example",
-            "Evidence",
+            "Report",
+            "How it works",
             "Quickstart",
-            "Guided walkthrough",
         )
         positions = [nav.index(label) for label in product_journey]
         self.assertEqual(positions, sorted(positions))
 
+        self.assertEqual(content.count("<section"), 4)
+        hero = content.split('<div class="shell hero">', 1)[1].split(
+            "</header>", 1
+        )[0]
+        heading = re.search(r"<h1>(.*?)</h1>", hero, re.DOTALL)
+        support = re.search(
+            r'<p class="hero-support">(.*?)</p>', hero, re.DOTALL
+        )
+        self.assertIsNotNone(heading)
+        self.assertIsNotNone(support)
+        hero_copy = unescape(
+            re.sub(r"<[^>]+>", " ", heading.group(1) + " " + support.group(1))
+        )
+        self.assertLessEqual(
+            len(re.findall(r"[A-Za-z]+(?:[-'][A-Za-z]+)*", hero_copy)), 35
+        )
+        main = content.split("<main>", 1)[1].split("</main>", 1)[0]
+        main_copy = unescape(re.sub(r"<[^>]+>", " ", main))
+        self.assertLessEqual(
+            len(re.findall(r"[A-Za-z]+(?:[-'][A-Za-z]+)*", main_copy)), 500
+        )
+
         self.assertNotIn("Inspect the detailed development milestone history", content)
         self.assertNotIn("Adapter <code>1.5.0</code>", content)
         self.assertNotIn("cryptographic personal identity,", content)
+        self.assertNotIn("Current development evidence", content)
+        self.assertNotIn("immutable reservation", main)
+        self.assertNotIn("No governance score. On purpose.", content)
+        self.assertNotIn("PASS · FACT SATISFIED", content)
+        self.assertNotIn("Small files make the invisible contract reviewable.", content)
+        self.assertNotIn("Actual fixture validation output", content)
+        self.assertNotIn("pipx install", content)
         self.assertIn('href="portfolio.html#boundary"', content)
-        self.assertIn("Illustrative published <code>0.3.0rc1</code> sample report", content)
-        self.assertIn("stable\n            <code>0.2.1</code> remains installable", content)
-        self.assertIn("newer development-source\n            behavior is separate", content)
+        self.assertIn("Sanitized <code>0.3.0rc1</code> sample", content)
+        self.assertIn("Stable CLI:", content)
         self.assertIn(
-            ".hero > *,\n"
-            "      .evidence > * {\n"
-            "        min-width: 0;\n"
-            "      }",
+            "releases/download/v0.2.1/"
+            "agent_governance_starter-0.2.1-py3-none-any.whl",
+            content,
+        )
+        self.assertIn('<details class="footer-evidence">', content)
+        self.assertIn(
+            ".hero > *,", content
+        )
+        self.assertIn(
+            "min-width: 0;",
             content,
         )
 
@@ -86,24 +121,19 @@ class ProductSiteTests(unittest.TestCase):
         self.assertIn("README on GitHub ↗", content)
         self.assertIn("MIT License ↗", content)
         self.assertIn('href="quickstart.html"', content)
-        self.assertIn("No autonomous approval", content)
-        self.assertIn("WARN</span> evaluation:needs_seed_cases", content)
+        self.assertIn("Never approves for you", content)
+        self.assertIn("HUMAN REVIEW", content)
         self.assertNotIn("Open live governance report", content)
         self.assertNotIn("{{", content)
         self.assertNotIn("}}", content)
         self.assertNotIn('role="img"', content)
         self.assertIn('<figcaption class="sr-only">', content)
-        self.assertIn(
-            'pipx install "https://github.com/Andy-JunXiong/'
-            "agent-governance-starter/releases/download/v0.2.1/"
-            'agent_governance_starter-0.2.1-py3-none-any.whl"',
-            content,
-        )
-        self.assertIn("Stable 0.2.1 · 0.3 development preview", content)
+        self.assertNotIn("agentgov adopt .", content)
+        self.assertIn("stable 0.2.1 · 0.3 development preview", content)
         self.assertNotIn("v0.1 technical preview", content)
         self.assertNotIn("python -m pip install --no-deps .", content)
-        self.assertIn("See what the CLI finds", content)
-        self.assertIn("Inspect the evidence boundary", content)
+        self.assertNotIn("See what the CLI finds", content)
+        self.assertIn("See current evidence and limits", content)
         quickstart_html = ROOT / "docs/quickstart.zh-CN.html"
         self.assertTrue(quickstart_html.is_file())
         quickstart = quickstart_html.read_text(encoding="utf-8")
