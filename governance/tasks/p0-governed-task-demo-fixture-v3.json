@@ -1,0 +1,63 @@
+{
+  "acceptance_signals": [
+    "The paused v2 task remains paused and its scope-validation acceptance signal names all three expected rejected preserved paths: the v1 runner, the v1 README, and untouched .codex configuration.",
+    "The corrected v2 wording agrees with its existing rationale and the recorded admitted-scope output.",
+    "STATUS and the dated log identify this as a documentation-only evidence correction.",
+    "Task and repository governance contain no deterministic contract failure.",
+    "Relevant documentation and task-contract tests pass.",
+    "No runner, README, test, Landing, Kernel, schema, release, integration, Git, publication, or hosting behavior changes."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-b07efc84037b4a2c8c026db9bd27214b and admitted that exact task through an explicit admission control. V3 corrected the paused v2 acceptance wording to match the existing rationale and observed evidence: v2 accepted all five owned paths and deliberately rejected the preserved v1 runner and README plus untouched .codex configuration. Fifty-five relevant task-contract, development-context, and user-documentation tests pass. Before pause, v3 task governance reported PASS=3 WARN=1 FAIL=0 ADVISORY=3 and repository governance reported PASS=26 WARN=2 FAIL=0 ADVISORY=4. Scope accepted all four v3-owned paths and rejected only preserved artifacts outside v3; no exception was inferred. JSON parsing, git diff --check, and the no-example-cache check pass. No Demo code, test, product, Git, or publication behavior changed. The task is paused for product-owner review.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Correct the paused v2 task acceptance wording so it matches the already observed scope evidence: v2 accepts its five owned closeout paths and deliberately rejects the preserved v1 runner and README plus untouched user-owned .codex configuration. Record this documentation-only correction in STATUS and the dated development log, without changing demo code, tests, product semantics, Git state, or publication state."
+  },
+  "risk": {
+    "items": [
+      "The correction could accidentally broaden v3 scope into product or test changes.",
+      "The corrected wording could imply an exception for paths that the scope checker rejected.",
+      "Reviewed assumption: The prior v2 scope output is the authoritative evidence for this wording correction.",
+      "Reviewed assumption: The preserved v1 runner and README remain legitimate uncommitted outputs of paused v1 and are intentionally outside v3."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "examples/governed-refund-demo",
+      "tests/test_governed_task_demo.py",
+      "src/agentgov",
+      "governance/schemas",
+      "governance/contracts",
+      "docs/index.html",
+      "README.md",
+      ".github"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-governed-task-demo-fixture-v2.json",
+      "governance/tasks/p0-governed-task-demo-fixture-v3.json",
+      "STATUS.md",
+      "docs/development-log/2026-08-18.md"
+    ]
+  },
+  "task_id": "p0-governed-task-demo-fixture-v3",
+  "title": "Correct M1 v2 scope evidence wording",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; python -m unittest tests.test_task_contract tests.test_development_context tests.test_user_documentation -v",
+    "$env:PYTHONPATH='src'; python -m agentgov check task governance/tasks/p0-governed-task-demo-fixture-v3.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check scope governance/tasks/p0-governed-task-demo-fixture-v3.json --repository .",
+    "python -m json.tool governance/tasks/p0-governed-task-demo-fixture-v2.json",
+    "python -m json.tool governance/tasks/p0-governed-task-demo-fixture-v3.json",
+    "git diff --check",
+    "git status -sb"
+  ]
+}

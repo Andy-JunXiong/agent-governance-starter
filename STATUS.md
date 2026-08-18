@@ -42,62 +42,74 @@ scheduling authority.
 
 ### Current closeout snapshot
 
-- **Active slice**: none. Task `p0-landing-copy-publish-v1` is paused after the
-  frozen landing copy commit was published through the existing direct-main
-  GitHub Pages path and checked online.
-- **Delivered copy**: the public landing now says `See a concrete example` and
-  uses `Guided walkthrough` for both links to the unchanged
-  `interview-guide.html` URL. The dashboard remains `Illustrative example`, its
-  note links to current evidence and limits, and the expanded development note
-  explains interruption and recovery in plain language.
-- **Progressive disclosure**: exact stable `0.2.1`, published `0.3.0rc1`, and
-  development-source provenance remains on the portfolio. Quickstart retains
-  the stable wheel, while opted-in evidence surfaces retain detailed recovery
-  and denied-authority terminology.
-- **Codex-run validation**: before publication, the unchanged source had 55
-  directly affected tests passing and the complete suite passing 926 tests
-  with 3 platform-limited skips. A fresh fetch showed remote/local divergence
-  `0 1`; commit `96d6899` was then pushed by ordinary non-force Git. After
-  Pages propagation, the online landing contained one concrete-example CTA,
-  two guided-walkthrough labels, no old CTA or public interview label, the
-  illustrative dashboard label, both evidence deep links, and the expected
-  expanded plain-language recovery copy. Quickstart, walkthrough, sample
-  report, portfolio boundary, and recovery destinations all loaded with
-  non-empty bodies. The final documentation-closeout rerun passes all 926
-  tests with 3 platform-limited skips; task governance reports `PASS=2 WARN=2
-  FAIL=0 ADVISORY=3`, repository governance reports `PASS=26 WARN=2 FAIL=0
-  ADVISORY=4`, and JSON plus `git diff --check` pass.
-- **Responsive evidence**: at the available online 1730 x 1205 viewport, body
-  client and scroll widths both measured 1715 pixels, so no horizontal
-  overflow was observed. The controlled browser did not expose a supported
-  viewport-resize operation; no new 390px online or actual-device result is
-  claimed. The freshly passing responsive tests remain applicable because the
-  published source is exactly the validated commit.
-- **Governance validation**: the human admitted the exact publication and
-  three-file closeout task. No exception, ownership transfer, force push, PR,
-  package release, Sites migration, new hosting project, or product change was
-  introduced.
-- **Advisory review**: the published source matches the reviewed local commit,
-  deeper provenance remains discoverable, and passing checks still do not
-  authorize merge, release, publication, or deployment. This fully specified
-  task did not start alignment, so the bounded current-Agent review does not
+- **Active slice**: task `p0-governed-task-demo-main-push-v1` is admitted for
+  the human-authorized direct-main Git closeout. Documentation-only task v3,
+  isolation-correction task v2, and implementation task v1 remain paused.
+- **Delivered experience**: one documented development-source command creates
+  a disposable refund-service Git repository, records a narrow calculation
+  task, simulates one admitted calculation edit plus one non-admitted approval
+  policy edit, and uses real AgentGov scope and foreground-cycle behavior to
+  return deterministic FAIL and `BLOCKED`. After the operator selects
+  `narrow_changes`, clearly labelled scripted remediation restores only the
+  policy file; real pre-approved validation and completion reconciliation then
+  reach `PASSED`, `VERIFIED`, and `REVIEW_READY`.
+- **Provenance boundary**: the runner labels agent file writes and remediation
+  as simulation. Git observation, path admission, the scope failure, blocked
+  cycle, human-decision contract, validation, and fresh-evidence reconciliation
+  use current AgentGov code. `BLOCKED` means AgentGov refuses completion
+  validation; it does not claim control over or rollback of an external coding
+  agent. Final completion acceptance is deliberately not recorded.
+- **Isolation and release boundary**: each run mutates only a temporary fixture
+  and deletes it on exit. No external key, model call, network service, new
+  frontend, Landing change, Kernel/schema change, stable `0.2.1` behavior, or
+  hosting change is involved. This is future-0.3 development-source evidence.
+- **Codex-run validation**: all 5 new semantic Demo tests pass; all 73 directly
+  related scope, foreground, transport, evidence, host-interaction, and
+  human-decision tests pass; and the complete repository suite passes 931 tests
+  with 3 platform-limited skips. The first Demo run correctly returned stale
+  evidence when validation created unignored fixture caches; adding standard
+  cache ignores made the governed snapshot stable. A final isolation audit then
+  found that the test module loader itself wrote ignored bytecode beneath the
+  source example. The v2 correction suppresses bytecode only during that
+  dynamic import, restores the process setting afterward, and asserts that no
+  example `__pycache__` exists after the tests.
+- **Governance validation**: v1 task governance before pause reported `PASS=3
+  WARN=1 FAIL=0 ADVISORY=3`. Its scope check accepted the runner, README, test,
+  and task record and rejected only excluded, untouched `.codex/config.toml`.
+  The separately admitted v2 correction owns only its test and closeout files;
+  its scope check accepted all five owned paths and deliberately rejected the
+  preserved v1 runner and README plus untouched `.codex/config.toml`. V3 fixes
+  the previously narrower acceptance wording; no exception or ownership
+  transfer was inferred. Before pause, v3 task governance reported `PASS=3
+  WARN=1 FAIL=0 ADVISORY=3`; repository governance reported `PASS=26 WARN=2
+  FAIL=0 ADVISORY=4`.
+- **Advisory review**: the M1 orchestration reuses existing AgentGov contracts
+  without changing their semantics. It does not silently apply the human
+  choice, automatically widen scope, claim external-agent enforcement, or
+  convert passing evidence into Git or release authority. The fully specified
+  task did not start alignment, so this bounded current-Agent review does not
   claim native self-review completion or an independent reviewer.
-- **Pending validation**: genuine unbriefed-reader comprehension and a new
-  phone-width or actual-device online pass remain unknown. No adoption,
-  hiring, or conversion effect is established.
-- **Incomplete**: none in the copy or desktop-publication scope; phone-width
-  browser acceptance remains pending because the available browser could not
-  resize.
-- **Git and publication boundary**: source commit `96d6899` is on
-  `origin/main`. The documentation-only closeout records only publication
-  evidence. `.codex` remains local, untracked, and unchanged.
-- **Blocker / stop condition**: the landing remains frozen. Stop further copy
-  polishing unless genuine reader evidence identifies a concrete
-  comprehension problem; do not treat the desktop check or automated tests as
-  an actual-device result.
-- **Next product review**: run one neutral unbriefed-reader test on the public
-  landing, ideally on a phone. The stronger governed-task demonstration
-  remains product-review input only and is not authorized as follow-on work.
+- **Pending validation**: tests inject `START` and option `2` and visibly label
+  that input as test-harness evidence, not human evidence. A real operator has
+  not yet run the interactive command. Completion time, first-time-reader
+  comprehension, hiring value, adoption, and conversion effects remain
+  unknown.
+- **Incomplete**: none inside the M1 implementation scope. The M2 60–90 second
+  public walkthrough and M3 unbriefed-reader test remain separate unadmitted
+  requirements.
+- **Git and publication boundary**: the human explicitly authorized two
+  ordinary non-force commits and direct pushes to `origin/main`: one M1
+  implementation commit and one evidence-only closeout commit. A fresh fetch
+  found remote/local divergence `0 0` before the first commit. No PR, force
+  push, package publication, release, deployment, hosting change, or Landing
+  change is authorized. `.codex` remains local, untracked, and unchanged.
+- **Blocker / stop condition**: do not build M2 or link the Demo from the frozen
+  Landing until the product owner reviews one real interactive M1 run. Stop if
+  that run cannot preserve the visible real/simulated/human distinction.
+- **Next product review**: the product owner should run the documented command
+  once in a real terminal and judge whether the terminal journey is credible
+  enough to become the evidence source for a separately admitted M2
+  walkthrough.
 
 ### Superseded closeout snapshot - bilingual Quickstart publication
 

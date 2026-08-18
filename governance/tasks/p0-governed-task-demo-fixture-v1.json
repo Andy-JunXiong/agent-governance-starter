@@ -1,0 +1,78 @@
+{
+  "acceptance_signals": [
+    "One documented command runs the demo locally using Python, Git, and the current development source without external API keys.",
+    "The demo creates and mutates only a disposable temporary Git repository plus an explicitly requested optional output directory; it does not mutate the AgentGov source worktree.",
+    "The visible scenario records refund-calculation files as allowed and approval or payment policy as not admitted.",
+    "The attempted code changes are visibly labelled simulated agent behavior.",
+    "Real AgentGov evidence identifies the allowed observed file and the out-of-scope approval-policy file, returns a deterministic failure, and reports the foreground cycle as blocked.",
+    "The blocked wording states that AgentGov completion validation is blocked and does not claim that AgentGov stopped or rolled back an external agent.",
+    "A real human selection is required to narrow changes in the interactive demo; tests may inject the same choice but must label it as test-harness input rather than human evidence.",
+    "After the selection, scripted remediation is visibly labelled, removes only the out-of-scope change, and real AgentGov completion runs admitted validation and reaches review-ready with fresh evidence.",
+    "The demo stops before session acceptance and states that passing evidence does not authorize commit, merge, release, publication, or deployment.",
+    "Tests protect scope mismatch, blocked semantics, human-decision separation, corrected state, fresh validation, final pending decision, fixture isolation, and stable semantic output.",
+    "Relevant tests and the complete repository suite pass.",
+    "STATUS and the dated development log record the exact capability boundary, validation, remaining comprehension unknown, and no Git or publication authority.",
+    "No Landing, Kernel, schema, stable-release, hosting, integration, Git, publication, release, or deployment change occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-8bafa2f59bfa4028845d45af0b031fee and admitted that exact task through an explicit admission control. The local M1 runner now creates only a disposable refund-service Git fixture, labels agent edits and remediation as simulated, and uses real AgentGov scope, foreground, human-decision, validation, and fresh-evidence contracts. The scenario produces an admitted calculation path, a deterministic approval-policy FAIL and blocked cycle, a narrow-changes decision boundary, corrected scope, passing admitted validation, verified evidence, and review-ready state without final acceptance or external-agent enforcement claims. Five new tests, 73 related contract tests, and all 931 repository tests pass with 3 platform-limited skips. Scope accepted every task-owned path and rejected only excluded, untouched .codex configuration. A later final audit found that the semantic test's dynamic import created ignored bytecode beneath the source example; v1 remains paused and separately admitted replacement task p0-governed-task-demo-fixture-v2 owns that isolation correction. A real interactive operator run, M2 walkthrough, M3 comprehension evidence, Git action, and publication remain outside this closeout. The task is paused for product-owner review.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Create a development-source terminal demo that builds a temporary refund-service Git fixture, labels agent code changes as simulated, uses real AgentGov scope and foreground-cycle behavior to expose an out-of-scope approval-policy change, records a human narrow-changes selection, applies clearly labelled scripted remediation, reruns real admitted validation to review-ready, and stops before final human acceptance."
+  },
+  "risk": {
+    "items": [
+      "The demo could overstate completion blocking as control over an external coding agent.",
+      "Fixture admission or scripted remediation could be mistaken for a live human or autonomous AgentGov action.",
+      "Temporary repository creation could accidentally target the source worktree.",
+      "Dynamic identifiers and timestamps could make tests brittle.",
+      "A runner that relies too heavily on test helpers or private internals could become non-credible.",
+      "Reviewed assumption: This is a development-source demonstration and is not presented as stable 0.2.1 behavior.",
+      "Reviewed assumption: M1 is terminal-first; a public HTML walkthrough remains a separately reviewed M2.",
+      "Reviewed assumption: The safest first narrative always chooses narrow changes rather than approving a wider task.",
+      "Reviewed assumption: The existing AgentGov reference adapter, foreground coordinator, scope report, human-decision contracts, and completion evidence are reused without semantic changes.",
+      "Reviewed unknown: Whether a first-time reader understands the demo within 90 seconds remains unknown until M3 human testing.",
+      "Reviewed unknown: Whether a hiring manager finds the terminal presentation compelling remains unknown.",
+      "Reviewed unknown: The final M2 HTML presentation format is not selected by this task."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "docs/index.html",
+      "docs/guide.css",
+      "docs/guide.js",
+      "src/agentgov",
+      "governance/schemas",
+      "governance/contracts",
+      "README.md",
+      ".github"
+    ],
+    "include_paths": [
+      "examples/governed-refund-demo",
+      "tests/test_governed_task_demo.py",
+      "STATUS.md",
+      "docs/development-log/2026-08-18.md",
+      "governance/tasks/p0-governed-task-demo-fixture-v1.json"
+    ]
+  },
+  "task_id": "p0-governed-task-demo-fixture-v1",
+  "title": "Build deterministic governed refund task fixture",
+  "validation_commands": [
+    "$env:PYTHONPATH = 'src'; python -m unittest tests.test_governed_task_demo -v",
+    "$env:PYTHONPATH = 'src'; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = 'src'; python -m agentgov check task governance/tasks/p0-governed-task-demo-fixture-v1.json --repository .",
+    "$env:PYTHONPATH = 'src'; python -m agentgov check repository .",
+    "$env:PYTHONPATH = 'src'; python -m agentgov check scope governance/tasks/p0-governed-task-demo-fixture-v1.json --repository .",
+    "git diff --check",
+    "git status -sb"
+  ]
+}

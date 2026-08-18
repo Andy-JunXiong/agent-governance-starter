@@ -1,0 +1,76 @@
+{
+  "acceptance_signals": [
+    "STATUS and the dated development log record the M1 capability, validation, remaining human-run unknown, and exact Git publication evidence.",
+    "Only the reviewed M1 example, semantic test, task records, STATUS, and dated log are staged.",
+    "User-owned .codex configuration remains untracked and unchanged.",
+    "Relevant tests and the complete repository suite remain passing with the already observed 931-pass and 3-skip result.",
+    "Task and repository governance have no deterministic contract failure.",
+    "A fresh origin fetch shows no unresolved divergence before the first commit.",
+    "The M1 implementation is committed and pushed to origin/main using ordinary non-force Git.",
+    "A second documentation-only closeout commit records the first commit and push result, pauses this task, and is pushed to origin/main.",
+    "Local main and origin/main finish synchronized.",
+    "No PR, force push, release, package publication, deployment, hosting change, or Landing change occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-cce768e113774675ad90ef53805a71ca and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Close out today's completed M1 governed-refund demo by updating STATUS and the dated development log, committing only the reviewed M1 implementation, tests, task records, and closeout documents, pushing ordinary non-force commits directly to origin/main, then recording the resulting Git evidence in a second bounded closeout commit and pushing it. Do not include user-owned .codex configuration or create a PR, release, deployment, or site publication."
+  },
+  "risk": {
+    "items": [
+      "Unrelated user-owned .codex content could be staged accidentally.",
+      "Remote main could diverge between inspection and push.",
+      "Closeout documentation could claim a push before Git transport succeeds.",
+      "A direct-main push is an external write and must remain limited to the explicitly authorized repository and branch.",
+      "Reviewed assumption: The human's current instruction explicitly authorizes commit and ordinary non-force push to origin/main.",
+      "Reviewed assumption: Two focused commits are acceptable so the second can record evidence from the first successful push.",
+      "Reviewed assumption: The existing full-suite result is valid for the unchanged implementation; directly affected tests will be rerun after closeout documentation edits.",
+      "Reviewed unknown: Whether Git transport authentication remains valid until the push is attempted."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "src/agentgov",
+      "governance/schemas",
+      "governance/contracts",
+      "docs/index.html",
+      "docs/guide.css",
+      "docs/guide.js",
+      "README.md",
+      ".github"
+    ],
+    "include_paths": [
+      "examples/governed-refund-demo",
+      "tests/test_governed_task_demo.py",
+      "STATUS.md",
+      "docs/development-log/2026-08-18.md",
+      "governance/tasks/p0-governed-task-demo-fixture-v1.json",
+      "governance/tasks/p0-governed-task-demo-fixture-v2.json",
+      "governance/tasks/p0-governed-task-demo-fixture-v3.json",
+      "governance/tasks/p0-governed-task-demo-main-push-v1.json"
+    ]
+  },
+  "task_id": "p0-governed-task-demo-main-push-v1",
+  "title": "Commit and push governed refund demo to main",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; python -m unittest tests.test_governed_task_demo tests.test_task_contract tests.test_development_context tests.test_user_documentation -v",
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; python -m agentgov check task governance/tasks/p0-governed-task-demo-main-push-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check scope governance/tasks/p0-governed-task-demo-main-push-v1.json --repository .",
+    "git diff --check",
+    "git status -sb",
+    "git fetch origin",
+    "git rev-list --left-right --count origin/main...main"
+  ]
+}
