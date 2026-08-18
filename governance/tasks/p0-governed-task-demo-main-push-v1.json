@@ -14,8 +14,8 @@
   "contract": "agentgov.development-task",
   "decision": {
     "decided_by": "Human product owner",
-    "rationale": "The accountable human reviewed structured proposal prp-cce768e113774675ad90ef53805a71ca and admitted that exact task through an explicit admission control.",
-    "state": "admitted"
+    "rationale": "The accountable human reviewed structured proposal prp-cce768e113774675ad90ef53805a71ca and admitted that exact task through an explicit admission control. A fresh origin fetch succeeded and showed remote/local divergence 0 0. The final pre-commit repository suite passed all 931 tests with 3 platform-limited skips; 60 directly affected tests also passed. Task governance reported PASS=3 WARN=1 FAIL=0 ADVISORY=3, repository governance reported PASS=26 WARN=2 FAIL=0 ADVISORY=4, and scope accepted all 9 task-owned paths while rejecting only excluded, untouched .codex configuration. No credential-like pattern or example cache remained. Commit d047ad5 (feat: add governed refund task demo) contained exactly the reviewed 9 paths and was pushed successfully by ordinary non-force Git to origin/main, advancing it from 94089d8 to d047ad5. This task record is part of the second evidence-only closeout commit authorized for the same direct-main push. No PR, force push, release, package publication, deployment, hosting change, or Landing change occurred. The task is paused after the Git closeout.",
+    "state": "paused"
   },
   "owner": "Human product owner",
   "profile": "compact",

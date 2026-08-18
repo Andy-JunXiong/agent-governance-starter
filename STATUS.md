@@ -42,9 +42,9 @@ scheduling authority.
 
 ### Current closeout snapshot
 
-- **Active slice**: task `p0-governed-task-demo-main-push-v1` is admitted for
-  the human-authorized direct-main Git closeout. Documentation-only task v3,
-  isolation-correction task v2, and implementation task v1 remain paused.
+- **Active slice**: none. Task `p0-governed-task-demo-main-push-v1` is paused
+  after the human-authorized direct-main Git closeout. Documentation-only task
+  v3, isolation-correction task v2, and implementation task v1 remain paused.
 - **Delivered experience**: one documented development-source command creates
   a disposable refund-service Git repository, records a narrow calculation
   task, simulates one admitted calculation edit plus one non-admitted approval
@@ -97,12 +97,12 @@ scheduling authority.
 - **Incomplete**: none inside the M1 implementation scope. The M2 60–90 second
   public walkthrough and M3 unbriefed-reader test remain separate unadmitted
   requirements.
-- **Git and publication boundary**: the human explicitly authorized two
-  ordinary non-force commits and direct pushes to `origin/main`: one M1
-  implementation commit and one evidence-only closeout commit. A fresh fetch
+- **Git and publication boundary**: implementation commit `d047ad5` was pushed
+  by ordinary non-force Git to `origin/main`; this evidence-only closeout
+  follows it in a second human-authorized direct-main commit. A fresh fetch
   found remote/local divergence `0 0` before the first commit. No PR, force
   push, package publication, release, deployment, hosting change, or Landing
-  change is authorized. `.codex` remains local, untracked, and unchanged.
+  change occurred. `.codex` remains local, untracked, and unchanged.
 - **Blocker / stop condition**: do not build M2 or link the Demo from the frozen
   Landing until the product owner reviews one real interactive M1 run. Stop if
   that run cannot preserve the visible real/simulated/human distinction.
