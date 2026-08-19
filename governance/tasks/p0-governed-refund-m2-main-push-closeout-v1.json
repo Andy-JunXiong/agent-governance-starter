@@ -12,8 +12,8 @@
   "contract": "agentgov.development-task",
   "decision": {
     "decided_by": "Human product owner",
-    "rationale": "The accountable human reviewed structured proposal prp-22137719bfd646a6bd71f852f5db563f and admitted that exact task through an explicit admission control.",
-    "state": "admitted"
+    "rationale": "The accountable human reviewed structured proposal prp-22137719bfd646a6bd71f852f5db563f and admitted that exact task through an explicit admission control, then separately and explicitly authorized commit and direct push to main. The complete intended diff was reviewed incrementally and reconciled to 15 task-owned paths; user-owned .codex was the only rejected worktree path and remained untracked and unstaged. All seven task JSON records parsed, bounded credential and absolute-host-path scans returned zero matches, git diff --check passed, and git fetch origin showed 0 0 divergence before commit. The complete repository suite passed all 938 tests with 3 platform-limited skips. Commit df8ca89, feat: add governed refund walkthrough, contains exactly the 15 staged paths. Its first sandboxed push failed because GitHub port 443 was unavailable; the exact same ordinary non-force push succeeded with approved external network access and advanced origin/main from 3e98143 to df8ca89. No authentication, credential, remote, PR, force push, hosting, publication, release, or deployment action occurred. This final bounded documentation follow-up records the concrete Git result under the same authorization. The task is paused after the direct-main product push and final evidence closeout.",
+    "state": "paused"
   },
   "owner": "Human product owner",
   "profile": "compact",

@@ -42,11 +42,11 @@ scheduling authority.
 
 ### Current closeout snapshot
 
-- **Active slice**: human-admitted closeout task
-  `p0-governed-refund-m2-main-push-closeout-v1` is active for exact session
-  documentation, validation, and the product owner's explicitly authorized
-  direct commit and push to `origin/main`. The underlying contrast,
-  Landing-link, M2, and correction tasks remain paused.
+- **Active slice**: none. Human-admitted closeout task
+  `p0-governed-refund-m2-main-push-closeout-v1` is paused after exact session
+  documentation, validation, product commit `df8ca89`, and its confirmed direct
+  push to `origin/main`. The underlying contrast, Landing-link, M2, and
+  correction tasks remain paused.
 - **Delivered experience**: one standalone English HTML page now tells the
   verified governed-refund story in a source-level 60-to-90-second reading
   range. It moves from admitted calculation scope through simulated agent
@@ -145,10 +145,15 @@ scheduling authority.
   separate unadmitted requirements.
 - **Git and publication boundary**: on 2026-08-20 the product owner explicitly
   authorized committing the accumulated M2/Landing scope and pushing it
-  directly to `origin/main`. Execution and remote confirmation are pending at
-  this pre-push checkpoint. No pull request, package publication, release,
-  deployment, hosting change, or external publication is authorized.
-  User-owned `.codex` remains local, untracked, unchanged, and excluded.
+  directly to `origin/main`. Commit `df8ca89` (`feat: add governed refund
+  walkthrough`) contains the exact 15-path product closeout and was pushed
+  normally from `main` to `origin/main`. The first sandboxed push could not
+  reach GitHub port 443; the exact same non-force push succeeded with approved
+  external network access. This final evidence update is a bounded
+  documentation follow-up under the same explicit authorization. No pull
+  request, package publication, release, deployment, hosting change, or
+  external publication occurred. User-owned `.codex` remains local, untracked,
+  unchanged, and excluded.
 - **Blocker / stop condition**: do not claim independent M3 validation,
   click-through benefit, publication, or stable-release behavior from the local
   Landing link. Stop if a visual review finds the new entry competes with the
