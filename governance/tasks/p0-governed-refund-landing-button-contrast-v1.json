@@ -1,0 +1,76 @@
+{
+  "acceptance_signals": [
+    "The Landing defines a scoped refund-example button rule with white background, deep navy text, and white border.",
+    "The walkthrough link, wording, placement, and accessible label remain unchanged.",
+    "A semantic regression assertion protects the three contrast declarations.",
+    "No global button style, walkthrough content, image, script, responsive rule, hosting, or publication surface changes.",
+    "The Landing and walkthrough URLs return HTTP 200 from the existing local preview.",
+    "Relevant and repository tests pass, governance checks have no deterministic failure, and the task is paused for human visual review."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-a87445650cbb490b9d7abd700f7f7c13 and admitted that exact task through an explicit admission control. The current Agent inspected the supplied screenshot and traced the blank white pill to white link text inherited inside a white button. The Landing now uses one scoped refund-example rule with white background, deep-navy text, and white border; other buttons, the link, wording, placement, accessible label, responsive rules, and frozen walkthrough remain unchanged. All 7 walkthrough and Landing semantic tests, 54 directly related documentation tests, and 938 repository tests pass with 3 platform-limited skips. Both local URLs return 200. Before pause, task and repository governance had no deterministic failures; scope accepted all five task-owned paths and rejected ten preserved prior-task or user-owned paths without granting an exception. A bounded current-Agent advisory review found the local selector, requested palette, unchanged link semantics, and non-publication boundary preserved and does not claim native self-review or independent post-correction visual validation. No Git, hosting, publication, localization, release, or deployment action is authorized. The task is paused for human visual confirmation after a hard refresh.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Change only the Landing refund-example walkthrough button styling so it uses a white background, deep navy text, and a white border. Preserve its link, wording, placement, responsive behavior, surrounding design, walkthrough content, and local-only status. Add a regression assertion and record the screenshot-observed white-on-white contrast defect."
+  },
+  "risk": {
+    "items": [
+      "Changing a global button style and affecting unrelated calls to action.",
+      "Reducing contrast or visual hierarchy inside the dark refund example.",
+      "Accidentally changing the link or walkthrough while fixing presentation.",
+      "Expanding into redesign, hosting, or publication.",
+      "Reviewed assumption: The supplied screenshot shows the button text rendered white on a white background because the link inherits the dark section's white text color.",
+      "Reviewed assumption: A scoped .case-wrap .button.light rule is safer than changing every light button globally.",
+      "Reviewed assumption: Deep navy text matches the existing navigation and CTA palette.",
+      "Reviewed assumption: The user requested a local visual correction and did not authorize hosting, publication, Git, release, or deployment.",
+      "Reviewed unknown: Post-change browser appearance remains subject to human visual confirmation.",
+      "Reviewed unknown: Exact color perception varies by display and browser rendering."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".openai",
+      "README.md",
+      "examples/governed-refund-demo",
+      "docs/governed-refund-walkthrough.html",
+      "docs/guide.css",
+      "docs/guide.js",
+      "docs/portfolio.html",
+      "docs/quickstart.html",
+      "src",
+      "schemas",
+      "governance/tasks/p0-governed-refund-walkthrough-landing-link-v1.json",
+      "governance/tasks/p0-governed-refund-walkthrough-restoration-clarity-v1.json",
+      "governance/tasks/p0-governed-refund-walkthrough-actor-attribution-v1.json",
+      "governance/tasks/p0-governed-refund-walkthrough-copy-correction-v1.json",
+      "governance/tasks/p0-governed-refund-walkthrough-v1.json"
+    ],
+    "include_paths": [
+      "docs/index.html",
+      "tests/test_governed_refund_walkthrough.py",
+      "STATUS.md",
+      "docs/development-log/2026-08-20.md",
+      "governance/tasks/p0-governed-refund-landing-button-contrast-v1.json"
+    ]
+  },
+  "task_id": "p0-governed-refund-landing-button-contrast-v1",
+  "title": "Fix the Landing walkthrough button contrast",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; python -m unittest tests.test_governed_refund_walkthrough -v",
+    "$env:PYTHONPATH='src'; python -m unittest tests.test_governed_refund_walkthrough tests.test_user_documentation tests.test_public_documentation_freshness -v",
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; python -m agentgov check task governance/tasks/p0-governed-refund-landing-button-contrast-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check scope governance/tasks/p0-governed-refund-landing-button-contrast-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

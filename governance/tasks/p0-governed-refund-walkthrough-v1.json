@@ -1,0 +1,77 @@
+{
+  "acceptance_signals": [
+    "One standalone HTML page can be read as a 60 to 90 second walkthrough and uses only repository-local existing guide assets.",
+    "The page clearly distinguishes simulated agent behavior, real AgentGov evidence, the human decision, scripted remediation, and final human authority.",
+    "The page states that BLOCKED refers to completion validation and does not claim AgentGov stopped or rolled back an external coding agent.",
+    "The narrative reaches fresh passing validation, VERIFIED reconciliation, and REVIEW_READY without recording final acceptance.",
+    "The page states that passing evidence does not authorize commit, merge, publication, release, or deployment.",
+    "The M1 example README and top-level README link to the new walkthrough without changing the frozen landing page.",
+    "Semantic tests protect narrative order, provenance labels, development-source maturity, authority limits, local asset references, and the absence of unsafe inline scripts.",
+    "STATUS and the dated development log distinguish the real product-owner M1 run from pending M3 unbriefed-reader comprehension evidence.",
+    "Relevant tests and the complete repository suite pass with no deterministic governance failure.",
+    "No Kernel, schema, stable-release, landing, hosting, Git, publication, release, deployment, or Chinese-localization change occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-c0c093c903f348c29264d1c222144052 and admitted that exact task through an explicit admission control. The local M2 candidate now reuses existing guide assets to explain the verified M1 story without changing the frozen Landing or AgentGov semantics. Four new semantic tests, all 75 final related tests, and all 935 repository tests pass with 3 platform-limited skips. Before pause, task and repository governance had no deterministic failure; scope accepted every then-changed task-owned path and rejected only preserved user-owned .codex configuration. Native aligned current-Agent self-review completed as a separate advisory pass and preserved the unbriefed-reader, visual-device, localization, and product-benefit unknowns. No Git, publication, release, deployment, hosting, or localization action is authorized. The task is paused for M3 product review.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Create one standalone public-facing English HTML walkthrough that explains the verified M1 governed-refund journey in 60 to 90 seconds: admitted calculation scope, simulated out-of-scope approval-policy change, real deterministic block, human narrow-changes choice, clearly labelled scripted remediation, fresh validation, REVIEW_READY, and final human authority. Reuse existing guide assets, link it from the M1 example README and top-level README, protect semantics with tests, and record the bounded closeout without modifying the frozen landing page or publishing the page."
+  },
+  "risk": {
+    "items": [
+      "The page could overstate AgentGov as controlling or rolling back an external coding agent.",
+      "The page could blur simulated edits, scripted remediation, real deterministic evidence, and human choices.",
+      "A concise narrative could omit the final authority boundary or development-source maturity.",
+      "Adding a public-facing page could be mistaken for publication authority.",
+      "README links or closeout wording could drift from the executable M1 evidence.",
+      "Reviewed assumption: The completed product-owner terminal run is sufficient evidence to use M1 as the factual source for M2.",
+      "Reviewed assumption: An English-only standalone page is the smallest useful M2 slice; localization remains a separate product decision.",
+      "Reviewed assumption: Existing guide.css and guide.js provide sufficient responsive and accessible presentation without modification.",
+      "Reviewed assumption: A public-facing source page can be implemented and validated locally without authorizing publication.",
+      "Reviewed unknown: Whether an unbriefed reader can understand the walkthrough within 90 seconds remains unknown until M3.",
+      "Reviewed unknown: Whether the walkthrough improves adoption, hiring, or conversion remains unknown.",
+      "Reviewed unknown: Whether Chinese localization should follow depends on product review after the English M2 candidate.",
+      "Reviewed unknown: Whether the frozen landing page should link the walkthrough remains a separate decision."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "docs/index.html",
+      "docs/guide.css",
+      "docs/guide.js",
+      "src/agentgov",
+      "governance/schemas",
+      "governance/contracts",
+      ".github"
+    ],
+    "include_paths": [
+      "docs/governed-refund-walkthrough.html",
+      "tests/test_governed_refund_walkthrough.py",
+      "examples/governed-refund-demo/README.md",
+      "README.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-19.md",
+      "governance/tasks/p0-governed-refund-walkthrough-v1.json"
+    ]
+  },
+  "task_id": "p0-governed-refund-walkthrough-v1",
+  "title": "Build M2 governed refund walkthrough",
+  "validation_commands": [
+    "$env:PYTHONPATH = 'src'; python -m unittest tests.test_governed_refund_walkthrough tests.test_governed_task_demo tests.test_user_documentation tests.test_public_documentation_freshness -v",
+    "$env:PYTHONPATH = 'src'; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = 'src'; python -m agentgov check task governance/tasks/p0-governed-refund-walkthrough-v1.json --repository .",
+    "$env:PYTHONPATH = 'src'; python -m agentgov check repository .",
+    "$env:PYTHONPATH = 'src'; python -m agentgov check scope governance/tasks/p0-governed-refund-walkthrough-v1.json --repository .",
+    "git diff --check",
+    "git status -sb"
+  ]
+}

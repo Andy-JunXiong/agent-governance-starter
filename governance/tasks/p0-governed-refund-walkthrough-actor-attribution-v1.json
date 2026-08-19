@@ -1,0 +1,80 @@
+{
+  "acceptance_signals": [
+    "Section 2 explicitly says the demo script simulates the coding-agent changes and AgentGov changes neither file.",
+    "Section 4 presents Human decision, Demo script action, and AgentGov role as three separate scannable actor labels.",
+    "The human actor declines expansion and records a decision without editing code.",
+    "The demo script actor performs clearly labelled scripted remediation that restores only the approval-policy file.",
+    "The AgentGov actor checks corrected scope and fresh evidence and explicitly does not modify or restore code.",
+    "The main narrative remains within the tested 190-to-300-word source-level reading range.",
+    "PASS, PASSED, VERIFIED, BLOCKED, and REVIEW_READY remain unchanged because they represent distinct real stage outputs.",
+    "Semantic tests protect all three actor-role mappings and reject attribution of modification or restoration to AgentGov.",
+    "STATUS and the dated development log record the user-reported 70-second M3 result as two correct answers and one actor-attribution misunderstanding, without presenting it as Codex-run or independently verified evidence.",
+    "Relevant tests and the complete repository suite pass with no deterministic governance failure.",
+    "No other page, layout asset, README, localization, Landing, Kernel, schema, Git, publication, release, deployment, or hosting change occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-00b2939bc23b49889b1dccd68c3eac21 and admitted that exact task through an explicit admission control. The page now states that the demo script, not AgentGov, simulates both file changes and presents separate Human decision, Demo script action, and AgentGov role cards. The human records the exact narrow-scope choice without editing code, the script performs labelled restoration, and AgentGov checks scope and fresh evidence without modifying or restoring code. The first focused test run caught accidental removal of the exact human-choice label; the page restored it and the unchanged related run then passed all 61 tests. All 937 repository tests pass with 3 platform-limited skips. Before pause, task and repository governance had no deterministic failure; scope accepted all five task-owned paths and rejected only preserved prior-task changes and user-owned .codex configuration. A bounded current-Agent advisory review found no correction-required drift and does not claim native self-review or independence. The user-reported 70-second M3 attempt remains a partial comprehension result requiring a different unbriefed reader. No Git, publication, localization, release, deployment, hosting, or Landing action is authorized. The task is paused for repeat M3 product review.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Correct the M2 walkthrough after the user-reported 70-second unbriefed-reader result answered the completion block and final human authority correctly but incorrectly attributed code modification and restoration to AgentGov. Make the three roles scannable in the page: the human declines scope expansion and edits no code, the demo script simulates the agent edit and performs scripted restoration, and AgentGov observes scope and validates evidence without modifying or restoring code. Update semantic tests and bounded closeout records, preserve exact provenance statuses, and leave publication and all other product surfaces unchanged."
+  },
+  "risk": {
+    "items": [
+      "The added actor block could push the page beyond the intended reading range.",
+      "The page could still blur simulated agent edits with scripted restoration.",
+      "The AgentGov role could be overstated as performing code changes or rollback.",
+      "User-reported comprehension evidence could be misrepresented as Codex-run or independently verified.",
+      "The correction could accidentally change real provenance-specific status terms.",
+      "Reviewed assumption: The user-reported result came from the intended unbriefed-reader flow and is suitable to record as user-reported M3 evidence.",
+      "Reviewed assumption: A three-role scannable block is the smallest correction likely to reduce actor-attribution errors.",
+      "Reviewed assumption: Existing states styling can present the three roles without CSS changes.",
+      "Reviewed assumption: The exact status terms must remain because the executable M1 runner emits them from different stages.",
+      "Reviewed unknown: The reader identity and unbriefed status are not independently verifiable by Codex.",
+      "Reviewed unknown: Whether the revised actor block improves comprehension remains unknown until a different unbriefed reader repeats M3.",
+      "Reviewed unknown: Actual visual behavior on different devices remains unvalidated.",
+      "Reviewed unknown: Localization, Landing linkage, Git, and publication remain separate product decisions."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "README.md",
+      "examples/governed-refund-demo",
+      "governance/tasks/p0-governed-refund-walkthrough-v1.json",
+      "governance/tasks/p0-governed-refund-walkthrough-copy-correction-v1.json",
+      "docs/index.html",
+      "docs/guide.css",
+      "docs/guide.js",
+      "src/agentgov",
+      "governance/schemas",
+      "governance/contracts",
+      ".github"
+    ],
+    "include_paths": [
+      "docs/governed-refund-walkthrough.html",
+      "tests/test_governed_refund_walkthrough.py",
+      "STATUS.md",
+      "docs/development-log/2026-08-19.md",
+      "governance/tasks/p0-governed-refund-walkthrough-actor-attribution-v1.json"
+    ]
+  },
+  "task_id": "p0-governed-refund-walkthrough-actor-attribution-v1",
+  "title": "Clarify M2 code-change actors after M3",
+  "validation_commands": [
+    "$env:PYTHONPATH = 'src'; python -m unittest tests.test_governed_refund_walkthrough tests.test_task_contract tests.test_development_context tests.test_user_documentation -v",
+    "$env:PYTHONPATH = 'src'; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = 'src'; python -m agentgov check task governance/tasks/p0-governed-refund-walkthrough-actor-attribution-v1.json --repository .",
+    "$env:PYTHONPATH = 'src'; python -m agentgov check repository .",
+    "$env:PYTHONPATH = 'src'; python -m agentgov check scope governance/tasks/p0-governed-refund-walkthrough-actor-attribution-v1.json --repository .",
+    "git diff --check",
+    "git status -sb"
+  ]
+}

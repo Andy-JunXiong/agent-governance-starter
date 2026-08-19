@@ -1,0 +1,70 @@
+{
+  "acceptance_signals": [
+    "The page explicitly states that the simulated coding agent changes the files but the demo script, not the simulated agent or AgentGov, restores the out-of-scope approval-policy file.",
+    "The human role remains decision-only and final acceptance remains human-controlled.",
+    "A semantic regression test protects the distinct modification and restoration actors.",
+    "The latest user-reported one-minute M3 attempt is recorded as two correct answers and one restoration-actor misunderstanding, with observation limits disclosed.",
+    "Relevant and repository test suites pass without weakening existing tests.",
+    "Governance checks have no deterministic failure and the task is paused for another unbriefed-reader product review."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-3eeced8aa0464e669495e4774e6c0a2a and admitted that exact task through an explicit admission control. The page now explicitly distinguishes the simulated coding agent as the modifier from the demo script as the restorer and states that neither AgentGov nor the human performs the restoration. A new regression test protects that contrast. All 7 page tests, 62 directly related tests, and 938 repository tests pass with 3 platform-limited skips; the unchanged final full-suite rerun completed in 163 seconds. One initial related-suite invocation omitted the documented repository module path and produced two import errors; the corrected command passed without changing tests. Before pause, task and repository governance had no deterministic failures; scope accepted all five task-owned paths and rejected six preserved prior-task or user-owned paths without granting an exception. A bounded current-Agent advisory review found the human authority, status vocabulary, frozen Landing, and local-only boundaries preserved and does not claim native self-review or independence. The latest user-reported one-minute, two-of-three M3 result is recorded only as the correction input because Codex did not observe it or verify the reader condition. No Git, hosting, publication, localization, release, deployment, or Landing action is authorized. The task is paused for a different unbriefed-reader product review.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Revise the existing local M2 walkthrough so a cold reader can distinguish that the simulated coding agent changes the files, while the demo script's scripted remediation restores the out-of-scope approval-policy file; AgentGov and the human do not edit or restore code. Add regression coverage and record the latest user-reported 60-second, two-of-three M3 result without claiming independent verification."
+  },
+  "risk": {
+    "items": [
+      "Overstating AgentGov as a code modifier or rollback mechanism.",
+      "Accidentally implying the simulated coding agent performs the scripted restoration.",
+      "Changing real demo status vocabulary or human authority boundaries while editing copy.",
+      "Overclaiming a comprehension improvement before another reader test.",
+      "Reviewed assumption: This is a fully specified, low-risk copy clarification within the existing local M2 page.",
+      "Reviewed assumption: The existing static HTML structure and styling remain unchanged except for bounded explanatory copy.",
+      "Reviewed assumption: The latest reader timing and answers are user-reported and were not independently observed by the current Agent.",
+      "Reviewed assumption: Local-only delivery remains intended; no hosting, publication, Git, release, or deployment action is authorized.",
+      "Reviewed unknown: Whether the latest reader was fully unbriefed cannot be independently verified.",
+      "Reviewed unknown: Whether the revised contrast will produce three correct answers remains unknown until another reader test."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "README.md",
+      "examples/governed-refund-demo",
+      "docs/guide.css",
+      "docs/guide.js",
+      "docs/index.html",
+      "src",
+      "schemas",
+      "governance/tasks/p0-governed-refund-walkthrough-v1.json",
+      "governance/tasks/p0-governed-refund-walkthrough-copy-correction-v1.json",
+      "governance/tasks/p0-governed-refund-walkthrough-actor-attribution-v1.json"
+    ],
+    "include_paths": [
+      "docs/governed-refund-walkthrough.html",
+      "tests/test_governed_refund_walkthrough.py",
+      "STATUS.md",
+      "docs/development-log/2026-08-19.md",
+      "governance/tasks/p0-governed-refund-walkthrough-restoration-clarity-v1.json"
+    ]
+  },
+  "task_id": "p0-governed-refund-walkthrough-restoration-clarity-v1",
+  "title": "Clarify who restores the out-of-scope file in the M2 walkthrough",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; python -m unittest tests.test_governed_refund_walkthrough -v",
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; python -m agentgov check task governance/tasks/p0-governed-refund-walkthrough-restoration-clarity-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check scope governance/tasks/p0-governed-refund-walkthrough-restoration-clarity-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "acceptance_signals": [
+    "The Landing refund example contains one prominent relative link to governed-refund-walkthrough.html.",
+    "The link copy describes a short governed walkthrough without claiming publication, independent validation, or authority.",
+    "The walkthrough HTML remains unchanged and its actor and final-authority boundaries are preserved.",
+    "A semantic test protects the Landing link and rejects the former frozen-Landing expectation.",
+    "STATUS records the latest one-minute, four-of-four result as user-reported M3 evidence and distinguishes it from Codex-run validation.",
+    "The Landing page and linked walkthrough both return HTTP 200 from the existing local preview.",
+    "Related and repository tests pass, governance checks have no deterministic failure, and the task is paused for product review."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human first selected Landing integration through resolved alignment journey mcpj-ceb8ee7e5ac747ab87675de497f19c45, then reviewed structured proposal prp-c3f0d3d8c58046f380c9338141f0cccf and admitted that exact task through an explicit admission control. The Landing refund example now contains exactly one prominent relative link to the frozen governed-refund walkthrough using the existing button layout and an accessible label. No walkthrough, CSS, script, image, hosting, or publication surface changed. All 7 walkthrough and Landing semantic tests, 54 directly related documentation tests, and 938 repository tests pass with 3 platform-limited skips. Both local URLs return 200. Before pause, task and repository governance had no deterministic failures; scope accepted the task-owned changes and rejected only preserved prior-task or user-owned paths without granting an exception. Native current-Agent self-review completed with four advisory observations and preserved the selected requirement, frozen walkthrough, human authority, and non-publication boundaries; browser presentation and click-through impact remain unknown. The latest one-minute four-of-four M3 result is recorded as user-reported because Codex did not observe the reader or verify the reader condition. No Git, hosting, publication, localization, release, or deployment action is authorized. The task is paused for human visual product review.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Add one prominent internal link from the existing refund example section of the local Landing page to the frozen English governed-refund walkthrough. Preserve the Landing design, walkthrough content, authority boundaries, and local-only status. Update semantic coverage and record the user-reported one-minute, four-of-four M3 result as non-independent evidence."
+  },
+  "risk": {
+    "items": [
+      "Making the development-source walkthrough look like stable released behavior.",
+      "Overstating the user-reported M3 result as independent validation.",
+      "Changing the frozen walkthrough while adding discoverability.",
+      "Expanding into Landing redesign, hosting, or publication.",
+      "Reviewed assumption: The existing refund example section is the most relevant Landing placement.",
+      "Reviewed assumption: One existing button style is sufficient and no CSS or image change is needed.",
+      "Reviewed assumption: The latest M3 time and answers were reported accurately but were not independently observed.",
+      "Reviewed assumption: The user selected Landing integration as a separate requirement and did not authorize hosting, publication, Git, release, or deployment.",
+      "Reviewed unknown: Click-through or adoption impact is unknown.",
+      "Reviewed unknown: Browser-specific visual presentation is untested unless separately requested.",
+      "Reviewed unknown: A future publication decision has not been made."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".openai",
+      "README.md",
+      "examples/governed-refund-demo",
+      "docs/governed-refund-walkthrough.html",
+      "docs/guide.css",
+      "docs/guide.js",
+      "docs/portfolio.html",
+      "docs/quickstart.html",
+      "src",
+      "schemas",
+      "governance/tasks/p0-governed-refund-walkthrough-v1.json",
+      "governance/tasks/p0-governed-refund-walkthrough-copy-correction-v1.json",
+      "governance/tasks/p0-governed-refund-walkthrough-actor-attribution-v1.json",
+      "governance/tasks/p0-governed-refund-walkthrough-restoration-clarity-v1.json"
+    ],
+    "include_paths": [
+      "docs/index.html",
+      "tests/test_governed_refund_walkthrough.py",
+      "STATUS.md",
+      "docs/development-log/2026-08-20.md",
+      "governance/tasks/p0-governed-refund-walkthrough-landing-link-v1.json"
+    ]
+  },
+  "task_id": "p0-governed-refund-walkthrough-landing-link-v1",
+  "title": "Link the governed-refund walkthrough from the Landing example",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; python -m unittest tests.test_governed_refund_walkthrough -v",
+    "$env:PYTHONPATH='src'; python -m unittest tests.test_governed_refund_walkthrough tests.test_user_documentation tests.test_public_documentation_freshness -v",
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; python -m agentgov check task governance/tasks/p0-governed-refund-walkthrough-landing-link-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check scope governance/tasks/p0-governed-refund-walkthrough-landing-link-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

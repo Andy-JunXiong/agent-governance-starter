@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A 60-to-90-second walkthrough of AgentGov catching and resolving an out-of-scope coding-agent change.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; img-src 'self'">
+  <title>Governed refund walkthrough - Agent Governance Starter Kit</title>
+  <link rel="icon" href="favicon.ico" type="image/svg+xml">
+  <link rel="stylesheet" href="guide.css">
+</head>
+<body>
+  <nav class="shell">
+    <a class="brand" href="index.html"><span class="mark">AG</span>Agent Governance Starter Kit</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="portfolio.html">Evidence portfolio</a>
+      <a href="https://github.com/Andy-JunXiong/agent-governance-starter/tree/main/examples/governed-refund-demo">Run the source demo</a>
+    </div>
+  </nav>
+  <p class="release-strip"><strong>Maturity boundary:</strong> this walkthrough describes future-0.3 development-source evidence. It is not stable AgentGov 0.2.1 behavior.</p>
+  <header class="shell">
+    <span class="eyebrow">60-to-90-second walkthrough</span>
+    <h1>The AI changed too much. AgentGov stopped completion.</h1>
+    <p class="lead">One refund fix shows the difference between what a coding agent can change and what a human actually authorized.</p>
+  </header>
+  <main class="shell">
+    <section class="emphasis">
+      <h2>1. The human sets the boundary</h2>
+      <p>The admitted task allows <code>refunds/calculation.py</code>. It does not admit <code>refunds/approval_policy.py</code>. Approval policy remains a separate human-owned decision.</p>
+    </section>
+    <section>
+      <h2>2. The demo script simulates the overreach</h2>
+      <p>The demo script, not AgentGov, simulates a coding agent writing the requested calculation fix and changing the non-admitted approval policy. The simulated coding agent changes the files; it does not perform the restoration shown later. AgentGov changes neither file.</p>
+    </section>
+    <section>
+      <h2>3. Real AgentGov evidence blocks completion</h2>
+      <div class="states">
+        <div class="state"><strong>PASS</strong><code>refunds/calculation.py</code> is inside the admitted scope.</div>
+        <div class="state"><strong>FAIL</strong><code>refunds/approval_policy.py</code> is outside it.</div>
+      </div>
+      <p>The real governance cycle becomes <code>BLOCKED</code>: AgentGov refuses completion validation. It does not claim that AgentGov stopped or rolled back an external coding agent.</p>
+    </section>
+    <section>
+      <h2>4. A human declines the scope expansion</h2>
+      <div class="states">
+        <div class="state"><strong>Human decision</strong>Selects <em>Decline expansion and narrow the changes</em>. Recording this choice edits no code and grants no wider scope.</div>
+        <div class="state"><strong>Demo script action</strong>The demo script—not the simulated coding agent, AgentGov, or the human—performs clearly labelled scripted remediation and restores only the out-of-scope approval-policy file.</div>
+        <div class="state"><strong>AgentGov role</strong>Checks corrected scope and fresh evidence. It does not modify or restore code.</div>
+      </div>
+    </section>
+    <section class="checklist">
+      <h2>5. Fresh evidence returns the work for review</h2>
+      <ol>
+        <li><strong>Corrected scope:</strong> <code>PASS</code></li>
+        <li><strong>Pre-approved validation:</strong> <code>PASSED</code></li>
+        <li><strong>Fresh completion reconciliation:</strong> <code>VERIFIED</code></li>
+        <li><strong>Final AgentGov state:</strong> <code>REVIEW_READY</code></li>
+      </ol>
+    </section>
+    <section class="emphasis">
+      <h2>What REVIEW_READY means</h2>
+      <p>The work is ready for a person to review. The demo deliberately records no final acceptance. Passing evidence does not authorize commit, merge, publication, release, or deployment.</p>
+    </section>
+    <div class="next"><a class="button dark" href="https://github.com/Andy-JunXiong/agent-governance-starter/tree/main/examples/governed-refund-demo">Run the executable demo</a><a class="button" href="portfolio.html#boundary">Review the evidence limits</a></div>
+  </main>
+  <footer class="shell">Agent Governance Starter Kit - Evidence before authority</footer>
+  <script src="guide.js" defer></script>
+</body>
+</html>

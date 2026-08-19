@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-08-18
+Last verified: 2026-08-20
 
 ## Current-status contract
 
@@ -41,6 +41,125 @@ interactive confirmation and stale-plan revalidation; it adds no automatic
 scheduling authority.
 
 ### Current closeout snapshot
+
+- **Active slice**: human-admitted closeout task
+  `p0-governed-refund-m2-main-push-closeout-v1` is active for exact session
+  documentation, validation, and the product owner's explicitly authorized
+  direct commit and push to `origin/main`. The underlying contrast,
+  Landing-link, M2, and correction tasks remain paused.
+- **Delivered experience**: one standalone English HTML page now tells the
+  verified governed-refund story in a source-level 60-to-90-second reading
+  range. It moves from admitted calculation scope through simulated agent
+  overreach, real deterministic `BLOCKED` completion, a human
+  `narrow_changes` decision, clearly labelled scripted remediation, fresh
+  `PASSED` and `VERIFIED` evidence, `REVIEW_READY`, and final human authority.
+  Section 4 now says that the human declines the scope expansion, while the two
+  public CTAs say `Run the source demo` and `Run the executable demo` without
+  requiring undefined M1 or M2 milestone vocabulary.
+  Section 2 now states that the demo script, not AgentGov, simulates both file
+  changes and that the simulated coding agent does not perform the later
+  restoration. Section 4 presents separate `Human decision`, `Demo script
+  action`, and `AgentGov role` cards. Its restoration card now states directly
+  that the demo script—not the simulated coding agent, AgentGov, or the
+  human—restores the out-of-scope policy file.
+  The Landing refund example now includes one prominent relative link labelled
+  `Open the 60-to-90-second governed walkthrough`; it reuses the existing
+  button layout and leaves the walkthrough source frozen. A scoped
+  `.case-wrap .button.light` rule now gives that button a white background,
+  deep-navy text, and white border without changing other light buttons.
+- **Provenance and authority boundary**: the page labels the agent edits as
+  simulated, the scope and completion results as real AgentGov evidence, the
+  narrowing choice as human, and the restoration as scripted remediation that
+  AgentGov did not perform. It states that `BLOCKED` means completion
+  validation was refused, not that AgentGov stopped or rolled back an external
+  agent, and that passing evidence grants no Git, publication, release, or
+  deployment authority.
+- **User-reported validation**: the product owner ran the documented M1 command
+  in a real terminal, selected option `2`, and supplied a terminal screenshot
+  showing the recorded human choice, scripted remediation, corrected scope
+  `PASS`, pre-approved validation `PASSED`, reconciliation `VERIFIED`, final
+  state `REVIEW_READY`, and the no-final-acceptance boundary. This is
+  human-reported evidence, not a Codex-run terminal observation.
+- **User-reported M3 evidence**: the product owner reported a 70-second
+  unbriefed-reader attempt. The reader correctly identified completion
+  validation as the blocked action and the human as final acceptance owner, but
+  incorrectly said that AgentGov modified and restored the code. Codex did not
+  observe the reader, independently verify the unbriefed condition, or measure
+  the time. The result is recorded as two correct answers and one material
+  actor-attribution misunderstanding, not a complete comprehension pass.
+  A later user-reported 60-second attempt correctly identified completion
+  validation, the simulated coding agent as modifier, and the human as final
+  acceptance owner, but incorrectly attributed restoration to the simulated
+  coding agent. Codex again did not observe the attempt, measure its time, or
+  independently verify that the reader was unbriefed. This second two-of-three
+  result triggered the restoration-actor clarification; it does not validate
+  the revised wording.
+  The product owner subsequently reported another one-minute attempt with all
+  four answers correct: completion validation, simulated coding agent as
+  modifier, demo script as restorer, and human final acceptance. Codex did not
+  observe the attempt, measure its time, or independently verify the reader
+  condition. It meets the user-reported M3 pass criteria but is not independent
+  validation.
+- **Codex-run validation**: all 7 M2 semantic tests pass; all 62 directly
+  related walkthrough, task-contract, development-context, and
+  user-documentation tests pass; and the complete repository suite passes 938
+  tests with 3 platform-limited skips.
+  One initial related-suite invocation omitted the repository module path and
+  produced two import errors; the corrected command using the documented
+  module path passed all 62 related tests. The complete suite then passed in
+  165 seconds before the closeout documents were written, and the unchanged
+  final rerun after closeout passed in 163 seconds.
+- **Landing validation**: all 7 walkthrough/Landing semantic tests and all
+  54 related walkthrough, user-documentation, and public-freshness tests pass.
+  The complete repository suite passes 938 tests with 3 platform-limited skips
+  in 157 seconds, and the unchanged final rerun after closeout passes in 164
+  seconds. The local Landing and walkthrough URLs both return `200 OK`.
+- **Human visual finding**: the product owner supplied a Landing screenshot in
+  which the new button appeared as a blank white pill. The current Agent
+  inspected that screenshot and traced the symptom to white link text inherited
+  inside the white button. Post-correction browser appearance still awaits the
+  product owner's visual confirmation.
+- **Governance validation**: before pause, contrast-correction task governance reported
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance reported `PASS=26
+  WARN=2 FAIL=0 ADVISORY=4`. Scope accepted all five task-owned paths and
+  rejected ten preserved prior-task or user-owned paths; no exception or
+  ownership transfer was inferred. Final closeout validation is recorded in
+  the dated development log.
+- **Advisory review**: the resolved Landing direction completed native
+  current-Agent self-review with four advisory observations. It found the
+  requirement, relative link placement, accessible label, frozen walkthrough,
+  and non-publication boundaries preserved. The review is a separate self-review
+  pass, not independent evidence. Actual click-through, adoption, browser/device
+  presentation, hiring, and conversion effects remain unknown.
+- **Contrast advisory review**: the fully specified contrast correction did not
+  start a new alignment journey. A bounded current-Agent review found the local
+  selector, three requested color declarations, unchanged link semantics, and
+  non-publication boundary preserved. It does not claim native self-review or
+  independent visual validation.
+- **Pending validation**: no browser visual, click, or responsive-device pass
+  was requested or performed. The Landing placement has not yet received a
+  human visual product review, and the M3 pass remains user-reported rather than
+  independently observed.
+- **Incomplete**: none inside the admitted local Landing-link scope. Chinese
+  localization, independent M3 observation, Git, and publication remain
+  separate unadmitted requirements.
+- **Git and publication boundary**: on 2026-08-20 the product owner explicitly
+  authorized committing the accumulated M2/Landing scope and pushing it
+  directly to `origin/main`. Execution and remote confirmation are pending at
+  this pre-push checkpoint. No pull request, package publication, release,
+  deployment, hosting change, or external publication is authorized.
+  User-owned `.codex` remains local, untracked, unchanged, and excluded.
+- **Blocker / stop condition**: do not claim independent M3 validation,
+  click-through benefit, publication, or stable-release behavior from the local
+  Landing link. Stop if a visual review finds the new entry competes with the
+  primary Quickstart path or obscures the development-source maturity boundary.
+- **Next product review**: open the local Landing, inspect the refund-example
+  button after a hard refresh, confirm that its deep-navy label is readable on
+  white, and follow it to the walkthrough. Decide whether the corrected button
+  is clear enough to keep or still needs adjustment. That review does not
+  authorize Git, hosting, publication, release, or deployment.
+
+### Superseded closeout snapshot - M1 governed refund task fixture
 
 - **Active slice**: none. Task `p0-governed-task-demo-main-push-v1` is paused
   after the human-authorized direct-main Git closeout. Documentation-only task

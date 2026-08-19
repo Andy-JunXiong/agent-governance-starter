@@ -1,0 +1,74 @@
+{
+  "acceptance_signals": [
+    "Section 4 is titled A human declines the scope expansion, so the heading describes the human decision rather than implying that the human restored code.",
+    "The navigation CTA reads Run the source demo and the final CTA reads Run the executable demo.",
+    "Undefined M1 and M2 milestone labels no longer appear in the standalone public-facing walkthrough.",
+    "The page still states that recording the human choice does not edit code or expand scope and that AgentGov did not perform scripted remediation.",
+    "PASS, PASSED, VERIFIED, BLOCKED, and REVIEW_READY remain unchanged because they reflect distinct real outputs.",
+    "Semantic tests protect the corrected actor heading and CTA wording and reject the superseded labels.",
+    "STATUS and the dated development log distinguish the analytical cold-read signal from genuine pending M3 human evidence.",
+    "Relevant tests and the complete repository suite pass with no deterministic governance failure.",
+    "No other page copy, layout, CSS, JavaScript, localization, Landing, Kernel, schema, Git, publication, release, deployment, or hosting change occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-22db925a5b5d42cda865479fd9814813 and admitted that exact task through an explicit admission control. Section 4 now names the human as declining scope expansion, and the two public CTAs use source-demo language without undefined M1 or M2 milestones. Tests preserve the distinction between the human decision and scripted remediation and keep PASS, PASSED, VERIFIED, BLOCKED, and REVIEW_READY unchanged. All 60 related tests and all 936 repository tests pass with 3 platform-limited skips. Before pause, task and repository governance had no deterministic failure; scope accepted all five correction-owned paths and rejected only preserved prior-task changes and user-owned .codex configuration. A bounded current-Agent advisory review found no correction-required drift and does not claim native self-review or independence. The analytical cold read remains advisory rather than genuine M3 evidence. No Git, publication, localization, release, deployment, hosting, or Landing action is authorized. The task is paused for genuine M3 product review.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Apply the smallest M2 copy correction supported by the analytical cold-read feedback: rename Section 4 so the human is clearly the scope-expansion decision maker rather than the code restorer, replace the two undefined M1 CTA labels with public-facing source-demo labels, update semantic tests, and record the bounded correction. Preserve the exact PASS, PASSED, VERIFIED, BLOCKED, and REVIEW_READY provenance terms and make no other page, layout, localization, Git, or publication change."
+  },
+  "risk": {
+    "items": [
+      "Changing the heading could accidentally weaken the distinction between human decision and scripted code restoration.",
+      "Changing CTA labels could obscure that the linked demo is executable development source.",
+      "Copy cleanup could accidentally normalize real provenance-specific status terms.",
+      "Analytical feedback could be misreported as genuine human evidence.",
+      "Reviewed assumption: The user's acknowledgement authorizes proposing this exact low-risk correction for native admission review.",
+      "Reviewed assumption: Removing internal milestone labels from the standalone public-facing page is clearer than adding an M1 and M2 glossary.",
+      "Reviewed assumption: The analytical cold read is useful advisory evidence but is not genuine M3 human evidence.",
+      "Reviewed assumption: The exact status words must remain because the executable M1 runner emits them from different stages.",
+      "Reviewed unknown: Whether the corrected page improves genuine unbriefed-reader comprehension remains unknown until M3.",
+      "Reviewed unknown: Actual human reading time remains unknown.",
+      "Reviewed unknown: Localization and Landing linkage remain separate product decisions."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "README.md",
+      "examples/governed-refund-demo",
+      "docs/index.html",
+      "docs/guide.css",
+      "docs/guide.js",
+      "src/agentgov",
+      "governance/schemas",
+      "governance/contracts",
+      ".github"
+    ],
+    "include_paths": [
+      "docs/governed-refund-walkthrough.html",
+      "tests/test_governed_refund_walkthrough.py",
+      "STATUS.md",
+      "docs/development-log/2026-08-19.md",
+      "governance/tasks/p0-governed-refund-walkthrough-copy-correction-v1.json"
+    ]
+  },
+  "task_id": "p0-governed-refund-walkthrough-copy-correction-v1",
+  "title": "Correct M2 actor and CTA wording",
+  "validation_commands": [
+    "$env:PYTHONPATH = 'src'; python -m unittest tests.test_governed_refund_walkthrough tests.test_task_contract tests.test_development_context tests.test_user_documentation -v",
+    "$env:PYTHONPATH = 'src'; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = 'src'; python -m agentgov check task governance/tasks/p0-governed-refund-walkthrough-copy-correction-v1.json --repository .",
+    "$env:PYTHONPATH = 'src'; python -m agentgov check repository .",
+    "$env:PYTHONPATH = 'src'; python -m agentgov check scope governance/tasks/p0-governed-refund-walkthrough-copy-correction-v1.json --repository .",
+    "git diff --check",
+    "git status -sb"
+  ]
+}

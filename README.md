@@ -32,7 +32,8 @@ remain an independent backstop.
 [Use the interview walkthrough](docs/interview-guide.md) ·
 [Open the repository sample report](docs/demo-governance-report.html) ·
 [Run the quickstart](#runnable-cli-example) ·
-[Inspect the architecture](#detailed-architecture)
+[Inspect the architecture](#detailed-architecture) ·
+[Read the 60-to-90-second governed refund walkthrough](docs/governed-refund-walkthrough.html)
 
 ## Interview snapshot
 
@@ -52,6 +53,11 @@ latest replay-safety slice separates immutable correlation reservation,
 create-only ownership claim, and immutable abandoned-claim recovery evidence.
 Recovery preserves the original claim, creates no replacement owner, and
 grants no replay authority.
+
+The standalone [governed refund walkthrough](docs/governed-refund-walkthrough.html)
+compresses one verified development-source scope failure, human narrowing
+decision, and fresh-evidence recovery into a 60-to-90-second product story.
+It remains a local source candidate until separately published.
 
 **Release boundary.** Stable `0.2.1` remains the installable repository-
 governance CLI. Published prerelease `0.3.0rc1` and newer development source

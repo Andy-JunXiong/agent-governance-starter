@@ -1,0 +1,87 @@
+{
+  "acceptance_signals": [
+    "STATUS and the 2026-08-20 development log accurately summarize the completed M2, user-reported M3, Landing link, contrast correction, validation, pending human visual confirmation, and explicit Git closeout.",
+    "The intended commit contains exactly the 14 accumulated product and governance files plus this closeout task record, while .codex remains untracked and unstaged.",
+    "The complete intended diff is reviewed, git diff --check passes, task and repository governance have no deterministic failure, and the complete repository suite passes.",
+    "A bounded secret-safety review finds no credentials, private data, or secret-like values in the intended diff.",
+    "git fetch origin shows no remote divergence before commit and no force operation is used.",
+    "The authorized commit is created on main and pushed with ordinary direct Git to origin/main without creating a pull request.",
+    "After the actual push, STATUS, the dated log, and this task record capture the concrete Git result in a final documentation commit that is also pushed to origin/main.",
+    "The task is paused after origin/main contains the final closeout commit."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-22137719bfd646a6bd71f852f5db563f and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Finalize the 2026-08-20 session documentation for the complete governed-refund M2, M3 copy corrections, Landing integration, and button contrast work; validate the exact accumulated 14-file product scope; exclude user-owned .codex; create the closeout task record; then use the product owner's explicit Git authority to commit and push directly to origin/main without a pull request, release, hosting, publication, or deployment."
+  },
+  "risk": {
+    "items": [
+      "Accidentally staging user-owned .codex configuration.",
+      "Silently including unrelated or ambiguous worktree changes.",
+      "Pushing against a diverged remote or using force.",
+      "Recording a push as successful before Git confirms it.",
+      "Creating a pull request despite the explicit direct-main instruction.",
+      "Treating a Git push as hosting, publication, release, or deployment authority.",
+      "Reviewed assumption: All worktree changes except .codex belong to the accumulated governed-refund M2 and Landing work reviewed in this session.",
+      "Reviewed assumption: The product owner explicitly authorized commit and direct push to main in the current chat.",
+      "Reviewed assumption: Direct Git transport authentication is independent of GitHub CLI authentication and no PR is requested.",
+      "Reviewed assumption: No hosting, publication, package release, deployment, or external product action is authorized.",
+      "Reviewed assumption: The pending post-correction browser visual confirmation remains honestly incomplete and does not block committing the local source result.",
+      "Reviewed unknown: The final commit identifiers and remote push result are unknown until Git operations complete.",
+      "Reviewed unknown: Post-correction browser visual appearance remains pending human confirmation."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".openai",
+      "src",
+      "schemas",
+      "release",
+      ".github",
+      "docs/guide.css",
+      "docs/guide.js",
+      "docs/portfolio.html",
+      "docs/quickstart.html"
+    ],
+    "include_paths": [
+      "README.md",
+      "STATUS.md",
+      "docs/index.html",
+      "examples/governed-refund-demo/README.md",
+      "docs/development-log/2026-08-19.md",
+      "docs/development-log/2026-08-20.md",
+      "docs/governed-refund-walkthrough.html",
+      "tests/test_governed_refund_walkthrough.py",
+      "governance/tasks/p0-governed-refund-walkthrough-v1.json",
+      "governance/tasks/p0-governed-refund-walkthrough-copy-correction-v1.json",
+      "governance/tasks/p0-governed-refund-walkthrough-actor-attribution-v1.json",
+      "governance/tasks/p0-governed-refund-walkthrough-restoration-clarity-v1.json",
+      "governance/tasks/p0-governed-refund-walkthrough-landing-link-v1.json",
+      "governance/tasks/p0-governed-refund-landing-button-contrast-v1.json",
+      "governance/tasks/p0-governed-refund-m2-main-push-closeout-v1.json"
+    ]
+  },
+  "task_id": "p0-governed-refund-m2-main-push-closeout-v1",
+  "title": "Close out, commit, and push the governed-refund M2 work to main",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; python -m agentgov check task governance/tasks/p0-governed-refund-m2-main-push-closeout-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check scope governance/tasks/p0-governed-refund-m2-main-push-closeout-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check repository .",
+    "git diff --check",
+    "git status -sb",
+    "git diff --cached --name-status",
+    "git fetch origin",
+    "git rev-list --left-right --count HEAD...origin/main"
+  ]
+}

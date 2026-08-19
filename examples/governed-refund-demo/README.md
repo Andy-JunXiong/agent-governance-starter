@@ -64,6 +64,7 @@ The terminal output shows:
 ## Product boundary
 
 This is a future-0.3 development-source demonstration. It is not behavior
-shipped in stable AgentGov 0.2.1. It is the M1 executable fixture, not the M2
-public 60–90 second HTML walkthrough, and it does not establish first-time
-reader comprehension.
+shipped in stable AgentGov 0.2.1. This runner is the M1 executable fixture; the
+separate [M2 60-to-90-second HTML walkthrough](../../docs/governed-refund-walkthrough.html)
+explains its verified path for a public-facing audience. Neither artifact
+establishes first-time-reader comprehension.
