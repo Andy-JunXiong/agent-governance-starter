@@ -136,6 +136,10 @@ The implementation updates together:
 - fixtures for pass, stale, invalid, redirected, cancelled, duplicate,
   one/many/zero next-task, changed-digest, tracked-state, and no-Git-mutation
   behavior.
+- Development Adapter `1.6.0` adds a native MCP entry point that can append the
+  same deterministic validation and `completion.reconciled` evidence for an
+  exact admitted task. It does not perform this ADR's human-owned
+  `session.handed_off` transition.
 
 Compatibility must be explicit: older valid event versions remain readable,
 and a newer unsupported event fails closed rather than disappearing.

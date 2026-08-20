@@ -1,0 +1,79 @@
+{
+  "acceptance_signals": [
+    "The retained AIRBNB clone remains detached at exact commit d70615527d9acdde3893ce645d1923606173acf6, clean, and without remotes before and after runtime preparation.",
+    "The original AIRBNB worktree retains its existing branch, committed HEAD, modified README, untracked prior task, and measured blob identities without cleanup, reset, stash, commit, overwrite, or metadata mutation.",
+    "Exactly one fresh temporary Python 3.11 virtual environment is created without changing the global Python, pipx, AgentGov launcher, user configuration, or existing environments.",
+    "The retained wheel matches SHA-256 78D6A216FE7344A2E3DA01086A7A92B9F3310BE61DAD2E690B0705003221FDE6 before installation and installs with --no-index --no-deps only into the fresh environment.",
+    "From the clean AIRBNB clone, a temporary process PATH resolves agentgov to the isolated environment and a no-model MCP initialize plus tools/list exchange reports distribution 0.3.0rc1, Adapter 1.5.0, protocol 2026-07-28, seven form-capable tools, and no Agent-supplied owner input.",
+    "The committed AIRBNB .codex/config.toml and all consumer content remain byte-unchanged, and no wrapper or persistent environment configuration is created.",
+    "No external model turn, network request, AIRBNB-local task admission, consumer validation, global repair, Git commit or push, publication, release, deployment, or cleanup occurs.",
+    "Sanitized evidence records only stable identities, command outcomes, readiness classification, authority boundaries, and remaining gaps; no raw prompt, transcript, source content, credential, private data, or absolute host path is retained.",
+    "Task and repository governance, relevant documentation tests, the complete repository suite, JSON parsing, bounded secret and absolute-path scans, and git diff check pass or report bounded preserved prior-task state."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-92b7e3245bfe4ba8aaeaef4eec7d08c3, admitted that exact task through an explicit admission control, and separately took it up. One fresh temporary Python 3.11 environment installed the exact retained wheel offline, and the unchanged AIRBNB command completed the bounded no-model MCP launch proof through a process-local PATH. The task is paused after validation and bounded current-Agent review; no live replay or downstream authority is inferred.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Using the retained temporary clean AIRBNB clone and the exact retained AgentGov 0.3.0rc1 wheel, create one fresh Python 3.11 virtual environment in the operating-system temporary area, verify the wheel SHA-256, install it offline with no dependencies or index access, and use only a temporary process PATH to prove that the clone's unchanged Codex MCP command can start the exact Adapter and return the expected form-capable tool catalog. Record sanitized evidence in the Starter repository and stop before any live Codex turn, AIRBNB task admission, consumer source or configuration change, global launcher repair, Git commit or push, publication, release, deployment, or cleanup."
+  },
+  "risk": {
+    "items": [
+      "The environment or installation could target an existing or global location unless the unique temporary path and interpreter are resolved and verified before creation.",
+      "Pip could access the network or resolve dependencies unless --no-index and --no-deps are both enforced against the exact local wheel.",
+      "A persistent PATH or configuration edit could silently alter later sessions; only one process-local PATH override is allowed.",
+      "Launching the wrong agentgov executable would invalidate the artifact proof unless command resolution and distribution identity are checked inside the isolated process.",
+      "An MCP handshake could be mistaken for a live Codex rehearsal; no model or external host turn is authorized.",
+      "Accumulated prior-task worktree changes must remain preserved and must not be attributed to this runtime-preparation task.",
+      "Evidence could leak temporary paths, source content, prompts, transcripts, or credentials unless strictly normalized.",
+      "Reviewed assumption: The previously retained clean AIRBNB clone and exact wheel remain present and byte-unchanged.",
+      "Reviewed assumption: Python 3.11.9 is available locally and can create a virtual environment without network access.",
+      "Reviewed assumption: The wheel is self-contained for a no-dependency MCP discovery handshake.",
+      "Reviewed assumption: A process-local PATH proof is sufficient to clear the runtime-binding prerequisite but does not authorize or prove the later live replay.",
+      "Reviewed unknown: Whether offline installation of the retained wheel will succeed in a fresh environment on the current host.",
+      "Reviewed unknown: Whether the wheel-installed console entrypoint can complete the MCP initialize and tools/list exchange from the clean AIRBNB clone.",
+      "Reviewed unknown: Whether a later fresh Codex session will honor the same process-local runtime binding without additional configuration."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "README.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "docs/assets",
+      "docs/experiments/airbnb-clean-clone-preflight-2026-08-20.md",
+      "governance/tasks/p0-airbnb-clean-clone-preflight-v1.json",
+      "examples",
+      "release",
+      "schemas",
+      "src",
+      "tests"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-airbnb-isolated-runtime-preparation-v1.json",
+      "docs/experiments/airbnb-isolated-runtime-preparation-2026-08-20.md",
+      "docs/development-log/2026-08-20.md",
+      "STATUS.md"
+    ]
+  },
+  "task_id": "p0-airbnb-isolated-runtime-preparation-v1",
+  "title": "Prepare one isolated AIRBNB rehearsal runtime",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -p \"test_task_contract.py\" -v",
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -p \"test_user_documentation.py\" -v",
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; python -m agentgov check task governance/tasks/p0-airbnb-isolated-runtime-preparation-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check scope governance/tasks/p0-airbnb-isolated-runtime-preparation-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

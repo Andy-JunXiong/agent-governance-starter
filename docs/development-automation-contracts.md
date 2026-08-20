@@ -288,11 +288,14 @@ Implemented native MCP Adapter boundary:
 - `agentgov adapter governance-mcp --host-profile codex` runs a dependency-free
   foreground STDIO JSON-RPC server. It supports current MCP discovery/tool
   calls and the legacy initialize handshake used by existing clients;
-- five base tools start, update, and resolve alignment, then start and complete
-  medium-risk active-Agent self-review. Those base tools remain advisory and
-  read-only. A capability-gated sixth tool, `agentgov_task_proposal_review`,
-  may create only the exact reviewed task after native MCP form acceptance and
-  the explicit `admit` choice. Every tool input rejects unknown
+- six base tools start, update, and resolve alignment, start and complete
+  medium-risk active-Agent self-review, and record deterministic completion
+  for one exact admitted task. The first five remain advisory and read-only;
+  `agentgov_task_completion_record` may run only task-declared validation and
+  append local evidence after a complete scope preflight. Two capability-gated
+  form tools, `agentgov_task_proposal_review` and
+  `agentgov_drift_review_record`, handle exact task-proposal admission and due
+  drift review. Every tool input rejects unknown
   governance-bearing fields; no tool grants session, code, Git, release,
   deployment, external-write, or open-world authority;
 - the Adapter creates an explicit opaque journey handle. Later calls must carry

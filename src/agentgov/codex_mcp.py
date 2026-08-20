@@ -54,7 +54,7 @@ def render_codex_mcp_config() -> str:
         f"enabled_tools = [{tools}]\n"
         'default_tools_approval_mode = "auto"\n'
         "startup_timeout_sec = 10\n"
-        "tool_timeout_sec = 60\n"
+        "tool_timeout_sec = 1800\n"
     )
 
 

@@ -232,6 +232,24 @@ protocol preflight passes; a fresh external replay of `1.3.0`, plus another
 native MCP host package, remain required. Local deterministic evidence is not
 semantic-success evidence.
 
+Development source Adapter `1.6.0` closes one bounded MCP lifecycle gap with
+`agentgov_task_completion_record`. The sixth base tool reuses the existing
+scope, Git-snapshot, declared-validation, evidence, and append-only completion
+contracts for an exact admitted task. It adds no new Core completion meaning:
+`verified` remains deterministic local evidence, the human task decision stays
+immutable, and acceptance plus handoff remain separate. Form-capable clients
+now discover eight tools and other clients discover six. Installation,
+consumer replay, and broader host evidence remain separate work.
+
+The first separately admitted attempt to obtain that evidence stopped before
+installation: a fresh offline Python 3.11.9 environment supplied
+`setuptools 65.5.0`, below the declared `setuptools>=69` build requirement, and
+the metadata phase failed before a package was created or installed. The clean
+AIRBNB clone also retained a prior seven-tool allow-list that omits native
+completion. No MCP discovery or model replay ran. A later requirement must
+explicitly own offline build bootstrap and consumer configuration binding;
+this failed attempt grants neither.
+
 ## Human decision boundaries
 
 AgentGov interrupts the user only for:

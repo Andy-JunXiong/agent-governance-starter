@@ -85,11 +85,12 @@ class InitializerTests(unittest.TestCase):
             self.assertNotIn("{{PROJECT_NAME}}", agents_text)
             for phrase in (
                 "## Native governance MCP journey",
-                "five base `agentgov_*` governance tools",
+                "six base `agentgov_*` governance tools",
+                "agentgov_task_completion_record",
                 "agentgov_task_proposal_review",
                 "`governance/tasks/*.json` record",
                 "A direct\n  chat request, approval, authorization, tool permission",
-                "After implementing and validating any repository-changing task",
+                "After implementing an exact admitted task",
                 "do not fabricate a journey handle",
                 "agentgov_self_review_start",
                 "agentgov_self_review_complete",

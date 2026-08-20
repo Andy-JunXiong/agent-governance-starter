@@ -53,8 +53,27 @@ The fields preserve:
 | `decision` | Human-owned `draft`, `admitted`, or `paused` state. The checker does not admit work itself. |
 
 `completed` is deliberately not a supported decision state yet. Completion
-requires the later fresh-evidence and reconciliation contract rather than a
-claim embedded in the initial task declaration.
+uses the separate fresh-evidence and reconciliation contracts rather than a
+claim embedded in the initial task declaration. Development Adapter `1.6.0`
+exposes that existing boundary through `agentgov_task_completion_record`; it
+never rewrites `decision.state` or `decision.rationale`.
+
+## Native completion record
+
+For one exact admitted task, the development-source MCP completion tool first
+checks the complete Git snapshot against declared scope. It reuses a matching
+active session's comparison base; without an active session it uses current
+committed HEAD only when every current changed path is attributable to the
+task. It then runs only `validation_commands` from the unchanged task and
+appends the existing privacy-bounded validation evidence plus
+`validation.completed` and `completion.reconciled` local events.
+
+`verified` means those commands passed against a fresh unchanged snapshot. It
+does not prove requirement satisfaction, architecture correctness, validation
+sufficiency, human acceptance, or handoff, and it grants no Git, publication,
+release, or deployment authority. Failed, stale, malformed, non-admitted,
+mismatched-session, and out-of-scope inputs fail closed or return
+`needs_evidence` without changing the human task decision.
 
 ## Read-only check
 
@@ -122,16 +141,9 @@ low-risk compact profile.
 
 ## Follow-up work
 
-This slice does not yet:
-
-- create or edit task contracts interactively;
-- compare staged, unstaged, untracked, or renamed files with `scope`;
-- capture fresh validation evidence or reconcile completion;
-- integrate the implemented context output into the higher-level
-  `govern start` session workflow;
-- replay task facts in CI;
-- install a hook, daemon, IDE integration, or mechanical agent gate.
-
-Those capabilities remain ordered P0 follow-up work. The contract will be
-validated through real use before it is added to initialization or stable
-repository-wide checks.
+This development line does not yet automatically start a governed session
+after native task admission, treat deterministic completion as semantic human
+acceptance, perform human handoff through the completion tool, replay local
+events in CI without an explicit redacted export, or install a daemon or
+cross-process session manager. These remain separate reviewed requirements;
+the task contract itself stays human-owned and unchanged by completion.

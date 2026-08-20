@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-08-20
+Last verified: 2026-08-21
 
 ## Current-status contract
 
@@ -43,10 +43,219 @@ scheduling authority.
 ### Current closeout snapshot
 
 - **Active slice**: none. Human-admitted closeout task
-  `p0-governed-refund-m2-main-push-closeout-v1` is paused after exact session
-  documentation, validation, product commit `df8ca89`, and its confirmed direct
-  push to `origin/main`. The underlying contrast, Landing-link, M2, and
-  correction tasks remain paused.
+  `p0-2026-08-21-development-closeout-main-push-v1` is complete and stopped
+  after recording today's bounded results and the separately supplied Git
+  authority. The preceding native-completion AIRBNB task stopped at its first
+  offline installation gate with `BLOCKED_BEFORE_INSTALLATION`; no retry,
+  dependency download, source repair, consumer change, or live model run
+  followed.
+- **2026-08-21 Git handoff**: the product owner explicitly authorized one
+  ordinary non-force commit of today's confirmed cumulative project scope and
+  a direct push to `origin/main`. The user-owned `.codex` directory remains
+  excluded and unstaged. The requested direct-main handoff does not authorize
+  a pull request, force-push, release, deployment, cleanup, or any additional
+  repository or external change. The resulting commit identity and transport
+  outcome must be observed after this record is included in the payload and
+  reported in the human handoff rather than predicted here.
+- **2026-08-21 closeout validation**: the exact complete repository suite
+  passed all 944 tests with 3 platform-limited skips in 198.835 seconds. The
+  closeout task check reported `PASS=3 WARN=1 FAIL=0 ADVISORY=3`, repository
+  governance reported `PASS=26 WARN=2 FAIL=0 ADVISORY=4`, and
+  `git diff --check` passed. Its deliberately narrow cumulative scope check
+  admitted the 3 closeout-owned records and rejected 29 preserved paths from
+  earlier tasks or user-owned `.codex`; no exception or ownership transfer was
+  inferred. The task JSON parsed, and bounded secret-like and absolute-host-
+  path scans returned zero matches.
+- **2026-08-21 closeout advisory review**: a distinct bounded current-Agent
+  pass found the documentation-only requirement, accumulated-scope
+  attribution, validation evidence, direct-main authority, and `.codex`
+  exclusion consistent. It retained remote divergence and Git transport as
+  unknown until fetch and push. This fully specified task started no alignment
+  journey, so the pass does not claim native self-review completion or an
+  independent audit.
+- **Native completion isolated-install result**: a fresh temporary source
+  staging copy matched the task-scoped Adapter and generated-template hashes;
+  a fresh Python 3.11.9 environment contained `pip 24.0` and
+  `setuptools 65.5.0`. Starter declares `setuptools>=69`. The offline
+  `--no-index --no-deps --no-build-isolation` metadata phase rejected the
+  current project metadata before creating or installing a package. The new
+  runtime contains no AgentGov distribution or command, and no MCP process or
+  Codex session started.
+- **Native completion consumer readiness**: the fresh AIRBNB clone remains
+  clean and detached at `d70615527d9acdde3893ce645d1923606173acf6` with zero
+  remotes. Its committed Codex `enabled_tools` allow-list contains the prior
+  seven form-capable tools and omits `agentgov_task_completion_record`; its
+  Agent guidance still describes five base tools. This was measured and not
+  repaired or overridden. A future requirement must explicitly own both an
+  offline build dependency and the consumer configuration binding.
+- **Native completion replay preservation**: Starter HEAD, index, remotes, and
+  task-scoped source hashes; the original AIRBNB state; the prior clean clone;
+  and retained runtimes remained unchanged. The new temporary staging area,
+  empty runtime, and clean remote-free clone are retained. No raw interaction,
+  credential, source content, private data, or temporary absolute path is
+  recorded. No commit, push, publication, release, deployment, cleanup, or
+  external system change occurred.
+- **Native completion replay validation**: the two focused documentation suites
+  passed 37 and 12 tests. The exact full repository suite passed all 944 tests
+  with 3 platform-limited skips in 199.247 seconds. Task governance reported
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`, repository governance reported
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`, and `git diff --check` passed. The
+  cumulative working-copy scope check admitted all 9 task-owned paths and
+  rejected 22 pre-existing excluded paths; those paths were preserved and no
+  exception or ownership transfer was inferred.
+- **Native completion replay advisory review**: native current-Agent
+  self-review `srv-6fbc48d394502804b530a4c0e7b781db` completed as a distinct
+  pass. It confirmed the required fail-closed stop, retained the compatible
+  offline build dependency and explicit consumer configuration binding as
+  unknowns, and found no correction-required scope drift. The result is
+  advisory, not an independent audit or a new authorization.
+- **User-reported validation**: none for installed discovery or consumer
+  behavior. The human selected, admitted, and started the bounded attempt;
+  those decisions are authority evidence, not runtime validation. The human
+  additionally authorized today's bounded commit and direct `origin/main`
+  push; that is Git authority, not product-behavior evidence.
+- **Pending validation**: installed Adapter `1.6.0` discovery and a live
+  uncoached AIRBNB completion replay remain unmeasured because installation
+  failed before either could start.
+- **Incomplete**: none inside the bounded failure-record task. The intended
+  successful replay outcome was not achieved and requires a separately chosen
+  and admitted requirement.
+- **Blocker / stop condition**: stop before dependency download, packaging or
+  consumer-configuration correction, retry, cleanup, Git operations,
+  publication, release, deployment, or external action.
+- **Next product review**: decide whether one follow-up requirement should own
+  both a compatible offline build bootstrap and an explicit AIRBNB
+  completion-tool configuration binding. This entry grants no follow-on
+  authority.
+- **Native completion source slice**: append-only task-completion recording under
+  cumulative human-admitted successor
+  `p0-native-append-only-task-completion-record-v2` is complete and stopped.
+  The narrower v1 admission remains byte-preserved; it was
+  not rewritten to absorb the repository and generated templates omitted from
+  its scope. No installed runtime or consumer was changed.
+- **Native task completion**: development Adapter `1.6.0` exposes
+  `agentgov_task_completion_record` as the sixth base tool. Form-capable
+  clients discover eight tools; clients without form elicitation discover six.
+  The tool accepts one safe repository-relative admitted-task path, rechecks
+  the complete Git scope, preserves a matching active-session comparison base
+  or uses current HEAD for a fully attributable sessionless snapshot, runs
+  only declared validation, and appends the existing local validation and
+  reconciliation records. Generated Codex configuration uses a 1,800-second
+  server-level tool timeout instead of the 60-second default so this
+  repository's declared suite can complete. It leaves the human task decision
+  unchanged.
+- **Native completion authority and limits**: `verified` is deterministic
+  evidence about declared commands and an unchanged governed snapshot, not
+  human requirement acceptance, architecture approval, session handoff, or
+  Git, publication, release, or deployment authority. Validation failure or
+  validation-time mutation yields `needs_evidence`; unsafe, unrelated,
+  non-admitted, active-task-mismatched, or out-of-scope input fails before a
+  local write. Installed-runtime discovery, uncoached AIRBNB selection, other
+  MCP hosts, higher-risk repositories, and non-Git workflows remain untested.
+- **Native completion validation**: all 105 focused MCP, evidence,
+  initializer, user-documentation, and public-freshness tests pass. The full
+  repository suite passes 942 tests with 3 platform-limited skips in 200
+  seconds. Task governance reports `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository
+  governance reports `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Scope accepts all 21
+  v2-owned changed paths and rejects only 8 explicitly preserved old-task or
+  user-owned paths; no exception or ownership transfer is inferred. JSON
+  parsing, bounded secret and absolute-path scans, and `git diff --check`
+  pass. No commit, push, installation, replay, publication, release, or
+  deployment occurred.
+- **Native completion advisory review**: native current-Agent self-review
+  `srv-79e87ea1acfd031ab3f6a8f62e34fc6d` completed against the resolved
+  append-only direction. It found no correction-required requirement,
+  architecture, or scope drift. It retains unknown installed-consumer and
+  cross-host behavior, and notes that a sufficiently long multi-command
+  validation set can still exceed the 1,800-second client timeout. The result
+  is advisory, not an independent audit or a new authorization.
+- **AIRBNB replay status**: human-admitted task
+  `p0-airbnb-live-uncoached-replay-evidence-v1` remains complete and stopped.
+  Its original `admitted` decision remains unchanged; no unsupported
+  completion-state rewrite is claimed. The preceding clean-clone and
+  isolated-runtime tasks remain paused.
+- **AIRBNB live uncoached replay**: one fresh interactive Codex CLI session
+  loaded the clean clone's required AgentGov MCP through the retained isolated
+  `0.3.0rc1` runtime, a process-local PATH, and a one-time trust override.
+  User-provided terminal evidence shows native proposal review occurring before
+  the heading edit and the product owner admitting the exact two-path task.
+  Current-Agent read-only measurement confirms an owner of `Human product
+  owner`, an `admitted` decision, exactly one deleted and one added README
+  heading line, one tool-managed task record, a passing diff check, zero
+  remotes, and no commit or push.
+- **AIRBNB replay authority boundary**: after the completed edit, the parent
+  Agent incorrectly recommended rewriting the human admission decision as
+  paused. AgentGov rejected the relayed follow-up because it would mutate the
+  existing decision and rationale. The live Agent respected the fail-closed
+  result and stopped writing. No follow-up task, decision mutation, further
+  README change, commit, or push resulted. This is a successful boundary result
+  and exposed a completion-state-transition workflow gap at that time.
+  Development Adapter `1.6.0` now addresses deterministic append-only
+  completion recording in Starter source, but it has not been installed or
+  replayed in AIRBNB.
+- **AIRBNB replay evidence boundary**: visible tool ordering and Agent behavior
+  come from product-owner screenshots; exact task fields, final status, diff,
+  diff-check result, remote count, persistent-trust absence, runtime identity,
+  and source-worktree preservation come from current-Agent read-only checks.
+  No raw prompt, response, transcript, screenshot, source content, credential,
+  private data, or absolute host path is retained.
+- **AIRBNB replay validation**: all 13 task-contract and 36
+  user-documentation tests pass. The complete Starter suite passes 938 tests
+  with 3 platform-limited skips in 183 seconds. Task governance reports
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance reports
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Scope accepts all four task-owned
+  Starter paths and rejects only six preserved excluded paths from prior tasks
+  or user-owned `.codex`; no exception or ownership transfer is inferred.
+  JSON parsing, bounded credential and absolute-host-path scans, and
+  `git diff --check` pass.
+- **AIRBNB replay advisory review**: a distinct bounded current-Agent pass
+  finds the requirement, evidence-source separation, measured result,
+  correction of the parent Agent's mistaken advice, fail-closed behavior,
+  privacy boundary, and denied authority consistent. It retains the unknown
+  broader generality and supported completion-marker workflow gap and finds no
+  correction-required drift. This fully specified task started no alignment
+  journey, so the pass is neither native self-review completion nor an
+  independent audit.
+- **AIRBNB isolated runtime**: exactly one fresh temporary Python 3.11.9
+  environment now contains the exact retained `0.3.0rc1` wheel, installed
+  offline with `--no-index --no-deps`. From the clean clone, a process-local
+  PATH resolved the unchanged configured command `agentgov` to that isolated
+  environment first. A no-model MCP discovery, initialize, and tools/list
+  exchange reported Adapter `1.5.0`, supported AgentGov protocol `2026-07-28`,
+  negotiated MCP protocol `2025-11-25`, all seven expected tools, and no
+  Agent-supplied proposal owner. The runtime is retained in the operating-
+  system temporary area; its absolute path is not recorded.
+- **AIRBNB runtime readiness**: the earlier executable-binding blocker remains
+  `CLEARED FOR LIVE-REPLAY BINDING`, and the retained binding has now
+  supported one fresh live AIRBNB session. That single success does not prove
+  broader task, consumer, operating-system, Codex-version, or AgentGov-release
+  generality.
+- **AIRBNB preservation**: the existing AIRBNB worktree remained
+  untouched at committed HEAD `d706155` with its modified README and untracked
+  prior task preserved. One temporary clone detached at that exact commit,
+  removed its remote, and reported a clean worktree with committed governance
+  instructions, Codex configuration, and task-directory placeholder. One
+  retained wheel matched its recorded SHA-256 and exposed Adapter `1.5.0`,
+  protocol `2026-07-28`, and seven form-capable tools through read-only direct
+  artifact loading. Both the clone and its Codex configuration remained
+  byte-stable through runtime preparation; the original two-path dirty state
+  and measured identities also remained unchanged.
+- **AIRBNB runtime validation**: all 13 task-contract and 36
+  user-documentation tests pass. The complete repository suite passes 938
+  tests with 3 platform-limited skips in 170 seconds. Before pause, task
+  governance reports `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance
+  reports `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Scope accepts the four task-owned
+  Starter paths and rejects only the preserved user-owned `.codex/config.toml`
+  and two excluded prior-preflight records; no exception or ownership transfer
+  is inferred. JSON parsing, bounded credential and absolute-host-path scans,
+  and `git diff --check` pass.
+- **AIRBNB runtime advisory review**: a separate bounded current-Agent pass
+  finds the exact-artifact, single-environment, offline-installation,
+  configured-command, preservation, privacy, and denied-authority claims
+  consistent. It retains the unknown fresh-Codex-session binding outcome and
+  finds no correction-required drift. This fully specified task did not start
+  a new alignment journey, so the pass is neither native self-review completion
+  nor an independent audit.
 - **Delivered experience**: one standalone English HTML page now tells the
   verified governed-refund story in a source-level 60-to-90-second reading
   range. It moves from admitted calculation scope through simulated agent
@@ -136,13 +345,17 @@ scheduling authority.
   selector, three requested color declarations, unchanged link semantics, and
   non-publication boundary preserved. It does not claim native self-review or
   independent visual validation.
-- **Pending validation**: no browser visual, click, or responsive-device pass
-  was requested or performed. The Landing placement has not yet received a
-  human visual product review, and the M3 pass remains user-reported rather than
-  independently observed.
-- **Incomplete**: none inside the admitted local Landing-link scope. Chinese
-  localization, independent M3 observation, Git, and publication remain
-  separate unadmitted requirements.
+- **Pending validation**: the product owner selected `keep` after the current
+  Agent's browser inspection of the corrected Landing button and successful
+  walkthrough navigation. That is a human product decision supported by a
+  current-Agent visual pass, not independent browser validation. The M3 pass
+  remains user-reported rather than independently observed. The selected
+  AIRBNB automatic rehearsal has not started and remains blocked on an exact
+  installed runtime binding.
+- **Incomplete**: none inside the admitted AIRBNB clean-clone preflight.
+  Isolated runtime preparation and the live AIRBNB rehearsal remain separate
+  unadmitted requirements. Chinese localization, independent M3 observation,
+  Git, and publication also remain separate.
 - **Git and publication boundary**: on 2026-08-20 the product owner explicitly
   authorized committing the accumulated M2/Landing scope and pushing it
   directly to `origin/main`. Commit `df8ca89` (`feat: add governed refund
@@ -154,15 +367,17 @@ scheduling authority.
   request, package publication, release, deployment, hosting change, or
   external publication occurred. User-owned `.codex` remains local, untracked,
   unchanged, and excluded.
-- **Blocker / stop condition**: do not claim independent M3 validation,
-  click-through benefit, publication, or stable-release behavior from the local
-  Landing link. Stop if a visual review finds the new entry competes with the
-  primary Quickstart path or obscures the development-source maturity boundary.
-- **Next product review**: open the local Landing, inspect the refund-example
-  button after a hard refresh, confirm that its deep-navy label is readable on
-  white, and follow it to the walkthrough. Decide whether the corrected button
-  is clear enough to keep or still needs adjustment. That review does not
-  authorize Git, hosting, publication, release, or deployment.
+- **Blocker / stop condition**: stop before installing or repairing AgentGov,
+  changing AIRBNB configuration, admitting an AIRBNB-local task, starting the
+  live replay, or cleaning either AIRBNB worktree. Also do not claim independent
+  M3 validation, click-through benefit, publication, or stable-release behavior
+  from the local Landing link.
+- **Next product review**: decide whether to admit one bounded offline task that
+  installs the retained exact wheel only into a fresh isolated environment for
+  the temporary AIRBNB clone and proves the configured MCP launch path. That
+  task must not repair the global launcher, modify the preserved AIRBNB
+  worktree, start the live replay, use network access, or grant Git,
+  publication, release, or deployment authority.
 
 ### Superseded closeout snapshot - M1 governed refund task fixture
 

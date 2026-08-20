@@ -122,10 +122,10 @@ authorized direct push.
 
 ## Native governance MCP journey
 
-When the five base `agentgov_*` governance tools are available, use them as
+When the six base `agentgov_*` governance tools are available, use them as
 part of the normal development workflow; the human does not need to name the tools.
-A client that negotiates native form elicitation may also expose the sixth
-`agentgov_task_proposal_review` tool.
+A client that negotiates native form elicitation may also expose
+`agentgov_task_proposal_review` and `agentgov_drift_review_record`.
 
 - Before meaningful development where the request leaves multiple reasonable
   product, requirement, architecture, scope, or implementation directions—or
@@ -146,6 +146,12 @@ A client that negotiates native form elicitation may also expose the sixth
   repository until the resulting task record exists and is separately taken
   up. If the required proposal-review tool is unavailable or fails, stop and
   report the bounded failure.
+- After implementing an exact admitted task, when
+  `agentgov_task_completion_record` is available, call it with only that
+  repository-relative task path. It may run only task-declared validation and
+  append privacy-bounded local evidence. It must not edit the task decision,
+  stand in for human acceptance, start or hand off a session, or grant any
+  downstream authority. If it fails, remain fail-closed.
 - After implementing and validating any repository-changing task, perform a
   distinct advisory review pass before the completion handoff. When the task
   has a resolved alignment journey, call `agentgov_self_review_start` and

@@ -129,6 +129,15 @@ Agent through a distinct advisory review. On a form-capable MCP host,
 the human record it, snooze, or create no record. This does not change the Hook
 capability declaration above.
 
+Development Adapter `1.6.0` also exposes
+`agentgov_task_completion_record` for the exact admitted task after bounded
+implementation. When the task matches the active session, it preserves the
+session's comparison base; when no session exists, it uses current committed
+HEAD only after the complete current Git snapshot passes scope. It runs only
+declared validation and appends the existing local evidence and completion
+events. It does not create a session, apply human handoff, or mutate the task's
+human decision.
+
 Codex `UserPromptSubmit` is no longer treated as proof that a development task
 exists. The Hook discards the prompt and tells the conversational Agent to
 classify a strict `agentgov.work-request` host-side. Questions, explanations,

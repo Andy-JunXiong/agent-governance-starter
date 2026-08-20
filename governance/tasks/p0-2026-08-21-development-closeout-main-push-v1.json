@@ -1,0 +1,73 @@
+{
+  "acceptance_signals": [
+    "STATUS.md identifies no active slice, the bounded installation failure, passed validation, advisory review result, retained unknowns, and the next product review without claiming a successful live replay.",
+    "docs/development-log/2026-08-21.md appends the product owner's explicit commit and direct main push authorization plus the final preservation and validation boundary.",
+    "No source, template, test, README, historical task decision, AIRBNB consumer, temporary runtime, or user-owned .codex content is changed by this closeout task.",
+    "Final task, repository, scope, JSON, bounded secret/path, and diff-format checks are reported honestly before Git staging."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-fccc2cd0b22849ab993b66149958e0c4 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Update only the current status and append-only 2026-08-21 development log with the final bounded AIRBNB installation-failure outcome, validation and self-review evidence, and the human's separate direct commit-and-push authorization; do not change product behavior or rewrite historical task decisions."
+  },
+  "risk": {
+    "items": [
+      "The working tree contains accumulated changes from multiple earlier admitted tasks, so staging must name every confirmed path explicitly.",
+      "The closeout task's scope check will reject preserved accumulated changes outside its three owned paths; this must not be treated as an exception.",
+      "Remote divergence discovered before commit must stop or be reconciled without discarding work or force-pushing.",
+      "Reviewed assumption: The existing accumulated non-.codex working-copy changes belong to the previously admitted tasks completed today and are the intended Git commit scope.",
+      "Reviewed assumption: The product owner's current message separately authorizes one ordinary non-force commit and direct push to origin/main after validation.",
+      "Reviewed assumption: The user-owned .codex directory remains local and unstaged.",
+      "Reviewed unknown: Whether origin/main has advanced since the last fetch.",
+      "Reviewed unknown: The final commit identifier and push result are unknown until the separately authorized Git operations complete."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "src",
+      "templates",
+      "tests",
+      "README.md",
+      "AGENTS.md",
+      "docs/adr",
+      "docs/experiments",
+      "docs/development-log/2026-08-20.md",
+      "docs/development-automation-contracts.md",
+      "docs/development-session.md",
+      "docs/development-task-contract.md",
+      "docs/governance-mcp-adapter.md",
+      "docs/product-requirements-automatic-governance.md",
+      "governance/tasks/p0-airbnb-clean-clone-preflight-v1.json",
+      "governance/tasks/p0-airbnb-isolated-runtime-preparation-v1.json",
+      "governance/tasks/p0-airbnb-live-uncoached-replay-evidence-v1.json",
+      "governance/tasks/p0-native-append-only-task-completion-record-v1.json",
+      "governance/tasks/p0-native-append-only-task-completion-record-v2.json",
+      "governance/tasks/p0-native-completion-airbnb-isolated-live-replay-v1.json"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-2026-08-21-development-closeout-main-push-v1.json",
+      "STATUS.md",
+      "docs/development-log/2026-08-21.md"
+    ]
+  },
+  "task_id": "p0-2026-08-21-development-closeout-main-push-v1",
+  "title": "Record 2026-08-21 development closeout before authorized main push",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-2026-08-21-development-closeout-main-push-v1.json",
+    "python -m agentgov check scope governance/tasks/p0-2026-08-21-development-closeout-main-push-v1.json",
+    "python -m agentgov check repository .",
+    "git diff --check",
+    "git status -sb"
+  ]
+}

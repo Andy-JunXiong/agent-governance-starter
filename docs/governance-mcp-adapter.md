@@ -51,8 +51,9 @@ restart.
 
 ## Tool workflow
 
-Without form elicitation capability, the server advertises exactly five tools,
-all read-only, in a fixed order:
+Without form elicitation capability, the current server advertises exactly six
+tools in a fixed order. The first five are read-only and the sixth performs
+only the bounded local evidence writes described below:
 
 1. `agentgov_alignment_start` starts from normalized meaning;
 2. `agentgov_alignment_update` applies one normalized answer to the exact
@@ -61,7 +62,9 @@ all read-only, in a fixed order:
 4. `agentgov_self_review_start` prepares one exact medium-risk active-host
    materialization request;
 5. `agentgov_self_review_complete` validates normalized observations and
-   returns the accepted advisory result.
+   returns the accepted advisory result;
+6. `agentgov_task_completion_record` revalidates one exact admitted task and
+   appends its declared-validation and deterministic completion evidence.
 
 Development Adapter `1.3.0` conditionally advertises a sixth tool,
 `agentgov_task_proposal_review`, only when the initialized client declares MCP
@@ -106,6 +109,39 @@ accepted task with `Human product owner` in both durable fields. Byte-verified
 module/launcher repair, not a wheel build, publication, release, consumer
 activation, model run, or live replay.
 
+Development source Adapter `1.6.0` adds the sixth base tool,
+`agentgov_task_completion_record`. Its only input is one safe
+repository-relative `governance/tasks/*.json` path. Before writing, the
+Adapter revalidates human admission, canonical task identity, the active-task
+binding when one exists, and every path in the complete Git snapshot. A
+matching session retains its recorded comparison base; a sessionless call uses
+current committed HEAD only after the complete current snapshot is within the
+exact task scope. The Adapter then runs only the task's declared validation
+commands and reuses `agentgov.development-evidence`,
+`agentgov.development-completion`, `validation.completed`, and
+`completion.reconciled`. Passing fresh evidence returns `verified`; failed,
+stale, or insufficient evidence returns `needs_evidence`. Records are
+exclusive-create local `.agentgov/` files, while the task decision and prior
+records remain unchanged. This is deterministic evidence, not human
+requirement acceptance or architecture approval, and it neither starts nor
+hands off a session. Form-capable clients discover eight tools and clients
+without form support discover six. Adapter `1.6.0` is not installed,
+consumer-replayed, published, released, or deployed. Generated Codex
+configuration raises the server-level tool timeout from the default 60 seconds
+to 1,800 seconds so bounded task-declared validation can complete; this does
+not change the per-command 1,800-second validation limit or prove that every
+multi-command task finishes within the client timeout.
+
+A separately admitted isolated AIRBNB installation and live-replay attempt
+created a fresh source staging copy, Python 3.11.9 environment, and clean
+remote-free clone, then stopped before installation. The fresh environment's
+`setuptools 65.5.0` did not satisfy Starter's declared `setuptools>=69` build
+backend and rejected current metadata during the exact offline no-dependency
+install attempt. No AgentGov package, MCP process, Codex session, consumer
+task, or completion record resulted. The committed consumer `enabled_tools`
+allow-list also omits `agentgov_task_completion_record`; that separate binding
+was measured but not repaired or overridden.
+
 The proposal trigger is scoped to the exact requested repository change. A
 human-admitted task counts only when its requirement, goal, scope, and
 acceptance signals match and authorize that change. An unrelated,
@@ -138,6 +174,10 @@ leave the final offered direction to the human. After implementing and
 validating that resolved direction, the same Agent starts a distinct advisory
 self-review before its completion handoff. Repository `AGENTS.md` repeats this
 host-visible rule; deterministic tests keep both surfaces synchronized.
+After implementing any exact admitted task, the same guidance routes the Agent
+through `agentgov_task_completion_record` before that advisory pass when the
+tool is available. A completion-tool failure remains fail-closed and cannot be
+recast as task acceptance.
 
 The model must carry the journey handle and exact prompt/request digest returned
 by AgentGov. Unknown, stale, duplicate, out-of-order, cross-journey, or

@@ -29,6 +29,7 @@ from agentgov.governance_mcp import (
     MCP_PROTOCOL_VERSION,
     MCP_SERVER_VERSION,
     MCP_SERVER_INSTRUCTIONS,
+    MCP_TASK_COMPLETION_TOOL_NAME,
     MCP_TASK_PROPOSAL_TOOL_NAME,
     MCP_TOOL_NAMES,
     GovernanceMcpAdapter,
@@ -38,6 +39,7 @@ from agentgov.governance_mcp import (
     governance_mcp_tools,
 )
 from agentgov.development_monitor import MonitorPolicyError
+from agentgov.development_session import apply_start_plan, build_start_plan
 from agentgov.drift_review import build_drift_review_status
 from agentgov.human_decision import canonical_document_digest
 from agentgov.reference_alignment_adapter import (
@@ -237,6 +239,66 @@ def create_git_repository(root: Path) -> None:
     subprocess.run(("git", "init", "-q", str(root)), check=True)
 
 
+def run_git(repository: Path, *args: str) -> str:
+    completed = subprocess.run(
+        ("git", "-C", str(repository), *args),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    if completed.returncode != 0:
+        raise AssertionError(completed.stderr.decode("utf-8", errors="replace"))
+    return completed.stdout.decode("ascii", errors="replace").strip()
+
+
+def create_completion_repository(
+    root: Path,
+    *,
+    validation_command: str | None = None,
+    decision_state: str = "admitted",
+) -> Path:
+    create_git_repository(root)
+    run_git(root, "config", "user.email", "fixture@example.invalid")
+    run_git(root, "config", "user.name", "Fixture Author")
+    (root / "src").mkdir()
+    (root / "governance" / "tasks").mkdir(parents=True)
+    (root / "AGENTS.md").write_text("# Fixture governance\n", encoding="utf-8")
+    (root / "src" / "app.py").write_text("VALUE = 1\n", encoding="utf-8")
+    command = validation_command or f'"{sys.executable}" -c "print(\'completion-pass\')"'
+    task = {
+        "contract": "agentgov.development-task",
+        "schema_version": "1.1",
+        "profile": "compact",
+        "task_id": "native-completion-fixture",
+        "title": "Record native completion evidence",
+        "requirement": {
+            "summary": "Change and validate only the admitted fixture source path.",
+            "source_refs": [],
+        },
+        "scope": {
+            "include_paths": [
+                "src",
+                "governance/tasks/native-completion-fixture.json",
+            ],
+            "exclude_paths": [],
+        },
+        "acceptance_signals": ["The declared validation command passes."],
+        "validation_commands": [command],
+        "owner": "Fixture owner",
+        "risk": {"level": "low", "items": []},
+        "decision": {
+            "state": decision_state,
+            "decided_by": "Fixture owner",
+            "rationale": "The fixture owner reviewed this bounded completion task.",
+        },
+    }
+    task_path = root / "governance" / "tasks" / "native-completion-fixture.json"
+    task_path.write_text(json.dumps(task, indent=2) + "\n", encoding="utf-8")
+    run_git(root, "add", ".")
+    run_git(root, "commit", "--quiet", "-m", "baseline")
+    return task_path
+
+
 def create_drift_review_repository(root: Path) -> None:
     create_git_repository(root)
     (root / "docs" / "adr").mkdir(parents=True)
@@ -272,7 +334,7 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
         listed = server.dispatch(rpc(3, "tools/list", {}))
 
         self.assertEqual(discovered["result"]["supportedVersions"][0], MCP_PROTOCOL_VERSION)
-        self.assertEqual(MCP_SERVER_VERSION, "1.5.0")
+        self.assertEqual(MCP_SERVER_VERSION, "1.6.0")
         self.assertEqual(initialized["result"]["serverInfo"]["version"], MCP_SERVER_VERSION)
         self.assertEqual(initialized["result"]["protocolVersion"], "2025-11-25")
         self.assertEqual(
@@ -298,6 +360,7 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
         )
         self.assertIn("Do not use proposal review for read-only work", MCP_SERVER_INSTRUCTIONS)
         self.assertIn("human alone", MCP_SERVER_INSTRUCTIONS)
+        self.assertIn("task-completion-record tool", MCP_SERVER_INSTRUCTIONS)
         descriptions = {tool["name"]: tool["description"] for tool in listed["result"]["tools"]}
         self.assertIn("multiple reasonable directions", descriptions[MCP_TOOL_NAMES[0]])
         self.assertIn("human must select", descriptions[MCP_TOOL_NAMES[0]])
@@ -314,6 +377,10 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
         self.assertIn(
             "Never supply or infer the human decision",
             descriptions[MCP_DRIFT_REVIEW_TOOL_NAME],
+        )
+        self.assertIn(
+            "does not edit the task decision",
+            descriptions[MCP_TASK_COMPLETION_TOOL_NAME],
         )
         for index, tool in enumerate(listed["result"]["tools"]):
             self.assertFalse(tool["inputSchema"]["additionalProperties"])
@@ -337,7 +404,13 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
         self.assertTrue(review_complete["observations"]["uniqueItems"])
         self.assertEqual(observation["assumptions"]["maxItems"], 20)
         self.assertEqual(observation["unknowns"]["maxItems"], 20)
-        proposal = listed["result"]["tools"][5]["inputSchema"]
+        tools_by_name = {
+            tool["name"]: tool for tool in listed["result"]["tools"]
+        }
+        completion = tools_by_name[MCP_TASK_COMPLETION_TOOL_NAME]["inputSchema"]
+        self.assertEqual(completion["required"], ["task_path"])
+        self.assertNotIn("repository", completion["properties"])
+        proposal = tools_by_name[MCP_TASK_PROPOSAL_TOOL_NAME]["inputSchema"]
         self.assertNotIn("raw_prompt", proposal["properties"])
         self.assertNotIn("decision", proposal["properties"])
         self.assertNotIn("repository", proposal["properties"])
@@ -351,7 +424,7 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
             proposal["properties"]["scope"]["properties"]["include_paths"]["items"]["maxLength"],
             400,
         )
-        drift = listed["result"]["tools"][6]["inputSchema"]
+        drift = tools_by_name[MCP_DRIFT_REVIEW_TOOL_NAME]["inputSchema"]
         self.assertNotIn("decision", drift["properties"])
         self.assertNotIn("repository", drift["properties"])
         self.assertEqual(drift["properties"]["observations"]["minItems"], 3)
@@ -379,7 +452,7 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
             rpc(
                 3,
                 "tools/call",
-                {"name": MCP_TOOL_NAMES[5], "arguments": task_proposal_arguments()},
+                {"name": MCP_TASK_PROPOSAL_TOOL_NAME, "arguments": task_proposal_arguments()},
             )
         )["result"]
         self.assertTrue(called["isError"])
@@ -399,6 +472,156 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
             drift_called["structuredContent"]["error"]["error_code"],
             "drift_review_elicitation_unsupported",
         )
+
+    def test_native_completion_records_fresh_evidence_without_task_or_git_mutation(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            task_path = create_completion_repository(root)
+            (root / "src" / "app.py").write_text("VALUE = 2\n", encoding="utf-8")
+            original_task = task_path.read_bytes()
+            original_head = run_git(root, "rev-parse", "HEAD")
+            active = adapter(repository=root)
+
+            first = active.call_tool(
+                MCP_TASK_COMPLETION_TOOL_NAME,
+                {"task_path": "governance/tasks/native-completion-fixture.json"},
+            )
+            second = active.call_tool(
+                MCP_TASK_COMPLETION_TOOL_NAME,
+                {"task_path": "governance/tasks/native-completion-fixture.json"},
+            )
+
+            self.assertEqual(first["contract"], "agentgov.task-completion-record-result")
+            self.assertEqual(first["status"], "verified")
+            self.assertEqual(first["execution"]["mode"], "head_snapshot")
+            self.assertEqual(first["execution"]["validation_outcome"], "passed")
+            self.assertEqual(second["status"], "verified")
+            self.assertEqual(task_path.read_bytes(), original_task)
+            self.assertEqual(run_git(root, "rev-parse", "HEAD"), original_head)
+            self.assertEqual(run_git(root, "diff", "--cached", "--name-only"), "")
+            self.assertEqual(len(list((root / ".agentgov" / "evidence").glob("*.json"))), 2)
+            self.assertEqual(len(list((root / ".agentgov" / "events").glob("*.json"))), 4)
+            self.assertTrue(first["authority_boundary"]["local_governance_modified"])
+            self.assertFalse(first["authority_boundary"]["task_modified"])
+            for key, value in first["authority_boundary"].items():
+                if key != "local_governance_modified":
+                    self.assertFalse(value, key)
+
+    def test_native_completion_failed_and_stale_validation_never_verify(self) -> None:
+        failure_command = f'"{sys.executable}" -c "import sys; sys.exit(3)"'
+        mutation_command = (
+            f'"{sys.executable}" -c "from pathlib import Path; '
+            "Path('src/generated.txt').write_text('generated', encoding='utf-8')\""
+        )
+        for command, expected_outcome in (
+            (failure_command, "failed"),
+            (mutation_command, "stale"),
+        ):
+            with self.subTest(expected_outcome=expected_outcome), TemporaryDirectory() as temp_dir:
+                root = Path(temp_dir)
+                create_completion_repository(root, validation_command=command)
+                (root / "src" / "app.py").write_text("VALUE = 2\n", encoding="utf-8")
+
+                result = adapter(repository=root).call_tool(
+                    MCP_TASK_COMPLETION_TOOL_NAME,
+                    {"task_path": "governance/tasks/native-completion-fixture.json"},
+                )
+
+                self.assertEqual(result["status"], "needs_evidence")
+                self.assertEqual(result["execution"]["validation_outcome"], expected_outcome)
+                self.assertGreater(result["findings"]["failures"], 0)
+
+    def test_native_completion_reuses_matching_session_and_rejects_mismatch(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            task_path = create_completion_repository(root)
+            plan = build_start_plan(root, task=task_path)
+            apply_start_plan(plan)
+            (root / "src" / "app.py").write_text("VALUE = 2\n", encoding="utf-8")
+
+            result = adapter(repository=root).call_tool(
+                MCP_TASK_COMPLETION_TOOL_NAME,
+                {"task_path": "governance/tasks/native-completion-fixture.json"},
+            )
+
+            self.assertEqual(result["status"], "verified")
+            self.assertEqual(result["execution"]["mode"], "active_session")
+            self.assertEqual(
+                result["execution"]["comparison_base_sha"],
+                plan.session.comparison_base_sha,
+            )
+
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            first = create_completion_repository(root)
+            second = json.loads(first.read_text(encoding="utf-8"))
+            second["task_id"] = "native-completion-other"
+            second["title"] = "Record other native completion evidence"
+            second["scope"]["include_paths"][1] = (
+                "governance/tasks/native-completion-other.json"
+            )
+            second_path = root / "governance" / "tasks" / "native-completion-other.json"
+            second_path.write_text(json.dumps(second, indent=2) + "\n", encoding="utf-8")
+            run_git(root, "add", ".")
+            run_git(root, "commit", "--quiet", "-m", "add second task")
+            apply_start_plan(build_start_plan(root, task=first))
+            initial_events = len(list((root / ".agentgov" / "events").glob("*.json")))
+
+            with self.assertRaises(GovernanceMcpError) as caught:
+                adapter(repository=root).call_tool(
+                    MCP_TASK_COMPLETION_TOOL_NAME,
+                    {"task_path": "governance/tasks/native-completion-other.json"},
+                )
+
+            self.assertEqual(
+                caught.exception.code, "task_completion_active_task_mismatch"
+            )
+            self.assertEqual(
+                len(list((root / ".agentgov" / "events").glob("*.json"))),
+                initial_events,
+            )
+            self.assertFalse((root / ".agentgov" / "evidence").exists())
+
+    def test_native_completion_invalid_or_out_of_scope_input_is_zero_write(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            create_completion_repository(root)
+            (root / "src" / "app.py").write_text("VALUE = 2\n", encoding="utf-8")
+            (root / "outside.txt").write_text("not admitted\n", encoding="utf-8")
+            active = adapter(repository=root)
+
+            with self.assertRaises(GovernanceMcpError) as blocked:
+                active.call_tool(
+                    MCP_TASK_COMPLETION_TOOL_NAME,
+                    {"task_path": "governance/tasks/native-completion-fixture.json"},
+                )
+            self.assertEqual(blocked.exception.code, "task_completion_scope_blocked")
+            self.assertFalse((root / ".agentgov").exists())
+
+            for invalid in (
+                "../task.json",
+                str(task_path := root / "governance" / "tasks" / "native-completion-fixture.json"),
+                "governance/tasks/not-json.txt",
+                "governance/tasks/Uppercase.json",
+            ):
+                with self.subTest(invalid=invalid), self.assertRaises(GovernanceMcpError) as caught:
+                    active.call_tool(
+                        MCP_TASK_COMPLETION_TOOL_NAME,
+                        {"task_path": invalid},
+                    )
+                self.assertEqual(caught.exception.code, "task_completion_invalid_field")
+                self.assertFalse((root / ".agentgov").exists())
+
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            create_completion_repository(root, decision_state="paused")
+            with self.assertRaises(GovernanceMcpError) as paused:
+                adapter(repository=root).call_tool(
+                    MCP_TASK_COMPLETION_TOOL_NAME,
+                    {"task_path": "governance/tasks/native-completion-fixture.json"},
+                )
+            self.assertEqual(paused.exception.code, "task_completion_failed_closed")
+            self.assertFalse((root / ".agentgov").exists())
 
     def test_native_proposal_review_admits_only_exact_accept_decision(self) -> None:
         with TemporaryDirectory() as temp_dir:
@@ -425,7 +648,7 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
                             2,
                             "tools/call",
                             {
-                                "name": MCP_TOOL_NAMES[5],
+                                "name": MCP_TASK_PROPOSAL_TOOL_NAME,
                                 "arguments": task_proposal_arguments(),
                             },
                         )
@@ -609,7 +832,7 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
                 2,
                 "tools/call",
                 {
-                    "name": MCP_TOOL_NAMES[5],
+                    "name": MCP_TASK_PROPOSAL_TOOL_NAME,
                     "arguments": task_proposal_arguments("native-interrupted"),
                 },
             )
@@ -641,7 +864,7 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
                             3,
                             "tools/call",
                             {
-                                "name": MCP_TOOL_NAMES[5],
+                                "name": MCP_TASK_PROPOSAL_TOOL_NAME,
                                 "arguments": invalid_arguments,
                             },
                         )
@@ -825,6 +1048,9 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
         self.assertIn("fully specified low-risk change", guidance)
         self.assertIn("A direct\n  chat request, approval, authorization", guidance)
         self.assertIn("any repository-changing task", guidance)
+        self.assertIn("six base `agentgov_*` governance tools", guidance)
+        self.assertIn("agentgov_task_completion_record", guidance)
+        self.assertIn("stand in for human acceptance", guidance)
         self.assertIn("do not fabricate a journey handle", guidance)
         self.assertIn("agentgov_self_review_start", guidance)
         self.assertIn("agentgov_self_review_complete", guidance)
@@ -1394,6 +1620,7 @@ class CodexMcpIntegrationTests(unittest.TestCase):
         self.assertEqual(tuple(server["enabled_tools"]), MCP_TOOL_NAMES)
         self.assertTrue(server["required"])
         self.assertEqual(server["default_tools_approval_mode"], "auto")
+        self.assertEqual(server["tool_timeout_sec"], 1800)
         self.assertEqual(
             rendered,
             (ROOT / "templates/codex-mcp.template.toml").read_text(encoding="utf-8"),

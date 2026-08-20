@@ -171,6 +171,16 @@ pre-elicitation hostile-owner rejection, and human-owned admitted output. The
 local repair retained byte-verified `1.4.0` module and launcher backups; it did
 not build a wheel, change project configuration, run a model, or start a
 consumer replay.
+Development source Adapter `1.6.0` now adds the sixth base tool,
+`agentgov_task_completion_record`. After bounded implementation it accepts only
+one repository-relative admitted-task path, rechecks the complete Git scope,
+uses a matching active-session base or the current committed HEAD for a
+sessionless closeout, runs only task-declared validation, and appends the
+existing privacy-bounded validation and completion records under `.agentgov/`.
+It never edits the human decision or stands in for requirement acceptance or
+session handoff. Form-capable clients now discover eight tools and other
+clients discover six. This is development source only: it has not been
+installed, replayed in AIRBNB, published, released, or deployed.
 See the [automatic governance product requirements](docs/product-requirements-automatic-governance.md)
 and [ADR-0013](docs/adr/0013-make-automatic-governance-and-dashboard-primary.md).
 ADR-0014 separately owns semantic-review Provider and assurance routing.
@@ -596,6 +606,27 @@ operator or alter the generic proposal contract. The exact module is now
 installed only in the existing local pipx development runtime and passed an
 isolated no-model preflight; it remains unpublished, unreleased, and inactive
 in consumers, and this does not authorize a consumer replay.
+Development source Adapter `1.6.0` adds
+`agentgov_task_completion_record` as a sixth base tool. It reuses the existing
+scope, Git-snapshot, declared-validation, evidence, and append-only event
+contracts to record `verified` or `needs_evidence` without changing the
+admitted task. A matching active session supplies its comparison base; without
+one, the tool uses current HEAD only after the entire current snapshot passes
+the exact task scope. The result grants no semantic acceptance, Git, release,
+or deployment authority and performs no session handoff. Codex configuration
+generated for future consumers enables the tool and raises the server-level
+tool timeout to 1,800 seconds so task-declared validation is not constrained by
+Codex's 60-second default. This source change is not installed or
+consumer-replayed.
+A separately admitted isolated AIRBNB installation and live-replay attempt
+then stopped before installation. A fresh Python 3.11.9 environment exposed
+only `setuptools 65.5.0`, while Starter declares `setuptools>=69`; the exact
+offline, no-dependency build rejected current project metadata before creating
+or installing a package. No MCP server or Codex session started. The clean
+remote-free consumer clone was retained unchanged. Its committed Codex config
+also allow-lists the prior seven tools and omits the completion tool, so any
+future retry must separately own both an offline build dependency and the
+consumer configuration binding rather than hiding them in replay setup.
 The following proposal replay evidence remains specific to Adapter `1.3.0`.
 Standalone authentication is repaired. A separately authorized UTF-8-safe
 App Server replay completed one real read-only turn without surfacing a native

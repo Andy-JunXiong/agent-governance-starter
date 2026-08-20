@@ -68,6 +68,19 @@ class PublicDocumentationFreshnessTests(unittest.TestCase):
         ):
             self.assertIn(phrase, normalized)
 
+    def test_public_readme_reports_native_completion_install_block(self) -> None:
+        normalized = " ".join((ROOT / "README.md").read_text(encoding="utf-8").split())
+
+        for phrase in (
+            "isolated AIRBNB installation and live-replay attempt",
+            "setuptools 65.5.0",
+            "setuptools>=69",
+            "before creating or installing a package",
+            "No MCP server or Codex session started",
+            "omits the completion tool",
+        ):
+            self.assertIn(phrase, normalized)
+
     def test_public_readme_reports_bounded_nyc_completion_evidence(self) -> None:
         normalized = " ".join((ROOT / "README.md").read_text(encoding="utf-8").split())
 
@@ -202,14 +215,15 @@ class PublicDocumentationFreshnessTests(unittest.TestCase):
         normalized = " ".join(instructions.split())
 
         for phrase in (
-            "five base `agentgov_*` governance tools",
-            "sixth `agentgov_task_proposal_review` tool",
+            "six base `agentgov_*` governance tools",
+            "`agentgov_task_completion_record` is available",
+            "`agentgov_task_proposal_review` and `agentgov_drift_review_record`",
             "readable, validated `governance/tasks/*.json` record",
             "explicitly authorizes that exact requested change",
             "A direct chat request, approval, authorization, tool permission",
             "Do not call it for read-only work",
             "Do not modify the repository until the resulting task record exists",
-            "After implementing and validating any repository-changing task",
+            "After implementing an exact admitted task",
         ):
             self.assertIn(phrase, normalized)
 

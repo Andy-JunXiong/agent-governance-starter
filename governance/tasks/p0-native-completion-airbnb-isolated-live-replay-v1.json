@@ -1,0 +1,97 @@
+{
+  "acceptance_signals": [
+    "The admitted task and retained evidence bind alignment journey mcpj-26130afbf8444dadab2f3e42246e0de7 and the human-selected live isolated AIRBNB replay direction without granting external or downstream authority.",
+    "A fresh temporary source staging area contains the exact task-scoped development-source identity needed for Adapter 1.6.0, and building there leaves the Starter source worktree, ignored build artifacts, Git index, HEAD, and remote unchanged.",
+    "A fresh temporary Python 3.11 or newer runtime installs the locally built artifact offline with no dependency download, reports the expected distribution identity and Adapter 1.6.0, and does not overwrite or mutate the current pipx or retained isolated runtimes.",
+    "A fresh disposable AIRBNB clone starts at exact commit d70615527d9acdde3893ce645d1923606173acf6, has no remote, has the expected committed AGENTS and Codex MCP configuration, and is clean before the replay.",
+    "No-model MCP initialization and discovery from the disposable AIRBNB clone expose exactly eight tools with form elicitation and six without it, include agentgov_task_completion_record with only the safe task_path input, and retain denied authority.",
+    "Exactly one live uncoached Codex session receives only an ordinary bounded heading-change requirement, invokes native proposal review before editing, waits for human admission, performs only the admitted edit, invokes agentgov_task_completion_record, and performs the required distinct current-Agent review.",
+    "The replay task remains human-owned and admitted with its original rationale; successful completion appends distinct privacy-bounded validation evidence, validation.completed, and completion.reconciled records and returns verified without starting or handing off a session.",
+    "If proposal admission, tool selection, validation, completion, or review does not occur, the result is recorded as a bounded failure or incomplete replay rather than repaired, coached, retried, or overstated.",
+    "The disposable clone retains no remote and no commit or push; the original AIRBNB worktree, prior clean clone, retained runtimes, Starter source and Git state, credentials, and external systems remain unchanged.",
+    "Retained Starter evidence contains no raw prompt, response, transcript, screenshot, source content, credential, private data, temporary absolute path, or external-model payload and clearly separates user-observed interaction from current-Agent deterministic measurement.",
+    "README, current status, MCP guide, product requirements, dated log, experiment record, and documentation tests state the exact installed and consumer evidence without changing stable distribution or release identity.",
+    "Focused documentation tests, the complete Starter suite, task and repository checks, exact cumulative scope reconciliation, JSON parsing, bounded secret and absolute-path scans, and git diff check pass or report only explicitly preserved prior-task and user-owned state.",
+    "The task stops before source repair, another replay, reuse or cleanup of temporary resources, original-consumer mutation, existing-runtime mutation, Git operations, publication, release, deployment, or broader consumer activation."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-1383eb44a7354a1e9aed00087ab6b96a and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Prepare a fresh disposable source staging area and Python runtime containing the exact current development-source Adapter 1.6.0 without modifying existing runtimes or source artifacts; create a fresh disposable AIRBNB clone at the already measured commit with no remote; run privacy-bounded no-model discovery and schema preflight; then run exactly one live uncoached Codex journey from an ordinary bounded heading-change request through native proposal admission, implementation, agentgov_task_completion_record, and current-Agent review. Measure whether completion appends verified evidence while preserving the human admitted decision. Record only sanitized result evidence in the admitted Starter documentation surfaces and stop before any source fix, repeat replay, cleanup, Git operation, publication, release, deployment, or consumer activation."
+  },
+  "risk": {
+    "items": [
+      "Building from the dirty Starter source could accidentally absorb unrelated files or mutate ignored build artifacts unless a fresh bounded staging copy is used.",
+      "A temporary environment or clone could collide with retained resources; every target must be fresh and resolved before creation.",
+      "The live host may fail to load the project MCP configuration, select the completion tool, present forms, or finish before timeout.",
+      "The model may change files outside the admitted consumer task, omit completion, or make unsupported authority claims.",
+      "MCP client timeout or cancellation may leave server-side validation or append-only records in an uncertain state.",
+      "External model execution uses the user's existing Codex entitlement and must not expose retained raw interaction data.",
+      "The dirty Starter worktree contains prior admitted and user-owned changes that must remain preserved and outside this task.",
+      "A successful single AIRBNB replay would not prove other hosts, repositories, risk levels, operating systems, or release behavior.",
+      "Reviewed assumption: AIRBNB remains the accountable human-selected independent consumer.",
+      "Reviewed assumption: The existing Codex CLI authentication can be used without reading or copying credentials.",
+      "Reviewed assumption: Python 3.11 or newer, Git, and local packaging dependencies are available for an offline staged build.",
+      "Reviewed assumption: The original AIRBNB repository provides the exact measured commit as a local clone source.",
+      "Reviewed assumption: A one-time project trust override can load the disposable clone configuration without persisting trust.",
+      "Reviewed assumption: The bounded consumer edit can use a unique README heading distinct from the earlier replay.",
+      "Reviewed unknown: Whether Adapter 1.6.0 source can be built and installed offline in a fresh runtime without modifying the Starter worktree.",
+      "Reviewed unknown: Whether current Codex discovers and autonomously selects the new completion tool in the disposable AIRBNB clone.",
+      "Reviewed unknown: Whether native completion finishes within the configured 1,800-second tool timeout.",
+      "Reviewed unknown: Whether the host visibly presents both proposal admission and completion behavior without coaching.",
+      "Reviewed unknown: Whether a successful result generalizes beyond this single consumer replay."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "docs/assets",
+      "docs/development-log/2026-08-20.md",
+      "docs/experiments/airbnb-clean-clone-preflight-2026-08-20.md",
+      "docs/experiments/airbnb-isolated-runtime-preparation-2026-08-20.md",
+      "docs/experiments/airbnb-live-uncoached-replay-2026-08-21.md",
+      "governance/tasks/p0-airbnb-clean-clone-preflight-v1.json",
+      "governance/tasks/p0-airbnb-isolated-runtime-preparation-v1.json",
+      "governance/tasks/p0-airbnb-live-uncoached-replay-evidence-v1.json",
+      "governance/tasks/p0-native-append-only-task-completion-record-v1.json",
+      "governance/tasks/p0-native-append-only-task-completion-record-v2.json",
+      "src",
+      "templates",
+      "schemas",
+      "release",
+      "examples"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-native-completion-airbnb-isolated-live-replay-v1.json",
+      "docs/experiments/airbnb-native-completion-isolated-live-replay-2026-08-21.md",
+      "docs/development-log/2026-08-21.md",
+      "STATUS.md",
+      "README.md",
+      "docs/governance-mcp-adapter.md",
+      "docs/product-requirements-automatic-governance.md",
+      "tests/test_user_documentation.py",
+      "tests/test_public_documentation_freshness.py"
+    ]
+  },
+  "task_id": "p0-native-completion-airbnb-isolated-live-replay-v1",
+  "title": "Install and replay native completion in isolated AIRBNB",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -p \"test_user_documentation.py\" -v",
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -p \"test_public_documentation_freshness.py\" -v",
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; python -m agentgov check task governance/tasks/p0-native-completion-airbnb-isolated-live-replay-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check scope governance/tasks/p0-native-completion-airbnb-isolated-live-replay-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

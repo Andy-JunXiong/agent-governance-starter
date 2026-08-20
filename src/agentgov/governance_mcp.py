@@ -4,17 +4,34 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 import unicodedata
 import uuid
 from dataclasses import asdict, dataclass
 from pathlib import Path
+from pathlib import PurePosixPath
 from typing import Any, Callable, Mapping, Sequence, TextIO
 
 from agentgov.clarification_dialogue import denied_authority
 from agentgov.alignment_transport import AlignmentStreamSession
+from agentgov.change_scope import (
+    GitInspectionError,
+    ScopePolicyError,
+    check_development_scope,
+)
+from agentgov.development_evidence import (
+    EvidenceError,
+    reconcile_task_completion,
+    run_task_validation,
+)
 from agentgov.development_monitor import (
     build_development_monitor,
     write_development_monitor,
+)
+from agentgov.development_session import (
+    SessionPolicyError,
+    load_active_session,
+    resolve_active_task,
 )
 from agentgov.drift_review import (
     DRIFT_DIMENSIONS,
@@ -25,9 +42,10 @@ from agentgov.drift_review import (
     write_drift_review_record,
 )
 from agentgov.event_store import LocalStateError
+from agentgov.git_snapshot import GitSnapshotError, capture_git_snapshot, snapshot_paths
 from agentgov.host_interaction import build_host_interaction_capabilities
 from agentgov.human_decision import canonical_document_digest
-from agentgov.path_policy import scope_path_error
+from agentgov.path_policy import evaluate_path_scope, scope_path_error
 from agentgov.reference_alignment_adapter import (
     AlignmentContextDraft,
     ClarificationUpdateDraft,
@@ -57,12 +75,13 @@ from agentgov.task_proposal import (
     apply_task_admission_plan,
     render_task_admission_plan_json,
 )
+from agentgov.task_contract import load_development_task
 
 
 MCP_PROTOCOL_VERSION = "2026-07-28"
 MCP_LEGACY_PROTOCOL_VERSIONS = ("2025-11-25", "2025-06-18")
 MCP_SERVER_NAME = "agentgov-governance"
-MCP_SERVER_VERSION = "1.5.0"
+MCP_SERVER_VERSION = "1.6.0"
 MCP_NATIVE_ACCOUNTABLE_OWNER = "Human product owner"
 MCP_BASE_TOOL_NAMES = (
     "agentgov_alignment_start",
@@ -70,7 +89,9 @@ MCP_BASE_TOOL_NAMES = (
     "agentgov_alignment_resolve",
     "agentgov_self_review_start",
     "agentgov_self_review_complete",
+    "agentgov_task_completion_record",
 )
+MCP_TASK_COMPLETION_TOOL_NAME = MCP_BASE_TOOL_NAMES[-1]
 MCP_TASK_PROPOSAL_TOOL_NAME = "agentgov_task_proposal_review"
 MCP_DRIFT_REVIEW_TOOL_NAME = "agentgov_drift_review_record"
 MCP_FORM_TOOL_NAMES = (
@@ -101,6 +122,9 @@ MCP_SERVER_INSTRUCTIONS = (
     "use proposal review for read-only work. Do not modify the repository if the required tool is "
     "unavailable or fails. That tool may create only the exact "
     "human-admitted task after a capability-negotiated form; ordinary tool permission is not task admission. "
+    "After bounded implementation, use the task-completion-record tool for the exact admitted task. "
+    "It may run only task-declared validation and append privacy-bounded local evidence; it never "
+    "changes the human decision, proves semantic acceptance, starts or hands off a session, or grants authority. "
     "When the periodic drift reminder is due, perform an evidence-bounded advisory review, then "
     "use the native drift-review tool with only normalized candidate observations. The human alone "
     "chooses whether to record that exact candidate, snooze, or write nothing. "
@@ -118,6 +142,9 @@ _SENSITIVE_INPUT_RE = re.compile(
 )
 _ABSOLUTE_INPUT_PATH_RE = re.compile(
     r"(?i)(?:^|\s)(?:[a-z]:[\\/]|/(?:users|home|var|etc|tmp)/)"
+)
+_TASK_COMPLETION_PATH_RE = re.compile(
+    r"^governance/tasks/(?:[a-z0-9][a-z0-9._-]*/)*[a-z0-9][a-z0-9._-]*\.json$"
 )
 
 
@@ -191,6 +218,17 @@ def _task_proposal_input_error(*, field_path: str, rule: str) -> None:
         "Normalized task-proposal input violates the indicated rule; correct it and retry",
         code="task_proposal_invalid_field",
         stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+        field_path=field_path,
+        rule=rule,
+        retryable=True,
+    )
+
+
+def _task_completion_input_error(*, field_path: str, rule: str) -> None:
+    raise GovernanceMcpError(
+        "Normalized task-completion input violates the indicated rule; correct it and retry",
+        code="task_completion_invalid_field",
+        stage=MCP_TASK_COMPLETION_TOOL_NAME,
         field_path=field_path,
         rule=rule,
         retryable=True,
@@ -1155,6 +1193,34 @@ def governance_mcp_tools() -> tuple[Mapping[str, Any], ...]:
             "annotations": common_annotations,
         },
         {
+            "name": MCP_TASK_COMPLETION_TOOL_NAME,
+            "title": "Record deterministic task completion evidence",
+            "description": (
+                "Use after bounded implementation for one exact human-admitted task. "
+                "Revalidate its complete Git scope, run only its declared validation commands, "
+                "and append privacy-bounded local validation and completion evidence. This tool "
+                "does not edit the task decision, prove human acceptance, start or hand off a "
+                "session, or authorize source changes, Git operations, release, or deployment."
+            ),
+            "inputSchema": _tool_schema(
+                {
+                    "task_path": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 400,
+                        "pattern": _TASK_COMPLETION_PATH_RE.pattern,
+                    }
+                },
+                ("task_path",),
+            ),
+            "annotations": {
+                "readOnlyHint": False,
+                "destructiveHint": False,
+                "idempotentHint": False,
+                "openWorldHint": False,
+            },
+        },
+        {
             "name": MCP_TASK_PROPOSAL_TOOL_NAME,
             "title": "Prepare and review a low-risk task proposal",
             "description": (
@@ -1203,7 +1269,7 @@ def governance_mcp_tools() -> tuple[Mapping[str, Any], ...]:
 
 
 class GovernanceMcpAdapter:
-    """Host-neutral tool layer backed only by foreground in-memory state."""
+    """Host-neutral tools with foreground journeys and bounded local records."""
 
     def __init__(
         self,
@@ -1229,6 +1295,7 @@ class GovernanceMcpAdapter:
             MCP_TOOL_NAMES[2]: self._alignment_resolve,
             MCP_TOOL_NAMES[3]: self._self_review_start,
             MCP_TOOL_NAMES[4]: self._self_review_complete,
+            MCP_TASK_COMPLETION_TOOL_NAME: self._task_completion_record,
         }
         handler = dispatch.get(name)
         if handler is None:
@@ -2023,6 +2090,175 @@ class GovernanceMcpAdapter:
         journey.self_review_sequence = 2
         journey.review_completed = True
         return {"journey_handle": handle, "stage": "self_review", "response": asdict(response), "authority_boundary": semantic_authority_boundary()}
+
+    def _task_completion_record(self, value: Any) -> Mapping[str, Any]:
+        fields = {"task_path"}
+        args = _exact_arguments(
+            value, fields, tool=MCP_TASK_COMPLETION_TOOL_NAME
+        )
+        task_ref = args["task_path"]
+        if (
+            not isinstance(task_ref, str)
+            or not task_ref.strip()
+            or len(task_ref) > 400
+            or any(
+                unicodedata.category(character).startswith("C")
+                for character in task_ref
+            )
+        ):
+            _task_completion_input_error(
+                field_path="task_path", rule="normalized_text"
+            )
+        if (
+            scope_path_error(task_ref)
+            or not _TASK_COMPLETION_PATH_RE.fullmatch(task_ref)
+        ):
+            _task_completion_input_error(
+                field_path="task_path", rule="repository_task_path"
+            )
+        if self.repository is None:
+            raise GovernanceMcpError(
+                "MCP task completion has no locally bound repository",
+                code="task_completion_repository_unavailable",
+                stage=MCP_TASK_COMPLETION_TOOL_NAME,
+                field_path=None,
+                rule="local_repository_binding",
+                retryable=False,
+            )
+
+        root = self.repository.resolve()
+        task_path = root.joinpath(*PurePosixPath(task_ref).parts)
+        try:
+            scope_report = check_development_scope(task_path, repository=root)
+            if scope_report.has_failures:
+                raise GovernanceMcpError(
+                    "Current repository changes exceed the exact admitted task scope",
+                    code="task_completion_scope_blocked",
+                    stage=MCP_TASK_COMPLETION_TOOL_NAME,
+                    field_path="task_path",
+                    rule="admitted_scope",
+                    retryable=True,
+                )
+
+            comparison_base = scope_report.head_sha
+            execution_mode = "head_snapshot"
+            active_session = load_active_session(root)
+            if active_session is not None:
+                active_task, resolved_session = resolve_active_task(root)
+                if active_task != task_path.resolve():
+                    raise GovernanceMcpError(
+                        "The active AgentGov session belongs to a different task",
+                        code="task_completion_active_task_mismatch",
+                        stage=MCP_TASK_COMPLETION_TOOL_NAME,
+                        field_path="task_path",
+                        rule="active_task_binding",
+                        retryable=False,
+                    )
+                comparison_base = resolved_session.comparison_base_sha
+                execution_mode = "active_session"
+
+            task = load_development_task(task_path)
+            task_scope = task["scope"]
+            snapshot = capture_git_snapshot(
+                root, comparison_base=comparison_base
+            )
+            blocked_paths = tuple(
+                path
+                for path in snapshot_paths(snapshot)
+                if not evaluate_path_scope(
+                    path,
+                    includes=task_scope["include_paths"],
+                    excludes=task_scope["exclude_paths"],
+                ).admitted
+            )
+            if blocked_paths:
+                raise GovernanceMcpError(
+                    "The complete Git snapshot exceeds the exact admitted task scope",
+                    code="task_completion_scope_blocked",
+                    stage=MCP_TASK_COMPLETION_TOOL_NAME,
+                    field_path="task_path",
+                    rule="complete_snapshot_scope",
+                    retryable=True,
+                )
+
+            validation = run_task_validation(
+                task_path,
+                repository=root,
+                comparison_base=comparison_base,
+            )
+            completion = reconcile_task_completion(
+                task_path,
+                repository=root,
+                evidence_path=Path(validation.evidence_ref),
+            )
+        except GovernanceMcpError:
+            raise
+        except (
+            EvidenceError,
+            GitInspectionError,
+            GitSnapshotError,
+            LocalStateError,
+            ScopePolicyError,
+            SessionPolicyError,
+            OSError,
+            subprocess.SubprocessError,
+            TypeError,
+            ValueError,
+        ) as exc:
+            raise GovernanceMcpError(
+                "Repository state prevented safe task-completion recording",
+                code="task_completion_failed_closed",
+                stage=MCP_TASK_COMPLETION_TOOL_NAME,
+                field_path=None,
+                rule="validated_local_completion",
+                retryable=True,
+            ) from exc
+
+        return {
+            "contract": "agentgov.task-completion-record-result",
+            "schema_version": "1.0",
+            "status": completion.state,
+            "task": {
+                "task_id": completion.task_id,
+                "task_path": completion.task_path,
+                "task_digest": completion.task_digest,
+            },
+            "execution": {
+                "mode": execution_mode,
+                "comparison_base_sha": comparison_base,
+                "validation_outcome": validation.evidence.outcome,
+                "evidence_ref": validation.evidence_ref,
+                "validation_event_ref": validation.event_ref,
+                "completion_event_ref": completion.event_ref,
+            },
+            "findings": {
+                "passes": sum(
+                    item.status == "PASS" for item in completion.findings
+                ),
+                "failures": sum(
+                    item.status == "FAIL" for item in completion.findings
+                ),
+                "advisories": sum(
+                    item.status == "ADVISORY" for item in completion.findings
+                ),
+            },
+            "known_limits": list(completion.known_limits),
+            "authority_boundary": {
+                "local_governance_modified": True,
+                "task_modified": False,
+                "starts_session": False,
+                "hands_off_session": False,
+                "authorizes_requirement_completion": False,
+                "authorizes_architecture_correctness": False,
+                "authorizes_code_change": False,
+                "authorizes_scope_expansion": False,
+                "authorizes_exception": False,
+                "authorizes_git_operations": False,
+                "authorizes_publication": False,
+                "authorizes_release": False,
+                "authorizes_deployment": False,
+            },
+        }
 
     @staticmethod
     def _alignment_result(handle: str, response: Any) -> Mapping[str, Any]:

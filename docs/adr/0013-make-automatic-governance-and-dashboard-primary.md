@@ -240,6 +240,12 @@ human judgment, and unsupported causal claims into false precision.
   context-only because current Hooks provide no arbitrary button or trusted
   custom-decision callback. `PermissionRequest` leaves the ordinary Codex
   human tool prompt undecided and is not treated as governance approval.
+- Development Adapter `1.6.0` adds `agentgov_task_completion_record` as the
+  sixth base MCP tool. It reuses the existing deterministic scope, validation,
+  evidence, and append-only completion primitives after implementation,
+  without mutating human admission or collapsing completion verification into
+  semantic acceptance or handoff. This is an Adapter entry point over existing
+  Kernel meanings, not a new Kernel completion concept.
 - Vendor-neutral alignment-context and clarification-dialogue contracts now
   keep substantive multi-turn discussion separate from final governance
   decisions. They preserve the current center, mark business, requirement, and

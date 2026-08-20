@@ -1,0 +1,95 @@
+{
+  "acceptance_signals": [
+    "Native MCP discovery exposes exactly one additive task-completion-record tool with strict normalized input and consistent development Adapter identity and documented tool counts, without changing distribution or release identity.",
+    "The tool accepts one repository-relative governance/tasks task reference, revalidates it as human-admitted, binds its canonical digest, and rejects missing, malformed, draft, paused, approval-inconsistent, changed, absolute, traversal, or out-of-repository inputs before validation or local writes.",
+    "Without an active session, current committed HEAD is used only when the complete committed, staged, unstaged, renamed, and non-ignored untracked snapshot is attributable to exact admitted scope; unrelated or ambiguous changes fail closed.",
+    "Only validation commands declared in the admitted task run; task or Git mutation during validation produces stale or needs_evidence rather than verified.",
+    "Fresh passing in-scope evidence appends validation.completed and completion.reconciled: verified local records; failed, stale, missing, or insufficient evidence never claims verified.",
+    "No invocation mutates the task file, decision.state, decision.rationale, prior evidence, or prior events.",
+    "Returned authority keeps human acceptance, architecture correctness, exception, source change, scope expansion, Git, publication, release, and deployment false.",
+    "Existing govern start, check, finish, handoff, task decision states, and completion schemas remain compatible and regression-tested.",
+    "Tests cover verified, failed, stale, out-of-scope, non-admitted, malformed-path, append-only, no-overwrite, no-Git-operation, and denied-authority behavior.",
+    "Affected README, MCP guide, task guide, ADR note, plan, status, dated log, and documentation tests remain consistent while historical facts are preserved.",
+    "Focused and complete tests, task and repository checks, scope reconciliation, JSON parsing, bounded privacy scans, and git diff check pass or report only preserved prior state.",
+    "No installed runtime, AIRBNB repository, consumer configuration, temporary resource, Git remote, package, release, publication, deployment, or external system changes."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-3be1c0d06cb74078955d4792f9156850 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Add one native AgentGov MCP action that records deterministic completion for an exact human-admitted task without changing its decision. Reuse existing scope, Git-snapshot, development-evidence, development-completion, and append-only local event contracts. The action must validate the unchanged task, check the complete current change set against admitted scope, run only declared validation commands, and append privacy-bounded validation.completed and completion.reconciled evidence under local .agentgov state. It may use current committed HEAD for a no-session closeout only when the entire current snapshot is attributable to exact scope; otherwise it fails closed. Return verified or needs_evidence while preserving human acceptance, CLI session and handoff semantics, and all downstream authority boundaries. Update affected Adapter identity, MCP discovery, documentation, tests, status, and dated evidence. Do not install, replay against a consumer, use Git, publish, release, or deploy."
+  },
+  "risk": {
+    "items": [
+      "A verified deterministic record could be misread as human requirement acceptance or architecture approval.",
+      "A no-session comparison against current HEAD could misattribute prior in-scope work unless full snapshot limits are explicit.",
+      "Declared validation may mutate files, so before-and-after snapshots must detect stale evidence.",
+      "The MCP path could be confused with admission or source authority unless it requires an exact admitted task and writes only local evidence.",
+      "Adapter identity, tool count, documentation, and tests could drift.",
+      "Preserved dirty and user-owned paths must not be overwritten or absorbed.",
+      "Repeated use must append rather than overwrite.",
+      "Development-source behavior must not be presented as installed or released proof.",
+      "Reviewed assumption: Existing development evidence, completion, event, scope, and Git-snapshot contracts are the reusable source of truth.",
+      "Reviewed assumption: Append-only completion means an Adapter entry point over local completion evidence, not a completed human decision state.",
+      "Reviewed assumption: Current committed HEAD plus the complete current Git snapshot can bound a clean-base sessionless completion check without claiming a start event.",
+      "Reviewed assumption: Local .agentgov records remain privacy-bounded untracked state and grant no downstream authority.",
+      "Reviewed assumption: Development Adapter identity may advance while distribution 0.3.0rc1 and published metadata remain unchanged.",
+      "Reviewed assumption: Prior STATUS and 2026-08-21 log content must be preserved.",
+      "Reviewed unknown: Usefulness across hosts other than the current Codex MCP client remains unmeasured.",
+      "Reviewed unknown: Automatic session start and human handoff remain separate possible follow-ups.",
+      "Reviewed unknown: Installed-runtime discovery and uncoached selection are not tested in this source-only slice.",
+      "Reviewed unknown: Higher-risk, multi-repository, committed-during-task, and non-Git workflows remain out of scope."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "docs/assets",
+      "docs/experiments",
+      "governance/tasks/p0-airbnb-clean-clone-preflight-v1.json",
+      "governance/tasks/p0-airbnb-isolated-runtime-preparation-v1.json",
+      "governance/tasks/p0-airbnb-live-uncoached-replay-evidence-v1.json",
+      "examples",
+      "release",
+      "schemas",
+      "docs/schemas"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-native-append-only-task-completion-record-v1.json",
+      "src/agentgov/governance_mcp.py",
+      "src/agentgov/development_evidence.py",
+      "src/agentgov/codex_mcp.py",
+      "tests/test_governance_mcp.py",
+      "tests/test_development_evidence.py",
+      "tests/test_user_documentation.py",
+      "README.md",
+      "docs/governance-mcp-adapter.md",
+      "docs/development-task-contract.md",
+      "docs/adr/0013-make-automatic-governance-and-dashboard-primary.md",
+      "DEVELOPMENT_PLAN.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-21.md"
+    ]
+  },
+  "task_id": "p0-native-append-only-task-completion-record-v1",
+  "title": "Add native append-only task completion recording",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -p \"test_governance_mcp.py\" -v",
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -p \"test_development_evidence.py\" -v",
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -p \"test_user_documentation.py\" -v",
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; python -m agentgov check task governance/tasks/p0-native-append-only-task-completion-record-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check scope governance/tasks/p0-native-append-only-task-completion-record-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

@@ -41,6 +41,11 @@ AIRBNB_OWNER_REGRESSION_REPLAY = (
     ROOT
     / "docs/experiments/airbnb-adapter-1-5-owner-regression-replay-2026-08-16.md"
 )
+AIRBNB_NATIVE_COMPLETION_REPLAY_ATTEMPT = (
+    ROOT
+    / "docs/experiments/airbnb-native-completion-isolated-live-replay-2026-08-21.md"
+)
+CURRENT_NATIVE_COMPLETION_LOG = ROOT / "docs/development-log/2026-08-21.md"
 ADAPTER_1_5_INSTALLED_PREFLIGHT = (
     ROOT / "docs/experiments/adapter-1-5-installed-preflight-2026-08-15.md"
 )
@@ -392,6 +397,40 @@ class UserDocumentationTests(unittest.TestCase):
         ):
             self.assertIn(phrase, experiment)
 
+    def test_airbnb_native_completion_replay_preserves_install_block(self) -> None:
+        surfaces = (
+            README,
+            STATUS,
+            GOVERNANCE_MCP_ADAPTER,
+            AUTOMATIC_PRODUCT_REQUIREMENTS,
+            AIRBNB_NATIVE_COMPLETION_REPLAY_ATTEMPT,
+            CURRENT_NATIVE_COMPLETION_LOG,
+        )
+
+        self.assertTrue(AIRBNB_NATIVE_COMPLETION_REPLAY_ATTEMPT.is_file())
+        for path in surfaces:
+            normalized = " ".join(path.read_text(encoding="utf-8").split())
+            with self.subTest(path=path.name):
+                self.assertIn("setuptools 65.5.0", normalized)
+                self.assertIn("setuptools>=69", normalized)
+                self.assertIn("agentgov_task_completion_record", normalized)
+                self.assertIn("no", normalized.lower())
+
+        experiment = AIRBNB_NATIVE_COMPLETION_REPLAY_ATTEMPT.read_text(
+            encoding="utf-8"
+        )
+        normalized_experiment = " ".join(experiment.split())
+        for phrase in (
+            "BLOCKED_BEFORE_INSTALLATION",
+            "No AgentGov development package was installed",
+            "zero remotes",
+            "No compatible build dependency was available",
+            "no MCP process or Codex session started",
+            "contains no raw prompt",
+            "authorizes no dependency download",
+        ):
+            self.assertIn(phrase, normalized_experiment)
+
     def test_nyc_completion_and_handoff_evidence_is_bounded(self) -> None:
         surfaces = (
             README,
@@ -673,7 +712,7 @@ class UserDocumentationTests(unittest.TestCase):
         for phrase in (
             "agentgov integrate codex-mcp . --dry-run",
             "foreground STDIO MCP",
-            "exactly five tools",
+            "exactly six tools",
             "journey handle",
             "zero model and network calls",
             "do not prove that a production model will always choose the right tool",
@@ -683,6 +722,11 @@ class UserDocumentationTests(unittest.TestCase):
             self.assertIn(phrase, governance_mcp_compact)
         for text in (automation, governance_mcp, proposal_admission):
             self.assertIn("agentgov_task_proposal_review", text)
+        for text in (readme, governance_mcp):
+            self.assertIn("Adapter `1.6.0`", text)
+            self.assertIn("agentgov_task_completion_record", text)
+            self.assertIn("eight tools", text)
+            self.assertIn("sixth base tool", text)
         for text in (governance_mcp, proposal_admission):
             normalized_text = " ".join(text.split())
             self.assertIn("exact requested repository change", normalized_text)
@@ -690,7 +734,7 @@ class UserDocumentationTests(unittest.TestCase):
             self.assertIn("Read-only work does not trigger proposal review", normalized_text)
             self.assertIn("cannot force a model", normalized_text)
         self.assertIn("agentgov.task-proposal-review-result", proposal_admission)
-        self.assertIn("five base tools", automation)
+        self.assertIn("six base tools", automation)
         self.assertNotIn("five fixed tools", automation)
         self.assertNotIn("every tool remains advisory/read-only", automation)
         self.assertNotIn(

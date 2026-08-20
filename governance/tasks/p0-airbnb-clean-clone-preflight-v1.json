@@ -1,0 +1,74 @@
+{
+  "acceptance_signals": [
+    "The existing AIRBNB worktree before and after the task retains the same branch, committed HEAD, modified README, and untracked prior task without cleanup, reset, stash, commit, overwrite, or metadata mutation.",
+    "One temporary local clone is created from the exact committed AIRBNB HEAD with copied Git objects, its remote is removed, and its working tree is clean before any rehearsal.",
+    "The clone contains the committed AIRBNB AGENTS instructions, governance task directory, and Codex AgentGov configuration required for a later independent journey.",
+    "Read-only checks identify the exact available AgentGov distribution, Adapter/protocol/tool capability, and whether one exact candidate artifact can be bound truthfully; mismatch produces a recorded blocker rather than installation or repair.",
+    "No external model turn, network request, AIRBNB task admission, consumer source modification, validation of business behavior, Git commit or push, publication, release, deployment, or cleanup occurs.",
+    "Sanitized evidence records only repository-relative or identity facts, stable command outcomes, readiness classification, authority boundaries, and remaining gaps; no raw prompt, transcript, credentials, private data, source content, or unrelated absolute path is retained.",
+    "Task and repository governance, JSON parsing, relevant documentation tests, the complete repository suite, secret-safety inspection, and git diff check pass or report bounded unresolved gaps."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-41f01c3c6dd24cccb288553f81a51f3a and admitted that exact task through an explicit admission control, then separately took up the admitted preflight. One temporary no-remote AIRBNB clone detached at exact committed HEAD d70615527d9acdde3893ce645d1923606173acf6 and reported a clean worktree with committed governance instructions, Codex configuration, and task-directory placeholder. The existing AIRBNB worktree retained its branch, HEAD, modified README, untracked prior task, and measured blob identities. One retained 0.3.0rc1 wheel matched SHA-256 78D6A216FE7344A2E3DA01086A7A92B9F3310BE61DAD2E690B0705003221FDE6; direct read-only artifact loading reported Adapter 1.5.0, protocol 2026-07-28, seven form-capable tools, and the owner-free proposal input. The committed clone configuration calls agentgov, but the exposed launcher could not resolve its Python binding and no usable pipx environment or command was available. Live-replay readiness is therefore BLOCKED at runtime binding. All 13 task-contract and 36 user-documentation tests passed; the complete suite passed 938 tests with 3 skips in 180 seconds. Task and repository governance had no deterministic failure. Scope accepted all four task-owned Starter paths and rejected only pre-existing excluded .codex/config.toml without an exception. JSON parsing, bounded credential and absolute-host-path scans, and git diff --check passed. Native current-Agent advisory review srv-6030fa385782ccd98453cb047099e252 found no correction-required requirement, scope, implementation, privacy, or authority drift and retained isolated-installation and Codex launch as unknown. No installation, repair, external model turn, AIRBNB task admission, consumer source change, Git operation, publication, release, deployment, or cleanup occurred. The task is paused.",
+    "state": "paused"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Create one temporary no-remote local clone from the current committed AIRBNB HEAD while preserving the existing dirty AIRBNB worktree unchanged; run only clean-target, governance-configuration, and exact AgentGov candidate-artifact identity checks; record sanitized readiness or blocker evidence in the Starter repository; and stop before any live Codex turn, AIRBNB task admission, consumer source change, Git publication, release, or deployment."
+  },
+  "risk": {
+    "items": [
+      "A clone operation could accidentally target or alter the existing AIRBNB worktree unless source and destination paths are resolved and checked first.",
+      "Local clone configuration could retain a source remote and enable accidental external Git operations unless the temporary clone remote is removed and verified absent.",
+      "Dirty prior-replay state could be copied or confused with the clean baseline unless the clone is bound only to committed HEAD.",
+      "Installed AgentGov identity may differ from the required exact candidate artifact; the task must stop without installing or repairing it.",
+      "Evidence could leak absolute paths, consumer source content, raw prompts, or private host output unless it is strictly normalized.",
+      "A READY preflight could be overstated as live-replay, product-effectiveness, task-admission, or write authority.",
+      "Reviewed assumption: The human selected a temporary clean AIRBNB clone and requires the existing AIRBNB worktree to remain untouched.",
+      "Reviewed assumption: The current committed AIRBNB HEAD is the intended consumer baseline for this preflight.",
+      "Reviewed assumption: A temporary no-remote clone is sufficient for prerequisite validation but is not itself live-replay evidence.",
+      "Reviewed assumption: The later live replay, if proposed, will require a separate exact task and AIRBNB-local human admission.",
+      "Reviewed unknown: Whether the currently available AgentGov installation matches an exact reproducible candidate artifact suitable for the later rehearsal.",
+      "Reviewed unknown: Whether the cloned Codex configuration can discover the expected native governance tools without repair.",
+      "Reviewed unknown: Whether preflight will classify the clean clone as ready for a separately authorized live replay."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "README.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-plan.md",
+      "docs/assets",
+      "examples",
+      "release",
+      "schemas",
+      "src",
+      "tests"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-airbnb-clean-clone-preflight-v1.json",
+      "docs/experiments/airbnb-clean-clone-preflight-2026-08-20.md",
+      "docs/development-log/2026-08-20.md",
+      "STATUS.md"
+    ]
+  },
+  "task_id": "p0-airbnb-clean-clone-preflight-v1",
+  "title": "Preflight one clean AIRBNB rehearsal clone",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -p \"test_task_contract.py\" -v",
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -p \"test_user_documentation.py\" -v",
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; python -m agentgov check task governance/tasks/p0-airbnb-clean-clone-preflight-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check scope governance/tasks/p0-airbnb-clean-clone-preflight-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}
