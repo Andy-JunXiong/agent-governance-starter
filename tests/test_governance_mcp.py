@@ -12,8 +12,8 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
-from agentgov.cli import EXIT_PASS, main
-from agentgov.codex_hooks import CodexHooksAction
+from agentgov.cli import EXIT_ERROR, EXIT_PASS, main
+from agentgov.codex_hooks import CodexHookPolicyError, CodexHooksAction
 from agentgov.codex_mcp import (
     CODEX_MCP_ADAPTER_ID,
     CODEX_MCP_CONFIG_PATH,
@@ -1608,6 +1608,31 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
         self.assertEqual(stderr, "")
         self.assertEqual(len(output), 3)
         self.assertEqual(output[-1]["error"]["code"], -32700)
+
+    def test_cli_repository_binding_failure_is_bounded_and_stdout_clean(self) -> None:
+        with patch(
+            "agentgov.cli._git_root",
+            side_effect=CodexHookPolicyError(
+                "private host path and raw Git diagnostic must not escape"
+            ),
+        ):
+            code, stdout, stderr = run_cli(
+                "",
+                "adapter",
+                "governance-mcp",
+                "--host-profile",
+                "codex",
+            )
+
+        self.assertEqual(code, EXIT_ERROR)
+        self.assertEqual(stdout, "")
+        self.assertEqual(
+            stderr,
+            "AgentGov MCP Adapter error: repository binding failed; confirm the "
+            "MCP working directory is a Git worktree trusted for the current OS account\n",
+        )
+        self.assertNotIn("private host path", stderr)
+        self.assertNotIn("raw Git diagnostic", stderr)
 
 
 class CodexMcpIntegrationTests(unittest.TestCase):

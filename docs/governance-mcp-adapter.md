@@ -288,6 +288,24 @@ agentgov adapter governance-mcp --host-profile codex
 Daily alignment and self-review require no additional installation command or
 manual protocol input after the host has loaded the reviewed MCP server.
 
+### Repository-binding startup failures
+
+Before reading the first MCP request, the Adapter binds its working directory
+to a Git worktree. If Git rejects that directory, including when the worktree
+is not trusted for the operating-system account that launched the MCP server,
+the Adapter exits nonzero and writes one bounded diagnostic to `stderr`:
+
+```text
+AgentGov MCP Adapter error: repository binding failed; confirm the MCP working directory is a Git worktree trusted for the current OS account
+```
+
+This failure writes nothing to `stdout`, so an MCP client does not receive a
+non-protocol banner or raw Git output. AgentGov does not add or modify Git
+`safe.directory`, bypass ownership checks, or echo the rejected path, host
+identity, or underlying Git diagnostic. Correct the configured MCP working
+directory or run it against a worktree owned or explicitly trusted by the
+intended operating-system account, then restart the client.
+
 ## Honest implementation limit
 
 The first live uncoached Codex session discovered all five tools and selected

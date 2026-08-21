@@ -1,0 +1,59 @@
+{
+  "acceptance_signals": [
+    "A repository-binding policy failure during Governance MCP construction produces a bounded actionable stderr message and a stable nonzero exit.",
+    "No non-protocol output is written to stdout on either success or startup failure.",
+    "Successful initialize and tools/list behavior remains unchanged.",
+    "The implementation does not add or modify Git safe.directory configuration and does not bypass Git ownership checks.",
+    "Focused governance MCP and Codex hook tests pass.",
+    "Affected current-state documentation and the dated development log accurately record the verified behavior and remaining limits."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-12596e4a8d03432e98dcc0dc09d9f2ae and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "When Governance MCP startup cannot bind the selected working directory to a valid Git worktree, convert the existing repository policy exception into a bounded actionable stderr diagnostic and stable nonzero CLI exit while preserving protocol-only stdout and all existing successful MCP behavior."
+  },
+  "risk": {
+    "items": [
+      "Catching the exception too broadly could hide unrelated startup failures.",
+      "Including raw Git stderr could expose absolute paths or host identity, so diagnostics must use bounded product-owned wording.",
+      "Changing repository validation semantics could weaken fail-closed ownership protection; this task must not change those semantics.",
+      "Reviewed assumption: The observed Git dubious-ownership failure is an environment and fixture-ownership issue, not an MCP protocol defect.",
+      "Reviewed assumption: CodexHookPolicyError is the existing bounded exception type for repository-binding policy failures.",
+      "Reviewed assumption: A narrow CLI exception boundary is sufficient without changing GovernanceMcpServer protocol code.",
+      "Reviewed unknown: Whether a future dedicated repository-binding exception type is preferable to reusing CodexHookPolicyError is an implementation detail to resolve within the admitted scope without changing behavior."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      "governance/tasks/p0-airbnb-runtime-completion-handoff.json",
+      ".codex",
+      "docs/assets",
+      "src/agentgov/governance_mcp.py"
+    ],
+    "include_paths": [
+      "src/agentgov/cli.py",
+      "src/agentgov/codex_hooks.py",
+      "tests/test_governance_mcp.py",
+      "tests/test_codex_hooks.py",
+      "docs/governance-mcp-adapter.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-21-agentgov-mcp-repository-binding-diagnostic.md",
+      "governance/tasks/p0-mcp-repository-binding-diagnostic.json"
+    ]
+  },
+  "task_id": "p0-mcp-repository-binding-diagnostic",
+  "title": "Expose bounded repository-binding failures during Governance MCP startup",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_governance_mcp tests.test_codex_hooks -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v"
+  ]
+}

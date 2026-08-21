@@ -1025,11 +1025,20 @@ def _run_governance_mcp_adapter(*, host_profile: str) -> int:
             adapter_id=CODEX_MCP_ADAPTER_ID,
             provider_id=CODEX_MCP_PROVIDER_ID,
         )
+        try:
+            repository = _git_root(Path.cwd())
+        except CodexHookPolicyError:
+            print(
+                "AgentGov MCP Adapter error: repository binding failed; confirm the "
+                "MCP working directory is a Git worktree trusted for the current OS account",
+                file=sys.stderr,
+            )
+            return EXIT_ERROR
         server = GovernanceMcpServer(
             GovernanceMcpAdapter(
                 adapter_id=CODEX_MCP_ADAPTER_ID,
                 provider=provider,
-                repository=_git_root(Path.cwd()),
+                repository=repository,
             )
         )
         return server.serve(sys.stdin, sys.stdout)

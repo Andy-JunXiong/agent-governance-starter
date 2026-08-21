@@ -42,18 +42,54 @@ scheduling authority.
 
 ### Current closeout snapshot
 
-- **Active slice**: none after local completion of human-admitted closeout task
-  `p0-2026-08-21-diagnostic-closeout-main-push-v2`. Its exact cumulative scope
-  is 18 paths and contains today's post-`0bb72f0` recovery and diagnostic
-  records, current documentation, and their documentation tests; it contains
-  no new uncommitted product-source implementation. The product owner
-  explicitly authorized one ordinary commit on `main` and direct push to
-  `origin/main`; the observed Git result belongs in the direct human handoff.
-- **Closeout exclusions**: user-owned `.codex`, the social-cover asset, and the
+- **Active slice**: human-admitted task
+  `p0-mcp-repository-binding-diagnostic` is implemented and locally validated.
+  Governance MCP now converts a repository-binding
+  `CodexHookPolicyError` into one fixed actionable `stderr` diagnostic and a
+  stable nonzero exit without writing anything to protocol `stdout`.
+- **Repository-binding evidence**: the real-host failure occurred before MCP
+  request handling while Git rejected a sandbox-owned disposable worktree as
+  dubious ownership. The same complete AgentGov server passed without a Git
+  exception when the disposable worktree was created by the real-host
+  operating-system identity. This rules out the protocol, import, console
+  launcher, and successful server-response paths for that observed failure.
+- **Safety boundary**: the implementation does not echo raw Git output or the
+  rejected path, add or modify `safe.directory`, bypass ownership checks, or
+  change successful initialize and tools/list behavior. The correct
+  operational remedy remains a valid worktree owned or explicitly trusted by
+  the intended operating-system account.
+- **Codex-run validation**: the admitted focused Governance MCP and Codex hook
+  suites pass all 50 tests under the supported Python 3.11.9 runtime. The
+  repository-wide suite passes all 947 tests with 3 platform-limited skips in
+  268.110 seconds. Task governance reports `PASS=3 WARN=1 FAIL=0 ADVISORY=3`,
+  repository governance reports `PASS=26 WARN=2 FAIL=0 ADVISORY=4`, and
+  `git diff --check` passes. Scope admits all 6 task-owned paths and rejects
+  only 3 explicit exclusions. A scan of this task's added content finds no
+  credential-shaped values or absolute host paths.
+- **Consumer diagnostic replay**: an isolated no-model App Server probe using
+  the current source launcher and the same sandbox-owned disposable worktree
+  passed in sandbox Codex and reproduced the real-host required-MCP `-32603`
+  failure before `thread/started`. The real-host App Server stderr and its
+  isolated local log databases contained neither the fixed AgentGov diagnostic
+  nor raw Git ownership details. The server-side bounded error is therefore
+  verified, but this Codex consumer path does not expose it to the caller.
+- **Incomplete**: none within the admitted implementation and documentation
+  scope. Consumer-visible presentation remains unavailable in the tested Codex
+  App Server path and is not claimed by the server-side regression evidence.
+- **Completion-record availability**: the current callable governance
+  inventory does not expose `agentgov_task_completion_record`, so no native
+  completion record was fabricated. This does not change the passing local
+  validation or grant human acceptance.
+- **Next product review**: decide whether server-side bounded diagnostics are
+  sufficient or whether a separate requirement should own a Codex-visible
+  error channel. A dedicated repository-binding exception contract is not
+  justified by the current server behavior alone. This review grants no
+  implementation or Git authority.
+- **Previous closeout exclusions**: user-owned `.codex`, the social-cover asset, and the
   external AIRBNB consumer task record remain outside the commit, unstaged,
   and unchanged. No pull request, force-push, release, deployment, cleanup, or
   broader external action is authorized.
-- **Closeout validation**: focused documentation suites passed 38 and 13
+- **Previous closeout validation**: focused documentation suites passed 38 and 13
   tests. The exact supported Python 3.11.9 suite passed all 946 tests with 3
   platform-limited skips in 266.486 seconds. Task governance returned
   `PASS=3 WARN=1 FAIL=0 ADVISORY=3`, repository governance returned
@@ -62,14 +98,14 @@ scheduling authority.
   exclusions. Included task JSON records and bounded concrete-host-path and
   credential-marker scans passed. The generic path scan's only match was the
   documentation test's deliberate `C:\\Users` rejection literal.
-- **Closeout advisory review**: this fully specified task did not start an
+- **Previous closeout advisory review**: this fully specified task did not start an
   alignment journey. A distinct bounded current-Agent review found the
   documentation-only requirement, cumulative ownership, blocked-integration
   wording, validation, exclusions, Git authority, and stop boundaries
   consistent without claiming native self-review completion. Remote
   divergence, Git transport, and branch protection remain unknown until the
   authorized fetch and push.
-- **Closeout completion-record availability**: the current callable governance
+- **Previous closeout completion-record availability**: the current callable governance
   inventory did not expose `agentgov_task_completion_record`, so no completion
   record was fabricated.
 - **Latest completed diagnostic slice**: human-admitted task
