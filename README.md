@@ -259,6 +259,18 @@ Running `agentgov` without arguments is also a safe, read-only orientation
 surface. It prints the command overview and points first-time users to
 `doctor`, `next`, and `status`; it does not inspect or modify the repository.
 
+Before enabling the development-source required Governance MCP server, run the
+read-only repository preflight from the same operating-system account that will
+launch Codex:
+
+```powershell
+agentgov doctor .
+```
+
+The `repository:git-access` finding fails with bounded guidance when Git cannot
+resolve the selected worktree for that account. It does not echo raw Git
+output, modify `safe.directory`, or weaken required-server startup behavior.
+
 For an existing installation, use one command to check the tool and repository,
 preview the exact bounded change, request one `UPDATE` confirmation, apply it,
 and rerun validation:

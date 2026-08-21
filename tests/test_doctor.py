@@ -4,9 +4,11 @@ import json
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from unittest.mock import patch
 
 from agentgov import __version__
 from agentgov.cli import EXIT_ERROR, EXIT_FAIL, EXIT_PASS, main
+from agentgov.codex_hooks import CodexHookPolicyError
 from agentgov.doctor import (
     DoctorStatus,
     WINDOWS_PATH_ADVISORY_THRESHOLD,
@@ -62,6 +64,7 @@ class DoctorTests(unittest.TestCase):
                 root,
                 python_version=(3, 11, 9),
                 platform_name="nt",
+                git_worktree_resolver=lambda path: path.resolve(),
             )
 
         statuses = {
@@ -69,8 +72,44 @@ class DoctorTests(unittest.TestCase):
         }
         self.assertIs(statuses["environment:python"], DoctorStatus.PASS)
         self.assertIs(statuses["repository:git-context"], DoctorStatus.PASS)
+        self.assertIs(statuses["repository:git-access"], DoctorStatus.PASS)
         self.assertIs(statuses["adoption:state"], DoctorStatus.PASS)
         self.assertFalse(report.has_failures)
+
+    def test_git_access_failure_is_bounded_deterministic_and_read_only(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            (root / ".git").mkdir()
+            before = tuple(root.iterdir())
+
+            def reject_worktree(_: Path) -> Path:
+                raise CodexHookPolicyError(
+                    "private rejected path and raw Git identity must not escape"
+                )
+
+            report = diagnose_repository(
+                root,
+                python_version=(3, 11, 9),
+                git_worktree_resolver=reject_worktree,
+            )
+            after = tuple(root.iterdir())
+
+        finding = next(
+            item
+            for item in report.findings
+            if item.check_id == "repository:git-access"
+        )
+        self.assertEqual(before, after)
+        self.assertIs(finding.status, DoctorStatus.FAIL)
+        self.assertEqual(finding.classification, "deterministic")
+        self.assertEqual(
+            finding.message,
+            "Git worktree access failed; confirm the selected path is a Git "
+            "worktree trusted for the current OS account",
+        )
+        self.assertNotIn("private rejected path", finding.message)
+        self.assertNotIn("raw Git identity", finding.message)
+        self.assertTrue(report.has_failures)
 
     def test_governance_conflict_is_a_deterministic_failure(self) -> None:
         with TemporaryDirectory() as temp_dir:
@@ -206,6 +245,23 @@ class DoctorCliTests(unittest.TestCase):
 
         self.assertEqual(exit_code, EXIT_FAIL)
         self.assertIn("FAIL adoption:conflicts:", stdout)
+        self.assertEqual(stderr, "")
+
+    def test_cli_git_access_failure_returns_bounded_policy_failure(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            (Path(temp_dir) / ".git").mkdir()
+            with patch(
+                "agentgov.doctor.resolve_git_worktree",
+                side_effect=CodexHookPolicyError(
+                    "private raw Git diagnostic must not escape"
+                ),
+            ):
+                exit_code, stdout, stderr = run_cli("doctor", temp_dir)
+
+        self.assertEqual(exit_code, EXIT_FAIL)
+        self.assertIn("FAIL repository:git-access:", stdout)
+        self.assertIn("trusted for the current OS account", stdout)
+        self.assertNotIn("private raw Git diagnostic", stdout)
         self.assertEqual(stderr, "")
 
     def test_cli_missing_path_is_operational_error(self) -> None:

@@ -306,6 +306,20 @@ identity, or underlying Git diagnostic. Correct the configured MCP working
 directory or run it against a worktree owned or explicitly trusted by the
 intended operating-system account, then restart the client.
 
+For development-source installations, run this read-only preflight from the
+same operating-system account before enabling or restarting the required MCP
+server:
+
+```powershell
+agentgov doctor .
+```
+
+`repository:git-access` reports whether Git worktree resolution is accessible
+to that account. A failure uses bounded product-owned wording and a nonzero
+policy exit without changing Git configuration. This is a user-run preflight,
+not automatic Codex UI forwarding: current App Server behavior can still
+replace an early required-server failure with a generic startup error.
+
 ## Honest implementation limit
 
 The first live uncoached Codex session discovered all five tools and selected

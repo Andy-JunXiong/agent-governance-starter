@@ -42,49 +42,53 @@ scheduling authority.
 
 ### Current closeout snapshot
 
-- **Active slice**: human-admitted task
-  `p0-mcp-repository-binding-diagnostic` is implemented and locally validated.
-  Governance MCP now converts a repository-binding
-  `CodexHookPolicyError` into one fixed actionable `stderr` diagnostic and a
-  stable nonzero exit without writing anything to protocol `stdout`.
-- **Repository-binding evidence**: the real-host failure occurred before MCP
-  request handling while Git rejected a sandbox-owned disposable worktree as
-  dubious ownership. The same complete AgentGov server passed without a Git
-  exception when the disposable worktree was created by the real-host
-  operating-system identity. This rules out the protocol, import, console
-  launcher, and successful server-response paths for that observed failure.
-- **Safety boundary**: the implementation does not echo raw Git output or the
-  rejected path, add or modify `safe.directory`, bypass ownership checks, or
-  change successful initialize and tools/list behavior. The correct
-  operational remedy remains a valid worktree owned or explicitly trusted by
-  the intended operating-system account.
-- **Codex-run validation**: the admitted focused Governance MCP and Codex hook
-  suites pass all 50 tests under the supported Python 3.11.9 runtime. The
-  repository-wide suite passes all 947 tests with 3 platform-limited skips in
-  268.110 seconds. Task governance reports `PASS=3 WARN=1 FAIL=0 ADVISORY=3`,
-  repository governance reports `PASS=26 WARN=2 FAIL=0 ADVISORY=4`, and
-  `git diff --check` passes. Scope admits all 6 task-owned paths and rejects
-  only 3 explicit exclusions. A scan of this task's added content finds no
-  credential-shaped values or absolute host paths.
-- **Consumer diagnostic replay**: an isolated no-model App Server probe using
-  the current source launcher and the same sandbox-owned disposable worktree
-  passed in sandbox Codex and reproduced the real-host required-MCP `-32603`
-  failure before `thread/started`. The real-host App Server stderr and its
-  isolated local log databases contained neither the fixed AgentGov diagnostic
-  nor raw Git ownership details. The server-side bounded error is therefore
-  verified, but this Codex consumer path does not expose it to the caller.
-- **Incomplete**: none within the admitted implementation and documentation
-  scope. Consumer-visible presentation remains unavailable in the tested Codex
-  App Server path and is not claimed by the server-side regression evidence.
+- **Active slice**: human-admitted aligned task
+  `p0-doctor-git-worktree-access-preflight` is implemented and locally
+  validated. Development-source `agentgov doctor .` now verifies that the
+  current operating-system identity can resolve a selected Git worktree before
+  Codex starts the required Governance MCP server.
+- **Behavior and compatibility**: a configured accessible worktree receives a
+  deterministic `repository:git-access` `PASS`. Git resolution failure receives
+  a deterministic `FAIL` with one bounded remedy and no raw Git diagnostic,
+  host path, or identity. A directory without a `.git` marker retains the
+  existing non-blocking onboarding `WARN`; existing doctor text/JSON shape and
+  Codex-hook repository resolution remain compatible.
+- **Real differential evidence**: the current source doctor returned exit 0
+  and `repository:git-access=PASS` in the accessible Starter worktree. Under
+  the sandbox identity it returned exit 1 and
+  `repository:git-access=FAIL` for the retained real-host-owned worktree. The
+  failure used the fixed bounded message and exposed neither raw Git's
+  ownership wording nor the selected host path.
+- **Safety and consumer boundary**: doctor remains read-only. It does not add
+  or modify `safe.directory`, bypass Git ownership enforcement, start MCP, or
+  weaken required-server fail-closed behavior. Current Codex App Server
+  evidence still shows required-server failure before a thread loads and no
+  consumer forwarding of the AgentGov server diagnostic; this user-run
+  preflight is the controllable AgentGov path, not automatic Codex UI error
+  forwarding.
+- **Codex-run validation**: the focused doctor and Codex-hook suites pass all
+  28 tests under Python 3.11.9. The repository-wide suite passes all 949 tests
+  with 3 platform-limited skips in 306.681 seconds, and the documentation and
+  status suites pass all 49 tests. Task governance reports
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance reports
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Scope admits all 8 task changes and
+  retains 3 failures for explicit exclusions. Task JSON parsing, bounded host-
+  path and credential scans, full diff review, and `git diff --check` pass.
+- **Advisory review**: native current-Agent self-review
+  `srv-0d58c231534639f70005611bfde4f876` found the requirement, shared-resolver
+  architecture, implementation evidence, admitted scope, and security boundary
+  consistent. It records the existing nested-directory behavior and future
+  Codex host behavior as unknowns, and grants no new authority.
+- **Incomplete**: none within the admitted implementation, documentation, and
+  local validation scope. Automatic Codex startup-error presentation remains a
+  host-side capability gap outside this admitted AgentGov task.
 - **Completion-record availability**: the current callable governance
   inventory does not expose `agentgov_task_completion_record`, so no native
-  completion record was fabricated. This does not change the passing local
-  validation or grant human acceptance.
-- **Next product review**: decide whether server-side bounded diagnostics are
-  sufficient or whether a separate requirement should own a Codex-visible
-  error channel. A dedicated repository-binding exception contract is not
-  justified by the current server behavior alone. This review grants no
-  implementation or Git authority.
+  completion record was fabricated. This does not grant human acceptance.
+- **Next product review**: decide whether onboarding should proactively route
+  users through doctor before enabling a required MCP server, or whether the
+  current documented manual preflight is sufficient. This review grants no
+  implementation, Git, publication, release, or deployment authority.
 - **Previous closeout exclusions**: user-owned `.codex`, the social-cover asset, and the
   external AIRBNB consumer task record remain outside the commit, unstaged,
   and unchanged. No pull request, force-push, release, deployment, cleanup, or

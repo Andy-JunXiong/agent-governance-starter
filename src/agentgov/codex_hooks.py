@@ -122,7 +122,9 @@ class CodexHooksIntegrationResult:
     created_files: tuple[Path, ...]
 
 
-def _git_root(path: Path) -> Path:
+def resolve_git_worktree(path: Path) -> Path:
+    """Resolve one accessible Git worktree without exposing Git diagnostics."""
+
     if path.is_symlink():
         raise CodexHookPolicyError("repository path must not be a symbolic link")
     if not path.exists():
@@ -145,6 +147,12 @@ def _git_root(path: Path) -> Path:
     if root.is_symlink() or not root.is_dir():
         raise CodexHookPolicyError("Git repository root must be a regular directory")
     return root
+
+
+def _git_root(path: Path) -> Path:
+    """Preserve the existing private binding for current Adapter callers."""
+
+    return resolve_git_worktree(path)
 
 
 def _required_text(payload: Mapping[str, Any], field: str, *, maximum: int = 512) -> str:

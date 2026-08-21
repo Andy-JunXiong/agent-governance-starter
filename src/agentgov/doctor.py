@@ -8,10 +8,11 @@ import sys
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Sequence
+from typing import Callable, Sequence
 
 from agentgov import __version__
 from agentgov.adoption import AdoptionState, inspect_adoption
+from agentgov.codex_hooks import CodexHookPolicyError, resolve_git_worktree
 
 
 class DoctorStatus(str, Enum):
@@ -75,18 +76,51 @@ def _project_environment_finding(root: Path) -> DoctorFinding:
     )
 
 
+def _git_access_finding(
+    root: Path,
+    *,
+    git_marker_exists: bool,
+    resolver: Callable[[Path], Path],
+) -> DoctorFinding:
+    if not git_marker_exists:
+        return DoctorFinding(
+            DoctorStatus.WARN,
+            "repository:git-access",
+            "Git worktree access was not checked because no .git context was detected",
+            "deterministic",
+        )
+    try:
+        resolver(root)
+    except (CodexHookPolicyError, OSError, UnicodeError, ValueError):
+        return DoctorFinding(
+            DoctorStatus.FAIL,
+            "repository:git-access",
+            "Git worktree access failed; confirm the selected path is a Git worktree "
+            "trusted for the current OS account",
+            "deterministic",
+        )
+    return DoctorFinding(
+        DoctorStatus.PASS,
+        "repository:git-access",
+        "Git worktree access confirmed for the current OS account",
+        "deterministic",
+    )
+
+
 def diagnose_repository(
     root: Path,
     *,
     python_version: Sequence[int] | None = None,
     python_executable: Path | None = None,
     platform_name: str | None = None,
+    git_worktree_resolver: Callable[[Path], Path] | None = None,
 ) -> DoctorReport:
     """Diagnose onboarding prerequisites without modifying the repository."""
 
     version = tuple(python_version or sys.version_info[:3])
     executable = python_executable or Path(sys.executable)
     platform = platform_name or os.name
+    resolver = git_worktree_resolver or resolve_git_worktree
     adoption = inspect_adoption(root)
     resolved = root.resolve()
     findings: list[DoctorFinding] = []
@@ -123,6 +157,13 @@ def diagnose_repository(
                 "reviewable change tracking is not yet available"
             ),
             "deterministic",
+        )
+    )
+    findings.append(
+        _git_access_finding(
+            root,
+            git_marker_exists=git_marker.exists(),
+            resolver=resolver,
         )
     )
 

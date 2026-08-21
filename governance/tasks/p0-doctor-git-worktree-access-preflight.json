@@ -1,0 +1,67 @@
+{
+  "acceptance_signals": [
+    "Doctor reports a deterministic bounded failure when Git cannot resolve the target as an accessible worktree for the current operating-system identity.",
+    "The failure message does not include raw Git stderr, an absolute host path, or host identity.",
+    "Doctor remains read-only and does not add or modify Git safe.directory configuration.",
+    "Accessible Git worktrees retain a passing repository context result and existing doctor JSON and text contracts remain valid.",
+    "Governance MCP remains required and fail-closed with unchanged protocol behavior.",
+    "Focused doctor and Codex hook tests plus the complete repository test suite pass.",
+    "Current user documentation, status, and dated evidence distinguish the controllable preflight from the unavailable Codex startup-error forwarding."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-92a6100e77834ab9ac4aa995ad804272 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Extend the read-only AgentGov doctor journey with a deterministic bounded check that verifies the current operating-system identity can resolve the selected Git worktree before Codex starts the required Governance MCP server, while preserving existing doctor output contracts, Git ownership enforcement, and required MCP fail-closed behavior."
+  },
+  "risk": {
+    "items": [
+      "Executing Git during doctor could change performance or platform behavior, so the check must be bounded and covered on success and failure.",
+      "Reusing a hook-specific exception or message too broadly could misclassify unrelated Git errors.",
+      "Raw Git stderr may contain paths or identity details and must never enter doctor text or JSON output.",
+      "A preflight must not be presented as automatic Codex UI error forwarding.",
+      "Refactoring the shared resolver could regress existing Codex hook and MCP repository-binding behavior.",
+      "Reviewed assumption: The existing Git worktree resolution behavior can be reused or minimally extracted without changing Codex hook semantics.",
+      "Reviewed assumption: The doctor finding contract can represent the new deterministic access failure without a schema version change.",
+      "Reviewed assumption: A preflight diagnostic is the only AgentGov-controlled user-visible path established by current Codex behavior.",
+      "Reviewed assumption: The existing bounded repository-binding wording is suitable for doctor output.",
+      "Reviewed unknown: Whether the smallest implementation should expose the existing private Git resolver or inject an equivalent bounded runner into doctor tests.",
+      "Reviewed unknown: Whether README and the Governance MCP troubleshooting guide are the only user-facing documents affected after documentation tests run."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      "src/agentgov/governance_mcp.py",
+      ".codex",
+      "docs/assets",
+      "governance/tasks/p0-airbnb-runtime-completion-handoff.json"
+    ],
+    "include_paths": [
+      "src/agentgov/doctor.py",
+      "src/agentgov/codex_hooks.py",
+      "tests/test_doctor.py",
+      "tests/test_codex_hooks.py",
+      "README.md",
+      "docs/governance-mcp-adapter.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-21-doctor-git-worktree-access-preflight.md",
+      "governance/tasks/p0-doctor-git-worktree-access-preflight.json"
+    ]
+  },
+  "task_id": "p0-doctor-git-worktree-access-preflight",
+  "title": "Detect Git worktree access failures in AgentGov doctor",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_doctor tests.test_codex_hooks -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_user_documentation tests.test_status -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "git diff --check"
+  ]
+}
