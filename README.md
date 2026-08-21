@@ -1,5 +1,8 @@
 # Agent Governance Starter Kit
 
+[![CI](https://github.com/Andy-JunXiong/agent-governance-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/Andy-JunXiong/agent-governance-starter/actions/workflows/ci.yml)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-open-0f8294)](https://andy-junxiong.github.io/agent-governance-starter/)
+
 **Make AI-assisted repositories reviewable by default.**
 
 AgentGov keeps humans in control of AI-written code. It records the work a
@@ -7,13 +10,25 @@ coding agent was allowed to do, checks deterministic repository facts, keeps
 semantic uncertainty visible as `ADVISORY`, and separates verified completion
 from permission to commit, merge, publish, release, or deploy.
 
-[![CI](https://github.com/Andy-JunXiong/agent-governance-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/Andy-JunXiong/agent-governance-starter/actions/workflows/ci.yml)
+[![Agent Governance from task intent to verified evidence](docs/assets/agentgov-social-preview.jpg)](https://andy-junxiong.github.io/agent-governance-starter/)
 
 <p align="center">
-  <a href="#quickstart"><strong>Quickstart</strong></a> |
-  <a href="#governed-example"><strong>Governed example</strong></a> |
-  <a href="#architecture"><strong>Architecture</strong></a>
+  <strong>Follow one coding-agent task from intent to bounded handoff.</strong>
+  <br><br>
+  <a href="https://andy-junxiong.github.io/agent-governance-starter/"><strong>Open the interactive product demo &rarr;</strong></a>
+  &nbsp;&middot;&nbsp;
+  <a href="https://andy-junxiong.github.io/agent-governance-starter/governed-refund-walkthrough.html">Follow the 60-to-90-second walkthrough</a>
+  &nbsp;&middot;&nbsp;
+  <a href="https://andy-junxiong.github.io/agent-governance-starter/portfolio.html">Inspect the evidence portfolio</a>
+  &nbsp;&middot;&nbsp;
+  <a href="https://andy-junxiong.github.io/agent-governance-starter/quickstart.html">Read the quickstart</a>
 </p>
+
+> **Project status:** stable `0.2.1` provides installable repository governance.
+> Published prerelease `0.3.0rc1` and current development source extend the
+> development-time journey; this showcase does not prove universal host or
+> consumer adoption. No check or demo authorizes commit, merge, publication,
+> release, or deployment.
 
 ## Product overview
 
@@ -39,8 +54,6 @@ AgentGov has three distinct release states:
 See [release channels](docs/release-channels.md), the
 [`0.3.0rc1` release notes](docs/releases/0.3.0rc1.md), and
 [current repository status](STATUS.md) for exact evidence and limitations.
-
-![Agent Governance from task intent to verified evidence](docs/assets/agentgov-social-preview.jpg)
 
 ## Why AgentGov
 

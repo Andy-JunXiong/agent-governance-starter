@@ -21,12 +21,20 @@ DEMO_ASSET = ROOT / "docs/assets/agentgov-demo.svg"
 class PortfolioDocumentationTests(unittest.TestCase):
     def test_readme_opens_with_portfolio_positioning_and_required_sections(self) -> None:
         text = README.read_text(encoding="utf-8")
-        expected_opening = (
-            "# Agent Governance Starter Kit\n\n"
-            "**Make AI-assisted repositories reviewable by default.**"
+        self.assertTrue(text.startswith("# Agent Governance Starter Kit\n"))
+        showcase = text[: text.index("## Product overview")]
+        ordered_markers = (
+            "[![CI]",
+            "[![Live Demo]",
+            "**Make AI-assisted repositories reviewable by default.**",
+            "docs/assets/agentgov-social-preview.jpg",
+            '<p align="center">',
+            "> **Project status:**",
         )
-
-        self.assertTrue(text.startswith(expected_opening))
+        positions = [showcase.index(marker) for marker in ordered_markers]
+        self.assertEqual(positions, sorted(positions))
+        self.assertEqual(showcase.count("<a href="), 4)
+        self.assertIn("No check or demo authorizes commit, merge", showcase)
         for heading in (
             "## Product overview",
             "## Why AgentGov",

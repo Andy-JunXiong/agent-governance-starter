@@ -284,10 +284,12 @@ sections were inventoried and classified by their owning responsibility:
 - **Evidence**: version chronology, experiments, consumer replays, failures,
   recoveries, and validation owned by `STATUS.md` and dated development logs.
 
-The resulting README is a 376-line, approximately 2,044-word product entry with
-12 second-level sections, exactly three primary first-screen routes, and one
-overview architecture diagram. Detailed command, architecture, reviewer, and
-chronological evidence content now routes to existing topical documents,
+The resulting README is a concise product entry with 12 second-level sections,
+one first-screen portfolio showcase, and one overview architecture diagram.
+The showcase follows the shared GLAP and NYC pattern with CI and Live Demo
+badges, a linked hero, one centered product-story caption, four focused product
+links, and an evidence-boundary note. Detailed command, architecture, reviewer,
+and chronological evidence content now routes to existing topical documents,
 `STATUS.md`, and dated evidence. No new catch-all reference was created.
 Documentation tests protect release identity, authority, links, and unique
 claims at their owning surfaces instead of requiring those claims to be
@@ -298,8 +300,8 @@ Reader-centered acceptance signals:
 - within two to three minutes, a new reader can explain what AgentGov is, the
   problem it solves, what stable can do, what current development source adds,
   how to run the shortest relevant journey, and where to read deeper material;
-- the first screen presents no more than three primary routes: Quickstart, one
-  governed example, and architecture;
+- the first screen presents four focused product routes: the interactive
+  product, the governed walkthrough, the evidence portfolio, and Quickstart;
 - `Interview snapshot` becomes a neutral product overview, while interview and
   portfolio material remains available under reviewer documentation;
 - stable, published prerelease, and current development-source states appear

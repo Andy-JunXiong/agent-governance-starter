@@ -42,17 +42,19 @@ scheduling authority.
 
 ### Current closeout snapshot
 
-- **Active slice**: human-admitted tasks
-  `p1-readme-product-entry-refactor-v1` and
-  `p1-readme-product-entry-test-owner-migration-v1` implement the selected
-  README product entry and the bounded migration of stale documentation-test
-  ownership. The prior 27 sections were classified before migration; none
-  lacked an existing owner or destination.
-- **Delivered product entry**: README is now 376 lines and approximately 2,044
-  words across 12 second-level sections. It presents exactly three primary
-  first-screen routes, uses a neutral Product overview, retains one Mermaid
+- **Active slice**: human-admitted task
+  `p1-readme-portfolio-showcase-test-owner-v1` implements the product owner's
+  selected shared GLAP/NYC portfolio format only in the README first screen.
+  Product overview, published pages, the existing visual asset, runtime, and
+  release behavior remain unchanged.
+- **Delivered product entry**: README is now 389 lines and approximately 2,116
+  words across 12 second-level sections. It presents one portfolio showcase,
+  uses a neutral Product overview, retains one Mermaid
   architecture diagram, and distinguishes stable `0.2.1`, published prerelease
   `0.3.0rc1`, and current development source before the deeper product story.
+  The showcase uses CI and Live Demo badges, the existing linked hero, one
+  centered product story, four focused published-product links, and an explicit
+  evidence and authority boundary.
 - **Responsibility boundary**: the shortest stable install and first-use path
   remains in README. Detailed commands, architecture, reviewer material, and
   chronological evidence route to existing topical documents, `STATUS.md`,
@@ -75,7 +77,24 @@ scheduling authority.
   repository governance reports `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; all 61
   README links resolve locally or are explicit external/fragment references;
   bounded privacy-marker scans and `git diff --check` pass.
-- **Scope validation**: all 14 observed work paths pass the cumulative admitted
+- **Prior route-only correction evidence**: the focused README, portfolio-page, and
+  status suite passes all 59 tests. The supported Python 3.11 full suite passes
+  all 950 tests with 3 platform-limited skips in 150.592 seconds. A direct
+  read-only request to the published governed refund walkthrough returned
+  `HTTP 200`. The current task check reports
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance remains
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; the former exact three-route block, task
+  JSON, bounded privacy scan, and diff formatting passed. The later human-
+  selected portfolio showcase supersedes that route-only presentation while
+  preserving its historical evidence in the dated log.
+- **Portfolio showcase validation**: all 74 focused README, portfolio, social-
+  preview, and status tests pass. The supported Python 3.11 full suite passes
+  all 950 tests with 3 platform-limited skips in 149.128 seconds. The four
+  published showcase targets each return `HTTP 200`. The cumulative task check
+  reports `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance reports
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; three task JSON records, ASCII-safe link
+  markup, bounded privacy scans, and `git diff --check` pass.
+- **Scope validation**: all 10 observed work paths pass the current admitted
   scope. The deterministic command still reports one failure for pre-existing
   user-owned `.codex/config.toml`, because `.codex` is explicitly excluded and
   the checker does not distinguish a pre-existing excluded untracked path. The
@@ -91,8 +110,22 @@ scheduling authority.
   implementation consistent. It preserves the pre-existing `.codex` scope
   limitation and unbriefed-reader comprehension as explicit unknowns. This is
   separate-pass self-review, not independent assurance or human acceptance.
+- **Prior route-only review**: the fully specified low-risk route
+  correction did not start a new alignment journey. A distinct bounded
+  current-Agent pass found no requirement, architecture, scope, security, or
+  implementation drift: one of three existing routes changed destination, the
+  published page and product content did not change, and the unbriefed-reader
+  outcome remains unknown. This is not native self-review or independent
+  assurance.
+- **Portfolio showcase advisory review**: native current-Agent self-review
+  `srv-73ab1a55e4771f46e517214e19675e44` completed through resolved alignment
+  journey `mcpj-b2fe50102d144b87875255e1d674ab0d`. It found the selected
+  first-screen-only requirement, unchanged architecture, cumulative scope,
+  implementation, and security boundaries consistent. Rendered GitHub
+  viewport behavior and unbriefed-reader comprehension remain unknown. This is
+  separate-pass self-review, not independent assurance or human acceptance.
 - **Incomplete**: no implementation or documentation item is currently known
-  incomplete inside the cumulative admitted 15-path scope. The pending human
+  incomplete inside the current admitted 10-path scope. The pending human
   comprehension outcome and the known pre-existing scope-check limitation are
   validation state, not hidden product content.
 - **Completion-record availability**: the current callable governance

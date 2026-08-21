@@ -24,8 +24,17 @@ class EvidencePortfolioTests(unittest.TestCase):
         ]
         image_path = DOCS / "assets" / "agentgov-social-preview.jpg"
 
-        self.assertEqual(primary_routes.count("<a href="), 3)
-        self.assertIn("docs/assets/agentgov-social-preview.jpg", showcase)
+        self.assertEqual(primary_routes.count("<a href="), 4)
+        self.assertIn(
+            "[![Agent Governance from task intent to verified evidence]"
+            "(docs/assets/agentgov-social-preview.jpg)]"
+            "(https://andy-junxiong.github.io/agent-governance-starter/)",
+            showcase,
+        )
+        self.assertLess(
+            showcase.index("docs/assets/agentgov-social-preview.jpg"),
+            showcase.index("## Product overview"),
+        )
         self.assertIn(
             "https://andy-junxiong.github.io/agent-governance-starter/",
             showcase,

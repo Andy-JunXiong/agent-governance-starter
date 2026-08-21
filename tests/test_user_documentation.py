@@ -137,9 +137,23 @@ class UserDocumentationTests(unittest.TestCase):
             readme.index('<p align="center">') : readme.index("</p>")
         ]
 
-        self.assertEqual(first_routes.count("<a href="), 3)
-        for anchor in ("#quickstart", "#governed-example", "#architecture"):
+        self.assertEqual(first_routes.count("<a href="), 4)
+        for anchor in (
+            "https://andy-junxiong.github.io/agent-governance-starter/\"",
+            "https://andy-junxiong.github.io/agent-governance-starter/"
+            "governed-refund-walkthrough.html",
+            "https://andy-junxiong.github.io/agent-governance-starter/"
+            "portfolio.html",
+            "https://andy-junxiong.github.io/agent-governance-starter/"
+            "quickstart.html",
+        ):
             self.assertIn(anchor, first_routes)
+        self.assertNotIn('href="#governed-example"', first_routes)
+        self.assertIn(
+            "Follow one coding-agent task from intent to bounded handoff.",
+            first_routes,
+        )
+        self.assertEqual(readme.count("docs/assets/agentgov-social-preview.jpg"), 1)
         self.assertIn("## Product overview", readme)
         self.assertNotIn("## Interview snapshot", readme)
         self.assertNotIn("## Runnable CLI example", readme)

@@ -1,0 +1,69 @@
+{
+  "acceptance_signals": [
+    "The README implements the exact human-selected first-screen showcase and leaves Product overview and later sections structurally unchanged.",
+    "The portfolio documentation test no longer requires the superseded title-then-tagline prefix.",
+    "Tests require title, CI and Live Demo badges, value statement, linked hero, centered story and four links, boundary note, then Product overview in that order.",
+    "Tests continue protecting all existing second-level headings, finding semantics, stable commands, architecture diagram, and deep documentation ownership.",
+    "No test is deleted, skipped, or reduced to checking only file existence.",
+    "All source-of-truth, validation, scope, privacy, and authority requirements from the admitted showcase task remain cumulative."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-eb97632d0beb4423987f519c3573cb7d and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Complete the admitted AgentGov README portfolio showcase by updating the existing portfolio documentation test that hard-codes the former title-then-tagline opening so it protects the newly selected shared structure, ordering, four product links, linked hero, and unchanged Product overview boundary."
+  },
+  "risk": {
+    "items": [
+      "Changing the opening-order test could weaken broader README coverage if unrelated heading, semantics, command, or architecture assertions are removed.",
+      "The cumulative scope must preserve all three admitted task records because earlier route-only work remains uncommitted.",
+      "The pre-existing user-owned .codex path remains excluded and may remain visible to the deterministic scope checker.",
+      "Reviewed assumption: The existing portfolio documentation module is the correct owner for README opening order.",
+      "Reviewed assumption: All other tests required by the showcase task are already included or need no edits.",
+      "Reviewed unknown: GitHub-rendered visual spacing remains structurally tested rather than human-verified."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "docs/assets",
+      "docs/index.html",
+      "docs/governed-refund-walkthrough.html",
+      "docs/portfolio.html",
+      "docs/quickstart.html",
+      "src",
+      "schemas",
+      "release"
+    ],
+    "include_paths": [
+      "README.md",
+      "DEVELOPMENT_PLAN.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-21.md",
+      "governance/tasks/p1-restore-readme-live-demo-route-v1.json",
+      "governance/tasks/p1-readme-portfolio-showcase-v1.json",
+      "governance/tasks/p1-readme-portfolio-showcase-test-owner-v1.json",
+      "tests/test_user_documentation.py",
+      "tests/test_portfolio_page.py",
+      "tests/test_portfolio_docs.py"
+    ]
+  },
+  "task_id": "p1-readme-portfolio-showcase-test-owner-v1",
+  "title": "Migrate the README opening-order test",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_user_documentation tests.test_portfolio_page tests.test_social_preview tests.test_portfolio_docs tests.test_status -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p1-readme-portfolio-showcase-test-owner-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check scope governance/tasks/p1-readme-portfolio-showcase-test-owner-v1.json --repository . --format terminal",
+    "git diff --check"
+  ]
+}
