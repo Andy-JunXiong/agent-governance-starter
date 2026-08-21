@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Development Plan
 
-Last updated: 2026-08-14
+Last updated: 2026-08-21
 
 ## Purpose
 
@@ -269,6 +269,55 @@ Stop conditions:
 - do not hide findings to make the workflow appear simpler;
 - stop and request human judgment whenever ownership, authority, release, or
   deployment boundaries are unresolved.
+
+### README product entry and documentation responsibility split
+
+Recorded as a future P1 backlog item on 2026-08-21. It is not started,
+scheduled, or admitted for implementation. A later implementation task must
+first inventory every current README section and classify it by its owning
+responsibility:
+
+- **Product**: concise purpose, audience, value, boundaries, release channels,
+  one governed workflow, and the shortest verified path to first use;
+- **Reference**: command, purpose, expected result, and authority boundary;
+- **Architecture**: durable design meaning owned by architecture guides and
+  ADRs, with only one overview diagram retained in README;
+- **Evidence**: version chronology, experiments, consumer replays, failures,
+  recoveries, and validation owned by `STATUS.md` and dated development logs.
+
+The refactor must not move the current README monolith into another monolithic
+document. Existing topical documentation should be reused before a compact CLI
+index or any other new reference is created. Unique evidence must be preserved
+at its owning stable path rather than deleted or duplicated.
+
+Reader-centered acceptance signals:
+
+- within two to three minutes, a new reader can explain what AgentGov is, the
+  problem it solves, what stable can do, what current development source adds,
+  how to run the shortest relevant journey, and where to read deeper material;
+- the first screen presents no more than three primary routes: Quickstart, one
+  governed example, and architecture;
+- `Interview snapshot` becomes a neutral product overview, while interview and
+  portfolio material remains available under reviewer documentation;
+- stable, published prerelease, and current development-source states appear
+  early and remain distinct, including development-only doctor behavior;
+- README retains one architecture diagram and routes detailed design to its
+  existing architecture owner;
+- documentation tests, link integrity, release identity, unique-claim
+  preservation, and source-of-truth ownership pass after the refactor.
+
+A result around 400–650 lines or 3,000–4,500 words is a useful review signal,
+not a hard acceptance threshold. Clarity and preservation of required release,
+authority, and evidence boundaries take precedence over a size target.
+
+Stop conditions:
+
+- stop if a section has no confirmed destination or contains a unique claim
+  whose owner is unclear;
+- stop if stable, prerelease, and development-source behavior cannot be stated
+  without ambiguity;
+- do not create a new catch-all reference, rewrite historical evidence, or use
+  this backlog entry as implementation, Git, publication, or release authority.
 
 ### Profile-based adoption
 

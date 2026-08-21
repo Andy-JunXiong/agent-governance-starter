@@ -42,53 +42,50 @@ scheduling authority.
 
 ### Current closeout snapshot
 
-- **Active slice**: human-admitted aligned task
-  `p0-doctor-git-worktree-access-preflight` is implemented and locally
-  validated. Development-source `agentgov doctor .` now verifies that the
-  current operating-system identity can resolve a selected Git worktree before
-  Codex starts the required Governance MCP server.
-- **Behavior and compatibility**: a configured accessible worktree receives a
-  deterministic `repository:git-access` `PASS`. Git resolution failure receives
-  a deterministic `FAIL` with one bounded remedy and no raw Git diagnostic,
-  host path, or identity. A directory without a `.git` marker retains the
-  existing non-blocking onboarding `WARN`; existing doctor text/JSON shape and
-  Codex-hook repository resolution remain compatible.
-- **Real differential evidence**: the current source doctor returned exit 0
-  and `repository:git-access=PASS` in the accessible Starter worktree. Under
-  the sandbox identity it returned exit 1 and
-  `repository:git-access=FAIL` for the retained real-host-owned worktree. The
-  failure used the fixed bounded message and exposed neither raw Git's
-  ownership wording nor the selected host path.
-- **Safety and consumer boundary**: doctor remains read-only. It does not add
-  or modify `safe.directory`, bypass Git ownership enforcement, start MCP, or
-  weaken required-server fail-closed behavior. Current Codex App Server
-  evidence still shows required-server failure before a thread loads and no
-  consumer forwarding of the AgentGov server diagnostic; this user-run
-  preflight is the controllable AgentGov path, not automatic Codex UI error
-  forwarding.
-- **Codex-run validation**: the focused doctor and Codex-hook suites pass all
-  28 tests under Python 3.11.9. The repository-wide suite passes all 949 tests
-  with 3 platform-limited skips in 306.681 seconds, and the documentation and
-  status suites pass all 49 tests. Task governance reports
+- **Active slice**: human-admitted task
+  `p1-record-readme-product-entry-refactor-backlog` records one documentation-
+  only future product item. The README product-entry refactor and documentation
+  responsibility split is now present in the strategic plan; README itself is
+  unchanged.
+- **Backlog boundary**: a later task must classify every candidate section as
+  Product, Reference, Architecture, or Evidence before moving it. It must reuse
+  existing topical documents, preserve unique evidence, and must not relocate
+  the current monolith into another catch-all document.
+- **Acceptance direction**: the future refactor should let a new reader answer
+  six core product and usage questions within two to three minutes, expose only
+  three primary first-screen routes, retain one README architecture diagram,
+  and distinguish stable, published prerelease, and development-source behavior
+  early. The 400–650-line range is a review signal, not a hard threshold.
+- **Current product continuity**: the preceding doctor Git-worktree preflight
+  remains implemented and validated at commit `98d0945`; this record changes no
+  CLI, MCP, release, consumer, or runtime behavior.
+- **Codex-run validation**: all 62 user-documentation, status, and public-
+  documentation-freshness tests pass. Task governance reports
   `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance reports
-  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Scope admits all 8 task changes and
-  retains 3 failures for explicit exclusions. Task JSON parsing, bounded host-
-  path and credential scans, full diff review, and `git diff --check` pass.
-- **Advisory review**: native current-Agent self-review
-  `srv-0d58c231534639f70005611bfde4f876` found the requirement, shared-resolver
-  architecture, implementation evidence, admitted scope, and security boundary
-  consistent. It records the existing nested-directory behavior and future
-  Codex host behavior as unknowns, and grants no new authority.
-- **Incomplete**: none within the admitted implementation, documentation, and
-  local validation scope. Automatic Codex startup-error presentation remains a
-  host-side capability gap outside this admitted AgentGov task.
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Scope admits all 4 task files and retains
+  3 failures for explicit exclusions. Task JSON parsing, bounded host-path and
+  credential scans, full diff review, and `git diff --check` pass. An initial
+  command named a nonexistent test module; its operational error is preserved
+  in the dated log and the corrected existing suite passed.
+- **User-reported validation**: none; no reader-comprehension outcome is
+  inferred from the product owner's backlog decision.
+- **Pending validation**: none for this bounded record. Unbriefed-reader
+  comprehension belongs to the future implementation and remains unknown.
+- **Advisory review**: this fully specified record did not start alignment. A
+  distinct bounded current-Agent pass found the product/reference/architecture/
+  evidence ownership, preservation rule, heuristic size signal, scope, and
+  no-implementation boundary consistent without claiming native self-review or
+  independent evidence.
+- **Incomplete**: none in the admitted backlog-record scope. The README
+  inventory, refactor, reader testing, scheduling, and priority relative to
+  other P1 work are deliberately not started or decided.
 - **Completion-record availability**: the current callable governance
   inventory does not expose `agentgov_task_completion_record`, so no native
   completion record was fabricated. This does not grant human acceptance.
-- **Next product review**: decide whether onboarding should proactively route
-  users through doctor before enabling a required MCP server, or whether the
-  current documented manual preflight is sufficient. This review grants no
-  implementation, Git, publication, release, or deployment authority.
+- **Next product review**: decide whether and when to prioritize a separately
+  admitted README responsibility inventory and refactor. This recorded item is
+  decision input only and grants no implementation, Git, publication, release,
+  deployment, or follow-on authority.
 - **Previous closeout exclusions**: user-owned `.codex`, the social-cover asset, and the
   external AIRBNB consumer task record remain outside the commit, unstaged,
   and unchanged. No pull request, force-push, release, deployment, cleanup, or
