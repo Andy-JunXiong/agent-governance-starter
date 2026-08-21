@@ -220,7 +220,8 @@ class ProductSiteTests(unittest.TestCase):
         self.assertIn("](docs/index.html)", readme)
         self.assertIn("](docs/demo-governance-report.html)", readme)
         self.assertIn("](docs/interview-guide.md)", readme)
-        self.assertIn("Interview snapshot", readme)
+        self.assertIn("## Product overview", readme)
+        self.assertNotIn("## Interview snapshot", readme)
 
 
 if __name__ == "__main__":

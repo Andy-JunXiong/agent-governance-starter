@@ -42,50 +42,67 @@ scheduling authority.
 
 ### Current closeout snapshot
 
-- **Active slice**: human-admitted task
-  `p1-record-readme-product-entry-refactor-backlog` records one documentation-
-  only future product item. The README product-entry refactor and documentation
-  responsibility split is now present in the strategic plan; README itself is
-  unchanged.
-- **Backlog boundary**: a later task must classify every candidate section as
-  Product, Reference, Architecture, or Evidence before moving it. It must reuse
-  existing topical documents, preserve unique evidence, and must not relocate
-  the current monolith into another catch-all document.
-- **Acceptance direction**: the future refactor should let a new reader answer
-  six core product and usage questions within two to three minutes, expose only
-  three primary first-screen routes, retain one README architecture diagram,
-  and distinguish stable, published prerelease, and development-source behavior
-  early. The 400–650-line range is a review signal, not a hard threshold.
+- **Active slice**: human-admitted tasks
+  `p1-readme-product-entry-refactor-v1` and
+  `p1-readme-product-entry-test-owner-migration-v1` implement the selected
+  README product entry and the bounded migration of stale documentation-test
+  ownership. The prior 27 sections were classified before migration; none
+  lacked an existing owner or destination.
+- **Delivered product entry**: README is now 376 lines and approximately 2,044
+  words across 12 second-level sections. It presents exactly three primary
+  first-screen routes, uses a neutral Product overview, retains one Mermaid
+  architecture diagram, and distinguishes stable `0.2.1`, published prerelease
+  `0.3.0rc1`, and current development source before the deeper product story.
+- **Responsibility boundary**: the shortest stable install and first-use path
+  remains in README. Detailed commands, architecture, reviewer material, and
+  chronological evidence route to existing topical documents, `STATUS.md`,
+  and dated records. No catch-all reference was created, and tests now protect
+  exact claims at their owning surfaces instead of requiring duplication in
+  README.
 - **Current product continuity**: the preceding doctor Git-worktree preflight
-  remains implemented and validated at commit `98d0945`; this record changes no
-  CLI, MCP, release, consumer, or runtime behavior.
-- **Codex-run validation**: all 62 user-documentation, status, and public-
-  documentation-freshness tests pass. Task governance reports
-  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance reports
-  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Scope admits all 4 task files and retains
-  3 failures for explicit exclusions. Task JSON parsing, bounded host-path and
-  credential scans, full diff review, and `git diff --check` pass. An initial
-  command named a nonexistent test module; its operational error is preserved
-  in the dated log and the corrected existing suite passed.
-- **User-reported validation**: none; no reader-comprehension outcome is
-  inferred from the product owner's backlog decision.
-- **Pending validation**: none for this bounded record. Unbriefed-reader
-  comprehension belongs to the future implementation and remains unknown.
-- **Advisory review**: this fully specified record did not start alignment. A
-  distinct bounded current-Agent pass found the product/reference/architecture/
-  evidence ownership, preservation rule, heuristic size signal, scope, and
-  no-implementation boundary consistent without claiming native self-review or
-  independent evidence.
-- **Incomplete**: none in the admitted backlog-record scope. The README
-  inventory, refactor, reader testing, scheduling, and priority relative to
-  other P1 work are deliberately not started or decided.
+  remains implemented and was already validated at commit `98d0945`. README
+  now states the development-only `repository:git-access` distinction without
+  changing CLI, MCP, release, consumer, or runtime behavior.
+- **Codex-run validation**: the initial focused run exposed 20 obsolete
+  README-copy assertions. The first full-suite run then exposed 47 failures,
+  all in seven additional documentation-test modules that still treated README
+  as an evidence archive. Native proposal review admitted that exact corrective
+  scope. All affected assertions now protect either the concise entry contract
+  or the existing owning evidence surface, and the resulting focused suite
+  passes all 126 tests. The supported Python 3.11 full suite passes all 950
+  tests with 3 platform-limited skips in 149.463 seconds. Both task JSON files
+  parse; the cumulative task check reports `PASS=3 WARN=1 FAIL=0 ADVISORY=3`;
+  repository governance reports `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; all 61
+  README links resolve locally or are explicit external/fragment references;
+  bounded privacy-marker scans and `git diff --check` pass.
+- **Scope validation**: all 14 observed work paths pass the cumulative admitted
+  scope. The deterministic command still reports one failure for pre-existing
+  user-owned `.codex/config.toml`, because `.codex` is explicitly excluded and
+  the checker does not distinguish a pre-existing excluded untracked path. The
+  file was present before this task and remains untouched; it was neither
+  hidden nor converted into an exception.
+- **User-reported validation**: none. No human reader outcome is inferred from
+  the product owner's direction choice or from static tests.
+- **Pending validation**: a genuinely unbriefed reader has not yet tested the
+  two-to-three-minute comprehension target. This human outcome remains unknown.
+- **Advisory review**: native current-Agent self-review
+  `srv-c9b13cc2e817573caae8a65c26fd0f8a` completed as a distinct advisory pass.
+  It found the selected requirement, ownership boundaries, architecture, and
+  implementation consistent. It preserves the pre-existing `.codex` scope
+  limitation and unbriefed-reader comprehension as explicit unknowns. This is
+  separate-pass self-review, not independent assurance or human acceptance.
+- **Incomplete**: no implementation or documentation item is currently known
+  incomplete inside the cumulative admitted 15-path scope. The pending human
+  comprehension outcome and the known pre-existing scope-check limitation are
+  validation state, not hidden product content.
 - **Completion-record availability**: the current callable governance
   inventory does not expose `agentgov_task_completion_record`, so no native
   completion record was fabricated. This does not grant human acceptance.
-- **Next product review**: decide whether and when to prioritize a separately
-  admitted README responsibility inventory and refactor. This recorded item is
-  decision input only and grants no implementation, Git, publication, release,
-  deployment, or follow-on authority.
+- **Next product review**: give the new README to one genuinely unbriefed
+  reader and ask the six recorded product and usage questions without coaching.
+  Use that evidence to decide whether navigation copy needs another bounded
+  change. This review input grants no implementation, Git, publication,
+  release, deployment, or follow-on authority.
 - **Previous closeout exclusions**: user-owned `.codex`, the social-cover asset, and the
   external AIRBNB consumer task record remain outside the commit, unstaged,
   and unchanged. No pull request, force-push, release, deployment, cleanup, or

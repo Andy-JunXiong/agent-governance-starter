@@ -13,29 +13,30 @@ STABLE_WHEEL = (
 
 
 class PublicDocumentationFreshnessTests(unittest.TestCase):
-    def test_public_readme_connects_clean_target_preflight_to_harness(self) -> None:
+    def test_public_readme_routes_clean_target_detail_to_existing_owners(self) -> None:
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
-        normalized = " ".join(readme.split())
+        preflight = (ROOT / "docs/clean-target-replay-preflight.md").read_text(
+            encoding="utf-8"
+        )
+        harness = (ROOT / "docs/harness-contract-v1.md").read_text(encoding="utf-8")
+        owned_detail = " ".join((preflight + "\n" + harness).split())
 
-        self.assertIn("agentgov check replay-preflight", normalized)
-        self.assertIn("clean-target replay preflight guide", normalized)
-        self.assertIn("READY", normalized)
-        self.assertIn("BLOCKED", normalized)
-        self.assertIn("UNKNOWN", normalized)
-        self.assertIn("Harness still evaluates normalized evidence after it", normalized)
-        self.assertIn("agentgov reserve replay-correlation", normalized)
-        self.assertIn("requires an interactive `RESERVE`", normalized)
-        self.assertIn("agentgov claim replay-correlation", normalized)
-        self.assertIn("requires a pre-existing claim registry", normalized)
-        self.assertIn("interactive exact `CLAIM`", normalized)
-        self.assertIn("Preflight, reservation, claim, separately authorized replay", normalized)
-        self.assertIn("agentgov recover replay-claim", normalized)
-        self.assertIn("interactive exact `RECOVER`", normalized)
-        self.assertIn("pre-existing recovery registry", normalized)
-        self.assertIn("does not create replacement ownership", normalized)
-        self.assertIn("agentgov.replay-correlation-bridge", normalized)
-        self.assertIn("host.repository_correlation", normalized)
-        self.assertIn("post-run correlation evidence", normalized)
+        self.assertIn("](docs/clean-target-replay-preflight.md)", readme)
+        self.assertIn("](docs/harness-contract-v1.md)", readme)
+        self.assertNotIn("agentgov check replay-preflight", readme)
+        for phrase in (
+            "agentgov check replay-preflight",
+            "READY",
+            "BLOCKED",
+            "UNKNOWN",
+            "agentgov reserve replay-correlation",
+            "agentgov claim replay-correlation",
+            "agentgov recover replay-claim",
+            "agentgov.replay-correlation-bridge",
+            "host.repository_correlation",
+            "does not create replacement ownership",
+        ):
+            self.assertIn(phrase, owned_detail)
 
     def test_public_plan_routes_historical_checkpoints_to_dated_evidence(self) -> None:
         public_plan = (ROOT / "docs/development-plan.md").read_text(
@@ -54,60 +55,81 @@ class PublicDocumentationFreshnessTests(unittest.TestCase):
         self.assertIn("### Current checkpoint", migration_log)
         self.assertIn("### Next-session starting point", migration_log)
 
-    def test_public_readme_reports_bounded_airbnb_completion_evidence(self) -> None:
+    def test_public_readme_routes_airbnb_completion_evidence_to_status(self) -> None:
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
-        normalized = " ".join(readme.split())
+        status = " ".join((ROOT / "STATUS.md").read_text(encoding="utf-8").split())
 
+        self.assertIn("](STATUS.md)", readme)
+        self.assertNotIn("all 79 tests", readme)
         for phrase in (
             "Python 3.11.9",
             "all 79 tests",
             "Completion Verified",
             "Bounded Handoff",
-            "not proof of the automatic primary experience",
-            "consumer changes remain uncommitted and unpushed",
+            "does not prove the automatic primary experience",
+            "consumer working tree remains uncommitted and unpushed",
         ):
-            self.assertIn(phrase, normalized)
+            self.assertIn(phrase, status)
 
-    def test_public_readme_reports_native_completion_install_block(self) -> None:
-        normalized = " ".join((ROOT / "README.md").read_text(encoding="utf-8").split())
+    def test_public_readme_routes_native_completion_install_block_to_evidence(self) -> None:
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        evidence = " ".join(
+            (
+                ROOT
+                / "docs/experiments/airbnb-native-completion-isolated-live-replay-2026-08-21.md"
+            ).read_text(encoding="utf-8").split()
+        )
 
+        self.assertIn("](STATUS.md)", readme)
+        self.assertNotIn("setuptools 65.5.0", readme)
         for phrase in (
-            "isolated AIRBNB installation and live-replay attempt",
+            "BLOCKED_BEFORE_INSTALLATION",
             "setuptools 65.5.0",
             "setuptools>=69",
-            "before creating or installing a package",
-            "No MCP server or Codex session started",
-            "omits the completion tool",
+            "before building or installing a package",
+            "no MCP process or Codex session started",
+            "omits `agentgov_task_completion_record`",
         ):
-            self.assertIn(phrase, normalized)
+            self.assertIn(phrase, evidence)
 
-    def test_public_readme_reports_native_completion_live_start_block(self) -> None:
-        normalized = " ".join((ROOT / "README.md").read_text(encoding="utf-8").split())
+    def test_public_readme_routes_native_completion_live_start_block_to_evidence(self) -> None:
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        evidence = " ".join(
+            (
+                ROOT
+                / "docs/experiments/airbnb-native-completion-end-to-end-recovery-2026-08-21.md"
+            ).read_text(encoding="utf-8").split()
+        )
 
+        self.assertIn("](STATUS.md)", readme)
+        self.assertNotIn("setuptools 84.0.0", readme)
         for phrase in (
             "setuptools 84.0.0",
             "agent-governance-starter 0.3.0rc1",
-            "eight form-capable and six base tools",
+            "eight tools with form elicitation and six without it",
             "BLOCKED_BEFORE_MODEL_MCP_INITIALIZATION",
-            "required AgentGov MCP handshake closed during `thread/start`",
-            "No proposal form, consumer task, README edit, completion record",
+            "MCP handshake closed while producing the initialize response",
+            "No native proposal form",
         ):
-            self.assertIn(phrase, normalized)
+            self.assertIn(phrase, evidence)
 
-    def test_public_readme_reports_bounded_nyc_completion_evidence(self) -> None:
-        normalized = " ".join((ROOT / "README.md").read_text(encoding="utf-8").split())
+    def test_public_readme_routes_bounded_nyc_completion_evidence_to_status(self) -> None:
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        status = " ".join((ROOT / "STATUS.md").read_text(encoding="utf-8").split())
 
+        self.assertIn("](STATUS.md)", readme)
+        self.assertNotIn("all 68 tests", readme)
         for phrase in (
-            "second independent bounded consumer journey",
+            "second independent bounded consumer result",
             "all 68 tests",
             "Completion Verified",
             "Bounded Handoff",
             "formal CI remains on AgentGov 0.2.1",
             "not a formal upgrade",
-            "not proof of uncoached automatic adoption",
-            "NYC consumer changes remain uncommitted and unpushed",
+            "does not prove uncoached adoption",
+            "Its consumer changes remain uncommitted and unpushed",
         ):
-            self.assertIn(phrase, normalized)
+            self.assertIn(phrase, status)
 
     def test_current_install_surfaces_and_landing_disclosure_are_fresh(self) -> None:
         install_surfaces = (

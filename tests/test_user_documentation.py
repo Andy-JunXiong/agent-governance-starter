@@ -131,11 +131,49 @@ PUBLIC_REFERENCE_SOURCES = (
 
 
 class UserDocumentationTests(unittest.TestCase):
+    def test_readme_is_a_product_entry_not_an_evidence_archive(self) -> None:
+        readme = README.read_text(encoding="utf-8")
+        first_routes = readme[
+            readme.index('<p align="center">') : readme.index("</p>")
+        ]
+
+        self.assertEqual(first_routes.count("<a href="), 3)
+        for anchor in ("#quickstart", "#governed-example", "#architecture"):
+            self.assertIn(anchor, first_routes)
+        self.assertIn("## Product overview", readme)
+        self.assertNotIn("## Interview snapshot", readme)
+        self.assertNotIn("## Runnable CLI example", readme)
+        self.assertNotIn("## Detailed architecture", readme)
+        self.assertNotIn("## Project navigation", readme)
+        self.assertEqual(readme.count("```mermaid"), 1)
+
+        overview = readme[: readme.index("## Why AgentGov")]
+        for channel in ("Stable `0.2.1`", "Published prerelease `0.3.0rc1`", "Current development source"):
+            self.assertIn(channel, overview)
+        self.assertIn("`repository:git-access`", readme)
+
+        for owner in (
+            "STATUS.md",
+            "docs/development-log/INDEX.md",
+            "docs/governance-model.md",
+            "docs/interview-guide.md",
+            "docs/portfolio.html",
+        ):
+            self.assertIn(f"]({owner})", readme)
+        for historical_detail in (
+            "setuptools 65.5.0",
+            "setuptools 84.0.0",
+            "all 79 tests",
+            "all 68 tests",
+            "BLOCKED_BEFORE_MODEL_MCP_INITIALIZATION",
+        ):
+            self.assertNotIn(historical_detail, readme)
+
     def test_native_proposal_owner_binding_is_adapter_owned_and_bounded(self) -> None:
+        readme = README.read_text(encoding="utf-8")
         detailed_sources = tuple(
             path.read_text(encoding="utf-8")
             for path in (
-                README,
                 GOVERNANCE_MCP_ADAPTER,
                 TASK_PROPOSAL_ADMISSION,
                 TASK_ADMISSION_ADR,
@@ -149,6 +187,9 @@ class UserDocumentationTests(unittest.TestCase):
                 self.assertIn("decided_by", text)
         for text in detailed_sources:
             self.assertIn("cryptographic", text.lower())
+        self.assertIn("](docs/governance-mcp-adapter.md)", readme)
+        self.assertIn("](docs/task-proposal-admission.md)", readme)
+        self.assertNotIn("Adapter `1.5.0`", readme)
 
         for quickstart in (QUICKSTART_WEB, QUICKSTART_ZH_WEB):
             text = quickstart.read_text(encoding="utf-8")
@@ -166,11 +207,11 @@ class UserDocumentationTests(unittest.TestCase):
         self.assertIn("blob/main/STATUS.md", landing)
 
     def test_adapter_1_5_local_installation_is_evidenced_without_overclaim(self) -> None:
+        readme = README.read_text(encoding="utf-8")
         evidence = ADAPTER_1_5_INSTALLED_PREFLIGHT.read_text(encoding="utf-8")
         detailed_surfaces = tuple(
             path.read_text(encoding="utf-8")
             for path in (
-                README,
                 GOVERNANCE_MCP_ADAPTER,
                 TASK_ADMISSION_ADR,
             )
@@ -203,7 +244,8 @@ class UserDocumentationTests(unittest.TestCase):
             "live replay",
         ):
             self.assertIn(phrase, " ".join(evidence.split()))
-        self.assertIn("unpublished", README.read_text(encoding="utf-8"))
+        self.assertIn("](docs/governance-mcp-adapter.md)", readme)
+        self.assertNotIn("Adapter `1.5.0`", readme)
         self.assertIn("consumer", evidence)
 
     def test_documentation_archive_plan_is_read_only_and_explicit(self) -> None:
@@ -212,11 +254,11 @@ class UserDocumentationTests(unittest.TestCase):
         normalized = " ".join(guide.split())
 
         self.assertIn("docs/documentation-archive-plan.md", readme)
-        for text in (readme, guide):
-            self.assertIn(
-                "agentgov plan documentation-archive . --through 2026-08-14",
-                text,
-            )
+        self.assertNotIn("agentgov plan documentation-archive", readme)
+        self.assertIn(
+            "agentgov plan documentation-archive . --through 2026-08-14",
+            guide,
+        )
         for phrase in (
             "never consults the host clock",
             "logical inclusion",
@@ -314,12 +356,15 @@ class UserDocumentationTests(unittest.TestCase):
             self.assertIn(phrase, migration_log)
 
     def test_airbnb_completion_and_handoff_evidence_is_bounded(self) -> None:
+        readme = README.read_text(encoding="utf-8")
         surfaces = (
-            README,
             STATUS,
             HISTORICAL_MIGRATION_LOG,
             CONSUMER_COMPLETION_LOG,
         )
+
+        self.assertIn("](STATUS.md)", readme)
+        self.assertNotIn("all 79 tests", readme)
 
         self.assertTrue(CONSUMER_COMPLETION_LOG.is_file())
         for path in surfaces:
@@ -402,14 +447,18 @@ class UserDocumentationTests(unittest.TestCase):
             self.assertIn(phrase, experiment)
 
     def test_airbnb_native_completion_replay_preserves_install_block(self) -> None:
+        readme = README.read_text(encoding="utf-8")
         surfaces = (
-            README,
             STATUS,
             GOVERNANCE_MCP_ADAPTER,
             AUTOMATIC_PRODUCT_REQUIREMENTS,
             AIRBNB_NATIVE_COMPLETION_REPLAY_ATTEMPT,
             CURRENT_NATIVE_COMPLETION_LOG,
         )
+
+        self.assertIn("](STATUS.md)", readme)
+        self.assertIn("](docs/governance-mcp-adapter.md)", readme)
+        self.assertNotIn("setuptools 65.5.0", readme)
 
         self.assertTrue(AIRBNB_NATIVE_COMPLETION_REPLAY_ATTEMPT.is_file())
         for path in surfaces:
@@ -436,14 +485,18 @@ class UserDocumentationTests(unittest.TestCase):
             self.assertIn(phrase, normalized_experiment)
 
     def test_airbnb_native_completion_end_to_end_recovery_is_bounded(self) -> None:
+        readme = README.read_text(encoding="utf-8")
         surfaces = (
-            README,
             STATUS,
             GOVERNANCE_MCP_ADAPTER,
             AUTOMATIC_PRODUCT_REQUIREMENTS,
             AIRBNB_NATIVE_COMPLETION_END_TO_END_RECOVERY,
             CURRENT_NATIVE_COMPLETION_LOG,
         )
+
+        self.assertIn("](STATUS.md)", readme)
+        self.assertIn("](docs/governance-mcp-adapter.md)", readme)
+        self.assertNotIn("setuptools 84.0.0", readme)
 
         self.assertTrue(AIRBNB_NATIVE_COMPLETION_END_TO_END_RECOVERY.is_file())
         for path in surfaces:
@@ -470,12 +523,15 @@ class UserDocumentationTests(unittest.TestCase):
             self.assertIn(phrase, normalized_experiment)
 
     def test_nyc_completion_and_handoff_evidence_is_bounded(self) -> None:
+        readme = README.read_text(encoding="utf-8")
         surfaces = (
-            README,
             STATUS,
             HISTORICAL_MIGRATION_LOG,
             CONSUMER_COMPLETION_LOG,
         )
+
+        self.assertIn("](STATUS.md)", readme)
+        self.assertNotIn("all 68 tests", readme)
 
         for path in surfaces:
             normalized = " ".join(path.read_text(encoding="utf-8").split())
@@ -728,7 +784,7 @@ class UserDocumentationTests(unittest.TestCase):
             "ReferenceAlignmentAdapter",
             "HostSemanticMaterializer",
             "zero user-authored structured records",
-            "not general semantic inference",
+            "not a claim that Core performs semantic inference",
             "model-free",
             "zero-configuration",
             "optional independent Reviewer",
@@ -739,7 +795,7 @@ class UserDocumentationTests(unittest.TestCase):
             "agentgov.semantic-review-route",
             "agentgov.semantic-review-result",
             "digest-bound",
-            "no real model",
+            "not model integrations",
             "ActiveAgentSelfReviewMaterializer",
             "resolved `ReferenceAlignmentAdapter`",
             "evidence allow-list",
@@ -760,7 +816,7 @@ class UserDocumentationTests(unittest.TestCase):
             self.assertIn(phrase, governance_mcp_compact)
         for text in (automation, governance_mcp, proposal_admission):
             self.assertIn("agentgov_task_proposal_review", text)
-        for text in (readme, governance_mcp):
+        for text in (governance_mcp,):
             self.assertIn("Adapter `1.6.0`", text)
             self.assertIn("agentgov_task_completion_record", text)
             self.assertIn("eight tools", text)
@@ -831,7 +887,7 @@ class UserDocumentationTests(unittest.TestCase):
                 with self.subTest(skill=skill_name):
                     self.assertIn(skill_name, text)
 
-        self.assertIn("govern the\ncoding agent during development", readme)
+        self.assertIn("automatic coding-agent loop", readme)
         self.assertIn("independent backstop", readme)
         self.assertIn(
             "first planned real-consumer development-loop shadow",
@@ -852,10 +908,11 @@ class UserDocumentationTests(unittest.TestCase):
         monitor = DEVELOPMENT_MONITOR.read_text(encoding="utf-8")
         decision = SESSION_HANDOFF_ADR.read_text(encoding="utf-8")
 
-        self.assertIn("Development source now implements ADR-0012", readme)
+        self.assertIn("`Completion Verified` and `Bounded Handoff`", readme)
+        self.assertIn("](docs/development-session.md)", readme)
         self.assertIn("implements ADR-0012", session)
         self.assertIn("Monitor schema 1.4", monitor)
-        for text in (readme, session):
+        for text in (session,):
             self.assertIn("govern handoff --repository . --dry-run", text)
             self.assertIn("exact", text)
             self.assertIn("HANDOFF", text)
@@ -872,7 +929,7 @@ class UserDocumentationTests(unittest.TestCase):
             "Development-source runtime now implements",
         ):
             self.assertIn(phrase, decision)
-        self.assertIn("matching handoff\nis idempotent", readme)
+        self.assertNotIn("govern handoff --repository . --dry-run", readme)
         self.assertIn("Published\nstable 0.2.1 does not include", session)
 
     def test_bootstrap_and_update_decision_has_no_self_install_or_fake_release(self) -> None:
@@ -882,7 +939,7 @@ class UserDocumentationTests(unittest.TestCase):
         development_release = DEVELOPMENT_RELEASE.read_text(encoding="utf-8")
 
         stable_install = 'pipx install "https://github.com/Andy-JunXiong/'
-        self.assertLess(readme.index(stable_install), readme.index("python -m agentgov next ."))
+        self.assertLess(readme.index(stable_install), readme.index("agentgov next ."))
         self.assertLess(quickstart.index(stable_install), quickstart.index('id="development"'))
         for text in (readme, decision):
             self.assertIn("agentgov update --check", text)
@@ -903,14 +960,15 @@ class UserDocumentationTests(unittest.TestCase):
         session = DEVELOPMENT_SESSION.read_text(encoding="utf-8")
         decision = GUIDED_NEXT_ADR.read_text(encoding="utf-8")
 
-        for text in (readme, session, decision):
+        for text in (session, decision):
             self.assertIn("govern start", text)
             self.assertIn("govern check", text)
             self.assertIn("govern finish", text)
             self.assertIn("monitor development", text)
             self.assertIn("deterministic repository `FAIL`", text)
             self.assertRegex(text.lower(), r"multiple admitted\s+tasks")
-        self.assertIn("action_executed=false", readme)
+        self.assertIn("](docs/development-session.md)", readme)
+        self.assertNotIn("action_executed=false", readme)
         self.assertIn("action_executed=false", session)
         self.assertIn("never executes", decision)
         self.assertIn("Older events", decision)
@@ -920,12 +978,13 @@ class UserDocumentationTests(unittest.TestCase):
         monitor = DEVELOPMENT_MONITOR.read_text(encoding="utf-8")
         consumer_ci = CONSUMER_CI.read_text(encoding="utf-8")
 
-        for text in (readme, monitor, consumer_ci):
+        for text in (monitor, consumer_ci):
             self.assertIn("publish_development_monitor", text)
             self.assertIn("agentgov-development-monitor.html", text)
             self.assertIn("default-off", text)
             self.assertIn("development_export", text)
-        self.assertIn("future 0.3", readme)
+        self.assertIn("](docs/development-monitor.md)", readme)
+        self.assertNotIn("publish_development_monitor", readme)
         self.assertIn("future 0.3", monitor)
         self.assertIn("never uploads the development export", monitor)
         self.assertIn("actor-validated CI event files", monitor)
@@ -1202,13 +1261,13 @@ class UserDocumentationTests(unittest.TestCase):
             "exclusive file create",
         ):
             self.assertIn(phrase, normalized_guide)
-        self.assertIn("clean-target replay preflight guide", readme)
+        self.assertIn("](docs/clean-target-replay-preflight.md)", readme)
         self.assertIn("implemented upstream gate", harness)
         self.assertIn("preflight -> reservation", harness)
         self.assertIn("reservation -> claim", harness)
         self.assertIn("Abandoned-claim recovery is a separate side branch", harness)
         self.assertIn("First Deviation rules", harness)
-        for surface in (normalized_guide, readme, harness):
+        for surface in (normalized_guide, harness):
             self.assertIn("agentgov.replay-correlation-bridge", surface)
             self.assertIn("host.repository_correlation", surface)
         self.assertIn("reserved", normalized_guide)
@@ -1216,7 +1275,7 @@ class UserDocumentationTests(unittest.TestCase):
         self.assertIn("invalidated", normalized_guide)
         self.assertIn("unavailable", normalized_guide)
         self.assertIn("does not reserve, consume, invalidate", normalized_guide)
-        for surface in (normalized_guide, " ".join(readme.split()), " ".join(harness.split())):
+        for surface in (normalized_guide, " ".join(harness.split())):
             self.assertIn("does not authorize, launch, consume, expire, recover", surface)
         for phrase in (
             "VALID",

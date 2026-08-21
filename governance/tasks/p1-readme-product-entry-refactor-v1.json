@@ -1,0 +1,80 @@
+{
+  "acceptance_signals": [
+    "The dated development log records a complete pre-migration inventory of all current README second-level sections, their Product, Reference, Architecture, or Evidence responsibility, and their confirmed existing destination or retained product role.",
+    "README presents no more than three primary first-screen routes: Quickstart, one governed example, and architecture; the former Interview snapshot is a neutral product overview and reviewer-specific navigation remains available through existing reviewer documentation.",
+    "Stable 0.2.1, published prerelease 0.3.0rc1, and current development-source behavior are distinguished early, including the development-only doctor boundary, without implying publication or consumer adoption.",
+    "README retains exactly one overview architecture diagram and routes detailed architecture to existing architecture documents and ADRs.",
+    "Detailed commands, reference material, and chronological evidence are removed from the README reading path only after their existing owning documents are confirmed; no new catch-all reference is created and no unique claim is deleted.",
+    "Documentation tests enforce the new responsibility boundaries and continue protecting release identity, authority limits, link integrity, and unique evidence at its owning STATUS or dated-log surface rather than requiring historical evidence to be duplicated in README.",
+    "DEVELOPMENT_PLAN, STATUS, and the dated log accurately record the completed bounded slice, validation state, remaining reader-comprehension evidence, and next product review.",
+    "Focused documentation tests, the supported full test suite, task and repository governance checks, scope reconciliation, privacy scans, and git diff checks pass."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-888c9e3c6cb847919b6ac3e3fdec9841 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Inventory and classify every current README section as Product, Reference, Architecture, or Evidence, then refactor README into a concise reader-centered product entry that presents exactly three primary first-screen routes, distinguishes stable, published prerelease, and development-source behavior early, retains one overview architecture diagram, and routes detailed commands, architecture, reviewer material, and historical evidence to their existing owning documents without creating a new catch-all reference."
+  },
+  "risk": {
+    "items": [
+      "Compressing README could delete or obscure a unique release, authority, workflow, or evidence claim.",
+      "Changing tests that currently require historical claims in README could weaken coverage unless each claim remains asserted at its owning STATUS or dated-log surface.",
+      "Existing external links or repository anchors could break when headings and detailed sections are removed.",
+      "The compact entry could blur stable, prerelease, and development-source capabilities.",
+      "A responsibility inventory could accidentally become a new permanent catch-all reference rather than bounded migration evidence.",
+      "The user-owned untracked .codex directory and unrelated external consumer task remain outside this task.",
+      "Reviewed assumption: The latest strategic plan and current-status snapshot establish the selected README refactor direction and its acceptance boundaries.",
+      "Reviewed assumption: Existing topical documents provide confirmed destinations for detailed commands, architecture, onboarding, troubleshooting, consumer CI, release channels, governance contracts, and reviewer evidence.",
+      "Reviewed assumption: The dated development log is the correct owner for the one-time section classification and migration evidence.",
+      "Reviewed assumption: README may link to current STATUS and dated evidence without duplicating their chronological content.",
+      "Reviewed assumption: A concise product entry can preserve one shortest verified stable journey while routing advanced development-source workflows to their existing guides.",
+      "Reviewed unknown: Real two-to-three-minute comprehension by an unbriefed reader remains unproven until a later human review.",
+      "Reviewed unknown: Any section or claim found during full inventory without a confirmed owner or destination will trigger the declared stop condition and remain unmigrated."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "docs/assets",
+      "docs/index.html",
+      "docs/quickstart.html",
+      "docs/quickstart.zh-CN.html",
+      "docs/quickstart.zh-CN.md",
+      "docs/interview-guide.html",
+      "docs/interview-guide.zh-CN.html",
+      "docs/interview-guide.md",
+      "docs/portfolio.html",
+      "src",
+      "schemas",
+      "release",
+      "governance/tasks/p0-airbnb-runtime-completion-handoff.json"
+    ],
+    "include_paths": [
+      "README.md",
+      "DEVELOPMENT_PLAN.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-21.md",
+      "governance/tasks/p1-readme-product-entry-refactor-v1.json",
+      "tests/test_user_documentation.py",
+      "tests/test_public_documentation_freshness.py"
+    ]
+  },
+  "task_id": "p1-readme-product-entry-refactor-v1",
+  "title": "Refactor README into a concise product entry",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_user_documentation tests.test_public_documentation_freshness tests.test_status -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p1-readme-product-entry-refactor-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check scope governance/tasks/p1-readme-product-entry-refactor-v1.json --repository . --format json",
+    "git diff --check"
+  ]
+}

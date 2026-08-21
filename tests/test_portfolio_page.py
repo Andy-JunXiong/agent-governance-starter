@@ -18,9 +18,13 @@ class EvidencePortfolioTests(unittest.TestCase):
         self.assertIn("Explore the evidence story", home)
 
     def test_readme_exposes_a_rendered_showcase_entry(self) -> None:
-        showcase = self.readme.split("## Why this exists", 1)[0]
+        showcase = self.readme
+        primary_routes = showcase[
+            showcase.index('<p align="center">') : showcase.index("</p>")
+        ]
         image_path = DOCS / "assets" / "agentgov-social-preview.jpg"
 
+        self.assertEqual(primary_routes.count("<a href="), 3)
         self.assertIn("docs/assets/agentgov-social-preview.jpg", showcase)
         self.assertIn(
             "https://andy-junxiong.github.io/agent-governance-starter/",

@@ -96,12 +96,9 @@ class HumanAdoptionPilotContractTests(unittest.TestCase):
             'agent_governance_starter-0.2.1-py3-none-any.whl"',
             text,
         )
-        self.assertIn("paste the block into the\nterminal and press Enter", text)
-        self.assertIn("does not mean governance is\ncomplete", text)
-        self.assertIn(
-            "No\ncheck result authorizes an agent to merge, publish, release, or deploy",
-            text,
-        )
+        self.assertIn("does not mean the\nnew project is semantically complete or approved", text)
+        self.assertIn("does not stage, commit, merge, publish, release, or\ndeploy", text)
+        self.assertIn("genuinely unbriefed", (ROOT / "STATUS.md").read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

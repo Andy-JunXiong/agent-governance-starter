@@ -272,10 +272,9 @@ Stop conditions:
 
 ### README product entry and documentation responsibility split
 
-Recorded as a future P1 backlog item on 2026-08-21. It is not started,
-scheduled, or admitted for implementation. A later implementation task must
-first inventory every current README section and classify it by its owning
-responsibility:
+Implemented as bounded v1 on 2026-08-21 through human-admitted task
+`p1-readme-product-entry-refactor-v1`. Before migration, all 27 prior README
+sections were inventoried and classified by their owning responsibility:
 
 - **Product**: concise purpose, audience, value, boundaries, release channels,
   one governed workflow, and the shortest verified path to first use;
@@ -285,10 +284,14 @@ responsibility:
 - **Evidence**: version chronology, experiments, consumer replays, failures,
   recoveries, and validation owned by `STATUS.md` and dated development logs.
 
-The refactor must not move the current README monolith into another monolithic
-document. Existing topical documentation should be reused before a compact CLI
-index or any other new reference is created. Unique evidence must be preserved
-at its owning stable path rather than deleted or duplicated.
+The resulting README is a 376-line, approximately 2,044-word product entry with
+12 second-level sections, exactly three primary first-screen routes, and one
+overview architecture diagram. Detailed command, architecture, reviewer, and
+chronological evidence content now routes to existing topical documents,
+`STATUS.md`, and dated evidence. No new catch-all reference was created.
+Documentation tests protect release identity, authority, links, and unique
+claims at their owning surfaces instead of requiring those claims to be
+duplicated in README.
 
 Reader-centered acceptance signals:
 
@@ -305,6 +308,10 @@ Reader-centered acceptance signals:
   existing architecture owner;
 - documentation tests, link integrity, release identity, unique-claim
   preservation, and source-of-truth ownership pass after the refactor.
+
+The static structure and ownership signals are implemented. The two-to-three-
+minute comprehension outcome remains pending until a genuinely unbriefed human
+reviews the result; no automated test may claim that outcome.
 
 A result around 400–650 lines or 3,000–4,500 words is a useful review signal,
 not a hard acceptance threshold. Clarity and preservation of required release,

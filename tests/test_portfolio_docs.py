@@ -28,35 +28,34 @@ class PortfolioDocumentationTests(unittest.TestCase):
 
         self.assertTrue(text.startswith(expected_opening))
         for heading in (
-            "## Interview snapshot",
-            "## Why this exists",
-            "## Architecture at a glance",
-            "## What makes it different",
-            "## What this project demonstrates",
-            "## Scope boundaries",
-            "## Runnable CLI example",
-            "## Example findings",
-            "## Detailed architecture",
-            "## Project status and non-goals",
-            "## Project navigation",
+            "## Product overview",
+            "## Why AgentGov",
+            "## Architecture",
+            "## What it governs",
+            "## Quickstart",
+            "## Governed example",
+            "## Product direction",
+            "## Product boundaries",
+            "## Documentation map",
+            "## Development",
+            "## Source boundary",
+            "## License",
         ):
             self.assertIn(heading, text)
-        self.assertLess(
-            text.index("## Why this exists"), text.index("## Repository layout")
-        )
-        self.assertLess(
-            text.index("## Architecture at a glance"),
-            text.index("![Agent Governance CLI"),
-        )
+        self.assertLess(text.index("## Quickstart"), text.index("## Documentation map"))
+        for removed_heading in (
+            "## Interview snapshot",
+            "## Runnable CLI example",
+            "## Detailed architecture",
+            "## Project navigation",
+        ):
+            self.assertNotIn(removed_heading, text)
 
     def test_readme_demo_visual_uses_real_sanitized_cli_output(self) -> None:
         text = README.read_text(encoding="utf-8")
 
-        self.assertIn(
-            "![Agent Governance CLI detecting incomplete evidence, source drift, "
-            "and a human-review advisory](docs/assets/agentgov-demo.svg)",
-            text,
-        )
+        self.assertIn("](docs/demo-governance-report.html)", text)
+        self.assertNotIn("](docs/assets/agentgov-demo.svg)", text)
         self.assertTrue(DEMO_ASSET.is_file())
 
         asset = DEMO_ASSET.read_text(encoding="utf-8")
@@ -75,15 +74,13 @@ class PortfolioDocumentationTests(unittest.TestCase):
         text = README.read_text(encoding="utf-8")
 
         for phrase in (
-            "| Without explicit contracts | With Agent Governance Starter Kit |",
-            "Artifact hashes report deterministic source drift.",
-            "Human approval remains an external boundary.",
-            "### How to read the result",
-            "`PASS` — a deterministic contract is satisfied.",
-            "`WARN` — a valid, non-blocking configuration or evidence state is incomplete.",
-            "`FAIL` — a deterministic requirement is broken or a reviewed artifact is stale.",
-            "`ADVISORY` — accountable human judgment is still required.",
-            "They do not authorize merge,\npublication, release, or deployment.",
+            "Matching hashes detect change, not correctness or safety.",
+            "No check authorizes commit, merge, publication, release, or deployment.",
+            "`PASS`: a deterministic contract is satisfied.",
+            "`WARN`: a valid, non-blocking configuration or evidence state is incomplete.",
+            "`FAIL`: a deterministic requirement is broken or evidence is stale.",
+            "`ADVISORY`: accountable human judgment is still required.",
+            "These states describe repository evidence.",
         ):
             self.assertIn(phrase, text)
 
@@ -95,82 +92,34 @@ class PortfolioDocumentationTests(unittest.TestCase):
             "agent-governance-starter/releases/download/v0.2.1/"
             'agent_governance_starter-0.2.1-py3-none-any.whl"',
             "agentgov --help",
-            'python -m agentgov init $Project --project-name "Portfolio Demo"',
-            "python -m agentgov check repository $Project",
-            'python -m agentgov report repository $Project '
+            'agentgov init $Project --project-name "Portfolio Demo"',
+            "agentgov check repository $Project",
+            'agentgov report repository $Project '
             '--output "$Project/governance-report.md"',
-            'python -m agentgov init "$project" --project-name "Portfolio Demo"',
         ):
             self.assertIn(command, text)
         self.assertLess(
             text.index('pipx install "https://github.com/'),
             text.index(
-                'python -m agentgov init $Project --project-name "Portfolio Demo"'
+                'agentgov init $Project --project-name "Portfolio Demo"'
             ),
         )
-        for finding in (
-            "PASS capability:governance/capabilities/example-capability.json:",
-            "WARN evaluation:evaluation/example-capability: needs_seed_cases:",
-            "FAIL artifact:example-capability:",
-            "ADVISORY governance:human-review:",
-        ):
+        for finding in ("`PASS`", "`WARN`", "`FAIL`", "`ADVISORY`"):
             self.assertIn(finding, text)
 
         diagrams = re.findall(r"```mermaid\n(.*?)```", text, flags=re.DOTALL)
-        self.assertEqual(len(diagrams), 2)
-        overview, diagram = diagrams
+        self.assertEqual(len(diagrams), 1)
+        diagram = diagrams[0]
         for label in (
-            "Policy · Capability · Owner · Risk",
-            "Implementation · Contracts · Evidence",
-            "References · Readiness · Drift",
-            "PASS · WARN · FAIL · ADVISORY",
-            "Accountable human authority",
-        ):
-            self.assertIn(label, overview)
-        self.assertTrue(diagram.startswith("flowchart TB\n"))
-        for label in (
-            "Repository-local contracts and evidence",
-            "agentgov governance operations",
-            "Review and integration surfaces",
-            "Separate explicit write command",
-            "Read-only drift detection",
-            "Ordered RepositoryReport",
-            "Consumer CI",
-            "Pinned check · Report artifact",
-            "Not in stable 0.2.1",
+            "Human intent",
+            "Repository memory",
+            "Bounded work",
+            "Verification",
+            "PASS, WARN, FAIL, ADVISORY",
+            "Human decision",
         ):
             self.assertIn(label, diagram)
-        for edge in (
-            "SOURCES --> VALIDATE",
-            "CAPABILITY --> EXPORT",
-            "SOURCES --> EXPORT",
-            "EXPORT --> ARTIFACT",
-            "ARTIFACT --> DRIFT",
-            "VALIDATE --> FINDINGS",
-            "DRIFT --> FINDINGS",
-            "FINDINGS --> TERMINAL",
-            "FINDINGS --> MARKDOWN",
-            "FINDINGS --> JSON",
-            "FINDINGS --> STATUS_SURFACE",
-            "JSON --> CONSUMER_CI",
-            "JSON -.-> FUTURE",
-            'HUMAN -->|"Separate explicit authority"| TRANSITION',
-        ):
-            self.assertIn(edge, diagram)
-        self.assertNotIn("Reject · Escalate", diagram)
-        self.assertNotIn("A --> B", diagram)
-        self.assertIn(
-            "The bounded consumer CI integration runs the JSON report without "
-            "installing\nthe adopting project's dependencies. Artifact export is "
-            "a separate explicit\nwrite command, not a stage inside repository "
-            "checking.",
-            text,
-        )
-        self.assertIn(
-            "merge, publication, release,\nand deployment remain separate "
-            "human-authorized actions.",
-            text,
-        )
+        self.assertIn("INTENT --> MEMORY --> WORK --> VERIFY --> REVIEW --> DECIDE", diagram)
 
     def test_prominent_local_navigation_targets_exist(self) -> None:
         required_paths = (
@@ -228,8 +177,32 @@ class PortfolioDocumentationTests(unittest.TestCase):
 
         for relative_path in required_paths:
             with self.subTest(path=relative_path):
-                self.assertIn(f"]({relative_path})", text)
                 self.assertTrue((ROOT / relative_path).exists())
+
+        entry_paths = (
+            "docs/development-task-contract.md",
+            "docs/task-proposal-admission.md",
+            "docs/admission-routing.md",
+            "docs/human-decision-prompts.md",
+            "docs/clarification-dialogue.md",
+            "docs/development-session.md",
+            "docs/development-scope-check.md",
+            "docs/development-evidence.md",
+            "docs/development-monitor.md",
+            "docs/governance-model.md",
+            "docs/ai-radar-extraction-map.md",
+            "docs/consumer-ci.md",
+        )
+        for relative_path in entry_paths:
+            with self.subTest(entry_path=relative_path):
+                self.assertIn(f"]({relative_path})", text)
+
+        for deep_path in (
+            "src/agentgov/cli.py",
+            "schemas/development-task.schema.json",
+            "docs/experiments/installed-development-governance-pilot.md",
+        ):
+            self.assertNotIn(f"]({deep_path})", text)
 
     def test_case_study_preserves_scope_and_honest_limits(self) -> None:
         text = CASE_STUDY.read_text(encoding="utf-8")

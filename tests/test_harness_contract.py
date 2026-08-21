@@ -83,8 +83,8 @@ class HarnessContractTests(unittest.TestCase):
         )
 
     def test_current_source_of_truth_describes_the_same_bounded_slice(self) -> None:
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
         surfaces = (
-            ROOT / "README.md",
             ROOT / "STATUS.md",
             ROOT / "DEVELOPMENT_PLAN.md",
             ROOT / "docs/harness-contract-v1.md",
@@ -97,6 +97,11 @@ class HarnessContractTests(unittest.TestCase):
                 self.assertIn("Harness Contract v1", normalized)
                 self.assertIn("First Deviation", normalized)
                 self.assertIn("AIRBNB", normalized)
+
+        self.assertIn("](docs/harness-contract-v1.md)", readme)
+        self.assertIn("](STATUS.md)", readme)
+        self.assertNotIn("First Deviation", readme)
+        self.assertNotIn("AIRBNB", readme)
 
         guide = (ROOT / "docs/harness-contract-v1.md").read_text(encoding="utf-8")
         for phrase in (
