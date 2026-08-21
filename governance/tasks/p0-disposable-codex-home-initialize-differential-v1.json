@@ -1,0 +1,90 @@
+{
+  "acceptance_signals": [
+    "Fresh read-only preflight confirms the same retained AgentGov runtime, Codex executable, remote-free AIRBNB clone binding, Starter HEAD, user configuration identity, and pre-existing process identities before the diagnostic.",
+    "A fresh operating-system temporary directory is used only as process-local CODEX_HOME; its absolute path, generated filenames, contents, session identities, and credentials are not retained in repository evidence.",
+    "The process-local environment keeps the retained runtime first on PATH, uses no PYTHONPATH override, and changes no persistent user or project configuration.",
+    "Exactly one separately approved user-host Codex App Server startup is attempted with the same project binding and process-local trust override used by the recorded real-user-home baseline.",
+    "The protocol sends only initialize, initialized, and one thread/start, and stops before turn/start, prompt submission, model interaction, tool invocation, retry, repair, or second launch.",
+    "The sanitized result records whether connection initialize succeeded, whether required AgentGov MCP initialization succeeded, whether thread/started occurred, and whether the prior -32603 initialize-response closure reproduced.",
+    "A disposable-home success is classified as evidence that existing user-home state materially participates in the failure; the same failure is classified as evidence that the cause is home-independent or outside the inspected state; ambiguous evidence remains unknown.",
+    "The exact diagnostic processes exit, pre-existing processes are untouched, and the disposable home is retained without cleanup or content inspection.",
+    "User configuration, original and retained AIRBNB repositories, retained runtime, Starter source, credentials, Git state, remotes, and external systems remain unchanged apart from unavoidable temporary Codex-home metadata effects.",
+    "The task and repository governance checks, cumulative scope reconciliation, task JSON parsing, bounded privacy scans, one final baseline suite, focused documentation tests, and git diff check pass or truthfully preserve excluded state.",
+    "The task stops before user-home inspection, configuration migration, launcher changes, dependency downloads, cleanup, commit, push, publication, release, deployment, or broader activation."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-0175f96bf9bb407d8e4f5a3328615e45 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Run exactly one bounded no-model user-host Codex App Server initialization using a fresh disposable Codex home while retaining the same Codex build, retained AgentGov runtime, remote-free AIRBNB clone binding, trust override, and initialize-only lifecycle as the recorded failing real-user-home baseline. Compare only the sanitized outcome to determine whether the failure depends on existing user-home state, then stop without repair, retry, model interaction, cleanup, or broader inspection."
+  },
+  "risk": {
+    "items": [
+      "A user-host App Server startup may create temporary metadata or attempt background network access even without a model turn.",
+      "A fresh home may omit defaults that differ from the real user home, so the result localizes CODEX_HOME dependence but may not identify a specific causal file or setting.",
+      "The required MCP process may fail before emitting a fully classifiable protocol result.",
+      "Concurrent pre-existing Codex processes could confound broad host observations; only the exact diagnostic lifecycle may be attributed.",
+      "The working tree contains preserved prior-task and user-owned excluded paths.",
+      "The result may suggest a repair, but this task grants no repair, migration, retry, cleanup, Git, release, or deployment authority.",
+      "Reviewed assumption: The retained Python 3.11.9 and AgentGov 0.3.0rc1 runtime still exists and matches recorded identity.",
+      "Reviewed assumption: The remote-free AIRBNB clone and its two project-binding changes still match recorded identity.",
+      "Reviewed assumption: Codex can initialize an App Server with a process-local fresh CODEX_HOME without requiring a model turn or credential import.",
+      "Reviewed assumption: The prior real-user-home baseline is sufficiently matched for a one-variable home-state comparison.",
+      "Reviewed unknown: Whether a fresh Codex home can load the project MCP configuration with only the existing process-local trust override.",
+      "Reviewed unknown: Whether Codex creates unavoidable temporary home metadata before thread/start.",
+      "Reviewed unknown: Whether the AgentGov initialize-response closure reproduces with a fresh home.",
+      "Reviewed unknown: Whether background host behavior differs despite the matched command and lifecycle.",
+      "Reviewed unknown: Whether a result can distinguish user-home state from other CODEX_HOME-dependent defaults without inspecting generated content."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "README.md",
+      "docs/assets",
+      "docs/governance-mcp-adapter.md",
+      "docs/product-requirements-automatic-governance.md",
+      "tests",
+      "src",
+      "templates",
+      "schemas",
+      "release",
+      "examples",
+      "governance/tasks/p0-airbnb-runtime-completion-handoff.json",
+      "governance/tasks/p0-native-completion-airbnb-end-to-end-recovery-v1.json",
+      "governance/tasks/p0-installed-codex-agentgov-initialize-diagnostic-v1.json",
+      "governance/tasks/p0-user-host-codex-agentgov-no-model-comparison-v1.json",
+      "governance/tasks/p0-user-host-agentgov-child-identity-diagnostic-v1.json",
+      "docs/experiments/airbnb-native-completion-end-to-end-recovery-2026-08-21.md",
+      "docs/experiments/installed-codex-agentgov-initialize-diagnostic-2026-08-21.md",
+      "docs/experiments/user-host-codex-agentgov-no-model-comparison-2026-08-21.md",
+      "docs/experiments/user-host-agentgov-child-identity-diagnostic-2026-08-21.md"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-disposable-codex-home-initialize-differential-v1.json",
+      "docs/experiments/disposable-codex-home-initialize-differential-2026-08-21.md",
+      "docs/development-log/2026-08-21.md",
+      "STATUS.md"
+    ]
+  },
+  "task_id": "p0-disposable-codex-home-initialize-differential-v1",
+  "title": "Run one disposable Codex-home initialization differential",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -p \"test_user_documentation.py\" -v",
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -p \"test_public_documentation_freshness.py\" -v",
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; python -m agentgov check task governance/tasks/p0-disposable-codex-home-initialize-differential-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check scope governance/tasks/p0-disposable-codex-home-initialize-differential-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

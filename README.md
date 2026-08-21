@@ -627,6 +627,17 @@ remote-free consumer clone was retained unchanged. Its committed Codex config
 also allow-lists the prior seven tools and omits the completion tool, so any
 future retry must separately own both an offline build dependency and the
 consumer configuration binding rather than hiding them in replay setup.
+The human-selected end-to-end recovery task then obtained only
+`setuptools 84.0.0` through one approved bootstrap download, built and
+installed `agent-governance-starter 0.3.0rc1`, and measured Adapter `1.6.0`
+with eight form-capable and six base tools. A remote-free AIRBNB clone received
+the explicit completion-tool and Agent-guidance binding; direct no-model
+discovery passed. The single approved live Codex launch nevertheless stopped
+at `BLOCKED_BEFORE_MODEL_MCP_INITIALIZATION`: its required AgentGov MCP
+handshake closed during `thread/start` (`-32603`) before a usable session or
+Agent turn.
+No proposal form, consumer task, README edit, completion record, retry, Git
+operation, publication, release, or deployment followed.
 The following proposal replay evidence remains specific to Adapter `1.3.0`.
 Standalone authentication is repaired. A separately authorized UTF-8-safe
 App Server replay completed one real read-only turn without surfacing a native

@@ -142,6 +142,21 @@ task, or completion record resulted. The committed consumer `enabled_tools`
 allow-list also omits `agentgov_task_completion_record`; that separate binding
 was measured but not repaired or overridden.
 
+The later human-selected end-to-end recovery task cleared both deterministic
+readiness gates in isolation. One approved bootstrap download supplied
+`setuptools 84.0.0`; exact staged source built and installed distribution
+`0.3.0rc1`, which reported Adapter `1.6.0`, eight form-capable tools, six base
+tools, and completion input `task_path`. A fresh remote-free AIRBNB clone then
+received the explicit completion allow-list, 1,800-second timeout, and Agent
+guidance binding. Direct no-model discovery and a process-local Codex MCP list
+passed without persisting worktree trust. The single approved live launch
+still failed closed during `thread/start`: the required AgentGov MCP handshake
+closed while producing its initialize response (`-32603`), before a usable
+thread or Agent turn. No proposal form, consumer task, README edit, completion
+record, current-Agent consumer review, repair, or replay retry followed. This
+is `BLOCKED_BEFORE_MODEL_MCP_INITIALIZATION`, not installed live-completion
+evidence.
+
 The proposal trigger is scoped to the exact requested repository change. A
 human-admitted task counts only when its requirement, goal, scope, and
 acceptance signals match and authorize that change. An unrelated,

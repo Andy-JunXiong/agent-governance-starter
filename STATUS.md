@@ -42,37 +42,318 @@ scheduling authority.
 
 ### Current closeout snapshot
 
-- **Active slice**: none. Human-admitted closeout task
-  `p0-2026-08-21-development-closeout-main-push-v1` is complete and stopped
-  after recording today's bounded results and the separately supplied Git
-  authority. The preceding native-completion AIRBNB task stopped at its first
-  offline installation gate with `BLOCKED_BEFORE_INSTALLATION`; no retry,
-  dependency download, source repair, consumer change, or live model run
+- **Active slice**: none after local completion of human-admitted closeout task
+  `p0-2026-08-21-diagnostic-closeout-main-push-v2`. Its exact cumulative scope
+  is 18 paths and contains today's post-`0bb72f0` recovery and diagnostic
+  records, current documentation, and their documentation tests; it contains
+  no new uncommitted product-source implementation. The product owner
+  explicitly authorized one ordinary commit on `main` and direct push to
+  `origin/main`; the observed Git result belongs in the direct human handoff.
+- **Closeout exclusions**: user-owned `.codex`, the social-cover asset, and the
+  external AIRBNB consumer task record remain outside the commit, unstaged,
+  and unchanged. No pull request, force-push, release, deployment, cleanup, or
+  broader external action is authorized.
+- **Closeout validation**: focused documentation suites passed 38 and 13
+  tests. The exact supported Python 3.11.9 suite passed all 946 tests with 3
+  platform-limited skips in 266.486 seconds. Task governance returned
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`, repository governance returned
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`, and `git diff --check` passed. Scope
+  admitted all 18 intended paths and retained 3 failures for the explicit
+  exclusions. Included task JSON records and bounded concrete-host-path and
+  credential-marker scans passed. The generic path scan's only match was the
+  documentation test's deliberate `C:\\Users` rejection literal.
+- **Closeout advisory review**: this fully specified task did not start an
+  alignment journey. A distinct bounded current-Agent review found the
+  documentation-only requirement, cumulative ownership, blocked-integration
+  wording, validation, exclusions, Git authority, and stop boundaries
+  consistent without claiming native self-review completion. Remote
+  divergence, Git transport, and branch protection remain unknown until the
+  authorized fetch and push.
+- **Closeout completion-record availability**: the current callable governance
+  inventory did not expose `agentgov_task_completion_record`, so no completion
+  record was fabricated.
+- **Latest completed diagnostic slice**: human-admitted task
+  `p0-disposable-codex-home-initialize-differential-v1` is complete after its
+  one permitted startup. Its result is
+  `DISPOSABLE_CODEX_HOME_REPRODUCED_USER_HOST_INITIALIZE_FAILURE`: a fresh
+  process-local Codex home still reproduced the required-MCP
+  initialize-response closure and `-32603` before `thread/started`. No model
+  turn, retry, repair, cleanup, Git operation, release, deployment, or broader
+  activation followed.
+- **Disposable-home conclusion**: existing user-home files and persistent user
+  configuration are not necessary for the failure under the matched launch.
+  Cleanup or migration of the existing Codex home is not a justified next
+  repair. The remaining boundary is a home-independent difference between the
+  passing sandboxed App Server path and the failing user-host App
+  Server/project-MCP initialization path. The exact initialize-response code
+  flow and other host-process differences remain unknown.
+- **Disposable-home preservation**: the temporary home remains without
+  cleanup or content inspection. Its path, generated names, contents, session
+  identity, and internal metadata were not retained. User configuration,
+  retained clone and runtime identities, Starter Git state, remotes,
+  credentials, and pre-existing process counts were preserved.
+- **Disposable-home validation**: focused documentation suites passed 38 and
+  13 tests. The exact supported Python 3.11.9 suite passed all 946 tests with
+  3 platform-limited skips in 254.303 seconds. Task governance returned
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`, repository governance returned
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`, and `git diff --check` passed. Scope
+  reconciliation admitted all 4 task-owned paths and retained 16 failures for
+  explicitly excluded prior-task or user-owned paths. Task JSON and bounded
+  privacy scans passed.
+- **Disposable-home advisory review**: this fully specified task did not start
+  an alignment journey. A distinct bounded current-Agent review found the
+  single-variable inference, scope, validation, privacy, and stop boundaries
+  consistent without claiming native self-review completion. Exact
+  initialize-response code flow, complete child environment,
+  home-independent host state, disposable-home contents, and possible
+  background network attempts remain unknown.
+- **Disposable-home completion-record availability**: the current callable
+  governance inventory did not expose `agentgov_task_completion_record`, so no
+  completion record was fabricated.
+- **Previous child-identity slice**: human-admitted task
+  `p0-user-host-agentgov-child-identity-diagnostic-v1` is complete as a bounded
+  diagnostic record. Its result is
+  `RETAINED_AGENTGOV_CHILD_CONFIRMED_USER_HOST_FAILURE_PERSISTS`: the failed
+  MCP child was the intended retained AgentGov launcher with matching digest
+  and arguments, and it started the retained Python executable. The user-host
+  initialize-response closure still reproduced. No thread, model turn, retry,
+  repair, Git operation, publication, release, deployment, or cleanup
   followed.
-- **2026-08-21 Git handoff**: the product owner explicitly authorized one
-  ordinary non-force commit of today's confirmed cumulative project scope and
-  a direct push to `origin/main`. The user-owned `.codex` directory remains
-  excluded and unstaged. The requested direct-main handoff does not authorize
-  a pull request, force-push, release, deployment, cleanup, or any additional
-  repository or external change. The resulting commit identity and transport
-  outcome must be observed after this record is included in the payload and
-  reported in the human handoff rather than predicted here.
-- **2026-08-21 closeout validation**: the exact complete repository suite
-  passed all 944 tests with 3 platform-limited skips in 198.835 seconds. The
-  closeout task check reported `PASS=3 WARN=1 FAIL=0 ADVISORY=3`, repository
-  governance reported `PASS=26 WARN=2 FAIL=0 ADVISORY=4`, and
-  `git diff --check` passed. Its deliberately narrow cumulative scope check
-  admitted the 3 closeout-owned records and rejected 29 preserved paths from
-  earlier tasks or user-owned `.codex`; no exception or ownership transfer was
-  inferred. The task JSON parsed, and bounded secret-like and absolute-host-
-  path scans returned zero matches.
-- **2026-08-21 closeout advisory review**: a distinct bounded current-Agent
-  pass found the documentation-only requirement, accumulated-scope
-  attribution, validation evidence, direct-main authority, and `.codex`
-  exclusion consistent. It retained remote divergence and Git transport as
-  unknown until fetch and push. This fully specified task started no alignment
-  journey, so the pass does not claim native self-review completion or an
-  independent audit.
+- **Child-identity preflight**: retained runtime, clone, original-consumer,
+  user-configuration, Codex, and pre-existing-process identities matched the
+  preceding records. Parent `PATH` placed the retained runtime first;
+  `CODEX_HOME` and `PYTHONPATH` overrides were absent, while the existing
+  `ELECTRON_RUN_AS_NODE` flag was present. Complete environment values were
+  not retained. Event-based tracing was unavailable and was not enabled; one
+  hidden 800-millisecond PowerShell child proved exact-parent CIM polling and
+  exited normally without Codex, MCP, network, or repository activity.
+- **Child-identity observed boundary**: the one separately approved user-host
+  App Server launch initialized against the real user Codex home. The exact
+  Codex process started the retained `agentgov.exe` with matching SHA-256 and
+  expected `adapter governance-mcp --host-profile codex` arguments; that
+  launcher started the retained `python.exe` with matching digest. The older
+  global AgentGov process was unrelated and not selected. Required MCP
+  initialize still closed with `-32603` before `thread/started`. No
+  `turn/start`, prompt, model payload, Agent response, or tool call occurred.
+- **Child-identity conclusion**: accidental global-launcher selection is ruled
+  out. The remaining reproducible boundary is the real user Codex-home or
+  host-environment context while running the intended retained executable.
+  The child's complete inherited environment and causal user-home state remain
+  unknown because observing them would require a wrapper, debugger,
+  persistent trace, raw log, or wider inspection that this task prohibited.
+- **Child-identity preservation**: user configuration, retained clone
+  identities, and pre-existing processes remained unchanged. The exact
+  diagnostic processes exited. A metadata-only five-minute user-home window
+  found 18 recently modified and 7 recently created files across bounded
+  extension categories, but concurrent pre-existing Codex processes prevent
+  attribution. No names, paths, contents, session or installation identities,
+  raw command lines, complete environment values, or broad logs were retained.
+  No cleanup, retry, repair, Git operation, publication, release, deployment,
+  or broader activation occurred.
+- **Child-identity validation**: the exact Python 3.11.9 repository suite
+  passed all 946 tests with 3 platform-limited skips in 261.213 seconds. Task
+  governance returned `PASS=3 WARN=1 FAIL=0 ADVISORY=3`, repository governance
+  returned `PASS=26 WARN=2 FAIL=0 ADVISORY=4`, and `git diff --check` passed.
+  Scope reconciliation admitted all 4 task-owned paths and retained 14
+  failures for explicitly excluded prior-task or user-owned paths; no
+  exception or ownership transfer was inferred. Task JSON parsing and both
+  bounded privacy scans passed.
+- **Child-identity advisory review**: native current-Agent self-review
+  `srv-d0e389eb2f38b3cbe6e47e346f2db0e6` completed as a distinct advisory pass
+  with requirement, architecture, scope, implementation, and security
+  observations. It found the retained-child conclusion, observer fallback,
+  ownership, validation, privacy, attribution limits, and stop boundaries
+  consistent. Complete child environment, causal user-home state, the
+  initialize-response code path, shared-file attribution, and possible
+  unobserved background network attempts remain unknown. The review granted
+  no new authority.
+- **Child-identity completion-record availability**: the current Agent's
+  callable governance inventory did not expose
+  `agentgov_task_completion_record`, so no Starter completion record was
+  fabricated.
+- **User-host comparison identity**: preflight confirmed the retained Python
+  3.11.9 and AgentGov `0.3.0rc1` runtime, remote-free AIRBNB clone at
+  `d70615527d9acdde3893ce645d1923606173acf6`, unchanged project bindings,
+  unchanged user configuration hash, and Codex `0.149.0-alpha.4`. The
+  process-local parent `PATH` resolved the bare project command to the retained
+  launcher. Original AIRBNB HEAD and its two checked binding hashes matched
+  the preceding record; its full status check retained the existing local
+  AgentGov-directory permission warning.
+- **User-host comparison boundary**: one separately approved App Server launch
+  initialized against the real user Codex home. It recognized the required
+  project server, reached its MCP handshake, and failed before
+  `thread/started` with the same `-32603` boundary as the prior TUI run. No
+  `turn/start`, turn, item, prompt, model payload, Agent response, or tool call
+  occurred. The preceding sandboxed App Server path passed with the same
+  Codex build, retained runtime, clone binding, and no-turn lifecycle, so the
+  reproducible deviation is localized to the real user-host Codex-home or
+  host-process context.
+- **User-host comparison preservation**: user configuration and retained clone
+  identities remained unchanged. No new user-Codex-home file was observed
+  from the startup-time cutoff. Five existing shared files were modified after
+  the cutoff, but concurrent pre-existing Codex processes prevent attribution;
+  no contents or session identities were inspected. All pre-existing
+  processes were preserved. No retry, repair, launcher pinning, dependency
+  download, cleanup, Git operation, publication, release, deployment, or
+  broader activation occurred.
+- **User-host comparison remaining unknown**: the evidence does not yet
+  distinguish child-process command resolution, inherited host environment,
+  user-home state, or another TUI/user-host-specific condition. Resolving that
+  smaller cause requires a separately selected and admitted requirement.
+- **User-host comparison validation**: the exact Python 3.11.9 repository
+  suite passed all 946 tests with 3 platform-limited skips in 268.686 seconds.
+  Task governance returned `PASS=3 WARN=1 FAIL=0 ADVISORY=3`, repository
+  governance returned `PASS=26 WARN=2 FAIL=0 ADVISORY=4`, and
+  `git diff --check` passed. Scope reconciliation admitted all 4 task-owned
+  paths and retained 12 failures for explicitly excluded prior-task or user-
+  owned paths; no exception or ownership transfer was inferred. Task JSON
+  parsing and both bounded privacy scans passed.
+- **User-host comparison advisory review**: native current-Agent self-review
+  `srv-0022f90a035fd6310dc67aa983c2cbe7` completed as a distinct advisory pass
+  with requirement, architecture, scope, implementation, and security
+  observations. It found the single-launch result, differential
+  classification, ownership, validation, privacy, and stop boundaries
+  consistent. Child-process executable identity, inherited environment, user-
+  home state, shared-file attribution, and possible unobserved background
+  network attempts remain unknown. The review granted no new authority.
+  After advisory evidence write-back, the focused documentation suites passed
+  38 and 13 tests, and the diff and privacy checks passed again.
+- **User-host comparison completion-record availability**: the current
+  Agent's callable governance inventory did not expose
+  `agentgov_task_completion_record`, so no Starter completion record was
+  fabricated.
+- **Initialize diagnostic identity**: the retained Python 3.11.9 runtime still
+  reports AgentGov `0.3.0rc1`; the remote-free AIRBNB clone remains at
+  `d70615527d9acdde3893ce645d1923606173acf6` with only its two existing binding
+  changes. Process-local `PATH` resolves the bare configured launcher to that
+  runtime. Original AIRBNB identities and user Codex configuration hashes are
+  unchanged.
+- **Initialize diagnostic direct boundary**: corrected direct stdio discovery
+  exited zero with no stderr, protocol `2025-11-25`, Adapter `1.6.0`, eight
+  tools, and task completion present. An earlier harness result that resolved
+  an old global Adapter `1.4.0` before applying child-only `PATH` was rejected
+  as a diagnostic-harness error and is not product evidence.
+- **Initialize diagnostic App Server boundary**: Codex App Server
+  `0.149.0-alpha.4` initialized. Its installed schema rejected the official
+  example's `workspaceWrite` value with `-32600` and accepted
+  `workspace-write`; the corrected `thread/start` created one empty sandbox-
+  local thread and moved required `agentgov_governance` from `starting` to
+  `ready`. No `turn/*` or `item/*` event occurred. Built-in plugin refreshes
+  and a later Responses WebSocket connection attempt failed in the restricted
+  environment and produced no install, connection, model payload, or turn.
+- **Initialize diagnostic conclusion**: the prior live TUI `-32603` was not
+  reproduced. The current evidence narrows the remaining unknown to the prior
+  live host environment, its command-resolution or Codex-home boundary, the
+  TUI path, or a transient condition; it does not choose among them. The
+  historical replay outcome remains
+  `BLOCKED_BEFORE_MODEL_MCP_INITIALIZATION`; this diagnostic narrows that
+  result without rewriting it.
+- **Initialize diagnostic validation**: the first full-suite pass found one
+  documentation consistency failure because current status no longer retained
+  the historical replay outcome identifier. Status was corrected without
+  weakening a test. The final Python 3.11.9 suite passed all 946 tests with 3
+  platform-limited skips in 260.078 seconds; the focused 38-test user-
+  documentation suite also passed. Task governance returned
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`, repository governance returned
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`, and `git diff --check` passed. Scope
+  reconciliation admitted all 4 diagnostic-owned paths and retained 10
+  failures for explicitly excluded prior-task or user paths; no exception or
+  ownership transfer was inferred. After advisory evidence write-back, the
+  focused 38-test suite and diff check passed again. The task JSON parsed, and
+  bounded host-absolute-path and recognized credential-marker scans returned
+  zero matches.
+- **Initialize diagnostic advisory review**: native current-Agent self-review
+  `srv-47c9c47323b97e67fc4cd11c689df32a` completed as a distinct advisory pass
+  with requirement, architecture, scope, implementation, and security
+  observations. It found the bounded outcome, harness-error classification,
+  admitted ownership, validation, privacy, and stop boundaries consistent.
+  The earlier user-host TUI failure cause, host and TUI differences, command-
+  resolution drift, transient conditions, and future Codex schema behavior
+  remain unknown. The review granted no new authority.
+- **Initialize diagnostic completion-record availability**: the current
+  Agent's callable governance inventory did not expose
+  `agentgov_task_completion_record`, so no Starter completion record was
+  fabricated.
+- **End-to-end build recovery**: a fresh Python 3.11.9 environment received
+  exactly one approved bootstrap download, `setuptools 84.0.0`, satisfying the
+  declared `setuptools>=69` backend. Exact staged Starter HEAD built and
+  installed `agent-governance-starter 0.3.0rc1`; the installed runtime reports
+  Adapter `1.6.0`, eight form-capable tools, six base tools, and
+  `agentgov_task_completion_record`. The build and bootstrap wheel digests are
+  retained in the sanitized experiment record. No pip upgrade, second
+  download, project metadata edit, source repair, current pipx change, or
+  retained-runtime change occurred.
+- **End-to-end consumer binding**: a fresh AIRBNB clone detached at
+  `d70615527d9acdde3893ce645d1923606173acf6` with zero remotes received only
+  the local completion-tool allow-list, 1,800-second timeout, and Agent-guidance
+  binding. Direct no-model initialization reported MCP `2025-11-25`, Adapter
+  `1.6.0`, eight/form and six/base tools, and completion input `task_path`.
+  A Codex no-model list loaded the same project server through an exact
+  process-local worktree-trust override; user Codex configuration stayed
+  byte-unchanged and contains no persistent temporary trust entry.
+- **End-to-end live first deviation**: the only approved interactive launch
+  reached Codex TUI bootstrap, then `thread/start` reported that the required
+  AgentGov MCP handshake closed while producing the initialize response
+  (`-32603`). No usable session, Agent turn, proposal form, consumer admission,
+  task write, README edit, validation, completion record, or current-Agent
+  consumer review was observed. This is not successful installed
+  live-completion evidence.
+- **End-to-end preservation**: the bound clone remains detached, remote-free,
+  and changed only at its two pre-replay binding paths; its README heading is
+  unchanged and no new AgentGov state exists. Original AIRBNB, prior clones and
+  runtimes, Starter source identities, HEAD, index, remotes, user Codex
+  configuration, and credentials remain unchanged. All new temporary
+  resources, including the rejected empty clone target, are retained. The
+  evidence stores no raw prompt, response, transcript, screenshot, source
+  content, credential, private data, temporary absolute path, or external-model
+  payload.
+- **User-reported validation**: none for successful installed completion. The
+  product owner selected, admitted, started, and separately approved each
+  bounded user-host startup; those decisions are authority evidence, not
+  product-behavior evidence.
+- **Pending validation**: the exact initialize-response code flow, complete
+  child environment, and other home-independent host-specific causes remain
+  unmeasured. Existing user-home state is no longer a necessary-cause
+  candidate under the matched launch, and the child executable identity is
+  measured.
+- **Incomplete**: none inside the bounded failure-record task. The intended
+  successful end-to-end replay outcome was not achieved.
+- **Blocker / stop condition**: stop before inspecting raw host logs or session
+  content, instrumenting or wrapping the MCP child, launcher pinning or other
+  repair, another Codex launch, dependency download, original-consumer or
+  retained-runtime mutation, cleanup, Git operations, publication, release,
+  deployment, or broader activation.
+- **Next product review**: decide whether to design explicit, privacy-bounded
+  AgentGov initialize-error instrumentation for the user-host App Server path
+  or pause live integration. Do not clean or migrate the existing Codex home;
+  the failure reproduced without it. This entry grants no follow-on authority.
+- **2026-08-21 end-to-end recovery validation**: on the supported Python
+  3.11.9 runtime, the exact complete repository suite passed all 946 tests with
+  3 platform-limited skips in 261.439 seconds. The first full-suite invocation
+  resolved to unsupported Python 3.9.7 and failed on unavailable language and
+  standard-library features; it is retained as environment evidence, not
+  reported as a product regression. Focused documentation suites passed 38 and
+  13 tests. The task check returned `PASS=3 WARN=1 FAIL=0 ADVISORY=3`,
+  repository governance returned `PASS=26 WARN=2 FAIL=0 ADVISORY=4`, and
+  `git diff --check` passed. Scope reconciliation admitted all 9 task-owned
+  paths and retained 3 failures for pre-existing, task-excluded user paths;
+  no exception or ownership transfer was inferred. Task JSON parsing passed,
+  and bounded secret-like and host-absolute-path scans returned zero matches.
+- **2026-08-21 end-to-end recovery advisory review**: native current-Agent
+  self-review `srv-4f6ab60826ed1c5b3755bf0f627faa7b` completed as a distinct
+  advisory pass with requirement, architecture, scope, implementation, and
+  security observations. It found the bounded failure classification,
+  admitted-path ownership, validation, privacy, and stop boundaries
+  consistent. It retained the live initialize root cause, host/runtime
+  attribution, later proposal-to-completion path, and external package
+  provenance beyond recorded digests as unknown. The review granted no new
+  task, scope, exception, Git, release, deployment, or external authority.
+- **Starter native completion-record availability**: the current Agent's
+  callable governance tool inventory did not expose
+  `agentgov_task_completion_record`, so no Starter completion record was
+  fabricated. The installed disposable consumer runtime did expose that tool,
+  but its live consumer session stopped before a usable thread and did not call
+  it.
 - **Native completion isolated-install result**: a fresh temporary source
   staging copy matched the task-scoped Adapter and generated-template hashes;
   a fresh Python 3.11.9 environment contained `pip 24.0` and

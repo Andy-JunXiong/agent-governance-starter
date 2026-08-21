@@ -250,6 +250,19 @@ completion. No MCP discovery or model replay ran. A later requirement must
 explicitly own offline build bootstrap and consumer configuration binding;
 this failed attempt grants neither.
 
+The human subsequently selected and admitted one combined recovery task. A
+single approved bootstrap download supplied `setuptools 84.0.0`; exact current
+source built and installed Adapter `1.6.0`. A fresh remote-free AIRBNB clone
+received the missing completion-tool, 1,800-second timeout, and Agent-guidance
+bindings, and no-model discovery exposed eight form-capable and six base tools
+with completion input `task_path`. The only approved live Codex launch then
+failed during required MCP initialization before a usable thread or Agent
+turn: `thread/start` reported that the AgentGov handshake closed while
+producing the initialize response (`-32603`). No proposal form, consumer task,
+README edit, completion evidence, self-review, repair, or retry followed. The
+result is `BLOCKED_BEFORE_MODEL_MCP_INITIALIZATION`; installed Codex-to-MCP
+handshake behavior remains an explicit product unknown.
+
 ## Human decision boundaries
 
 AgentGov interrupts the user only for:

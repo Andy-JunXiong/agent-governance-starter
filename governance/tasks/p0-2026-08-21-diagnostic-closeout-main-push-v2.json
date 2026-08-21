@@ -1,0 +1,92 @@
+{
+  "acceptance_signals": [
+    "STATUS.md reports no active slice, distinguishes the completed native completion capability from the still-blocked real user-host MCP initialization, and names the next product review without authorizing it.",
+    "The dated development log appends one final closeout section that identifies the exact cumulative commit scope, preserved exclusions, validation, Git authority, and stop boundaries.",
+    "README, governance adapter documentation, product requirements, diagnostic experiments, task records, and their documentation tests remain mutually consistent about Adapter 1.6.0, the -32603 pre-model boundary, correct retained child identity, and disposable-home result.",
+    "The exact supported Python 3.11.9 full suite and focused documentation suites pass after final evidence write-back.",
+    "Task and repository governance have no deterministic failure; scope reconciliation admits the exact 18 task-owned paths and reports only preserved excluded state.",
+    "All included task JSON records parse and bounded credential-marker and absolute-host-path scans return zero matches.",
+    "git diff --check passes, the complete intended diff is reviewed, main and origin/main identities are checked, and git fetch origin detects no unhandled divergence before commit.",
+    "Only the exact 18 included paths are staged; .codex, the social-cover asset, the external AIRBNB consumer task record, and all other unrelated changes remain unstaged and unchanged.",
+    "One ordinary non-force commit is created on main using the product owner's explicit chat authorization and pushed explicitly with git push origin HEAD:main.",
+    "The final handoff reports the commit identity, push destination and result, remaining uncommitted paths, and that no pull request, force-push, release, deployment, cleanup, or broader external action occurred."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-ca8346bebd1242acb6b5b27a79f6c90b and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Update the current status and dated development log to close out today's installed AgentGov recovery and bounded Codex-to-AgentGov initialization diagnostics, validate the exact cumulative confirmed Starter scope, preserve unrelated user-owned and external-consumer files, then use the product owner's explicit authorization for one ordinary non-force commit on main and direct push to origin/main. Do not create a pull request, release, deployment, cleanup, force-push, or broader external change."
+  },
+  "risk": {
+    "items": [
+      "The mixed worktree contains unrelated user-owned and external-consumer files that must not be staged.",
+      "A remote update could create divergence; the task must stop rather than pull, rebase, reset, overwrite, or force-push.",
+      "A documentation mismatch could fail final validation and must be corrected before commit without weakening tests.",
+      "The direct push changes remote main and must use only the user's explicit authorization and the exact confirmed commit.",
+      "The closeout must not accidentally present the blocked user-host integration as a successful end-to-end completion.",
+      "No task or Git authorization extends to a release, deployment, cleanup, pull request, or other external action.",
+      "Reviewed assumption: The working copy still has main and the locally known origin/main at the same committed base before fetch.",
+      "Reviewed assumption: The 17 existing intended paths are attributable to admitted tasks completed after commit 0bb72f0, and the new closeout task record is the eighteenth path.",
+      "Reviewed assumption: The user-owned .codex directory, social-cover asset, and external AIRBNB consumer task record must remain outside the commit.",
+      "Reviewed assumption: The retained Python 3.11.9 runtime remains available for final validation.",
+      "Reviewed assumption: Ordinary Git credential handling can authenticate the explicitly authorized direct push.",
+      "Reviewed unknown: Whether origin/main advanced after the last local observation.",
+      "Reviewed unknown: Whether final evidence write-back exposes a documentation consistency failure.",
+      "Reviewed unknown: Whether Git transport authentication succeeds.",
+      "Reviewed unknown: Whether GitHub branch protection accepts an ordinary direct push to main."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "docs/assets",
+      "governance/tasks/p0-airbnb-runtime-completion-handoff.json",
+      "src",
+      "templates",
+      "schemas",
+      "release",
+      "examples"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-2026-08-21-diagnostic-closeout-main-push-v2.json",
+      "README.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-21.md",
+      "docs/governance-mcp-adapter.md",
+      "docs/product-requirements-automatic-governance.md",
+      "tests/test_public_documentation_freshness.py",
+      "tests/test_user_documentation.py",
+      "docs/experiments/airbnb-native-completion-end-to-end-recovery-2026-08-21.md",
+      "docs/experiments/installed-codex-agentgov-initialize-diagnostic-2026-08-21.md",
+      "docs/experiments/user-host-codex-agentgov-no-model-comparison-2026-08-21.md",
+      "docs/experiments/user-host-agentgov-child-identity-diagnostic-2026-08-21.md",
+      "docs/experiments/disposable-codex-home-initialize-differential-2026-08-21.md",
+      "governance/tasks/p0-native-completion-airbnb-end-to-end-recovery-v1.json",
+      "governance/tasks/p0-installed-codex-agentgov-initialize-diagnostic-v1.json",
+      "governance/tasks/p0-user-host-codex-agentgov-no-model-comparison-v1.json",
+      "governance/tasks/p0-user-host-agentgov-child-identity-diagnostic-v1.json",
+      "governance/tasks/p0-disposable-codex-home-initialize-differential-v1.json"
+    ]
+  },
+  "task_id": "p0-2026-08-21-diagnostic-closeout-main-push-v2",
+  "title": "Close out the August 21 diagnostics and push confirmed scope to main",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -p \"test_user_documentation.py\" -v",
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -p \"test_public_documentation_freshness.py\" -v",
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; python -m agentgov check task governance/tasks/p0-2026-08-21-diagnostic-closeout-main-push-v2.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check scope governance/tasks/p0-2026-08-21-diagnostic-closeout-main-push-v2.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check repository .",
+    "git diff --check",
+    "git status --short"
+  ]
+}

@@ -45,6 +45,10 @@ AIRBNB_NATIVE_COMPLETION_REPLAY_ATTEMPT = (
     ROOT
     / "docs/experiments/airbnb-native-completion-isolated-live-replay-2026-08-21.md"
 )
+AIRBNB_NATIVE_COMPLETION_END_TO_END_RECOVERY = (
+    ROOT
+    / "docs/experiments/airbnb-native-completion-end-to-end-recovery-2026-08-21.md"
+)
 CURRENT_NATIVE_COMPLETION_LOG = ROOT / "docs/development-log/2026-08-21.md"
 ADAPTER_1_5_INSTALLED_PREFLIGHT = (
     ROOT / "docs/experiments/adapter-1-5-installed-preflight-2026-08-15.md"
@@ -428,6 +432,40 @@ class UserDocumentationTests(unittest.TestCase):
             "no MCP process or Codex session started",
             "contains no raw prompt",
             "authorizes no dependency download",
+        ):
+            self.assertIn(phrase, normalized_experiment)
+
+    def test_airbnb_native_completion_end_to_end_recovery_is_bounded(self) -> None:
+        surfaces = (
+            README,
+            STATUS,
+            GOVERNANCE_MCP_ADAPTER,
+            AUTOMATIC_PRODUCT_REQUIREMENTS,
+            AIRBNB_NATIVE_COMPLETION_END_TO_END_RECOVERY,
+            CURRENT_NATIVE_COMPLETION_LOG,
+        )
+
+        self.assertTrue(AIRBNB_NATIVE_COMPLETION_END_TO_END_RECOVERY.is_file())
+        for path in surfaces:
+            normalized = " ".join(path.read_text(encoding="utf-8").split())
+            with self.subTest(path=path.name):
+                self.assertIn("setuptools 84.0.0", normalized)
+                self.assertIn("Adapter `1.6.0`", normalized)
+                self.assertIn("BLOCKED_BEFORE_MODEL_MCP_INITIALIZATION", normalized)
+                self.assertIn("-32603", normalized)
+
+        experiment = AIRBNB_NATIVE_COMPLETION_END_TO_END_RECOVERY.read_text(
+            encoding="utf-8"
+        )
+        normalized_experiment = " ".join(experiment.split())
+        for phrase in (
+            "eight tools with form elicitation and six without it",
+            "The completion tool exposed only `task_path`",
+            "No usable session or Agent turn followed",
+            "No native proposal form",
+            "The README still contains `### One-command demo`",
+            "contains no raw prompt",
+            "No commit, push, pull request, publication, release, deployment",
         ):
             self.assertIn(phrase, normalized_experiment)
 

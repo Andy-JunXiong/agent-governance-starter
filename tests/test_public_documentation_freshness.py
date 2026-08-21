@@ -81,6 +81,19 @@ class PublicDocumentationFreshnessTests(unittest.TestCase):
         ):
             self.assertIn(phrase, normalized)
 
+    def test_public_readme_reports_native_completion_live_start_block(self) -> None:
+        normalized = " ".join((ROOT / "README.md").read_text(encoding="utf-8").split())
+
+        for phrase in (
+            "setuptools 84.0.0",
+            "agent-governance-starter 0.3.0rc1",
+            "eight form-capable and six base tools",
+            "BLOCKED_BEFORE_MODEL_MCP_INITIALIZATION",
+            "required AgentGov MCP handshake closed during `thread/start`",
+            "No proposal form, consumer task, README edit, completion record",
+        ):
+            self.assertIn(phrase, normalized)
+
     def test_public_readme_reports_bounded_nyc_completion_evidence(self) -> None:
         normalized = " ".join((ROOT / "README.md").read_text(encoding="utf-8").split())
 

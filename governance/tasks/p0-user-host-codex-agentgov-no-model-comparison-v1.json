@@ -1,0 +1,82 @@
+{
+  "acceptance_signals": [
+    "The task binds resolved alignment journey mcpj-f565c4f45c9149588cece61d2f7afcd3 and the human-selected user-host no-model comparison direction without treating alignment as task admission.",
+    "Read-only preflight confirms the retained runtime, remote-free clone, original consumer, Starter worktree, user Codex configuration, and command identities before any host launch.",
+    "The comparison records which AgentGov executable and configuration layer the user-host Codex process resolves, using only process-local environment or trust inputs and without persistent configuration change.",
+    "At most one separately approved user-host Codex startup is attempted, and it stops before turn/start, prompt submission, model interaction, tool invocation, repair, retry, or second launch.",
+    "The evidence distinguishes command-resolution, Codex-home, TUI or equivalent host startup, and required-MCP readiness as far as normalized events permit.",
+    "If startup would require or creates user-local state beyond unavoidable bounded thread metadata, the exact state is disclosed and the task stops without cleanup or expansion.",
+    "No raw prompt, response, transcript, source content, credential, private data, user or temporary absolute path, thread identity, installation identity, or unbounded host log is retained in repository evidence.",
+    "The original AIRBNB repository, retained clone content, retained runtime, Starter source, user Codex configuration, credentials, Git state, remotes, and external systems remain unchanged.",
+    "The task and repository checks, cumulative scope reconciliation, task JSON parsing, bounded privacy scans, baseline test suite, and git diff check pass or truthfully report preserved excluded state.",
+    "The task stops before repair, launcher pinning, model turn, governed replay, dependency download, cleanup, commit, push, publication, release, deployment, or broader activation."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-eafb17c86d8540c4831999ba94557f0f and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Run one bounded no-model comparison of the retained AgentGov runtime and remote-free AIRBNB binding through user-host Codex command resolution and TUI or equivalent startup. Stop before turn/start or any model interaction, make no repair or persistent configuration change, and retain only sanitized repository evidence."
+  },
+  "risk": {
+    "items": [
+      "A user-host Codex startup may create local thread metadata or attempt background network access even when no model turn is requested.",
+      "A TUI startup could advance to model interaction unless the exact process is observed and stopped before turn/start.",
+      "Process-local PATH or worktree trust inputs could resolve a different launcher or configuration layer than intended.",
+      "Reading broad host logs could expose prompts, credentials, source content, private paths, or unrelated sessions.",
+      "The retained runtime or clone may have drifted and must fail closed if recorded identities no longer match.",
+      "A likely repair may become apparent, but diagnosis grants no repair or launcher-pinning authority.",
+      "The working tree contains prior-task and user-owned excluded changes that must be preserved.",
+      "Reviewed assumption: The retained Python runtime and remote-free AIRBNB clone still exist.",
+      "Reviewed assumption: The current Codex executable can expose command resolution or host startup evidence before any model turn.",
+      "Reviewed assumption: Exact processes and configuration hashes can be observed without persisting trust or editing user configuration.",
+      "Reviewed unknown: Whether the earlier TUI initialize failure is reproducible in the current user-host environment.",
+      "Reviewed unknown: Whether the user-host Codex home or TUI path resolves a different AgentGov launcher than the bounded App Server path.",
+      "Reviewed unknown: Whether unavoidable user-local thread metadata can be cleanly distinguished without reading unrelated session content.",
+      "Reviewed unknown: Whether background plugin or model transport attempts can be prevented entirely during user-host startup."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "README.md",
+      "docs/assets",
+      "docs/governance-mcp-adapter.md",
+      "docs/product-requirements-automatic-governance.md",
+      "tests",
+      "src",
+      "templates",
+      "schemas",
+      "release",
+      "examples",
+      "governance/tasks/p0-airbnb-runtime-completion-handoff.json",
+      "governance/tasks/p0-native-completion-airbnb-end-to-end-recovery-v1.json",
+      "governance/tasks/p0-installed-codex-agentgov-initialize-diagnostic-v1.json",
+      "docs/experiments/airbnb-native-completion-end-to-end-recovery-2026-08-21.md",
+      "docs/experiments/installed-codex-agentgov-initialize-diagnostic-2026-08-21.md"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-user-host-codex-agentgov-no-model-comparison-v1.json",
+      "docs/experiments/user-host-codex-agentgov-no-model-comparison-2026-08-21.md",
+      "docs/development-log/2026-08-21.md",
+      "STATUS.md"
+    ]
+  },
+  "task_id": "p0-user-host-codex-agentgov-no-model-comparison-v1",
+  "title": "Compare the user-host Codex-to-AgentGov startup boundary without a model turn",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; python -m agentgov check task governance/tasks/p0-user-host-codex-agentgov-no-model-comparison-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check scope governance/tasks/p0-user-host-codex-agentgov-no-model-comparison-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

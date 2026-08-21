@@ -1,0 +1,79 @@
+{
+  "acceptance_signals": [
+    "The task binds resolved alignment journey mcpj-d3402c1828a34ea3bca54073af84e7bc and the human-selected diagnose-initialization-first direction without treating alignment as task admission.",
+    "The diagnostic reuses only the retained disposable Python 3.11 runtime and remote-free AIRBNB clone from the prior bounded run, after confirming their recorded identities and preservation state.",
+    "A direct AgentGov stdio initialize probe and a Codex host-side no-model thread-start probe use the same process-local runtime, clone configuration, and temporary worktree trust boundary.",
+    "The result distinguishes, as far as deterministic evidence permits, server process startup, MCP initialize response, and Codex host integration without invoking a model turn.",
+    "If the root boundary cannot be distinguished, the evidence records the smallest remaining unknown and stops without repair, coaching, retry, wrapper installation, dependency download, or configuration persistence.",
+    "No raw prompt, response, transcript, source content, credential, private data, temporary absolute path, or unbounded host log is retained.",
+    "The original AIRBNB repository, prior runtimes, Starter source, user Codex configuration, credentials, Git state, remotes, and external systems remain unchanged.",
+    "The experiment record, current status, and dated log report the exact normalized result and identify any superseded current-status statement without rewriting historical evidence.",
+    "The exact task and repository checks, cumulative scope reconciliation, task JSON parsing, bounded privacy scans, baseline test suite, and git diff check pass or truthfully report preserved excluded state.",
+    "The task stops before any product-source repair, consumer repair, model turn, second live replay, dependency download, cleanup, commit, push, publication, release, deployment, or broader activation."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-e8d970b4706740dd9c240a5824998ddf and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Run one bounded deterministic no-model diagnostic against the retained disposable AgentGov runtime and remote-free AIRBNB clone to distinguish AgentGov server startup, MCP initialize response, and Codex host integration at the previously measured thread-start boundary. Record only sanitized evidence, make no product or consumer repair, and do not start a model turn or second live replay."
+  },
+  "risk": {
+    "items": [
+      "A host-side thread-start probe could accidentally advance toward model execution unless it stops before any turn-start request.",
+      "Reading broad Codex or MCP logs could retain raw prompts, credentials, source content, or absolute paths unless evidence is restricted to normalized protocol and exit facts.",
+      "The retained temporary runtime or clone may have drifted since the prior run and must fail closed if identity checks do not match.",
+      "Process-local trust or environment overrides could become persistent if written to user configuration.",
+      "A diagnosis may reveal a likely repair but does not authorize implementing it.",
+      "The current Starter worktree contains changes from the completed recovery task and user-owned excluded paths that must remain preserved and outside this diagnostic's ownership.",
+      "Reviewed assumption: The retained disposable runtime and bound AIRBNB clone still exist.",
+      "Reviewed assumption: The Codex app-server or equivalent host protocol can exercise thread initialization without sending a model turn.",
+      "Reviewed assumption: Direct stdio MCP initialization can be repeated without network access or repository mutation.",
+      "Reviewed assumption: Python 3.11 or newer and the current Codex executable remain available.",
+      "Reviewed unknown: Whether the prior initialize failure originated before the AgentGov process started, during its initialize response, or while Codex consumed that response.",
+      "Reviewed unknown: Whether the failure is reproducible through a no-model Codex host protocol.",
+      "Reviewed unknown: Whether a bounded child-process diagnostic surface exposes enough normalized error detail without reading retained raw logs."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "README.md",
+      "docs/assets",
+      "docs/governance-mcp-adapter.md",
+      "docs/product-requirements-automatic-governance.md",
+      "tests",
+      "src",
+      "templates",
+      "schemas",
+      "release",
+      "examples",
+      "governance/tasks/p0-airbnb-runtime-completion-handoff.json",
+      "governance/tasks/p0-native-completion-airbnb-end-to-end-recovery-v1.json",
+      "docs/experiments/airbnb-native-completion-end-to-end-recovery-2026-08-21.md"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-installed-codex-agentgov-initialize-diagnostic-v1.json",
+      "docs/experiments/installed-codex-agentgov-initialize-diagnostic-2026-08-21.md",
+      "docs/development-log/2026-08-21.md",
+      "STATUS.md"
+    ]
+  },
+  "task_id": "p0-installed-codex-agentgov-initialize-diagnostic-v1",
+  "title": "Diagnose the installed Codex-to-AgentGov initialize handshake",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; python -m agentgov check task governance/tasks/p0-installed-codex-agentgov-initialize-diagnostic-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check scope governance/tasks/p0-installed-codex-agentgov-initialize-diagnostic-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "acceptance_signals": [
+    "The task binds resolved alignment journey mcpj-1fd2da6fc67e4fd28e356ccc5bef7587 and the human-selected child-identity diagnostic direction without treating alignment as task admission.",
+    "Read-only preflight confirms the retained runtime, remote-free clone, original consumer, Starter worktree, user Codex configuration, Codex executable, and pre-existing process identities before any launch.",
+    "The diagnostic uses only transient read-only Windows process observation; it does not edit the project command, create a launcher wrapper, enable persistent tracing, change user configuration, or read session content or broad host logs.",
+    "Observed process evidence is normalized to parent relationship, process basename, executable classification and digest, and an allow-list of environment-state classifications; raw command lines, complete PATH values, usernames, process identifiers, absolute paths, and unrelated process data are not retained.",
+    "At most one separately approved user-host Codex App Server startup is attempted with the retained runtime first on process-local PATH, the admitted clone binding, and no persistent trust change.",
+    "The startup sends only initialize, initialized, and one thread/start; it stops before turn/start, prompt submission, model interaction, tool invocation, retry, repair, or second launch.",
+    "If the MCP child exits too quickly or Windows cannot expose an allow-listed fact, the evidence records the smallest unknown and stops without widening observation, reading logs, changing the launcher, or retrying.",
+    "The result distinguishes whether the failed child resolves to the retained launcher, the older global launcher, or another identity as far as deterministic evidence permits.",
+    "User configuration, original and retained AIRBNB repositories, retained runtime, Starter source, credentials, Git state, remotes, and external systems remain unchanged; unavoidable user-home metadata effects are reported without cleanup.",
+    "The task and repository checks, cumulative scope reconciliation, task JSON parsing, bounded privacy scans, baseline suite, and git diff check pass or truthfully report preserved excluded state.",
+    "The task stops before launcher pinning, repair, dependency download, cleanup, commit, push, publication, release, deployment, or broader activation."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-2636db15ddf14cd88ab8ecb726a70c4c and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Run one bounded no-model diagnostic of the reproducible user-host Codex-to-AgentGov initialize failure using read-only Windows process observation to classify the actual MCP child executable, parent chain, and only allow-listed inherited-environment facts. Do not change or wrap the launcher, inspect raw sessions or broad logs, send turn/start, repair, retry, or retain sensitive process data."
+  },
+  "risk": {
+    "items": [
+      "The failed MCP process may exit before read-only polling can capture its executable identity.",
+      "Windows process APIs may expose broad command lines or unrelated process data unless observation is filtered by the exact new Codex parent and normalized before retention.",
+      "A user-host App Server startup may update existing user-home state or attempt background network access even without a model turn.",
+      "Concurrent pre-existing Codex and AgentGov processes could be misattributed unless exact preflight identities and parent relationships are preserved.",
+      "A complete environment block may be unavailable without invasive instrumentation; unavailable facts must remain unknown.",
+      "The observed identity may suggest a repair, but this task grants no launcher modification or retry authority.",
+      "The working tree contains prior-task and user-owned excluded paths that must remain preserved.",
+      "Reviewed assumption: Transient Windows process observation can filter descendants of the exact diagnostic Codex process.",
+      "Reviewed assumption: The retained runtime and remote-free AIRBNB clone still exist and retain their recorded identities.",
+      "Reviewed assumption: The current Codex App Server can reproduce the no-turn failure through the same bounded lifecycle.",
+      "Reviewed unknown: Whether the failed MCP child persists long enough for its executable path and digest to be observed.",
+      "Reviewed unknown: Whether Codex modifies PATH or other environment values before starting the MCP child.",
+      "Reviewed unknown: Whether Windows exposes any child environment facts without a wrapper, debugger, persistent trace, or raw log.",
+      "Reviewed unknown: Whether another user-host condition besides launcher identity causes the initialize response closure."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "README.md",
+      "docs/assets",
+      "docs/governance-mcp-adapter.md",
+      "docs/product-requirements-automatic-governance.md",
+      "tests",
+      "src",
+      "templates",
+      "schemas",
+      "release",
+      "examples",
+      "governance/tasks/p0-airbnb-runtime-completion-handoff.json",
+      "governance/tasks/p0-native-completion-airbnb-end-to-end-recovery-v1.json",
+      "governance/tasks/p0-installed-codex-agentgov-initialize-diagnostic-v1.json",
+      "governance/tasks/p0-user-host-codex-agentgov-no-model-comparison-v1.json",
+      "docs/experiments/airbnb-native-completion-end-to-end-recovery-2026-08-21.md",
+      "docs/experiments/installed-codex-agentgov-initialize-diagnostic-2026-08-21.md",
+      "docs/experiments/user-host-codex-agentgov-no-model-comparison-2026-08-21.md"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-user-host-agentgov-child-identity-diagnostic-v1.json",
+      "docs/experiments/user-host-agentgov-child-identity-diagnostic-2026-08-21.md",
+      "docs/development-log/2026-08-21.md",
+      "STATUS.md"
+    ]
+  },
+  "task_id": "p0-user-host-agentgov-child-identity-diagnostic-v1",
+  "title": "Identify the failed user-host AgentGov MCP child without changing its launcher",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; python -m agentgov check task governance/tasks/p0-user-host-agentgov-child-identity-diagnostic-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check scope governance/tasks/p0-user-host-agentgov-child-identity-diagnostic-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}
