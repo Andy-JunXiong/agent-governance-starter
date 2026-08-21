@@ -42,100 +42,67 @@ scheduling authority.
 
 ### Current closeout snapshot
 
-- **Active slice**: human-admitted task
-  `p1-readme-portfolio-showcase-test-owner-v1` implements the product owner's
-  selected shared GLAP/NYC portfolio format only in the README first screen.
-  Product overview, published pages, the existing visual asset, runtime, and
-  release behavior remain unchanged.
-- **Delivered product entry**: README is now 389 lines and approximately 2,116
-  words across 12 second-level sections. It presents one portfolio showcase,
-  uses a neutral Product overview, retains one Mermaid
-  architecture diagram, and distinguishes stable `0.2.1`, published prerelease
-  `0.3.0rc1`, and current development source before the deeper product story.
-  The showcase uses CI and Live Demo badges, the existing linked hero, one
-  centered product story, four focused published-product links, and an explicit
-  evidence and authority boundary.
-- **Responsibility boundary**: the shortest stable install and first-use path
-  remains in README. Detailed commands, architecture, reviewer material, and
-  chronological evidence route to existing topical documents, `STATUS.md`,
-  and dated records. No catch-all reference was created, and tests now protect
-  exact claims at their owning surfaces instead of requiring duplication in
-  README.
-- **Current product continuity**: the preceding doctor Git-worktree preflight
-  remains implemented and was already validated at commit `98d0945`. README
-  now states the development-only `repository:git-access` distinction without
-  changing CLI, MCP, release, consumer, or runtime behavior.
-- **Codex-run validation**: the initial focused run exposed 20 obsolete
-  README-copy assertions. The first full-suite run then exposed 47 failures,
-  all in seven additional documentation-test modules that still treated README
-  as an evidence archive. Native proposal review admitted that exact corrective
-  scope. All affected assertions now protect either the concise entry contract
-  or the existing owning evidence surface, and the resulting focused suite
-  passes all 126 tests. The supported Python 3.11 full suite passes all 950
-  tests with 3 platform-limited skips in 149.463 seconds. Both task JSON files
-  parse; the cumulative task check reports `PASS=3 WARN=1 FAIL=0 ADVISORY=3`;
-  repository governance reports `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; all 61
-  README links resolve locally or are explicit external/fragment references;
-  bounded privacy-marker scans and `git diff --check` pass.
-- **Prior route-only correction evidence**: the focused README, portfolio-page, and
-  status suite passes all 59 tests. The supported Python 3.11 full suite passes
-  all 950 tests with 3 platform-limited skips in 150.592 seconds. A direct
-  read-only request to the published governed refund walkthrough returned
-  `HTTP 200`. The current task check reports
-  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance remains
-  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; the former exact three-route block, task
-  JSON, bounded privacy scan, and diff formatting passed. The later human-
-  selected portfolio showcase supersedes that route-only presentation while
-  preserving its historical evidence in the dated log.
-- **Portfolio showcase validation**: all 74 focused README, portfolio, social-
-  preview, and status tests pass. The supported Python 3.11 full suite passes
-  all 950 tests with 3 platform-limited skips in 149.128 seconds. The four
-  published showcase targets each return `HTTP 200`. The cumulative task check
-  reports `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance reports
-  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; three task JSON records, ASCII-safe link
-  markup, bounded privacy scans, and `git diff --check` pass.
-- **Scope validation**: all 10 observed work paths pass the current admitted
-  scope. The deterministic command still reports one failure for pre-existing
-  user-owned `.codex/config.toml`, because `.codex` is explicitly excluded and
-  the checker does not distinguish a pre-existing excluded untracked path. The
-  file was present before this task and remains untouched; it was neither
-  hidden nor converted into an exception.
-- **User-reported validation**: none. No human reader outcome is inferred from
-  the product owner's direction choice or from static tests.
-- **Pending validation**: a genuinely unbriefed reader has not yet tested the
-  two-to-three-minute comprehension target. This human outcome remains unknown.
-- **Advisory review**: native current-Agent self-review
-  `srv-c9b13cc2e817573caae8a65c26fd0f8a` completed as a distinct advisory pass.
-  It found the selected requirement, ownership boundaries, architecture, and
-  implementation consistent. It preserves the pre-existing `.codex` scope
-  limitation and unbriefed-reader comprehension as explicit unknowns. This is
-  separate-pass self-review, not independent assurance or human acceptance.
-- **Prior route-only review**: the fully specified low-risk route
-  correction did not start a new alignment journey. A distinct bounded
-  current-Agent pass found no requirement, architecture, scope, security, or
-  implementation drift: one of three existing routes changed destination, the
-  published page and product content did not change, and the unbriefed-reader
-  outcome remains unknown. This is not native self-review or independent
-  assurance.
-- **Portfolio showcase advisory review**: native current-Agent self-review
-  `srv-73ab1a55e4771f46e517214e19675e44` completed through resolved alignment
-  journey `mcpj-b2fe50102d144b87875255e1d674ab0d`. It found the selected
-  first-screen-only requirement, unchanged architecture, cumulative scope,
-  implementation, and security boundaries consistent. Rendered GitHub
-  viewport behavior and unbriefed-reader comprehension remain unknown. This is
-  separate-pass self-review, not independent assurance or human acceptance.
-- **Incomplete**: no implementation or documentation item is currently known
-  incomplete inside the current admitted 10-path scope. The pending human
-  comprehension outcome and the known pre-existing scope-check limitation are
-  validation state, not hidden product content.
-- **Completion-record availability**: the current callable governance
-  inventory does not expose `agentgov_task_completion_record`, so no native
-  completion record was fabricated. This does not grant human acceptance.
-- **Next product review**: give the new README to one genuinely unbriefed
-  reader and ask the six recorded product and usage questions without coaching.
-  Use that evidence to decide whether navigation copy needs another bounded
-  change. This review input grants no implementation, Git, publication,
-  release, deployment, or follow-on authority.
+- **Active slice**: human-admitted task `p1-evidence-freshness-v1` implements
+  the product owner's selected Evidence Freshness v1 direction as an optional,
+  standalone development-source contract and read-only CLI check.
+- **Delivered capability**: `agentgov.evidence-freshness` 1.0 records explicit
+  applicability, repository-relative evidence and policy references, review
+  dates, expiry, policy validity, declared invalidating events, and observed
+  events. `agentgov check evidence-freshness RECORD --as-of YYYY-MM-DD`
+  evaluates one record reproducibly and writes nothing.
+- **Finding semantics**: current evidence returns `PASS`; a due review returns
+  non-blocking `WARN`; explicit expiry, superseded policy, an exact
+  invalidation-event match, future review facts, or malformed contract fields
+  return `FAIL`; unknown policy validity returns `ADVISORY`; and only an
+  explicit declaration returns `NOT_APPLICABLE`. A review date never becomes
+  expiry solely through elapsed time.
+- **Architecture boundary**: the new longer-lived validity contract remains
+  separate from Fresh Validation Evidence v1, which binds a validation command
+  to an unchanged task and Git snapshot. The checker does not discover change
+  events, inspect raw evidence, infer policy quality, refresh evidence, scan a
+  repository automatically, or join release, upgrade, report, or CI flows.
+- **Codex-run validation**: all 69 focused Evidence Freshness, CLI, and user-
+  documentation tests pass. The supported Python 3.11 full suite passes all
+  969 tests with 3 platform-limited skips in 148.772 seconds. The admitted task
+  check reports `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance
+  reports `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; seven task, schema, and fixture
+  JSON documents parse; bounded secret, host-path, and ASCII scans pass; and
+  `git diff --check` passes.
+- **Scope validation**: all 17 task-owned changed or new paths pass the admitted
+  scope. The report retains one failure for pre-existing user-owned
+  `.codex/config.toml`, because `.codex` is explicitly excluded and the current
+  checker does not distinguish a pre-existing excluded untracked path. The
+  file remains untouched, unstaged, and outside this task.
+- **User-reported validation**: the product owner reports that the preceding
+  genuinely unbriefed-reader README validation is complete. No answers, observations,
+  viewport evidence, or measured comprehension result were supplied in this
+  session, so no reader-benefit claim is inferred.
+- **Pending validation**: no automated validation remains pending inside the
+  implemented checker. No real consumer evidence record has yet exercised the
+  event vocabulary or optional integration boundary.
+- **Incomplete advisory closeout**: native current-Agent self-review started
+  for resolved alignment journey `mcpj-dd48fac37cc44dc9a581a660ed4dbb48`
+  and reached `materialization_required`, but the host-side response extraction
+  did not retain its random request binding. The Adapter correctly rejected a
+  duplicate start, and no binding or review result was guessed. Recovery
+  alignment journey `mcpj-d3c1e449d7a140b38a798c0671a40b28` offered a fresh
+  review-only path or stop; the product owner chose stop for today's closeout.
+  Therefore no native advisory-review completion or independent assurance is
+  claimed.
+- **Incomplete implementation**: none known inside the admitted Evidence
+  Freshness v1 scope. The incomplete native advisory review and future real-use
+  review are disclosed process and validation state, not hidden product work.
+- **Completion-record availability**: the current callable governance inventory
+  does not expose `agentgov_task_completion_record`, so no native completion
+  record was fabricated.
+- **Authority boundary**: the feature is development source only and is not
+  part of stable `0.2.1`. It does not approve evidence or authorize Git,
+  publication, release, deployment, or any other consequential action.
+- **Next product review**: apply the standalone record to one real,
+  repository-referenced evidence item and review whether the declared event
+  vocabulary is understandable before considering automatic repository,
+  release, upgrade, report, or CI integration. This review input grants no
+  implementation or downstream authority.
 - **Previous closeout exclusions**: user-owned `.codex`, the social-cover asset, and the
   external AIRBNB consumer task record remain outside the commit, unstaged,
   and unchanged. No pull request, force-push, release, deployment, cleanup, or

@@ -1,0 +1,67 @@
+{
+  "acceptance_signals": [
+    "A strict versioned contract records applicability, repository-relative evidence references, review timing, explicit expiry, policy validity, declared invalidating change events, and observed change events without raw evidence content.",
+    "The deterministic check reports PASS for currently valid evidence, WARN when a declared review date is due, FAIL only for explicit expiry, superseded policy, a matched invalidating event, or malformed contract data, ADVISORY when policy validity remains unknown, and NOT_APPLICABLE only when explicitly declared.",
+    "Elapsed time beyond a review date never becomes an expiry failure by itself, and the CLI accepts an explicit as-of date for reproducible checks.",
+    "Fixture-based tests cover passing, warning, failing, advisory, and not-applicable behavior plus privacy and repository-relative path boundaries.",
+    "README, strategic plan, current status, the durable specification, and dated development evidence consistently explain the new capability and its authority limits.",
+    "The focused tests, complete repository suite, and repository governance check pass."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-fa65cd9ad68c481db6b7636016d40f10 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Add a lightweight, repository-native Evidence Freshness v1 contract and deterministic CLI check that distinguishes review-due evidence from explicitly expired or invalidated evidence without treating elapsed time alone as proof of invalidity."
+  },
+  "risk": {
+    "items": [
+      "Conflating review cadence with expiry could incorrectly block valid evidence.",
+      "Accepting free-form or absolute evidence references could leak host-local information or weaken repository binding.",
+      "A permissive invalidation-event match could miss deterministic evidence invalidation or create false failures.",
+      "Adding a new CLI status must preserve existing exit-code and reporting semantics.",
+      "Reviewed assumption: Evidence Freshness v1 is an optional standalone record so existing adopters remain compatible.",
+      "Reviewed assumption: Review-due status is non-blocking WARN; explicit expiry, superseded policy, invalidation-event matches, and malformed required fields are deterministic FAIL states.",
+      "Reviewed assumption: Unknown policy validity requires accountable review and is ADVISORY rather than a deterministic failure.",
+      "Reviewed assumption: The existing fresh validation evidence contract remains unchanged and separate because it binds tests to Git snapshots rather than governing longer-lived evidence validity."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "release",
+      "src/agentgov/development_evidence.py",
+      "src/agentgov/upgrade_writer.py"
+    ],
+    "include_paths": [
+      "README.md",
+      "DEVELOPMENT_PLAN.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-21.md",
+      "docs/specs/evidence-freshness-v1.md",
+      "governance/fixtures/evidence-freshness",
+      "governance/tasks/p1-evidence-freshness-v1.json",
+      "schemas/evidence-freshness.schema.json",
+      "src/agentgov/cli.py",
+      "src/agentgov/evidence_freshness.py",
+      "tests/test_cli.py",
+      "tests/test_evidence_freshness.py",
+      "tests/test_user_documentation.py"
+    ]
+  },
+  "task_id": "p1-evidence-freshness-v1",
+  "title": "Implement Evidence Freshness v1",
+  "validation_commands": [
+    "python -m unittest tests.test_evidence_freshness tests.test_cli tests.test_user_documentation -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check repository ."
+  ]
+}

@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/evidence-freshness-v1.0.json",
+  "title": "AgentGov Evidence Freshness",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "schema_version",
+    "evidence_id",
+    "applicability",
+    "evidence_refs",
+    "review",
+    "validity",
+    "invalidation"
+  ],
+  "properties": {
+    "contract": {"const": "agentgov.evidence-freshness"},
+    "schema_version": {"const": "1.0"},
+    "evidence_id": {
+      "type": "string",
+      "maxLength": 120,
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "applicability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reason"],
+      "properties": {
+        "status": {"enum": ["applicable", "not_applicable"]},
+        "reason": {"type": ["string", "null"], "minLength": 1, "maxLength": 400}
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "maxItems": 50,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/repositoryPath"}
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reviewed_at", "review_due_on"],
+      "properties": {
+        "reviewed_at": {"$ref": "#/$defs/dateOrNull"},
+        "review_due_on": {"$ref": "#/$defs/dateOrNull"}
+      }
+    },
+    "validity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expires_on", "policy_status", "policy_ref"],
+      "properties": {
+        "expires_on": {"$ref": "#/$defs/dateOrNull"},
+        "policy_status": {
+          "enum": ["current", "superseded", "unknown", "not_applicable"]
+        },
+        "policy_ref": {
+          "oneOf": [
+            {"$ref": "#/$defs/repositoryPath"},
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+    "invalidation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["declared_events", "observed_events"],
+      "properties": {
+        "declared_events": {"$ref": "#/$defs/events"},
+        "observed_events": {"$ref": "#/$defs/events"}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "applicability": {
+            "properties": {"status": {"const": "applicable"}},
+            "required": ["status"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "applicability": {"properties": {"reason": {"type": "null"}}},
+          "evidence_refs": {"minItems": 1},
+          "review": {"properties": {"reviewed_at": {"type": "string"}}},
+          "validity": {
+            "properties": {
+              "policy_status": {"enum": ["current", "superseded", "unknown"]},
+              "policy_ref": {"$ref": "#/$defs/repositoryPath"}
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "applicability": {"properties": {"reason": {"type": "string", "minLength": 1}}},
+          "evidence_refs": {"maxItems": 0},
+          "review": {
+            "properties": {
+              "reviewed_at": {"type": "null"},
+              "review_due_on": {"type": "null"}
+            }
+          },
+          "validity": {
+            "properties": {
+              "expires_on": {"type": "null"},
+              "policy_status": {"const": "not_applicable"},
+              "policy_ref": {"type": "null"}
+            }
+          },
+          "invalidation": {
+            "properties": {
+              "declared_events": {"maxItems": 0},
+              "observed_events": {"maxItems": 0}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "dateOrNull": {
+      "type": ["string", "null"],
+      "pattern": "^\\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\\d|3[01])$"
+    },
+    "repositoryPath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240,
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$))(?!\\./).+$"
+    },
+    "events": {
+      "type": "array",
+      "maxItems": 50,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "maxLength": 120,
+        "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$"
+      }
+    }
+  }
+}

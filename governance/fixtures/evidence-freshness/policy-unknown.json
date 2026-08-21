@@ -1,0 +1,27 @@
+{
+  "contract": "agentgov.evidence-freshness",
+  "schema_version": "1.0",
+  "evidence_id": "policy-unknown-evaluation-baseline",
+  "applicability": {
+    "status": "applicable",
+    "reason": null
+  },
+  "evidence_refs": [
+    "evaluation/fixtures/baseline-ready/evaluation-manifest.json"
+  ],
+  "review": {
+    "reviewed_at": "2026-07-01",
+    "review_due_on": null
+  },
+  "validity": {
+    "expires_on": null,
+    "policy_status": "unknown",
+    "policy_ref": "evaluation/readiness-policy.md"
+  },
+  "invalidation": {
+    "declared_events": [
+      "evaluation-policy-changed"
+    ],
+    "observed_events": []
+  }
+}

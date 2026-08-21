@@ -1482,5 +1482,38 @@ class UserDocumentationTests(unittest.TestCase):
                 self.assertIn("@media", (docs / template).read_text(encoding="utf-8"))
 
 
+class EvidenceFreshnessDocumentationTests(unittest.TestCase):
+    def test_evidence_freshness_routes_detail_to_the_durable_specification(self) -> None:
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        plan = " ".join((ROOT / "DEVELOPMENT_PLAN.md").read_text(encoding="utf-8").split())
+        specification = " ".join(
+            (ROOT / "docs/specs/evidence-freshness-v1.md")
+            .read_text(encoding="utf-8")
+            .split()
+        )
+
+        self.assertIn(
+            "](docs/specs/evidence-freshness-v1.md)",
+            readme,
+        )
+        for phrase in (
+            "agentgov.evidence-freshness",
+            "agentgov check evidence-freshness",
+            "Elapsed time beyond a review date never becomes expiry by inference",
+            "separately admitted contract",
+        ):
+            self.assertIn(phrase, plan)
+        for phrase in (
+            "Fresh Validation Evidence binds one validation run",
+            "elapsed time alone does not invalidate evidence",
+            "exactly matches a declared invalidating event",
+            "NOT_APPLICABLE",
+            "--as-of",
+            "writes nothing",
+            "authorize Git, publication, release, deployment",
+        ):
+            self.assertIn(phrase, specification)
+
+
 if __name__ == "__main__":
     unittest.main()

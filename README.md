@@ -106,6 +106,7 @@ keeps only the overview diagram.
 | Architecture | `AGENTS.md`, ADRs, invariants, and selected context | Drift can be surfaced; architecture is not approved by keyword matching. |
 | AI capabilities | Inventory, manifests, callers, contracts, owners, risk, and provenance | References and contracts are deterministic; capability sufficiency is advisory. |
 | Evaluation readiness | Cases, evidence, review metadata, and explicit readiness | Incomplete evidence remains visible instead of becoming a misleading pass. |
+| Evidence validity | Explicit review dates, expiry, policy status, and invalidating events | Review cadence can warn; only declared expiry or invalidation facts fail. |
 | Review artifacts | Canonical manifest snapshots and source hashes | Matching hashes detect change, not correctness or safety. |
 | Consequential actions | Explicit human authority boundaries | No check authorizes commit, merge, publication, release, or deployment. |
 
@@ -339,6 +340,9 @@ owner rather than being duplicated here.
 - [Release review](docs/release-review.md) and
   [consumer upgrade review](docs/consumer-upgrade-review.md): evidence bundles
   that remain separate from human decisions.
+- [Evidence Freshness v1](docs/specs/evidence-freshness-v1.md): explicit review,
+  expiry, policy-validity, invalidation, and not-applicable semantics without
+  inferring expiry from elapsed time.
 
 ## Development
 

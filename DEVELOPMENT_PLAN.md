@@ -408,14 +408,26 @@ pull request, merge, release, or deploy.
 
 ### Evidence freshness
 
-Define before implementing:
+Implemented in development source as the optional standalone
+`agentgov.evidence-freshness` 1.0 contract and
+`agentgov check evidence-freshness` command. The first bounded slice records
+review dates, explicit expiry, policy validity, declared invalidating events,
+observed events, and explicit applicability.
 
-- review dates;
-- explicit expiry or policy-based validity periods;
-- change events that invalidate evidence;
-- WARN versus FAIL semantics.
+The deterministic semantics are:
 
-Do not infer expiry solely from elapsed time.
+- `WARN` when a declared review date is due;
+- `FAIL` for malformed records, future review facts, explicit expiry,
+  superseded policy, or an exact invalidation-event match;
+- `ADVISORY` when policy validity is unknown;
+- `NOT_APPLICABLE` only when the record explicitly declares it;
+- `PASS` when no declared invalidating condition is active.
+
+Elapsed time beyond a review date never becomes expiry by inference. The
+checker reads one record and does not discover change events, refresh evidence,
+or automatically join freshness into repository, release, upgrade, or report
+flows. Any such integration requires real use evidence and a separately
+admitted contract.
 
 ## P2 — Report Evolution
 

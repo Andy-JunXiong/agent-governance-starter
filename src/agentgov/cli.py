@@ -213,6 +213,10 @@ from agentgov.human_decision import (
     request_reference_terminal_selection,
 )
 from agentgov.evaluation import EvaluationStatus, check_evaluation_bundle
+from agentgov.evidence_freshness import (
+    EvidenceFreshnessStatus,
+    check_evidence_freshness,
+)
 from agentgov.repository import FindingStatus, check_repository
 from agentgov.references import (
     ReferencePolicyError,
@@ -3080,6 +3084,37 @@ def _check_evaluation(path: Path) -> int:
     return EXIT_FAIL if result.status is EvaluationStatus.FAIL else EXIT_PASS
 
 
+def _check_evidence_freshness(path: Path, *, as_of: str | None) -> int:
+    try:
+        result = check_evidence_freshness(path, as_of=as_of)
+    except FileNotFoundError:
+        print(f"ERROR evidence-freshness: file not found: {path}", file=sys.stderr)
+        return EXIT_ERROR
+    except json.JSONDecodeError as exc:
+        print(
+            "ERROR evidence-freshness: invalid JSON: "
+            f"line {exc.lineno}, column {exc.colno}: {exc.msg}",
+            file=sys.stderr,
+        )
+        return EXIT_ERROR
+    except ValueError as exc:
+        print(f"ERROR evidence-freshness: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    except (OSError, UnicodeError) as exc:
+        print(f"ERROR evidence-freshness: cannot read {path}: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+
+    identity = result.evidence_id or "invalid"
+    print(
+        f"{result.status.value} evidence-freshness:{identity}: "
+        f"{path} as of {result.as_of}"
+    )
+    print(f"  - reasons: {', '.join(result.reason_codes)}")
+    for message in result.messages:
+        print(f"  - {message}")
+    return EXIT_FAIL if result.status is EvidenceFreshnessStatus.FAIL else EXIT_PASS
+
+
 def _check_agent_skills(path: Path) -> int:
     try:
         report = check_agent_skills(path)
@@ -5003,6 +5038,26 @@ def build_parser() -> argparse.ArgumentParser:
         help="Directory containing evaluation-manifest.json and referenced cases.",
     )
     evaluation_parser.set_defaults(handler=lambda args: _check_evaluation(args.bundle))
+
+    evidence_freshness_parser = check_targets.add_parser(
+        "evidence-freshness",
+        help="Check explicit review, expiry, policy, and invalidation evidence.",
+    )
+    evidence_freshness_parser.add_argument(
+        "record",
+        type=Path,
+        help="Path to an AgentGov Evidence Freshness v1 JSON record.",
+    )
+    evidence_freshness_parser.add_argument(
+        "--as-of",
+        help="Effective date in YYYY-MM-DD form (default: current UTC date).",
+    )
+    evidence_freshness_parser.set_defaults(
+        handler=lambda args: _check_evidence_freshness(
+            args.record,
+            as_of=args.as_of,
+        )
+    )
 
     agent_skills_parser = check_targets.add_parser(
         "agent-skills",

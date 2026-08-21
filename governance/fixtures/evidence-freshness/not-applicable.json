@@ -1,0 +1,23 @@
+{
+  "contract": "agentgov.evidence-freshness",
+  "schema_version": "1.0",
+  "evidence_id": "runtime-evidence-not-applicable",
+  "applicability": {
+    "status": "not_applicable",
+    "reason": "This repository does not produce the governed runtime evidence type."
+  },
+  "evidence_refs": [],
+  "review": {
+    "reviewed_at": null,
+    "review_due_on": null
+  },
+  "validity": {
+    "expires_on": null,
+    "policy_status": "not_applicable",
+    "policy_ref": null
+  },
+  "invalidation": {
+    "declared_events": [],
+    "observed_events": []
+  }
+}
