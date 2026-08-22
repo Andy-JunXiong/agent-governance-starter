@@ -1,0 +1,79 @@
+{
+  "acceptance_signals": [
+    "agentgov review release accepts --freshness-record only together with an explicit --freshness-as-of date; the record must be a regular file inside the selected source repository and is never modified.",
+    "When supplied, the existing Evidence Freshness checker result is written to a strict portable evidence-freshness sidecar and rendered in a clearly labeled non-blocking REVIEW.md section.",
+    "PASS, WARN, FAIL, ADVISORY, and NOT_APPLICABLE freshness results leave the existing release-review gates, review_state, human-decision state, and CLI exit behavior unchanged.",
+    "The pilot sidecar records the repository-relative record reference, evidence identity, explicit as-of date, status, reason codes, messages, and all-false/non-authorizing boundaries without raw source content or absolute paths.",
+    "Missing, outside-source, symbolic-link, malformed-JSON, or invalid-date freshness inputs fail atomically as operational errors and create no review bundle; no automatic event discovery or observed-event mutation is introduced.",
+    "Focused tests cover all freshness statuses, unchanged blocking semantics, paired CLI inputs, portable bundle output, strict schema, Markdown rendering, and current behavior without optional inputs.",
+    "Release-review and Evidence Freshness documentation, strategic development state, current status, and session evidence describe the pilot honestly and distinguish it from the published 0.3.0rc1 release.",
+    "The supported Python 3.11 suite, task/repository governance, scope reconciliation, privacy scan, and diff validation pass or record pre-existing unrelated findings."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-7441a2fdb36542b9ada70c4a1be58d9b and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Extend agentgov review release with optional Evidence Freshness inputs so one source-repository record is checked at an explicit as-of date and written into the create-new-only release review bundle as a separate advisory sidecar and Markdown section, while leaving release-review gates, review_state, exit behavior, human decision, and authority boundaries unchanged."
+  },
+  "risk": {
+    "items": [
+      "Mixing advisory freshness with deterministic release gates could accidentally block or approve a release.",
+      "Recording an absolute freshness path would make the bundle non-portable and leak host-local information.",
+      "Copying raw source content into the sidecar would violate the reference-only privacy boundary.",
+      "Changing the published release-review 1.0 contract would create unnecessary compatibility risk for a bounded pilot.",
+      "Pre-existing prior-task and user-owned working-copy changes must remain outside this task.",
+      "Reviewed assumption: A separate sidecar plus REVIEW.md section is the smallest pilot and avoids changing the existing strict release-review 1.0 JSON contract.",
+      "Reviewed assumption: The current repository-owned 0.3.0rc1 compatibility-baseline freshness record is the first real source record used by the pilot.",
+      "Reviewed assumption: Freshness semantic FAIL is non-blocking in this pilot; inability to read or evaluate the requested input is an operational error that prevents partial bundle creation.",
+      "Reviewed assumption: Observed events remain producer-supplied facts already present in the record.",
+      "Reviewed assumption: The user-selected direction and resolved alignment journey authorize proposing this task but do not grant Git, release, publication, or deployment authority.",
+      "Reviewed unknown: Whether release reviewers find the added sidecar useful in routine work remains unknown until an actual bundle is reviewed.",
+      "Reviewed unknown: Whether Evidence Freshness should later influence release gates remains explicitly undecided.",
+      "Reviewed unknown: Whether the pilot should later extend to consumer CI or upgrade review remains undecided."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "release",
+      "sites",
+      "README.md",
+      "pyproject.toml",
+      "schemas/release-review.schema.json",
+      "schemas/evidence-freshness.schema.json",
+      "governance/evidence/release-candidate-0-3-0rc1.json",
+      "src/agentgov/evidence_freshness.py",
+      "docs/releases"
+    ],
+    "include_paths": [
+      "src/agentgov/release_review.py",
+      "src/agentgov/cli.py",
+      "schemas/release-review-evidence-freshness-pilot.schema.json",
+      "tests/test_release_review.py",
+      "tests/test_user_documentation.py",
+      "docs/release-review.md",
+      "docs/specs/evidence-freshness-v1.md",
+      "DEVELOPMENT_PLAN.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-22.md",
+      "governance/tasks/p1-evidence-freshness-release-review-pilot-v1.json"
+    ]
+  },
+  "task_id": "p1-evidence-freshness-release-review-pilot-v1",
+  "title": "Pilot non-blocking Evidence Freshness in release review",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_release_review tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check scope governance/tasks/p1-evidence-freshness-release-review-pilot-v1.json --repository ."
+  ]
+}

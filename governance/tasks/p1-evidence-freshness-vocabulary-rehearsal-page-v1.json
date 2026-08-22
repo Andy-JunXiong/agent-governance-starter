@@ -1,0 +1,68 @@
+{
+  "acceptance_signals": [
+    "One responsive Chinese HTML page presents a clear start, reading, answer, and result-copy journey without requiring repository navigation.",
+    "The page records eligibility attestation, start and finish time, elapsed seconds, six raw answers, participant questions, first uncertainty, extra sources, assistance, and confidence.",
+    "The shipped page contains no answer key or automatic pass/fail classification and clearly tells the participant not to ask the facilitator for content help.",
+    "All state remains in page memory; the page performs no network request, analytics, localStorage, cookie, repository write, upload, publication, or deployment.",
+    "Copy-result behavior works with the Clipboard API when available and a visible manual-copy fallback when it is unavailable.",
+    "Focused page tests, the complete supported Python 3.11 suite, task and repository governance, scope reconciliation, privacy scanning, and git diff validation pass."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-c1d2bf7439714aba9bd035fc13bc06b3 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Add one self-contained Chinese static page that lets an unbriefed participant read the bounded Evidence Freshness material, start a timer, answer the six vocabulary questions, disclose uncertainty and assistance, and copy a privacy-bounded raw result without showing an answer key, scoring automatically, persisting data, contacting a network, or publishing the page."
+  },
+  "risk": {
+    "items": [
+      "Including the answer key or automatic scoring would invalidate the uncoached comprehension rehearsal.",
+      "Persisting participant responses or using network services would exceed the privacy and local-only boundary.",
+      "Clipboard access may be unavailable when the page is opened directly from a local file, so a manual fallback is required.",
+      "A browser timer is observational convenience rather than trusted or tamper-proof measurement.",
+      "The existing uncommitted completed-task changes will remain separate prior-task state and must not be absorbed into this task's ownership.",
+      "Reviewed assumption: A self-contained static page in the existing docs site is the smallest useful interface.",
+      "Reviewed assumption: The participant has a modern browser with JavaScript enabled.",
+      "Reviewed assumption: The page remains local until Git and publication are separately authorized.",
+      "Reviewed assumption: Building the page is an enabling slice; the real uncoached participant result remains a later human-run validation step.",
+      "Reviewed unknown: Whether a genuinely unbriefed participant completes the page without assistance remains unknown until the page is used.",
+      "Reviewed unknown: Whether the page should later become part of public navigation remains undecided and outside this task."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      ".openai",
+      "release",
+      "src",
+      "schemas",
+      "docs/index.html",
+      "docs/portfolio.html",
+      "docs/specs",
+      "governance/evidence"
+    ],
+    "include_paths": [
+      "docs/evidence-freshness-rehearsal.html",
+      "tests/test_evidence_freshness_rehearsal_page.py",
+      "governance/tasks/p1-evidence-freshness-vocabulary-rehearsal-page-v1.json",
+      "STATUS.md",
+      "docs/development-log/2026-08-22.md"
+    ]
+  },
+  "task_id": "p1-evidence-freshness-vocabulary-rehearsal-page-v1",
+  "title": "Build a simple Evidence Freshness rehearsal page",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_evidence_freshness_rehearsal_page -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check scope governance/tasks/p1-evidence-freshness-vocabulary-rehearsal-page-v1.json --repository ."
+  ]
+}

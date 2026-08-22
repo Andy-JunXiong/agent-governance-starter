@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/release-review-evidence-freshness-pilot-v1.0.json",
+  "title": "AgentGov Release Review Evidence Freshness Pilot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "schema_version",
+    "mode",
+    "record_ref",
+    "result",
+    "effect",
+    "authority_boundary"
+  ],
+  "properties": {
+    "contract": {"const": "agentgov.release-review.evidence-freshness-pilot"},
+    "schema_version": {"const": "1.0"},
+    "mode": {"const": "advisory_non_blocking"},
+    "record_ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240,
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$"
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_id", "as_of", "status", "reason_codes", "messages"],
+      "properties": {
+        "evidence_id": {
+          "anyOf": [
+            {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+            {"type": "null"}
+          ]
+        },
+        "as_of": {"type": "string", "format": "date"},
+        "status": {
+          "enum": ["PASS", "WARN", "FAIL", "ADVISORY", "NOT_APPLICABLE"]
+        },
+        "reason_codes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "messages": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "effect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["release_review_state_changed", "release_review_exit_changed"],
+      "properties": {
+        "release_review_state_changed": {"const": false},
+        "release_review_exit_changed": {"const": false}
+      }
+    },
+    "authority_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_modified",
+        "automatic_event_discovery",
+        "observed_events_modified",
+        "release_authorized"
+      ],
+      "properties": {
+        "record_modified": {"const": false},
+        "automatic_event_discovery": {"const": false},
+        "observed_events_modified": {"const": false},
+        "release_authorized": {"const": false}
+      }
+    }
+  }
+}

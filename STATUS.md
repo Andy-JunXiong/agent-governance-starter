@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-08-21
+Last verified: 2026-08-22
 
 ## Current-status contract
 
@@ -42,65 +42,237 @@ scheduling authority.
 
 ### Current closeout snapshot
 
-- **Active slice**: human-admitted task `p1-evidence-freshness-v1` implements
-  the product owner's selected Evidence Freshness v1 direction as an optional,
-  standalone development-source contract and read-only CLI check.
-- **Delivered capability**: `agentgov.evidence-freshness` 1.0 records explicit
-  applicability, repository-relative evidence and policy references, review
-  dates, expiry, policy validity, declared invalidating events, and observed
-  events. `agentgov check evidence-freshness RECORD --as-of YYYY-MM-DD`
-  evaluates one record reproducibly and writes nothing.
-- **Finding semantics**: current evidence returns `PASS`; a due review returns
-  non-blocking `WARN`; explicit expiry, superseded policy, an exact
-  invalidation-event match, future review facts, or malformed contract fields
-  return `FAIL`; unknown policy validity returns `ADVISORY`; and only an
-  explicit declaration returns `NOT_APPLICABLE`. A review date never becomes
-  expiry solely through elapsed time.
-- **Architecture boundary**: the new longer-lived validity contract remains
-  separate from Fresh Validation Evidence v1, which binds a validation command
-  to an unchanged task and Git snapshot. The checker does not discover change
-  events, inspect raw evidence, infer policy quality, refresh evidence, scan a
-  repository automatically, or join release, upgrade, report, or CI flows.
-- **Codex-run validation**: all 69 focused Evidence Freshness, CLI, and user-
-  documentation tests pass. The supported Python 3.11 full suite passes all
-  969 tests with 3 platform-limited skips in 148.772 seconds. The admitted task
-  check reports `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance
-  reports `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; seven task, schema, and fixture
-  JSON documents parse; bounded secret, host-path, and ASCII scans pass; and
-  `git diff --check` passes.
-- **Scope validation**: all 17 task-owned changed or new paths pass the admitted
-  scope. The report retains one failure for pre-existing user-owned
-  `.codex/config.toml`, because `.codex` is explicitly excluded and the current
-  checker does not distinguish a pre-existing excluded untracked path. The
-  file remains untouched, unstaged, and outside this task.
-- **User-reported validation**: the product owner reports that the preceding
-  genuinely unbriefed-reader README validation is complete. No answers, observations,
-  viewport evidence, or measured comprehension result were supplied in this
-  session, so no reader-benefit claim is inferred.
-- **Pending validation**: no automated validation remains pending inside the
-  implemented checker. No real consumer evidence record has yet exercised the
-  event vocabulary or optional integration boundary.
-- **Incomplete advisory closeout**: native current-Agent self-review started
-  for resolved alignment journey `mcpj-dd48fac37cc44dc9a581a660ed4dbb48`
-  and reached `materialization_required`, but the host-side response extraction
-  did not retain its random request binding. The Adapter correctly rejected a
-  duplicate start, and no binding or review result was guessed. Recovery
-  alignment journey `mcpj-d3c1e449d7a140b38a798c0671a40b28` offered a fresh
-  review-only path or stop; the product owner chose stop for today's closeout.
-  Therefore no native advisory-review completion or independent assurance is
-  claimed.
-- **Incomplete implementation**: none known inside the admitted Evidence
-  Freshness v1 scope. The incomplete native advisory review and future real-use
-  review are disclosed process and validation state, not hidden product work.
+- **Active slice**: human-admitted task
+  `p1-release-review-consumer-governance-summary-v1` implements the product
+  owner's selected Markdown-only correction after the first real release review
+  exposed an ambiguous consumer `PASS` gate.
+- **Delivered capability**: generated `REVIEW.md` now shows the already-
+  collected consumer Adoption state and aggregate `PASS`, `WARN`, `FAIL`, and
+  `ADVISORY` counts directly below the collection gates. It explicitly states
+  that a `PASS` `consumer-status` gate means the status command completed and
+  rendered successfully, not that consumer governance is complete. Unsupported
+  or malformed status tables fail before a create-new-only bundle is committed.
+  Consumer findings remain non-blocking, and `review.json` 1.0, gate identities
+  and statuses, review state, exit behavior, human decision, and authority
+  boundary remain unchanged.
+- **Codex-run validation**: all 59 focused release-review and user-
+  documentation tests pass. A second real review used the digest-verified
+  published `0.3.0rc1` assets against the Airbnb consumer repository. Its seven
+  collection gates and non-blocking freshness result passed; the main page
+  displayed `Adoption: incomplete` and `PASS=4 WARN=7 FAIL=0 ADVISORY=1`.
+  The real run's supported Python 3.11 source suite passed all 994 tests with 3
+  platform-limited skips in 166.073 seconds. The corrected and preceding
+  `review.json` files have the identical SHA-256 digest. Task governance reports
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance reports
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; task JSON parsing, bounded privacy, and
+  `git diff --check` pass.
+- **User-reported validation**: the product owner selected the recommended
+  Markdown-only direction, admitted its exact native task proposal, and then
+  separately instructed the Agent to execute it. The owner has not yet reviewed
+  the corrected real output; no post-change usability claim is inferred. At
+  session close, the owner ended work for the day and explicitly authorized
+  updating the related records, committing today's bounded Evidence Freshness
+  and release-review work, and pushing it ordinarily to `origin/main`.
+- **Scope validation**: all 8 current-task-owned changed paths pass the admitted
+  scope. The report retains 30 failures for pre-existing prior-task or user-
+  owned paths; no exception or ownership transfer is inferred.
+- **Pending validation**: no automated validation remains pending inside this
+  bounded task. One human review of the corrected `REVIEW.md` is still needed to
+  confirm that the new summary removes the observed ambiguity without adding
+  clutter.
+- **Incomplete implementation**: none known inside the admitted task. The human
+  review is future product validation, not hidden implementation.
+- **Advisory review**: native current-Agent self-review
+  `srv-a8480daf7e60bc2800fdb874e42aafe1` completed as a distinct separate pass.
+  It found the requirement, Markdown-only architecture, strict parser,
+  task-owned scope, aggregate-data boundary, and unchanged machine and authority
+  contracts consistent. It retains cross-consumer usefulness and future
+  Markdown-format compatibility as explicit unknowns.
 - **Completion-record availability**: the current callable governance inventory
   does not expose `agentgov_task_completion_record`, so no native completion
-  record was fabricated.
-- **Authority boundary**: the feature is development source only and is not
-  part of stable `0.2.1`. It does not approve evidence or authorize Git,
-  publication, release, deployment, or any other consequential action.
-- **Next product review**: apply the standalone record to one real,
-  repository-referenced evidence item and review whether the declared event
-  vocabulary is understandable before considering automatic repository,
+  record is fabricated.
+- **Authority boundary**: the real review modified neither source nor consumer
+  repository and ran no consumer project workflow. No Git operation, tag, push,
+  publication, release, deployment, upgrade, machine-contract change, warning
+  gate, or broader external action was performed by the feature itself. The
+  product owner separately authorized one bounded parent-repository commit and
+  ordinary non-force push to `origin/main`; this does not authorize publication,
+  release, deployment, upgrade, or any other external action.
+- **Next product review**: in the next session, let the product owner inspect the corrected real
+  `REVIEW.md` and decide whether the distinction is now clear and sufficiently
+  compact. A machine-contract version or broader consumer-status redesign
+  remains not yet decided and would require a separately admitted task.
+- **Previous Evidence Freshness pilot closeout**: human-admitted task
+  `p1-evidence-freshness-release-review-pilot-v1` adds the product owner's
+  selected read-only, non-blocking Evidence Freshness pilot to one existing
+  release-review flow.
+- **Delivered capability**: `agentgov review release` can now receive the
+  optional paired inputs `--freshness-record` and `--freshness-as-of`. It
+  evaluates the repository-owned record with the existing checker and writes a
+  strict `evidence-freshness.json` sidecar plus a clearly labeled Markdown
+  section. All five freshness statuses remain advisory: the existing strict
+  `review.json` 1.0 contract, gate results, review state, human decision, and
+  process exit behavior are unchanged. The pilot copies no raw record, accepts
+  only a regular source-repository file, discovers or changes no observed
+  event, and grants no release authority.
+- **Codex-run validation**: all 65 focused release-review, user-documentation,
+  and rehearsal-source-parity tests pass. The supported Python 3.11 full suite
+  passes all 991 tests with 3 platform-limited skips in 161.245 seconds. The
+  first full run exposed that pilot guidance had been added to the standalone
+  freshness source used by the public rehearsal; the exact-parity test failed,
+  so the integration guidance was moved to its owning release-review document
+  and no test was weakened. Task governance reports
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance reports
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`.
+- **User-reported validation**: after the concept-map revision, a genuinely
+  unbriefed participant completed the six-question rehearsal in 310 seconds
+  with no outside material or observer assistance and confidence 5/5. All six
+  raw answers align with the source distinctions among exact event identities,
+  exact-name membership, producer-supplied observations, and review due dates.
+  The product owner reported that the participant had genuinely understood the
+  rules. This closes the earlier comprehension check for that participant only;
+  it is not a population-level comprehension rate or proof of operational
+  release-review value. The first real release-review run then used the exact
+  published `0.3.0rc1` assets against the Airbnb consumer repository. The human
+  reviewer reported yes to all three bounded product questions: the freshness
+  result was easy to find, its valid-but-non-authorizing meaning was clear, and
+  it helped the review. This establishes usefulness for that reviewer and run
+  only, not a general adoption or effectiveness claim.
+- **Scope validation**: all 11 current-task-owned changed paths pass the
+  admitted scope. The report retains 26 failures for pre-existing prior-task or
+  user-owned paths; no exception or ownership transfer is inferred.
+- **Pending validation**: no automated validation remains pending inside this
+  bounded task, and the first human usefulness review is complete. Usefulness
+  across other reviewers, repositories, and release conditions remains unknown.
+- **Incomplete implementation**: none known inside the admitted task. Real-
+  reviewer usefulness is future product validation, not hidden implementation.
+- **Advisory review**: native current-Agent self-review
+  `srv-a6daed8a4dc1add1f98e21a9b6eb746f` completed as a distinct separate
+  pass. It found the paired-input requirement, separate-sidecar architecture,
+  documentation ownership, atomic input failures, privacy boundary, and
+  unchanged authority behavior consistent. Its initial operational-usefulness
+  unknown is now resolved for one user-reported run only; any future main-
+  contract promotion and suitability as a release gate remain unknown.
+- **Completion-record availability**: the current callable governance
+  inventory does not expose `agentgov_task_completion_record`, so no native
+  completion record is fabricated.
+- **Authority boundary**: this task changes local development source,
+  documentation, tests, and task evidence only. It authorizes no Git operation,
+  publication, release, deployment, CI integration, automatic event discovery,
+  release gate, or broader external action.
+- **Next product review**: the real run showed all seven collection gates as
+  `PASS`, while the detailed Airbnb consumer status separately reported
+  incomplete adoption with `PASS=4 WARN=7 FAIL=0 ADVISORY=1`. Review whether
+  the main page should distinguish “the consumer check ran successfully” from
+  “consumer governance is complete” more visibly. This is product-review input
+  only; no presentation change, gate, or broader integration is yet admitted.
+- **Previous local-page closeout**: human-admitted task
+  `p1-evidence-freshness-vocabulary-rehearsal-page-v1` turns the bounded
+  external-consumer vocabulary review into one local Chinese browser page.
+- **Delivered capability**: a participant can confirm eligibility, start the
+  in-memory timer, read the real Evidence Freshness example, answer all six
+  raw questions, disclose uncertainty, extra sources and assistance, record
+  confidence, and copy one privacy-bounded result without navigating the
+  repository. The page includes no answer key, score, automatic pass/fail,
+  persistence, network request, repository write, upload, or publication.
+- **Codex-run validation**: all 5 focused static-page contract tests pass. The
+  supported Python 3.11 full suite passes all 976 tests with 3 platform-limited
+  skips in 147.596 seconds. Task governance reports
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance reports
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; task JSON parsing, bounded privacy and
+  external-resource scans, and `git diff --check` pass.
+- **User-reported validation**: the product owner selected a page because the
+  prose workflow was too complex to use comfortably, admitted the exact native
+  task proposal, and separately instructed the Agent to begin execution. No
+  browser-use result or participant comprehension result has been reported.
+- **Scope validation**: all five current-task-owned paths pass the admitted
+  scope. The report retains six failures for pre-existing prior-task or
+  user-owned paths, including the explicitly excluded `.codex`,
+  `docs/specs`, and `governance/evidence` paths. They remain outside this
+  task's ownership and were not absorbed into its change.
+- **Pending validation**: no automated validation remains pending inside this
+  bounded task. A genuinely unbriefed participant must still use the page
+  before vocabulary comprehension or live-browser usability can be evaluated.
+- **Incomplete implementation**: none known inside the admitted task. The
+  participant run is future product validation, not hidden implementation.
+- **Advisory review**: native current-Agent self-review
+  `srv-cd2ae52eb94b3f6747f7369f1c6a8351` completed as a distinct separate pass.
+  It found the requirement, static-page architecture, task-owned scope,
+  implementation, privacy, and authority boundaries consistent. It retained
+  the genuinely unbriefed participant result, live-browser behavior, and any
+  later public navigation as explicit unknowns; it grants no independent
+  assurance or downstream authority.
+- **Completion-record availability**: the current callable governance
+  inventory does not expose `agentgov_task_completion_record`, so no native
+  completion record is fabricated.
+- **Authority boundary**: the page remains a local source artifact. This task
+  authorizes no Git operation, navigation change, publication, hosting,
+  release, deployment, participant recruitment, or external write.
+- **Next product review**: after technical closeout, conduct one genuinely
+  unbriefed participant rehearsal using the page and review only the raw
+  answers and disclosed assistance before deciding whether any vocabulary or
+  interface change is needed. This grants no follow-on authority.
+- **Previous Evidence Freshness closeout**: human-admitted task
+  `p1-evidence-freshness-real-use-v1` applies the product owner's selected real-
+  use direction to one repository-owned release baseline.
+- **Delivered capability**: the new
+  `governance/evidence/release-candidate-0-3-0rc1.json` record references the
+  bundled `release/current.json` source compatibility baseline and its matching
+  release notes, with `docs/release-channels.md` as policy. It stores references
+  and event identities rather than raw evidence and does not represent the
+  bundled source manifest as the immutable public release manifest.
+- **Vocabulary review**: `bundled-compatibility-baseline-changed`,
+  `release-candidate-notes-corrected`, and `release-channel-policy-changed`
+  each identify one concrete referenced dependency and reconsideration reason.
+  The vocabulary is understandable in this repository context; external-
+  consumer understanding remains unknown.
+- **Finding semantics**: the real record reports `PASS` as of 2026-08-22.
+  Focused tests prove every exact declared/observed event match reports `FAIL`
+  while a similar undeclared event name remains `PASS`. No event is discovered,
+  inferred, or recorded automatically.
+- **Codex-run validation**: all 59 focused Evidence Freshness and user-
+  documentation tests pass. The final supported Python 3.11 full suite passes
+  all 971 tests with 3 platform-limited skips in 155.149 seconds. The explicit
+  real-record CLI check reports `PASS`; task governance reports
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance reports
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; new JSON parsing, bounded added-content
+  privacy and JSON ASCII scans, and `git diff --check` pass.
+- **User-reported validation**: the product owner selected this direction,
+  admitted its exact native task proposal, and separately instructed the Agent
+  to begin execution. These are human authority facts, not product-behavior or
+  external-consumer validation.
+- **Retained adoption-evidence boundary**: the product owner's preceding report
+  that genuinely unbriefed README-reader validation was complete remains user-
+  reported only. No reader answers, observations, or measured comprehension
+  outcome were supplied, so no reader-benefit claim is inferred.
+- **Scope validation**: all seven task-owned changed or new paths pass the
+  admitted scope. The report retains one failure for pre-existing user-owned
+  `.codex/config.toml`, because `.codex` is explicitly excluded and the checker
+  does not distinguish a pre-existing excluded untracked path. The file remains
+  untouched, unstaged, and outside this task.
+- **Pending validation**: no automated validation remains pending inside this
+  bounded task. An uncoached external consumer has not yet reviewed the event
+  vocabulary, so cross-repository understandability remains unknown.
+- **Incomplete implementation**: none known inside the admitted task. The
+  external-consumer review is disclosed future validation, not hidden
+  implementation work.
+- **Advisory review**: native current-Agent self-review
+  `srv-36cf93af5425a1414a12bcd1d6deb006` completed as a distinct separate pass.
+  It found the real evidence identity, standalone architecture, exact-match
+  behavior, retained scope, validation, privacy, and authority boundaries
+  consistent. It retained external uncoached vocabulary understanding as the
+  only product unknown and grants no independent assurance, human acceptance,
+  Git, publication, release, deployment, or follow-on authority.
+- **Completion-record availability**: the current callable governance inventory
+  does not expose `agentgov_task_completion_record`, so no native completion
+  record is fabricated.
+- **Authority boundary**: this task changes development-source evidence and
+  documentation only. It does not modify checker behavior, schema, release
+  metadata, release notes, source code, CI, or user-owned `.codex` state, and
+  it authorizes no Git operation, publication, release, deployment, automatic
+  integration, or external write.
+- **Next product review**: after validation, consider an uncoached external-
+  consumer vocabulary rehearsal before proposing any automatic repository,
   release, upgrade, report, or CI integration. This review input grants no
   implementation or downstream authority.
 - **Previous closeout exclusions**: user-owned `.codex`, the social-cover asset, and the

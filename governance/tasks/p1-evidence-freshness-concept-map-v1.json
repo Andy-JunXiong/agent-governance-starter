@@ -1,0 +1,76 @@
+{
+  "acceptance_signals": [
+    "A compact relationship map appears before the detailed reading material and shows the source-faithful sequence from referenced dependency to declared event identity to accountable-producer observed fact to exact-name membership evaluation.",
+    "Three clearly differentiated panels explain the roles of repository-relative paths, declared invalidating event identifiers, and observed event identities without presenting a question answer key, score, automatic pass/fail, or facilitator coaching.",
+    "The complete friendly record and specification reading layers and both exact-source audit disclosures remain available and source-parity tests continue to pass.",
+    "Tests protect the new concept-map structure, source-faithful terminology, correct no-automatic-discovery boundary, responsive behavior, and existing no-persistence/no-answer-submission boundaries.",
+    "The standalone site build and supported Python 3.11 suite pass, the existing public Sites URL is updated, and the final response contains the concept-map markers and noindex directive.",
+    "Task/repository governance, scope reconciliation, privacy scanning, diff validation, status closeout, and an evidence-bounded current-Agent advisory review are recorded."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-eedefa814ead40b08fb14a6bccb0bc2e and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Add a concise pre-question concept map to the existing Evidence Freshness rehearsal that distinguishes referenced paths, declared invalidating event identifiers, producer-supplied observed events, and exact-name matching; preserve the complete friendly source material and exact audit disclosures; update the existing public test URL."
+  },
+  "risk": {
+    "items": [
+      "A concept map may become an answer key rather than a conceptual explanation.",
+      "Overfitting the interface to one participant could hide different comprehension problems.",
+      "Removing or collapsing source material could regress the source-completeness requirement.",
+      "The public URL remains discoverable despite noindex metadata.",
+      "Pre-existing prior-task and user-owned working-copy changes must remain outside this task.",
+      "The Sites source commit/push is limited to the existing Sites-managed source destination and does not authorize a parent-repository commit or push.",
+      "Reviewed assumption: The user's approval refers to the concrete relationship-map and three-category presentation proposed immediately before this request.",
+      "Reviewed assumption: The existing public URL and public access mode should be reused without changing access policy.",
+      "Reviewed assumption: The complete friendly source and exact audit layers remain part of the measured page; the new map changes information hierarchy rather than deleting source facts.",
+      "Reviewed assumption: A CSS/HTML relationship map is sufficient and avoids unrelated image or application-architecture changes.",
+      "Reviewed assumption: The prior participant result is product evidence for this bounded revision but is not generalized as proof about all users.",
+      "Reviewed unknown: Whether a second genuinely unbriefed participant will distinguish paths from event identifiers after the revision remains unknown.",
+      "Reviewed unknown: Whether the concept map unintentionally over-coaches individual answers remains a later participant-review question.",
+      "Reviewed unknown: Whether the longer source material still creates excessive scrolling in the participant's live browser remains unknown."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "release",
+      "src",
+      "schemas",
+      "DEVELOPMENT_PLAN.md",
+      "docs/specs/evidence-freshness-v1.md",
+      "governance/evidence/release-candidate-0-3-0rc1.json",
+      "sites/evidence-freshness-rehearsal/.openai/hosting.json",
+      "sites/evidence-freshness-rehearsal/package.json",
+      "sites/evidence-freshness-rehearsal/package-lock.json",
+      "sites/evidence-freshness-rehearsal/app"
+    ],
+    "include_paths": [
+      "docs/evidence-freshness-rehearsal.html",
+      "sites/evidence-freshness-rehearsal/public/rehearsal.html",
+      "tests/test_evidence_freshness_rehearsal_page.py",
+      "tests/test_evidence_freshness_rehearsal_site.py",
+      "governance/tasks/p1-evidence-freshness-concept-map-v1.json",
+      "STATUS.md",
+      "docs/development-log/2026-08-22.md"
+    ]
+  },
+  "task_id": "p1-evidence-freshness-concept-map-v1",
+  "title": "Clarify evidence paths, events, and exact-match flow",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_evidence_freshness_rehearsal_page tests.test_evidence_freshness_rehearsal_site -v",
+    "npm.cmd run build --prefix sites/evidence-freshness-rehearsal",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check scope governance/tasks/p1-evidence-freshness-concept-map-v1.json --repository ."
+  ]
+}

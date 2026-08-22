@@ -15,6 +15,7 @@ from agentgov.evidence_freshness import (
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "governance/fixtures/evidence-freshness"
+REAL_RECORD = ROOT / "governance/evidence/release-candidate-0-3-0rc1.json"
 AS_OF = "2026-08-21"
 
 
@@ -54,6 +55,46 @@ class EvidenceFreshnessSchemaTests(unittest.TestCase):
 
 
 class EvidenceFreshnessTests(unittest.TestCase):
+    def test_real_release_candidate_baseline_is_current(self) -> None:
+        document = json.loads(REAL_RECORD.read_text(encoding="utf-8"))
+        result = check_evidence_freshness(REAL_RECORD, as_of="2026-08-22")
+
+        self.assertIs(result.status, EvidenceFreshnessStatus.PASS)
+        self.assertEqual(result.reason_codes, ("current",))
+        self.assertEqual(
+            document["evidence_refs"],
+            ["release/current.json", "docs/releases/0.3.0rc1.md"],
+        )
+        self.assertEqual(
+            document["validity"]["policy_ref"], "docs/release-channels.md"
+        )
+        for reference in (
+            *document["evidence_refs"],
+            document["validity"]["policy_ref"],
+        ):
+            self.assertTrue((ROOT / reference).is_file(), reference)
+
+    def test_each_real_declared_event_requires_an_exact_observed_match(self) -> None:
+        document = json.loads(REAL_RECORD.read_text(encoding="utf-8"))
+
+        for event in document["invalidation"]["declared_events"]:
+            with self.subTest(event=event), TemporaryDirectory() as temp_dir:
+                exact = deepcopy(document)
+                exact["invalidation"]["observed_events"] = [event]
+                exact_result = check_evidence_freshness(
+                    write_record(exact, temp_dir), as_of="2026-08-22"
+                )
+
+                near_match = deepcopy(document)
+                near_match["invalidation"]["observed_events"] = [event + "-reviewed"]
+                near_match_result = check_evidence_freshness(
+                    write_record(near_match, temp_dir), as_of="2026-08-22"
+                )
+
+            self.assertIs(exact_result.status, EvidenceFreshnessStatus.FAIL)
+            self.assertIn("invalidation_event_observed", exact_result.reason_codes)
+            self.assertIs(near_match_result.status, EvidenceFreshnessStatus.PASS)
+
     def test_current_evidence_passes(self) -> None:
         result = check_evidence_freshness(FIXTURES / "current.json", as_of=AS_OF)
 

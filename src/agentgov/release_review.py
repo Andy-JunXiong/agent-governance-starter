@@ -17,10 +17,16 @@ from tempfile import TemporaryDirectory
 from typing import Callable, Mapping
 
 from agentgov import __version__
+from agentgov.evidence_freshness import (
+    EvidenceFreshnessResult,
+    check_evidence_freshness,
+)
 from agentgov.release_metadata import load_release_manifest, validate_release_manifest
 
 
 RELEASE_REVIEW_CONTRACT_VERSION = "1.0"
+FRESHNESS_PILOT_CONTRACT = "agentgov.release-review.evidence-freshness-pilot"
+FRESHNESS_PILOT_SCHEMA_VERSION = "1.0"
 
 
 class ReleaseReviewError(Exception):
@@ -57,10 +63,20 @@ class ReleaseReviewEvidence:
 
 
 @dataclass(frozen=True)
+class ConsumerGovernanceSummary:
+    adoption: str
+    pass_count: int
+    warn_count: int
+    fail_count: int
+    advisory_count: int
+
+
+@dataclass(frozen=True)
 class ReleaseReviewResult:
     output: Path
     state: str
     gates: tuple[Mapping[str, str], ...]
+    freshness: Mapping[str, object] | None = None
 
     @property
     def blocked(self) -> bool:
@@ -80,6 +96,50 @@ def _directory(path: Path, label: str) -> Path:
     if path.is_symlink() or not path.is_dir():
         raise ReleaseReviewError(f"{label} must be a directory: {path}")
     return path.resolve()
+
+
+def _source_relative_file(
+    source: Path,
+    path: Path,
+    label: str,
+) -> tuple[Path, str]:
+    candidate = path if path.is_absolute() else source / path
+    resolved = _regular_file(candidate, label)
+    try:
+        reference = resolved.relative_to(source)
+    except ValueError as exc:
+        raise ReleaseReviewError(f"{label} must stay inside the source repository") from exc
+    return resolved, reference.as_posix()
+
+
+def _freshness_pilot_document(
+    *,
+    record_ref: str,
+    result: EvidenceFreshnessResult,
+) -> dict[str, object]:
+    return {
+        "contract": FRESHNESS_PILOT_CONTRACT,
+        "schema_version": FRESHNESS_PILOT_SCHEMA_VERSION,
+        "mode": "advisory_non_blocking",
+        "record_ref": record_ref,
+        "result": {
+            "evidence_id": result.evidence_id,
+            "as_of": result.as_of,
+            "status": result.status.value,
+            "reason_codes": list(result.reason_codes),
+            "messages": list(result.messages),
+        },
+        "effect": {
+            "release_review_state_changed": False,
+            "release_review_exit_changed": False,
+        },
+        "authority_boundary": {
+            "record_modified": False,
+            "automatic_event_discovery": False,
+            "observed_events_modified": False,
+            "release_authorized": False,
+        },
+    }
 
 
 def _wheel_metadata_version(wheel: Path) -> str:
@@ -290,6 +350,48 @@ def _gate(gate_id: str, evidence: CommandEvidence, detail: str) -> dict[str, str
     }
 
 
+def _consumer_governance_summary(markdown: str) -> ConsumerGovernanceSummary:
+    lines = markdown.splitlines()
+    adoption_rows = [line for line in lines if line.startswith("| Adoption |")]
+    if len(adoption_rows) != 1:
+        raise ReleaseReviewError(
+            "consumer governance status must contain exactly one Adoption row"
+        )
+    adoption_cells = [
+        cell.strip() for cell in adoption_rows[0].strip().strip("|").split("|")
+    ]
+    if len(adoption_cells) != 3 or adoption_cells[0] != "Adoption":
+        raise ReleaseReviewError("consumer governance Adoption row is invalid")
+    adoption = adoption_cells[1]
+    if adoption not in {"configured", "incomplete"}:
+        raise ReleaseReviewError(
+            f"consumer governance adoption state is unsupported: {adoption}"
+        )
+
+    findings_header = "| PASS | WARN | FAIL | ADVISORY |"
+    header_indexes = [
+        index for index, line in enumerate(lines) if line == findings_header
+    ]
+    if len(header_indexes) != 1:
+        raise ReleaseReviewError(
+            "consumer governance status must contain exactly one Findings table"
+        )
+    header_index = header_indexes[0]
+    if header_index + 2 >= len(lines):
+        raise ReleaseReviewError("consumer governance Findings table is incomplete")
+    alignment = lines[header_index + 1]
+    if alignment != "|---:|---:|---:|---:|":
+        raise ReleaseReviewError("consumer governance Findings table is unsupported")
+    count_cells = [
+        cell.strip()
+        for cell in lines[header_index + 2].strip().strip("|").split("|")
+    ]
+    if len(count_cells) != 4 or any(not cell.isdecimal() for cell in count_cells):
+        raise ReleaseReviewError("consumer governance finding counts are invalid")
+    counts = [int(cell) for cell in count_cells]
+    return ConsumerGovernanceSummary(adoption, *counts)
+
+
 def _review_document(
     *,
     source: Path,
@@ -375,7 +477,12 @@ def _review_document(
     return document, tuple(gates)
 
 
-def _render_review_markdown(document: Mapping[str, object]) -> str:
+def _render_review_markdown(
+    document: Mapping[str, object],
+    *,
+    consumer_governance: ConsumerGovernanceSummary,
+    freshness: Mapping[str, object] | None = None,
+) -> str:
     release = document["release"]
     if not isinstance(release, Mapping):
         raise ReleaseReviewError("internal release review document is invalid")
@@ -407,6 +514,55 @@ def _render_review_markdown(document: Mapping[str, object]) -> str:
     lines.extend(
         [
             "",
+            "## Consumer governance summary",
+            "",
+            f"Adoption: **{consumer_governance.adoption}**",
+            "",
+            "| PASS | WARN | FAIL | ADVISORY |",
+            "|---:|---:|---:|---:|",
+            (
+                f"| {consumer_governance.pass_count} | "
+                f"{consumer_governance.warn_count} | "
+                f"{consumer_governance.fail_count} | "
+                f"{consumer_governance.advisory_count} |"
+            ),
+            "",
+            (
+                "A PASS `consumer-status` gate means the status command completed "
+                "and rendered successfully. It does not mean consumer governance "
+                "is complete. Review `consumer-status.md` for the findings."
+            ),
+            "",
+        ]
+    )
+    if freshness is not None:
+        freshness_result = freshness.get("result")
+        if not isinstance(freshness_result, Mapping):
+            raise ReleaseReviewError("internal freshness pilot result is invalid")
+        reason_codes = freshness_result.get("reason_codes")
+        messages = freshness_result.get("messages")
+        if not isinstance(reason_codes, list) or not isinstance(messages, list):
+            raise ReleaseReviewError("internal freshness pilot details are invalid")
+        rendered_reasons = ", ".join(str(item) for item in reason_codes) or "none"
+        lines.extend(
+            [
+                "## Evidence Freshness pilot (non-blocking)",
+                "",
+                f"Record: `{escape(freshness['record_ref'])}`",
+                f"As of: `{escape(freshness_result['as_of'])}`",
+                f"Status: **{escape(freshness_result['status'])}**",
+                f"Reason codes: `{escape(rendered_reasons)}`",
+                "",
+                *[f"- {escape(message)}" for message in messages],
+                "",
+                "This pilot result does not change release-review gates, state, or exit behavior.",
+                "Observed events remain producer-supplied; no event was discovered or added automatically.",
+                "",
+            ]
+        )
+    lines.extend(
+        [
+            "",
             "## Human decision",
             "",
             "Automated evidence is complete, but no release decision has been made.",
@@ -433,6 +589,8 @@ def create_release_review_bundle(
     manifest_path: Path,
     consumer: Path,
     output: Path,
+    freshness_record: Path | None = None,
+    freshness_as_of: str | None = None,
     evidence_collector: EvidenceCollector = collect_release_review_evidence,
 ) -> ReleaseReviewResult:
     """Create one atomic review bundle from exact artifacts and consumer evidence."""
@@ -441,16 +599,41 @@ def create_release_review_bundle(
     resolved_consumer = _directory(consumer, "consumer repository")
     resolved_wheel = _regular_file(wheel, "candidate wheel")
     resolved_manifest = _regular_file(manifest_path, "release manifest")
+    if (freshness_record is None) != (freshness_as_of is None):
+        raise ReleaseReviewError(
+            "freshness_record and freshness_as_of must be supplied together"
+        )
     if output.exists() or output.is_symlink():
         raise ReleaseReviewConflictError(f"review output already exists: {output}")
     parent = _directory(output.parent, "review output parent")
     resolved_output = parent / output.name
     manifest, digest = _validate_artifacts(resolved_wheel, resolved_manifest)
+    freshness: Mapping[str, object] | None = None
+    if freshness_record is not None:
+        resolved_freshness, freshness_ref = _source_relative_file(
+            resolved_source,
+            freshness_record,
+            "freshness record",
+        )
+        try:
+            freshness_result = check_evidence_freshness(
+                resolved_freshness,
+                as_of=freshness_as_of,
+            )
+        except (OSError, UnicodeError, TypeError, ValueError) as exc:
+            raise ReleaseReviewError(f"cannot evaluate freshness record: {exc}") from exc
+        freshness = _freshness_pilot_document(
+            record_ref=freshness_ref,
+            result=freshness_result,
+        )
     evidence = evidence_collector(
         resolved_source,
         resolved_wheel,
         resolved_manifest,
         resolved_consumer,
+    )
+    consumer_governance = _consumer_governance_summary(
+        evidence.consumer_status.stdout
     )
     document, gates = _review_document(
         source=resolved_source,
@@ -484,13 +667,30 @@ def create_release_review_bundle(
         (staging / "upgrade-plan.json").write_text(
             evidence.upgrade_plan.stdout, encoding="utf-8", newline="\n"
         )
+        if freshness is not None:
+            (staging / "evidence-freshness.json").write_text(
+                json.dumps(freshness, indent=2, ensure_ascii=False) + "\n",
+                encoding="utf-8",
+                newline="\n",
+            )
         (staging / "review.json").write_text(
             json.dumps(document, indent=2, ensure_ascii=False) + "\n",
             encoding="utf-8",
             newline="\n",
         )
         (staging / "REVIEW.md").write_text(
-            _render_review_markdown(document), encoding="utf-8", newline="\n"
+            _render_review_markdown(
+                document,
+                consumer_governance=consumer_governance,
+                freshness=freshness,
+            ),
+            encoding="utf-8",
+            newline="\n",
         )
         staging.replace(resolved_output)
-    return ReleaseReviewResult(resolved_output, str(document["review_state"]), gates)
+    return ReleaseReviewResult(
+        resolved_output,
+        str(document["review_state"]),
+        gates,
+        freshness,
+    )

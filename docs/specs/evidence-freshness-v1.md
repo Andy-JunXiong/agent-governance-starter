@@ -65,6 +65,32 @@ Example:
 }
 ```
 
+## First repository trial
+
+The first real repository-owned record applies this contract to the bundled
+`0.3.0rc1` source compatibility baseline:
+[release-candidate-0-3-0rc1.json](../../governance/evidence/release-candidate-0-3-0rc1.json).
+It references `release/current.json` and the matching release notes, and uses
+`docs/release-channels.md` as its policy source. The bundled manifest is a
+source compatibility baseline; the record does not represent it as the
+immutable public release manifest described by the release notes.
+
+The trial declares three events with repository-specific meanings:
+
+- `bundled-compatibility-baseline-changed`: compatibility facts in the bundled
+  `release/current.json` baseline changed;
+- `release-candidate-notes-corrected`: facts in the referenced `0.3.0rc1`
+  release notes were corrected;
+- `release-channel-policy-changed`: the cited release-channel policy changed
+  in a way that requires this record to be reconsidered.
+
+Each name identifies one referenced dependency and one reason to reconsider
+the record, so the vocabulary is understandable for this bounded repository
+trial. Tests show that every exact declared/observed match fails and a similar
+but undeclared name does not. Whether an external consumer understands the
+same names without repository context remains unknown. No event is discovered
+or added automatically.
+
 ## Status semantics
 
 The checker evaluates facts against an explicit `as_of` date. A date is due

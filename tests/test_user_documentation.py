@@ -1514,6 +1514,52 @@ class EvidenceFreshnessDocumentationTests(unittest.TestCase):
         ):
             self.assertIn(phrase, specification)
 
+    def test_release_review_pilot_is_explicitly_non_blocking_and_unpublished(self) -> None:
+        review = " ".join(
+            (ROOT / "docs/release-review.md").read_text(encoding="utf-8").split()
+        )
+        specification = " ".join(
+            (ROOT / "docs/specs/evidence-freshness-v1.md")
+            .read_text(encoding="utf-8")
+            .split()
+        )
+        plan = " ".join(
+            (ROOT / "DEVELOPMENT_PLAN.md").read_text(encoding="utf-8").split()
+        )
+
+        for phrase in (
+            "--freshness-record",
+            "--freshness-as-of",
+            "not part of the published `0.3.0rc1`",
+            "does not",
+            "observed_events",
+        ):
+            self.assertIn(phrase, review)
+        self.assertNotIn("--freshness-record", specification)
+        self.assertIn("agentgov check evidence-freshness", specification)
+        for phrase in (
+            "release-review 1.0 JSON contract",
+            "gates",
+            "exit behavior",
+            "remain undecided",
+        ):
+            self.assertIn(phrase, plan)
+
+    def test_release_review_distinguishes_collection_from_consumer_completeness(self) -> None:
+        review = " ".join(
+            (ROOT / "docs/release-review.md").read_text(encoding="utf-8").split()
+        )
+
+        for phrase in (
+            "Consumer governance summary",
+            "consumer-status.md",
+            "does **not** mean the consumer's governance is complete",
+            "do not become release gates",
+            "not added to the strict `review.json` 1.0 contract",
+            "fails before committing a partial review bundle",
+        ):
+            self.assertIn(phrase, review)
+
 
 if __name__ == "__main__":
     unittest.main()

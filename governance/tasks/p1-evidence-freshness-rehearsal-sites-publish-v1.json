@@ -1,0 +1,76 @@
+{
+  "acceptance_signals": [
+    "A standalone Sites project serves the same validated Chinese rehearsal journey at its root production URL.",
+    "The deployed test site is not added to the repository's public navigation and contains no answer submission, analytics, persistence, account, scoring, or automatic pass/fail behavior.",
+    "Anyone who receives the unlisted test URL can open it for the intended external-participant rehearsal; this is a test publication rather than a formal product launch.",
+    "The site build succeeds and tests verify the hosted copy preserves the required controls, privacy boundary, and manual-copy fallback.",
+    "The deployed URL returns successfully and the Sites deployment reports succeeded.",
+    "Focused site tests, the supported Python 3.11 suite, task and repository governance, scope reconciliation, privacy scanning, and diff validation are recorded."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-c68f38d19d454d8a9f0ea589f9a7481a and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Package the existing validated Chinese Evidence Freshness rehearsal page as a standalone Sites project, deploy one production test URL that is not added to the repository's public navigation, keep participant responses entirely in browser memory with no analytics or network submission, and record the exact deployment and validation boundaries without changing checker behavior or publishing any other repository content."
+  },
+  "risk": {
+    "items": [
+      "A public production URL is accessible to anyone who receives or discovers it even though it is intentionally absent from formal navigation.",
+      "Publishing must not expose repository files, prior-task artifacts, credentials, host paths, or participant answers.",
+      "Sites source preparation uses a separate deployment-source commit and push and must not commit or push the parent repository.",
+      "The hosting project must persist only the opaque project ID and no short-lived source credential.",
+      "The existing uncommitted prior-task and user-owned changes must remain untouched and outside this task's ownership.",
+      "The hosted copy can drift from the local source unless a deterministic parity test protects the participant-facing contract.",
+      "The deployment URL is a production URL but represents a test publication, not release acceptance or a public product launch.",
+      "Reviewed assumption: The product owner's request to publish the previously described test link selects an unlisted public test URL rather than owner-only access.",
+      "Reviewed assumption: Sites is the selected hosting provider for this bounded publication.",
+      "Reviewed assumption: The existing page design and behavior remain unchanged except for the minimum wrapper needed for Sites hosting.",
+      "Reviewed assumption: No custom domain, account, database, upload, analytics, or answer collection is needed.",
+      "Reviewed assumption: The participant will manually copy and return the raw result outside the page.",
+      "Reviewed unknown: Whether the requested slug is available remains unknown until site creation.",
+      "Reviewed unknown: Whether an unbriefed participant can complete the hosted page without coaching remains unknown until the later human-run rehearsal.",
+      "Reviewed unknown: Search-engine discovery behavior is not guaranteed by absence from navigation; no discoverability claim will be made.",
+      "Reviewed unknown: Whether the page should ever enter formal public navigation remains undecided."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "release",
+      "src",
+      "schemas",
+      "docs/index.html",
+      "docs/portfolio.html",
+      "docs/specs",
+      "governance/evidence",
+      "docs/evidence-freshness-rehearsal.html",
+      "DEVELOPMENT_PLAN.md",
+      "tests/test_evidence_freshness.py"
+    ],
+    "include_paths": [
+      "sites/evidence-freshness-rehearsal",
+      "tests/test_evidence_freshness_rehearsal_site.py",
+      "governance/tasks/p1-evidence-freshness-rehearsal-sites-publish-v1.json",
+      "STATUS.md",
+      "docs/development-log/2026-08-22.md"
+    ]
+  },
+  "task_id": "p1-evidence-freshness-rehearsal-sites-publish-v1",
+  "title": "Publish the Evidence Freshness rehearsal as an unlisted test site",
+  "validation_commands": [
+    "npm.cmd run build --prefix sites/evidence-freshness-rehearsal",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_evidence_freshness_rehearsal_site -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check scope governance/tasks/p1-evidence-freshness-rehearsal-sites-publish-v1.json --repository ."
+  ]
+}

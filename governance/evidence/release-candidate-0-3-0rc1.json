@@ -1,0 +1,30 @@
+{
+  "contract": "agentgov.evidence-freshness",
+  "schema_version": "1.0",
+  "evidence_id": "bundled-0-3-0rc1-compatibility-baseline",
+  "applicability": {
+    "status": "applicable",
+    "reason": null
+  },
+  "evidence_refs": [
+    "release/current.json",
+    "docs/releases/0.3.0rc1.md"
+  ],
+  "review": {
+    "reviewed_at": "2026-08-22",
+    "review_due_on": null
+  },
+  "validity": {
+    "expires_on": null,
+    "policy_status": "current",
+    "policy_ref": "docs/release-channels.md"
+  },
+  "invalidation": {
+    "declared_events": [
+      "bundled-compatibility-baseline-changed",
+      "release-candidate-notes-corrected",
+      "release-channel-policy-changed"
+    ],
+    "observed_events": []
+  }
+}

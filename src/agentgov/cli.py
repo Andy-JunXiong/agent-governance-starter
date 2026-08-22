@@ -357,6 +357,8 @@ def _review_release(
     manifest: Path,
     consumer: Path,
     output: Path,
+    freshness_record: Path | None,
+    freshness_as_of: str | None,
 ) -> int:
     try:
         result = create_release_review_bundle(
@@ -365,6 +367,8 @@ def _review_release(
             manifest_path=manifest,
             consumer=consumer,
             output=output,
+            freshness_record=freshness_record,
+            freshness_as_of=freshness_as_of,
         )
     except ReleaseReviewConflictError as exc:
         print(f"FAIL review release: {exc}")
@@ -380,6 +384,14 @@ def _review_release(
     print(f"STATE {result.state}")
     for gate in result.gates:
         print(f"GATE {gate['id']}: {gate['status']} - {gate['detail']}")
+    if result.freshness is not None:
+        freshness_result = result.freshness["result"]
+        if isinstance(freshness_result, Mapping):
+            print(
+                "FRESHNESS "
+                f"{freshness_result['status']} as-of {freshness_result['as_of']} "
+                "(non-blocking)"
+            )
     print("DECISION pending: approve, request_changes, or reject")
     print("NOTE review release: source and consumer repositories were not modified")
     print("NOTE review release: no Git, tag, push, publish, release, or deploy action was run")
@@ -3500,6 +3512,15 @@ def build_parser() -> argparse.ArgumentParser:
         required=True,
         help="New review-bundle directory; existing paths are never overwritten.",
     )
+    release_review_parser.add_argument(
+        "--freshness-record",
+        type=Path,
+        help="Optional source-repository-relative Evidence Freshness record for the non-blocking pilot.",
+    )
+    release_review_parser.add_argument(
+        "--freshness-as-of",
+        help="Explicit YYYY-MM-DD date paired with --freshness-record.",
+    )
     release_review_parser.set_defaults(
         handler=lambda args: _review_release(
             args.source,
@@ -3507,6 +3528,8 @@ def build_parser() -> argparse.ArgumentParser:
             manifest=args.manifest,
             consumer=args.consumer,
             output=args.output,
+            freshness_record=args.freshness_record,
+            freshness_as_of=args.freshness_as_of,
         )
     )
     upgrade_review_parser = review_targets.add_parser(

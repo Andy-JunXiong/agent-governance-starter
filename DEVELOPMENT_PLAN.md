@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Development Plan
 
-Last updated: 2026-08-21
+Last updated: 2026-08-22
 
 ## Purpose
 
@@ -428,6 +428,50 @@ checker reads one record and does not discover change events, refresh evidence,
 or automatically join freshness into repository, release, upgrade, or report
 flows. Any such integration requires real use evidence and a separately
 admitted contract.
+
+The first bounded real-use review now applies the record to the bundled
+`0.3.0rc1` source compatibility baseline. Its three declared events each name
+one concrete reconsideration trigger: `bundled-compatibility-baseline-changed`,
+`release-candidate-notes-corrected`, or `release-channel-policy-changed`.
+Exact-match tests make the deterministic behavior visible. The vocabulary is
+understandable in this repository context; whether an external consumer
+reaches the same interpretation remains unknown. This review does not
+authorize automatic discovery or repository, release, upgrade, report, or CI
+integration.
+
+An unbriefed participant has now completed the corrected vocabulary rehearsal;
+the product owner reports that the participant genuinely understood the key
+path, event, exact-match, producer, and review-date boundaries. This is one
+bounded user-reported result, not a general comprehension rate.
+
+The next admitted development slice is a release-review integration pilot. It
+adds one optional source-repository record and explicit `as_of` date to
+`agentgov review release`, writes the result as a separate portable sidecar,
+and renders it as non-blocking review context. The existing release-review 1.0
+JSON contract, gates, state, exit behavior, human decision, and authority
+boundary stay unchanged. Operational usefulness, later gating, consumer CI,
+and upgrade-review integration remain undecided pending real review evidence.
+
+The first real release-review run has now used the published `0.3.0rc1` wheel
+and immutable manifest against the Airbnb consumer repository. All seven
+collection gates completed, the freshness result was `PASS`, and the human
+reviewer reported that the freshness section was easy to find, its valid-but-
+non-authorizing meaning was clear, and the information helped the review. This
+supports retaining the non-blocking pilot for this one reviewer; it does not
+establish broad usefulness or justify a gate. The run also exposed a separate
+presentation question: a successful consumer-check gate means the command ran,
+while the detailed consumer status can still contain incomplete adoption and
+warnings. Whether the main review should summarize that distinction is the
+next product-review question, not an admitted implementation requirement.
+
+The product owner selected the smallest correction: improve only the human-
+facing `REVIEW.md`. The admitted slice summarizes the Adoption state and four
+finding counts already present in `consumer-status.md`, and states that a
+successful collection gate does not mean governance is complete. The strict
+`review.json` 1.0 contract, gates, review state, exit behavior, warning
+semantics, human decision, and authority boundary remain unchanged. A future
+machine-contract version or broader consumer-status redesign remains
+undecided.
 
 ## P2 — Report Evolution
 

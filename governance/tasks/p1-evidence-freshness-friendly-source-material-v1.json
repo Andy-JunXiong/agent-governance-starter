@@ -1,0 +1,80 @@
+{
+  "acceptance_signals": [
+    "The measured reading section uses a friendly structured Chinese interface rather than a synthetic summary or a raw-data-only dump.",
+    "Every field and value from the original freshness JSON remains present and traceable with its original key or identifier; no source fact is omitted.",
+    "All sections of the source Evidence Freshness specification are available in a readable structured form, and exact source JSON and specification text are available in clearly labeled audit disclosures.",
+    "Friendly labels and layout improve navigation but add no unsupported domain facts, answer key, score, automatic pass/fail, or facilitator coaching.",
+    "Tests prove the embedded exact-source payloads match the repository-owned record and specification and protect the no-persistence, no-answer-submission, and manual-copy boundaries.",
+    "The standalone site build succeeds, the existing public Sites URL is updated, and its final response contains the friendly-source controls and noindex directive.",
+    "Focused tests, the supported Python 3.11 suite, task and repository governance, scope reconciliation, privacy scanning, and diff validation are recorded."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-62f6656825b244e9a20d6bad6a26edad and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Replace the rehearsal page's synthetic record summary and oversimplified rules with a friendly Chinese reading layer that preserves and traces every original Evidence Freshness record field and the complete source specification, keeps exact original JSON and specification text available for audit, introduces no unsupported domain conclusions or answer scoring, and redeploys the corrected page to the existing public test URL."
+  },
+  "risk": {
+    "items": [
+      "A friendly rewrite can accidentally become coaching or introduce conclusions absent from the source.",
+      "Omitting one raw field or specification section would make the reading layer incomplete and weaken traceability.",
+      "Showing only raw JSON would be technically faithful but fail the requested usability outcome.",
+      "Showing only a curated summary would test the Agent's explanation rather than comprehension of the productized source material.",
+      "The existing public page is currently unsuitable for the intended rehearsal and must not be described as valid until the corrected deployment succeeds.",
+      "The public test URL remains discoverable to anyone who receives or finds it despite noindex metadata.",
+      "Existing prior-task and user-owned working-copy changes must remain outside this task's ownership.",
+      "The Sites source commit and push are limited to the existing Sites-managed destination and do not authorize a parent-repository commit or push.",
+      "Reviewed assumption: The product owner confirmed a productized, friendly reading experience rather than raw-artifact usability as the intended test surface.",
+      "Reviewed assumption: Chinese labels may translate structural field names while original keys, identifiers, dates, paths, and values remain visible.",
+      "Reviewed assumption: Source-derived explanations may reorganize existing specification statements but may not add a new domain interpretation.",
+      "Reviewed assumption: The exact English specification and exact JSON record will remain available in audit disclosures so transformations can be checked.",
+      "Reviewed assumption: The existing public URL and access mode should be reused.",
+      "Reviewed unknown: Whether the friendly representation enables an unbriefed participant to understand the material remains unknown until the corrected page is used.",
+      "Reviewed unknown: Whether any source-derived Chinese phrasing still creates unintended coaching remains a later participant-review question.",
+      "Reviewed unknown: Search-engine behavior cannot be guaranteed by noindex metadata."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "release",
+      "src",
+      "schemas",
+      "docs/index.html",
+      "docs/portfolio.html",
+      "docs/specs/evidence-freshness-v1.md",
+      "governance/evidence/release-candidate-0-3-0rc1.json",
+      "DEVELOPMENT_PLAN.md",
+      "sites/evidence-freshness-rehearsal/.openai/hosting.json",
+      "sites/evidence-freshness-rehearsal/package.json",
+      "sites/evidence-freshness-rehearsal/package-lock.json"
+    ],
+    "include_paths": [
+      "docs/evidence-freshness-rehearsal.html",
+      "sites/evidence-freshness-rehearsal/public/rehearsal.html",
+      "tests/test_evidence_freshness_rehearsal_page.py",
+      "tests/test_evidence_freshness_rehearsal_site.py",
+      "governance/tasks/p1-evidence-freshness-friendly-source-material-v1.json",
+      "STATUS.md",
+      "docs/development-log/2026-08-22.md"
+    ]
+  },
+  "task_id": "p1-evidence-freshness-friendly-source-material-v1",
+  "title": "Present faithful source material in a friendly rehearsal interface",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_evidence_freshness_rehearsal_page tests.test_evidence_freshness_rehearsal_site -v",
+    "npm.cmd run build --prefix sites/evidence-freshness-rehearsal",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check scope governance/tasks/p1-evidence-freshness-friendly-source-material-v1.json --repository ."
+  ]
+}

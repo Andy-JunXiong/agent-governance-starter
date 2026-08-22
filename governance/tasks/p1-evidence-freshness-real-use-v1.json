@@ -1,0 +1,62 @@
+{
+  "acceptance_signals": [
+    "One strict Evidence Freshness record references release/current.json and docs/releases/0.3.0rc1.md, uses docs/release-channels.md as its policy reference, and stores no raw evidence content.",
+    "The record passes agentgov check evidence-freshness with an explicit 2026-08-22 as-of date.",
+    "Focused tests prove the real record is current and that each declared event invalidates only by exact observed-event membership.",
+    "The specification, strategic plan, current status, and dated session record state whether the real event vocabulary is understandable and preserve the no-automatic-integration boundary.",
+    "The focused tests, complete supported Python 3.11 suite, repository governance check, JSON parsing, privacy scan, scope reconciliation, and git diff check pass."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-bf6363479a644bb5b241c650609f523a and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Add one repository-native Evidence Freshness v1 record for the bundled 0.3.0rc1 source compatibility baseline, validate its declared invalidating-event vocabulary against the existing deterministic checker, and record the bounded real-use review without adding automatic integration."
+  },
+  "risk": {
+    "items": [
+      "The bundled source manifest must not be represented as the immutable public release manifest.",
+      "Vague event names could make accountable producers unsure when to declare an observed invalidation.",
+      "A documentation-only review must not be presented as automatic change discovery or proof of broader consumer usability.",
+      "Current status and strategy must distinguish this real-use review from future repository or CI integration.",
+      "Reviewed assumption: The bundled 0.3.0rc1 source compatibility baseline is a real, longer-lived governance evidence item suitable for the first bounded trial.",
+      "Reviewed assumption: A null expiry and null review-due date are appropriate because the release-channel policy declares neither an expiry nor a review cadence.",
+      "Reviewed assumption: The task may add tests and evidence documentation without changing checker behavior or schema.",
+      "Reviewed unknown: Whether a future consumer finds the event names equally understandable remains unknown until external use."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "release",
+      "docs/releases",
+      "src",
+      "schemas"
+    ],
+    "include_paths": [
+      "governance/evidence/release-candidate-0-3-0rc1.json",
+      "governance/tasks/p1-evidence-freshness-real-use-v1.json",
+      "tests/test_evidence_freshness.py",
+      "docs/specs/evidence-freshness-v1.md",
+      "DEVELOPMENT_PLAN.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-22.md"
+    ]
+  },
+  "task_id": "p1-evidence-freshness-real-use-v1",
+  "title": "Apply Evidence Freshness to one real release baseline",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_evidence_freshness tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check evidence-freshness governance/evidence/release-candidate-0-3-0rc1.json --as-of 2026-08-22",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository ."
+  ]
+}
