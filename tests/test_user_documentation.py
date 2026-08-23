@@ -33,6 +33,14 @@ ACTIVE_AGENT_SELF_REVIEW = ROOT / "docs/active-agent-self-review.md"
 DOCUMENTATION_ARCHIVE_PLAN = ROOT / "docs/documentation-archive-plan.md"
 EXTRACTION_MAP = ROOT / "docs/ai-radar-extraction-map.md"
 STATUS = ROOT / "STATUS.md"
+STRATEGIC_PLAN = ROOT / "DEVELOPMENT_PLAN.md"
+TAXI_CROSS_DOMAIN_PILOT = (
+    ROOT / "docs/experiments/taxi-cross-domain-adoption-pilot.md"
+)
+TAXI_SEMANTIC_GAP = (
+    ROOT / "docs/experiments/semantic-relations/taxi-gap-analysis.md"
+)
+CURRENT_TAXI_CLOSEOUT_LOG = ROOT / "docs/development-log/2026-08-23.md"
 HARNESS_GUIDE = ROOT / "docs/harness-contract-v1.md"
 AIRBNB_HEADING_REPLAY = (
     ROOT / "docs/experiments/airbnb-uncoached-readme-heading-replay-2026-08-15.md"
@@ -915,6 +923,59 @@ class UserDocumentationTests(unittest.TestCase):
         self.assertIn("NYC Taxi development-loop pilot boundary", extraction)
         self.assertIn("historical backstop evidence", extraction)
         self.assertIn("not a mechanical runtime halt", readme)
+
+    def test_taxi_historical_pilot_closeout_is_bounded_and_consistent(self) -> None:
+        record = TAXI_CROSS_DOMAIN_PILOT.read_text(encoding="utf-8")
+        normalized_record = " ".join(record.split())
+        extraction = " ".join(EXTRACTION_MAP.read_text(encoding="utf-8").split())
+        strategic_plan = " ".join(STRATEGIC_PLAN.read_text(encoding="utf-8").split())
+        status = " ".join(STATUS.read_text(encoding="utf-8").split())
+        log = " ".join(CURRENT_TAXI_CLOSEOUT_LOG.read_text(encoding="utf-8").split())
+        semantic_gap = TAXI_SEMANTIC_GAP.read_text(encoding="utf-8")
+
+        self.assertTrue(TAXI_CROSS_DOMAIN_PILOT.is_file())
+        for phrase in (
+            "8145376ed31f58f6261591a3db74ac6c2387cd76",
+            "Timed start: not recorded",
+            "Timed stop: not recorded",
+            "Elapsed duration: not recorded",
+            "commit timestamp is not a pilot start, stop, or duration measurement",
+            "no ten-minute pass",
+            "PASS=17 WARN=1 FAIL=0 ADVISORY=4",
+            "current set of one declared capability",
+            "tracked capability artifacts are deferred",
+            "artifact warning remains honest and non-blocking",
+            "not a permanent cross-project policy",
+            "does not complete the future automatic development-loop shadow pilot",
+        ):
+            self.assertIn(phrase, normalized_record)
+
+        for friction in (
+            "deeply nested Windows target path",
+            "python -m agentgov",
+            "check repository .",
+            "stale target-project environment",
+            "FAIL=0",
+        ):
+            self.assertIn(friction, normalized_record)
+
+        self.assertNotIn(":\\Users\\", record)
+        self.assertNotIn("Find a job", record)
+        self.assertNotIn(".env", record)
+        self.assertIn("Prepared; no Taxi observation recorded", semantic_gap)
+        self.assertNotIn(
+            "8145376ed31f58f6261591a3db74ac6c2387cd76",
+            semantic_gap,
+        )
+
+        for surface in (extraction, strategic_plan, status, log):
+            with self.subTest(surface=surface[:40]):
+                self.assertIn("taxi-cross-domain-adoption-pilot.md", surface)
+
+        for surface in (strategic_plan, status, log):
+            with self.subTest(boundary=surface[:40]):
+                self.assertIn("unavailable", surface)
+                self.assertIn("ten-minute", surface)
 
     def test_verified_session_handoff_contract_preserves_identity_and_authority(self) -> None:
         readme = README.read_text(encoding="utf-8")

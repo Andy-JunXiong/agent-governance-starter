@@ -1,0 +1,78 @@
+{
+  "acceptance_signals": [
+    "A new repository-owned pilot record identifies historical Taxi adoption commit 8145376ed31f58f6261591a3db74ac6c2387cd76 and the current read-only governance result PASS=17 WARN=1 FAIL=0 ADVISORY=4 without storing a machine-specific source path, Taxi code, data, credentials, workflows, or business policy.",
+    "The record distinguishes the historical adoption observation from the current read-only check and states that timed start, timed stop, and elapsed duration were not recorded, so no ten-minute or unassisted-pass claim is made.",
+    "Observed assistance and friction are limited to evidence already preserved in dated starter records, including nested Windows path, active-environment, command-syntax, stale-environment, and successful-check-versus-complete-governance interpretation friction.",
+    "The record names the historical maintainer decisions later resolved in Taxi and records the human-selected current disposition: the empty dependency graph is complete only for the current single declared capability; artifact tracking is deferred for lack of demonstrated need; the artifact WARN remains honest and non-blocking.",
+    "Deterministic contract and check results are separated from advisory claims about real-world completeness, control effectiveness, dependency completeness, artifact value, benefit, and general usability.",
+    "The prepared semantic-relation gap-analysis template remains unfilled, and no semantic schema, checker, report field, AgentGov behavior, Taxi file, external system, Git history, release, or deployment is changed.",
+    "DEVELOPMENT_PLAN.md, STATUS.md, the source-boundary map, and the 2026-08-23 development log consistently describe the record as a closed historical evidence account with unavailable timing rather than a successful ten-minute pilot.",
+    "Documentation tests protect the commit identity, timing boundary, conservative maintainer decision, current counts, privacy boundary, and unchanged semantic-gap status.",
+    "Focused and full tests, repository governance, task scope reconciliation, JSON parsing, privacy-bounded content checks, and git diff validation pass or retain only documented pre-existing unrelated findings."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-44c07c2cc45a4139a5bed829b91ba789 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Create one sanitized historical Taxi cross-domain adoption record from verified starter and read-only Taxi repository evidence; disclose that strict start, stop, and elapsed timing are unavailable and support no ten-minute claim; record observed assistance and friction, the resolved historical maintainer decisions, and the human-selected conservative disposition that the empty dependency graph is complete only for the current single declared capability while tracked artifact configuration is deferred and its WARN retained; update the owning strategic, current-status, dated-evidence, source-boundary, and documentation-test surfaces without modifying Taxi or changing AgentGov behavior."
+  },
+  "risk": {
+    "items": [
+      "A historical record could accidentally imply that the adoption commit timestamp measures pilot duration.",
+      "Combining historical and current observations could misstate which AgentGov version produced each result.",
+      "A machine-specific source path, private repository detail, Taxi business content, or secret-like string could leak into the starter record.",
+      "The human dependency and artifact disposition could be overstated as a deterministic completeness finding or a permanent cross-project policy.",
+      "Closing the evidence record could be confused with proving the ten-minute adoption goal or completing the later development-loop shadow pilot.",
+      "Status and strategic documents could diverge if only one owning surface is updated.",
+      "Reviewed assumption: The historical Taxi adoption commit and starter development logs are authoritative for what was changed and what friction was observed.",
+      "Reviewed assumption: The current read-only Taxi repository check is supporting present-state evidence and is not presented as the historical adoption result.",
+      "Reviewed assumption: The accountable product owner is also authorized to record the stated conservative maintainer disposition for this bounded starter-kit evidence closeout.",
+      "Reviewed assumption: A recorded unavailable timing state satisfies evidence closure while invalidating any strict ten-minute performance claim.",
+      "Reviewed assumption: Deferring optional artifact tracking and retaining its WARN is preferable to implementing an artifact without a demonstrated retained-artifact and review need.",
+      "Reviewed unknown: Exact timed start, timed stop, and elapsed duration for the 2026-07-24 Taxi adoption are unavailable.",
+      "Reviewed unknown: Whether tracked Taxi capability artifacts would provide enough future review value to justify their maintenance cost remains unknown.",
+      "Reviewed unknown: Whether the adoption experience and conservative disposition generalize to other repositories or maintainers remains unknown."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "src",
+      "schemas",
+      "release",
+      "sites",
+      "README.md",
+      "governance/evidence",
+      "docs/experiments/semantic-relations/taxi-gap-analysis.md",
+      "pyproject.toml"
+    ],
+    "include_paths": [
+      "docs/experiments/taxi-cross-domain-adoption-pilot.md",
+      "docs/ai-radar-extraction-map.md",
+      "DEVELOPMENT_PLAN.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-23.md",
+      "tests/test_user_documentation.py",
+      "governance/tasks/p1-taxi-cross-domain-pilot-record-closeout-v1.json"
+    ]
+  },
+  "task_id": "p1-taxi-cross-domain-pilot-record-closeout-v1",
+  "title": "Close the historical Taxi cross-domain pilot record",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check scope governance/tasks/p1-taxi-cross-domain-pilot-record-closeout-v1.json --repository .",
+    "py -3.11 -m json.tool governance/tasks/p1-taxi-cross-domain-pilot-record-closeout-v1.json",
+    "git diff --check"
+  ]
+}

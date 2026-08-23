@@ -155,8 +155,16 @@ Initial Taxi evidence on 2026-07-24:
 - the generated scaffold required real project adaptation after `adopt`;
   `FAIL=0` alone did not mean governance was complete.
 
-The pilot is not complete until its timing, assistance, maintainer decisions,
-and remaining release-boundary findings are recorded.
+The historical evidence account is now closed in
+[`docs/experiments/taxi-cross-domain-adoption-pilot.md`](docs/experiments/taxi-cross-domain-adoption-pilot.md).
+It records that strict start, stop, and elapsed timing are unavailable, so it
+supports no ten-minute or unassisted-pass claim. It preserves the observed
+assistance and friction, later resolved maintainer decisions, the current
+read-only `PASS=17 WARN=1 FAIL=0 ADVISORY=4` result, and the product owner's
+bounded decision to accept the empty dependency graph only for the one current
+declared capability while deferring optional artifact tracking and retaining
+its warning. This closes the historical record, not the fresh uncoached primary
+product pilot or the later automatic development-loop Taxi shadow pilot.
 
 ### Low-friction tool execution
 
@@ -555,7 +563,7 @@ Delivered:
 Carried forward after the release:
 
 - complete the fresh uncoached human adoption pilot;
-- finish the Taxi cross-domain pilot record and maintainer decisions;
+- preserve the closed historical Taxi cross-domain record as bounded evidence;
 - pilot the reusable consumer CI workflow in NYC and record the result;
 - verify the supported operating-system and Python matrix continuously in CI.
 

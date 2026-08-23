@@ -218,3 +218,12 @@ Actions integration independently replay deterministic facts as a backstop.
 The pilot must not copy or modify NYC business policy as starter-kit source,
 install project dependencies, run production workflows, overwrite an existing
 workflow, or authorize Git, merge, release, or deployment actions.
+
+Historical evidence closeout date: 2026-08-23. The
+[Taxi cross-domain adoption record](experiments/taxi-cross-domain-adoption-pilot.md)
+uses the exact historical adoption commit and a later read-only aggregate check
+as `reference-only` evidence. It stores no machine-specific source path and
+adapts no Taxi code, data, workflow, credential, runtime fact, or business
+policy. Missing strict timing is recorded as unavailable, so the closeout does
+not claim a ten-minute or unassisted pass and does not complete the separate
+development-loop shadow pilot.

@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-08-22
+Last verified: 2026-08-23
 
 ## Current-status contract
 
@@ -43,65 +43,58 @@ scheduling authority.
 ### Current closeout snapshot
 
 - **Active slice**: human-admitted task
-  `p1-release-review-consumer-governance-summary-v1` implements the product
-  owner's selected Markdown-only correction after the first real release review
-  exposed an ambiguous consumer `PASS` gate.
-- **Delivered capability**: generated `REVIEW.md` now shows the already-
-  collected consumer Adoption state and aggregate `PASS`, `WARN`, `FAIL`, and
-  `ADVISORY` counts directly below the collection gates. It explicitly states
-  that a `PASS` `consumer-status` gate means the status command completed and
-  rendered successfully, not that consumer governance is complete. Unsupported
-  or malformed status tables fail before a create-new-only bundle is committed.
-  Consumer findings remain non-blocking, and `review.json` 1.0, gate identities
-  and statuses, review state, exit behavior, human decision, and authority
-  boundary remain unchanged.
-- **Codex-run validation**: all 59 focused release-review and user-
-  documentation tests pass. A second real review used the digest-verified
-  published `0.3.0rc1` assets against the Airbnb consumer repository. Its seven
-  collection gates and non-blocking freshness result passed; the main page
-  displayed `Adoption: incomplete` and `PASS=4 WARN=7 FAIL=0 ADVISORY=1`.
-  The real run's supported Python 3.11 source suite passed all 994 tests with 3
-  platform-limited skips in 166.073 seconds. The corrected and preceding
-  `review.json` files have the identical SHA-256 digest. Task governance reports
-  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance reports
+  `p1-taxi-cross-domain-pilot-record-closeout-v1` closes the selected historical
+  Taxi adoption evidence account without modifying the Taxi repository.
+- **Delivered capability**: the repository now has one sanitized
+  [historical Taxi cross-domain adoption record](docs/experiments/taxi-cross-domain-adoption-pilot.md).
+  It binds the observed adoption to commit
+  `8145376ed31f58f6261591a3db74ac6c2387cd76`, separates that history from a
+  current read-only `PASS=17 WARN=1 FAIL=0 ADVISORY=4` check, and records that
+  strict start, stop, and elapsed timing are unavailable. It therefore makes no
+  ten-minute or unassisted-pass claim. The product owner's conservative decision
+  accepts the empty dependency graph only for the current single declared
+  capability, defers optional artifact tracking for lack of demonstrated need,
+  and retains the artifact warning honestly.
+- **Codex-run validation**: all 43 focused user-documentation tests pass. The
+  supported Python 3.11 full suite passes all 995 tests with 3 platform-limited
+  skips in 157.700 seconds. Repository governance reports
   `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; task JSON parsing, bounded privacy, and
-  `git diff --check` pass.
-- **User-reported validation**: the product owner selected the recommended
-  Markdown-only direction, admitted its exact native task proposal, and then
-  separately instructed the Agent to execute it. The owner has not yet reviewed
-  the corrected real output; no post-change usability claim is inferred. At
-  session close, the owner ended work for the day and explicitly authorized
-  updating the related records, committing today's bounded Evidence Freshness
-  and release-review work, and pushing it ordinarily to `origin/main`.
-- **Scope validation**: all 8 current-task-owned changed paths pass the admitted
-  scope. The report retains 30 failures for pre-existing prior-task or user-
-  owned paths; no exception or ownership transfer is inferred.
+  `git diff --check` pass. The Taxi reference repository has no tracked diff
+  from this task.
+- **User-reported validation**: the product owner reported that the preceding
+  release-review consumer summary was clear and concise, selected the Taxi
+  evidence direction, selected the conservative maintainer disposition,
+  admitted the exact native task proposal, and separately instructed the Agent
+  to execute it. These are human decision and validation facts, not evidence of
+  broad usability.
+- **Scope validation**: all 7 current-task-owned paths pass. The report retains
+  one failure for pre-existing user-owned `.codex/config.toml`, which is
+  explicitly excluded, untouched, and outside this task; no exception or
+  ownership transfer is inferred.
 - **Pending validation**: no automated validation remains pending inside this
-  bounded task. One human review of the corrected `REVIEW.md` is still needed to
-  confirm that the new summary removes the observed ambiguity without adding
-  clutter.
-- **Incomplete implementation**: none known inside the admitted task. The human
-  review is future product validation, not hidden implementation.
+  bounded task. A post-change human reading of the new historical record is
+  still needed before its clarity can be treated as user-reported validation.
+- **Incomplete implementation**: none known inside the admitted document and
+  test slice. Future product validation is not hidden implementation.
 - **Advisory review**: native current-Agent self-review
-  `srv-a8480daf7e60bc2800fdb874e42aafe1` completed as a distinct separate pass.
-  It found the requirement, Markdown-only architecture, strict parser,
-  task-owned scope, aggregate-data boundary, and unchanged machine and authority
-  contracts consistent. It retains cross-consumer usefulness and future
-  Markdown-format compatibility as explicit unknowns.
+  `srv-fa84e6d63dc7caa77141ec9799a47292` completed as a distinct separate pass.
+  It found the requirement, historical/current evidence separation, task scope,
+  validation, privacy, read-only Taxi boundary, and unchanged authority
+  consistent. Exact timing and intervention details, usefulness to another
+  maintainer, cross-repository generalization, and future artifact value remain
+  explicit unknowns.
 - **Completion-record availability**: the current callable governance inventory
   does not expose `agentgov_task_completion_record`, so no native completion
   record is fabricated.
-- **Authority boundary**: the real review modified neither source nor consumer
-  repository and ran no consumer project workflow. No Git operation, tag, push,
-  publication, release, deployment, upgrade, machine-contract change, warning
-  gate, or broader external action was performed by the feature itself. The
-  product owner separately authorized one bounded parent-repository commit and
-  ordinary non-force push to `origin/main`; this does not authorize publication,
-  release, deployment, upgrade, or any other external action.
-- **Next product review**: in the next session, let the product owner inspect the corrected real
-  `REVIEW.md` and decide whether the distinction is now clear and sufficiently
-  compact. A machine-contract version or broader consumer-status redesign
-  remains not yet decided and would require a separately admitted task.
+- **Authority boundary**: the Taxi repository was inspected read-only and
+  remained unmodified. No project workflow, Taxi tests, Git operation, tag,
+  push, publication, release, deployment, artifact configuration, semantic
+  contract change, or broader external action was performed.
+- **Next product review**: after technical closeout, let the product owner read
+  the new historical record and confirm that it distinguishes evidence closure
+  from a successful ten-minute pilot. The fresh uncoached primary-product pilot
+  and automatic Taxi development-loop shadow pilot remain separate, unadmitted
+  future work.
 - **Previous Evidence Freshness pilot closeout**: human-admitted task
   `p1-evidence-freshness-release-review-pilot-v1` adds the product owner's
   selected read-only, non-blocking Evidence Freshness pilot to one existing
@@ -2285,11 +2278,12 @@ Future-0.3 development-governance integration and pre-release evidence:
   `doctor` → `onboard` → `next` path and must not be treated as validation of
   the newly accepted automatic journey; a replacement automatic-journey pilot
   record is required.
-- [ ] Convert the Taxi adoption notes into a completed cross-domain pilot
-  record, including timing, assistance required, unresolved release-gate
-  findings, and final maintainer decisions. A bounded semantic-relation gap
-  analysis record is prepared under `docs/experiments/semantic-relations/`;
-  it contains no invented Taxi observations.
+- [x] Close the historical Taxi cross-domain adoption record with the exact
+  adoption commit, unavailable strict timing, observed assistance and friction,
+  current read-only findings, and bounded maintainer decisions. The record
+  makes no ten-minute or unassisted-pass claim. The prepared semantic-relation
+  gap analysis remains unfilled, and the later automatic development-loop
+  shadow pilot remains separate.
 - [x] Decide whether the supported one-command experience should use an
   isolated tool installer, an ephemeral runner, or a small bootstrap command.
   The isolated installer is selected and the primary Quickstart now pins the
@@ -2301,8 +2295,11 @@ Future-0.3 development-governance integration and pre-release evidence:
 
 ## Known gaps
 
-- Taxi supplied initial cross-domain adoption evidence, but the pilot record
-  and maintainer decisions are not complete.
+- Taxi supplied initial cross-domain adoption evidence, and its historical
+  record is now closed. Exact timing remains unavailable, so the record is not
+  a successful ten-minute pilot or evidence for the later automatic
+  development-loop shadow pilot. Optional artifact value and cross-repository
+  generalization remain unknown.
 - Published 0.2.1 consumer CI reports stable-release update state but cannot
   open or merge dependency-update pull requests. The future 0.3 source writer
   remains unavailable to consumers until a separately approved release and
