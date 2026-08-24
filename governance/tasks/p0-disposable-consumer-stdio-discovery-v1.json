@@ -1,0 +1,93 @@
+{
+  "acceptance_signals": [
+    "Recheck the retained wheel filename, SHA-256, distribution identity, predecessor task hashes, and absence of running task Python processes before consumer preparation.",
+    "Create exactly one fresh operating-system temporary task root containing one disposable local Git repository with no remote and one fresh Python 3.11 environment.",
+    "Install the retained 0.3.0rc1 wheel offline with no index and no dependencies; perform no dependency or package download.",
+    "Verify the installed packaged Codex MCP binding enables all expected tools including agentgov_task_completion_record and declares the 1800-second timeout without writing any real consumer repository.",
+    "Launch only the installed foreground STDIO Adapter from the disposable repository and send controlled MCP initialize and tools/list messages for a client without form elicitation and a client with form elicitation.",
+    "Observe Adapter 1.7.0, six base tools, eight form-capable tools, completion input only task_path, clean JSON-RPC output, and normal process exit with no remaining task process.",
+    "Do not start Codex or another model, call any AgentGov tool, create a consumer task or completion record, alter consumer product content, access a real consumer repository, repair product source, retry after a product deviation, or clean retained evidence.",
+    "Do not modify Starter source, tests, or predecessor records; update only the newly admitted task evidence and named current-state documentation.",
+    "Run every declared validation command, record deterministic results, and perform a separate bounded current-Agent review without claiming native self-review completion."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-542b3ee7e39a4aa6a2be756bf2fa0f75 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Use the retained verified AgentGov 0.3.0rc1 wheel to create one fresh remote-free disposable consumer repository and one fresh Python 3.11 environment. Install the exact wheel offline, verify the packaged Codex MCP binding includes the completion tool and 1800-second timeout, then launch the installed foreground STDIO Adapter in controlled no-model processes and verify initialize plus tools/list for six base and eight form-capable tools. Stop before any model or completion-tool call."
+  },
+  "risk": {
+    "items": [
+      "A malformed STDIO driver could misclassify a harness failure as an Adapter failure; messages and exit conditions must be deterministic and privacy-bounded.",
+      "A foreground Adapter process could remain running after a failed exchange; process identity and final absence must be checked without broad termination.",
+      "The disposable repository could be confused with a real consumer; it must resolve inside the fresh task temporary root and have no remote.",
+      "The retained wheel could have changed after prior validation; any identity or digest mismatch must stop before installation.",
+      "The dirty Starter worktree contains prior user and task changes that must remain classified and preserved.",
+      "Reviewed assumption: The retained verified wheel and its isolated build evidence remain readable.",
+      "Reviewed assumption: Python 3.11 and Git are available locally.",
+      "Reviewed assumption: The installed Adapter needs no runtime dependency beyond the wheel for controlled initialize and tools/list exchanges.",
+      "Reviewed assumption: This is a fully specified low-risk successor selected from the preceding completion review and needs no new product alignment.",
+      "Reviewed unknown: Whether the installed console entry point starts and completes clean STDIO MCP exchanges from a disposable consumer working directory.",
+      "Reviewed unknown: Whether process-level capability negotiation returns the same six and eight tool inventories observed in isolated in-process discovery.",
+      "Reviewed unknown: Whether the packaged Codex binding and installed runtime identities remain consistent in the disposable consumer context."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/adr",
+      "docs/development-automation-contracts.md",
+      "docs/development-log/2026-08-23.md",
+      "docs/task-proposal-admission.md",
+      "docs/experiments",
+      "docs/validation",
+      "docs/recovery",
+      "src",
+      "tests",
+      "governance/tasks/p0-app-server-parser-preflight-static-comparison-v3.json",
+      "governance/tasks/p0-app-server-static-protocol-inspection-v2.json",
+      "governance/tasks/p0-app-server-thread-start-no-model-diagnostic-v1.json",
+      "governance/tasks/p0-deterministic-process-attribution-gate-v1.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v1.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v2.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v3.json",
+      "governance/tasks/p0-installed-app-server-schema-static-validation-v1.json",
+      "governance/tasks/p0-installed-app-server-schema-static-validation-v2.json",
+      "governance/tasks/p0-native-completion-consumer-journey-recovery-v2.json",
+      "governance/tasks/p0-native-completion-consumer-journey-recovery-v3.json",
+      "governance/tasks/p0-native-proposal-worktree-scope-binding-v1.json",
+      "governance/tasks/p0-reusable-app-server-schema-diagnostic-v1.json"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-disposable-consumer-stdio-discovery-v1.json",
+      "governance/tasks/p0-isolated-build-install-discovery-v2.json",
+      "governance/tasks/p0-isolated-build-install-discovery-v1.json",
+      "governance/tasks/p0-binary-safe-source-staging-v1.json",
+      "docs/build-validation/isolated-build-install-discovery-v2-2026-08-24.md",
+      "docs/consumer-validation/disposable-consumer-stdio-discovery-v1-2026-08-24.md",
+      "docs/development-log/2026-08-24.md",
+      "STATUS.md",
+      "docs/governance-mcp-adapter.md",
+      "docs/product-requirements-automatic-governance.md"
+    ]
+  },
+  "task_id": "p0-disposable-consumer-stdio-discovery-v1",
+  "title": "Disposable consumer STDIO discovery v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-disposable-consumer-stdio-discovery-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check scope governance/tasks/p0-disposable-consumer-stdio-discovery-v1.json --repository .",
+    "git diff --check"
+  ]
+}

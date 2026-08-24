@@ -1,0 +1,102 @@
+{
+  "acceptance_signals": [
+    "The first visible proposal-review content is a concise human-facing summary that states what approval does now, the task goal, future allowed scope, validation count, material risks or unknowns, and the authority boundary before any raw JSON.",
+    "The exact task-admission plan remains present after a clearly labeled secondary technical-details section for audit.",
+    "Decision labels directly distinguish approving only this task, sending it back for changes, and not approving it.",
+    "Approving still creates only the exact task record and does not start implementation or authorize scope expansion, Git, release, deployment, or publication.",
+    "Request changes, reject, decline, cancel, malformed input, stale inventory, and unsupported elicitation remain zero-write and fail closed.",
+    "Focused MCP tests protect summary-before-JSON ordering, required summary facts, exact technical detail retention, decision values, and unchanged authority behavior.",
+    "The first execution action after task take-up captures the exact task-start baseline before any repository write, and final comparison reports zero failures.",
+    "All pre-existing task records and unrelated dirty-worktree paths remain byte-identical to their task-start identities.",
+    "Affected current-state, admission, Adapter, product-requirement, ADR, and dated development-log documents describe the new summary-first behavior and its host-rendering limit.",
+    "The focused governance tests, documentation tests, complete Python 3.11 suite, task governance, repository governance, baseline comparison, privacy scan, and diff check pass."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-ba72562c52084fdda9716ec7fef4e160 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Replace the JSON-first native task-admission message with a concise summary-first decision card, followed by clearly secondary exact technical details, while preserving the existing human authority and fail-closed contract."
+  },
+  "risk": {
+    "items": [
+      "The host owns final form chrome and may not support collapsible content; this task guarantees summary-first ordering, not a host-specific collapse control.",
+      "The worktree already contains unrelated changes, so the task-start baseline and explicit identity preservation are required before implementation.",
+      "The scope schema limit requires several pre-existing paths to be classified inside broad source and test prefixes; acceptance forbids modifying unrelated files under those prefixes.",
+      "Reviewed assumption: The current Codex form renders the elicitation message in order before the decision controls.",
+      "Reviewed assumption: Plain headings and bullets are more understandable than leading with the raw admission-plan JSON.",
+      "Reviewed assumption: English decision copy remains the portable default for all MCP hosts.",
+      "Reviewed unknown: Whether every supported host renders Markdown headings identically.",
+      "Reviewed unknown: Whether a future MCP or Codex host version will provide native collapsible technical-detail controls."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/adr/INVARIANTS.md",
+      "docs/development-automation-contracts.md",
+      "docs/development-log/2026-08-23.md",
+      "docs/development-log/2026-08-24.md",
+      "docs/build-validation",
+      "docs/consumer-validation",
+      "docs/experiments",
+      "docs/recovery",
+      "docs/scope-validation",
+      "docs/validation",
+      "scripts",
+      "governance/tasks/p0-installed-app-server-schema-static-validation-v1.json",
+      "governance/tasks/p0-installed-app-server-schema-static-validation-v2.json",
+      "governance/tasks/p0-isolated-build-install-discovery-v1.json",
+      "governance/tasks/p0-isolated-build-install-discovery-v2.json",
+      "governance/tasks/p0-native-completion-consumer-journey-recovery-v2.json",
+      "governance/tasks/p0-native-completion-consumer-journey-recovery-v3.json",
+      "governance/tasks/p0-native-proposal-worktree-scope-binding-v1.json",
+      "governance/tasks/p0-reusable-app-server-schema-diagnostic-v1.json",
+      "governance/tasks/p0-reusable-foreground-stdio-controller-closeout-v1.json",
+      "governance/tasks/p0-reusable-foreground-stdio-controller-v1.json",
+      "governance/tasks/p0-task-start-scope-baseline-v1.json"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-native-task-admission-summary-card-v1.json",
+      ".agentgov/scope-baselines/p0-native-task-admission-summary-card-v1.json",
+      "STATUS.md",
+      "docs/adr/0015-use-mcp-elicitation-for-codex-task-admission.md",
+      "docs/task-proposal-admission.md",
+      "docs/governance-mcp-adapter.md",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/development-log/2026-08-25.md",
+      "src/agentgov",
+      "tests",
+      "governance/tasks/p0-app-server-parser-preflight-static-comparison-v3.json",
+      "governance/tasks/p0-app-server-static-protocol-inspection-v2.json",
+      "governance/tasks/p0-app-server-thread-start-no-model-diagnostic-v1.json",
+      "governance/tasks/p0-binary-safe-source-staging-v1.json",
+      "governance/tasks/p0-deterministic-process-attribution-gate-v1.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v1.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v2.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v3.json",
+      "governance/tasks/p0-disposable-codex-mcp-initialization-v1.json",
+      "governance/tasks/p0-disposable-consumer-stdio-discovery-v1.json"
+    ]
+  },
+  "task_id": "p0-native-task-admission-summary-card-v1",
+  "title": "Native task-admission summary-first decision card v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-native-task-admission-summary-card-v1.json --baseline .agentgov/scope-baselines/p0-native-task-admission-summary-card-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_governance_mcp -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-native-task-admission-summary-card-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

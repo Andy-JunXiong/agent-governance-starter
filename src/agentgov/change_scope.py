@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 from dataclasses import asdict, dataclass
@@ -68,6 +69,36 @@ class GitChange:
     @property
     def admitted(self) -> bool:
         return all(endpoint.admitted for endpoint in self.endpoints)
+
+
+@dataclass(frozen=True, order=True)
+class GitChangedPathRecord:
+    """One normalized Git metadata record with no file content or host path."""
+
+    layer: str
+    status: str
+    path: str
+    old_path: str | None = None
+
+    @property
+    def paths(self) -> tuple[str, ...]:
+        if self.old_path is None:
+            return (self.path,)
+        return (self.old_path, self.path)
+
+
+@dataclass(frozen=True)
+class GitChangedPathInventory:
+    """Stable privacy-bounded inventory used by pre-admission scope checks."""
+
+    records: tuple[GitChangedPathRecord, ...]
+    digest: str
+
+    @property
+    def paths(self) -> tuple[str, ...]:
+        return tuple(
+            sorted({path for record in self.records for path in record.paths})
+        )
 
 
 @dataclass(frozen=True)
@@ -175,11 +206,28 @@ def _parse_name_status(output: bytes, *, layer: str) -> list[tuple[str, str, str
 def _inventory_changes(root: Path) -> tuple[str, list[tuple[str, str, str, str | None]]]:
     head_sha = _require_repository_root(root)
     staged = _parse_name_status(
-        _run_git(root, "diff", "--cached", "--name-status", "-z", "--find-renames"),
+        _run_git(
+            root,
+            "diff",
+            "--cached",
+            "--name-status",
+            "-z",
+            "--find-renames",
+            "--find-copies",
+            "--find-copies-harder",
+        ),
         layer="staged",
     )
     unstaged = _parse_name_status(
-        _run_git(root, "diff", "--name-status", "-z", "--find-renames"),
+        _run_git(
+            root,
+            "diff",
+            "--name-status",
+            "-z",
+            "--find-renames",
+            "--find-copies",
+            "--find-copies-harder",
+        ),
         layer="unstaged",
     )
     untracked_output = _run_git(root, "ls-files", "--others", "--exclude-standard", "-z")
@@ -195,6 +243,48 @@ def _inventory_changes(root: Path) -> tuple[str, list[tuple[str, str, str, str |
     ]
     records.sort(key=lambda item: (_LAYER_ORDER[item[0]], item[2], item[3] or ""))
     return head_sha, records
+
+
+def inventory_changed_paths(repository: Path) -> GitChangedPathInventory:
+    """Return an exact read-only inventory of normalized changed-path metadata."""
+
+    root = _safe_root(repository)
+    _head_sha, raw_records = _inventory_changes(root)
+    records = tuple(
+        GitChangedPathRecord(
+            layer=layer,
+            status=status,
+            path=path,
+            old_path=old_path,
+        )
+        for layer, status, path, old_path in raw_records
+    )
+    encoded = json.dumps(
+        [asdict(record) for record in records],
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return GitChangedPathInventory(
+        records=records,
+        digest="sha256:" + hashlib.sha256(encoded).hexdigest(),
+    )
+
+
+def unclassified_inventory_paths(
+    inventory: GitChangedPathInventory,
+    *,
+    includes: tuple[str, ...],
+    excludes: tuple[str, ...],
+) -> tuple[str, ...]:
+    """Return paths matching neither proposed include nor exclude prefixes."""
+
+    unclassified = []
+    for path in inventory.paths:
+        decision = evaluate_path_scope(path, includes=includes, excludes=excludes)
+        if decision.matched_include is None and decision.matched_exclude is None:
+            unclassified.append(path)
+    return tuple(unclassified)
 
 
 def _endpoint(role: str, decision: PathScopeDecision) -> ScopeEndpoint:
@@ -236,7 +326,7 @@ def check_development_scope(
     changes: list[GitChange] = []
     findings: list[ScopeFinding] = []
     for layer, status, path, old_path in records:
-        if status == "renamed" and old_path is not None:
+        if status in {"copied", "renamed"} and old_path is not None:
             endpoints = (
                 _endpoint(
                     "old",

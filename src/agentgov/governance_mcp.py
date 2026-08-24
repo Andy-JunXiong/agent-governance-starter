@@ -15,9 +15,12 @@ from typing import Any, Callable, Mapping, Sequence, TextIO
 from agentgov.clarification_dialogue import denied_authority
 from agentgov.alignment_transport import AlignmentStreamSession
 from agentgov.change_scope import (
+    GitChangedPathInventory,
     GitInspectionError,
     ScopePolicyError,
     check_development_scope,
+    inventory_changed_paths,
+    unclassified_inventory_paths,
 )
 from agentgov.development_evidence import (
     EvidenceError,
@@ -81,7 +84,7 @@ from agentgov.task_contract import load_development_task
 MCP_PROTOCOL_VERSION = "2026-07-28"
 MCP_LEGACY_PROTOCOL_VERSIONS = ("2025-11-25", "2025-06-18")
 MCP_SERVER_NAME = "agentgov-governance"
-MCP_SERVER_VERSION = "1.6.0"
+MCP_SERVER_VERSION = "1.7.0"
 MCP_NATIVE_ACCOUNTABLE_OWNER = "Human product owner"
 MCP_BASE_TOOL_NAMES = (
     "agentgov_alignment_start",
@@ -100,6 +103,7 @@ MCP_FORM_TOOL_NAMES = (
 )
 MCP_TOOL_NAMES = (*MCP_BASE_TOOL_NAMES, *MCP_FORM_TOOL_NAMES)
 MAX_PROPOSAL_ELICITATION_MESSAGE_CHARACTERS = 24_000
+_MARKDOWN_ESCAPE_RE = re.compile(r"([\\`*_[\]<>#])")
 MAX_DRIFT_REVIEW_ELICITATION_MESSAGE_CHARACTERS = 12_000
 MCP_SERVER_INSTRUCTIONS = (
     "Use these tools without waiting for the user to name them. Before meaningful development "
@@ -120,7 +124,9 @@ MCP_SERVER_INSTRUCTIONS = (
     "measurement-only, or differently scoped task is not that record. When no matching record "
     "exists, use the native proposal-review tool with normalized low-risk task meaning. Do not "
     "use proposal review for read-only work. Do not modify the repository if the required tool is "
-    "unavailable or fails. That tool may create only the exact "
+    "unavailable or fails. Before opening the native form, that tool requires every existing "
+    "changed repository path to be classified by the proposed include or exclude scope, and it "
+    "revalidates the same privacy-bounded path inventory before admission. That tool may create only the exact "
     "human-admitted task after a capability-negotiated form; ordinary tool permission is not task admission. "
     "After bounded implementation, use the task-completion-record tool for the exact admitted task. "
     "It may run only task-declared validation and append privacy-bounded local evidence; it never "
@@ -1268,6 +1274,18 @@ def governance_mcp_tools() -> tuple[Mapping[str, Any], ...]:
     return tools
 
 
+@dataclass(frozen=True)
+class _NativeTaskProposalPreparation:
+    """A proposal plan bound to the exact changed-path inventory reviewed."""
+
+    preparation: TaskProposalPreparation
+    changed_path_inventory: GitChangedPathInventory
+
+    @property
+    def plan(self):
+        return self.preparation.plan
+
+
 class GovernanceMcpAdapter:
     """Host-neutral tools with foreground journeys and bounded local records."""
 
@@ -1277,6 +1295,9 @@ class GovernanceMcpAdapter:
         adapter_id: str,
         provider: SemanticReviewProviderCapabilities,
         repository: Path | None = None,
+        changed_path_inventory_provider: Callable[
+            [Path], GitChangedPathInventory
+        ] = inventory_changed_paths,
     ) -> None:
         if not isinstance(adapter_id, str) or not _ID_RE.fullmatch(adapter_id):
             raise GovernanceMcpError("MCP adapter_id is invalid")
@@ -1286,6 +1307,7 @@ class GovernanceMcpAdapter:
         self.adapter_id = adapter_id
         self.provider = normalized_provider
         self.repository = repository
+        self._changed_path_inventory_provider = changed_path_inventory_provider
         self._journeys: dict[str, _Journey] = {}
 
     def call_tool(self, name: str, arguments: Any) -> Mapping[str, Any]:
@@ -1309,7 +1331,7 @@ class GovernanceMcpAdapter:
                 raise
             raise GovernanceMcpError(str(exc)) from exc
 
-    def prepare_task_proposal(self, value: Any) -> TaskProposalPreparation:
+    def prepare_task_proposal(self, value: Any) -> _NativeTaskProposalPreparation:
         """Build an exact read-only plan from one Codex-materialized draft."""
 
         fields = {
@@ -1396,10 +1418,53 @@ class GovernanceMcpAdapter:
                 retryable=False,
             )
         try:
-            return ReferenceTaskProposalAdapter(
+            changed_path_inventory = self._changed_path_inventory_provider(
+                self.repository
+            )
+            if type(changed_path_inventory) is not GitChangedPathInventory:
+                raise TypeError("invalid changed-path inventory")
+        except (GitInspectionError, OSError, TypeError, ValueError) as exc:
+            raise GovernanceMcpError(
+                "Local repository state prevented safe changed-path inventory",
+                code="task_proposal_repository_unavailable",
+                stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+                field_path=None,
+                rule="changed_path_inventory",
+                retryable=False,
+            ) from exc
+        try:
+            unclassified_paths = unclassified_inventory_paths(
+                changed_path_inventory,
+                includes=include_paths,
+                excludes=exclude_paths,
+            )
+        except ValueError as exc:
+            raise GovernanceMcpError(
+                "Local repository state prevented safe changed-path classification",
+                code="task_proposal_repository_unavailable",
+                stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+                field_path=None,
+                rule="changed_path_inventory",
+                retryable=False,
+            ) from exc
+        if unclassified_paths:
+            raise GovernanceMcpError(
+                "Existing changed paths are not fully classified by the proposed scope",
+                code="task_proposal_scope_incomplete",
+                stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+                field_path="scope",
+                rule="changed_path_classification",
+                retryable=True,
+            )
+        try:
+            preparation = ReferenceTaskProposalAdapter(
                 _NormalizedOnlyMaterializer(),
                 adapter_id=self.adapter_id,
             ).prepare_from_draft(self.repository, draft)
+            return _NativeTaskProposalPreparation(
+                preparation=preparation,
+                changed_path_inventory=changed_path_inventory,
+            )
         except ReferenceTaskProposalAdapterError as exc:
             raise GovernanceMcpError(
                 str(exc),
@@ -1421,7 +1486,7 @@ class GovernanceMcpAdapter:
 
     def complete_task_proposal_review(
         self,
-        preparation: TaskProposalPreparation,
+        preparation: _NativeTaskProposalPreparation,
         response: Any,
     ) -> Mapping[str, Any]:
         """Apply only one exact native admit response to the reviewed plan."""
@@ -1488,6 +1553,39 @@ class GovernanceMcpAdapter:
         )
         modified = False
         if action == "accept" and decision == "admit":
+            if type(preparation) is not _NativeTaskProposalPreparation:
+                raise GovernanceMcpError(
+                    "Native proposal preparation is invalid",
+                    code="task_proposal_plan_stale",
+                    stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+                    field_path="admission_plan",
+                    rule="changed_path_inventory",
+                    retryable=False,
+                )
+            try:
+                current_inventory = self._changed_path_inventory_provider(
+                    self.repository
+                )
+                if type(current_inventory) is not GitChangedPathInventory:
+                    raise TypeError("invalid changed-path inventory")
+            except (GitInspectionError, OSError, TypeError, ValueError) as exc:
+                raise GovernanceMcpError(
+                    "Local repository state prevented safe task-admission revalidation",
+                    code="task_proposal_plan_stale",
+                    stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+                    field_path="admission_plan",
+                    rule="changed_path_inventory",
+                    retryable=False,
+                ) from exc
+            if current_inventory != preparation.changed_path_inventory:
+                raise GovernanceMcpError(
+                    "Changed-path inventory no longer matches the reviewed proposal",
+                    code="task_proposal_plan_stale",
+                    stage=MCP_TASK_PROPOSAL_TOOL_NAME,
+                    field_path="admission_plan",
+                    rule="changed_path_inventory",
+                    retryable=True,
+                )
             try:
                 apply_task_admission_plan(preparation.plan)
             except TaskProposalPolicyError as exc:
@@ -2323,20 +2421,93 @@ class GovernanceMcpServer:
             "properties": {
                 "decision": {
                     "type": "string",
-                    "title": "Task proposal decision",
+                    "title": "What do you want to do?",
                     "description": (
-                        "Admit only this exact reviewed task, request changes without "
-                        "writing, or reject it without writing."
+                        "Approving creates only this task record. Work starts only after "
+                        "a separate take-up; this decision does not authorize Git, release, "
+                        "or deployment."
                     ),
                     "oneOf": [
-                        {"const": "admit", "title": "Admit this exact task"},
-                        {"const": "request_changes", "title": "Request changes"},
-                        {"const": "reject", "title": "Reject proposal"},
+                        {"const": "admit", "title": "Approve only this task"},
+                        {"const": "request_changes", "title": "Send back for changes"},
+                        {"const": "reject", "title": "Do not approve"},
                     ],
                 }
             },
             "required": ["decision"],
         }
+
+    @staticmethod
+    def _proposal_summary_text(value: str) -> str:
+        return _MARKDOWN_ESCAPE_RE.sub(r"\\\1", value)
+
+    @classmethod
+    def _append_proposal_summary_items(
+        cls,
+        lines: list[str],
+        *,
+        heading: str,
+        items: Sequence[str],
+    ) -> None:
+        if not items:
+            return
+        lines.extend(("", heading))
+        lines.extend(f"- {cls._proposal_summary_text(item)}" for item in items[:3])
+        remaining = len(items) - 3
+        if remaining:
+            lines.append(f"- +{remaining} more in the technical details below")
+
+    @classmethod
+    def _proposal_review_message(
+        cls, preparation: _NativeTaskProposalPreparation
+    ) -> str:
+        plan = preparation.plan
+        task = plan.proposal["task"]
+        scope = task["scope"]
+        risks = task["risk"]["items"]
+        unknowns = task["unknowns"]
+
+        lines = [
+            "# TASK APPROVAL — QUICK SUMMARY",
+            "",
+            "## What happens now",
+            (
+                "**Approve only this task** creates one task record. It does not start "
+                "work and does not authorize commit, push, release, or deployment."
+            ),
+            "",
+            "## Task",
+            f"**Name:** {cls._proposal_summary_text(task['title'])}",
+            f"**Goal:** {cls._proposal_summary_text(task['requirement_summary'])}",
+            f"**Task record created if approved:** `{plan.target}`",
+            "",
+            "## Boundaries and checks",
+            f"- Allowed path rules for later execution: {len(scope['include_paths'])}",
+            f"- Protected path rules: {len(scope['exclude_paths'])}",
+            f"- Required validation commands: {len(task['validation_commands'])}",
+            "- Human decision owner: Human product owner",
+        ]
+        cls._append_proposal_summary_items(
+            lines, heading="## Material risks", items=risks
+        )
+        cls._append_proposal_summary_items(
+            lines, heading="## Still unknown", items=unknowns
+        )
+        lines.extend(
+            (
+                "",
+                "## Technical details — audit only",
+                (
+                    "The exact scope, checks, digests, and authority flags are retained "
+                    "below. You do not need to read this JSON to understand the decision above."
+                ),
+                "",
+                "```json",
+                render_task_admission_plan_json(plan).rstrip(),
+                "```",
+            )
+        )
+        return "\n".join(lines) + "\n"
 
     @staticmethod
     def _drift_review_schema() -> Mapping[str, Any]:
@@ -2489,12 +2660,7 @@ class GovernanceMcpServer:
             preparation = self.adapter.prepare_task_proposal(
                 params.get("arguments", {})
             )
-            message = (
-                "Review this exact bounded AgentGov task-admission plan. "
-                "Only 'Admit this exact task' may create the listed target; all "
-                "other outcomes perform no repository write.\n\n"
-                + render_task_admission_plan_json(preparation.plan)
-            )
+            message = self._proposal_review_message(preparation)
             if len(message) > MAX_PROPOSAL_ELICITATION_MESSAGE_CHARACTERS:
                 raise GovernanceMcpError(
                     "Task proposal is too large for bounded native review",

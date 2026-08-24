@@ -1,0 +1,106 @@
+{
+  "acceptance_signals": [
+    "A repository-internal Python controller exists only under scripts/foreground_stdio and exposes a reusable programmatic interface without changing the public AgentGov CLI or installed package.",
+    "The controller invokes an explicit argv with shell disabled, requires an existing working directory, accepts a finite ordered JSON-message sequence, and never constructs or evaluates a shell command.",
+    "For each request carrying an ID, the controller accepts only the exact matching response ID, records bounded intervening notifications, and reports duplicate, missing, unexpected, or mismatched response identities deterministically.",
+    "The controller closes stdin after the declared sequence and enforces explicit per-step, overall, message-count, stdout-byte, and stderr-byte bounds.",
+    "Outcome categories distinguish success, spawn failure, early exit, malformed JSONL, response mismatch, step timeout, overall timeout, output limit, stderr policy deviation, nonzero exit, and termination failure without treating advisory observations as deterministic failures.",
+    "Returned and recorded results contain only normalized categories, counts, booleans, bounded protocol method names, and timing buckets; they do not expose raw argv, absolute paths, environment values, process IDs, stdout, stderr, or message payloads.",
+    "Timeout recovery targets only the controller's directly spawned child process, performs one bounded terminate-then-kill sequence if needed, and never scans or terminates a process tree or unrelated process.",
+    "An inert local fixture can deterministically simulate normal responses, notifications, early exit, malformed JSON, response-ID mismatch, delayed output, output overflow, stderr output, and nonzero exit without starting Codex, AgentGov, MCP, a model, or network access.",
+    "Fixture-backed tests cover the successful ordered exchange and every supported failure classification, privacy normalization, limit enforcement, stdin closure, and absence of shell execution.",
+    "The task changes only its admitted controller directory, task record, dated evidence, current development log, STATUS, MCP adapter guide, and automatic-governance product requirement; all predecessor tasks and evidence remain byte-identical.",
+    "All declared controller tests, repository baseline tests, governance checks, scope check, and diff whitespace check pass.",
+    "Because this task follows a resolved alignment journey, implementation closeout includes the required native current-Agent self-review before task completion recording."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-ca0bc405c04044d9a45acc9ecc808f42 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Implement one repository-internal, reusable Python foreground JSONL STDIO controller under scripts/foreground_stdio for later bounded subprocess protocol checks. The controller must launch only an explicitly supplied argv without a shell, use an existing supplied working directory, send an ordered finite message sequence, correlate exact response IDs while retaining bounded notifications, close stdin, enforce per-step and overall timeouts plus message, stdout, and stderr limits, classify deterministic outcomes, and return only normalized privacy-bounded results. Add an inert local fixture process and fixture-backed tests. This task must not launch Codex, AgentGov, an MCP server, a model, or a networked process; must not change the public AgentGov CLI, installed package, release identity, user configuration, predecessor evidence, or Git state; and may terminate only the directly spawned child process."
+  },
+  "risk": {
+    "items": [
+      "A reader thread could outlive a timed-out exchange; tests must prove bounded shutdown and report termination failure if it cannot be contained.",
+      "Unbounded or sensitive child output could leak through evidence; all capture and returned fields must be capped and normalized.",
+      "Response correlation could accept the wrong request result; exact typed ID matching and duplicate detection are required.",
+      "A termination path could affect unrelated processes; authority is limited to the exact directly spawned child object.",
+      "Fixture behavior could accidentally invoke project runtime or network access; it must use only inert standard-library local behavior.",
+      "The controller could be mistaken for a public API; documentation must label it internal validation infrastructure.",
+      "The dirty worktree could be widened or rewritten; scope validation must preserve excluded and predecessor paths.",
+      "Reviewed assumption: Python 3.11 subprocess, threading, queue, and JSON standard-library facilities are sufficient; no dependency is needed.",
+      "Reviewed assumption: A repository-internal scripts module is the correct boundary because the controller is validation infrastructure rather than public product behavior.",
+      "Reviewed assumption: The later Codex retry can consume this controller programmatically without requiring it to be shipped in the AgentGov wheel.",
+      "Reviewed assumption: The current dirty worktree contains earlier human and admitted-task changes that must be classified and preserved.",
+      "Reviewed assumption: The resolved alignment direction is the reusable fixture-tested controller, not another one-off Codex attempt.",
+      "Reviewed unknown: Whether the later Codex App Server emits protocol framing or shutdown behavior not represented by the inert fixture.",
+      "Reviewed unknown: Whether Windows child-process termination timing will require a later narrowly admitted compatibility adjustment.",
+      "Reviewed unknown: Whether the later Codex retry will need additional notification filtering beyond bounded method-name retention.",
+      "Reviewed unknown: Whether this internal controller should eventually become packaged product functionality; that is outside this task."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/adr",
+      "docs/development-automation-contracts.md",
+      "docs/development-log/2026-08-23.md",
+      "docs/task-proposal-admission.md",
+      "docs/experiments",
+      "docs/validation",
+      "docs/recovery",
+      "src",
+      "tests",
+      "governance/tasks/p0-app-server-parser-preflight-static-comparison-v3.json",
+      "governance/tasks/p0-app-server-static-protocol-inspection-v2.json",
+      "governance/tasks/p0-app-server-thread-start-no-model-diagnostic-v1.json",
+      "governance/tasks/p0-deterministic-process-attribution-gate-v1.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v1.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v2.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v3.json",
+      "governance/tasks/p0-installed-app-server-schema-static-validation-v1.json",
+      "governance/tasks/p0-installed-app-server-schema-static-validation-v2.json",
+      "governance/tasks/p0-native-completion-consumer-journey-recovery-v2.json",
+      "governance/tasks/p0-native-completion-consumer-journey-recovery-v3.json",
+      "governance/tasks/p0-native-proposal-worktree-scope-binding-v1.json",
+      "governance/tasks/p0-reusable-app-server-schema-diagnostic-v1.json"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-reusable-foreground-stdio-controller-v1.json",
+      "scripts/foreground_stdio",
+      "docs/consumer-validation/reusable-foreground-stdio-controller-v1-2026-08-24.md",
+      "governance/tasks/p0-disposable-codex-mcp-initialization-v1.json",
+      "governance/tasks/p0-disposable-consumer-stdio-discovery-v1.json",
+      "governance/tasks/p0-isolated-build-install-discovery-v2.json",
+      "governance/tasks/p0-isolated-build-install-discovery-v1.json",
+      "governance/tasks/p0-binary-safe-source-staging-v1.json",
+      "docs/build-validation/isolated-build-install-discovery-v2-2026-08-24.md",
+      "docs/consumer-validation/disposable-consumer-stdio-discovery-v1-2026-08-24.md",
+      "docs/consumer-validation/disposable-codex-mcp-initialization-v1-2026-08-24.md",
+      "docs/development-log/2026-08-24.md",
+      "STATUS.md",
+      "docs/governance-mcp-adapter.md",
+      "docs/product-requirements-automatic-governance.md"
+    ]
+  },
+  "task_id": "p0-reusable-foreground-stdio-controller-v1",
+  "title": "Reusable foreground STDIO controller v1",
+  "validation_commands": [
+    "py -3.11 -m unittest discover -s scripts/foreground_stdio -p \"test_*.py\" -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-reusable-foreground-stdio-controller-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check scope governance/tasks/p0-reusable-foreground-stdio-controller-v1.json --repository .",
+    "git diff --check"
+  ]
+}

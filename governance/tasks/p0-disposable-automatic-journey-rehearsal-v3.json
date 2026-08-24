@@ -1,0 +1,93 @@
+{
+  "acceptance_signals": [
+    "The retained synthetic repository is verified as the same remote-free clean one-commit baseline used by v2, and no existing consumer repository is used.",
+    "The synthetic project has no persisted user-level Codex trust entry before the rehearsal, and its project-scoped Codex configuration is not relied upon.",
+    "Exactly one Codex App Server process receives AgentGov MCP command, working directory, required status, eight-tool allow-list, approval mode, and timeouts only through one-run CLI configuration overrides.",
+    "The App Server client declares structured MCP form elicitation support and starts exactly one ephemeral thread so the rehearsal thread is not materialized on disk.",
+    "Before any model turn, no-model checks confirm current Codex and AgentGov identities, successful required-MCP startup, exactly eight expected AgentGov tools, the ephemeral thread, zero remotes, and a clean synthetic baseline.",
+    "Only after every readiness gate passes, exactly one ordinary low-risk request starts exactly one external model turn without AgentGov names, internal tool names, raw protocol JSON, coaching, retry, or a second session.",
+    "The trace separately records structured proposal review, human decision, separate task take-up, implementation scope, declared validation, native task completion when callable, distinct current-Agent review, visible human interactions, terminal state, and first deviation.",
+    "Any failed gate, missing form, MCP startup error, non-ephemeral thread, unexpected persistence, scope drift, or unexpected mutation stops the measured attempt without repair, coaching, restart, or second model turn.",
+    "The user-level Codex configuration byte digest and normalized synthetic-project trust match are checked before and after the App Server lifecycle; the digest remains unchanged and the trust match remains absent.",
+    "Requested synthetic Agent changes remain uncommitted, the synthetic repository remains remote-free, and no Starter commit, push, pull request, publication, release, deployment, CI change, or production action occurs.",
+    "Only normalized privacy-bounded evidence is retained; no raw prompt, response, transcript, source content, validation output, credential, private path, external session identifier, or model-private reasoning enters the repository.",
+    "The v3 experiment record, current status, strategic plan, dated log, and documentation tests agree on the outcome and limits; all declared validation passes or records the exact bounded failure without weakening tests."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-8a42b6c98f4242bf89fe0b4c8d911958 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Reuse the retained remote-free synthetic rehearsal repository and run one bounded automatic-governance rehearsal through Codex App Server without relying on project-scoped trust. Inject the exact AgentGov MCP server only through one-run CLI configuration overrides, require successful MCP initialization, initialize the App Server client with structured form elicitation support, and create one ephemeral thread. After no-model readiness verifies the expected eight AgentGov tools and clean synthetic baseline, allow exactly one ordinary low-risk model turn. Surface and bind any structured human proposal decision, require separate task take-up, measure implementation, declared validation, native completion when callable, and distinct current-Agent review, then stop at completion or the first deviation. Preserve only normalized privacy-bounded evidence and verify that user Codex configuration and trust state are unchanged."
+  },
+  "risk": {
+    "items": [
+      "The single external model turn uses the existing authenticated entitlement and may fail before or during the governed journey.",
+      "One-run CLI override quoting or working-directory binding could target the wrong process or repository unless every resolved identity is verified before the turn.",
+      "A required MCP initialization failure may surface only a generic App Server error and must remain a stop condition.",
+      "Structured form mediation may still add a visible manual relay step; it must be counted and not described as fully automatic if observed.",
+      "An ephemeral thread avoids rollout persistence but does not prove that Codex writes no logs, caches, or other host state.",
+      "A process interruption could require bounded termination of the task-created App Server process; it does not authorize broader process cleanup.",
+      "One synthetic run cannot establish real-consumer adoption, cross-host reliability, causal benefit, ROI, prevented harm, or production readiness.",
+      "Unexpected user configuration, trust, repository, or session persistence must stop the attempt and remain disclosed rather than trigger an unauthorized repair.",
+      "Reviewed assumption: The retained synthetic repository and its one local baseline commit remain available, clean, remote-free, and contain only synthetic non-sensitive content.",
+      "Reviewed assumption: Codex 0.146.0 accepts one-run CLI configuration overrides for App Server and its local protocol accepts ephemeral root threads.",
+      "Reviewed assumption: AgentGov 0.3.0rc1 with Adapter 1.6.0 remains locally callable from the operating-system account used by App Server.",
+      "Reviewed assumption: The current authenticated Codex entitlement can serve one external model turn without copying or exposing credentials.",
+      "Reviewed assumption: The product owner can review a structured App Server form and separately authorize consumer task take-up if those stages are reached.",
+      "Reviewed assumption: The synthetic request can be implemented and validated without dependency downloads.",
+      "Reviewed assumption: The existing dated development log can append this session while preserving prior evidence.",
+      "Reviewed unknown: Whether the required AgentGov MCP initializes successfully when supplied only through App Server CLI overrides.",
+      "Reviewed unknown: Whether the external Agent autonomously selects proposal review for the ordinary low-risk request.",
+      "Reviewed unknown: Whether the structured MCP form remains active long enough for direct human review and a bound response.",
+      "Reviewed unknown: Whether the Agent stops after admission for separate task take-up.",
+      "Reviewed unknown: Whether native completion recording and distinct current-Agent review are both selected after implementation and validation.",
+      "Reviewed unknown: Whether App Server produces any user-level state outside the configuration, trust, and ephemeral-thread boundaries measured by this task.",
+      "Reviewed unknown: Whether one synthetic rehearsal provides useful evidence beyond this host and fixture."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "docs/assets",
+      "src",
+      "schemas",
+      "templates",
+      "release",
+      "README.md",
+      "pyproject.toml",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v1.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v2.json",
+      "docs/experiments/disposable-automatic-journey-rehearsal-2026-08-23.md",
+      "docs/experiments/disposable-automatic-journey-rehearsal-v2-2026-08-23.md",
+      "governance/tasks/p1-taxi-cross-domain-pilot-record-closeout-v1.json",
+      "docs/experiments/taxi-cross-domain-adoption-pilot.md"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v3.json",
+      "docs/experiments/disposable-automatic-journey-rehearsal-v3-2026-08-23.md",
+      "docs/development-log/2026-08-23.md",
+      "DEVELOPMENT_PLAN.md",
+      "STATUS.md",
+      "tests/test_user_documentation.py"
+    ]
+  },
+  "task_id": "p0-disposable-automatic-journey-rehearsal-v3",
+  "title": "Run one trust-independent ephemeral App Server rehearsal",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check task governance/tasks/p0-disposable-automatic-journey-rehearsal-v3.json --repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check scope governance/tasks/p0-disposable-automatic-journey-rehearsal-v3.json --repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

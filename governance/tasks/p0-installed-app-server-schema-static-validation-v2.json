@@ -1,0 +1,108 @@
+{
+  "acceptance_signals": [
+    "The observer has a narrow injected and Windows-host boundary, performs only read-only enumeration, classifies only relevant process families, and emits no identifiers, raw names, command lines, usernames, executable paths, host paths, or unrelated process data.",
+    "Incomplete enumeration, malformed records, ambiguous classification, missing ancestry, unknown task lineage, or snapshot mismatch returns a stable indeterminate result and prevents schema generation.",
+    "A fully attributable nonzero ambient baseline is accepted; the exact task root and relevant descendants are tracked transiently, and the existing attribution gate requires no task-owned relevant process to remain.",
+    "Deterministic tests cover privacy reduction, classification, ancestry, ambient readiness, same-class replacement, incomplete identity, cleanup, observer failure, command rejection, one-attempt enforcement, bounded JSON discovery, diagnostic reduction, and temporary-directory removal.",
+    "Read-only discovery selects exactly one platform-native Windows Codex entry and verifies the experimental JSON schema-generation surface without selecting a script wrapper or daemon command.",
+    "After all gates pass, exactly one verified task-owned directory is created under the operating-system temporary root and exactly one schema-generation subcommand is invoked, with no substitution, second generation, or retry.",
+    "Generated entries remain bounded to that directory; links, non-JSON entries, excess documents or size, invalid JSON, cross-file ambiguity, and unsupported constructs stop or remain indeterminate without raw values entering retained evidence.",
+    "The existing diagnostic returns compatible, incompatible, or indeterminate with bounded counts, normalized fields, stable reason codes, and first-deviation evidence; it does not prove runtime thread or required-MCP readiness.",
+    "The exact temporary directory is removed and postflight confirms unchanged configuration, trust, repository state, and ambient attribution with no task-owned relevant process remaining; cleanup failure is not retried.",
+    "The two existing upstream modules remain byte-identical; their inclusion classifies current dependency paths but does not authorize behavior changes.",
+    "Focused tests, the Python 3.11 full suite, task and repository governance, changed-path classification, JSON parsing, privacy assertions, and diff checks pass or disclose only exact excluded findings."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-95812d33eec34a6790857096ea5c946e and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Build one dependency-free internal Windows process observer and one controlled installed-schema validation driver. The observer transiently reduces only relevant process metadata to normalized class, presence, lineage-completeness, count, and reason-code facts. The driver composes the existing process-attribution gate and schema diagnostic without changing their behavior, permits a complete nonzero ambient baseline, runs at most one installed experimental schema-generation subcommand in one verified temporary directory, diagnoses bounded JSON only in memory, cleans up, reconciles post-state, and stops at the first non-ready or deviating condition. It never starts an App Server daemon, initializes a client, creates a thread, starts MCP, sends a prompt, or requests a model turn."
+  },
+  "risk": {
+    "items": [
+      "Transient process metadata is sensitive and must remain in memory, be discarded after normalization, and never enter results, exceptions, logs, tests, or repository evidence.",
+      "A permissive classifier could mislabel a task-owned process as ambient; incomplete classification or lineage must fail closed.",
+      "A malformed installed command could launch a daemon or model path; command construction must be allow-listed and tested before the single invocation.",
+      "Generation or cleanup could leave temporary files; cleanup must be registered before invocation and verified afterward.",
+      "Generated schema may be large, malformed, multi-document, cross-referenced, or unsupported; bounded discovery must return indeterminate rather than guess.",
+      "The one-shot Windows result does not establish cross-host portability, runtime readiness, required-MCP readiness, causal benefit, or user value.",
+      "Shared documentation files contain prior uncommitted work that must be preserved.",
+      "Excluded changed paths receive no ownership, cleanup, exception, or downstream authority.",
+      "Reviewed assumption: Python 3.11 and a read-only Windows process-query surface are available.",
+      "Reviewed assumption: The installed Codex distribution still exposes one platform-native entry and the experimental JSON schema-generation surface.",
+      "Reviewed assumption: The existing schema diagnostic and process-attribution gate remain importable and suitable for unchanged composition.",
+      "Reviewed assumption: The schema-generation subcommand starts no daemon, client initialization, MCP, thread, prompt, or model request.",
+      "Reviewed assumption: One task-owned directory can be created and removed under the operating-system temporary root.",
+      "Reviewed assumption: A synthetic normalized request is sufficient for static diagnosis without retaining a host path.",
+      "Reviewed unknown: Whether the Windows query yields complete ancestry for every relevant process.",
+      "Reviewed unknown: Whether installed schema generation passes every gate and completes once.",
+      "Reviewed unknown: Whether the installed schema is compatible, incompatible, or structurally indeterminate.",
+      "Reviewed unknown: Whether static compatibility would move the remaining failure to required-MCP initialization or another runtime precondition.",
+      "Reviewed unknown: Cross-host behavior, causal benefit, return on investment, and real-user value remain unproven."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/adr",
+      "docs/development-automation-contracts.md",
+      "docs/development-log/2026-08-23.md",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/task-proposal-admission.md",
+      "src/agentgov/change_scope.py",
+      "src/agentgov/governance_mcp.py",
+      "tests/test_change_scope.py",
+      "tests/test_governance_mcp.py",
+      "tests/test_app_server_schema_diagnostic.py",
+      "tests/test_process_attribution_gate.py",
+      ".codex",
+      "docs/experiments",
+      "governance/tasks/p0-app-server-parser-preflight-static-comparison-v3.json",
+      "governance/tasks/p0-app-server-static-protocol-inspection-v2.json",
+      "governance/tasks/p0-app-server-thread-start-no-model-diagnostic-v1.json",
+      "governance/tasks/p0-deterministic-process-attribution-gate-v1.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v1.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v2.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v3.json",
+      "governance/tasks/p0-installed-app-server-schema-static-validation-v1.json",
+      "governance/tasks/p0-native-proposal-worktree-scope-binding-v1.json",
+      "governance/tasks/p0-reusable-app-server-schema-diagnostic-v1.json"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-installed-app-server-schema-static-validation-v2.json",
+      "src/agentgov/windows_process_observer.py",
+      "src/agentgov/installed_schema_validation.py",
+      "src/agentgov/app_server_schema_diagnostic.py",
+      "src/agentgov/process_attribution_gate.py",
+      "tests/test_windows_process_observer.py",
+      "tests/test_installed_schema_validation.py",
+      "docs/validation/installed-app-server-schema-static-validation-v2-2026-08-24.md",
+      "docs/governance-mcp-adapter.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-24.md",
+      "tests/test_user_documentation.py"
+    ]
+  },
+  "task_id": "p0-installed-app-server-schema-static-validation-v2",
+  "title": "Run installed-schema validation v2 with a bounded process observer",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest tests.test_windows_process_observer -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest tests.test_installed_schema_validation -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check task governance/tasks/p0-installed-app-server-schema-static-validation-v2.json --repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check scope governance/tasks/p0-installed-app-server-schema-static-validation-v2.json --repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-installed-app-server-schema-static-validation-v2.json",
+    "git diff --check"
+  ]
+}

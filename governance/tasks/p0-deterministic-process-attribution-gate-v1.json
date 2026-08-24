@@ -1,0 +1,78 @@
+{
+  "acceptance_signals": [
+    "A repository-internal pure module accepts only in-memory normalized process facts and snapshots; it performs no process enumeration, subprocess, filesystem, network, MCP, App Server, model, or configuration operation.",
+    "The result distinguishes pre-existing ambient, task-owned descendant, and indeterminate attribution with stable bounded statuses and reason codes.",
+    "A complete normalized ambient baseline is not rejected merely because its count is nonzero.",
+    "Incomplete identity, ambiguous lineage, malformed observations, or unaccounted newly relevant post-attempt entries fail closed rather than being treated as safe.",
+    "The output retains only normalized process classes, counts, and reason codes; it excludes raw command lines, process identifiers, usernames, absolute paths, and unrelated process data.",
+    "Deterministic tests cover zero and nonzero ambient baselines, task descendants, ambiguous and incomplete attribution, multiset changes, duplicate normalized classes, malformed input, and clean post-attempt reconciliation.",
+    "Adapter documentation, current status, dated development evidence, and documentation assertions consistently describe the internal non-CLI capability and explicitly state that installed-schema validation has not been retried.",
+    "Focused tests, the supported Python 3.11 full suite, task and repository governance, scope reconciliation, and git diff checks pass or retain only disclosed pre-existing excluded findings."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-c88ee5a4bd34445c8583ba3014c5d5e9 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Implement a small dependency-free internal module that evaluates already-normalized process observations and before/after snapshots to distinguish pre-existing ambient processes, task-descendant processes, and indeterminate attribution. It must permit a complete normalized ambient baseline, fail closed on incomplete or ambiguous attribution, identify newly remaining relevant process classes after an attempt, and return bounded statuses and reason codes without retaining raw command lines, process identifiers, usernames, absolute paths, or unrelated process data. Add fixture-based tests and document the contract and current status. Stop before any Codex App Server launch, schema generation, process intervention, user-configuration change, public CLI, Git operation, release, or deployment."
+  },
+  "risk": {
+    "items": [
+      "Count-only snapshot comparison can miss same-class process replacement; ambiguous or insufficient attribution must remain indeterminate.",
+      "A permissive ambient classification could hide a task-owned process; explicit task-root lineage and completeness facts must control attribution.",
+      "Normalized labels or reason text could accidentally retain host-local data; outputs must use bounded enums, counts, and stable codes only.",
+      "Shared status, log, and documentation files contain earlier uncommitted work that must be preserved.",
+      "The component must not be presented as proof that installed-schema generation, App Server runtime behavior, or required-MCP readiness succeeds.",
+      "Reviewed assumption: A deterministic pure classifier over normalized facts is sufficient for this bounded reusable slice.",
+      "Reviewed assumption: Actual Windows process observation and transient task-root tracking remain the responsibility of a separately authorized experiment driver.",
+      "Reviewed assumption: The module can remain dependency-free and compatible with supported Python 3.11.",
+      "Reviewed unknown: Whether a later authorized driver can obtain complete lineage facts on every supported host remains unproven.",
+      "Reviewed unknown: Installed-schema compatibility remains unknown until a separately admitted validation retry.",
+      "Reviewed unknown: Cross-platform utility beyond synthetic fixtures is not established by this task."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "DEVELOPMENT_PLAN.md",
+      "pyproject.toml",
+      "src/agentgov/app_server_schema_diagnostic.py",
+      "src/agentgov/cli.py",
+      "src/agentgov/governance_mcp.py",
+      "schemas",
+      "templates",
+      "examples",
+      "tests/fixtures",
+      "docs/experiments/installed-app-server-schema-static-validation-v1-2026-08-23.md",
+      "governance/tasks/p0-installed-app-server-schema-static-validation-v1.json"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-deterministic-process-attribution-gate-v1.json",
+      "src/agentgov/process_attribution_gate.py",
+      "tests/test_process_attribution_gate.py",
+      "docs/governance-mcp-adapter.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-23.md",
+      "tests/test_user_documentation.py"
+    ]
+  },
+  "task_id": "p0-deterministic-process-attribution-gate-v1",
+  "title": "Build a deterministic ambient-process attribution gate",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest tests.test_process_attribution_gate -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check task governance/tasks/p0-deterministic-process-attribution-gate-v1.json --repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check scope governance/tasks/p0-deterministic-process-attribution-gate-v1.json --repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

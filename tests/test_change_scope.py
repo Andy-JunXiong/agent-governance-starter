@@ -12,9 +12,11 @@ from agentgov.change_scope import (
     SCOPE_REPORT_SCHEMA_VERSION,
     ScopeFindingStatus,
     check_development_scope,
+    inventory_changed_paths,
     render_scope_report_json,
     render_scope_report_markdown,
     render_scope_report_terminal,
+    unclassified_inventory_paths,
 )
 from agentgov.cli import EXIT_ERROR, EXIT_FAIL, EXIT_PASS, main
 
@@ -154,6 +156,62 @@ class DevelopmentScopeTests(unittest.TestCase):
         self.assertTrue(report.has_failures)
         self.assertEqual(report.count(ScopeFindingStatus.FAIL), 1)
         self.assertEqual(report.count(ScopeFindingStatus.ADVISORY), 1)
+
+    def test_reusable_inventory_is_stable_read_only_and_has_rename_endpoints(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            repository, _task = create_repository(Path(temp_dir))
+            run_git(repository, "mv", "src/route/delete.py", "outside/moved.py")
+            write(repository, "untracked.txt", "new\n")
+            before = run_git(repository, "status", "--porcelain=v1", "-z")
+
+            first = inventory_changed_paths(repository)
+            second = inventory_changed_paths(repository)
+
+            after = run_git(repository, "status", "--porcelain=v1", "-z")
+
+        self.assertEqual(after, before)
+        self.assertEqual(first, second)
+        self.assertRegex(first.digest, r"^sha256:[0-9a-f]{64}$")
+        self.assertIn("src/route/delete.py", first.paths)
+        self.assertIn("outside/moved.py", first.paths)
+        self.assertIn("untracked.txt", first.paths)
+        renamed = [record for record in first.records if record.status == "renamed"]
+        self.assertEqual(len(renamed), 1)
+        self.assertEqual(
+            renamed[0].paths,
+            ("src/route/delete.py", "outside/moved.py"),
+        )
+
+    def test_reusable_inventory_reports_both_copy_endpoints(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            repository, _task = create_repository(Path(temp_dir))
+            write(repository, "outside/copied.py", "VALUE = 1\n")
+            run_git(repository, "add", "outside/copied.py")
+
+            inventory = inventory_changed_paths(repository)
+
+        copied = [record for record in inventory.records if record.status == "copied"]
+        self.assertEqual(len(copied), 1)
+        self.assertEqual(
+            copied[0].paths,
+            ("src/route/handler.py", "outside/copied.py"),
+        )
+
+    def test_inventory_classification_accepts_explicit_exclusions(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            repository, _task = create_repository(Path(temp_dir))
+            write(repository, "src/route/new.py", "NEW = True\n")
+            write(repository, "outside/file.py", "OUTSIDE = False\n")
+            write(repository, "unclassified.txt", "unknown\n")
+            inventory = inventory_changed_paths(repository)
+
+        missing = unclassified_inventory_paths(
+            inventory,
+            includes=("src/route",),
+            excludes=("outside",),
+        )
+
+        self.assertEqual(missing, ("unclassified.txt",))
 
     def test_rename_requires_both_endpoints_to_be_admitted(self) -> None:
         scenarios = (

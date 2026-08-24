@@ -28,6 +28,80 @@ ordinary host conversation
   -> AgentGov accepts only the exact advisory result
 ```
 
+### Internal no-model schema diagnostic
+
+Development source now includes a small internal diagnostic for the App Server
+`thread/start` schema boundary. It accepts only an already-loaded in-memory
+JSON schema and normalized request mapping. It recursively discovers direct or
+nested method definitions, resolves bounded local JSON references, and checks
+required fields, primitive types, and string enums.
+
+The result is exactly `compatible`, `incompatible`, or `indeterminate`, with
+stable reason codes and normalized field names. Missing decisive constraints,
+unresolved references, reference cycles, and ambiguous parameter contracts are
+`indeterminate`; the diagnostic does not guess that they are compatible. Its
+result contains no request values, raw schema fragments, executable paths, or
+user configuration.
+
+This is an internal pure-function boundary with ordinary unit tests. It is not
+a public CLI command and performs no Codex invocation, subprocess, filesystem
+access, network request, App Server launch, MCP call, thread creation, or model
+turn. Static compatibility cannot prove runtime thread creation or required-MCP
+readiness. A later product review must decide whether the capability should be
+exposed through a CLI or used in a separately authorized controlled rehearsal.
+
+### Internal deterministic process-attribution gate
+
+Development source also includes a dependency-free internal gate for
+reconciling already-normalized process observations with before-and-after
+snapshots. A complete nonzero ambient baseline is allowed: a process is not a
+failure merely because it existed before the task. Each normalized observation
+states only its process class, preflight and postflight presence, whether it
+belongs to the exact task root or descendant tree, and whether its transient
+identity evidence was complete.
+
+The gate returns only `ready`, `blocked`, or `indeterminate`, normalized process
+classes and counts, and stable reason codes. `ready` requires every observation
+to reconcile with both snapshots, complete attribution, and no task-owned
+process remaining. Incomplete identity, unknown lineage, a new process outside
+the task tree, malformed input, or an unreconciled snapshot remains
+`indeterminate`. A known task-owned process remaining at postflight is
+`blocked`. Per-instance normalized facts ensure that a same-class replacement
+cannot be hidden by an unchanged aggregate count.
+
+This gate is not a process scanner or controller. It accepts no raw command
+line, process identifier, username, absolute path, or unrelated process data,
+and it performs no enumeration, termination, subprocess, filesystem, network,
+Codex, App Server, MCP, model, or user-configuration operation.
+
+### Internal Windows observer and controlled schema validator
+
+Development source now adds separate dependency-free
+`windows_process_observer` and `installed_schema_validation` modules. The
+observer transiently reads only the
+host fields needed to recognize relevant Codex and AgentGov process families,
+bind per-instance identity, and trace task ancestry. It immediately reduces
+them to normalized classes, completeness facts, counts, and stable reason
+codes. Public results retain no raw process name, command line, executable
+path, process or parent identifier, username, or unrelated process data. It
+never stops or modifies a process.
+
+The driver composes that observer with the unchanged attribution gate and
+schema diagnostic. It accepts a complete nonzero ambient baseline, selects one
+native Windows `codex.cmd`, verifies only the bounded schema-generation help
+surface, permits at most one experimental generation inside one verified
+task-owned temporary directory, bounds JSON discovery, and removes that exact
+directory. It is an internal experiment surface, not a public `agentgov` CLI,
+App Server daemon, MCP client, thread runner, or model runner.
+
+The admitted v2 host attempt stopped at process preflight before schema
+generation because the first observer version rejected the Windows system idle
+root record. The parser now accepts that unrelated root record, and a
+read-only post-stop snapshot admits the same nonzero ambient baseline. The
+one-shot driver was not rerun: schema-generation attempts remain zero and
+installed-schema compatibility, runtime thread readiness, and required-MCP
+readiness remain unknown.
+
 ## Why MCP is the native boundary
 
 Current Codex command hooks can add context, enforce lifecycle checks, and ask
@@ -74,6 +148,17 @@ authority fields, binds the local repository, renders the exact existing task
 admission plan, and requests one native approve/change/reject decision through
 `elicitation/create`. Clients without that capability continue to see exactly
 the original five tools.
+
+The proposal message is now summary-first rather than JSON-first. It opens with
+what approval does now, the task goal, scope-rule and validation counts,
+material risks and unknowns, and denied downstream authority. Exact plan JSON
+remains below a labeled audit-only technical-details heading. Decision labels
+are `Approve only this task`, `Send back for changes`, and `Do not approve`;
+their protocol values and zero-write behavior are unchanged. The MCP host owns
+the final visual chrome, so source guarantees ordering and content but does not
+claim a native collapsible widget. Summary values are Markdown-escaped, and
+risk or unknown lists show at most three items plus a remaining count while the
+exact JSON retains every item.
 
 Development source Adapter `1.4.0` adds a seventh capability-gated tool,
 `agentgov_drift_review_record`, on that same negotiated native-form boundary.
@@ -132,6 +217,20 @@ to 1,800 seconds so bounded task-declared validation can complete; this does
 not change the per-command 1,800-second validation limit or prove that every
 multi-command task finishes within the client timeout.
 
+Development source Adapter `1.7.0` strengthens the existing native proposal
+tool without changing its owner-free input schema or human decision form. It
+reads a privacy-bounded Git inventory containing only normalized repository-
+relative layer, status, current path, and rename/copy source path metadata.
+Before elicitation, every inventory path must match a proposed include or
+exclude; otherwise `task_proposal_scope_incomplete` fails before the form and
+writes nothing. The exact inventory is retained with the preparation and
+re-read after exact human admission but before `apply_task_admission_plan`.
+Any difference or inspection failure returns `task_proposal_plan_stale` and
+writes nothing. Generic reference materialization and terminal admission are
+unchanged. A narrow time-of-check/time-of-use window remains between the final
+inventory read and exclusive task-file creation; this version does not claim
+transactional Git locking.
+
 A separately admitted isolated AIRBNB installation and live-replay attempt
 created a fresh source staging copy, Python 3.11.9 environment, and clean
 remote-free clone, then stopped before installation. The fresh environment's
@@ -156,6 +255,45 @@ thread or Agent turn. No proposal form, consumer task, README edit, completion
 record, current-Agent consumer review, repair, or replay retry followed. This
 is `BLOCKED_BEFORE_MODEL_MCP_INITIALIZATION`, not installed live-completion
 evidence.
+
+A 2026-08-24 successor selected the same completion-loop product direction for
+current development Adapter `1.7.0`, but stopped earlier at allowlisted source
+staging. PowerShell corrupted the binary Git tar stream before extraction, the
+staged source remained empty, and the required overlay hash comparison failed.
+The exact task required the first deviation to end the attempt, so no alternate
+archive method, dependency download, build, installation, consumer clone, MCP
+discovery, model session, repair, or retry followed. This result changes no
+Adapter behavior and provides no new installed-consumer evidence.
+
+A separately admitted staging-only successor then replaced the unsafe binary
+pipeline with one direct file-backed Git archive. The allowlisted committed
+tree extracted successfully, the two Adapter `1.7.0` working-tree overlays
+matched exactly, required package surfaces were present, and task-excluded
+untracked modules were absent. Direct staged-source inspection reported six
+base tools, eight form-capable tools, and the completion-record tool. The task
+stopped at that gate; no dependency, build, install, consumer, MCP, model, or
+cleanup action followed. This proves binary-safe staging only and changes no
+Adapter behavior.
+
+A following isolated build successor revalidated that retained source, cached
+only `setuptools 84.0.0`, built distribution `0.3.0rc1`, and installed it with
+no index or dependencies into a separate fresh Python 3.11 environment. The
+installed Adapter reported version `1.7.0`; MCP initialize and tool-list
+dispatch returned six base tools and eight form-capable tools, including
+`agentgov_task_completion_record` with only `task_path` input. No consumer,
+model, completion-tool call, or product repair occurred. This clears isolated
+build, installation, and no-model discovery only; installed consumer STDIO and
+model-to-MCP initialization remain unproven.
+
+A disposable consumer successor then installed that exact wheel offline into
+one fresh environment beside one clean remote-free Git repository. The
+installed packaged binding enabled all eight tools, included completion, and
+declared the 1800-second timeout. Two real foreground STDIO Adapter processes
+started from the disposable repository: clients without and with form
+elicitation received six and eight tools respectively, then both processes
+exited normally with clean JSON-RPC output. No consumer file, Codex process,
+model turn, AgentGov tool call, or completion record occurred. Process-level
+STDIO readiness is observed; live Codex-thread initialization remains unknown.
 
 The proposal trigger is scoped to the exact requested repository change. A
 human-admitted task counts only when its requirement, goal, scope, and
@@ -416,3 +554,56 @@ improves future replay evidence only; historical events remain unrecoverable.
   valuable now that its completion/error evidence can be interpreted honestly.
   Another replay, another MCP host, and optional independent high-risk review
   remain separate later choices.
+
+## Disposable Codex initialization boundary
+
+The retained `0.3.0rc1` wheel now has direct installed foreground STDIO proof
+for Adapter `1.7.0`: six tools without form elicitation and eight with it. A
+separate no-model Codex App Server task did not reach that Adapter boundary.
+Its only App Server command exited before the controller obtained a writable
+STDIO session, so no initialize, thread, MCP-status, AgentGov tool, or model
+request occurred and no retry was made. A remote-control WebSocket task started
+and exited before client readiness, so background network absence is unknown.
+
+This preserves the architectural distinction between a verified packaged MCP
+server and an unverified Codex-host integration.
+
+The repository now has a reusable internal foreground JSONL STDIO controller
+under `scripts/foreground_stdio`. It launches only one explicit shell-free
+child in an existing working directory, correlates exact typed response IDs,
+retains bounded normalized notification methods, closes input, and enforces
+step, overall, message, stdout, stderr, and direct-child shutdown limits. Its
+fixture suite covers success, early exit, malformed output, duplicate,
+mismatched and unexpected IDs, timeouts, capacity limits, standard-error
+policy, nonzero exit, privacy reduction, and termination failure. It is test
+infrastructure, not an Adapter change, installed package surface, public CLI,
+general process controller, Codex retry, or proof of Codex compatibility.
+
+The controller's functional tests pass, but its first task closeout remains
+blocked: the declared worktree-wide scope command treats 44 pre-existing paths
+that match explicit exclusions as failures. This is not a controller failure
+and is not silently waived.
+
+The repository now has an internal task-start scope-baseline bridge under
+`scripts/task_start_scope_baseline`. A future separately admitted task can use
+it before its first write to bind the exact task digest, HEAD, comparison base,
+captured scope, and privacy-reduced per-path identities across all four Git
+layers. Later comparison preserves only byte-identical pre-existing exclusions;
+post-start excluded, unclassified, changed, or missing identities fail closed.
+The bridge is not a Core, public CLI, installed Adapter, or MCP tool change and
+cannot retroactively validate either its own bootstrap task or the controller
+task.
+
+The separately admitted controller-closeout task has now used that boundary as
+its first execution action. Its initial comparison returned
+`PASS=20 PRESERVED=49 FAIL=0 TOTAL=69`; all 16 controller tests, all 17
+baseline-tool tests, and the 1083-test product suite pass. The controller,
+baseline tool, their task records, and historical evidence remain captured
+exclusions. New evidence classifies the controller as
+`REVIEW_READY_BASELINE_BACKED` without rewriting the original stopped outcome
+or claiming its cumulative scope command passed.
+
+Product review may next decide between public baseline integration and one
+separately admitted single-launch Codex initialization retry. This record
+grants no task, Git action, retry, model, cleanup, publication, release, or
+deployment authority.

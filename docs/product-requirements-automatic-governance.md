@@ -155,6 +155,10 @@ without raw request data entering Core or any AgentGov model/network call.
 This remains the portable reference seam. Codex development source now uses the
 current Agent as its production materializer through strict normalized MCP
 input; AgentGov itself still performs no proposal inference or network call.
+The native human review now presents a concise task, boundary, validation,
+risk, and authority summary before the exact audit JSON. This reduces the
+machine-contract burden on the product owner without weakening the explicit
+single-select decision or removing the complete plan.
 
 ## Semantic review compute and risk routing
 
@@ -241,6 +245,17 @@ immutable, and acceptance plus handoff remain separate. Form-capable clients
 now discover eight tools and other clients discover six. Installation,
 consumer replay, and broader host evidence remain separate work.
 
+Development source Adapter `1.7.0` closes the dirty-worktree scope-accounting
+gap in native proposal review. Before presenting a task for admission, it must
+derive a read-only, content-free Git path inventory and require each existing
+change to be explicitly covered by the proposed includes or excludes. It binds
+that exact inventory to the preview and compares it again after human admission
+but before creating the task. Missing classification or any intervening
+inventory change is a zero-write failure. This prevents a proposal from
+silently omitting pre-existing worktree changes; it does not prove semantic
+scope correctness, grant authority over excluded work, or remove the small
+race between the final read-only comparison and the exclusive task-file write.
+
 The first separately admitted attempt to obtain that evidence stopped before
 installation: a fresh offline Python 3.11.9 environment supplied
 `setuptools 65.5.0`, below the declared `setuptools>=69` build requirement, and
@@ -262,6 +277,43 @@ producing the initialize response (`-32603`). No proposal form, consumer task,
 README edit, completion evidence, self-review, repair, or retry followed. The
 result is `BLOCKED_BEFORE_MODEL_MCP_INITIALIZATION`; installed Codex-to-MCP
 handshake behavior remains an explicit product unknown.
+
+On 2026-08-24 the product owner returned to the completion-loop direction for
+current development Adapter `1.7.0`. The exact successor attempt stopped at
+allowlisted source staging because a PowerShell binary pipeline corrupted the
+Git tar stream, leaving the staged source empty and failing the overlay hash
+gate. The task forbade repair or retry after the first deviation. No dependency
+download, package, install, consumer clone, MCP discovery, model turn, or
+completion card resulted. This is bounded recovery evidence, not a change to
+the product requirement or proof of consumer readiness.
+
+A separately admitted successor isolated only the staging correction. One
+direct file-backed Git archive extracted successfully; exact Adapter `1.7.0`
+overlays matched, package surfaces were present, excluded untracked modules
+were absent, and the staged source exposed the expected six-base/eight-form
+tool identity with completion recording. The task then stopped before any
+dependency, build, installation, consumer, MCP, model, or cleanup action. This
+clears the staging precondition but does not establish installed or consumer
+readiness and does not change the acceptance journey.
+
+The next bounded successor revalidated that retained source, downloaded only
+the declared build backend, built distribution `0.3.0rc1`, and installed it
+offline with no dependencies into a second fresh Python 3.11 environment. The
+installed Adapter `1.7.0` negotiated the expected six-base/eight-form tool
+inventories and exposed completion input only as `task_path`. No consumer or
+model was started and no completion tool was called. Isolated package readiness
+is now observed; consumer STDIO initialization, model-to-MCP binding, actual
+completion evidence, and completion-card handoff remain acceptance unknowns.
+
+A following disposable consumer gate installed that exact wheel offline next
+to one clean remote-free Git repository. Two installed foreground STDIO
+processes started from the consumer directory, negotiated the expected
+six-base/eight-form inventories, and exited normally with clean JSON-RPC
+responses. The packaged binding also retained completion enablement and its
+1800-second timeout. No Codex or model process and no AgentGov tool call ran.
+Installed consumer process readiness is now observed; live Agent-thread MCP
+initialization, completion execution, and completion-card handoff remain
+acceptance unknowns.
 
 ## Human decision boundaries
 
@@ -413,3 +465,47 @@ command composition.
    insufficient-evidence, or rejected;
 12. change AgentGov Core only for admitted general gaps, then replay in the
     independent repository and NYC before any stable promotion.
+
+## Current consumer-integration evidence
+
+The retained development wheel passes offline installation and direct
+foreground STDIO initialization with six base and eight form-capable tools.
+The first successor Codex-host initialization task stopped earlier: the only
+App Server command exited before the controller obtained writable STDIO, so it
+sent no initialize or model request and did not test AgentGov through Codex.
+
+A repository-internal foreground JSONL controller now supplies the missing
+reusable test boundary. Its inert fixture proves ordered writes, exact typed
+response correlation, input closure, bounded notifications, deterministic
+failure categories, timeout and output limits, direct-child-only termination,
+and privacy-reduced results. It is not shipped product behavior and has not run
+Codex, AgentGov, MCP, a model, or a network client.
+
+Its 16 functional tests and the full product suite pass, but task closeout
+remains blocked because the declared worktree-wide scope command also fails 44
+older paths that were explicitly excluded at admission. That failure is not
+waived.
+
+An internal task-start scope-baseline bridge now supplies the missing future
+comparison primitive. Before a separately admitted task writes, it can bind the
+exact task digest, HEAD, comparison base, captured scope, and privacy-reduced
+per-path identities for committed-since-base, staged, unstaged, and untracked
+state. Later comparison preserves unchanged predecessor exclusions while new,
+changed, removed, or unclassified post-start state fails closed. This bridge is
+not shipped product behavior, a public CLI/session integration, or retroactive
+proof for its own bootstrap task or the controller task.
+
+The separately admitted controller-closeout task has now captured the new
+boundary as its first execution action. Its initial comparison returned
+`PASS=20 PRESERVED=49 FAIL=0 TOTAL=69`; all controller, baseline-tool, and full
+product tests pass. The controller and baseline implementation, original task
+records, and historical evidence remain excluded captured predecessors. The
+new result is `REVIEW_READY_BASELINE_BACKED`, not a retroactive pass of the
+original cumulative scope command.
+
+Codex-to-MCP initialization and the complete automatic acceptance journey
+remain unknown. Product review may next choose between public baseline/session
+integration and one separately admitted single-launch Codex initialization
+retry that uses the controller and stops at its first normalized deviation. No
+task, retry, model, Git, release, deployment, or other downstream authority
+follows from this requirement record.

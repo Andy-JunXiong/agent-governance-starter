@@ -1,0 +1,84 @@
+{
+  "acceptance_signals": [
+    "Preflight verifies the retained synthetic repository remains clean at one local commit with zero remotes, its trust match is absent, the user Codex configuration digest is captured without retaining its value, and no App Server or governance-MCP process is running.",
+    "Read-only command discovery verifies exactly one platform-native Windows Codex entry point and rejects PowerShell script-wrapper selection before any Codex invocation.",
+    "Before schema generation, the exact in-memory parser passes a synthetic-schema self-test covering ThreadStartParams discovery, recursive JSON traversal, local-reference resolution, string-enum extraction, primitive-type extraction, and normalized compatibility classification.",
+    "Only after parser and command gates pass, exactly one experimental schema-generation subcommand runs in exactly one task-owned directory whose resolved path is verified under the operating-system temporary root.",
+    "The generated schema is read only inside the task-created directory and reduced to normalized facts for method presence, ThreadStartParams discovery, cwd, ephemeral, approvalPolicy, sandbox, required fields, and accepted values; no raw schema or private path is retained.",
+    "The normalized v3 request fields are classified as compatible, incompatible, or indeterminate, with static-schema reasons and an explicit statement that static compatibility cannot prove required-MCP startup or runtime thread success.",
+    "The task stops at the first deviation and performs no parser replacement after preflight, executable substitution after invocation, second schema generation, App Server launch, or retry.",
+    "The exact task-owned temporary directory is removed after inspection; post-state confirms user configuration and trust are unchanged, the synthetic repository remains clean and remote-free, and no diagnostic process remains.",
+    "The evidence record, current status, development plan, dated log, and documentation test describe the same bounded outcome without raw schemas, protocol payloads, credentials, private paths, external identities, configuration digests, or model-private reasoning."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-ca4a8f760484435fbe5b1cfd0122c258 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Run one parser-preflighted, static-only comparison between the installed experimental App Server thread/start contract and the normalized v3 request. Before schema generation, verify the platform-native Windows Codex entry point and execute the exact in-memory JSON parser against a synthetic schema fixture, including recursive definition and local-reference resolution. Only after those gates pass, generate the experimental schema exactly once in one verified task-owned temporary directory, reduce it to normalized field and value-compatibility facts, classify the v3 request as compatible, incompatible, or indeterminate, clean the exact temporary directory, and stop at the first deviation without retry. Never start an App Server daemon, initialize a client, create a thread, call MCP, or start a model turn."
+  },
+  "risk": {
+    "items": [
+      "The parser self-test could be too weak and pass while failing on the installed schema structure.",
+      "The generated schema may represent multiple protocol versions or reference layouts and leave the comparison indeterminate.",
+      "Static field compatibility could be mistaken for runtime App Server or required-MCP readiness.",
+      "Schema generation could leave transient files or expose raw host details if cleanup or normalization fails.",
+      "A malformed command could start the App Server daemon rather than the bounded schema-generation subcommand.",
+      "Reviewed assumption: Python 3.11 is available and suitable for a read-only, in-memory JSON schema parser self-test and comparison without repository writes.",
+      "Reviewed assumption: The installed Codex distribution still provides the verified platform-native Windows entry and experimental schema-generation surface.",
+      "Reviewed assumption: The normalized v3 request facts are sufficient to compare cwd, ephemeral, approvalPolicy set to never, and sandbox set to workspace-write without reopening raw v3 protocol output.",
+      "Reviewed assumption: The installed schema includes enough static structure to make a compatible, incompatible, or explicitly indeterminate classification.",
+      "Reviewed assumption: One task-owned temporary directory can be safely created and removed inside the operating-system temporary directory.",
+      "Reviewed unknown: Whether ThreadStartParams is represented directly, through local references, or across multiple generated schema files.",
+      "Reviewed unknown: Whether the installed schema accepts every normalized v3 field and value.",
+      "Reviewed unknown: Whether a statically compatible request would move the remaining diagnosis to required-MCP initialization or another runtime thread-start precondition."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "src",
+      "schemas",
+      "templates",
+      "examples",
+      "tests/fixtures",
+      "pyproject.toml",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v1.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v2.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v3.json",
+      "governance/tasks/p0-app-server-thread-start-no-model-diagnostic-v1.json",
+      "governance/tasks/p0-app-server-static-protocol-inspection-v2.json",
+      "docs/experiments/disposable-automatic-journey-rehearsal-2026-08-23.md",
+      "docs/experiments/disposable-automatic-journey-rehearsal-v2-2026-08-23.md",
+      "docs/experiments/disposable-automatic-journey-rehearsal-v3-2026-08-23.md",
+      "docs/experiments/app-server-thread-start-no-model-diagnostic-v1-2026-08-23.md",
+      "docs/experiments/app-server-static-protocol-inspection-v2-2026-08-23.md"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-app-server-parser-preflight-static-comparison-v3.json",
+      "docs/experiments/app-server-parser-preflight-static-comparison-v3-2026-08-23.md",
+      "docs/development-log/2026-08-23.md",
+      "DEVELOPMENT_PLAN.md",
+      "STATUS.md",
+      "tests/test_user_documentation.py"
+    ]
+  },
+  "task_id": "p0-app-server-parser-preflight-static-comparison-v3",
+  "title": "Preflight the parser and statically classify the v3 thread-start request",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check task governance/tasks/p0-app-server-parser-preflight-static-comparison-v3.json --repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check scope governance/tasks/p0-app-server-parser-preflight-static-comparison-v3.json --repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

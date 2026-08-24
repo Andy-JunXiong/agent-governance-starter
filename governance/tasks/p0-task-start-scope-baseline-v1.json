@@ -1,0 +1,109 @@
+{
+  "acceptance_signals": [
+    "A new internal Python tool exists only under scripts/task_start_scope_baseline and has no public package or CLI integration.",
+    "Capture binds the baseline to the exact task path, validated task digest, repository-relative paths, comparison base, HEAD, and normalized staged, unstaged, untracked, and committed-since-base identities.",
+    "Persisted baseline contains no raw file contents, raw patches, absolute paths, environment values, credentials, process identifiers, or host/user identity.",
+    "Baseline creation is exclusive and refuses overwrite, symlink targets, malformed task records, unsafe paths, unstable capture, and missing Git state.",
+    "Comparison treats unchanged pre-existing excluded paths as preserved, included post-start changes as allowed, and new or changed excluded or unclassified paths as failures.",
+    "Rename and copy endpoints, deletions, index-only changes, worktree-only changes, task-digest drift, HEAD drift, missing baselines, and malformed baselines have deterministic fail-closed behavior.",
+    "The tool performs only read-only Git inspection in the real repository and writes only its explicitly selected local baseline file.",
+    "Fixture tests cover passing, failing, preserved, rename or copy, staged, unstaged, untracked, malformed, stale, unsafe-path, and unstable-capture cases.",
+    "Existing foreground STDIO controller code, predecessor task records, and predecessor evidence in the included scope remain byte-identical.",
+    "Documentation clearly states the bootstrap limit: this task cannot use the not-yet-existing baseline to prove its own start state.",
+    "STATUS and the dated development log distinguish implemented capability from the later separately admitted controller closeout.",
+    "Declared validation passes without claiming the existing cumulative worktree scope check has passed.",
+    "No dependency, network, model call, Git transition, commit, push, release, deployment, publication, or host execution is performed."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-3a9e90493c5e43cb8523dc4674997f64 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Build the smallest deterministic internal task-start scope-baseline tool. It will capture privacy-bounded per-path Git-layer identities before a future task writes, persist an immutable local baseline, and compare later state so unchanged pre-existing excluded work is preserved while post-start out-of-scope drift fails closed. This slice enables a separately admitted controller closeout; it does not retroactively validate the controller task or this bootstrap task, and it does not change the public CLI or core package."
+  },
+  "risk": {
+    "items": [
+      "Capturing after task changes would launder earlier drift, so the tool must label capture timing and cannot validate this bootstrap task retroactively.",
+      "A path can have different index and worktree identities; collapsing layers could hide drift.",
+      "Rename, copy, deletion, and symlink handling could misattribute an excluded change.",
+      "Hash-only records reduce exposure but remain local evidence and must never be exported automatically.",
+      "The dirty worktree may change during capture; inconsistent before and after snapshots must abort.",
+      "Overwriting a baseline would destroy the audit boundary.",
+      "The current cumulative scope checker will still report predecessor excluded paths for this bootstrap task.",
+      "Reviewed assumption: The repository is a Git worktree and Python 3.11 is available.",
+      "Reviewed assumption: Existing task loading and Git snapshot contracts may be imported read-only without changing src or tests.",
+      "Reviewed assumption: Local baseline records live under ignored .agentgov state and remain repository-local.",
+      "Reviewed assumption: A later separately admitted task will capture its baseline before any repository write.",
+      "Reviewed assumption: Disposable fixture repositories, if needed, do not modify the real repository Git state.",
+      "Reviewed unknown: Performance on very large dirty worktrees is not established in this slice.",
+      "Reviewed unknown: Public agentgov CLI and development-session integration are deferred.",
+      "Reviewed unknown: The exact later controller closeout edits are not yet admitted.",
+      "Reviewed unknown: Cross-platform symlink coverage may remain limited by host capabilities."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/adr",
+      "docs/development-log/2026-08-23.md",
+      "docs/task-proposal-admission.md",
+      "docs/experiments",
+      "docs/validation",
+      "docs/recovery",
+      "src",
+      "tests",
+      "governance/tasks/p0-app-server-parser-preflight-static-comparison-v3.json",
+      "governance/tasks/p0-app-server-static-protocol-inspection-v2.json",
+      "governance/tasks/p0-app-server-thread-start-no-model-diagnostic-v1.json",
+      "governance/tasks/p0-deterministic-process-attribution-gate-v1.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v1.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v2.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v3.json",
+      "governance/tasks/p0-installed-app-server-schema-static-validation-v1.json",
+      "governance/tasks/p0-installed-app-server-schema-static-validation-v2.json",
+      "governance/tasks/p0-native-completion-consumer-journey-recovery-v2.json",
+      "governance/tasks/p0-native-completion-consumer-journey-recovery-v3.json",
+      "governance/tasks/p0-reusable-app-server-schema-diagnostic-v1.json"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-task-start-scope-baseline-v1.json",
+      "scripts/task_start_scope_baseline",
+      "docs/scope-validation/task-start-scope-baseline-v1-2026-08-24.md",
+      "STATUS.md",
+      "docs/development-automation-contracts.md",
+      "docs/governance-mcp-adapter.md",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/development-log/2026-08-24.md",
+      "governance/tasks/p0-reusable-foreground-stdio-controller-v1.json",
+      "scripts/foreground_stdio",
+      "docs/consumer-validation/reusable-foreground-stdio-controller-v1-2026-08-24.md",
+      "governance/tasks/p0-native-proposal-worktree-scope-binding-v1.json",
+      "governance/tasks/p0-binary-safe-source-staging-v1.json",
+      "governance/tasks/p0-disposable-codex-mcp-initialization-v1.json",
+      "governance/tasks/p0-disposable-consumer-stdio-discovery-v1.json",
+      "governance/tasks/p0-isolated-build-install-discovery-v1.json",
+      "governance/tasks/p0-isolated-build-install-discovery-v2.json",
+      "docs/build-validation/isolated-build-install-discovery-v2-2026-08-24.md",
+      "docs/consumer-validation/disposable-codex-mcp-initialization-v1-2026-08-24.md",
+      "docs/consumer-validation/disposable-consumer-stdio-discovery-v1-2026-08-24.md"
+    ]
+  },
+  "task_id": "p0-task-start-scope-baseline-v1",
+  "title": "Task-start scope baseline v1",
+  "validation_commands": [
+    "py -3.11 -m unittest discover -s scripts/task_start_scope_baseline -p \"test_*.py\" -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov.cli check task governance/tasks/p0-task-start-scope-baseline-v1.json --format json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov.cli check repo . --format json",
+    "git diff --check"
+  ]
+}

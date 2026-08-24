@@ -1,0 +1,83 @@
+{
+  "acceptance_signals": [
+    "The task and retained experiment record bind resolved alignment journey mcpj-2c53eb797bb04cf9b3665c635a50d0dd without treating alignment as task admission or external-write authority.",
+    "A fresh operating-system temporary repository is initialized with zero remotes and only synthetic non-NYC sample content, minimal governance instructions, and a bounded validation command; existing consumer repositories and user-owned .codex state remain unchanged.",
+    "Before any model turn, deterministic readiness checks identify the current Codex and development AgentGov identities, confirm the exact project MCP binding and required native tools, and verify a clean synthetic baseline.",
+    "Exactly one fresh external Codex session is eligible only after readiness passes and receives one ordinary low-risk request without AgentGov names, internal tool names, hand-authored protocol JSON, repeated next queries, manual lifecycle command composition, or special confirmation words.",
+    "The measured trace separately records native proposal review, the human decision, separate task take-up, implementation scope, declared validation, native task completion when callable, distinct current-Agent review, terminal state, and the first deviation; missing stages are reported as not reached rather than inferred.",
+    "The record counts visible human interactions, manual setup or relay steps, interruptions, retries, and restarts, and states whether protection status and any resolution were visible to the human.",
+    "Benefit and Learning evidence uses only observed facts, attributed human feedback, supported inference, or unknown; it makes no causal, prevented-harm, ROI, coverage-percentage, general-effectiveness, or uncoached-human-pilot claim.",
+    "Any failed readiness gate, initialization failure, absent native form, scope drift, raw-material retention, or unexpected mutation stops the attempt without product repair, coaching, second session, or retry.",
+    "Only normalized, privacy-bounded evidence is retained; no raw prompt, response, transcript, source content, validation output, credential, private data, temporary absolute path, or model-private reasoning enters the repository.",
+    "The temporary repository remains remote-free and uncommitted; no existing consumer mutation, product-source change, dependency download, retained-runtime change, cleanup, commit, push, pull request, publication, release, deployment, CI change, or production action occurs.",
+    "The experiment record, current status, strategic plan, dated log, and documentation tests agree on the exact outcome and evidence limits; focused tests, the full suite, task and repository checks, scope reconciliation, JSON parsing, bounded privacy scans, and git diff check pass or preserve disclosed excluded state."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-e2fda91144164dd0b569328f668193c2 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Carry resolved alignment journey mcpj-2c53eb797bb04cf9b3665c635a50d0dd into one bounded independent non-NYC rehearsal. Prepare a fresh remote-free temporary repository containing only synthetic sample code and governance fixtures, run deterministic no-model readiness checks, and only if those gates pass start exactly one fresh external Codex session with an ordinary low-risk request. Measure native proposal review, separate human take-up, the admitted edit, declared validation, native completion recording when available, and distinct current-Agent review. Record required manual steps, interruptions, protection visibility, observed benefit or learning evidence, friction, first deviation, and unknowns. If readiness fails or the known initialize boundary recurs, record that bounded result and stop without repair or retry."
+  },
+  "risk": {
+    "items": [
+      "The single external Codex session uses the user's existing authenticated model entitlement and may fail before or during the governed journey.",
+      "A temporary project configuration or command could target the wrong repository unless the resolved path, zero remotes, synthetic identity, and baseline are verified before launch.",
+      "The current Codex CLI may differ from the previously diagnosed host and may not support the required native form or completion journey.",
+      "Relaying a human decision through a terminal may add a manual interaction and must be counted rather than hidden as automatic behavior.",
+      "One synthetic rehearsal cannot establish real-consumer adoption, uncoached human usability, cross-host behavior, causal benefit, or production readiness.",
+      "A failed launch must not trigger an unauthorized repair, retry, dependency download, runtime mutation, cleanup, or broader diagnostic.",
+      "Reviewed assumption: Python 3.11 or newer, Git, the current Starter development source, and an authenticated Codex CLI are locally available.",
+      "Reviewed assumption: A fresh operating-system temporary directory can be used for a disposable remote-free Git repository without modifying existing consumers.",
+      "Reviewed assumption: The product owner can review any native task form and separately authorize task take-up if the single session reaches those stages.",
+      "Reviewed assumption: The synthetic task can be validated with only local standard-library tooling and no dependency download.",
+      "Reviewed assumption: Repository evidence may append to the existing 2026-08-23 development log while preserving its prior session history.",
+      "Reviewed unknown: Whether the current Codex CLI and project MCP startup path pass initialization with the development AgentGov source.",
+      "Reviewed unknown: Whether the external session exposes native form elicitation in a way the product owner can directly review.",
+      "Reviewed unknown: Whether the Agent autonomously selects proposal review, stops for separate take-up, invokes completion recording, and performs distinct self-review.",
+      "Reviewed unknown: Whether any protection event occurs and, if so, whether its resolution is visibly linked.",
+      "Reviewed unknown: Whether the complete bounded journey finishes within the available host timeout.",
+      "Reviewed unknown: Whether the observed interaction burden and evidence are useful beyond this one synthetic rehearsal."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "docs/assets",
+      "src",
+      "schemas",
+      "templates",
+      "release",
+      "README.md",
+      "pyproject.toml",
+      "governance/tasks/p1-taxi-cross-domain-pilot-record-closeout-v1.json",
+      "docs/experiments/taxi-cross-domain-adoption-pilot.md"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v1.json",
+      "docs/experiments/disposable-automatic-journey-rehearsal-2026-08-23.md",
+      "docs/development-log/2026-08-23.md",
+      "DEVELOPMENT_PLAN.md",
+      "STATUS.md",
+      "tests/test_user_documentation.py"
+    ]
+  },
+  "task_id": "p0-disposable-automatic-journey-rehearsal-v1",
+  "title": "Run one gated disposable automatic-journey rehearsal",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check task governance/tasks/p0-disposable-automatic-journey-rehearsal-v1.json --repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check scope governance/tasks/p0-disposable-automatic-journey-rehearsal-v1.json --repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

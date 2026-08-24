@@ -49,6 +49,15 @@ a titled single-select enum. Elicitation-result top-level protocol extensions
 are ignored and never echoed; the standard action and accepted content remain
 strictly validated.
 
+The preview presentation is summary-first. Human-facing task, scope-count,
+validation-count, risk, unknown, and authority facts precede a labeled
+audit-only section containing the unchanged exact plan JSON. The three visible
+labels directly say approve only this task, send it back for changes, or do not
+approve; their durable protocol values remain `admit`, `request_changes`, and
+`reject`. This changes presentation order and copy, not decision authority or
+write behavior. Collapsible rendering remains a host capability rather than an
+Adapter guarantee.
+
 Only the conjunction of MCP `action=accept` and the exact `admit` form value may
 apply the revalidated plan. Decline, cancel, request-changes, reject, malformed
 content, missing capability, transport loss, target drift, and target races
@@ -226,11 +235,36 @@ accepted disposable task with `Human product owner` as both `owner` and
 consumer activation, live replay, or personal identity proof. A new consumer
 replay still requires separate authority.
 
+## Implementation correction — 2026-08-23 changed-path scope binding
+
+A later dirty-worktree review showed that a syntactically valid native proposal
+could list its intended edits while leaving other existing changed paths
+neither included nor explicitly excluded. The later scope checker disclosed
+those paths, but admission itself did not require a complete classification.
+
+Development Adapter `1.7.0` closes that boundary before elicitation. The
+Adapter derives a read-only inventory of normalized repository-relative Git
+path/status metadata, including both endpoints of renames and copies, and
+requires every current path to match the proposed include or exclude scope.
+An incomplete classification fails before the form with no repository write.
+The exact inventory is bound to the prepared admission plan and revalidated
+after an exact human admit response but before exclusive task creation; any
+change fails as a stale plan with no write.
+
+This correction does not add file content, absolute host paths, credentials,
+or ignored unrelated files to the proposal; does not change the owner-free
+native input schema, decision form, generic proposal contract, terminal
+fallback, or human authority; and does not transfer authority over excluded
+paths. A small time-of-check/time-of-use interval remains between final
+inventory comparison and exclusive task creation, so transactional Git-state
+locking is explicitly not claimed.
+
 ## Validation
 
 Deterministic validation covers schemas, client-capability negotiation,
-elicitation request/response IDs, exact decision values, plan digests, target
-races, no-write outcomes, existing five-tool compatibility, config rendering,
+elicitation request/response IDs, exact decision values, plan digests,
+changed-path classification and revalidation, rename/copy endpoints, target
+races, no-write outcomes, existing base-tool compatibility, config rendering,
 task/scope/repository governance, and the full Python suite.
 
 Advisory review evaluates whether the native form is understandable, whether a

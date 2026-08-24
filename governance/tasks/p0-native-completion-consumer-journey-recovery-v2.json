@@ -1,0 +1,98 @@
+{
+  "acceptance_signals": [
+    "The task binds the resolved human choice to close the completion loop without treating alignment as task admission or external authority.",
+    "One explicitly approved dependency acquisition obtains only a compatible declared build backend into a fresh temporary cache.",
+    "A fresh allowlisted staging copy builds the exact current development source without changing Starter source, index, HEAD, remotes, or release identity.",
+    "A fresh supported Python runtime installs the local artifact and reports the expected distribution plus Adapter 1.7.0 identity.",
+    "A fresh disposable consumer clone is clean, remote-free, and receives only local task-owned completion-tool and Agent-guidance bindings.",
+    "No-model discovery exposes six base and eight form-capable tools, including agentgov_task_completion_record with only task_path input and denied downstream authority.",
+    "Exactly one explicitly approved live uncoached Codex session receives an ordinary bounded request, uses native proposal review before editing, waits for human admission, changes only admitted consumer paths, calls task completion recording, presents a completion card, and performs distinct current-Agent review.",
+    "A successful run appends privacy-bounded validation and completion evidence while preserving the human admitted decision; any deviation is recorded as a bounded failure with no coaching, repair, substitution, or retry.",
+    "The original consumer, prior clones, existing runtimes, credentials, external repositories, and external systems remain unchanged.",
+    "Starter records only normalized results and retains no raw prompt, response, transcript, screenshot, source content, credential, private data, temporary absolute path, or external-model payload.",
+    "Status, MCP guide, product requirement, dated log, experiment record, and documentation tests state the exact result without changing Kernel semantics or stable release identity.",
+    "Focused documentation tests, the full Starter suite, task and repository checks, exact cumulative scope reconciliation, JSON parsing, privacy scans, and git diff check pass or truthfully report preserved excluded state."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-f828ec0a67f147ff85517a744fc56029 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Carry resolved alignment journey mcpj-3d39130f6cb8421ebb1c6b35a6bca9e9 as one bounded consumer-facing recovery slice. Obtain one compatible declared build backend in a fresh temporary cache, build the exact current AgentGov development source in an allowlisted staging copy, install it into a fresh Python runtime, and bind a fresh remote-free disposable consumer clone to the current Adapter completion tool. Verify no-model discovery, then run exactly one explicitly approved ordinary low-risk Codex journey through native proposal admission, the admitted edit, task completion recording, the completion card, and distinct current-Agent review. Record only sanitized Starter evidence. Stop at the first deviation without repair or retry, and do not change Kernel semantics, Starter product source, the original consumer, existing runtimes, Git state, publication, release, deployment, or broader activation."
+  },
+  "risk": {
+    "items": [
+      "One bounded dependency acquisition carries provenance and availability risk unless restricted to the declared build backend and a fresh cache.",
+      "A staging build could absorb unrelated worktree content unless copied from an explicit allowlist and hash checked.",
+      "A disposable consumer binding could reach an original repository unless the target is fresh, resolved, and remote-free.",
+      "The host may not load the current Adapter, select governance tools, display native review, or finish completion within the timeout.",
+      "The model may write outside admitted consumer scope or make unsupported acceptance, rollback, Git, release, or deployment claims.",
+      "External model execution uses the existing user entitlement and requires separate explicit command approval without reading credentials.",
+      "A successful single replay would not prove general effectiveness across other users, hosts, repositories, risks, or operating systems.",
+      "Reviewed assumption: A supported Python runtime, Git, and local package installer are available.",
+      "Reviewed assumption: A local reference consumer repository can provide a fresh disposable remote-free clone.",
+      "Reviewed assumption: The current Codex authentication can be used without reading or copying credentials.",
+      "Reviewed assumption: The product owner can review the nested native proposal form during the one live replay.",
+      "Reviewed unknown: Whether the compatible build backend can be acquired and used on this host.",
+      "Reviewed unknown: Whether the current Adapter artifact installs and exposes the completion tool in a fresh runtime.",
+      "Reviewed unknown: Whether the consumer host autonomously selects proposal and completion tools after explicit binding.",
+      "Reviewed unknown: Whether the single journey reaches verified completion and a completion card without scope drift."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/adr",
+      "docs/development-automation-contracts.md",
+      "docs/development-log/2026-08-23.md",
+      "docs/task-proposal-admission.md",
+      "docs/experiments/app-server",
+      "docs/experiments/disposable-automatic",
+      "docs/experiments/installed-app-server",
+      "docs/validation",
+      "governance/tasks/p0-app-server",
+      "governance/tasks/p0-disposable",
+      "governance/tasks/p0-installed",
+      "governance/tasks/p0-deterministic",
+      "governance/tasks/p0-native-proposal",
+      "governance/tasks/p0-reusable",
+      "src",
+      "tests/test_change_scope.py",
+      "tests/test_governance_mcp.py",
+      "tests/test_app_server_schema_diagnostic.py",
+      "tests/test_installed_schema_validation.py",
+      "tests/test_process_attribution_gate.py",
+      "tests/test_windows_process_observer.py"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-native-completion-consumer-journey-recovery-v2.json",
+      "docs/experiments/native-completion-consumer-journey-recovery-v2-2026-08-24.md",
+      "docs/development-log/2026-08-24.md",
+      "STATUS.md",
+      "docs/governance-mcp-adapter.md",
+      "docs/product-requirements-automatic-governance.md",
+      "tests/test_user_documentation.py",
+      "tests/test_public_documentation_freshness.py"
+    ]
+  },
+  "task_id": "p0-native-completion-consumer-journey-recovery-v2",
+  "title": "Recover one native consumer completion journey with the current Adapter",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -p \"test_user_documentation.py\" -v",
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -p \"test_public_documentation_freshness.py\" -v",
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; python -m agentgov check task governance/tasks/p0-native-completion-consumer-journey-recovery-v2.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check scope governance/tasks/p0-native-completion-consumer-journey-recovery-v2.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

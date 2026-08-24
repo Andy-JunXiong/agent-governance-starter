@@ -1,0 +1,92 @@
+{
+  "acceptance_signals": [
+    "One fresh task-owned temporary root is resolved inside the operating-system temporary directory before any staging write.",
+    "Git writes one allowlisted archive directly to a task-owned file without a shell binary pipeline.",
+    "The archive extracts into an initially empty source directory and contains the declared package metadata and distribution data paths.",
+    "Only current src/agentgov/change_scope.py and src/agentgov/governance_mcp.py are overlaid from the working tree, and both staged SHA-256 hashes match their source hashes.",
+    "Staged governance MCP reports Adapter 1.7.0, six base tools, eight form-capable tools, and agentgov_task_completion_record.",
+    "Task-excluded untracked schema-diagnostic and process-observer modules are absent from the staged source.",
+    "The attempt stops after the deterministic staging gate whether it passes or fails, with no repair, substitution, or retry.",
+    "No dependency download, virtual environment, package build, installation, consumer clone or write, MCP initialization, external model action, cleanup, Git operation, publication, release, or deployment occurs.",
+    "Starter evidence records only normalized counts, identities, hashes or hash-match results, boundaries, validation results, and remaining unknowns without raw output, source content, credentials, identities, or absolute paths.",
+    "Status, MCP guide, product requirement, dated log, and one new recovery record state the exact result without changing Kernel semantics or stable release identity.",
+    "Existing documentation tests, the complete Starter suite, task and repository governance, exact scope reconciliation, JSON parsing, privacy scans, and git diff check pass or truthfully report preserved excluded state."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-bbddb3ecc4524223bd3d64cb0daeae7d and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Create one fresh verified operating-system temporary root and stage the current AgentGov package source without using a PowerShell binary pipeline. Write the allowlisted Git archive directly to one task-owned file, extract it into an empty staging directory, overlay only the current change-scope and governance-MCP Adapter 1.7.0 source files, and verify exact hashes plus required package metadata and completion-tool templates. Record only normalized evidence and stop immediately after the staging gate. Do not download dependencies, create runtimes, build or install packages, clone or change a consumer, initialize MCP, invoke a model, clean retained task roots, modify Starter product source, or perform Git, publication, release, or deployment actions."
+  },
+  "risk": {
+    "items": [
+      "An incorrect archive output or extraction target could write outside the verified temporary root.",
+      "The archive could include unrelated working-copy content unless it is produced from committed HEAD with an explicit path allowlist.",
+      "The overlay could absorb unrelated untracked package modules unless only the two exact Adapter 1.7.0 files are copied and excluded-module absence is checked.",
+      "A successful staging result does not prove package build, installation, MCP discovery, consumer behavior, completion cards, or product value.",
+      "Retained temporary files consume local disk space because cleanup is outside this task.",
+      "Reviewed assumption: Git can write an archive directly to a file on this Windows host.",
+      "Reviewed assumption: The system tar reader can extract a file-backed archive.",
+      "Reviewed assumption: Current Adapter 1.7.0 requires only the two identified working-tree source overlays on top of committed package paths.",
+      "Reviewed unknown: Whether file-backed extraction succeeds on this host.",
+      "Reviewed unknown: Whether the resulting staged tree would later build and install successfully.",
+      "Reviewed unknown: Whether installed consumer completion behavior would work after a future separately admitted task."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/adr",
+      "docs/development-automation-contracts.md",
+      "docs/development-log/2026-08-23.md",
+      "docs/task-proposal-admission.md",
+      "docs/experiments",
+      "docs/validation",
+      "docs/recovery/native-completion-consumer-journey-recovery-v3-2026-08-24.md",
+      "src",
+      "tests",
+      "governance/tasks/p0-app-server-parser-preflight-static-comparison-v3.json",
+      "governance/tasks/p0-app-server-static-protocol-inspection-v2.json",
+      "governance/tasks/p0-app-server-thread-start-no-model-diagnostic-v1.json",
+      "governance/tasks/p0-deterministic-process-attribution-gate-v1.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v1.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v2.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v3.json",
+      "governance/tasks/p0-installed-app-server-schema-static-validation-v1.json",
+      "governance/tasks/p0-installed-app-server-schema-static-validation-v2.json",
+      "governance/tasks/p0-native-completion-consumer-journey-recovery-v2.json",
+      "governance/tasks/p0-native-completion-consumer-journey-recovery-v3.json",
+      "governance/tasks/p0-native-proposal-worktree-scope-binding-v1.json",
+      "governance/tasks/p0-reusable-app-server-schema-diagnostic-v1.json"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-binary-safe-source-staging-v1.json",
+      "docs/recovery/binary-safe-source-staging-v1-2026-08-24.md",
+      "docs/development-log/2026-08-24.md",
+      "STATUS.md",
+      "docs/governance-mcp-adapter.md",
+      "docs/product-requirements-automatic-governance.md"
+    ]
+  },
+  "task_id": "p0-binary-safe-source-staging-v1",
+  "title": "Prove one binary-safe allowlisted source staging",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -p \"test_user_documentation.py\" -v",
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -p \"test_public_documentation_freshness.py\" -v",
+    "$env:PYTHONPATH='src'; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; python -m agentgov check task governance/tasks/p0-binary-safe-source-staging-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check scope governance/tasks/p0-binary-safe-source-staging-v1.json --repository .",
+    "$env:PYTHONPATH='src'; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

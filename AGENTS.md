@@ -142,7 +142,10 @@ A client that negotiates native form elicitation may also expose
   measurement-only, or differently scoped task is not that record. If no
   matching record exists and `agentgov_task_proposal_review` is available,
   call it with normalized low-risk task meaning and let the human decide
-  through the native form. Do not call it for read-only work. Do not modify the
+  through the native form. Before that form, every existing changed path must
+  be classified by the proposed include or exclude scope; the same privacy-
+  bounded inventory must still match immediately before admission. Do not call
+  it for read-only work. Do not modify the
   repository until the resulting task record exists and is separately taken
   up. If the required proposal-review tool is unavailable or fails, stop and
   report the bounded failure.

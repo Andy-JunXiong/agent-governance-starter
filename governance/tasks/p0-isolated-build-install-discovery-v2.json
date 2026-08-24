@@ -1,0 +1,91 @@
+{
+  "acceptance_signals": [
+    "Treat v1 as a preserved non-executed predecessor and do not modify either predecessor task record.",
+    "Recheck the retained staging archive digest, overlay digests, staged file count, and excluded-module absence before building.",
+    "Download only setuptools version 69 or newer into a fresh task cache, then perform build and installation offline.",
+    "Build one wheel in a dedicated Python 3.11 environment and install it without dependencies into a separate fresh Python 3.11 environment.",
+    "Verify distribution identity, Adapter version 1.7.0, six base tools without form capability, and eight tools with form capability including the completion tool.",
+    "Do not call a model, clone or write a consumer repository, repair product source, retry after a product deviation, or clean retained task evidence.",
+    "Do not modify source or tests; update only the newly admitted task evidence and named current-state documentation.",
+    "Run every corrected declared validation command and record deterministic results.",
+    "Perform a separate bounded current-Agent review without claiming native self-review completion."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-3f2e5504ce3c46e2b20af4068bff7771 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Supersede the non-executed v1 task whose declared AgentGov CLI checks used an inert module entry. Verify the retained staged source by building one wheel in an isolated Python 3.11 environment, installing it into a separate fresh environment, and discovering the expected governance tools without any model call or consumer repository access."
+  },
+  "risk": {
+    "items": [
+      "The single setuptools download requires controlled network permission and must stop on failure.",
+      "The retained staging directory may have changed; any mismatch must stop the task before build.",
+      "Build or install behavior may create unexpected files and must remain inside a fresh task temporary directory.",
+      "Tool discovery may differ after isolated installation and must not be bypassed through source repair, consumer access, or a model call.",
+      "The dirty worktree contains prior user and task changes that must remain classified and preserved.",
+      "Reviewed assumption: The retained source and evidence from binary-safe source staging v1 remain readable.",
+      "Reviewed assumption: Python 3.11, pip, tar, and Git are available locally.",
+      "Reviewed assumption: Distribution and Adapter identities can be verified from the isolated installation.",
+      "Reviewed assumption: This is a fully specified low-risk validation slice that needs no new product alignment.",
+      "Reviewed unknown: Whether the retained staged source can produce a wheel offline.",
+      "Reviewed unknown: Whether the wheel can be installed without dependencies into a fresh environment.",
+      "Reviewed unknown: Whether isolated capability negotiation returns the expected six and eight tool inventories."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/adr",
+      "docs/development-automation-contracts.md",
+      "docs/development-log/2026-08-23.md",
+      "docs/task-proposal-admission.md",
+      "docs/experiments",
+      "docs/validation",
+      "docs/recovery",
+      "src",
+      "tests",
+      "governance/tasks/p0-app-server-parser-preflight-static-comparison-v3.json",
+      "governance/tasks/p0-app-server-static-protocol-inspection-v2.json",
+      "governance/tasks/p0-app-server-thread-start-no-model-diagnostic-v1.json",
+      "governance/tasks/p0-deterministic-process-attribution-gate-v1.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v1.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v2.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v3.json",
+      "governance/tasks/p0-installed-app-server-schema-static-validation-v1.json",
+      "governance/tasks/p0-installed-app-server-schema-static-validation-v2.json",
+      "governance/tasks/p0-native-completion-consumer-journey-recovery-v2.json",
+      "governance/tasks/p0-native-completion-consumer-journey-recovery-v3.json",
+      "governance/tasks/p0-native-proposal-worktree-scope-binding-v1.json",
+      "governance/tasks/p0-reusable-app-server-schema-diagnostic-v1.json"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-isolated-build-install-discovery-v2.json",
+      "governance/tasks/p0-isolated-build-install-discovery-v1.json",
+      "governance/tasks/p0-binary-safe-source-staging-v1.json",
+      "docs/build-validation/isolated-build-install-discovery-v2-2026-08-24.md",
+      "docs/development-log/2026-08-24.md",
+      "STATUS.md",
+      "docs/governance-mcp-adapter.md",
+      "docs/product-requirements-automatic-governance.md"
+    ]
+  },
+  "task_id": "p0-isolated-build-install-discovery-v2",
+  "title": "Isolated build install and no-model discovery v2",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-isolated-build-install-discovery-v2.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check scope governance/tasks/p0-isolated-build-install-discovery-v2.json --repository .",
+    "git diff --check"
+  ]
+}

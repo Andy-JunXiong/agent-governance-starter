@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Development Plan
 
-Last updated: 2026-08-22
+Last updated: 2026-08-23
 
 ## Purpose
 
@@ -165,6 +165,106 @@ bounded decision to accept the empty dependency graph only for the one current
 declared capability while deferring optional artifact tracking and retaining
 its warning. This closes the historical record, not the fresh uncoached primary
 product pilot or the later automatic development-loop Taxi shadow pilot.
+
+The first separately admitted disposable automatic-journey rehearsal stopped
+before a Git baseline or external model session with result
+`BLOCKED_BEFORE_GIT_BASELINE_AND_MODEL_SESSION`. Its exact task simultaneously
+required native scope/completion evidence and prohibited every commit in a new
+temporary repository. Current AgentGov contracts require a commit-identified
+`HEAD` and comparison base, so the Agent retained the synthetic scaffold and
+stopped rather than reinterpret the admission. The result is recorded in
+[`docs/experiments/disposable-automatic-journey-rehearsal-2026-08-23.md`](docs/experiments/disposable-automatic-journey-rehearsal-2026-08-23.md).
+It does not satisfy the independent rehearsal gate. A future product review
+must choose between explicitly permitting one local baseline commit and using
+an already committed disposable fixture before any new replay is proposed.
+
+The product owner selected the local-baseline direction, and the separately
+admitted v2 rehearsal successfully created one clean, remote-free synthetic
+baseline commit. Its no-model preflight confirmed the development Adapter and
+all eight intended native tools. The only external session nevertheless
+disabled project-local configuration at its trust boundary, started one
+read-only model turn without AgentGov, and persisted a user-level trust entry.
+The turn was interrupted with no repository change and no retry. The normalized
+result is `STOPPED_AFTER_UNTRUSTED_PROJECT_FALLBACK` and is recorded in
+[`docs/experiments/disposable-automatic-journey-rehearsal-v2-2026-08-23.md`](docs/experiments/disposable-automatic-journey-rehearsal-v2-2026-08-23.md).
+It does not satisfy the independent rehearsal gate. A future product review
+must choose a trust-lifecycle design before another replay is proposed.
+
+The product owner then admitted the trust-independent v3 App Server direction.
+It reused the clean remote-free synthetic baseline, removed project trust from
+the MCP configuration path, and verified zero trusted-project matches before
+launch. One App Server process accepted its one-run configuration and completed
+initialization, but the only `thread/start` request failed before an ephemeral
+thread, tool inventory, or model turn. The normalized result is
+`STOPPED_BEFORE_EPHEMERAL_THREAD_AND_MODEL_TURN` and is recorded in
+[`docs/experiments/disposable-automatic-journey-rehearsal-v3-2026-08-23.md`](docs/experiments/disposable-automatic-journey-rehearsal-v3-2026-08-23.md).
+Post-state checks found unchanged user configuration, zero trust matches, a
+clean one-commit synthetic repository, and no residual App Server or AgentGov
+process. The independent rehearsal gate remains open. A future product review
+must decide whether a separately admitted no-model thread-start diagnostic is
+worthwhile before any further model replay.
+
+The product owner separately admitted that no-model diagnostic. Its read-only
+protocol-inspection batch stopped before comparison because PowerShell resolved
+the installed `codex` command to a script wrapper blocked by local execution
+policy. No executable substitution, App Server process, thread request, MCP
+startup, or model turn followed. The normalized result is
+`STOPPED_BEFORE_PROTOCOL_COMPARISON_AND_APP_SERVER_REQUEST` and is recorded in
+[`docs/experiments/app-server-thread-start-no-model-diagnostic-v1-2026-08-23.md`](docs/experiments/app-server-thread-start-no-model-diagnostic-v1-2026-08-23.md).
+The v3 RPC cause remains unknown and the independent rehearsal gate remains
+open. A future product review must decide whether one corrected static-only
+inspection is worthwhile before any new App Server request is proposed.
+
+That corrected static-only inspection was separately admitted as v2. It
+successfully preselected the platform-native Windows Codex entry, completed one
+bounded help query, and generated one experimental App Server schema inside a
+task-owned temporary directory. The comparison controller then lacked its
+planned encoding helper, so the task stopped before schema analysis and removed
+the temporary directory without retry. The normalized result is
+`STOPPED_AFTER_SCHEMA_GENERATION_BEFORE_PROTOCOL_COMPARISON` and is recorded in
+[`docs/experiments/app-server-static-protocol-inspection-v2-2026-08-23.md`](docs/experiments/app-server-static-protocol-inspection-v2-2026-08-23.md).
+The v3 request classification and RPC cause remain unknown. A future product
+review must decide whether one parser-preflighted static comparison is worth
+admitting before any live App Server request.
+
+The parser-preflighted static comparison was separately admitted as v3. Fresh
+host and native-entry discovery passed, but the exact parser's single in-memory
+self-test exited nonzero without a normalized result. The gate stopped the task
+before any Codex invocation, schema generation, temporary directory, App Server
+daemon, or model turn. The normalized result is
+`STOPPED_AT_PARSER_PREFLIGHT_BEFORE_SCHEMA_GENERATION` and is recorded in
+[`docs/experiments/app-server-parser-preflight-static-comparison-v3-2026-08-23.md`](docs/experiments/app-server-parser-preflight-static-comparison-v3-2026-08-23.md).
+The parser failure cause and v3 request compatibility remain unknown. A future
+product review should decide whether to replace further one-off inspections
+with a small, reusable, unit-tested Adapter diagnostic before any new schema or
+App Server rehearsal.
+
+The product owner selected the internal-module direction rather than a public
+CLI or test-only harness. Development source now contains a dependency-free,
+pure in-memory App Server schema diagnostic with deterministic unit tests. It
+recursively discovers `thread/start`, resolves bounded local references, checks
+required fields, primitive types, and string enums, and returns only normalized
+`compatible`, `incompatible`, or `indeterminate` findings. It does not invoke
+Codex, start App Server or MCP, access the filesystem or network, or retain raw
+schema and request values. This replaces the fragile inline parser as the next
+reusable foundation but does not itself classify the installed schema or prove
+runtime readiness. The next product review should decide between exposing a
+small public diagnostic CLI and using this internal boundary in one separately
+authorized sanitized static rehearsal.
+
+The product owner then selected and separately admitted the sanitized static
+validation. Its module tests and repository, trust, configuration,
+native-command, and temporary-path gates passed, but the absolute-zero process
+gate found six existing relevant processes. The task stopped as
+`STOPPED_AT_PROCESS_PREFLIGHT_BEFORE_SCHEMA_GENERATION` before a driver
+self-test, temporary directory, Codex invocation, schema generation, or schema
+analysis. The normalized result is recorded in
+[`docs/experiments/installed-app-server-schema-static-validation-v1-2026-08-23.md`](docs/experiments/installed-app-server-schema-static-validation-v1-2026-08-23.md).
+Installed-schema compatibility therefore remains `indeterminate`. A future
+product review must decide whether the process gate should distinguish an
+unchanged ambient baseline from task-created processes, or whether static
+validation should remain paused. This is decision input only and authorizes no
+gate change, process intervention, replay, Git action, or external work.
 
 ### Low-friction tool execution
 

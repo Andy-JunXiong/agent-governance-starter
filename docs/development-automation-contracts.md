@@ -298,6 +298,13 @@ Implemented native MCP Adapter boundary:
   drift review. Every tool input rejects unknown
   governance-bearing fields; no tool grants session, code, Git, release,
   deployment, external-write, or open-world authority;
+- development Adapter `1.7.0` makes changed-path classification a prerequisite
+  for native proposal elicitation. Its read-only Git inventory contains only
+  normalized repository-relative path/status metadata, includes both endpoints
+  of renames and copies, and requires every current path to match a proposed
+  include or exclude. The exact inventory is bound to preparation and compared
+  again after human admission but before the exclusive task-file write;
+  incomplete or changed inventories fail closed with zero writes;
 - the Adapter creates an explicit opaque journey handle. Later calls must carry
   that handle plus the exact pending prompt or review-request digest. State is
   in process memory only and a restarted server rejects the old handle;
@@ -343,6 +350,45 @@ Not yet implemented:
 - a background or cross-process session manager; stream mode is deliberately
   foreground and exists only for the lifetime of the connected host process;
 - Benefit and Learning views.
+
+## Internal task-start scope-baseline bridge
+
+The repository now contains an internal, dependency-free bridge at
+`scripts/task_start_scope_baseline`. It is not part of the installed package,
+public `agentgov` CLI, Core contract, Adapter, or development-session format.
+
+For a future separately admitted task, the bridge can be invoked before the
+first implementation write. It validates the admitted task, requires every
+current changed path to be classified, takes stable before/after canonical Git
+snapshots, and derives a separate SHA-256 identity for every committed-since-
+base, staged, unstaged, and untracked record. Both endpoints of renames and
+copies remain in scope evaluation. A task-contract change, HEAD change,
+unstable capture, malformed or missing baseline, unsafe or symbolic-link path,
+or overwrite attempt fails closed.
+
+Later comparison uses the captured scope rather than silently trusting a
+changed task. Exact pre-existing excluded identities become `PRESERVED`, while
+included post-start changes pass and changed or missing predecessor exclusions,
+new exclusions, and unclassified endpoints fail. The record stores no raw
+source or patch, absolute path, environment value, credential, process ID, or
+human/host identity. It can be created only at an explicit relative path below
+`.agentgov/scope-baselines`; that local record is excluded from canonical
+untracked snapshots.
+
+This is a bootstrap capability. It cannot prove work performed before capture,
+cannot retroactively close the task that created it, and does not change the
+existing worktree-wide scope command. Public CLI/session integration remains a
+later architecture decision.
+
+The first governed use now exists. Task
+`p0-reusable-foreground-stdio-controller-closeout-v1` captured its exclusive
+local baseline as the first execution action after take-up and before any
+repository write. The initial comparison returned
+`PASS=20 PRESERVED=49 FAIL=0 TOTAL=69`; controller and baseline-tool fixtures
+then passed without changing their captured excluded identities. Bounded
+closeout documents are the only admitted post-start repository changes. Final
+comparison evidence is recorded separately and remains a review input, not a
+retroactive cumulative-scope pass or public integration claim.
 
 ## Next requirement review
 

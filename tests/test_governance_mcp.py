@@ -13,6 +13,11 @@ from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
 from agentgov.cli import EXIT_ERROR, EXIT_PASS, main
+from agentgov.change_scope import (
+    GitChangedPathInventory,
+    GitChangedPathRecord,
+    GitInspectionError,
+)
 from agentgov.codex_hooks import CodexHookPolicyError, CodexHooksAction
 from agentgov.codex_mcp import (
     CODEX_MCP_ADAPTER_ID,
@@ -51,11 +56,16 @@ from tests.test_clarification_dialogue import empty_patch, question, resolutions
 
 ROOT = Path(__file__).resolve().parents[1]
 EVIDENCE = "docs/product-requirements-automatic-governance.md"
+EMPTY_CHANGED_PATH_INVENTORY = GitChangedPathInventory(
+    records=(),
+    digest="sha256:" + "0" * 64,
+)
 
 
 def adapter(
     host: str = "fixture.codex-mcp",
     repository: Path | None = None,
+    changed_path_inventory_provider=None,
 ) -> GovernanceMcpAdapter:
     provider = build_active_host_self_review_provider(
         adapter_id=host,
@@ -65,6 +75,11 @@ def adapter(
         adapter_id=host,
         provider=provider,
         repository=repository,
+        changed_path_inventory_provider=(
+            changed_path_inventory_provider
+            if changed_path_inventory_provider is not None
+            else lambda _repository: EMPTY_CHANGED_PATH_INVENTORY
+        ),
     )
 
 
@@ -334,7 +349,7 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
         listed = server.dispatch(rpc(3, "tools/list", {}))
 
         self.assertEqual(discovered["result"]["supportedVersions"][0], MCP_PROTOCOL_VERSION)
-        self.assertEqual(MCP_SERVER_VERSION, "1.6.0")
+        self.assertEqual(MCP_SERVER_VERSION, "1.7.0")
         self.assertEqual(initialized["result"]["serverInfo"]["version"], MCP_SERVER_VERSION)
         self.assertEqual(initialized["result"]["protocolVersion"], "2025-11-25")
         self.assertEqual(
@@ -623,6 +638,169 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
             self.assertEqual(paused.exception.code, "task_completion_failed_closed")
             self.assertFalse((root / ".agentgov").exists())
 
+    def test_native_proposal_requires_every_changed_path_to_be_classified(self) -> None:
+        inventory = GitChangedPathInventory(
+            records=(
+                GitChangedPathRecord(
+                    layer="untracked",
+                    status="untracked",
+                    path="private/unclassified.txt",
+                ),
+            ),
+            digest="sha256:" + "1" * 64,
+        )
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            (root / "governance" / "tasks").mkdir(parents=True)
+            active = adapter(
+                repository=root,
+                changed_path_inventory_provider=lambda _repository: inventory,
+            )
+
+            with self.assertRaises(GovernanceMcpError) as caught:
+                active.prepare_task_proposal(
+                    task_proposal_arguments("native-incomplete-scope")
+                )
+
+            self.assertEqual(caught.exception.code, "task_proposal_scope_incomplete")
+            self.assertEqual(caught.exception.field_path, "scope")
+            self.assertEqual(caught.exception.rule, "changed_path_classification")
+            self.assertTrue(caught.exception.retryable)
+            self.assertNotIn("private", str(caught.exception))
+            self.assertFalse(
+                (root / "governance" / "tasks" / "native-incomplete-scope.json").exists()
+            )
+
+            arguments = task_proposal_arguments("native-classified-scope")
+            arguments["scope"]["exclude_paths"].append("private")
+            preparation = active.prepare_task_proposal(arguments)
+            self.assertEqual(preparation.changed_path_inventory, inventory)
+
+    def test_native_proposal_revalidates_changed_paths_before_admission(self) -> None:
+        first = GitChangedPathInventory(
+            records=(
+                GitChangedPathRecord(
+                    layer="untracked", status="untracked", path="src/agentgov/new.py"
+                ),
+            ),
+            digest="sha256:" + "2" * 64,
+        )
+        second = GitChangedPathInventory(
+            records=(
+                *first.records,
+                GitChangedPathRecord(
+                    layer="untracked", status="untracked", path="outside/new.txt"
+                ),
+            ),
+            digest="sha256:" + "3" * 64,
+        )
+        inventories = iter((first, second))
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            (root / "governance" / "tasks").mkdir(parents=True)
+            active = adapter(
+                repository=root,
+                changed_path_inventory_provider=lambda _repository: next(inventories),
+            )
+            preparation = active.prepare_task_proposal(
+                task_proposal_arguments("native-inventory-race")
+            )
+
+            with self.assertRaises(GovernanceMcpError) as caught:
+                active.complete_task_proposal_review(
+                    preparation,
+                    {"action": "accept", "content": {"decision": "admit"}},
+                )
+
+            self.assertEqual(caught.exception.code, "task_proposal_plan_stale")
+            self.assertEqual(caught.exception.field_path, "admission_plan")
+            self.assertEqual(caught.exception.rule, "changed_path_inventory")
+            self.assertTrue(caught.exception.retryable)
+            self.assertFalse((root / preparation.plan.target).exists())
+
+    def test_native_proposal_inventory_inspection_failures_are_private_and_zero_write(self) -> None:
+        def unavailable(_repository):
+            raise GitInspectionError(r"C:\private-host\repository is unavailable")
+
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            (root / "governance" / "tasks").mkdir(parents=True)
+            active = adapter(
+                repository=root,
+                changed_path_inventory_provider=unavailable,
+            )
+            with self.assertRaises(GovernanceMcpError) as caught:
+                active.prepare_task_proposal(
+                    task_proposal_arguments("native-inventory-unavailable")
+                )
+            self.assertEqual(
+                caught.exception.code, "task_proposal_repository_unavailable"
+            )
+            self.assertEqual(caught.exception.rule, "changed_path_inventory")
+            self.assertNotIn("private-host", str(caught.exception))
+            self.assertFalse(
+                (root / "governance" / "tasks" / "native-inventory-unavailable.json").exists()
+            )
+
+        calls = 0
+
+        def becomes_unavailable(_repository):
+            nonlocal calls
+            calls += 1
+            if calls == 1:
+                return EMPTY_CHANGED_PATH_INVENTORY
+            raise GitInspectionError(r"C:\private-host\repository is unavailable")
+
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            (root / "governance" / "tasks").mkdir(parents=True)
+            active = adapter(
+                repository=root,
+                changed_path_inventory_provider=becomes_unavailable,
+            )
+            preparation = active.prepare_task_proposal(
+                task_proposal_arguments("native-inventory-lost")
+            )
+            with self.assertRaises(GovernanceMcpError) as caught:
+                active.complete_task_proposal_review(
+                    preparation,
+                    {"action": "accept", "content": {"decision": "admit"}},
+                )
+            self.assertEqual(caught.exception.code, "task_proposal_plan_stale")
+            self.assertEqual(caught.exception.rule, "changed_path_inventory")
+            self.assertNotIn("private-host", str(caught.exception))
+            self.assertFalse((root / preparation.plan.target).exists())
+
+        unsafe_inventory = GitChangedPathInventory(
+            records=(
+                GitChangedPathRecord(
+                    layer="untracked",
+                    status="untracked",
+                    path=r"private-host\unsafe.py",
+                ),
+            ),
+            digest="sha256:" + "4" * 64,
+        )
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            (root / "governance" / "tasks").mkdir(parents=True)
+            active = adapter(
+                repository=root,
+                changed_path_inventory_provider=lambda _repository: unsafe_inventory,
+            )
+            with self.assertRaises(GovernanceMcpError) as caught:
+                active.prepare_task_proposal(
+                    task_proposal_arguments("native-unsafe-inventory-path")
+                )
+            self.assertEqual(
+                caught.exception.code, "task_proposal_repository_unavailable"
+            )
+            self.assertEqual(caught.exception.rule, "changed_path_inventory")
+            self.assertNotIn("private-host", str(caught.exception))
+            self.assertFalse(
+                (root / "governance" / "tasks" / "native-unsafe-inventory-path.json").exists()
+            )
+
     def test_native_proposal_review_admits_only_exact_accept_decision(self) -> None:
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
@@ -672,10 +850,35 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
 
             self.assertEqual(messages[1]["method"], "elicitation/create")
             self.assertEqual(messages[1]["params"]["mode"], "form")
-            self.assertIn("task_document", messages[1]["params"]["message"])
+            review_message = messages[1]["params"]["message"]
+            self.assertTrue(review_message.startswith("# TASK APPROVAL — QUICK SUMMARY"))
+            self.assertIn("## What happens now", review_message)
+            self.assertIn("**Approve only this task** creates one task record", review_message)
+            self.assertIn("**Name:** Review one native Codex task proposal", review_message)
+            self.assertIn("Allowed path rules for later execution: 1", review_message)
+            self.assertIn("Protected path rules: 1", review_message)
+            self.assertIn("Required validation commands: 1", review_message)
+            self.assertIn("## Technical details — audit only", review_message)
+            self.assertIn("```json", review_message)
+            self.assertIn('"task_document"', review_message)
+            self.assertLess(
+                review_message.index("## What happens now"),
+                review_message.index('"task_document"'),
+            )
             requested_schema = messages[1]["params"]["requestedSchema"]
             self.assertEqual(set(requested_schema), {"type", "properties", "required"})
             self.assertEqual(requested_schema["required"], ["decision"])
+            decision_schema = requested_schema["properties"]["decision"]
+            self.assertEqual(decision_schema["title"], "What do you want to do?")
+            self.assertIn("creates only this task record", decision_schema["description"])
+            self.assertEqual(
+                decision_schema["oneOf"],
+                [
+                    {"const": "admit", "title": "Approve only this task"},
+                    {"const": "request_changes", "title": "Send back for changes"},
+                    {"const": "reject", "title": "Do not approve"},
+                ],
+            )
             result = messages[2]["result"]["structuredContent"]
             self.assertEqual(
                 result["contract"], "agentgov.task-proposal-review-result"
@@ -692,6 +895,33 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
             self.assertEqual(
                 document["decision"]["decided_by"], MCP_NATIVE_ACCOUNTABLE_OWNER
             )
+
+    def test_native_proposal_summary_is_bounded_and_escapes_markdown(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            (root / "governance" / "tasks").mkdir(parents=True)
+            arguments = task_proposal_arguments("native-summary-fixture")
+            arguments["title"] = "Review **one** [native] task"
+            arguments["risk_items"] = [
+                "Risk *one*",
+                "Risk _two_",
+                "Risk `three`",
+                "Risk #four",
+            ]
+            preparation = adapter(repository=root).prepare_task_proposal(arguments)
+
+            message = GovernanceMcpServer._proposal_review_message(preparation)
+            summary = message[: message.index("## Technical details — audit only")]
+
+            self.assertIn(
+                r"**Name:** Review \*\*one\*\* \[native\] task", summary
+            )
+            self.assertIn(r"- Risk \*one\*", summary)
+            self.assertIn(r"- Risk \_two\_", summary)
+            self.assertIn(r"- Risk \`three\`", summary)
+            self.assertNotIn("Risk #four", summary)
+            self.assertIn("- +1 more in the technical details below", summary)
+            self.assertIn('"Risk #four"', message)
 
     def test_native_proposal_rejects_agent_supplied_owner_before_elicitation(self) -> None:
         with TemporaryDirectory() as temp_dir:

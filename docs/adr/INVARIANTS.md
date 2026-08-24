@@ -104,6 +104,32 @@ Stop the consequential transition or narrow the product claim. A new runtime
 mediation or enforcement boundary requires a separate ADR, authority model,
 threat model, and validation; it is not inferred from the current MCP Adapter.
 
+## Native task proposals classify and bind the current changed-path inventory
+
+- Authority: `AGENTS.md` and `docs/adr/0015-use-mcp-elicitation-for-codex-task-admission.md`
+
+### Enforcement points
+
+- Before native proposal elicitation, every changed repository-relative path
+  must match either the proposed include or exclude scope.
+- Read-only inventory metadata includes staged, unstaged, and untracked paths
+  plus both endpoints of renames and copies; it excludes contents, absolute host
+  paths, credentials, and ignored unrelated files.
+- The exact inventory bound at preparation must match a fresh inventory after
+  exact human admission and before task-file creation.
+- Missing classification, inspection failure, or inventory drift is zero-write
+  and grants no authority over excluded paths.
+
+### Verification
+
+Exercise complete and incomplete classifications, rename/copy endpoints,
+inventory drift, inspection failure, non-admission, and privacy-safe errors.
+
+### Failure response
+
+Stop before elicitation or task creation. Prepare a fresh exact proposal after
+the worktree and its include/exclude classification are understood.
+
 ## Development-time governance is the primary product boundary
 
 - Authority: `docs/adr/0009-govern-coding-agents-during-development.md`

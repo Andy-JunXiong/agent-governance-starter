@@ -1,0 +1,92 @@
+{
+  "acceptance_signals": [
+    "Fresh preflight confirms the retained synthetic repository is clean at one local commit with zero remotes, user trust has zero matching entries, the user configuration byte digest is captured without retaining its value, and no matching App Server, governance-MCP, or task-owned process or directory exists.",
+    "Command discovery selects exactly one platform-native Windows Codex entry and rejects script-wrapper selection before invocation.",
+    "All focused reusable diagnostic tests pass before schema generation, and one minimal in-memory driver self-test returns compatible without subprocess, filesystem, network, App Server, MCP, thread, or model activity.",
+    "Exactly one task-owned directory is created after its resolved path is verified under the operating-system temporary root, cleanup is registered, and exactly one installed experimental schema-generation subcommand is executed there.",
+    "Generated entries are bounded to the verified temporary directory, symbolic links and non-JSON entries are rejected, parseable JSON documents are analyzed only in memory with the existing diagnostic function, and no raw schema or filename is retained.",
+    "The overall result is compatible, incompatible, or indeterminate with bounded document counts, stable reason codes, normalized field names, first-deviation evidence, and an explicit statement that static compatibility cannot prove runtime thread or required-MCP readiness.",
+    "The task stops at the first deviation and performs no executable substitution after invocation, diagnostic-module or controller replacement, second schema generation, App Server daemon launch, initialize request, thread request, MCP startup, prompt, model turn, or retry.",
+    "The exact task-owned temporary directory is removed; post-state confirms user configuration and trust are unchanged, the synthetic repository remains clean and remote-free, and no relevant process or task-owned directory remains.",
+    "The experiment record, current status, development plan, dated log, and documentation assertion describe the same privacy-bounded outcome without raw schemas, request values, filenames, executable or temporary paths, credentials, private identities, configuration digests, or model-private reasoning."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-22567e1a1fdf4289916ce396d513dc09 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Run one controlled no-model validation of the internal App Server schema diagnostic. After host, repository, trust, process, native-command, module-test, and temporary-path gates pass, create one verified operating-system temporary directory, run exactly one installed schema-generation subcommand through the platform-native Codex entry, and analyze its bounded JSON documents in memory with the existing diagnostic and normalized thread-start request facts. Retain only document counts, normalized status, reason codes, field names, and first-deviation evidence. Remove the exact temporary directory and verify post-state. Stop at the first deviation without substitution, source change, regeneration, App Server launch, MCP call, thread, model turn, or retry."
+  },
+  "risk": {
+    "items": [
+      "Schema generation could leave temporary files if cleanup is not registered and verified before invocation.",
+      "A malformed command could start an App Server daemon instead of the bounded schema-generation subcommand.",
+      "Raw schema, filenames, host paths, or request values could leak into evidence unless the controller retains normalized output only.",
+      "Cross-file references or unsupported schema constructs could be misclassified; missing decisive information must remain indeterminate.",
+      "An analysis or controller failure could invite another inline repair loop; the task requires first-deviation stop without retry.",
+      "The worktree contains explicitly excluded pre-existing uncommitted task and evidence files that must not be modified or attributed to this task.",
+      "Reviewed assumption: The installed Codex distribution still exposes the previously observed platform-native Windows entry and experimental App Server schema-generation surface.",
+      "Reviewed assumption: The existing internal diagnostic module and its focused tests remain unchanged and importable through Python 3.11.",
+      "Reviewed assumption: The schema-generation subcommand does not start an App Server daemon or model.",
+      "Reviewed assumption: A synthetic cwd string is sufficient for static type and enum comparison and avoids retaining a host path.",
+      "Reviewed assumption: One task-owned temporary directory can be safely created and removed inside the operating-system temporary root.",
+      "Reviewed unknown: The generated schema may contain multiple documents, cross-file references, or unsupported constructs and therefore legitimately produce indeterminate.",
+      "Reviewed unknown: The installed schema may accept or reject the normalized request fields and values.",
+      "Reviewed unknown: Static compatibility does not establish runtime thread creation, required-MCP initialization, cross-host behavior, causal benefit, or user value.",
+      "Reviewed unknown: The exact earlier v3 thread-start RPC cause may remain unknown even after a static result."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "pyproject.toml",
+      "src",
+      "schemas",
+      "templates",
+      "examples",
+      "tests/fixtures",
+      "tests/test_app_server_schema_diagnostic.py",
+      "docs/governance-mcp-adapter.md",
+      "governance/tasks/p0-reusable-app-server-schema-diagnostic-v1.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v1.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v2.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v3.json",
+      "governance/tasks/p0-app-server-thread-start-no-model-diagnostic-v1.json",
+      "governance/tasks/p0-app-server-static-protocol-inspection-v2.json",
+      "governance/tasks/p0-app-server-parser-preflight-static-comparison-v3.json",
+      "docs/experiments/disposable-automatic-journey-rehearsal-2026-08-23.md",
+      "docs/experiments/disposable-automatic-journey-rehearsal-v2-2026-08-23.md",
+      "docs/experiments/disposable-automatic-journey-rehearsal-v3-2026-08-23.md",
+      "docs/experiments/app-server-thread-start-no-model-diagnostic-v1-2026-08-23.md",
+      "docs/experiments/app-server-static-protocol-inspection-v2-2026-08-23.md",
+      "docs/experiments/app-server-parser-preflight-static-comparison-v3-2026-08-23.md"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-installed-app-server-schema-static-validation-v1.json",
+      "docs/experiments/installed-app-server-schema-static-validation-v1-2026-08-23.md",
+      "docs/development-log/2026-08-23.md",
+      "DEVELOPMENT_PLAN.md",
+      "STATUS.md",
+      "tests/test_user_documentation.py"
+    ]
+  },
+  "task_id": "p0-installed-app-server-schema-static-validation-v1",
+  "title": "Validate the reusable diagnostic against one installed App Server schema",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest tests.test_app_server_schema_diagnostic -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check task governance/tasks/p0-installed-app-server-schema-static-validation-v1.json --repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check scope governance/tasks/p0-installed-app-server-schema-static-validation-v1.json --repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "acceptance_signals": [
+    "Revalidate the retained consumer repository, Python environment, exact wheel digest, predecessor task hashes, clean remote-free state, user Codex configuration digest, and absence of task-owned processes before launch.",
+    "Use the retained offline-installed AgentGov 0.3.0rc1 runtime and packaged eight-tool binding without reinstalling, downloading, or changing Starter or consumer product source.",
+    "Create exactly one fresh task-owned disposable Codex home without reading, copying, or changing the real user Codex home.",
+    "Perform deterministic read-only Codex executable and App Server protocol preflight before the single launch; stop before launch if required commands or request shapes are not established.",
+    "Launch exactly one Codex App Server foreground process from the retained disposable consumer repository using only one-run AgentGov MCP configuration and the retained runtime.",
+    "Send only initialize, initialized, one ephemeral thread/start, and at most one MCP status inventory request; never send turn/start, a prompt, or a model payload.",
+    "Claim pass only if the ephemeral thread starts and Codex reports the required AgentGov MCP initialized with observable evidence of expected form-capable tool availability; otherwise record the first bounded deviation and stop without repair, restart, substitution, or retry.",
+    "Close the exact process input and allow only bounded termination of the positively attributed task process if it cannot exit; confirm no task-owned Codex, AgentGov, or Python process remains.",
+    "Preserve the disposable repository clean with zero remotes and zero product or configuration files; preserve user configuration, Starter source and tests, HEAD, remotes, release identity, retained wheel, and predecessor task records.",
+    "Record only normalized privacy-bounded evidence and update only the admitted task, evidence, dated log, current status, MCP guide, and product requirement.",
+    "Run all declared validation commands and perform a distinct bounded current-Agent review without claiming native self-review completion."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-6e555bf047be43b7811e6a9769162f59 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Using the exact retained remote-free disposable consumer repository and its offline-installed AgentGov 0.3.0rc1 runtime, perform one controlled no-model Codex App Server launch with a fresh task-owned disposable Codex home and one-run AgentGov MCP configuration. Complete only the App Server initialize handshake, one ephemeral thread/start, and at most one MCP status inventory request. Pass only if Codex reports the required AgentGov MCP initialized and exposes evidence of the expected form-capable tool availability; otherwise stop at the first deviation without repair, restart, substitution, or retry. Do not send turn/start, create a model turn, invoke an AgentGov tool, modify the consumer repository or user Codex configuration, or perform Git, publication, release, deployment, or cleanup actions."
+  },
+  "risk": {
+    "items": [
+      "The prior App Server path failed at thread/start; this task must stop at the first repeated or new deviation and must not retry.",
+      "A malformed controller could misclassify a protocol failure; request cardinality, response identity, and exit conditions must be deterministic.",
+      "Codex could mutate user configuration or the consumer repository; pre/post digests and clean-state checks must detect any change without repairing it.",
+      "A foreground App Server or child AgentGov process could remain running; termination is allowed only for a positively attributed task process.",
+      "Raw protocol, configuration, paths, process identities, credentials, or model-private data could leak into evidence; retain only normalized bounded outcomes.",
+      "The dirty Starter worktree contains earlier user and task changes that must remain classified, excluded where applicable, and preserved.",
+      "Possible background network behavior cannot be treated as absent unless directly established.",
+      "Reviewed assumption: The retained disposable consumer repository and offline-installed Python 3.11 environment remain readable and unchanged.",
+      "Reviewed assumption: A compatible Codex CLI with App Server support is locally available.",
+      "Reviewed assumption: A no-model App Server initialization and ephemeral thread can run without copying credentials into the disposable Codex home.",
+      "Reviewed assumption: One-run MCP configuration can bind the retained AgentGov runtime without project trust or user-configuration mutation.",
+      "Reviewed assumption: The fully specified low-risk successor implements the product owner's selected initialization-only direction and requires no new architecture choice.",
+      "Reviewed unknown: Whether the current Codex App Server accepts the established initialize, ephemeral thread, and MCP status request shapes on this host.",
+      "Reviewed unknown: Whether Adapter 1.7.0 resolves the required-MCP thread-start failure observed by earlier Adapter versions.",
+      "Reviewed unknown: Whether Codex exposes sufficient MCP status or tool-inventory evidence before any model turn to prove expected form-capable tool availability.",
+      "Reviewed unknown: Whether the Codex process performs any background network activity despite the absence of a model request.",
+      "Reviewed unknown: Whether a successful single host result generalizes to other consumers, Codex versions, hosts, or operating systems."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/adr",
+      "docs/development-automation-contracts.md",
+      "docs/development-log/2026-08-23.md",
+      "docs/task-proposal-admission.md",
+      "docs/experiments",
+      "docs/validation",
+      "docs/recovery",
+      "src",
+      "tests",
+      "governance/tasks/p0-app-server-parser-preflight-static-comparison-v3.json",
+      "governance/tasks/p0-app-server-static-protocol-inspection-v2.json",
+      "governance/tasks/p0-app-server-thread-start-no-model-diagnostic-v1.json",
+      "governance/tasks/p0-deterministic-process-attribution-gate-v1.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v1.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v2.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v3.json",
+      "governance/tasks/p0-installed-app-server-schema-static-validation-v1.json",
+      "governance/tasks/p0-installed-app-server-schema-static-validation-v2.json",
+      "governance/tasks/p0-native-completion-consumer-journey-recovery-v2.json",
+      "governance/tasks/p0-native-completion-consumer-journey-recovery-v3.json",
+      "governance/tasks/p0-native-proposal-worktree-scope-binding-v1.json",
+      "governance/tasks/p0-reusable-app-server-schema-diagnostic-v1.json"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-disposable-codex-mcp-initialization-v1.json",
+      "governance/tasks/p0-disposable-consumer-stdio-discovery-v1.json",
+      "governance/tasks/p0-isolated-build-install-discovery-v2.json",
+      "governance/tasks/p0-isolated-build-install-discovery-v1.json",
+      "governance/tasks/p0-binary-safe-source-staging-v1.json",
+      "docs/build-validation/isolated-build-install-discovery-v2-2026-08-24.md",
+      "docs/consumer-validation/disposable-consumer-stdio-discovery-v1-2026-08-24.md",
+      "docs/consumer-validation/disposable-codex-mcp-initialization-v1-2026-08-24.md",
+      "docs/development-log/2026-08-24.md",
+      "STATUS.md",
+      "docs/governance-mcp-adapter.md",
+      "docs/product-requirements-automatic-governance.md"
+    ]
+  },
+  "task_id": "p0-disposable-codex-mcp-initialization-v1",
+  "title": "Disposable Codex MCP initialization v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-disposable-codex-mcp-initialization-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check scope governance/tasks/p0-disposable-codex-mcp-initialization-v1.json --repository .",
+    "git diff --check"
+  ]
+}

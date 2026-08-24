@@ -66,6 +66,18 @@ still performs no model or network call. Static code can validate the
 normalized contract but cannot prove semantic fidelity, so Codex presents the
 exact resulting plan through native MCP form elicitation before any write.
 
+The native review is summary-first. Its first visible section tells the human
+what approval creates now, the task name and goal, the number of allowed and
+protected path rules, the validation count, material risks and unknowns, and
+the authority boundary. The exact admission-plan JSON still follows under a
+clearly labeled audit-only technical-details section. The form therefore keeps
+the complete contract available without making machine-oriented JSON the first
+thing a product owner must interpret. Final layout and any collapsible control
+remain host-owned; AgentGov guarantees content and ordering, not Codex chrome.
+Human-facing values are Markdown-escaped, and each risk or unknown section shows
+at most three items plus a remaining-item count; every item remains in the exact
+technical JSON.
+
 Development Adapter `1.5.0` narrows that native input relative to the generic
 draft: the Codex Agent no longer supplies `owner`. The Adapter injects the
 canonical `Human product owner` role into the exact plan, where the existing
@@ -73,6 +85,19 @@ task builder uses it for both `owner` and `decided_by`. The generic proposal
 contract, reference materializer, and terminal recovery path continue to carry
 an explicit accountable owner because those non-native paths have separate
 operator-attestation boundaries.
+
+Development Adapter `1.7.0` adds a mandatory dirty-worktree scope binding to
+the native Codex path. Before it opens the review form, it reads only
+repository-relative Git status/path metadata and requires every existing
+changed path—including both endpoints of a rename or copy—to match either a
+proposed include or a proposed exclude. Any unclassified path returns the
+privacy-safe `task_proposal_scope_incomplete` error and writes nothing. The
+Adapter binds the exact normalized inventory to the preparation and reads it
+again after an exact human admit decision but before task creation. Any added,
+removed, reclassified, renamed, or copied record returns
+`task_proposal_plan_stale` and writes nothing. File contents, absolute host
+paths, credentials, process data, and unrelated ignored files are never part
+of this inventory.
 
 ## Codex native review
 
@@ -82,8 +107,9 @@ omits raw conversation, repository identity, proposal identity, privacy and
 authority declarations, the accountable-owner identity, and the decision. The
 Adapter binds the local Git root, adds those invariant fields and the canonical
 `Human product owner` role, builds the existing read-only admission plan, and
-sends the complete bounded plan back to Codex with three choices: admit the
-exact task, request changes, or reject.
+sends a summary-first bounded plan back to Codex with three direct choices:
+`Approve only this task`, `Send back for changes`, or `Do not approve`. Those
+labels retain the existing `admit`, `request_changes`, and `reject` values.
 
 Triggering is scoped to the exact requested repository change. A
 human-admitted task counts only when its requirement, goal, scope, and
@@ -96,7 +122,8 @@ contracts but cannot force a model to select the tool.
 Only an MCP response with `action=accept` and `decision=admit`, bound to that
 elicitation request, may exclusively create the planned task file. Request
 changes, reject, decline, cancel, malformed responses, interruption, missing
-client capability, stale digests, and target races write nothing. Ordinary MCP
+client capability, incomplete changed-path classification, changed inventory,
+stale digests, and target races write nothing. Ordinary MCP
 tool permission is not task admission. Admission still does not start a
 session or authorize implementation, scope expansion, Git, release, or
 deployment. Clients without form elicitation retain the original five
@@ -164,6 +191,10 @@ the existing task contract, repository-relative paths, real parent
 directories (including every ancestor symlink), and target nonexistence
 immediately before writing. A changed plan or raced target fails without
 overwrite.
+
+The terminal fallback retains its existing contract and does not claim the
+native Adapter's changed-path binding. That binding is specific to the native
+proposal review path in Adapter `1.7.0`.
 
 The apply step creates only `governance/tasks/<task-id>.json`. It does not:
 

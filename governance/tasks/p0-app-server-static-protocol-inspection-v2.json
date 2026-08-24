@@ -1,0 +1,80 @@
+{
+  "acceptance_signals": [
+    "Preflight verifies the retained synthetic repository remains clean at one local commit with zero remotes, its trust match is absent, the user Codex configuration digest is captured without retaining its value, and no App Server or governance-MCP process is running.",
+    "Read-only command discovery verifies the exact platform-native Windows Codex entry point before any Codex invocation and rejects PowerShell script-wrapper resolution.",
+    "Only bounded Codex help or schema-generation subcommands execute; no App Server daemon, initialize request, thread/start request, turn/start request, MCP startup, prompt, or model turn occurs.",
+    "If schema generation requires transient output, exactly one task-owned directory is created under the resolved operating-system temporary directory, its resolved path is verified inside that directory before use or cleanup, no raw schema enters the Starter repository, and the task-created directory is removed after inspection.",
+    "The installed thread/start contract is compared only with the normalized v3 request fields and classified as compatible, incompatible, or indeterminate with evidence-supported reasons.",
+    "The inspection stops at the first deviation and performs no executable substitution after invocation, configuration repair, second schema-generation attempt, App Server launch, or retry.",
+    "Post-state verification confirms the user configuration digest and trust state are unchanged, the synthetic repository remains clean and remote-free, the transient output is absent, and no diagnostic process remains.",
+    "The evidence record, current status, development plan, dated log, and documentation test describe the same bounded result without raw schemas, protocol payloads, credentials, private paths, external identities, configuration digests, or model-private reasoning."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-348e4540ef8d48d3b0c357930cd305b4 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Run one corrected static-only protocol inspection for the v3 App Server thread/start request. Before invoking Codex, resolve and verify the platform-native Windows command entry point without executing a PowerShell script wrapper. Use only bounded help or schema-generation subcommands, never start an App Server daemon, initialize a client, create a thread, call MCP, or start a model turn. Compare only the installed protocol shape with the normalized v3 request, classify it as compatible, incompatible, or indeterminate, retain privacy-bounded evidence, and stop at the first deviation without substitution or retry."
+  },
+  "risk": {
+    "items": [
+      "Command discovery could select a script wrapper or a different Codex installation than the v3 host process.",
+      "Schema generation could create transient files containing local implementation details or leave them behind after failure.",
+      "A malformed command could start the App Server daemon rather than the bounded schema-generation subcommand.",
+      "The installed schema may not fully express runtime validation or required-MCP startup behavior, so static compatibility may not explain the v3 RPC failure.",
+      "Raw schema or command output could disclose local paths or host details if retained without normalization.",
+      "Reviewed assumption: The installed Codex distribution provides a platform-native Windows command entry point and a bounded App Server schema-generation surface.",
+      "Reviewed assumption: The normalized v3 request fields already recorded in Starter evidence are sufficient for comparison without reopening raw v3 protocol output.",
+      "Reviewed assumption: A task-owned temporary directory can be safely created and removed within the operating-system temporary directory without touching other temporary state.",
+      "Reviewed assumption: Static schema compatibility can narrow request-shape uncertainty but cannot prove runtime MCP initialization or full thread-start success.",
+      "Reviewed unknown: Whether the installed schema exposes every field and constraint that caused the v3 thread/start RPC failure.",
+      "Reviewed unknown: Whether the v3 normalized request is compatible with the installed thread/start contract.",
+      "Reviewed unknown: Whether a compatible static result would leave required-MCP initialization as the next meaningful diagnostic boundary."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "src",
+      "schemas",
+      "templates",
+      "examples",
+      "tests/fixtures",
+      "pyproject.toml",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v1.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v2.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v3.json",
+      "governance/tasks/p0-app-server-thread-start-no-model-diagnostic-v1.json",
+      "docs/experiments/disposable-automatic-journey-rehearsal-2026-08-23.md",
+      "docs/experiments/disposable-automatic-journey-rehearsal-v2-2026-08-23.md",
+      "docs/experiments/disposable-automatic-journey-rehearsal-v3-2026-08-23.md",
+      "docs/experiments/app-server-thread-start-no-model-diagnostic-v1-2026-08-23.md"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-app-server-static-protocol-inspection-v2.json",
+      "docs/experiments/app-server-static-protocol-inspection-v2-2026-08-23.md",
+      "docs/development-log/2026-08-23.md",
+      "DEVELOPMENT_PLAN.md",
+      "STATUS.md",
+      "tests/test_user_documentation.py"
+    ]
+  },
+  "task_id": "p0-app-server-static-protocol-inspection-v2",
+  "title": "Statically compare the installed App Server protocol with the v3 request",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check task governance/tasks/p0-app-server-static-protocol-inspection-v2.json --repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check scope governance/tasks/p0-app-server-static-protocol-inspection-v2.json --repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

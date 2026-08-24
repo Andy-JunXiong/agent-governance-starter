@@ -1,0 +1,77 @@
+{
+  "acceptance_signals": [
+    "Preflight verifies the retained synthetic repository is clean at one local commit with zero remotes, its trust match is absent, and the user Codex configuration digest is captured without retaining its value or content.",
+    "Read-only inspection compares the installed App Server protocol contract with the v3 thread/start request and records only normalized findings.",
+    "If live confirmation remains necessary and all gates pass, exactly one App Server process receives at most one ephemeral thread/start request; no model turn, turn/start request, prompt, or consumer repository write occurs.",
+    "The diagnostic stops at the first new deviation and performs no configuration repair, App Server restart, second thread request, direct model call, or retry.",
+    "The failure is classified into an evidence-supported normalized category or explicitly remains unknown; required-MCP initialization is not inferred without evidence.",
+    "Post-state verification confirms the user configuration digest and trust state are unchanged, the synthetic repository remains clean and remote-free, and no diagnostic process remains.",
+    "The evidence record, current status, development plan, dated log, and documentation test describe the same bounded outcome without raw protocol payloads, credentials, private paths, external identities, configuration digests, or model-private reasoning."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-fba270b82f2f4bdd94f922eecacf4170 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Perform one bounded, trust-independent diagnostic of the v3 App Server thread/start RPC failure. Use read-only local protocol/schema inspection first, then at most one App Server process and one ephemeral thread/start request only when preflight remains safe. Never start a model turn. Retain only normalized failure classification and privacy-bounded evidence, update the current Starter evidence surfaces, and stop at the first new deviation without repair, restart, or retry."
+  },
+  "risk": {
+    "items": [
+      "Diagnostic protocol output could expose local paths, configuration content, or process details if retained without normalization.",
+      "A malformed client sequence could accidentally start a model turn or create persistent App Server state.",
+      "One-run MCP configuration could still trigger a user-level trust mutation if the host ignores the intended override boundary.",
+      "A stopped App Server or governance-MCP child process could remain after the diagnostic.",
+      "The observed failure may remain unclassified after the single allowed live attempt.",
+      "Reviewed assumption: The retained synthetic repository from v3 remains available as a read-only diagnostic target.",
+      "Reviewed assumption: The installed Codex CLI exposes enough local App Server schema or protocol behavior for a bounded comparison.",
+      "Reviewed assumption: Thread creation alone does not require a model turn; no turn/start request will be sent.",
+      "Reviewed assumption: The existing v3 evidence is sufficient context and will not be modified by this diagnostic.",
+      "Reviewed unknown: Whether the v3 RPC failure came from request shape, sandbox policy, required MCP startup, host capability negotiation, or another App Server precondition.",
+      "Reviewed unknown: Whether a single privacy-bounded live diagnostic can distinguish required-MCP initialization from a general thread-start failure.",
+      "Reviewed unknown: Whether the installed App Server emits a stable normalized error code that can be retained without private data."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "src",
+      "schemas",
+      "templates",
+      "examples",
+      "tests/fixtures",
+      "pyproject.toml",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v1.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v2.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v3.json",
+      "docs/experiments/disposable-automatic-journey-rehearsal-2026-08-23.md",
+      "docs/experiments/disposable-automatic-journey-rehearsal-v2-2026-08-23.md",
+      "docs/experiments/disposable-automatic-journey-rehearsal-v3-2026-08-23.md"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-app-server-thread-start-no-model-diagnostic-v1.json",
+      "docs/experiments/app-server-thread-start-no-model-diagnostic-v1-2026-08-23.md",
+      "docs/development-log/2026-08-23.md",
+      "DEVELOPMENT_PLAN.md",
+      "STATUS.md",
+      "tests/test_user_documentation.py"
+    ]
+  },
+  "task_id": "p0-app-server-thread-start-no-model-diagnostic-v1",
+  "title": "Classify the App Server thread-start failure without a model turn",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check task governance/tasks/p0-app-server-thread-start-no-model-diagnostic-v1.json --repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check scope governance/tasks/p0-app-server-thread-start-no-model-diagnostic-v1.json --repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "acceptance_signals": [
+    "A reusable read-only inventory API reports stable normalized repository-relative records for staged, unstaged, non-ignored untracked, deleted, copied, and renamed endpoints without reading file contents.",
+    "Native proposal preparation rejects before elicitation and writes nothing when an observed changed path is outside every proposed include and exclude prefix.",
+    "Explicit exclusions count as classified paths but grant no ownership, mutation, exception, or downstream authority.",
+    "A prepared native proposal binds a deterministic digest of its normalized changed-path inventory and accepted admission rechecks it before the exclusive task-file write.",
+    "Any inventory difference between preparation and admission returns a bounded privacy-safe stale-plan error and creates no task file.",
+    "The native proposal input stays owner-free and otherwise unchanged; human owner binding, exact form decision, target-race protection, generic proposal paths, and non-admission zero-write behavior remain intact.",
+    "Adapter identity 1.7.0 and affected AGENTS, ADR, invariant, product, automation, guide, status, log, and documentation-test surfaces consistently describe mandatory classification and authority boundaries.",
+    "Fixture tests cover Git layers, rename endpoints, complete classification, omission rejection, inventory staleness, Git inspection failure, privacy-safe diagnostics, admission, non-admission, and unchanged schemas.",
+    "Focused tests, the supported Python 3.11 full suite, task and repository governance, scope reconciliation, and diff checks pass or retain only explicitly excluded pre-existing findings."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-2dbb1eddee574b0490d49d579d0c0369 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Add mandatory changed-path classification to native MCP task proposal review. Before elicitation, collect only normalized repository-relative Git change metadata and reject a proposal when any observed path matches neither its include nor exclude prefixes. Bind that inventory to the prepared plan and revalidate it immediately before accepted human admission may create the task record. Preserve the owner-free input, human owner binding, generic proposal paths, zero-write failures, and post-write scope checker. Update Adapter identity to 1.7.0 and affected governance, architecture, documentation, status, log, and tests. Do not read file contents, rewrite earlier tasks, clean the worktree, retry schema validation, or perform Git or external actions."
+  },
+  "risk": {
+    "items": [
+      "A preparation-only path check can become stale while the human form is open, so admission must revalidate exact inventory metadata.",
+      "Rename and copy records have two relevant endpoints and omitting either endpoint creates a scope gap.",
+      "Repository-relative filenames may be sensitive, so rejection diagnostics must expose only bounded code, field, rule, and retryability metadata.",
+      "Git inspection can fail in an unbound, unborn, nested, or unavailable repository and must fail closed without a form or write.",
+      "Include and exclude prefix overlap must preserve exclude precedence and must not imply ownership of excluded paths.",
+      "Adapter identity and current source-of-truth documentation can drift if they are not updated together.",
+      "Shared status, log, Adapter documentation, and documentation tests contain earlier uncommitted work that must be preserved.",
+      "Reviewed assumption: The native MCP Adapter is bound to the repository Git worktree root before proposal review.",
+      "Reviewed assumption: Classification needs Git path, layer, status, and rename endpoint metadata but not file contents or content hashes.",
+      "Reviewed assumption: The existing scope checker remains authoritative after implementation.",
+      "Reviewed assumption: A same-path content change while the form is open does not change scope classification.",
+      "Reviewed unknown: A small operating-system race remains between final inventory revalidation and exclusive task-file creation without broader repository locking.",
+      "Reviewed unknown: Cross-host Git path encoding beyond existing fixtures remains unproven.",
+      "Reviewed unknown: User-friction impact requires later live evidence."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "DEVELOPMENT_PLAN.md",
+      "docs/experiments/app-server-parser-preflight-static-comparison-v3-2026-08-23.md",
+      "docs/experiments/app-server-static-protocol-inspection-v2-2026-08-23.md",
+      "docs/experiments/app-server-thread-start-no-model-diagnostic-v1-2026-08-23.md",
+      "docs/experiments/disposable-automatic-journey-rehearsal-2026-08-23.md",
+      "docs/experiments/disposable-automatic-journey-rehearsal-v2-2026-08-23.md",
+      "docs/experiments/disposable-automatic-journey-rehearsal-v3-2026-08-23.md",
+      "docs/experiments/installed-app-server-schema-static-validation-v1-2026-08-23.md",
+      "governance/tasks/p0-app-server-parser-preflight-static-comparison-v3.json",
+      "governance/tasks/p0-app-server-static-protocol-inspection-v2.json",
+      "governance/tasks/p0-app-server-thread-start-no-model-diagnostic-v1.json",
+      "governance/tasks/p0-deterministic-process-attribution-gate-v1.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v1.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v2.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v3.json",
+      "governance/tasks/p0-installed-app-server-schema-static-validation-v1.json",
+      "governance/tasks/p0-reusable-app-server-schema-diagnostic-v1.json",
+      "src/agentgov/app_server_schema_diagnostic.py",
+      "src/agentgov/process_attribution_gate.py",
+      "tests/test_app_server_schema_diagnostic.py",
+      "tests/test_process_attribution_gate.py"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-native-proposal-worktree-scope-binding-v1.json",
+      "AGENTS.md",
+      "src/agentgov/change_scope.py",
+      "src/agentgov/governance_mcp.py",
+      "tests/test_change_scope.py",
+      "tests/test_governance_mcp.py",
+      "docs/task-proposal-admission.md",
+      "docs/development-automation-contracts.md",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/governance-mcp-adapter.md",
+      "docs/adr/0015-use-mcp-elicitation-for-codex-task-admission.md",
+      "docs/adr/INVARIANTS.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-23.md",
+      "tests/test_user_documentation.py"
+    ]
+  },
+  "task_id": "p0-native-proposal-worktree-scope-binding-v1",
+  "title": "Bind native task proposals to complete worktree scope",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest tests.test_change_scope tests.test_governance_mcp -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check task governance/tasks/p0-native-proposal-worktree-scope-binding-v1.json --repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check scope governance/tasks/p0-native-proposal-worktree-scope-binding-v1.json --repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

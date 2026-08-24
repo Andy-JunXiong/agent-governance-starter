@@ -1,0 +1,84 @@
+{
+  "acceptance_signals": [
+    "The task and retained experiment record bind resolved alignment journey mcpj-1cca8f6aaeba41f39c58c016d2e18623 without treating alignment as task admission or execution authority.",
+    "A fresh operating-system temporary repository is initialized with zero remotes and only synthetic non-NYC content, minimal governance instructions, and bounded local validation.",
+    "Exactly one local synthetic baseline commit is created before the measured request; its identity and clean state are verified, and no remote is configured.",
+    "Before any model turn, readiness checks confirm current Codex and development AgentGov identities, exact project MCP binding, required native tools, the synthetic committed baseline, and clean scope.",
+    "Exactly one fresh external Codex session is eligible only after readiness passes and receives one ordinary low-risk request without AgentGov names, internal tool names, hand-authored protocol JSON, repeated next queries, or special confirmation words.",
+    "The measured trace separately records native proposal review, human decision, separate task take-up, implementation scope, declared validation, native task completion when callable, distinct current-Agent review, terminal state, and first deviation.",
+    "All requested Agent changes after the baseline remain uncommitted; any failed gate, absent native form, scope drift, unexpected mutation, or known initialize boundary stops the attempt without repair, coaching, second session, or retry.",
+    "Only normalized privacy-bounded evidence is retained; no raw prompt, response, transcript, source content, validation output, credential, private data, temporary absolute path, or model-private reasoning enters the repository.",
+    "No existing consumer mutation, dependency download, retained-runtime change, cleanup, Starter commit, push, pull request, publication, release, deployment, CI change, or production action occurs.",
+    "The experiment record, current status, strategic plan, dated log, and documentation tests agree on the exact outcome and limits; declared tests and governance checks pass or preserve disclosed excluded state."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-5865e9f05bcb4b6397878c251d833176 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Carry resolved alignment journey mcpj-1cca8f6aaeba41f39c58c016d2e18623 into one bounded independent non-NYC rehearsal. Prepare a fresh remote-free temporary repository with synthetic content and create exactly one local synthetic baseline commit before the measured request so current HEAD and comparison-base contracts are satisfiable. Run deterministic no-model readiness checks and, only if all gates pass, start exactly one fresh external Codex session with one ordinary low-risk request. Measure native proposal review, separate human take-up, the admitted edit, declared validation, native completion when callable, and distinct current-Agent review. Keep requested Agent changes uncommitted and stop on the first deviation without repair or retry."
+  },
+  "risk": {
+    "items": [
+      "The single external Codex session uses the existing authenticated model entitlement and may fail before or during the governed journey.",
+      "The local baseline commit is confined to a newly resolved operating-system temporary repository with zero remotes; a path-verification failure must stop execution.",
+      "The current Codex CLI may not support the required native form or completion journey.",
+      "Human interaction relayed through the terminal must be counted rather than hidden as automation.",
+      "One synthetic rehearsal cannot establish real-consumer adoption, uncoached usability, cross-host behavior, causal benefit, or production readiness.",
+      "A failed launch must not trigger unauthorized repair, retry, dependency download, runtime mutation, cleanup, or broader diagnostics.",
+      "Reviewed assumption: Python 3.11 or newer, Git, the current Starter development source, and an authenticated Codex CLI remain locally available.",
+      "Reviewed assumption: A fresh operating-system temporary directory can hold the disposable remote-free repository and exactly one preparation baseline commit.",
+      "Reviewed assumption: The product owner can review a native task form and separately authorize task take-up if the external session reaches those stages.",
+      "Reviewed assumption: The synthetic request can be validated with local standard-library tooling and no dependency download.",
+      "Reviewed assumption: The dated development log can append this session while preserving previous history.",
+      "Reviewed unknown: Whether current Codex and project MCP startup pass initialization against development AgentGov source.",
+      "Reviewed unknown: Whether the external session exposes native form elicitation directly to the product owner.",
+      "Reviewed unknown: Whether the Agent autonomously selects proposal review, stops for separate take-up, invokes completion recording, and performs distinct self-review.",
+      "Reviewed unknown: Whether any protection event occurs and whether its resolution is visibly linked.",
+      "Reviewed unknown: Whether the bounded journey completes within the host timeout.",
+      "Reviewed unknown: Whether observed interaction burden and evidence are useful beyond this synthetic rehearsal."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "docs/assets",
+      "src",
+      "schemas",
+      "templates",
+      "release",
+      "README.md",
+      "pyproject.toml",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v1.json",
+      "docs/experiments/disposable-automatic-journey-rehearsal-2026-08-23.md",
+      "governance/tasks/p1-taxi-cross-domain-pilot-record-closeout-v1.json",
+      "docs/experiments/taxi-cross-domain-adoption-pilot.md"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v2.json",
+      "docs/experiments/disposable-automatic-journey-rehearsal-v2-2026-08-23.md",
+      "docs/development-log/2026-08-23.md",
+      "DEVELOPMENT_PLAN.md",
+      "STATUS.md",
+      "tests/test_user_documentation.py"
+    ]
+  },
+  "task_id": "p0-disposable-automatic-journey-rehearsal-v2",
+  "title": "Run one corrected disposable automatic-journey rehearsal",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check task governance/tasks/p0-disposable-automatic-journey-rehearsal-v2.json --repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check scope governance/tasks/p0-disposable-automatic-journey-rehearsal-v2.json --repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

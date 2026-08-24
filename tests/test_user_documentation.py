@@ -41,6 +41,39 @@ TAXI_SEMANTIC_GAP = (
     ROOT / "docs/experiments/semantic-relations/taxi-gap-analysis.md"
 )
 CURRENT_TAXI_CLOSEOUT_LOG = ROOT / "docs/development-log/2026-08-23.md"
+DISPOSABLE_AUTOMATIC_REHEARSAL = (
+    ROOT
+    / "docs/experiments/disposable-automatic-journey-rehearsal-2026-08-23.md"
+)
+DISPOSABLE_AUTOMATIC_REHEARSAL_V2 = (
+    ROOT
+    / "docs/experiments/disposable-automatic-journey-rehearsal-v2-2026-08-23.md"
+)
+DISPOSABLE_AUTOMATIC_REHEARSAL_V3 = (
+    ROOT
+    / "docs/experiments/disposable-automatic-journey-rehearsal-v3-2026-08-23.md"
+)
+APP_SERVER_THREAD_START_NO_MODEL_DIAGNOSTIC_V1 = (
+    ROOT
+    / "docs/experiments/app-server-thread-start-no-model-diagnostic-v1-2026-08-23.md"
+)
+APP_SERVER_STATIC_PROTOCOL_INSPECTION_V2 = (
+    ROOT
+    / "docs/experiments/app-server-static-protocol-inspection-v2-2026-08-23.md"
+)
+APP_SERVER_PARSER_PREFLIGHT_STATIC_COMPARISON_V3 = (
+    ROOT
+    / "docs/experiments/app-server-parser-preflight-static-comparison-v3-2026-08-23.md"
+)
+INSTALLED_APP_SERVER_SCHEMA_STATIC_VALIDATION_V1 = (
+    ROOT
+    / "docs/experiments/installed-app-server-schema-static-validation-v1-2026-08-23.md"
+)
+INSTALLED_APP_SERVER_SCHEMA_STATIC_VALIDATION_V2 = (
+    ROOT
+    / "docs/validation/installed-app-server-schema-static-validation-v2-2026-08-24.md"
+)
+CURRENT_SCHEMA_VALIDATION_LOG = ROOT / "docs/development-log/2026-08-24.md"
 HARNESS_GUIDE = ROOT / "docs/harness-contract-v1.md"
 AIRBNB_HEADING_REPLAY = (
     ROOT / "docs/experiments/airbnb-uncoached-readme-heading-replay-2026-08-15.md"
@@ -227,6 +260,30 @@ class UserDocumentationTests(unittest.TestCase):
         self.assertNotIn("cryptographic personal identity", landing)
         self.assertIn("portfolio.html#boundary", landing)
         self.assertIn("blob/main/STATUS.md", landing)
+
+    def test_native_proposal_changed_path_binding_is_documented(self) -> None:
+        sources = (
+            (ROOT / "AGENTS.md").read_text(encoding="utf-8"),
+            TASK_PROPOSAL_ADMISSION.read_text(encoding="utf-8"),
+            AUTOMATION_CONTRACTS.read_text(encoding="utf-8"),
+            AUTOMATIC_PRODUCT_REQUIREMENTS.read_text(encoding="utf-8"),
+            GOVERNANCE_MCP_ADAPTER.read_text(encoding="utf-8"),
+            TASK_ADMISSION_ADR.read_text(encoding="utf-8"),
+            (ROOT / "docs/adr/INVARIANTS.md").read_text(encoding="utf-8"),
+        )
+        combined = " ".join(" ".join(text.split()) for text in sources)
+        for phrase in (
+            "Adapter `1.7.0`",
+            "every existing changed path",
+            "include or exclude",
+            "before admission",
+            "zero-write",
+            "time-of-check/time-of-use",
+        ):
+            self.assertIn(phrase, combined)
+        self.assertIn("both endpoints of renames and copies", combined)
+        self.assertIn("task_proposal_scope_incomplete", combined)
+        self.assertIn("task_proposal_plan_stale", combined)
 
     def test_adapter_1_5_local_installation_is_evidenced_without_overclaim(self) -> None:
         readme = README.read_text(encoding="utf-8")
@@ -849,6 +906,11 @@ class UserDocumentationTests(unittest.TestCase):
             self.assertIn("measurement-only", normalized_text)
             self.assertIn("Read-only work does not trigger proposal review", normalized_text)
             self.assertIn("cannot force a model", normalized_text)
+            self.assertIn("summary-first", normalized_text)
+            self.assertIn("audit-only technical-details", normalized_text)
+            self.assertIn("Approve only this task", normalized_text)
+            self.assertIn("Send back for changes", normalized_text)
+            self.assertIn("Do not approve", normalized_text)
         self.assertIn("agentgov.task-proposal-review-result", proposal_admission)
         self.assertIn("six base tools", automation)
         self.assertNotIn("five fixed tools", automation)
@@ -976,6 +1038,416 @@ class UserDocumentationTests(unittest.TestCase):
             with self.subTest(boundary=surface[:40]):
                 self.assertIn("unavailable", surface)
                 self.assertIn("ten-minute", surface)
+
+    def test_disposable_automatic_rehearsal_records_the_pre_model_stop(self) -> None:
+        record = DISPOSABLE_AUTOMATIC_REHEARSAL.read_text(encoding="utf-8")
+        normalized_record = " ".join(record.split())
+        strategic_plan = " ".join(STRATEGIC_PLAN.read_text(encoding="utf-8").split())
+        status = " ".join(STATUS.read_text(encoding="utf-8").split())
+        log = " ".join(CURRENT_TAXI_CLOSEOUT_LOG.read_text(encoding="utf-8").split())
+
+        self.assertTrue(DISPOSABLE_AUTOMATIC_REHEARSAL.is_file())
+        for phrase in (
+            "BLOCKED_BEFORE_GIT_BASELINE_AND_MODEL_SESSION",
+            "task_contract_baseline_conflict",
+            "git rev-parse HEAD",
+            "External model sessions | 0",
+            "Model turns | 0",
+            "Native consumer forms | 0",
+            "Model-session retries | 0",
+            "Protection-event resolution visibility therefore remains `unknown`",
+            "does not satisfy the independent automatic-experience gate",
+            "not a fresh uncoached human pilot",
+        ):
+            self.assertIn(phrase, normalized_record)
+
+        for surface in (strategic_plan, status, log):
+            with self.subTest(surface=surface[:40]):
+                self.assertIn(
+                    "disposable-automatic-journey-rehearsal-2026-08-23.md",
+                    surface,
+                )
+                self.assertIn(
+                    "BLOCKED_BEFORE_GIT_BASELINE_AND_MODEL_SESSION",
+                    surface,
+                )
+
+        self.assertNotIn(":\\Users\\", record)
+        self.assertNotIn("AppData", record)
+        self.assertNotIn("agentgov-auto-rehearsal-", record)
+        self.assertNotIn("prevented harm", normalized_record.lower())
+
+    def test_disposable_automatic_rehearsal_v2_records_the_trust_boundary_stop(self) -> None:
+        record = DISPOSABLE_AUTOMATIC_REHEARSAL_V2.read_text(encoding="utf-8")
+        normalized_record = " ".join(record.split())
+        strategic_plan = " ".join(STRATEGIC_PLAN.read_text(encoding="utf-8").split())
+        status = " ".join(STATUS.read_text(encoding="utf-8").split())
+        log = " ".join(CURRENT_TAXI_CLOSEOUT_LOG.read_text(encoding="utf-8").split())
+
+        self.assertTrue(DISPOSABLE_AUTOMATIC_REHEARSAL_V2.is_file())
+        for phrase in (
+            "STOPPED_AFTER_UNTRUSTED_PROJECT_FALLBACK",
+            "project_trust_not_effective_for_started_session",
+            "Preparation baseline commits | 1 local commit",
+            "External Codex sessions | 1",
+            "Model turns | 1, interrupted",
+            "Native consumer forms | 0",
+            "Consumer AgentGov tool calls | 0",
+            "Model-session retries | 0",
+            "user-level trust entry",
+            "Protection-event resolution visibility therefore remains `unknown`",
+            "does not satisfy the independent automatic-experience gate",
+            "not a fresh uncoached human pilot",
+        ):
+            self.assertIn(phrase, normalized_record)
+
+        for surface in (strategic_plan, status, log):
+            with self.subTest(surface=surface[:40]):
+                self.assertIn(
+                    "disposable-automatic-journey-rehearsal-v2-2026-08-23.md",
+                    surface,
+                )
+                self.assertIn(
+                    "STOPPED_AFTER_UNTRUSTED_PROJECT_FALLBACK",
+                    surface,
+                )
+
+        self.assertNotIn(":\\Users\\", record)
+        self.assertNotIn("AppData", record)
+        self.assertNotIn("agentgov-rehearsal-v2-", record)
+        self.assertNotIn("To continue this session", record)
+        self.assertNotIn("prevented harm", normalized_record.lower())
+
+    def test_disposable_automatic_rehearsal_v3_records_the_app_server_pre_model_stop(self) -> None:
+        record = DISPOSABLE_AUTOMATIC_REHEARSAL_V3.read_text(encoding="utf-8")
+        normalized_record = " ".join(record.split())
+        strategic_plan = " ".join(STRATEGIC_PLAN.read_text(encoding="utf-8").split())
+        status = " ".join(STATUS.read_text(encoding="utf-8").split())
+        log = " ".join(CURRENT_TAXI_CLOSEOUT_LOG.read_text(encoding="utf-8").split())
+
+        self.assertTrue(DISPOSABLE_AUTOMATIC_REHEARSAL_V3.is_file())
+        for phrase in (
+            "STOPPED_BEFORE_EPHEMERAL_THREAD_AND_MODEL_TURN",
+            "app_server_thread_start_rpc_error",
+            "App Server processes | 1",
+            "Ephemeral threads created | 0",
+            "External model turns | 0",
+            "Native consumer forms | 0",
+            "Consumer AgentGov tool calls | 0",
+            "Project-trust prompts | 0",
+            "Model-session retries | 0",
+            "complete user-level Codex configuration byte digest exactly matched",
+            "zero trusted-project matches",
+            "Protection-event resolution visibility therefore remains `unknown`",
+            "does not satisfy the independent automatic-experience gate",
+            "not a fresh uncoached human pilot",
+        ):
+            self.assertIn(phrase, normalized_record)
+
+        for surface in (strategic_plan, status, log):
+            with self.subTest(surface=surface[:40]):
+                self.assertIn(
+                    "disposable-automatic-journey-rehearsal-v3-2026-08-23.md",
+                    surface,
+                )
+                self.assertIn(
+                    "STOPPED_BEFORE_EPHEMERAL_THREAD_AND_MODEL_TURN",
+                    surface,
+                )
+
+        self.assertNotIn(":\\Users\\", record)
+        self.assertNotIn("AppData", record)
+        self.assertNotIn("agentgov-rehearsal-v2-", record)
+        self.assertNotIn("To continue this session", record)
+        self.assertNotIn("prevented harm", normalized_record.lower())
+
+    def test_app_server_thread_start_no_model_diagnostic_records_the_static_stop(self) -> None:
+        record = APP_SERVER_THREAD_START_NO_MODEL_DIAGNOSTIC_V1.read_text(
+            encoding="utf-8"
+        )
+        normalized_record = " ".join(record.split())
+        strategic_plan = " ".join(STRATEGIC_PLAN.read_text(encoding="utf-8").split())
+        status = " ".join(STATUS.read_text(encoding="utf-8").split())
+        log = " ".join(CURRENT_TAXI_CLOSEOUT_LOG.read_text(encoding="utf-8").split())
+
+        self.assertTrue(APP_SERVER_THREAD_START_NO_MODEL_DIAGNOSTIC_V1.is_file())
+        for phrase in (
+            "STOPPED_BEFORE_PROTOCOL_COMPARISON_AND_APP_SERVER_REQUEST",
+            "powershell_codex_script_wrapper_blocked",
+            "Read-only protocol-inspection commands | 2, one parallel batch",
+            "App Server processes started | 0",
+            "`thread/start` requests | 0",
+            "`turn/start` requests | 0",
+            "External model turns | 0",
+            "Diagnostic retries | 0",
+            "complete user Codex configuration byte digest exactly matched",
+            "v3 `thread/start` failure",
+            "does not satisfy the independent automatic-experience gate",
+            "not a fresh uncoached human pilot",
+        ):
+            self.assertIn(phrase, normalized_record)
+
+        for surface in (strategic_plan, status, log):
+            with self.subTest(surface=surface[:40]):
+                self.assertIn(
+                    "app-server-thread-start-no-model-diagnostic-v1-2026-08-23.md",
+                    surface,
+                )
+                self.assertIn(
+                    "STOPPED_BEFORE_PROTOCOL_COMPARISON_AND_APP_SERVER_REQUEST",
+                    surface,
+                )
+
+        self.assertNotIn(":\\Users\\", record)
+        self.assertNotIn("AppData", record)
+        self.assertNotIn("agentgov-rehearsal-v2-", record)
+        self.assertNotIn("To continue this session", record)
+        self.assertNotIn("prevented harm", normalized_record.lower())
+
+    def test_app_server_static_protocol_inspection_v2_records_the_analysis_stop(self) -> None:
+        record = APP_SERVER_STATIC_PROTOCOL_INSPECTION_V2.read_text(encoding="utf-8")
+        normalized_record = " ".join(record.split())
+        strategic_plan = " ".join(STRATEGIC_PLAN.read_text(encoding="utf-8").split())
+        status = " ".join(STATUS.read_text(encoding="utf-8").split())
+        log = " ".join(CURRENT_TAXI_CLOSEOUT_LOG.read_text(encoding="utf-8").split())
+
+        self.assertTrue(APP_SERVER_STATIC_PROTOCOL_INSPECTION_V2.is_file())
+        for phrase in (
+            "STOPPED_AFTER_SCHEMA_GENERATION_BEFORE_PROTOCOL_COMPARISON",
+            "schema_analysis_controller_base64_encoder_unavailable",
+            "Platform-native Codex entries selected | 1",
+            "Schema-generation subcommands | 1, successful",
+            "Generated-schema analyses | 0",
+            "Static compatibility classifications | 1, `indeterminate`",
+            "App Server daemon processes | 0",
+            "`thread/start` requests | 0",
+            "`turn/start` requests | 0",
+            "External model turns | 0",
+            "Inspection retries | 0",
+            "complete user Codex configuration byte digest exactly matched",
+            "does not satisfy the independent automatic-experience gate",
+            "not a fresh uncoached human pilot",
+        ):
+            self.assertIn(phrase, normalized_record)
+
+        for surface in (strategic_plan, status, log):
+            with self.subTest(surface=surface[:40]):
+                self.assertIn(
+                    "app-server-static-protocol-inspection-v2-2026-08-23.md",
+                    surface,
+                )
+                self.assertIn(
+                    "STOPPED_AFTER_SCHEMA_GENERATION_BEFORE_PROTOCOL_COMPARISON",
+                    surface,
+                )
+
+        self.assertNotIn(":\\Users\\", record)
+        self.assertNotIn("AppData", record)
+        self.assertNotIn("agentgov-static-v2-", record)
+        self.assertNotIn("To continue this session", record)
+        self.assertNotIn("prevented harm", normalized_record.lower())
+
+    def test_app_server_parser_preflight_v3_records_the_pre_schema_stop(self) -> None:
+        record = APP_SERVER_PARSER_PREFLIGHT_STATIC_COMPARISON_V3.read_text(
+            encoding="utf-8"
+        )
+        normalized_record = " ".join(record.split())
+        strategic_plan = " ".join(STRATEGIC_PLAN.read_text(encoding="utf-8").split())
+        status = " ".join(STATUS.read_text(encoding="utf-8").split())
+        log = " ".join(CURRENT_TAXI_CLOSEOUT_LOG.read_text(encoding="utf-8").split())
+
+        self.assertTrue(APP_SERVER_PARSER_PREFLIGHT_STATIC_COMPARISON_V3.is_file())
+        for phrase in (
+            "STOPPED_AT_PARSER_PREFLIGHT_BEFORE_SCHEMA_GENERATION",
+            "parser_self_test_process_failed_without_normalized_result",
+            "Parser self-test processes | 1, nonzero exit",
+            "Normalized parser self-test results | 0",
+            "Codex invocations | 0",
+            "Schema-generation subcommands | 0",
+            "Task-owned temporary directories | 0",
+            "Static compatibility classifications | 1, `indeterminate`",
+            "App Server daemon processes | 0",
+            "`thread/start` requests | 0",
+            "External model turns | 0",
+            "Parser or inspection retries | 0",
+            "complete user Codex configuration byte digest exactly matched",
+            "does not satisfy the independent automatic-experience gate",
+            "not a fresh uncoached human pilot",
+        ):
+            self.assertIn(phrase, normalized_record)
+
+        for surface in (strategic_plan, status, log):
+            with self.subTest(surface=surface[:40]):
+                self.assertIn(
+                    "app-server-parser-preflight-static-comparison-v3-2026-08-23.md",
+                    surface,
+                )
+                self.assertIn(
+                    "STOPPED_AT_PARSER_PREFLIGHT_BEFORE_SCHEMA_GENERATION",
+                    surface,
+                )
+
+        self.assertNotIn(":\\Users\\", record)
+        self.assertNotIn("AppData", record)
+        self.assertNotIn("agentgov-parser-v3-", record)
+        self.assertNotIn("To continue this session", record)
+        self.assertNotIn("prevented harm", normalized_record.lower())
+
+    def test_internal_app_server_schema_diagnostic_boundary_is_documented(self) -> None:
+        adapter = " ".join(
+            GOVERNANCE_MCP_ADAPTER.read_text(encoding="utf-8").split()
+        )
+        strategic_plan = " ".join(STRATEGIC_PLAN.read_text(encoding="utf-8").split())
+        status = " ".join(STATUS.read_text(encoding="utf-8").split())
+        log = " ".join(CURRENT_TAXI_CLOSEOUT_LOG.read_text(encoding="utf-8").split())
+
+        for surface in (adapter, strategic_plan, log):
+            with self.subTest(surface=surface[:40]):
+                self.assertIn("internal", surface.lower())
+                self.assertIn("compatible", surface)
+                self.assertIn("incompatible", surface)
+                self.assertIn("indeterminate", surface)
+                self.assertIn("thread/start", surface)
+
+        for phrase in (
+            "p0-reusable-app-server-schema-diagnostic-v1",
+            "app_server_schema_diagnostic",
+            "not a public CLI",
+            "20 focused deterministic tests",
+        ):
+            self.assertIn(phrase, log)
+
+        for phrase in (
+            "Internal no-model schema diagnostic",
+            "no request values",
+            "no Codex invocation",
+            "Static compatibility cannot prove runtime thread creation",
+        ):
+            self.assertIn(phrase, adapter)
+
+        self.assertIn("p0-reusable-app-server-schema-diagnostic-v1", status)
+
+    def test_installed_schema_static_validation_preserves_process_gate_stop(self) -> None:
+        record = INSTALLED_APP_SERVER_SCHEMA_STATIC_VALIDATION_V1.read_text(
+            encoding="utf-8"
+        )
+        normalized_record = " ".join(record.split())
+        strategic_plan = " ".join(STRATEGIC_PLAN.read_text(encoding="utf-8").split())
+        status = " ".join(STATUS.read_text(encoding="utf-8").split())
+        log = " ".join(CURRENT_TAXI_CLOSEOUT_LOG.read_text(encoding="utf-8").split())
+
+        self.assertTrue(INSTALLED_APP_SERVER_SCHEMA_STATIC_VALIDATION_V1.is_file())
+        for phrase in (
+            "STOPPED_AT_PROCESS_PREFLIGHT_BEFORE_SCHEMA_GENERATION",
+            "relevant_processes_present_at_preflight",
+            "Focused reusable diagnostic tests | 20 passed",
+            "Relevant processes at the gate | 6",
+            "Minimal in-memory driver self-tests | 0",
+            "Schema-generation subcommands | 0",
+            "Task-owned temporary directories created | 0",
+            "JSON documents analyzed | 0",
+            "Normalized compatibility status | 1, `indeterminate`",
+            "External model turns | 0",
+            "Retries or substitutions | 0",
+            "Native self-review completions | 0",
+            "complete user configuration byte digest exactly matched",
+            "does not satisfy the independent automatic-experience gate",
+            "not a fresh uncoached human pilot",
+            "completion rejected the returned request identity",
+        ):
+            self.assertIn(phrase, normalized_record)
+
+        for surface in (strategic_plan, status, log):
+            with self.subTest(surface=surface[:40]):
+                self.assertIn(
+                    "installed-app-server-schema-static-validation-v1-2026-08-23.md",
+                    surface,
+                )
+                self.assertIn(
+                    "STOPPED_AT_PROCESS_PREFLIGHT_BEFORE_SCHEMA_GENERATION",
+                    surface,
+                )
+
+        self.assertNotIn(":\\Users\\", record)
+        self.assertNotIn("AppData", record)
+        self.assertNotIn("agentgov-schema-validation-v1-", record)
+        self.assertNotIn("prevented harm", normalized_record.lower())
+
+    def test_installed_schema_static_validation_v2_preserves_first_deviation(self) -> None:
+        record = INSTALLED_APP_SERVER_SCHEMA_STATIC_VALIDATION_V2.read_text(
+            encoding="utf-8"
+        )
+        normalized_record = " ".join(record.split())
+        status = " ".join(STATUS.read_text(encoding="utf-8").split())
+        adapter = " ".join(
+            GOVERNANCE_MCP_ADAPTER.read_text(encoding="utf-8").split()
+        )
+        log = " ".join(
+            CURRENT_SCHEMA_VALIDATION_LOG.read_text(encoding="utf-8").split()
+        )
+
+        self.assertTrue(INSTALLED_APP_SERVER_SCHEMA_STATIC_VALIDATION_V2.is_file())
+        for phrase in (
+            "STOPPED_AT_PROCESS_PREFLIGHT_BEFORE_SCHEMA_GENERATION",
+            "process_record_invalid",
+            "Ambient `codex_host` count | 3",
+            "Ambient `agentgov_service` count | 1",
+            "Schema-generation attempts | 0",
+            "Task-owned temporary directories created | 0",
+            "JSON documents analyzed | 0",
+            "External model requests or turns | 0",
+            "Retries or substitutions | 0",
+            "Normalized compatibility status | 1, `indeterminate`",
+            "Windows system idle root",
+            "full driver was not run again",
+            "unchanged configuration, trust, and repository state",
+        ):
+            self.assertIn(phrase, normalized_record)
+
+        for surface in (status, adapter, log):
+            with self.subTest(surface=surface[:40]):
+                self.assertIn("windows_process_observer", surface)
+                self.assertIn("installed_schema_validation", surface)
+                self.assertIn("nonzero ambient", surface)
+                self.assertIn("system idle root", surface)
+                self.assertIn("not rerun", surface)
+                self.assertIn("indeterminate", surface)
+
+        for forbidden in (
+            ":\\Users\\",
+            "AppData",
+            "agentgov-installed-schema-v2-",
+            "ProcessId\":",
+            "ParentProcessId\":",
+            "prevented harm",
+        ):
+            self.assertNotIn(forbidden.lower(), normalized_record.lower())
+
+    def test_internal_process_attribution_gate_is_fail_closed_and_non_operational(self) -> None:
+        adapter = " ".join(
+            GOVERNANCE_MCP_ADAPTER.read_text(encoding="utf-8").split()
+        )
+        status = " ".join(STATUS.read_text(encoding="utf-8").split())
+        log = " ".join(CURRENT_TAXI_CLOSEOUT_LOG.read_text(encoding="utf-8").split())
+
+        for phrase in (
+            "Internal deterministic process-attribution gate",
+            "complete nonzero ambient baseline is allowed",
+            "`ready`, `blocked`, or `indeterminate`",
+            "same-class replacement",
+            "not a process scanner or controller",
+            "Internal Windows observer and controlled schema validator",
+        ):
+            self.assertIn(phrase, adapter)
+
+        for surface in (status, log):
+            with self.subTest(surface=surface[:40]):
+                self.assertIn(
+                    "p0-deterministic-process-attribution-gate-v1", surface
+                )
+                self.assertIn("process_attribution_gate", surface)
+                self.assertIn("19 focused", surface)
+                self.assertIn("installed-schema", surface)
 
     def test_verified_session_handoff_contract_preserves_identity_and_authority(self) -> None:
         readme = README.read_text(encoding="utf-8")

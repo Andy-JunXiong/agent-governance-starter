@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-08-23
+Last verified: 2026-08-25
 
 ## Current-status contract
 
@@ -43,6 +43,403 @@ scheduling authority.
 ### Current closeout snapshot
 
 - **Active slice**: human-admitted task
+  `p0-native-task-admission-summary-card-v1` implements the product-owner
+  selected summary-first native task-admission review.
+- **Outcome**: `IMPLEMENTED_LOCAL_VALIDATION_PASS`. The form message now begins
+  with what approval does, the task name and goal, scope-rule and validation
+  counts, material risks and unknowns, and the authority boundary. Exact plan
+  JSON remains below an `audit only` technical-details heading.
+- **Decision clarity**: visible choices now say `Approve only this task`, `Send
+  back for changes`, and `Do not approve`. Their protocol values remain
+  `admit`, `request_changes`, and `reject`.
+- **Authority preservation**: approval still creates only the exact task record.
+  It does not start implementation or authorize scope expansion, Git,
+  publication, release, or deployment. All non-admission and stale-plan paths
+  remain zero-write and fail closed.
+- **Codex-run validation**: all 40 focused MCP tests and all 54 documentation
+  tests pass. The complete supported Python 3.11 suite passes all 1084 tests
+  with 4 platform-limited skips in 171.104 seconds.
+- **Scope and privacy validation**: the first post-take-up action captured local
+  task-start baseline
+  `sha256:92f340990489d303c716f6c994529d04fe20f8e82dc53929227cc6aac52fa122`.
+  The final comparison is `PASS=38 PRESERVED=42 FAIL=0 TOTAL=80` across exactly
+  nine post-start paths. All 22 captured task records remain byte-identical.
+  Task governance is `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance
+  is `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; diff and bounded privacy checks pass.
+  No raw prompt, source, patch, output, absolute host path, credential, or user
+  identity is added to the form or baseline.
+- **User-reported validation**: the product owner selected summary-card-first
+  through resolved alignment journey
+  `mcpj-655db0274fef47b68f16107e5dfd671a`, admitted the exact task, and
+  separately instructed the Agent to execute it. This establishes direction
+  and authority, not visual proof of the changed host rendering.
+- **Advisory review**: the distinct native current-Agent self-review completed
+  with result `srv-a033e2c62c4458dd10074cc92d487f7d`. It found the selected
+  requirement, implementation, scope, privacy, and authority boundaries
+  consistent after Markdown escaping and summary-list bounding were added. It
+  retains live host rendering as an explicit unknown and is not independent
+  assurance.
+- **Pending validation**: a fresh installed/current-host proposal review has not
+  yet visually confirmed the new ordering. Codex owns final form chrome, and a
+  native collapsible technical-details control remains unknown.
+- **Incomplete**: none inside the admitted source, test, and documentation
+  slice. Installation, publication, consumer activation, and live host replay
+  are outside this task and remain unperformed.
+- **Next product review**: decide whether to run one separately admitted live
+  native proposal-review check to confirm that the quick summary is visibly
+  first. This entry grants no replay, installation, Git, or publication
+  authority.
+
+### Previous controller closeout snapshot
+
+- **Active slice**: human-admitted task
+  `p0-reusable-foreground-stdio-controller-closeout-v1` performs the first
+  baseline-backed review of the existing internal foreground STDIO controller.
+- **Outcome**: `REVIEW_READY_BASELINE_BACKED`. The first execution action
+  captured an exclusive local baseline before any repository write. Its
+  immediate comparison was `PASS=20 PRESERVED=49 FAIL=0 TOTAL=69`, proving the
+  captured boundary was internally consistent before closeout documents moved.
+- **Codex-run validation**: all 16 controller tests pass. All 17 baseline-tool
+  tests pass with one platform-limited symlink skip. The complete supported
+  Python 3.11 suite passes all 1083 tests with 4 platform-limited skips in
+  173.471 seconds. The controller tests start only the inert Python fixture.
+- **Preservation**: the controller and baseline-tool directories, their task
+  records and historical evidence, retained consumer/build evidence, Core
+  source, product tests, public CLI/package, Adapter/MCP source, earlier
+  worktree changes, HEAD, index, remotes, and user configuration are excluded
+  and frozen by the captured baseline. The final comparison is recorded in the
+  [new closeout evidence](docs/consumer-validation/reusable-foreground-stdio-controller-closeout-v1-2026-08-24.md).
+- **Historical boundary**: the original controller task remains
+  `STOPPED_AT_WORKTREE_WIDE_SCOPE_VALIDATION`. This later evidence does not
+  claim its historical cumulative scope command passed and does not rewrite
+  the original evidence.
+- **Privacy and authority boundary**: the local baseline stores only normalized
+  relative paths, Git categories, and SHA-256 identities. It is not exported
+  and retains no raw source, patch, output, absolute path, credential,
+  environment value, process ID, or host identity. No dependency, network,
+  model, Codex, MCP, consumer, Git transition, cleanup, publication, release,
+  deployment, or host retry was used or authorized.
+- **Final validation**: after exactly six admitted closeout-document changes,
+  the final boundary is `PASS=26 PRESERVED=49 FAIL=0 TOTAL=75`. All 54
+  documentation tests pass. The task-declared `python -m agentgov.cli`
+  governance commands return zero without invoking the CLI because that module
+  has no executable entry point; the supported `python -m agentgov` equivalents
+  were therefore run explicitly. Task governance is
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance is
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; diff and bounded privacy checks pass. The
+  admitted task record is not rewritten, and its inert command spelling remains
+  a known validation-contract defect rather than a claimed effective check.
+- **Advisory review**: this fully specified task did not start a new alignment
+  journey, so no new native self-review is claimed. A distinct bounded
+  current-Agent review confirmed exactly six admitted post-start paths, zero
+  excluded drift, unchanged architecture/implementation, all authority flags
+  false, and no observed privacy drift. It is not independent assurance.
+- **Incomplete**: none inside the admitted review-only scope. Native completion
+  recording is unavailable and is not fabricated. Real Codex compatibility,
+  public baseline/session integration, cross-host behavior, causal benefit,
+  saved review time, and return on investment remain unknown and outside this
+  task.
+- **Next product review**: decide whether this baseline-backed review is
+  sufficient to prepare one separately admitted Codex initialization retry, or
+  whether public CLI/session integration should come first. This record grants
+  neither direction nor any downstream authority.
+- **Previous baseline slice**: task `p0-task-start-scope-baseline-v1`
+  implemented the internal bridge and retained its honest bootstrap limit; its
+  own pre-implementation boundary cannot be reconstructed retroactively.
+- **Previous consumer slice**: task
+  `p0-disposable-consumer-stdio-discovery-v1` passed the direct installed
+  Adapter process gate with six base and eight form-capable tools.
+- **Previous recovery slice**: human-admitted task
+  `p0-native-completion-consumer-journey-recovery-v3` attempted the selected
+  consumer completion-loop recovery and stopped with
+  `STOPPED_AT_ALLOWLISTED_SOURCE_STAGING`.
+- **Direction and admission**: alignment journey
+  `mcpj-3d39130f6cb8421ebb1c6b35a6bca9e9` records the product owner's choice to
+  close completion verification and completion-card handoff before Monitor and
+  Dashboard work. Proposal `prp-fcf762230c3d444fa8f6e32ce6c8e86b`
+  admitted exact v3. The earlier admitted v2 record remains immutable and was
+  not executed because its partial filename prefixes left 18 current paths
+  unclassified. V3 classified all 46 then-current paths with zero unclassified
+  paths before take-up.
+- **Controlled recovery result**: one verified operating-system temporary root
+  and two fresh Python 3.11 virtual environments were created. PowerShell
+  corrupted the allowlisted Git tar stream before extraction; the staged
+  source count remained zero and the required overlay hash comparison failed.
+  The task stopped at this first deviation without an alternate extraction
+  method, repair, substitution, or retry.
+- **Execution boundary**: dependency-download, build-artifact, installed
+  distribution, consumer file or clone, MCP initialization or discovery,
+  external-model session or turn, and replay counts are all zero. The two
+  environments and empty task directories are retained; no task-owned process
+  remains active.
+- **Codex-run validation**: all 54 user-documentation tests, all 13 public-
+  documentation freshness tests, and the complete 1083-test Python 3.11 suite
+  pass, with 4 platform-limited skips in the final 170.657-second rerun. Task governance is
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance is
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Scope passes all 6 admitted paths and
+  reports 41 exact excluded pre-existing paths; all 47 current paths are
+  classified with zero unclassified. Task JSON, privacy scanning, retained
+  temporary-state checks, and `git diff --check` pass.
+- **Preservation**: Starter source, index, HEAD, remotes, release identity, and
+  prior working-copy changes retain their pre-attempt state. The original
+  reference consumer retains its measured commit, modified README, untracked
+  prior task, and existing remote. No consumer configuration, guidance, task,
+  source, or Git state changed.
+- **Pending validation**: build, installation, Adapter `1.7.0` installed
+  discovery, completion-card behavior, a complete consumer journey, causal
+  benefit, and cross-host behavior remain unknown. The
+  [v3 recovery record](docs/recovery/native-completion-consumer-journey-recovery-v3-2026-08-24.md)
+  is bounded failure evidence only.
+- **Advisory review**: native current-Agent self-review
+  `srv-8e2c0d48c4b4945ac84daa21fd427f47` completed as a separate pass. It
+  confirmed the first-deviation classification, unchanged Kernel and Adapter
+  semantics, exact v3 scope, and unused network, consumer, model, and Git
+  authority. A corrected binary-safe staging method and all downstream results
+  remain unknown. This is not independent assurance or retry authority.
+- **Next product review**: decide whether the value of one separately admitted
+  staging correction outweighs another recovery cycle. This stopped task
+  grants no correction, retry, dependency download, consumer change, model
+  run, cleanup, Git, publication, release, or deployment authority.
+- **Previous installed-schema slice**: human-admitted task
+  `p0-installed-app-server-schema-static-validation-v2` implements the selected
+  read-only Windows process observer and controlled installed-schema driver.
+- **Delivered capability**: internal `windows_process_observer` now reduces
+  transient process metadata to normalized relevant classes, completeness,
+  ancestry, counts, and stable reason codes. Internal
+  `installed_schema_validation` composes that observer with the unchanged
+  `process_attribution_gate` and `app_server_schema_diagnostic`, limits command
+  selection, one generation attempt, schema discovery, and exact temporary
+  cleanup, and exposes only privacy-bounded results. Neither component is a
+  public `agentgov` CLI feature or a process controller.
+- **Controlled attempt result**: the
+  [v2 validation record](docs/validation/installed-app-server-schema-static-validation-v2-2026-08-24.md)
+  is `STOPPED_AT_PROCESS_PREFLIGHT_BEFORE_SCHEMA_GENERATION`. One native help
+  query succeeded. The initial observer reduced three `codex_host` and one
+  `agentgov_service` ambient processes but also returned
+  `process_record_invalid`, so the driver stopped. Schema-generation,
+  temporary-directory, JSON-analysis, App Server, thread, MCP, model, and retry
+  counts were zero; compatibility remains `indeterminate`.
+- **First-deviation correction**: a privacy-bounded field-category count found
+  exactly one Windows system idle root record and no missing-name,
+  missing-creation, or invalid-parent records. The observer now accepts that
+  unrelated root while retaining fail-closed relevant identity checks. A new
+  regression test protects it. A read-only post-stop snapshot is `ready` with
+  the same ambient counts. The full driver was not rerun.
+- **Connection to previous capabilities**: task
+  `p0-reusable-app-server-schema-diagnostic-v1` delivered
+  `app_server_schema_diagnostic` and its static `compatible`, `incompatible`, or
+  `indeterminate` classification. Task
+  `p0-deterministic-process-attribution-gate-v1` delivered
+  `process_attribution_gate` with 19 focused tests, complete nonzero ambient
+  baselines, and fail-closed unresolved lineage. The historical
+  [v1 installed-schema record](docs/experiments/installed-app-server-schema-static-validation-v1-2026-08-23.md)
+  remains `STOPPED_AT_PROCESS_PREFLIGHT_BEFORE_SCHEMA_GENERATION`. V2 adds the
+  previously missing privacy-bounded host observation and controlled
+  composition layer without changing either upstream source file.
+- **Privacy and authority boundary**: public results contain no raw process
+  record, name, command line, executable path, process or parent identifier,
+  username, schema, filename, host path, configuration value or digest,
+  credential, transcript, or model-private reasoning. Ambient processes were
+  observed only; none was stopped, modified, or claimed as task-owned.
+- **Codex-run validation**: before the host attempt, 14 observer, 14 driver, 20
+  schema-diagnostic, and 19 process-attribution tests passed. Final focused
+  validation passes 16 observer tests, 16 driver tests with one
+  platform-limited file-symlink skip, and all 54 user-documentation tests. The
+  supported Python 3.11 full suite passes all 1083 tests with 4
+  platform-limited skips in 176.055 seconds. Task governance reports
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance reports
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; task JSON parsing, privacy scans,
+  upstream source hashes, and `git diff --check` pass.
+- **Scope validation**: all 12 admitted changed paths pass; 32 findings are
+  exact explicitly excluded pre-existing paths. All 44 current changed paths
+  match an include or exclude and the unclassified count is zero. The scope
+  command remains non-green because exclusions are not task-owned; this grants
+  no exception or ownership transfer.
+- **User-reported validation**: through alignment journey
+  `mcpj-c4617fcbd401464cbd09faf4e5cdf54a`, the product owner selected the
+  combined observer plus validation slice. Native proposal review admitted
+  proposal `prp-95812d33eec34a6790857096ea5c946e`, and the owner separately
+  instructed the Agent to execute v2. These establish direction and exact task
+  authority, not successful schema compatibility or runtime readiness.
+- **Pending validation**: installed-schema compatibility, runtime thread
+  creation, required-MCP readiness, the earlier RPC cause, cross-host process
+  observation, causal benefit, return on investment, and real-user value remain
+  unknown. The stopped early-return path did not compare its before/after
+  configuration, trust, and repository fingerprints, so those unchanged-state
+  claims are not made. A post-stop bounded temporary-root count was zero.
+- **Advisory review**: native current-Agent self-review
+  `srv-d80976dfa2b2f4877d59645e6c814970` completed as a distinct pass. It found
+  and closed three edges: temporary-root links are rejected before resolution,
+  the single generation process must exit before cleanup, and the observer no
+  longer queries executable paths or usernames. Link and privacy tests pass;
+  one real file-link fixture remains platform-skipped. The review retains
+  cross-host classification and schema compatibility as unknown. It is not
+  independent external assurance and grants no downstream authority.
+- **Incomplete implementation**: none currently known inside the admitted
+  source, test, and documentation slice. The real schema result is incomplete
+  evidence, not an unfinished implementation or permission to retry.
+- **Completion-record availability**: the current callable governance inventory
+  does not expose `agentgov_task_completion_record`, so no Starter completion
+  record is fabricated.
+- **Preservation**: the existing diagnostic and attribution source hashes are
+  unchanged. Earlier worktree changes, tasks, historical evidence, user Codex
+  configuration, ambient processes, Git state, release identity, and public
+  artifacts were not intentionally changed by this slice.
+- **Next product review**: review whether another separately admitted host
+  validation is worth the additional one-off diagnostic cycle, or whether the
+  more valuable next step is returning to the primary automatic-governance
+  consumer journey. This entry authorizes neither choice, observation, schema
+  generation, retry, Git, publication, release, deployment, nor external action.
+- **Previous parser-preflight v3**: human-admitted task
+  `p0-app-server-parser-preflight-static-comparison-v3` is complete and stopped
+  with result `STOPPED_AT_PARSER_PREFLIGHT_BEFORE_SCHEMA_GENERATION`.
+- **Delivered evidence**: the new
+  [parser-preflight static v3 record](docs/experiments/app-server-parser-preflight-static-comparison-v3-2026-08-23.md)
+  records the attempted static comparison. Host and native-entry discovery
+  passed, but the exact parser's only in-memory self-test exited nonzero without
+  a normalized result. The gate stopped the task before Codex invocation,
+  schema generation, temporary-directory creation, App Server launch, thread,
+  MCP startup, or model turn.
+- **Codex-run validation**: preflight confirmed the retained clean
+  single-commit baseline, zero remotes, zero synthetic trust matches, and zero
+  relevant processes. Post-state checks confirmed the complete user
+  configuration digest was unchanged, trust matches remained zero, the
+  synthetic worktree remained clean, and no matching process remained.
+  All 49 focused user-documentation tests pass. The supported Python 3.11 full
+  suite passes all 1001 tests with 3 platform-limited skips in 157.029 seconds.
+  Task governance reports `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository
+  governance reports `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; the task JSON,
+  bounded primary-record privacy scan, and `git diff --check` pass.
+- **User-reported validation**: the product owner admitted the exact native
+  parser-preflight proposal and separately instructed the Agent to start. These
+  are authority facts, not successful parser validation, protocol comparison,
+  or usability evidence.
+- **Interaction result**: one native Starter admission and one separate take-up
+  occurred. One parser self-test process exited nonzero without a normalized
+  result, and the task stopped. It created zero Codex invocations, schema
+  generations, temporary directories, App Server daemons, initialize requests,
+  thread requests, threads, MCP startups, model requests, model turns,
+  consumer forms, AgentGov calls, consumer tasks, implementation writes,
+  retries, or restarts.
+- **Protection and benefit boundary**: the pre-App-Server stop was visible.
+  The observed value is limited to proving the parser gate stops before schema
+  generation while preserving host and synthetic state. The parser cause,
+  installed protocol, v3 compatibility, and RPC cause remain unknown; avoided
+  harm, causality, ROI, coverage, general effectiveness, and human-pilot value
+  also remain unknown.
+- **Preservation**: the operating-system temporary repository is retained,
+  clean, remote-free, and at its single baseline commit; its identity and path
+  are not recorded. User-level Codex configuration remained byte-unchanged and
+  the synthetic trust match remained absent. No existing consumer repository,
+  Starter product source, dependency, remote Git state, publication, release,
+  deployment, CI, or production system changed.
+- **Scope validation**: all 6 parser-v3-owned paths pass. Eleven failures
+  remain for explicitly excluded pre-existing state: user-owned
+  `.codex/config.toml`, the five earlier v1-v3, diagnostic-v1, and static-v2
+  task paths, and their five experiment records. No exception, ownership
+  transfer, or parser-v3 mutation of those paths is inferred.
+- **Advisory review**: a distinct bounded current-Agent review found no
+  evidence correction required. It confirmed the parser gate, stop, zero-Codex
+  and zero-model claims, post-state, scope, privacy, and authority boundary
+  without claiming parser diagnosis, schema generation, or compatibility. It
+  also identified repeated one-off diagnostic plumbing failures as a product
+  stagnation risk. Because this fully specified task had no resolved alignment
+  journey, the review is neither native self-review completion nor independent
+  and grants no downstream authority.
+- **Completion-record availability**: the current callable Starter governance
+  inventory does not expose `agentgov_task_completion_record`, so no Starter
+  completion record will be fabricated.
+- **Incomplete implementation**: none inside this evidence-only stopped
+  inspection. The parser did not pass, schema was not generated, the v3 request
+  was not classified, and the general automatic-experience gate remains open.
+- **Next product review**: decide whether to stop one-off inspection tasks and
+  design a small reusable, unit-tested Adapter diagnostic before any further
+  schema or App Server rehearsal. This decision input authorizes no source
+  change, inspection, parser diagnosis, schema generation, App Server request,
+  Git action, release, deployment, or external work.
+- **Previous static inspection v2**: human-admitted task
+  `p0-app-server-static-protocol-inspection-v2` stopped with result
+  `STOPPED_AFTER_SCHEMA_GENERATION_BEFORE_PROTOCOL_COMPARISON`; its retained
+  [record](docs/experiments/app-server-static-protocol-inspection-v2-2026-08-23.md)
+  remains historical evidence. Parser v3 did not modify it.
+- **Previous no-model diagnostic v1**: human-admitted task
+  `p0-app-server-thread-start-no-model-diagnostic-v1` stopped with result
+  `STOPPED_BEFORE_PROTOCOL_COMPARISON_AND_APP_SERVER_REQUEST`; its retained
+  [record](docs/experiments/app-server-thread-start-no-model-diagnostic-v1-2026-08-23.md)
+  remains historical evidence. Static v2 did not modify it.
+- **Previous v3 rehearsal**: human-admitted task
+  `p0-disposable-automatic-journey-rehearsal-v3` stopped with result
+  `STOPPED_BEFORE_EPHEMERAL_THREAD_AND_MODEL_TURN`; its retained
+  [v3 record](docs/experiments/disposable-automatic-journey-rehearsal-v3-2026-08-23.md)
+  remains historical evidence. The current diagnostic did not modify it or
+  classify its RPC failure.
+- **Previous v2 rehearsal**: human-admitted task
+  `p0-disposable-automatic-journey-rehearsal-v2` stopped with result
+  `STOPPED_AFTER_UNTRUSTED_PROJECT_FALLBACK`; its retained
+  [v2 record](docs/experiments/disposable-automatic-journey-rehearsal-v2-2026-08-23.md)
+  remains historical evidence. Its temporary trust entry was later removed
+  under separate human authority before v3 and was not recreated by v3.
+- **Previous v1 rehearsal**: human-admitted task
+  `p0-disposable-automatic-journey-rehearsal-v1` is complete and stopped with
+  result `BLOCKED_BEFORE_GIT_BASELINE_AND_MODEL_SESSION`.
+- **Delivered evidence**: the new
+  [disposable rehearsal record](docs/experiments/disposable-automatic-journey-rehearsal-2026-08-23.md)
+  identifies an exact task-contract conflict before external model use. The
+  task required native scope/completion evidence in a fresh repository while
+  also prohibiting every commit and requiring the repository to remain
+  uncommitted. Current AgentGov snapshots require commit-identified `HEAD` and
+  comparison-base values, so no eligible full trace could start.
+- **Codex-run validation**: deterministic source review confirmed that scope
+  inspection resolves `git rev-parse HEAD`, canonical evidence requires commit
+  SHA identities, and completion fixtures create a baseline commit. All 44
+  focused user-documentation tests pass. The supported Python 3.11 full suite
+  passes all 996 tests with 3 platform-limited skips in 153.967 seconds. Task
+  governance reports `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance
+  reports `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; task JSON, bounded privacy, and
+  `git diff --check` pass.
+- **User-reported validation**: the product owner selected the independent
+  rehearsal direction, admitted the exact native proposal, and separately
+  instructed the Agent to start. These are authority facts, not successful
+  automatic-journey or usability evidence.
+- **Interaction result**: one native admission decision and one separate
+  take-up occurred. Two manual preparation writes created a temporary directory
+  and initialized its synthetic scaffold. One deterministic preflight stop
+  occurred; external model sessions, model turns, consumer forms, retries, and
+  restarts were all zero.
+- **Protection and benefit boundary**: the fail-closed stop was visible in the
+  current human surface. No consumer Monitor event or protection-resolution
+  link existed because no governed consumer session started. The observed
+  benefit is limited to exposing the task conflict before model use; avoided
+  harm, causality, ROI, coverage, general effectiveness, and human-pilot value
+  remain unknown.
+- **Preservation**: the operating-system temporary scaffold is retained without
+  cleanup; its name and absolute path are not recorded. No Git baseline,
+  external Codex session, existing-consumer change, product-source change,
+  dependency download, runtime change, commit, push, pull request, publication,
+  release, deployment, CI change, or production action occurred. User-owned
+  `.codex/` remains untouched.
+- **Scope validation**: all 6 task-owned paths pass. The report retains one
+  failure for the pre-existing user-owned `.codex/config.toml`, which is
+  explicitly excluded, untouched, and outside this task; no exception or
+  ownership transfer is inferred.
+- **Advisory review**: native current-Agent self-review
+  `srv-a419b87ea09ed7659242d53cf3992ba3` completed as a distinct separate pass.
+  It found the failure classification, Git-baseline dependency, exact task
+  scope, validation, privacy, retained temporary boundary, and denied authority
+  consistent. The intended meaning of “uncommitted,” unborn-repository support,
+  native consumer behavior, and the temporary directory's later lifecycle
+  remain explicit unknowns.
+- **Completion-record availability**: the current callable governance inventory
+  does not expose `agentgov_task_completion_record`, so no Starter completion
+  record is fabricated.
+- **Incomplete implementation**: none inside this evidence-only failure
+  closeout. The intended independent automatic journey was not executed and
+  the general automatic-experience gate remains open.
+- **Next product review**: decide whether a future rehearsal contract should
+  explicitly permit one local synthetic baseline commit or use an already
+  committed disposable fixture. This is decision input only and authorizes no
+  task correction, replay, Git action, release, deployment, or external work.
+- **Previous Taxi closeout**: human-admitted task
   `p1-taxi-cross-domain-pilot-record-closeout-v1` closes the selected historical
   Taxi adoption evidence account without modifying the Taxi repository.
 - **Delivered capability**: the repository now has one sanitized

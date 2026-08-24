@@ -1,0 +1,87 @@
+{
+  "acceptance_signals": [
+    "A repository-internal module exposes pure functions that accept only in-memory normalized schema and request data and return a normalized diagnostic result.",
+    "Recursive traversal and local JSON-reference resolution discover thread/start parameter schemas without assuming one generated-file layout.",
+    "The result classifies compatibility as compatible, incompatible, or indeterminate and reports stable machine-readable reason codes without retaining raw schemas or private paths.",
+    "Deterministic tests cover direct and referenced parameter definitions, nested traversal, required fields, primitive types, string enums, malformed input, unresolved references, missing constraints, and incompatible request fields or values.",
+    "Tests prove the diagnostic performs no subprocess, filesystem, network, MCP, App Server, or model operation.",
+    "The Adapter documentation, current status, development plan, dated development log, and documentation assertions consistently describe the internal non-CLI capability and its boundaries.",
+    "Focused tests, the supported Python 3.11 full suite, task governance, repository governance, scope reconciliation, and git diff checks pass or retain only explicitly excluded pre-existing findings."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-cd6f5cfdd067433a90296687c4426ce0 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Implement a small internal Adapter diagnostic module that accepts an in-memory App Server JSON schema plus a normalized thread/start request description, recursively discovers method and parameter definitions, resolves local JSON references, extracts required fields, primitive types, and string enums, and returns a normalized compatible, incompatible, or indeterminate result with bounded reasons. Add deterministic unit tests for successful discovery, nested and referenced definitions, malformed input, unresolved references, missing constraints, and incompatible fields or values. The module must perform no Codex invocation, App Server startup, MCP call, model turn, filesystem mutation, user-configuration access, or public CLI change."
+  },
+  "risk": {
+    "items": [
+      "An overly permissive interpretation could incorrectly label an underspecified schema compatible; missing decisive constraints must therefore produce indeterminate.",
+      "Recursive references could loop; traversal and reference resolution must be cycle-safe and bounded.",
+      "Reason strings could accidentally include raw schema fragments or host-local values; outputs must use bounded normalized codes and field names only.",
+      "Updating shared status and plan files must preserve earlier uncommitted task evidence and avoid claiming this task owns excluded changes.",
+      "Reviewed assumption: The first slice should remain an internal Python module rather than a public CLI contract.",
+      "Reviewed assumption: Static JSON-schema compatibility is useful diagnostic evidence but cannot prove runtime thread creation or required-MCP readiness.",
+      "Reviewed assumption: The module can stay dependency-free and compatible with Python 3.11.",
+      "Reviewed assumption: Normalized input and output can avoid retaining raw schemas, executable paths, user configuration, and private identities.",
+      "Reviewed unknown: The exact installed Codex schema layout may contain constructs beyond the bounded local-reference, primitive-type, enum, object-property, and required-field subset.",
+      "Reviewed unknown: A later product review must decide whether this internal module should gain a public CLI or be used in another controlled live rehearsal.",
+      "Reviewed unknown: Cross-version and cross-host utility remain unproven until exercised against separately authorized sanitized fixtures or diagnostics."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".github",
+      "pyproject.toml",
+      "src/agentgov/cli.py",
+      "src/agentgov/governance_mcp.py",
+      "src/agentgov/reference_adapter.py",
+      "schemas",
+      "templates",
+      "examples",
+      "tests/fixtures",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v1.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v2.json",
+      "governance/tasks/p0-disposable-automatic-journey-rehearsal-v3.json",
+      "governance/tasks/p0-app-server-thread-start-no-model-diagnostic-v1.json",
+      "governance/tasks/p0-app-server-static-protocol-inspection-v2.json",
+      "governance/tasks/p0-app-server-parser-preflight-static-comparison-v3.json",
+      "docs/experiments/disposable-automatic-journey-rehearsal-2026-08-23.md",
+      "docs/experiments/disposable-automatic-journey-rehearsal-v2-2026-08-23.md",
+      "docs/experiments/disposable-automatic-journey-rehearsal-v3-2026-08-23.md",
+      "docs/experiments/app-server-thread-start-no-model-diagnostic-v1-2026-08-23.md",
+      "docs/experiments/app-server-static-protocol-inspection-v2-2026-08-23.md",
+      "docs/experiments/app-server-parser-preflight-static-comparison-v3-2026-08-23.md"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-reusable-app-server-schema-diagnostic-v1.json",
+      "src/agentgov/app_server_schema_diagnostic.py",
+      "tests/test_app_server_schema_diagnostic.py",
+      "docs/governance-mcp-adapter.md",
+      "docs/development-log/2026-08-23.md",
+      "DEVELOPMENT_PLAN.md",
+      "STATUS.md",
+      "tests/test_user_documentation.py"
+    ]
+  },
+  "task_id": "p0-reusable-app-server-schema-diagnostic-v1",
+  "title": "Build a reusable no-model App Server schema diagnostic",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest tests.test_app_server_schema_diagnostic -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check task governance/tasks/p0-reusable-app-server-schema-diagnostic-v1.json --repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check scope governance/tasks/p0-reusable-app-server-schema-diagnostic-v1.json --repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check repository .",
+    "git diff --check"
+  ]
+}
