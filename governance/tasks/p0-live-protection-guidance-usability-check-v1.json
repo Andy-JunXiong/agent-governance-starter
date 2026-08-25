@@ -1,0 +1,78 @@
+{
+  "acceptance_signals": [
+    "The first execution action after separate task take-up captures the exact task-start baseline, and final comparison reports zero failures while preserving every excluded pre-existing path.",
+    "A temporary local fixture produces one self-contained Monitor 1.6 page containing a supported Protection Event and its deterministic read-only guidance; no repository source, schema, test, release, or installation file is changed.",
+    "The current browser opens only the local page, activates the Protection Event guidance, lands on the visible Task Detail fragment, and observes no external navigation, command, decision, mutation, policy, Git, publication, release, or deployment control.",
+    "The human product owner reports separately whether the guidance label is understandable and whether the reached Task Detail is sufficient to choose the next human action; unanswered dimensions remain unknown.",
+    "The evidence record distinguishes Agent-observed browser navigation from human-reported usability, retains no raw event payload, source content, absolute temporary path, browser identity, screenshot, credential, or host identity, and does not claim handling, remediation, causality, or cross-event resolution.",
+    "Focused Monitor and user-documentation tests, task governance, repository governance, scope comparison, bounded privacy scanning, JSON parsing, and git diff checks pass."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-4b6286564aaf49d1bd98e2c7c81ea6b9 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Run one bounded current-browser Protection Event guidance experience against a locally generated self-contained Monitor, verify that the internal guidance reaches Task Detail without external or mutation behavior, obtain the human product owner's clarity and sufficiency judgment, and record only privacy-bounded evidence without changing product source or tests."
+  },
+  "risk": {
+    "items": [
+      "A successful anchor click can prove navigation behavior but cannot prove that the human understood the label or found the destination sufficient.",
+      "A fixture-backed local Monitor is bounded current-browser evidence, not production, cross-host, future-version, causal-benefit, or true cross-event resolution evidence.",
+      "The temporary local HTTP listener must bind only to loopback, serve only the task-owned temporary directory, and be stopped after the check.",
+      "The worktree already contains admitted implementation and closeout changes that this validation-only task must preserve without absorbing or rewriting them.",
+      "Browser screenshots or visible machine JSON could expose unnecessary test detail, so the durable record must retain only normalized observations and no screenshot or raw payload.",
+      "Reviewed assumption: The current browser can reach a loopback-only temporary HTTP server.",
+      "Reviewed assumption: One supported scope-boundary Protection Event is sufficient to evaluate the shared guidance presentation and Task Detail destination.",
+      "Reviewed assumption: The product owner can judge label clarity and destination sufficiency after the browser navigation is shown.",
+      "Reviewed unknown: Whether the current browser will permit loopback navigation remains unknown until execution.",
+      "Reviewed unknown: Whether the guidance label is understandable remains unknown until the human reports it.",
+      "Reviewed unknown: Whether Task Detail contains enough context for the human next action remains unknown until the human reports it.",
+      "Reviewed unknown: Cross-browser behavior, production behavior, causal benefit, and true cross-event resolution remain outside this task."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex/config.toml",
+      ".agentgov/scope-baselines/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      ".agentgov/scope-baselines/p0-native-task-admission-summary-card-v1.json",
+      ".agentgov/scope-baselines/p0-protection-event-resolution-guidance-links-v1.json",
+      ".agentgov/scope-baselines/p0-reusable-foreground-stdio-controller-closeout-v1.json",
+      "docs/validation/live-native-task-admission-summary-visibility-check-2026-08-25.md",
+      "governance/tasks/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      "governance/tasks/p0-protection-event-resolution-guidance-links-v1.json",
+      "docs/development-automation-contracts.md",
+      "docs/development-monitor.md",
+      "docs/development-plan.md",
+      "docs/drift-review-reminders.md",
+      "docs/product-requirements-automatic-governance.md",
+      "schemas/development-monitor.schema.json",
+      "src/agentgov/development_monitor.py",
+      "tests/test_development_monitor.py",
+      "tests/test_user_documentation.py"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-live-protection-guidance-usability-check-v1.json",
+      ".agentgov/scope-baselines/p0-live-protection-guidance-usability-check-v1.json",
+      "docs/validation/live-protection-guidance-usability-check-2026-08-25.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-25.md"
+    ]
+  },
+  "task_id": "p0-live-protection-guidance-usability-check-v1",
+  "title": "Live protection-guidance usability check v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-live-protection-guidance-usability-check-v1.json --baseline .agentgov/scope-baselines/p0-live-protection-guidance-usability-check-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_development_monitor tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-live-protection-guidance-usability-check-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-live-protection-guidance-usability-check-v1.json",
+    "git diff --check"
+  ]
+}

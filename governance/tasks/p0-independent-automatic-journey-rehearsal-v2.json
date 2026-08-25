@@ -1,0 +1,104 @@
+{
+  "acceptance_signals": [
+    "Before any implementation write, capture and validate the task-start scope baseline; every pre-existing changed path is classified and remains preserved unless the admitted task explicitly permits its evidence, status, log, task, or baseline surface to evolve.",
+    "Preflight records the exact committed distribution-input pathspec and identities, the seven already-proven overlay identities, local build backend and short-root helper availability, relevant configuration and trust-state digests without reading credential values, remote absence, and ambient process state.",
+    "Use one verified task-owned short root, reproduce exactly the 199 committed distribution inputs plus the seven matching overlays, verify source-to-stage byte identity and manifest digests, perform one backend install, one build, and one runtime install, and pass wheel inventory plus installed shared-template identity gates before any Agent turn.",
+    "Create one new non-sensitive remote-free synthetic repository with one local fixture baseline commit and a deterministic README-only task; do not import Starter source, private data, credentials, or existing consumer state.",
+    "Start exactly one external Agent turn with an ordinary product request that does not name AgentGov, governance tools, task identifiers, the protocol, or a magic confirmation phrase; do not retry, coach, or start a second session.",
+    "Observe and timestamp the actual journey stages reached, including proposal, native human admission if offered, separate take-up, implementation, validation, completion record availability, self-review, Monitor visibility, and handoff; stop immediately on the first deviation and do not manufacture missing stages.",
+    "After privacy-bounded evidence is durable, remove only the exact verified task-owned temporary roots and confirm configuration, trust state, credentials boundary, Starter working tree outside admitted paths, existing consumer state, and ambient processes are unchanged.",
+    "Record the bounded outcome, facts, unknowns, deviations, and cleanup result in the v2 experiment evidence; update STATUS.md and the dated development log without converting one rehearsal into adoption, reliability, causal benefit, or ROI claims.",
+    "Run all admitted validation commands successfully and report any advisory or not-applicable outcomes separately from deterministic failures."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-dbf35246e84f4b40af0911160ac300a4 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Run exactly one bounded independent automatic-governance rehearsal in a new non-sensitive remote-free synthetic repository. Reproduce the previously proven exact distribution pathspec artifact, install it in one isolated runtime, then give one ordinary low-risk README-only request to one external Agent turn without naming AgentGov or coaching the governance protocol. Observe whether the installed governance journey reaches proposal, native human admission if offered, separate take-up, implementation, validation, completion recording when callable, self-review, Monitor visibility, and plain-language handoff. Stop at the first protocol, scope, state-preservation, privacy, or reproducibility deviation; record evidence without claiming adoption, reliability, causal benefit, or ROI."
+  },
+  "risk": {
+    "items": [
+      "The external Agent turn may consume authenticated product entitlement; the rehearsal must use one turn only and must never inspect, copy, log, or modify credential values.",
+      "A native human admission form may appear during the synthetic journey; only the human may decide it, and the rehearsal must not infer or bypass that decision.",
+      "The experiment creates a task-owned synthetic repository and one local baseline commit; it must remain remote-free and must not commit, push, publish, release, or deploy the Starter repository.",
+      "Artifact reproduction must be exact and single-pass; any unexpected input, overlay mismatch, backend download, second build, retry, or additional Agent session ends the rehearsal.",
+      "Temporary-root cleanup is destructive; cleanup is permitted only for exact resolved roots created and recorded by this task after evidence is written.",
+      "Configuration and trust state are measured only through privacy-bounded identities; secret values, credential stores, private content, and unrelated user state remain out of scope.",
+      "One successful or failed synthetic rehearsal cannot establish adoption, production reliability, causal benefit, governance correctness, or return on investment.",
+      "Reviewed assumption: The previously proven exact distribution pathspec and seven overlays remain locally reproducible without network access.",
+      "Reviewed assumption: The required local Python 3.11 interpreter, build backend artifact, short-root helper, Git, and external Agent client are available.",
+      "Reviewed assumption: The external Agent entitlement can run the single session without exposing credential material to the evidence.",
+      "Reviewed assumption: The native governance form and tool startup paths are available inside the isolated installed artifact when the journey reaches them.",
+      "Reviewed assumption: The human product owner is available to make at most the exact native admission decision presented by the synthetic journey.",
+      "Reviewed assumption: The synthetic README-only change is deterministic, low risk, and independently verifiable.",
+      "Reviewed unknown: Whether an ordinary uncoached Agent request will independently select and complete the installed native governance journey.",
+      "Reviewed unknown: Whether the native human admission form will be negotiated and displayed in the external session.",
+      "Reviewed unknown: Which lifecycle stages the one rehearsal will reach before completion or the first deviation.",
+      "Reviewed unknown: Whether native completion recording and Monitor visibility will be callable in the isolated installed runtime.",
+      "Reviewed unknown: Whether all measured configuration, trust, process, and working-tree identities will remain unchanged after cleanup.",
+      "Reviewed unknown: Whether this single synthetic observation generalizes to any other client, repository, task, user, or production environment."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      ".codex",
+      "docs/adr",
+      "docs/development-automation-contracts.md",
+      "docs/development-monitor.md",
+      "docs/development-plan.md",
+      "docs/drift-review-reminders.md",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/validation",
+      "schemas",
+      "scripts/short_build_root",
+      "src",
+      "tests",
+      "governance/tasks/p0-benefit-view-single-observation-cards-v1.json",
+      "governance/tasks/p0-human-confirmed-learning-review-record-v1.json",
+      "governance/tasks/p0-installed-shared-data-path-contract-diagnostic-v1.json",
+      "governance/tasks/p0-learning-view-current-observation-candidates-v1.json",
+      "governance/tasks/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      "governance/tasks/p0-live-protection-guidance-usability-check-v1.json",
+      "governance/tasks/p0-protection-event-resolution-guidance-links-v1.json",
+      "governance/tasks/p0-retained-installed-shared-template-inspection-v1.json",
+      "governance/tasks/p0-task-detail-actionability-repair-v1.json",
+      "governance/tasks/p0-windows-short-build-root-contract-v1.json"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-independent-automatic-journey-rehearsal-v2.json",
+      ".agentgov/scope-baselines",
+      "docs/experiments/independent-automatic-journey-rehearsal-v2-2026-08-25.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-25.md",
+      "governance/tasks/p0-independent-automatic-journey-rehearsal-v1.json",
+      "docs/experiments/independent-automatic-journey-rehearsal-v1-2026-08-25.md",
+      "governance/tasks/p0-exact-distribution-pathspec-replay-v1.json",
+      "docs/build-validation/exact-distribution-pathspec-replay-v1-2026-08-25.md",
+      "docs/build-validation/installed-shared-data-path-contract-diagnostic-v1-2026-08-25.md",
+      "docs/build-validation/retained-installed-shared-template-inspection-v1-2026-08-25.md",
+      "docs/build-validation/windows-short-build-root-contract-v1-2026-08-25.md"
+    ]
+  },
+  "task_id": "p0-independent-automatic-journey-rehearsal-v2",
+  "title": "Independent automatic governance journey rehearsal v2",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check governance/tasks/p0-independent-automatic-journey-rehearsal-v2.json",
+    "py -3.11 -m unittest scripts.short_build_root.test_root -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check --task governance/tasks/p0-independent-automatic-journey-rehearsal-v2.json --format json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check --format json",
+    "py -3.11 -m json.tool governance/tasks/p0-independent-automatic-journey-rehearsal-v2.json",
+    "git diff --check"
+  ]
+}

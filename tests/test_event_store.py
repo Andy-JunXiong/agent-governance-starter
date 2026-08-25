@@ -3,7 +3,12 @@ import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from agentgov.event_store import LocalStateError, append_governance_event, load_governance_event
+from agentgov.event_store import (
+    LocalStateError,
+    append_governance_event,
+    load_governance_event,
+    write_local_record,
+)
 
 
 class EventStoreTests(unittest.TestCase):
@@ -142,6 +147,35 @@ class EventStoreTests(unittest.TestCase):
             )
 
         self.assertEqual(event.schema_version, "1.2")
+
+    def test_learning_review_local_area_is_bounded_and_create_only(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            repository = Path(temp_dir)
+            relative = write_local_record(
+                repository,
+                area="learning-reviews",
+                record_id="lrv-" + "1" * 32,
+                payload={"contract": "fixture.learning-review"},
+            )
+            with self.assertRaisesRegex(LocalStateError, "already exists"):
+                write_local_record(
+                    repository,
+                    area="learning-reviews",
+                    record_id="lrv-" + "1" * 32,
+                    payload={"contract": "fixture.learning-review"},
+                )
+            with self.assertRaisesRegex(ValueError, "unsupported"):
+                write_local_record(
+                    repository,
+                    area="other",
+                    record_id="other-record",
+                    payload={},
+                )
+
+        self.assertEqual(
+            relative,
+            ".agentgov/learning-reviews/lrv-" + "1" * 32 + ".json",
+        )
 
 
 if __name__ == "__main__":

@@ -10,11 +10,17 @@ future 0.3 line. It consumes the privacy-bounded events created by
 - Live Sessions;
 - Protection Events;
 - Activity Timeline;
-- Task Detail.
+- Task Detail;
+- Benefit;
+- Learning.
 
-Monitor contract 1.5 also embeds the shared drift-review reminder state. It
-shows whether requirement, architecture, and functionality review is due and
-why, while keeping every semantic drift conclusion advisory.
+Monitor contract 1.9 adds exact candidate-bound human Learning reviews to the
+strict current-observation Learning projection introduced in 1.8 and to the
+single-observation Benefit projection introduced in 1.7, the read-only guidance
+introduced for Protection Events in 1.6, and the shared drift-review
+reminder state introduced in 1.5. It keeps semantic drift, supported-benefit
+inference, and every repeated-signal Learning candidate advisory. A recorded
+human disposition remains a judgment, not handling, resolution, or benefit.
 
 It is not part of stable 0.2.1. The explicit redacted-export slice lets it read
 one reviewed development export or combine that export with a CI-only replay
@@ -29,9 +35,14 @@ ADR-0013 makes the Monitor and Dashboard a core automatically refreshed product
 surface rather than a command the ordinary user must remember to run. The
 current static Monitor is the validated read-model foundation. Development
 source now derives Overview, Live Sessions, Protection Events, Activity
-Timeline, Task Detail, and the non-authoritative drift-review reminder. The
-accepted next slices add explicit protection
-resolution links and Benefit/Learning views. `agentgov dev` refreshes this
+Timeline, Task Detail, Benefit, Learning, and the non-authoritative drift-review reminder.
+Protection Events now provide enum-bounded read-only links to Task Detail; an
+explicit future handling or resolution contract is still required before
+actual handling or resolution can be linked across events. The first single-
+observation Benefit slice, current-observation Learning candidates, and exact
+candidate-bound human Learning review records are implemented in development
+source. Multi-observation trends and cross-window Benefit evidence remain
+future work. `agentgov dev` refreshes this
 Dashboard after each processed adapter event, and its strict `--stream` JSONL
 mode can process several events in one foreground coding-agent connection. The
 first packaged Codex lifecycle-hook Adapter is implemented in development
@@ -40,7 +51,9 @@ source; Claude Code and IDE adapters remain optional future portability work.
 Vendor-neutral host-interaction requests are foreground response artifacts,
 not Dashboard resolution evidence. A displayed option has
 `decision_applied=false`; until a later explicit decision/resolution link is
-recorded, Protection Events must continue to report resolution as unknown.
+recorded, Protection Events must continue to report resolution as unknown. A
+Monitor guidance link is navigation to visible task context, not that
+missing resolution record.
 
 The target Dashboard explains how AgentGov protected both the user and the
 coding agent: bounded scope and authority, relevant context, stale evidence,
@@ -67,6 +80,22 @@ An explicit `--output` may select another repository-local generated file.
 AgentGov refuses to overwrite a Git-tracked target, a symbolic link, or an
 existing file without the matching AgentGov Monitor ownership marker. The
 default untracked `.agentgov/` output does not enter the fresh-evidence digest.
+
+Preview one fixed human judgment for a current repeated signal:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m agentgov review learning . `
+  --signal-class scope_boundary `
+  --disposition false_positive
+```
+
+The preview is read-only. Adding `--apply` still writes nothing unless an
+interactive human types exact `RECORD`. Immediately before exclusive creation,
+AgentGov reloads current local events and rechecks the signal class, sorted
+source identities, two-event rule, and candidate digest. The strict record
+lives under `.agentgov/learning-reviews`; it contains no free text, personal
+name, task identity, resolution, or downstream authority.
 
 ## Observation scope
 
@@ -131,15 +160,52 @@ Within the displayed observation scope:
   `needs_attention`, `review_ready`, or `handed_off`.
 - Protection Events deterministically classify recorded scope failures,
   validation failures, stale validation evidence, and completion that needs
-  evidence. Their identity is derived from the source event; resolution is
-  explicitly unknown without a future link.
+  evidence. Each class carries one deterministic read-only action label and a
+  schema-bounded `task_detail` target. HTML and Markdown render internal links
+  to the matching deterministic task-card anchor; JSON contains no URL. Their
+  identity is derived from the source event, and resolution remains explicitly unknown
+  without a future cross-event link.
 - Task Detail groups the visible sequence and shows the latest recorded event
-  and completion outcome.
+  and completion outcome. A task with a Protection Event is prominent and open
+  by default, with the latest protection class, observed outcome and reasons,
+  recorded counters, a deterministic next human review action, and the explicit
+  statement that resolution is unknown. The current event contract records
+  counts rather than changed paths, so affected paths are shown as unavailable
+  instead of inferred. Tasks without Protection Events remain compact.
+- Benefit uses one strict five-card projection over the current observation:
+  `observed_fact` contains only validated direct counts;
+  `reproduced_comparison` is explicitly unavailable without a selected
+  baseline, denominator, applicability rules, and comparable window;
+  `supported_inference` is advisory and only connects recorded protection
+  context to review prioritization; `human_feedback` is unavailable because
+  current events do not record attributed feedback; and `unknown` preserves
+  counterfactual outcomes, semantic correctness, causal benefit, time savings,
+  governance completeness, and return on investment.
+- Learning uses one strict four-card projection over the same current
+  observation. `observed_signal` reports direct zero-inclusive counts for the
+  four existing Protection Event classes. `repeated_signal_candidate` is
+  advisory and includes only a class appearing in at least two unique validated
+  Protection Events, together with occurrence and distinct-task counts but no
+  task identity. Two events may belong to the same task; the rule is a visible
+  display threshold, not statistical significance or permission to generalize.
+  `human_judgment` remains unavailable without an exact matching local review;
+  when present, it reports the canonical human-product-owner role, a fixed
+  disposition, zero-inclusive disposition counts, and resolution `unknown`.
+  It exposes no task or source-event identity. `unknown` preserves causal improvement,
+  outside-scope applicability, transferability, future recurrence, time
+  savings, governance completeness, and ROI.
+
+The self-contained HTML keeps the embedded machine-readable JSON collapsed
+under `Technical audit data (optional)`. It is subordinate tool/debugging data;
+ordinary task review does not require opening it.
 
 Passing or verified outcomes are observations, not approval or causal benefit.
-The current events do not record explicit human continue/narrow/pause/override
-decisions, so handling and resolution remain `unknown`. A later passing event
-is not labeled as proof that AgentGov caused or resolved an earlier problem.
+A Learning review records one bounded human disposition, not an explicit
+continue/narrow/pause action and not handling or resolution. Those states
+remain `unknown`. A later passing event is not labeled as proof that AgentGov
+caused or resolved an earlier problem.
+Guidance availability means only that the current report can navigate to Task
+Detail; it does not mean the suggested review occurred.
 
 Development source implements ADR-0012's separate `session.handed_off` event.
 Monitor schema 1.4 counts and displays handoff as routing state while retaining
@@ -158,16 +224,31 @@ The Monitor keeps three claim layers visible:
 - **Unknown:** missing history, semantic correctness, validation sufficiency,
   human handling, causal benefit, and ROI.
 
-The accepted Benefit view refines these layers into `observed_fact`,
+Monitor 1.7's Benefit view refines these layers into `observed_fact`,
 `reproduced_comparison`, `supported_inference`, `human_feedback`, and `unknown`.
-A reproduced comparison requires a documented denominator, applicability
-rules, and comparable observation windows. Protection-event counts do not by
-themselves prove a prevented production outcome, causal improvement, or ROI.
+This first slice is `single_observation_only`, so reproduced comparison and human feedback are unavailable
+rather than inferred. The separate two-snapshot Benefit Monitor is not imported or relabeled.
+A future reproduced comparison
+requires a documented denominator, applicability rules, and comparable
+observation windows. Protection-event counts do not by themselves prove a
+prevented production outcome, causal improvement, or ROI.
+
+Monitor 1.9 keeps direct class counts observed and repeated-signal candidates
+advisory. Local immutable reviews may make one exact current candidate's human
+judgment available; stale reviews and export-backed inputs do not. Human
+judgment remains distinct from resolution, while transferability and impact
+remain unknown. Repetition inside one partial observation
+does not prove a shared root cause, false-positive status, systemic weakness,
+confirmed improvement, portability, or future recurrence. Task identities are
+used only to derive a distinct-task count and are not emitted in the Learning
+projection.
 
 The static HTML escapes event metadata, embeds no source code or raw validation
 output, performs no external requests, and contains no approval, exception,
 commit, merge, deployment, or governance mutation controls. Exported actor
-labels and local evidence pointers are always absent.
+labels and local evidence pointers are always absent. Protection guidance uses
+only deterministic internal task-card fragments; the strict machine contract
+accepts no external or absolute target.
 
 ## Event integrity
 

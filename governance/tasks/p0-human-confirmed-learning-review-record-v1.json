@@ -1,0 +1,102 @@
+{
+  "acceptance_signals": [
+    "The first execution action captures the exact task-start baseline; final comparison has zero failures and preserves every excluded path.",
+    "ADR-0017 and a strict learning-review schema define a separate create-only local record with canonical human role, signal class, at least two sorted source event identities, candidate digest, fixed disposition, bounded reason codes, and all authority false; lifecycle event and export contracts remain unchanged.",
+    "Dispositions are limited to confirmed constraint gap, false positive, intentional override, consumer configuration needed, improvement candidate, and no change needed; none proves handling, resolution, cause, recurrence, correctness, or benefit.",
+    "A command previews the candidate, disposition, destination, limits, and denied authority. Only exact interactive confirmation writes; cancellation, non-interactive use, unsafe state, malformed input, duplicates, and stale or ineligible candidates write nothing.",
+    "Apply reloads current validated events and rechecks signal class, the two-event rule, sorted source identities, and candidate digest immediately before exclusive creation.",
+    "Monitor and strict schema advance from 1.8 to 1.9. Local generation projects only exact current matching reviews; exported event input remains visibly unavailable because it carries no learning review.",
+    "The existing four Learning cards remain ordered. Human judgment becomes attributed with fixed disposition counts when matched, while observed signals, advisory candidates, unknown limits, hidden task identities, and zero mutation controls remain unchanged.",
+    "Fixtures cover empty, unavailable, same-task and cross-task candidates, every disposition, multiple and stale reviews, malformed records, confirmation failure, stable serialization, schema and JSON/Markdown/HTML parity; a local browser check keeps judgment distinct from resolution and technical JSON collapsed.",
+    "README, ADR, plans, Monitor and product guides, automation contracts, status, and dated log distinguish human-confirmed Learning from lifecycle events, actual resolution, trends, cross-window Benefit, and unknown impact.",
+    "Focused tests, full Python 3.11 tests, task and repository governance, both schemas, task JSON, scope comparison, privacy scan, and git diff checks pass."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-be7618e460454c709dd562c334f05063 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Add a strict, immutable, repository-local human Learning review record and an explicitly confirmed command for current repeated Protection Event candidates. Advance Monitor to 1.9 so local JSON, Markdown, and HTML show attributed fixed-enum judgments without treating them as resolution, cause, or benefit; keep lifecycle events and exports unchanged."
+  },
+  "risk": {
+    "items": [
+      "A human judgment could be mistaken for handling or resolution; records and renderers must keep those meanings separate.",
+      "Cross-task judgment does not fit the single-task lifecycle event model, so a separate ADR-governed record is required.",
+      "The canonical human role is workflow attribution, not cryptographic personal identity.",
+      "Preview may become stale; exact current events and digest must be revalidated before write.",
+      "Create-only local state requires exact interactive confirmation, safe paths, exclusive creation, and preservation of the dirty excluded worktree.",
+      "Reviewed assumption: A sidecar review record is the smallest safe cross-task representation.",
+      "Reviewed assumption: The existing four signal classes and two-event display rule remain the complete candidate vocabulary.",
+      "Reviewed assumption: Fixed dispositions and canonical human-product-owner attribution are sufficient for v1.",
+      "Reviewed assumption: Local Monitor may load reviews while redacted event exports remain unchanged and unavailable.",
+      "Reviewed unknown: Real-user usefulness and disposition-vocabulary sufficiency are unknown.",
+      "Reviewed unknown: Production, accessibility, cross-browser, packaging, and consumer compatibility remain unverified.",
+      "Reviewed unknown: Personal authentication, conflict, amendment, revocation, and supersession are not designed.",
+      "Reviewed unknown: Trends, cross-window Benefit, external review export, resolution, causal benefit, time savings, completeness, and ROI remain future or unknown."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex/config.toml",
+      ".agentgov/scope-baselines/p0-benefit-view-single-observation-cards-v1.json",
+      ".agentgov/scope-baselines/p0-learning-view-current-observation-candidates-v1.json",
+      ".agentgov/scope-baselines/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      ".agentgov/scope-baselines/p0-live-protection-guidance-usability-check-v1.json",
+      ".agentgov/scope-baselines/p0-native-task-admission-summary-card-v1.json",
+      ".agentgov/scope-baselines/p0-protection-event-resolution-guidance-links-v1.json",
+      ".agentgov/scope-baselines/p0-reusable-foreground-stdio-controller-closeout-v1.json",
+      ".agentgov/scope-baselines/p0-task-detail-actionability-repair-v1.json",
+      "docs/validation",
+      "governance/tasks/p0-benefit-view-single-observation-cards-v1.json",
+      "governance/tasks/p0-learning-view-current-observation-candidates-v1.json",
+      "governance/tasks/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      "governance/tasks/p0-live-protection-guidance-usability-check-v1.json",
+      "governance/tasks/p0-protection-event-resolution-guidance-links-v1.json",
+      "governance/tasks/p0-task-detail-actionability-repair-v1.json",
+      "docs/drift-review-reminders.md"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-human-confirmed-learning-review-record-v1.json",
+      ".agentgov/scope-baselines/p0-human-confirmed-learning-review-record-v1.json",
+      "src/agentgov/learning_review.py",
+      "schemas/learning-review.schema.json",
+      "tests/test_learning_review.py",
+      "src/agentgov/event_store.py",
+      "tests/test_event_store.py",
+      "src/agentgov/cli.py",
+      "src/agentgov/development_monitor.py",
+      "schemas/development-monitor.schema.json",
+      "tests/test_development_monitor.py",
+      "tests/test_user_documentation.py",
+      "docs/adr/0017-record-human-learning-separately-from-lifecycle-events.md",
+      "README.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-monitor.md",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/development-plan.md",
+      "docs/development-automation-contracts.md",
+      "docs/development-log/2026-08-25.md",
+      "STATUS.md"
+    ]
+  },
+  "task_id": "p0-human-confirmed-learning-review-record-v1",
+  "title": "Human-confirmed Learning review record v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-human-confirmed-learning-review-record-v1.json --baseline .agentgov/scope-baselines/p0-human-confirmed-learning-review-record-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_learning_review tests.test_event_store tests.test_development_monitor tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-human-confirmed-learning-review-record-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-human-confirmed-learning-review-record-v1.json",
+    "py -3.11 -m json.tool schemas/learning-review.schema.json",
+    "py -3.11 -m json.tool schemas/development-monitor.schema.json",
+    "git diff --check"
+  ]
+}

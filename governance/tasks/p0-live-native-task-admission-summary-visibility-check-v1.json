@@ -1,0 +1,70 @@
+{
+  "acceptance_signals": [
+    "The live native task-proposal form shows the human-facing summary before the audit-only exact technical JSON.",
+    "The visible decisions clearly distinguish approving only this task, sending it back for changes, and not approving it.",
+    "The human separately reports the observed ordering and decision-label clarity; the Agent does not infer visual rendering from protocol output.",
+    "Admission creates only this exact task record and does not start execution or authorize implementation, Git, publication, release, deployment, installation, or a fixture-task change.",
+    "After separate task take-up, evidence records the current host observation as one bounded user-reported result, not cross-host proof.",
+    "Existing untracked host configuration and prior scope baselines remain byte-identical.",
+    "Task governance, repository governance, documentation tests, scope-baseline comparison, bounded privacy checks, and diff checks pass."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-a3b05c4ccdee47f591ada6a0f168986e and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Run one bounded current-host native proposal-review check and record whether the human-facing summary appears before audit-only technical JSON and whether the decision labels are understandable, without changing the summary-card implementation."
+  },
+  "risk": {
+    "items": [
+      "Approving the live form creates this exact task record; it does not execute the check closeout or authorize any other write.",
+      "Final form chrome belongs to the current host, so the visual result must be reported by the human.",
+      "One current-host observation cannot prove identical rendering across other hosts or future versions.",
+      "Existing untracked local host configuration and earlier task baselines must remain unchanged.",
+      "Reviewed assumption: The current host renders proposal-review message content in transmitted order.",
+      "Reviewed assumption: The human can visually inspect the form before choosing a decision.",
+      "Reviewed unknown: Whether the current host presents audit-only technical details as collapsible content.",
+      "Reviewed unknown: Whether the summary ordering remains identical in other supported hosts."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".agentgov/scope-baselines/p0-native-task-admission-summary-card-v1.json",
+      ".agentgov/scope-baselines/p0-reusable-foreground-stdio-controller-closeout-v1.json",
+      "src",
+      "tests",
+      "scripts",
+      "README.md",
+      "DEVELOPMENT_PLAN.md",
+      "AGENTS.md",
+      "docs/adr",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/task-proposal-admission.md",
+      "docs/governance-mcp-adapter.md"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      ".agentgov/scope-baselines/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      "docs/validation/live-native-task-admission-summary-visibility-check-2026-08-25.md",
+      "docs/development-log/2026-08-25.md",
+      "STATUS.md"
+    ]
+  },
+  "task_id": "p0-live-native-task-admission-summary-visibility-check-v1",
+  "title": "Live native task-admission summary visibility check v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-live-native-task-admission-summary-visibility-check-v1.json --baseline .agentgov/scope-baselines/p0-live-native-task-admission-summary-visibility-check-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-live-native-task-admission-summary-visibility-check-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_user_documentation -v",
+    "git diff --check"
+  ]
+}

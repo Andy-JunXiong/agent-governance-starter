@@ -1,0 +1,96 @@
+{
+  "acceptance_signals": [
+    "The first execution action after separate task take-up captures the exact task-start baseline, and final comparison reports zero failures while preserving all excluded prior source, schema, tests, tasks, evidence, baselines, host configuration, and strategic or architecture documents.",
+    "Monitor remains contract 1.6 and its JSON payload and strict schema remain unchanged; the repair derives presentation only from existing validated Protection Events and task timeline data.",
+    "Every Protection Event HTML guidance link targets the deterministic anchor of its matching task card rather than the generic Task Detail section; protected task cards are prominent, open by default, and use scroll margin so the card heading is the visible landing context.",
+    "HTML and Markdown Task Detail show the latest deterministic protection class, observed outcome, reason codes, existing recorded counters, smallest safe next human action, explicit affected-path unavailability under the current event contract, and unchanged unknown-resolution semantics.",
+    "Tasks without Protection Events retain their ordinary compact presentation, multiple tasks and multiple events map to the correct latest task-specific context, and missing or invalid data fails closed without invented paths, actions, or resolution.",
+    "The embedded machine-readable block remains collapsed by default, is labeled optional technical audit data, explains that ordinary review does not require it, and remains available without external requests or mutation controls.",
+    "Focused fixtures cover matching anchors, protected-card prominence and open state, multiple-task isolation, latest-event selection, escaping, path-unavailable wording, Markdown parity, optional machine-data labeling, stable JSON serialization, and unchanged authority flags.",
+    "Current Monitor, automatic-governance, development-plan, automation-contract, status, and dated-log documents distinguish the presentation repair from future changed-path event data and true cross-event resolution evidence.",
+    "A bounded post-implementation local-browser check confirms that activating guidance visibly lands on the matching open task card and that optional technical JSON is subordinate; human usability feedback is recorded only if separately reported.",
+    "Focused Monitor and user-documentation tests, the complete supported Python 3.11 suite, task governance, repository governance, task-start scope comparison, task JSON, bounded privacy scanning, and git diff checks pass."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-986db1c3bc0d4342a952918a909c6f79 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Keep the existing Monitor 1.6 read-model contract while repairing HTML and Markdown Task Detail presentation so each Protection Event guidance link lands on its matching prominent open task card, exposes deterministic failure context and the smallest safe next human action, states that affected paths are unavailable under the current event contract, and keeps optional machine-readable JSON visually subordinate."
+  },
+  "risk": {
+    "items": [
+      "Opening protected task cards by default could create clutter when many tasks need attention, so only cards with visible Protection Events may receive the prominent open state.",
+      "The governance-event contract does not carry affected paths; presenting governance references or inferred paths as affected paths would be false and is prohibited.",
+      "Duplicating Protection Event context inside Task Detail could drift from the source event unless one deterministic helper selects the latest task-specific Protection Event and source timeline entry.",
+      "Changing anchor generation could break escaping or create collisions; anchors must be deterministic, safe, task-specific, and tested across multiple tasks.",
+      "The embedded JSON is already collapsed by default but can dominate attention when expanded; the repair may clarify and subordinate it without hiding or deleting audit data.",
+      "The worktree contains earlier admitted implementation and validation changes; the new baseline must preserve excluded paths and distinguish prior included-file state from this task's delta.",
+      "A browser check can establish current-host landing behavior but not production, cross-browser, accessibility, causal-benefit, or future-version behavior.",
+      "Reviewed assumption: Task-specific deterministic anchors can be derived from task identity without adding fields to the Monitor JSON contract.",
+      "Reviewed assumption: Existing Protection Event reason codes, observed outcomes, guidance labels, and matching timeline metrics are sufficient for a bounded actionable summary.",
+      "Reviewed assumption: Showing affected paths as unavailable is more honest than expanding the event contract in this small repair.",
+      "Reviewed assumption: Keeping technical JSON accessible but clearly optional satisfies both auditability and ordinary-user clarity.",
+      "Reviewed unknown: Whether the repaired Task Detail will be sufficient for the product owner remains unknown until a fresh browser review.",
+      "Reviewed unknown: How many simultaneously protected tasks remain readable before a different information architecture is needed is unknown.",
+      "Reviewed unknown: Changed-path event data, production behavior, cross-browser accessibility, causal benefit, and true cross-event resolution remain outside this task."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex/config.toml",
+      ".agentgov/scope-baselines/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      ".agentgov/scope-baselines/p0-live-protection-guidance-usability-check-v1.json",
+      ".agentgov/scope-baselines/p0-native-task-admission-summary-card-v1.json",
+      ".agentgov/scope-baselines/p0-protection-event-resolution-guidance-links-v1.json",
+      ".agentgov/scope-baselines/p0-reusable-foreground-stdio-controller-closeout-v1.json",
+      "docs/validation/live-native-task-admission-summary-visibility-check-2026-08-25.md",
+      "docs/validation/live-protection-guidance-usability-check-2026-08-25.md",
+      "governance/tasks/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      "governance/tasks/p0-live-protection-guidance-usability-check-v1.json",
+      "governance/tasks/p0-protection-event-resolution-guidance-links-v1.json",
+      "schemas/development-monitor.schema.json",
+      "schemas/governance-event.schema.json",
+      "schemas/development-trigger.schema.json",
+      "src/agentgov/event_store.py",
+      "src/agentgov/foreground_coordinator.py",
+      "tests/test_foreground_coordinator.py",
+      "docs/drift-review-reminders.md",
+      "README.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/adr"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-task-detail-actionability-repair-v1.json",
+      ".agentgov/scope-baselines/p0-task-detail-actionability-repair-v1.json",
+      "src/agentgov/development_monitor.py",
+      "tests/test_development_monitor.py",
+      "tests/test_user_documentation.py",
+      "docs/development-monitor.md",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/development-plan.md",
+      "docs/development-automation-contracts.md",
+      "docs/development-log/2026-08-25.md",
+      "STATUS.md"
+    ]
+  },
+  "task_id": "p0-task-detail-actionability-repair-v1",
+  "title": "Task Detail actionability repair v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-task-detail-actionability-repair-v1.json --baseline .agentgov/scope-baselines/p0-task-detail-actionability-repair-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_development_monitor -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-task-detail-actionability-repair-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-task-detail-actionability-repair-v1.json",
+    "git diff --check"
+  ]
+}

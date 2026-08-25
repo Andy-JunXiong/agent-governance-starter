@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/learning-review-v1.0.json",
+  "title": "AgentGov Human Learning Review",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "review_id", "recorded_at", "actor", "signal_class", "source_event_ids", "candidate_digest", "disposition", "reason_codes", "semantics", "authority_boundary"],
+  "properties": {
+    "contract": {"const": "agentgov.learning-review"},
+    "schema_version": {"const": "1.0"},
+    "review_id": {"type": "string", "pattern": "^lrv-[0-9a-f]{32}$"},
+    "recorded_at": {"type": "string", "minLength": 1},
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["class", "role"],
+      "properties": {
+        "class": {"const": "human"},
+        "role": {"const": "human_product_owner"}
+      }
+    },
+    "signal_class": {"enum": ["scope_boundary", "validation_failure", "stale_evidence", "incomplete_completion"]},
+    "source_event_ids": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 10000,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^evt-[0-9a-f]{32}$"}
+    },
+    "candidate_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "disposition": {"enum": ["confirmed_constraint_gap", "false_positive", "intentional_override", "consumer_configuration_needed", "improvement_candidate", "no_change_needed"]},
+    "reason_codes": {
+      "type": "array",
+      "maxItems": 10,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}
+    },
+    "semantics": {"const": "human_judgment"},
+    "authority_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authorizes_resolution", "authorizes_code_change", "authorizes_scope_expansion", "authorizes_exception", "authorizes_commit", "authorizes_merge", "authorizes_deployment", "authorizes_release"],
+      "properties": {
+        "authorizes_resolution": {"const": false},
+        "authorizes_code_change": {"const": false},
+        "authorizes_scope_expansion": {"const": false},
+        "authorizes_exception": {"const": false},
+        "authorizes_commit": {"const": false},
+        "authorizes_merge": {"const": false},
+        "authorizes_deployment": {"const": false},
+        "authorizes_release": {"const": false}
+      }
+    }
+  }
+}

@@ -65,7 +65,16 @@ Out-of-scope changes, requirement expansion, architecture conflict, repeated
 failed approaches, stale evidence, unapproved commands, or requested external
 authority create a clear protection event. The user chooses whether to narrow,
 review an expansion or exception, continue, or stop. AgentGov does not infer
-new authority from apparent relevance.
+new authority from apparent relevance. The Dashboard may link a supported
+Protection Event to its visible Task Detail as read-only guidance. That link
+must not execute a command, select a decision, claim handling occurred, or turn
+a later passing event into resolution evidence. The destination must identify
+the matching task, be prominent when attention is required, and expose the
+latest recorded protection class, outcome, reasons, counters, and smallest
+deterministic next human review action. Data absent from the event contract,
+including changed paths in Monitor 1.6, must be labeled unavailable rather than
+inferred. Optional machine-readable audit data remains subordinate and
+collapsed by default.
 
 ### Reconcile completion
 
@@ -354,16 +363,35 @@ They must provide:
 2. **Live Sessions** — task, coding-agent adapter, current state, admitted
    scope, changed-file count, latest evidence, and protection status;
 3. **Protection Events** — what AgentGov observed, prevented, paused, assisted,
-   or routed to human judgment;
-4. **Task Detail** — requirement, scope, selected governance, changed paths,
-   validation, exceptions, decisions, evidence, completion, and replay
-   timeline;
-5. **Benefit** — earlier discovery, avoided stale evidence, bounded retries,
-   manual-governance actions, evidence quality, and explicitly sourced human
-   feedback;
+   or routed to human judgment, plus schema-bounded read-only navigation to the
+   relevant visible task context while actual resolution stays unknown;
+4. **Task Detail** — requirement, scope, selected governance, changed paths when
+   recorded (otherwise an explicit unavailable state), validation, exceptions,
+   decisions, evidence, completion, and replay timeline. Protected tasks are
+   prominent and actionable without requiring the optional machine-readable
+   audit block;
+5. **Benefit** — Monitor 1.7 presents five single-observation cards for
+   `observed_fact`, `reproduced_comparison`, `supported_inference`,
+   `human_feedback`, and `unknown`. It uses only validated current-scope Monitor
+   data and does not add event collection;
 6. **Learning** — recurring friction, false positives, missed constraints,
    overrides, consumer-local configuration needs, and candidate general
    improvements.
+
+Monitor 1.8 implements only the first bounded part of that target: four
+current-observation cards for direct Protection Event class counts, advisory
+repeated-signal candidates, unavailable human learning judgments, and unknown
+transferability or impact. It adds no event collection and does not turn
+repetition into a generalized conclusion.
+
+Monitor 1.9 adds the first bounded human-confirmed layer. One strict,
+create-only local `agentgov.learning-review` record binds the canonical human-
+product-owner role and a fixed disposition to the sorted source identities and
+digest of an exact current repeated candidate. It is separate from lifecycle
+events because a candidate may span tasks. Preview is read-only; exact
+interactive `RECORD` plus immediate freshness revalidation is required before
+exclusive creation. A matched review is human judgment, not handling,
+resolution, common cause, recurrence, correctness, prevention, or benefit.
 
 The Monitor also keeps a periodic drift-review reminder visible. Cadence and
 due-state are deterministic; requirement, architecture, and functionality
@@ -398,6 +426,45 @@ AgentGov must not publish a single governance score, protection percentage, or
 benefit percentage without the required denominator and applicability model.
 It must not claim that an observed intervention prevented a production outcome
 unless that outcome is independently evidenced.
+
+Monitor 1.7 implements only a `single_observation_only` Benefit projection.
+Direct counts may appear as `observed_fact`; `reproduced_comparison` is
+unavailable because no baseline, denominator, applicability rules, or
+comparable window is selected; `supported_inference` is advisory and limited
+to review prioritization; `human_feedback` is unavailable because the current
+event contract records no attributed feedback; and causal benefit, prevention,
+time savings, governance completeness, and ROI remain `unknown`. The separate
+two-snapshot Benefit Monitor is not imported, replaced, or relabeled by this
+view.
+
+## Learning evidence semantics
+
+Monitor 1.9 retains the `current_observation_candidates` Learning projection
+introduced in 1.8. The four existing deterministic Protection Event classes form its
+complete signal vocabulary. Direct zero-inclusive class counts are observed. A
+class becomes an advisory repeated-signal candidate only when it appears in at
+least two unique validated Protection Events in the displayed observation. The
+rule does not require different tasks; occurrence and distinct-task counts are
+visible, while task identities are not emitted in the Learning projection.
+
+The two-event rule is a deterministic display rule, not a statistical threshold
+or proof of common cause, false-positive status, systemic weakness,
+transferability, future recurrence, or improvement. False-positive disposition,
+missed-constraint confirmation, override outcome, consumer-local configuration
+need, and general improvement decision are unavailable until an exact current
+candidate has a matched immutable local Learning review. The review may record
+only confirmed constraint gap, false positive, intentional override, consumer
+configuration needed, improvement candidate, or no change needed. The role is
+workflow attribution rather than authenticated personal identity.
+
+The existing governance lifecycle event and redacted development-event export
+contracts remain unchanged. Therefore exported, CI-only, and combined Monitor
+sources expose the human-review source as unavailable. A newly added matching
+Protection Event changes the candidate digest and makes the old review stale;
+the immutable record remains local history but is not projected as the current
+judgment. Causal improvement, applicability
+outside the current scope and window, portability, future recurrence, time
+savings, governance completeness, and ROI remain unknown.
 
 ## Protection model
 

@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgov.dev/schemas/distribution-input-manifest.schema.json",
+  "title": "AgentGov Distribution Input Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "schema_version",
+    "authority",
+    "derivation",
+    "supersession",
+    "paths",
+    "path_digest",
+    "content_digest"
+  ],
+  "properties": {
+    "contract": { "const": "agentgov.distribution-input-manifest" },
+    "schema_version": { "const": "1.0" },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authorizes_build", "authorizes_git_write", "authorizes_journey", "authorizes_publication", "authorizes_release", "authorizes_deployment"],
+      "properties": {
+        "authorizes_build": { "const": false },
+        "authorizes_git_write": { "const": false },
+        "authorizes_journey": { "const": false },
+        "authorizes_publication": { "const": false },
+        "authorizes_release": { "const": false },
+        "authorizes_deployment": { "const": false }
+      }
+    },
+    "derivation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pyproject", "fixed_metadata_inputs", "package_inputs", "data_file_inputs", "glob_semantics"],
+      "properties": {
+        "pyproject": { "const": "pyproject.toml" },
+        "fixed_metadata_inputs": { "const": ["LICENSE", "pyproject.toml"] },
+        "package_inputs": { "const": "regular .py files below each tool.setuptools.packages.find.where root" },
+        "data_file_inputs": { "const": "regular files matched by tool.setuptools.data-files source patterns" },
+        "glob_semantics": { "const": "python-glob-nonrecursive-unless-double-star" }
+      }
+    },
+    "supersession": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["supersedes", "historical_observed_count", "recovered_historical_paths", "reason"],
+      "properties": {
+        "supersedes": { "const": "exact-distribution-pathspec-replay-v1 omitted path list" },
+        "historical_observed_count": { "const": 199 },
+        "recovered_historical_paths": { "const": false },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    },
+    "paths": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$" }
+    },
+    "path_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "content_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+  }
+}

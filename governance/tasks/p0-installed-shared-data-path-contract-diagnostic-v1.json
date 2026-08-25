@@ -1,0 +1,94 @@
+{
+  "acceptance_signals": [
+    "A sanitized dated diagnostic compares the repository data-files declaration, wheel data-key mapping, pip installation destination mapping, and Windows virtual-environment sysconfig data scheme without building or installing an AgentGov wheel.",
+    "The prior combined shared-template gate is decomposed into location correctness, installed presence, and installed byte-identity conclusions; every unavailable conclusion remains explicitly unknown.",
+    "The diagnostic states whether a future exact-current-source build/install with retained artifacts is required before independent rehearsal v2.",
+    "STATUS.md and the dated development log describe the diagnostic result without claiming installed-template correctness or rehearsal completion.",
+    "The previous short-build-root script and its evidence file remain byte-identical, product source and packaging metadata remain outside scope, and repository validation remains green."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-74dea4e1c20346fe87a9eeb83cfef63c and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Using only repository-local declarations and already installed local Python or pip implementation metadata, determine whether the prior Windows virtual-environment shared-template check targeted the correct data location, separate location, presence, and byte-identity conclusions, preserve unresolved branches explicitly, and record whether another retained-artifact build/install inspection is required before independent rehearsal v2. Do not change product source, packaging metadata, or the previous short-build-root implementation."
+  },
+  "risk": {
+    "items": [
+      "Static contracts can establish an intended destination but cannot retroactively prove presence or byte identity in a removed runtime.",
+      "Pip internal implementation details are locally authoritative for the installed tool version but are not a cross-version compatibility guarantee.",
+      "The dirty worktree makes accidental scope expansion possible; excluded paths and included predecessor artifacts must remain unchanged.",
+      "No wheel build, project installation, model call, rehearsal, network access, credential use, Git mutation, publication, release, deployment, or external write is authorized.",
+      "Reviewed assumption: The installed local Python and pip distributions expose their path-scheme implementation or metadata without network access.",
+      "Reviewed assumption: Repository packaging declarations and the prior sanitized build evidence are sufficient to evaluate the path assumption even though the exact wheel and installed runtime were removed.",
+      "Reviewed assumption: The current dirty worktree contains unrelated or predecessor changes that must be preserved and explicitly bounded.",
+      "Reviewed unknown: Whether the removed installed runtime actually contained the shared template.",
+      "Reviewed unknown: Whether any installed shared template bytes matched the source template bytes.",
+      "Reviewed unknown: Whether a future retained-artifact replay will reveal a packaging defect or only a prior diagnostic ambiguity."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "docs/adr",
+      "docs/development-automation-contracts.md",
+      "docs/development-monitor.md",
+      "docs/development-plan.md",
+      "docs/drift-review-reminders.md",
+      "docs/experiments",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/validation",
+      "schemas",
+      "src",
+      "tests",
+      ".agentgov/scope-baselines/p0-benefit-view-single-observation-cards-v1.json",
+      ".agentgov/scope-baselines/p0-human-confirmed-learning-review-record-v1.json",
+      ".agentgov/scope-baselines/p0-independent-automatic-journey-rehearsal-v1.json",
+      ".agentgov/scope-baselines/p0-learning-view-current-observation-candidates-v1.json",
+      ".agentgov/scope-baselines/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      ".agentgov/scope-baselines/p0-live-protection-guidance-usability-check-v1.json",
+      ".agentgov/scope-baselines/p0-native-task-admission-summary-card-v1.json",
+      ".agentgov/scope-baselines/p0-protection-event-resolution-guidance-links-v1.json",
+      ".agentgov/scope-baselines/p0-reusable-foreground-stdio-controller-closeout-v1.json",
+      ".agentgov/scope-baselines/p0-task-detail-actionability-repair-v1.json",
+      ".agentgov/scope-baselines/p0-windows-short-build-root-contract-v1.json"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-installed-shared-data-path-contract-diagnostic-v1.json",
+      ".agentgov/scope-baselines/p0-installed-shared-data-path-contract-diagnostic-v1.json",
+      "docs/build-validation/installed-shared-data-path-contract-diagnostic-v1-2026-08-25.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-25.md",
+      "docs/build-validation/windows-short-build-root-contract-v1-2026-08-25.md",
+      "scripts/short_build_root",
+      "governance/tasks/p0-benefit-view-single-observation-cards-v1.json",
+      "governance/tasks/p0-human-confirmed-learning-review-record-v1.json",
+      "governance/tasks/p0-independent-automatic-journey-rehearsal-v1.json",
+      "governance/tasks/p0-learning-view-current-observation-candidates-v1.json",
+      "governance/tasks/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      "governance/tasks/p0-live-protection-guidance-usability-check-v1.json",
+      "governance/tasks/p0-protection-event-resolution-guidance-links-v1.json",
+      "governance/tasks/p0-task-detail-actionability-repair-v1.json",
+      "governance/tasks/p0-windows-short-build-root-contract-v1.json"
+    ]
+  },
+  "task_id": "p0-installed-shared-data-path-contract-diagnostic-v1",
+  "title": "Diagnose installed shared-data path contract without rebuilding",
+  "validation_commands": [
+    "python -m unittest scripts.short_build_root.test_root -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov task validate governance/tasks/p0-installed-shared-data-path-contract-diagnostic-v1.json",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov repo validate .",
+    "python -m json.tool governance/tasks/p0-installed-shared-data-path-contract-diagnostic-v1.json",
+    "git diff --check"
+  ]
+}

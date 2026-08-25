@@ -99,14 +99,30 @@ the intended final UX. The canonical requirements are in
    zero interruptions; material work must never enter fast-track. Treat Git
    policy ownership as an auditable attestation, not cryptographic identity.
 8. Preserve the implemented per-cycle automatic Monitor refresh and Overview,
-   Live Sessions, Protection Events, and Task Detail views; add explicit
-   resolution links. The Dashboard remains a read model and contains no policy,
-   merge, release, or deployment controls.
-9. Add Benefit and Learning views with explicit `observed_fact`,
-   `reproduced_comparison`, `supported_inference`, `human_feedback`, and
-   `unknown` semantics. Every comparison states its denominator,
-   applicability, and observation window; no combined governance score is
-   introduced.
+   Live Sessions, Protection Events, and Task Detail views. Monitor 1.9 retains
+   the 1.7 Benefit and 1.6 guidance behavior and gives each supported Protection
+   Event deterministic read-only guidance to
+   its matching Task Detail card. Protected cards are prominent and open by
+   default with the latest recorded protection context and next human review
+   action; normal cards stay compact and optional machine JSON stays collapsed.
+   Affected paths are explicitly unavailable because the unchanged event
+   contract records counts, not paths. Actual resolution remains unknown and
+   explicit cross-event resolution evidence remains future work. The Dashboard
+   remains a read model and contains no policy, merge, release, or deployment
+   controls.
+9. Preserve the implemented Monitor 1.7 single-observation Benefit cards with
+   explicit `observed_fact`, `reproduced_comparison`, `supported_inference`,
+   `human_feedback`, and `unknown` semantics. Comparison and attributed feedback
+   remain unavailable until their evidence contracts exist, supported inference
+   remains advisory, and no combined governance score is introduced. Preserve
+   the implemented Monitor 1.9 current-observation Learning cards: direct
+   Protection Event class counts are observed, the fixed two-event recurrence
+   rule produces advisory candidates only, and an immutable exact candidate-
+   bound local record may expose one canonical-role human judgment without
+   implying handling or resolution. Stale records and exported inputs remain
+   unavailable, and transferability or impact remains unknown. Multi-observation
+   trends and denominator-aware cross-window Benefit evidence remain future
+   product-review candidates.
 10. Run one exact-artifact automatic user-journey rehearsal in an independent
    non-NYC repository. One ordinary low-risk task must reach a reviewable
    completion without hand-authored internal JSON, repeated `next` queries,

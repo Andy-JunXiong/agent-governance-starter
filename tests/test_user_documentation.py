@@ -23,6 +23,9 @@ AUTOMATIC_PRODUCT_REQUIREMENTS = (
     ROOT / "docs/product-requirements-automatic-governance.md"
 )
 AUTOMATION_CONTRACTS = ROOT / "docs/development-automation-contracts.md"
+LEARNING_REVIEW_ADR = (
+    ROOT / "docs/adr/0017-record-human-learning-separately-from-lifecycle-events.md"
+)
 CODEX_HOOKS_ADAPTER = ROOT / "docs/codex-hooks-adapter.md"
 GOVERNANCE_MCP_ADAPTER = ROOT / "docs/governance-mcp-adapter.md"
 TASK_PROPOSAL_ADMISSION = ROOT / "docs/task-proposal-admission.md"
@@ -52,6 +55,10 @@ DISPOSABLE_AUTOMATIC_REHEARSAL_V2 = (
 DISPOSABLE_AUTOMATIC_REHEARSAL_V3 = (
     ROOT
     / "docs/experiments/disposable-automatic-journey-rehearsal-v3-2026-08-23.md"
+)
+INDEPENDENT_AUTOMATIC_REHEARSAL_V1 = (
+    ROOT
+    / "docs/experiments/independent-automatic-journey-rehearsal-v1-2026-08-25.md"
 )
 APP_SERVER_THREAD_START_NO_MODEL_DIAGNOSTIC_V1 = (
     ROOT
@@ -1161,6 +1168,54 @@ class UserDocumentationTests(unittest.TestCase):
         self.assertNotIn("To continue this session", record)
         self.assertNotIn("prevented harm", normalized_record.lower())
 
+    def test_independent_automatic_rehearsal_v1_preserves_the_wheel_build_stop(self) -> None:
+        record = INDEPENDENT_AUTOMATIC_REHEARSAL_V1.read_text(encoding="utf-8")
+        normalized_record = " ".join(record.split())
+        status = " ".join(STATUS.read_text(encoding="utf-8").split())
+        log = " ".join(
+            (ROOT / "docs/development-log/2026-08-25.md")
+            .read_text(encoding="utf-8")
+            .split()
+        )
+
+        self.assertTrue(INDEPENDENT_AUTOMATIC_REHEARSAL_V1.is_file())
+        for phrase in (
+            "STOPPED_AT_WHEEL_BUILD_PATH_LENGTH_BEFORE_FIXTURE_AND_MODEL",
+            "wheel_build_target_path_length_boundary",
+            "Measured failing target-path length | 264 characters",
+            "Wheel build attempts: 1",
+            "Wheel artifacts produced | 0",
+            "Synthetic fixture repositories created | 0",
+            "External Codex sessions | 0",
+            "External model requests or turns | 0",
+            "Native consumer forms | 0",
+            "Model-session retries | 0",
+            "does not satisfy the independent automatic-experience gate",
+            "not a fresh uncoached human pilot",
+        ):
+            self.assertIn(phrase, normalized_record)
+
+        for surface in (status, log):
+            with self.subTest(surface=surface[:40]):
+                self.assertIn(
+                    "independent-automatic-journey-rehearsal-v1-2026-08-25.md",
+                    surface,
+                )
+                self.assertIn(
+                    "STOPPED_AT_WHEEL_BUILD_PATH_LENGTH_BEFORE_FIXTURE_AND_MODEL",
+                    surface,
+                )
+
+        for forbidden in (
+            ":\\Users\\",
+            "AppData",
+            "agentgov-independent-journey-v1-",
+            "ProcessId",
+            "ParentProcessId",
+            "prevented harm",
+        ):
+            self.assertNotIn(forbidden.lower(), normalized_record.lower())
+
     def test_app_server_thread_start_no_model_diagnostic_records_the_static_stop(self) -> None:
         record = APP_SERVER_THREAD_START_NO_MODEL_DIAGNOSTIC_V1.read_text(
             encoding="utf-8"
@@ -1751,7 +1806,10 @@ class UserDocumentationTests(unittest.TestCase):
         guide = DRIFT_REVIEW_REMINDERS.read_text(encoding="utf-8")
         consumer = CONSUMER_CI.read_text(encoding="utf-8")
         monitor = DEVELOPMENT_MONITOR.read_text(encoding="utf-8")
+        requirements = AUTOMATIC_PRODUCT_REQUIREMENTS.read_text(encoding="utf-8")
         normalized_guide = " ".join(guide.split())
+        normalized_monitor = " ".join(monitor.split())
+        normalized_requirements = " ".join(requirements.split())
 
         for text in (guide, consumer, monitor):
             self.assertIn("advisory", text.lower())
@@ -1765,7 +1823,40 @@ class UserDocumentationTests(unittest.TestCase):
         ):
             self.assertIn(phrase, guide)
         self.assertIn("agentgov review drift . --format github", consumer)
-        self.assertIn("Monitor contract 1.5", monitor)
+        self.assertIn("Monitor contract 1.9", monitor)
+        self.assertIn("read-only guidance", monitor)
+        self.assertIn("resolution remains explicitly unknown", monitor)
+        self.assertIn("matching deterministic task-card anchor", monitor)
+        self.assertIn("affected paths are shown as unavailable", monitor)
+        self.assertIn("Technical audit data (optional)", monitor)
+        self.assertIn("Tasks without Protection Events remain compact", monitor)
+        self.assertIn("single-observation Benefit projection", monitor)
+        self.assertIn("reproduced comparison and human feedback are unavailable", monitor)
+        self.assertIn("two-snapshot Benefit Monitor is not imported", monitor)
+        self.assertIn("strict current-observation Learning projection", monitor)
+        self.assertIn("at least two unique validated Protection Events", normalized_monitor)
+        self.assertIn("but no task identity", normalized_monitor)
+        self.assertIn("display threshold, not statistical significance", normalized_monitor)
+        self.assertIn("exact matching local review", normalized_monitor)
+        self.assertIn("agentgov review learning", normalized_monitor)
+        self.assertIn("interactive human types exact `RECORD`", normalized_monitor)
+        self.assertIn("contains no free text", normalized_monitor)
+        self.assertIn("not emitted in the Learning projection", normalized_monitor)
+        self.assertIn(
+            "deterministic display rule, not a statistical threshold",
+            normalized_requirements,
+        )
+        self.assertIn("Monitor 1.9 adds the first bounded human-confirmed layer", requirements)
+        self.assertIn("exported, CI-only, and combined Monitor sources", normalized_requirements)
+        adr = LEARNING_REVIEW_ADR.read_text(encoding="utf-8")
+        for phrase in (
+            "separate, immutable `agentgov.learning-review`",
+            "false positive",
+            "grants no resolution",
+            "single-task identity",
+            "Stale records remain immutable",
+        ):
+            self.assertIn(phrase, adr)
         self.assertIn("agentgov_drift_review_record", guide)
         self.assertIn("cannot supply the human decision", guide)
         self.assertIn(

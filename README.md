@@ -95,6 +95,7 @@ granting the next authority.
 Durable architecture lives in the [governance model](docs/governance-model.md),
 [ADR-0013](docs/adr/0013-make-automatic-governance-and-dashboard-primary.md),
 [ADR-0016](docs/adr/0016-establish-minimum-sufficient-kernel-architecture.md),
+[ADR-0017](docs/adr/0017-record-human-learning-separately-from-lifecycle-events.md),
 and the [invariant register](docs/adr/INVARIANTS.md). This README intentionally
 keeps only the overview diagram.
 
@@ -299,8 +300,10 @@ owner rather than being duplicated here.
   selection and host capability limits.
 - [Clarification dialogue](docs/clarification-dialogue.md): discussion before a
   durable alignment decision.
-- [Development Monitor](docs/development-monitor.md): local protection state and
-  observed, inferred, and unknown layers.
+- [Development Monitor](docs/development-monitor.md): local protection state,
+  task context, development-source single-observation Benefit cards, and
+  current-observation Learning candidates plus exact candidate-bound human
+  judgments with explicit evidence limits.
 - [Drift-review reminders](docs/drift-review-reminders.md): advisory foreground
   and scheduled review cadence.
 - [Clean-target replay preflight](docs/clean-target-replay-preflight.md) and the

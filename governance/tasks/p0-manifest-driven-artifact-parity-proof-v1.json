@@ -1,0 +1,104 @@
+{
+  "acceptance_signals": [
+    "Capture the task-start baseline before implementation; excluded pre-existing changes remain byte-identical and the manifest checker passes at 186 paths with both persisted digests.",
+    "Preflight verifies one compatible local build backend and the short-root helper without network, package installation, temporary-root allocation, or artifact build; a missing prerequisite stops the task.",
+    "Exactly one verified short task root receives exactly the 186 manifest paths as current regular files, with zero extras, links, unsafe paths, or source-to-stage digest mismatches.",
+    "Exactly one offline no-isolation wheel build runs without retry, repair, alternate backend, dependency installation, or network access and emits at most one wheel; failure stops artifact analysis.",
+    "Artifact analysis maps every selected package and setuptools data-file payload to exactly one expected wheel member, verifies byte identity, rejects missing or unexpected managed payload members, and records generated metadata separately.",
+    "Before cleanup, sanitized durable evidence records counts and digests, build attempt and result, wheel inventory identity, payload parity, metadata observations, first deviation, and unknowns without host paths, raw output, contents, credentials, or process identities.",
+    "After evidence is durable, cleanup removes only the exact verified task root and confirms no task root remains; STATUS and the dated log record the bounded outcome and denied authority.",
+    "No packaging declaration, runtime source, checker, helper, test, consumer, configuration, credential, external Agent, model, Git mutation, commit, push, publication, release, deployment, or full journey is changed or used."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-e8a01255bf104341a8e76ca3b613d934 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Perform one bounded offline wheel build from exactly the current persisted 186-path distribution-input manifest. Require the read-only manifest checker and local backend preflight to pass before allocation. Stage only those current regular files into one verified short temporary root, recheck source-to-stage identities, run exactly one no-isolation offline wheel build without retry or substitution, and compare selected package and data-file payloads with expected wheel members and bytes while recording generated metadata separately. Write sanitized evidence before removing the exact task-owned root. Stop at the first deviation. Do not start an external Agent or full journey."
+  },
+  "risk": {
+    "items": [
+      "Any manifest, backend, staging, build, wheel, payload, evidence, cleanup, or scope deviation stops the run without repair or a second build.",
+      "The dirty working tree contains legitimate current distribution overlays; staging must copy only exact manifest paths and revalidate both digests.",
+      "Generated wheel metadata is backend-owned and remains separate from source-selected package and data payload parity.",
+      "The temporary root and wheel remain until sanitized evidence is durable, then only that verified root may be removed.",
+      "No network, dependency installation, credential access, external Agent, model, Git mutation, publication, release, or deployment is authorized.",
+      "Reviewed assumption: The persisted manifest still independently matches exactly 186 current regular files at take-up.",
+      "Reviewed assumption: A compatible local build frontend and backend are already available without network or installation.",
+      "Reviewed assumption: The repository-internal short-root helper remains unchanged and suitable for one task-owned root.",
+      "Reviewed assumption: Current setuptools declarations remain within the manifest checker's supported subset.",
+      "Reviewed assumption: A source-to-wheel payload mapping can be derived without changing packaging declarations or runtime source.",
+      "Reviewed unknown: Whether the one exact build succeeds in the current local toolchain.",
+      "Reviewed unknown: The resulting wheel member count and canonical inventory digest.",
+      "Reviewed unknown: Whether every selected package and data-file payload maps one-to-one with byte identity.",
+      "Reviewed unknown: Whether generated metadata adds any unexpected backend-owned member.",
+      "Reviewed unknown: Cross-platform and future-setuptools behavior beyond this one local observation.",
+      "Reviewed unknown: Future Agent journey behavior, adoption, reliability improvement, causal benefit, time savings, and return on investment."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      ".codex",
+      "docs/adr",
+      "docs/development-monitor.md",
+      "docs/development-plan.md",
+      "docs/drift-review-reminders.md",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/experiments",
+      "docs/validation",
+      "governance/distribution-input-manifest.json",
+      "schemas",
+      "scripts",
+      "src",
+      "tests",
+      "governance/tasks/p0-benefit-view-single-observation-cards-v1.json",
+      "governance/tasks/p0-human-confirmed-learning-review-record-v1.json",
+      "governance/tasks/p0-independent-automatic-journey-rehearsal-v1.json",
+      "governance/tasks/p0-installed-shared-data-path-contract-diagnostic-v1.json",
+      "governance/tasks/p0-learning-view-current-observation-candidates-v1.json",
+      "governance/tasks/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      "governance/tasks/p0-live-protection-guidance-usability-check-v1.json",
+      "governance/tasks/p0-protection-event-resolution-guidance-links-v1.json",
+      "governance/tasks/p0-task-detail-actionability-repair-v1.json"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-manifest-driven-artifact-parity-proof-v1.json",
+      ".agentgov/scope-baselines",
+      "docs/build-validation/manifest-driven-artifact-parity-proof-v1-2026-08-25.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-25.md",
+      "docs/development-automation-contracts.md",
+      "governance/tasks/p0-replayable-distribution-input-manifest-v1.json",
+      "governance/tasks/p0-exact-distribution-pathspec-replay-v1.json",
+      "governance/tasks/p0-independent-automatic-journey-rehearsal-v2.json",
+      "governance/tasks/p0-retained-installed-shared-template-inspection-v1.json",
+      "governance/tasks/p0-windows-short-build-root-contract-v1.json",
+      "docs/build-validation/distribution-input-manifest-contract-v1-2026-08-25.md",
+      "docs/build-validation/exact-distribution-pathspec-replay-v1-2026-08-25.md",
+      "docs/build-validation/installed-shared-data-path-contract-diagnostic-v1-2026-08-25.md",
+      "docs/build-validation/retained-installed-shared-template-inspection-v1-2026-08-25.md",
+      "docs/build-validation/windows-short-build-root-contract-v1-2026-08-25.md"
+    ]
+  },
+  "task_id": "p0-manifest-driven-artifact-parity-proof-v1",
+  "title": "Prove current manifest to wheel payload parity once",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-manifest-driven-artifact-parity-proof-v1.json --baseline .agentgov/scope-baselines/p0-manifest-driven-artifact-parity-proof-v1.json",
+    "py -3.11 -m scripts.distribution_input_manifest check --repository . --manifest governance/distribution-input-manifest.json",
+    "py -3.11 -m unittest scripts.distribution_input_manifest.test_manifest scripts.short_build_root.test_root -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-manifest-driven-artifact-parity-proof-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-manifest-driven-artifact-parity-proof-v1.json",
+    "git diff --check"
+  ]
+}

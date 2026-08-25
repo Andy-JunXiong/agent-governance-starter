@@ -275,7 +275,7 @@ def load_governance_events(directory: Path) -> EventLoadResult:
 
 
 def _safe_state_directory(repository: Path, area: str) -> Path:
-    if area not in {"events", "evidence"}:
+    if area not in {"events", "evidence", "learning-reviews"}:
         raise ValueError("unsupported AgentGov local-state area")
     if repository.is_symlink():
         raise LocalStateError("repository root must not be a symbolic link")

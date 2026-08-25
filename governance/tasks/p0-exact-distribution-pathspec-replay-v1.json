@@ -1,0 +1,106 @@
+{
+  "acceptance_signals": [
+    "Preflight finds exactly one retained setuptools 84.0.0 wheel matching the previously recorded SHA-256 before any temporary root or build attempt.",
+    "Exactly one short task root stages exactly 199 committed distribution inputs and no unrelated committed file, then applies exactly 7 current distribution overlays whose SHA-256 values match the prior retained-inspection record.",
+    "Exactly one offline wheel build and one fresh offline install emit at most one wheel and reproduce the recorded 188-member inventory plus the exact shared-template member without repair, retry, alternate backend, or network access.",
+    "Before cleanup, durable sanitized evidence records the exact source-stage and overlay counts, wheel inventory and member gate, actual runtime data scheme and normalized destination, installed-file presence, and source-to-installed byte identity as pass, fail, or unknown.",
+    "The driver retains the verified short-root object while evidence is written, accepts only the bounded cleanup continuation, then removes the exact task-owned root and records the cleanup result.",
+    "STATUS.md and the dated development log state the bounded outcome, validation results, remaining unknowns, and denied authority; no product source, packaging declaration, test, helper behavior, or rehearsal-v2 work is changed."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-ca02c6a4b12d4de0b5981c169b778672 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Perform one exact offline replay of the retained shared-template inspection using only the 199 committed distribution inputs from the prior protocol plus the exact 7 current distribution overlays. Retain the one task-owned wheel and runtime until sanitized evidence records source-stage cardinality, overlay digests, wheel inventory and exact member, actual runtime data scheme and normalized target, installed-file presence, and source-to-installed byte identity. Stop at the first deviation, do not repair or retry, clean up the exact verified root only after evidence is durable, and do not begin rehearsal v2."
+  },
+  "risk": {
+    "items": [
+      "A preflight, archive, overlay, build, install, member, scheme, presence, digest, inventory, evidence, or cleanup deviation must stop the run without repair or a second attempt.",
+      "The source archive must be driven by the exact 199-path manifest; a broad Git archive or repository copy would repeat the known scope deviation.",
+      "The dirty worktree makes overlay expansion possible; only the exact 7 recorded distribution overlays may enter the staged source.",
+      "The foreground driver temporarily retains a wheel and runtime; cleanup may target only the exact verified task-owned short root after evidence is durable.",
+      "Sanitized evidence must omit absolute paths, process identifiers, raw command output, source content, prompts, responses, credentials, and session identities.",
+      "No product source or packaging modification, consumer fixture, external model, network request, credential access, Git mutation, commit, push, publication, release, deployment, or external write is authorized.",
+      "Reviewed assumption: Exactly one local setuptools 84.0.0 wheel still matches the previously recorded expected digest.",
+      "Reviewed assumption: The repository-internal short-root helper remains byte-identical to its previously validated implementation.",
+      "Reviewed assumption: The prior protocol still deterministically identifies exactly 199 committed distribution input paths.",
+      "Reviewed assumption: The exact 7 current distribution overlay files and their recorded digests remain unchanged.",
+      "Reviewed assumption: The current host can keep one foreground driver alive while sanitized evidence is written before cleanup.",
+      "Reviewed unknown: Whether the exact-pathspec replay reproduces the same 188-member wheel inventory and shared-template gates.",
+      "Reviewed unknown: Whether any local toolchain or working-tree condition has changed since the prior retained inspection.",
+      "Reviewed unknown: Whether a successful exact replay will later justify admitting rehearsal v2."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      ".codex",
+      "docs/adr",
+      "docs/development-automation-contracts.md",
+      "docs/development-monitor.md",
+      "docs/development-plan.md",
+      "docs/drift-review-reminders.md",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/experiments",
+      "docs/validation",
+      "schemas",
+      "scripts/short_build_root",
+      "src",
+      "tests",
+      "governance/tasks/p0-benefit-view-single-observation-cards-v1.json",
+      "governance/tasks/p0-human-confirmed-learning-review-record-v1.json",
+      "governance/tasks/p0-independent-automatic-journey-rehearsal-v1.json",
+      "governance/tasks/p0-installed-shared-data-path-contract-diagnostic-v1.json",
+      "governance/tasks/p0-learning-view-current-observation-candidates-v1.json",
+      "governance/tasks/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      "governance/tasks/p0-live-protection-guidance-usability-check-v1.json",
+      "governance/tasks/p0-protection-event-resolution-guidance-links-v1.json",
+      "governance/tasks/p0-task-detail-actionability-repair-v1.json",
+      "governance/tasks/p0-windows-short-build-root-contract-v1.json"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-exact-distribution-pathspec-replay-v1.json",
+      ".agentgov/scope-baselines/p0-exact-distribution-pathspec-replay-v1.json",
+      "docs/build-validation/exact-distribution-pathspec-replay-v1-2026-08-25.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-25.md",
+      "docs/build-validation/installed-shared-data-path-contract-diagnostic-v1-2026-08-25.md",
+      "docs/build-validation/retained-installed-shared-template-inspection-v1-2026-08-25.md",
+      "docs/build-validation/windows-short-build-root-contract-v1-2026-08-25.md",
+      "governance/tasks/p0-retained-installed-shared-template-inspection-v1.json",
+      ".agentgov/scope-baselines/p0-benefit-view-single-observation-cards-v1.json",
+      ".agentgov/scope-baselines/p0-human-confirmed-learning-review-record-v1.json",
+      ".agentgov/scope-baselines/p0-independent-automatic-journey-rehearsal-v1.json",
+      ".agentgov/scope-baselines/p0-installed-shared-data-path-contract-diagnostic-v1.json",
+      ".agentgov/scope-baselines/p0-learning-view-current-observation-candidates-v1.json",
+      ".agentgov/scope-baselines/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      ".agentgov/scope-baselines/p0-live-protection-guidance-usability-check-v1.json",
+      ".agentgov/scope-baselines/p0-native-task-admission-summary-card-v1.json",
+      ".agentgov/scope-baselines/p0-protection-event-resolution-guidance-links-v1.json",
+      ".agentgov/scope-baselines/p0-retained-installed-shared-template-inspection-v1.json",
+      ".agentgov/scope-baselines/p0-reusable-foreground-stdio-controller-closeout-v1.json",
+      ".agentgov/scope-baselines/p0-task-detail-actionability-repair-v1.json",
+      ".agentgov/scope-baselines/p0-windows-short-build-root-contract-v1.json"
+    ]
+  },
+  "task_id": "p0-exact-distribution-pathspec-replay-v1",
+  "title": "Replay retained shared-template inspection with exact distribution pathspec",
+  "validation_commands": [
+    "py -3.11 -m unittest scripts.short_build_root.test_root -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-exact-distribution-pathspec-replay-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-exact-distribution-pathspec-replay-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-exact-distribution-pathspec-replay-v1.json --baseline .agentgov/scope-baselines/p0-exact-distribution-pathspec-replay-v1.json",
+    "git diff --check"
+  ]
+}

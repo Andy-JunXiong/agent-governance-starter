@@ -1,0 +1,85 @@
+{
+  "acceptance_signals": [
+    "Development Monitor contract and schema advance from 1.5 to 1.6, and each of the four existing protection-event types carries a strict deterministic guidance object with a bounded action identifier, human label, read-only navigation semantics, and task-detail target.",
+    "Protection-event status remains observed_resolution_unknown; guidance never claims that handling occurred or that a later event resolved an earlier event.",
+    "JSON exposes only schema-bounded guidance data, Markdown links to its Task Detail section, and self-contained HTML uses internal fragment links to its Task Detail section without external URLs, buttons, scripts, commands, or mutation controls.",
+    "Schema validation rejects free-form, external, absolute, or unsupported guidance targets and preserves all existing false authority flags.",
+    "Focused fixtures cover all four guidance mappings, JSON and schema output, Markdown and HTML links, escaped labels, unavailable or invalid target handling, stable serialization, and unchanged unknown-resolution semantics.",
+    "Current Monitor, automatic-governance, drift-reminder, strategic-plan, status, and dated-log documents distinguish resolution guidance from future cross-event resolution evidence and consistently identify Monitor contract 1.6.",
+    "The first execution action after task take-up captures the exact task-start baseline, and final comparison reports zero failures while preserving all excluded pre-existing task, evidence, baseline, and host-configuration paths.",
+    "Focused Monitor tests, user-documentation tests, the complete supported Python 3.11 suite, task governance, repository governance, bounded privacy scanning, schema parsing, and git diff checks pass."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-3639f2b1f6514c74a7adca5303504b3a and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Upgrade the development Monitor to contract 1.6 by adding deterministic read-only guidance for each supported protection-event class and internal links from HTML and Markdown Protection Events to Task Detail, while preserving actual resolution as unknown and keeping the Dashboard non-authoritative."
+  },
+  "risk": {
+    "items": [
+      "Adding required guidance fields changes the development Monitor JSON contract, so the schema version and every current version-owning documentation surface must advance together.",
+      "An internal navigation link can be mistaken for remediation authority unless the data model, labels, claim limits, and tests explicitly preserve read-only guidance and unknown resolution.",
+      "Free-form or event-derived URLs would create path and injection risk; this task permits only enum-bounded internal Task Detail targets rendered by trusted code.",
+      "The worktree contains earlier admitted closeout changes and local host state, so the task-start baseline must preserve excluded files and distinguish pre-existing included documentation state from this task's post-start delta.",
+      "The complete suite may reveal compatibility expectations outside the focused Monitor tests; failing tests must not be weakened.",
+      "Reviewed assumption: The existing Task Detail section is the smallest safe destination for reviewing the task context behind each protection event.",
+      "Reviewed assumption: All four current protection-event classes can receive deterministic guidance without semantic inference.",
+      "Reviewed assumption: A development-source Monitor contract bump is acceptable because stable 0.2.1 does not expose this future 0.3 Monitor contract.",
+      "Reviewed unknown: Whether users find Task Detail sufficient to choose the next human action remains unproven until a later usability review.",
+      "Reviewed unknown: True cross-event resolution evidence remains unimplemented and outside this task.",
+      "Reviewed unknown: Benefit and Learning views and the independent automatic journey rehearsal remain separate future product decisions."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".agentgov/scope-baselines/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      ".agentgov/scope-baselines/p0-native-task-admission-summary-card-v1.json",
+      ".agentgov/scope-baselines/p0-reusable-foreground-stdio-controller-closeout-v1.json",
+      "governance/tasks/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      "docs/validation/live-native-task-admission-summary-visibility-check-2026-08-25.md",
+      "README.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/adr",
+      "src/agentgov/development_event_export.py",
+      "src/agentgov/event_store.py",
+      "src/agentgov/drift_review.py",
+      "src/agentgov/cli.py",
+      "tests/test_foreground_coordinator.py"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-protection-event-resolution-guidance-links-v1.json",
+      ".agentgov/scope-baselines/p0-protection-event-resolution-guidance-links-v1.json",
+      "src/agentgov/development_monitor.py",
+      "schemas/development-monitor.schema.json",
+      "tests/test_development_monitor.py",
+      "tests/test_user_documentation.py",
+      "docs/development-monitor.md",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/development-plan.md",
+      "docs/development-automation-contracts.md",
+      "docs/drift-review-reminders.md",
+      "docs/development-log/2026-08-25.md",
+      "STATUS.md"
+    ]
+  },
+  "task_id": "p0-protection-event-resolution-guidance-links-v1",
+  "title": "Protection-event resolution guidance links v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-protection-event-resolution-guidance-links-v1.json --baseline .agentgov/scope-baselines/p0-protection-event-resolution-guidance-links-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_development_monitor -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-protection-event-resolution-guidance-links-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

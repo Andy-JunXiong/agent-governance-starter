@@ -1,0 +1,84 @@
+{
+  "acceptance_signals": [
+    "The first implementation write captures the exact task-start baseline; every pre-existing file under broad inventory-classification prefixes remains byte-identical unless it is one of the exact implementation or closeout paths named by this requirement.",
+    "A dependency-free evidence receipt and cleanup gate live only under scripts/short_build_root and preserve the existing verified-root removal boundary.",
+    "The receipt accepts only a repository-relative evidence path beneath the supplied repository, a regular non-link file, and a canonical sha256-prefixed lowercase hexadecimal identity matching the observed bytes.",
+    "Evidence validation completes before the existing removal helper is invoked; every validation failure leaves the exact short root present and records no cleanup success.",
+    "Successful validation delegates exactly once to the existing exact-root cleanup helper and confirms the verified root is removed.",
+    "The gate never calls input, reads stdin, or branches on TTY state; tests prove identical bounded behavior with TTY-reported input, redirected input, and closed input.",
+    "Tests cover success, missing evidence, absolute or escaping path, symbolic-link evidence where supported, malformed digest, digest mismatch, unsafe evidence type, and preservation on failure.",
+    "No wheel build, dependency installation, network access, retry, backend substitution, public CLI or installed-package change, consumer run, external Agent, model, Git mutation, publication, release, or deployment occurs.",
+    "The focused helper tests, complete Python 3.11 suite, task and repository governance, final scope comparison, task JSON parse, and diff whitespace check pass.",
+    "Only the new task record and baseline, scripts/short_build_root implementation and tests, new dated validation record, docs/development-automation-contracts.md, STATUS.md, and docs/development-log/2026-08-25.md may change during this task; predecessor records and evidence remain unchanged."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-2186fb4fb7254ea7acbbc6186c0c4f30 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Extend the existing repository-internal short-build-root helper with a dependency-free evidence receipt and gated cleanup operation. Cleanup may proceed only when an explicit repository-relative regular non-link evidence file exists and its SHA-256 matches the caller-supplied identity. The gate never reads stdin or depends on TTY state, verifies evidence before invoking the existing exact-root removal helper, and leaves the root untouched on missing, unsafe, linked, malformed, or mismatched evidence. Add fixture-backed tests for TTY-reported, redirected, and closed-input callers and document the bounded contract. Do not run another artifact build or broaden public AgentGov behavior."
+  },
+  "risk": {
+    "items": [
+      "A cleanup gate defect could remove a temporary root before evidence is durable; validation order and mock-backed no-removal tests are mandatory.",
+      "A path traversal or link could make unrelated evidence satisfy the gate; path containment, regular-file, and no-link checks must fail closed.",
+      "A digest formatting ambiguity could authorize cleanup incorrectly; only canonical sha256-prefixed lowercase hexadecimal identity is accepted.",
+      "Changes to the existing short-root helper could weaken its exact-target safety; existing tests must remain unchanged in meaning and continue to pass.",
+      "Broad prefixes used for dirty-inventory classification must not become implementation authority for predecessor files; exact changed-path review is mandatory.",
+      "Reviewed assumption: The existing scripts.short_build_root verified-root value and removal helper remain the correct deletion authority boundary.",
+      "Reviewed assumption: A repository-relative durable evidence file plus exact SHA-256 is sufficient to prove evidence existed before cleanup for this local contract.",
+      "Reviewed assumption: The same explicit programmatic receipt can serve interactive and noninteractive callers without reading their input streams.",
+      "Reviewed assumption: Broad governance, baseline, and build-validation prefixes are used only to classify the current dirty inventory within the native proposal limit; predecessor files under them are immutable acceptance evidence.",
+      "Reviewed unknown: Whether future callers should persist the evidence receipt in a separate state file is not decided.",
+      "Reviewed unknown: Cross-platform symbolic-link test availability is environment-dependent.",
+      "Reviewed unknown: This contract does not prove a future artifact build, external Agent journey, adoption, reliability improvement, time savings, causal benefit, or return on investment."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "docs/adr",
+      "docs/development-monitor.md",
+      "docs/development-plan.md",
+      "docs/drift-review-reminders.md",
+      "docs/experiments",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/validation",
+      "governance/distribution-input-manifest.json",
+      "schemas",
+      "scripts/distribution_input_manifest",
+      "scripts/foreground_stdio",
+      "src",
+      "tests"
+    ],
+    "include_paths": [
+      "governance/tasks",
+      ".agentgov/scope-baselines",
+      "scripts/short_build_root",
+      "docs/build-validation",
+      "docs/development-automation-contracts.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-25.md"
+    ]
+  },
+  "task_id": "p0-evidence-gated-short-root-cleanup-v1",
+  "title": "Evidence-gated noninteractive short-root cleanup v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-evidence-gated-short-root-cleanup-v1.json --baseline .agentgov/scope-baselines/p0-evidence-gated-short-root-cleanup-v1.json",
+    "py -3.11 -m unittest scripts.short_build_root.test_root -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-evidence-gated-short-root-cleanup-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-evidence-gated-short-root-cleanup-v1.json",
+    "git diff --check"
+  ]
+}

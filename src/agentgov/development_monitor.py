@@ -22,11 +22,39 @@ from agentgov.event_store import (
     utc_now,
 )
 from agentgov.drift_review import build_drift_review_status
+from agentgov.learning_review import (
+    HUMAN_PRODUCT_OWNER_ROLE,
+    LEARNING_DISPOSITIONS,
+    LearningReview,
+    LearningReviewPolicyError,
+    learning_candidate_digest,
+    load_learning_reviews,
+    protection_signal_class,
+)
 
 
 MONITOR_CONTRACT = "agentgov.development-monitor"
-MONITOR_SCHEMA_VERSION = "1.5"
+MONITOR_SCHEMA_VERSION = "1.9"
 MONITOR_SCOPES = {"local_session", "exported_development", "ci_only", "combined"}
+
+_PROTECTION_GUIDANCE = {
+    "scope_boundary": (
+        "review_scope_boundary",
+        "Review task scope and changed paths",
+    ),
+    "validation_failure": (
+        "review_validation_failure",
+        "Review failed validation evidence",
+    ),
+    "stale_evidence": (
+        "refresh_stale_evidence",
+        "Refresh stale validation evidence",
+    ),
+    "incomplete_completion": (
+        "complete_missing_evidence",
+        "Complete missing completion evidence",
+    ),
+}
 
 
 class MonitorPolicyError(RuntimeError):
@@ -44,6 +72,8 @@ class DevelopmentMonitor:
     protection_events: tuple[Mapping[str, Any], ...]
     timeline: tuple[Mapping[str, Any], ...]
     tasks: tuple[Mapping[str, Any], ...]
+    benefit: Mapping[str, Any]
+    learning: Mapping[str, Any]
     drift_review: Mapping[str, Any]
     claim_layers: Mapping[str, tuple[str, ...]]
     authority_boundary: Mapping[str, bool]
@@ -136,17 +166,10 @@ def _live_session(
 
 def _protection_event(observed: _ObservedEvent) -> dict[str, Any] | None:
     event = observed.event
-    protection_type: str | None = None
-    if event.event_type == "scope.checked" and event.outcome == "failed":
-        protection_type = "scope_boundary"
-    elif event.event_type == "validation.completed" and event.outcome == "failed":
-        protection_type = "validation_failure"
-    elif event.event_type == "validation.completed" and event.outcome == "stale":
-        protection_type = "stale_evidence"
-    elif event.event_type == "completion.reconciled" and event.outcome == "needs_evidence":
-        protection_type = "incomplete_completion"
+    protection_type = protection_signal_class(event)
     if protection_type is None:
         return None
+    action_id, label = _PROTECTION_GUIDANCE[protection_type]
     return {
         "protection_id": f"protection:{event.event_id}",
         "source_event_id": event.event_id,
@@ -156,8 +179,357 @@ def _protection_event(observed: _ObservedEvent) -> dict[str, Any] | None:
         "protection_type": protection_type,
         "observed_outcome": event.outcome,
         "status": "observed_resolution_unknown",
+        "guidance": {
+            "availability": "available",
+            "action_id": action_id,
+            "label": label,
+            "target": "task_detail",
+            "semantics": "read_only_navigation",
+        },
         "reason_codes": list(event.reason_codes),
         "evidence_ref": event.evidence_ref,
+    }
+
+
+def _benefit_view(
+    observation: Mapping[str, Any],
+    overview: Mapping[str, int],
+) -> Mapping[str, Any]:
+    protection_count = overview["protection_events"]
+    if protection_count:
+        inference_status = "supported"
+        inference_summary = (
+            "Recorded Protection Events can support prioritizing human review; "
+            "they do not prove prevention or causal benefit."
+        )
+        inference_reasons = [
+            "protection_context_observed",
+            "causality_not_established",
+        ]
+        inference_metrics = {
+            "protection_events": protection_count,
+            "sessions_needing_attention": overview["sessions_needing_attention"],
+        }
+    else:
+        inference_status = "unavailable"
+        inference_summary = (
+            "No Protection Event is visible in this observation scope, so no "
+            "review-prioritization inference is presented."
+        )
+        inference_reasons = ["protection_context_unavailable"]
+        inference_metrics = {}
+    return {
+        "comparison_mode": "single_observation_only",
+        "scope": observation["scope"],
+        "observation_window": {
+            "started_at": observation["started_at"],
+            "ended_at": observation["ended_at"],
+        },
+        "cards": (
+            {
+                "card_id": "current_scope_activity",
+                "claim_class": "observed_fact",
+                "status": "observed",
+                "semantics": "observed",
+                "title": "Current-scope activity",
+                "summary": (
+                    "Validated events and direct counts visible in this scope; "
+                    "these counts are not a benefit score."
+                ),
+                "reason_codes": ["validated_current_scope_counts"],
+                "metrics": {
+                    "tasks": overview["tasks"],
+                    "events": overview["events"],
+                    "protection_events": protection_count,
+                    "verified_completions": overview["verified_completions"],
+                    "handoffs": overview["handoffs"],
+                },
+            },
+            {
+                "card_id": "cross_window_comparison",
+                "claim_class": "reproduced_comparison",
+                "status": "unavailable",
+                "semantics": "observed",
+                "title": "Cross-window comparison",
+                "summary": (
+                    "No baseline or cross-window input was selected for Benefit "
+                    "View v1."
+                ),
+                "reason_codes": [
+                    "baseline_not_selected",
+                    "denominator_unavailable",
+                    "applicability_rules_unavailable",
+                    "comparable_window_unavailable",
+                ],
+                "metrics": {},
+            },
+            {
+                "card_id": "review_prioritization",
+                "claim_class": "supported_inference",
+                "status": inference_status,
+                "semantics": "advisory",
+                "title": "Review prioritization",
+                "summary": inference_summary,
+                "reason_codes": inference_reasons,
+                "metrics": inference_metrics,
+            },
+            {
+                "card_id": "attributed_human_feedback",
+                "claim_class": "human_feedback",
+                "status": "unavailable",
+                "semantics": "human_judgment",
+                "title": "Attributed human feedback",
+                "summary": (
+                    "Current Monitor events and Learning reviews do not record "
+                    "attributed benefit feedback."
+                ),
+                "reason_codes": ["attributed_feedback_not_recorded"],
+                "metrics": {},
+            },
+            {
+                "card_id": "causal_benefit_limits",
+                "claim_class": "unknown",
+                "status": "unknown",
+                "semantics": "unknown",
+                "title": "Causal benefit limits",
+                "summary": (
+                    "Counterfactual outcomes, semantic correctness, causal "
+                    "benefit, time savings, governance completeness, and return "
+                    "on investment are unknown."
+                ),
+                "reason_codes": ["benefit_not_established"],
+                "metrics": {},
+            },
+        ),
+        "claim_limit": (
+            "Single-observation cards do not prove causal benefit, prevention, "
+            "time savings, governance completeness, or return on investment."
+        ),
+    }
+
+
+def _learning_view(
+    observation: Mapping[str, Any],
+    protection_events: tuple[Mapping[str, Any], ...],
+    learning_reviews: tuple[LearningReview, ...],
+    *,
+    review_source_available: bool,
+) -> Mapping[str, Any]:
+    counts = {
+        protection_type: sum(
+            item["protection_type"] == protection_type
+            for item in protection_events
+        )
+        for protection_type in _PROTECTION_GUIDANCE
+    }
+    candidate_event_ids = {
+        protection_type: tuple(
+            sorted(
+                item["source_event_id"]
+                for item in protection_events
+                if item["protection_type"] == protection_type
+            )
+        )
+        for protection_type, count in counts.items()
+        if count >= 2
+    }
+    candidate_digests = {
+        protection_type: learning_candidate_digest(protection_type, identities)
+        for protection_type, identities in candidate_event_ids.items()
+    }
+    candidates = tuple(
+        {
+            "signal_id": protection_type,
+            "candidate_digest": candidate_digests[protection_type],
+            "occurrences": count,
+            "distinct_tasks": len(
+                {
+                    item["task_id"]
+                    for item in protection_events
+                    if item["protection_type"] == protection_type
+                }
+            ),
+            "cross_task": len(
+                {
+                    item["task_id"]
+                    for item in protection_events
+                    if item["protection_type"] == protection_type
+                }
+            ) > 1,
+        }
+        for protection_type, count in counts.items()
+        if count >= 2
+    )
+    matching_reviews = tuple(
+        review
+        for review in learning_reviews
+        if candidate_digests.get(review.signal_class) == review.candidate_digest
+    )
+    stale_review_count = len(learning_reviews) - len(matching_reviews)
+    disposition_counts = {
+        disposition: sum(review.disposition == disposition for review in matching_reviews)
+        for disposition in LEARNING_DISPOSITIONS
+    }
+    judgment_items = tuple(
+        {
+            "signal_id": review.signal_class,
+            "disposition": review.disposition,
+            "recorded_at": review.recorded_at,
+            "actor_role": HUMAN_PRODUCT_OWNER_ROLE,
+            "semantics": "human_judgment",
+            "resolution": "unknown",
+            "reason_codes": tuple(review.reason_codes),
+        }
+        for review in matching_reviews
+    )
+    if candidates:
+        repeated_status = "candidates_observed"
+        repeated_summary = (
+            "Protection classes repeated within this observation are advisory "
+            "review candidates, not evidence of shared cause or future recurrence."
+        )
+        repeated_reasons = ["recurrence_rule_met", "generalization_not_allowed"]
+    else:
+        repeated_status = "none_observed"
+        repeated_summary = (
+            "No Protection Event class reaches the two-event display rule in "
+            "this observation; absence is not proof that friction is absent."
+        )
+        repeated_reasons = ["recurrence_rule_not_met", "absence_not_established"]
+    if matching_reviews:
+        judgment_status = "recorded"
+        judgment_summary = (
+            "Human-product-owner judgments match exact current candidates; "
+            "they do not prove handling, resolution, shared cause, or benefit."
+        )
+        judgment_reasons = [
+            "exact_candidate_bound_human_judgment",
+            "resolution_not_established",
+        ]
+        judgment_metrics = {
+            "matched_reviews": len(matching_reviews),
+            **disposition_counts,
+        }
+    elif review_source_available:
+        judgment_status = "unavailable"
+        judgment_summary = (
+            "No immutable human Learning review matches an exact current "
+            "repeated-signal candidate."
+        )
+        judgment_reasons = ["human_disposition_not_recorded"]
+        judgment_metrics = {}
+    else:
+        judgment_status = "unavailable"
+        judgment_summary = (
+            "The selected event source contains no local Learning review "
+            "records, so attributed human judgment is unavailable."
+        )
+        judgment_reasons = ["learning_review_source_unavailable"]
+        judgment_metrics = {}
+    return {
+        "mode": "current_observation_candidates",
+        "scope": observation["scope"],
+        "observation_window": {
+            "started_at": observation["started_at"],
+            "ended_at": observation["ended_at"],
+        },
+        "recurrence_rule": {
+            "signal_source": "protection_type",
+            "minimum_occurrences": 2,
+            "requires_distinct_tasks": False,
+            "generalization_allowed": False,
+        },
+        "human_review_source": {
+            "availability": "available" if review_source_available else "unavailable",
+            "source_kind": (
+                "repository_local_learning_reviews"
+                if review_source_available
+                else "absent_from_selected_event_source"
+            ),
+            "records_read": len(learning_reviews),
+            "matched_records": len(matching_reviews),
+            "stale_records": stale_review_count,
+        },
+        "cards": (
+            {
+                "card_id": "observed_protection_signals",
+                "learning_class": "observed_signal",
+                "status": "observed",
+                "semantics": "observed",
+                "title": "Observed protection signals",
+                "summary": (
+                    "Direct counts for the existing deterministic Protection "
+                    "Event classes in this observation."
+                ),
+                "reason_codes": ["validated_protection_class_counts"],
+                "metrics": counts,
+                "candidates": (),
+                "judgments": (),
+                "topics": (),
+            },
+            {
+                "card_id": "repeated_protection_signals",
+                "learning_class": "repeated_signal_candidate",
+                "status": repeated_status,
+                "semantics": "advisory",
+                "title": "Repeated signal candidates",
+                "summary": repeated_summary,
+                "reason_codes": repeated_reasons,
+                "metrics": {},
+                "candidates": candidates,
+                "judgments": (),
+                "topics": (),
+            },
+            {
+                "card_id": "human_learning_judgments",
+                "learning_class": "human_judgment",
+                "status": judgment_status,
+                "semantics": "human_judgment",
+                "title": "Human learning judgments",
+                "summary": judgment_summary,
+                "reason_codes": judgment_reasons,
+                "metrics": judgment_metrics,
+                "candidates": (),
+                "judgments": judgment_items,
+                "topics": (
+                    "false_positive_disposition",
+                    "missed_constraint_confirmation",
+                    "override_outcome",
+                    "consumer_local_configuration_need",
+                    "general_improvement_decision",
+                ),
+            },
+            {
+                "card_id": "learning_limits",
+                "learning_class": "unknown",
+                "status": "unknown",
+                "semantics": "unknown",
+                "title": "Learning limits",
+                "summary": (
+                    "Causal improvement, applicability outside this scope and "
+                    "window, transferability, future recurrence, time savings, "
+                    "governance completeness, and return on investment are unknown."
+                ),
+                "reason_codes": ["learning_not_established"],
+                "metrics": {},
+                "candidates": (),
+                "judgments": (),
+                "topics": (
+                    "causal_improvement",
+                    "outside_scope_applicability",
+                    "transferability",
+                    "future_recurrence",
+                    "time_savings",
+                    "governance_completeness",
+                    "return_on_investment",
+                ),
+            },
+        ),
+        "claim_limit": (
+            "Current-observation repetition does not prove shared root cause, "
+            "false-positive status, systemic weakness, improvement, "
+            "transferability, future recurrence, or causal benefit."
+        ),
     }
 
 
@@ -340,6 +712,20 @@ def build_development_monitor(
         "missing_sources": list(missing_sources),
         "cross_stage_discovery_available": False,
     }
+    benefit = _benefit_view(observation, overview)
+    learning_reviews: tuple[LearningReview, ...] = ()
+    review_source_available = observation_scope == "local_session"
+    if review_source_available:
+        try:
+            learning_reviews = load_learning_reviews(root)
+        except LearningReviewPolicyError as exc:
+            raise MonitorPolicyError(str(exc)) from exc
+    learning = _learning_view(
+        observation,
+        protection_events,
+        learning_reviews,
+        review_source_available=review_source_available,
+    )
     monitor_generated_at = generated_at or utc_now()
     drift_review = asdict(
         build_drift_review_status(root, as_of=monitor_generated_at, events=events)
@@ -352,6 +738,8 @@ def build_development_monitor(
             "Latest recorded outcome means the chronologically latest event visible in this observation scope.",
             "Verified completion and handed-off routing are counted separately; handoff records routing responsibility, not semantic approval.",
             "Protection Events are deterministic read-model classifications of failed, stale, or incomplete recorded outcomes.",
+            "Protection Event guidance is deterministic read-only navigation to visible Task Detail; it is not remediation or resolution evidence.",
+            "Attributed Learning judgments come only from immutable local records bound to the exact current repeated-signal candidate.",
         ),
         "inferred": (
             "Chronological grouping suggests a task activity sequence but does not prove that one event caused another.",
@@ -359,7 +747,7 @@ def build_development_monitor(
         "unknown": (
             "Events do not prove requirement satisfaction, architecture correctness, validation sufficiency, causal benefit, or return on investment.",
             "Which routed governance artifacts or Skills the coding agent actually consumed is unknown until context-consumption events exist.",
-            "Human handling and resolution are unknown unless a future explicit human-decision event records them.",
+            "Human handling and resolution are unknown unless a future explicit handling or resolution record establishes them.",
             "A later passing event does not prove that a Protection Event was resolved because cross-event resolution links do not yet exist.",
             "History outside the displayed observation scope is unknown.",
         ),
@@ -374,6 +762,8 @@ def build_development_monitor(
         protection_events=protection_events,
         timeline=timeline,
         tasks=tasks,
+        benefit=benefit,
+        learning=learning,
         drift_review=drift_review,
         claim_layers=claim_layers,
         authority_boundary={
@@ -395,6 +785,90 @@ def _display(value: Any) -> str:
     if value is None:
         return "Unknown"
     return str(value).replace("_", " ")
+
+
+def _markdown_link_label(value: Any) -> str:
+    return str(value).replace("\\", "\\\\").replace("[", "\\[").replace("]", "\\]")
+
+
+def _task_anchor(task_id: Any) -> str:
+    identity = uuid.uuid5(
+        uuid.NAMESPACE_OID,
+        f"{MONITOR_CONTRACT}:{task_id}",
+    ).hex
+    return f"task-detail-{identity}"
+
+
+def _guidance_available(guidance: Any) -> bool:
+    return (
+        isinstance(guidance, Mapping)
+        and guidance.get("availability") == "available"
+        and isinstance(guidance.get("action_id"), str)
+        and bool(guidance.get("action_id"))
+        and isinstance(guidance.get("label"), str)
+        and bool(guidance.get("label"))
+        and guidance.get("target") == "task_detail"
+        and guidance.get("semantics") == "read_only_navigation"
+    )
+
+
+def _guidance_markdown(guidance: Any, task_id: Any) -> str:
+    if _guidance_available(guidance):
+        label = _markdown_link_label(guidance.get("label", "Review task detail"))
+        return f"[{label}](#{_task_anchor(task_id)})"
+    return "unavailable"
+
+
+def _guidance_html(guidance: Any, task_id: Any) -> str:
+    if _guidance_available(guidance):
+        label = html.escape(_display(guidance.get("label")), quote=True)
+        return (
+            f'<a class="resolution-link" href="#{_task_anchor(task_id)}">'
+            f"{label}</a>"
+        )
+    return "Unavailable"
+
+
+def _task_attention(
+    task: Mapping[str, Any],
+    protection_events: tuple[Mapping[str, Any], ...],
+) -> Mapping[str, Any] | None:
+    matching = tuple(
+        item
+        for item in protection_events
+        if item.get("task_id") == task.get("task_id")
+    )
+    if not matching:
+        return None
+    protection = max(
+        matching,
+        key=lambda item: (
+            str(item.get("occurred_at", "")),
+            str(item.get("source_event_id", "")),
+        ),
+    )
+    source_event = next(
+        (
+            item
+            for item in task.get("events", ())
+            if item.get("event_id") == protection.get("source_event_id")
+        ),
+        None,
+    )
+    guidance = protection.get("guidance")
+    if not isinstance(guidance, Mapping):
+        guidance = {}
+    metrics = source_event.get("metrics", {}) if source_event else {}
+    return {
+        "protection_type": protection.get("protection_type"),
+        "observed_outcome": protection.get("observed_outcome"),
+        "reason_codes": tuple(protection.get("reason_codes", ())),
+        "metrics": dict(sorted(metrics.items())) if isinstance(metrics, Mapping) else {},
+        "next_action": (
+            guidance.get("label") if _guidance_available(guidance) else None
+        ),
+        "resolution": "unknown",
+    }
 
 
 def render_development_monitor_markdown(monitor: DevelopmentMonitor) -> str:
@@ -440,7 +914,7 @@ def render_development_monitor_markdown(monitor: DevelopmentMonitor) -> str:
     lines.extend(["", "## Protection Events", ""])
     if monitor.protection_events:
         lines.extend(
-            f"- `{item['occurred_at']}` — `{item['task_id']}` — `{item['protection_type']}` — resolution `unknown`"
+            f"- `{item['occurred_at']}` — `{item['task_id']}` — `{item['protection_type']}` — resolution `unknown`; guidance {_guidance_markdown(item.get('guidance'), item['task_id'])}"
             for item in monitor.protection_events
         )
     else:
@@ -455,19 +929,119 @@ def render_development_monitor_markdown(monitor: DevelopmentMonitor) -> str:
         lines.append("- No events are visible in this observation scope.")
     lines.extend(["", "## Task Detail", ""])
     for task in monitor.tasks:
+        attention = _task_attention(task, monitor.protection_events)
         lines.extend(
             [
+                f'<a id="{_task_anchor(task["task_id"])}"></a>',
                 f"### {task['task_id']}",
                 "",
                 f"- Events: `{task['event_count']}`",
                 f"- Latest recorded outcome: `{task['latest_recorded_outcome']}`",
                 f"- Latest completion state: `{_display(task['latest_completion_state'])}`",
                 f"- Latest routing state: `{task['latest_routing_state']}`",
+            ]
+        )
+        if attention:
+            reasons = ", ".join(attention["reason_codes"]) or "none recorded"
+            counts = ", ".join(
+                f"{key}={value}" for key, value in attention["metrics"].items()
+            ) or "none recorded"
+            lines.extend(
+                [
+                    f"- Needs attention: `{_display(attention['protection_type'])}` / `{_display(attention['observed_outcome'])}`",
+                    f"- Observed reasons: `{reasons}`",
+                    f"- Recorded counts: `{counts}`",
+                    "- Affected paths: `unavailable` - the current Monitor event contract records counts, not changed paths.",
+                    f"- Next human action: `{_display(attention['next_action'])}`",
+                    "- Resolution: `unknown`; navigation and review guidance do not prove handling or resolution.",
+                ]
+            )
+        lines.append("")
+    if not monitor.tasks:
+        lines.append("No task events are visible.\n")
+    benefit = monitor.benefit
+    window = benefit["observation_window"]
+    lines.extend(
+        [
+            "## Benefit",
+            "",
+            f"- Evidence mode: `{benefit['comparison_mode']}`",
+            f"- Observation scope: `{benefit['scope']}`",
+            f"- Observation window: `{_display(window['started_at'])}` to `{_display(window['ended_at'])}`",
+            "",
+        ]
+    )
+    for card in benefit["cards"]:
+        counts = ", ".join(
+            f"{key}={value}" for key, value in card["metrics"].items()
+        ) or "none recorded"
+        reasons = ", ".join(card["reason_codes"])
+        lines.extend(
+            [
+                f"### {card['title']}",
+                "",
+                f"- Claim class: `{card['claim_class']}`",
+                f"- Status: `{card['status']}`",
+                f"- Semantics: `{card['semantics']}`",
+                f"- Summary: {card['summary']}",
+                f"- Recorded counts: `{counts}`",
+                f"- Evidence reasons: `{reasons}`",
                 "",
             ]
         )
-    if not monitor.tasks:
-        lines.append("No task events are visible.\n")
+    lines.extend([f"> Claim limit: {benefit['claim_limit']}", ""])
+    learning = monitor.learning
+    learning_window = learning["observation_window"]
+    recurrence_rule = learning["recurrence_rule"]
+    human_review_source = learning["human_review_source"]
+    lines.extend(
+        [
+            "## Learning",
+            "",
+            f"- Evidence mode: `{learning['mode']}`",
+            f"- Observation scope: `{learning['scope']}`",
+            f"- Observation window: `{_display(learning_window['started_at'])}` to `{_display(learning_window['ended_at'])}`",
+            f"- Recurrence rule: `{recurrence_rule['signal_source']}` appears at least `{recurrence_rule['minimum_occurrences']}` times; distinct tasks required `{str(recurrence_rule['requires_distinct_tasks']).lower()}`; generalization allowed `{str(recurrence_rule['generalization_allowed']).lower()}`",
+            f"- Human review source: `{human_review_source['availability']}` / `{human_review_source['source_kind']}`; records read `{human_review_source['records_read']}`, matched `{human_review_source['matched_records']}`, stale `{human_review_source['stale_records']}`",
+            "",
+        ]
+    )
+    for card in learning["cards"]:
+        counts = ", ".join(
+            f"{key}={value}" for key, value in card["metrics"].items()
+        ) or "none recorded"
+        candidates = "; ".join(
+            f"{item['signal_id']}: occurrences={item['occurrences']}, distinct_tasks={item['distinct_tasks']}, cross_task={str(item['cross_task']).lower()}"
+            for item in card["candidates"]
+        ) or "none observed"
+        topics = ", ".join(card["topics"]) or "none"
+        judgments = "; ".join(
+            "{}: disposition={}, actor role={}, resolution={}".format(
+                item["signal_id"],
+                item["disposition"],
+                item["actor_role"],
+                item["resolution"],
+            )
+            for item in card["judgments"]
+        ) or "none recorded"
+        reasons = ", ".join(card["reason_codes"])
+        lines.extend(
+            [
+                f"### {card['title']}",
+                "",
+                f"- Learning class: `{card['learning_class']}`",
+                f"- Status: `{card['status']}`",
+                f"- Semantics: `{card['semantics']}`",
+                f"- Summary: {card['summary']}",
+                f"- Recorded counts: `{counts}`",
+                f"- Repeated candidates: `{candidates}`",
+                f"- Attributed judgments: `{judgments}`",
+                f"- Bounded topics: `{topics}`",
+                f"- Evidence reasons: `{reasons}`",
+                "",
+            ]
+        )
+    lines.extend([f"> Claim limit: {learning['claim_limit']}", ""])
     lines.extend(["## Claim limits", ""])
     for layer in ("observed", "inferred", "unknown"):
         lines.append(f"### {layer.title()}\n")
@@ -519,19 +1093,46 @@ def render_development_monitor_html(monitor: DevelopmentMonitor) -> str:
     else:
         timeline = '<li class="empty">No governance events are visible in this observation scope.</li>'
     if monitor.tasks:
-        task_cards = "".join(
-            '<details class="task">'
-            f'<summary><span>{esc(task["task_id"])}</span><b>{esc(task["latest_recorded_outcome"])}</b></summary>'
-            '<div class="task-grid">'
-            f'<div><small>First observed</small><strong>{esc(task["first_observed_at"])}</strong></div>'
-            f'<div><small>Last observed</small><strong>{esc(task["last_observed_at"])}</strong></div>'
-            f'<div><small>Starts / checks / validations / completions / handoffs</small><strong>{task["task_starts"]} / {task["scope_checks"]} / {task["validations"]} / {task["completions"]} / {task["handoffs"]}</strong></div>'
-            f'<div><small>Completion / routing</small><strong>{esc(task["latest_completion_state"])} / {esc(task["latest_routing_state"])}</strong></div>'
-            "</div>"
-            '<p class="task-note">Handling remains unknown unless an explicit human-decision event records it. A later outcome is not presented as proof that an earlier issue was caused or resolved by AgentGov.</p>'
-            "</details>"
-            for task in monitor.tasks
-        )
+        rendered_tasks = []
+        for task in monitor.tasks:
+            attention = _task_attention(task, monitor.protection_events)
+            task_class = "task task-attention" if attention else "task"
+            open_state = " open" if attention else ""
+            attention_html = ""
+            if attention:
+                reasons = ", ".join(attention["reason_codes"]) or "none recorded"
+                counts = ", ".join(
+                    f"{key}={value}" for key, value in attention["metrics"].items()
+                ) or "none recorded"
+                attention_html = (
+                    '<section class="attention-context" aria-label="Protection context">'
+                    '<div class="attention-heading"><span>Needs attention</span>'
+                    f'<strong>{esc(_display(attention["protection_type"]))}</strong></div>'
+                    '<div class="attention-grid">'
+                    f'<div><small>Observed outcome</small><strong>{esc(attention["observed_outcome"])}</strong></div>'
+                    f'<div><small>Observed reasons</small><strong>{esc(reasons)}</strong></div>'
+                    f'<div><small>Recorded counts</small><strong>{esc(counts)}</strong></div>'
+                    '<div><small>Affected paths</small><strong>Unavailable - the current Monitor event contract records counts, not changed paths.</strong></div>'
+                    "</div>"
+                    '<p class="next-action"><span>Next human action</span>'
+                    f'<strong>{esc(attention["next_action"])}</strong></p>'
+                    '<p class="task-note">Resolution remains unknown. Navigation and review guidance do not prove handling or resolution.</p>'
+                    "</section>"
+                )
+            rendered_tasks.append(
+                f'<details class="{task_class}" id="{_task_anchor(task["task_id"])}"{open_state}>'
+                f'<summary><span>{esc(task["task_id"])}</span><b>{esc(task["latest_recorded_outcome"])}</b></summary>'
+                + attention_html
+                + '<div class="task-grid">'
+                + f'<div><small>First observed</small><strong>{esc(task["first_observed_at"])}</strong></div>'
+                + f'<div><small>Last observed</small><strong>{esc(task["last_observed_at"])}</strong></div>'
+                + f'<div><small>Starts / checks / validations / completions / handoffs</small><strong>{task["task_starts"]} / {task["scope_checks"]} / {task["validations"]} / {task["completions"]} / {task["handoffs"]}</strong></div>'
+                + f'<div><small>Completion / routing</small><strong>{esc(task["latest_completion_state"])} / {esc(task["latest_routing_state"])}</strong></div>'
+                + "</div>"
+                + '<p class="task-note">Handling remains unknown unless an explicit handling or resolution record establishes it. A Learning judgment or later outcome is not presented as proof that an earlier issue was caused or resolved by AgentGov.</p>'
+                + "</details>"
+            )
+        task_cards = "".join(rendered_tasks)
     else:
         task_cards = '<div class="empty">No task details are available.</div>'
     if monitor.live_sessions:
@@ -553,18 +1154,66 @@ def render_development_monitor_html(monitor: DevelopmentMonitor) -> str:
             f'<div><small>Outcome</small><strong>{esc(item["observed_outcome"])}</strong></div>'
             f'<div><small>Source</small><strong>{esc(item["source_scope"])}</strong></div>'
             '<div><small>Resolution</small><strong>Unknown</strong></div>'
+            f'<div><small>Guidance</small><strong>{_guidance_html(item.get("guidance"), item["task_id"])}</strong></div>'
             "</div></article>"
             for item in monitor.protection_events
         )
     else:
         protections = '<div class="empty">No protection event is visible in this observation scope.</div>'
+    benefit = monitor.benefit
+    benefit_cards = "".join(
+        '<article class="benefit-card">'
+        '<div class="benefit-head">'
+        f'<span>{esc(item["claim_class"])}</span>'
+        f'<b class="benefit-status {esc(item["status"])}">{esc(item["status"])}</b>'
+        "</div>"
+        f'<h3>{esc(item["title"])}</h3>'
+        f'<p>{esc(item["summary"])}</p>'
+        '<p class="benefit-meta"><small>Semantics</small>'
+        f'<strong>{esc(item["semantics"])}</strong></p>'
+        '<p class="benefit-meta"><small>Recorded counts</small>'
+        f'<strong>{esc(", ".join(f"{key}={value}" for key, value in item["metrics"].items()) or "none recorded")}</strong></p>'
+        '<p class="benefit-reasons"><small>Evidence reasons</small> '
+        f'{esc(", ".join(item["reason_codes"]))}</p>'
+        "</article>"
+        for item in benefit["cards"]
+    )
+    benefit_window = benefit["observation_window"]
+    learning = monitor.learning
+    learning_cards = "".join(
+        '<article class="benefit-card">'
+        '<div class="benefit-head">'
+        f'<span>{esc(item["learning_class"])}</span>'
+        f'<b class="benefit-status {esc(item["status"])}">{esc(item["status"])}</b>'
+        "</div>"
+        f'<h3>{esc(item["title"])}</h3>'
+        f'<p>{esc(item["summary"])}</p>'
+        '<p class="benefit-meta"><small>Semantics</small>'
+        f'<strong>{esc(item["semantics"])}</strong></p>'
+        '<p class="benefit-meta"><small>Recorded counts</small>'
+        f'<strong>{esc(", ".join(f"{key}={value}" for key, value in item["metrics"].items()) or "none recorded")}</strong></p>'
+        '<p class="benefit-meta"><small>Repeated candidates</small>'
+        f'<strong>{esc("; ".join("{}: occurrences={}, distinct tasks={}, cross task={}".format(candidate["signal_id"], candidate["occurrences"], candidate["distinct_tasks"], str(candidate["cross_task"]).lower()) for candidate in item["candidates"]) or "none observed")}</strong></p>'
+        '<p class="benefit-meta"><small>Attributed judgments</small>'
+        f'<strong>{esc("; ".join("{}: disposition={}, actor role={}, resolution={}".format(judgment["signal_id"], judgment["disposition"], judgment["actor_role"], judgment["resolution"]) for judgment in item["judgments"]) or "none recorded")}</strong></p>'
+        '<p class="benefit-meta"><small>Bounded topics</small>'
+        f'<strong>{esc(", ".join(item["topics"]) or "none")}</strong></p>'
+        '<p class="benefit-reasons"><small>Evidence reasons</small> '
+        f'{esc(", ".join(item["reason_codes"]))}</p>'
+        "</article>"
+        for item in learning["cards"]
+    )
+    learning_window = learning["observation_window"]
+    learning_rule = learning["recurrence_rule"]
+    learning_review_source = learning["human_review_source"]
     machine = html.escape(render_development_monitor_json(monitor), quote=False)
     return f'''<!doctype html>
 <!-- {MONITOR_CONTRACT} -->
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:">
 <title>AgentGov Development Monitor</title><style>
-:root{{--ink:#12222b;--muted:#617078;--paper:#fffdf7;--wash:#f1eee4;--line:#ddd8ca;--teal:#0d6f69;--amber:#a85e12;--red:#a33d3d;--blue:#315c8a}}*{{box-sizing:border-box}}body{{margin:0;background:var(--wash);color:var(--ink);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}}.shell{{width:min(1120px,calc(100% - 32px));margin:auto}}header{{background:var(--ink);color:white;padding:18px 0}}header .shell{{display:flex;justify-content:space-between;align-items:center;gap:18px}}.brand{{font-weight:850;letter-spacing:.02em}}.scope{{border:1px solid #ffffff55;border-radius:999px;padding:6px 11px;font-size:12px}}main{{padding:42px 0 56px}}.hero{{display:grid;grid-template-columns:1.45fr .75fr;gap:24px;align-items:end;margin-bottom:30px}}.eyebrow{{color:var(--teal);font-size:12px;font-weight:850;letter-spacing:.14em;text-transform:uppercase}}h1{{font-size:clamp(38px,6vw,68px);line-height:.98;letter-spacing:-.045em;margin:10px 0 16px;max-width:780px}}h2{{font-size:27px;letter-spacing:-.02em;margin:0 0 6px}}h3{{margin:0}}.lede,.sub,.event p,.task-note{{color:var(--muted)}}.boundary{{background:#e5f3ed;border-left:4px solid var(--teal);padding:18px;border-radius:12px}}.boundary strong{{display:block;font-size:21px}}.metrics{{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:26px 0}}.metric,.panel,.claim,.task{{background:var(--paper);border:1px solid var(--line);border-radius:16px}}.metric{{padding:17px}}.metric span{{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.07em}}.metric strong{{display:block;font-size:28px;margin-top:8px}}.panel{{padding:25px;margin-top:18px}}.limits{{display:grid;grid-template-columns:.8fr 1.2fr;gap:22px}}.missing{{background:#fff3dd;border-radius:12px;padding:16px}}.missing h3{{color:var(--amber)}}.claims{{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}}.claim{{padding:18px}}.claim h3{{text-transform:uppercase;font-size:12px;letter-spacing:.1em}}.claim.observed h3{{color:var(--teal)}}.claim.inferred h3{{color:var(--blue)}}.claim.unknown h3{{color:var(--amber)}}.claim ul,.missing ul{{padding-left:20px;margin-bottom:0}}.timeline{{list-style:none;margin:24px 0 0;padding:0}}.event{{display:grid;grid-template-columns:190px 1fr;gap:24px;padding:0 0 25px 24px;border-left:2px solid var(--line);position:relative}}.event:before{{content:"";position:absolute;width:12px;height:12px;border-radius:50%;background:var(--teal);left:-7px;top:5px}}time{{color:var(--muted);font-size:12px}}.event-head{{display:flex;gap:8px;align-items:center;margin-bottom:6px}}.kind,.outcome{{font-size:11px;font-weight:800;padding:4px 8px;border-radius:999px;background:#e8ecea}}.outcome.verified,.outcome.passed{{background:#dcefe6;color:var(--teal)}}.outcome.failed,.outcome.stale,.outcome.needs_evidence{{background:#f8dfd8;color:var(--red)}}.event p{{margin:4px 0}}.task{{margin-top:11px;overflow:hidden}}summary{{cursor:pointer;display:flex;justify-content:space-between;padding:17px 19px;font-weight:800}}summary b{{color:var(--teal)}}.task-grid{{border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:18px}}.task-grid small{{display:block;color:var(--muted)}}.task-grid strong{{font-size:13px}}.task-note{{padding:0 18px 18px;margin:0}}.empty{{color:var(--muted);padding:20px;border:1px dashed var(--line);border-radius:12px}}details.machine{{margin-top:18px}}pre{{white-space:pre-wrap;word-break:break-word;background:#17272f;color:#e8f3f0;padding:18px;border-radius:12px;font-size:12px}}footer{{padding:25px 0;color:var(--muted)}}@media(max-width:880px){{.metrics{{grid-template-columns:repeat(3,1fr)}}.hero,.limits{{grid-template-columns:1fr}}.claims{{grid-template-columns:1fr}}.task-grid{{grid-template-columns:1fr 1fr}}}}@media(max-width:560px){{header .shell{{align-items:flex-start;flex-direction:column}}.metrics{{grid-template-columns:1fr 1fr}}.event{{grid-template-columns:1fr;gap:5px}}.task-grid{{grid-template-columns:1fr}}}}
+:root{{--ink:#12222b;--muted:#617078;--paper:#fffdf7;--wash:#f1eee4;--line:#ddd8ca;--teal:#0d6f69;--amber:#a85e12;--red:#a33d3d;--blue:#315c8a}}*{{box-sizing:border-box}}body{{margin:0;background:var(--wash);color:var(--ink);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}}.shell{{width:min(1120px,calc(100% - 32px));margin:auto}}header{{background:var(--ink);color:white;padding:18px 0}}header .shell{{display:flex;justify-content:space-between;align-items:center;gap:18px}}.brand{{font-weight:850;letter-spacing:.02em}}.scope{{border:1px solid #ffffff55;border-radius:999px;padding:6px 11px;font-size:12px}}main{{padding:42px 0 56px}}.hero{{display:grid;grid-template-columns:1.45fr .75fr;gap:24px;align-items:end;margin-bottom:30px}}.eyebrow{{color:var(--teal);font-size:12px;font-weight:850;letter-spacing:.14em;text-transform:uppercase}}h1{{font-size:clamp(38px,6vw,68px);line-height:.98;letter-spacing:-.045em;margin:10px 0 16px;max-width:780px}}h2{{font-size:27px;letter-spacing:-.02em;margin:0 0 6px}}h3{{margin:0}}a.resolution-link{{color:var(--teal);text-decoration-thickness:2px;text-underline-offset:3px}}a.resolution-link:focus-visible{{outline:3px solid var(--amber);outline-offset:3px}}.lede,.sub,.event p,.task-note{{color:var(--muted)}}.boundary{{background:#e5f3ed;border-left:4px solid var(--teal);padding:18px;border-radius:12px}}.boundary strong{{display:block;font-size:21px}}.metrics{{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:26px 0}}.metric,.panel,.claim,.task{{background:var(--paper);border:1px solid var(--line);border-radius:16px}}.metric{{padding:17px}}.metric span{{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.07em}}.metric strong{{display:block;font-size:28px;margin-top:8px}}.panel{{padding:25px;margin-top:18px}}.limits{{display:grid;grid-template-columns:.8fr 1.2fr;gap:22px}}.missing{{background:#fff3dd;border-radius:12px;padding:16px}}.missing h3{{color:var(--amber)}}.claims{{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}}.claim{{padding:18px}}.claim h3{{text-transform:uppercase;font-size:12px;letter-spacing:.1em}}.claim.observed h3{{color:var(--teal)}}.claim.inferred h3{{color:var(--blue)}}.claim.unknown h3{{color:var(--amber)}}.claim ul,.missing ul{{padding-left:20px;margin-bottom:0}}.timeline{{list-style:none;margin:24px 0 0;padding:0}}.event{{display:grid;grid-template-columns:190px 1fr;gap:24px;padding:0 0 25px 24px;border-left:2px solid var(--line);position:relative}}.event:before{{content:"";position:absolute;width:12px;height:12px;border-radius:50%;background:var(--teal);left:-7px;top:5px}}time{{color:var(--muted);font-size:12px}}.event-head{{display:flex;gap:8px;align-items:center;margin-bottom:6px}}.kind,.outcome{{font-size:11px;font-weight:800;padding:4px 8px;border-radius:999px;background:#e8ecea}}.outcome.verified,.outcome.passed{{background:#dcefe6;color:var(--teal)}}.outcome.failed,.outcome.stale,.outcome.needs_evidence{{background:#f8dfd8;color:var(--red)}}.event p{{margin:4px 0}}.task{{margin-top:11px;overflow:hidden}}summary{{cursor:pointer;display:flex;justify-content:space-between;padding:17px 19px;font-weight:800}}summary b{{color:var(--teal)}}.task-grid{{border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:18px}}.task-grid small{{display:block;color:var(--muted)}}.task-grid strong{{font-size:13px}}.task-note{{padding:0 18px 18px;margin:0}}.empty{{color:var(--muted);padding:20px;border:1px dashed var(--line);border-radius:12px}}details.machine{{margin-top:18px}}pre{{white-space:pre-wrap;word-break:break-word;background:#17272f;color:#e8f3f0;padding:18px;border-radius:12px;font-size:12px}}footer{{padding:25px 0;color:var(--muted)}}@media(max-width:880px){{.metrics{{grid-template-columns:repeat(3,1fr)}}.hero,.limits{{grid-template-columns:1fr}}.claims{{grid-template-columns:1fr}}.task-grid{{grid-template-columns:1fr 1fr}}}}@media(max-width:560px){{header .shell{{align-items:flex-start;flex-direction:column}}.metrics{{grid-template-columns:1fr 1fr}}.event{{grid-template-columns:1fr;gap:5px}}.task-grid{{grid-template-columns:1fr}}}}
+.task[id]{{scroll-margin-top:24px}}.task-attention{{border:2px solid #d18a36;box-shadow:0 0 0 4px #fff3dd}}.task-attention>summary{{background:#fff3dd}}.attention-context{{margin:0 18px 18px;padding:18px;border:1px solid #e8c994;border-radius:12px;background:#fffaf0}}.attention-heading{{display:flex;justify-content:space-between;gap:12px;margin-bottom:14px}}.attention-heading span{{color:var(--amber);font-size:12px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}}.attention-heading strong{{color:var(--red)}}.attention-grid{{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}}.attention-grid small,.next-action span{{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em}}.attention-grid strong{{display:block;font-size:13px}}.next-action{{margin:18px 0 10px;padding:14px;border-left:4px solid var(--teal);background:#e5f3ed}}.next-action strong{{display:block;margin-top:4px}}.benefit-grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px}}.benefit-card{{padding:18px;border:1px solid var(--line);border-radius:14px;background:#fff}}.benefit-card:last-child{{grid-column:1/-1}}.benefit-head{{display:flex;justify-content:space-between;gap:12px;margin-bottom:10px}}.benefit-head span,.benefit-meta small,.benefit-reasons small{{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em}}.benefit-status{{padding:3px 8px;border-radius:999px;background:#e8ecea;font-size:11px}}.benefit-status.observed,.benefit-status.supported{{background:#dcefe6;color:var(--teal)}}.benefit-status.unavailable,.benefit-status.unknown{{background:#fff3dd;color:var(--amber)}}.benefit-card h3{{margin-bottom:8px}}.benefit-card p{{margin:8px 0;color:var(--muted)}}.benefit-meta strong{{display:block;color:var(--ink);font-size:13px}}.benefit-limit{{margin-top:16px;padding:14px;border-left:4px solid var(--amber);background:#fff3dd}}details.machine{{margin-top:28px;border-top:1px solid var(--line);color:var(--muted)}}details.machine>summary{{justify-content:flex-start;padding:16px 0;font-size:13px;font-weight:700}}.machine-note{{margin:0;padding:0 0 14px}}@media(max-width:560px){{.attention-grid,.benefit-grid{{grid-template-columns:1fr}}.benefit-card:last-child{{grid-column:auto}}}}
 </style></head><body><header><div class="shell"><div class="brand">AGENTGOV · DEVELOPMENT MONITOR</div><div class="scope">Observation scope · {esc(observation['scope'])}</div></div></header><main class="shell">
 <section class="hero"><div><div class="eyebrow">Govern → Observe → Monitor</div><h1>See governance while development is happening.</h1><p class="lede">A local, static view of when AgentGov ran, why it ran, who invoked it, and what its event records observed—without turning evidence into approval.</p></div><aside class="boundary"><span>History completeness</span><strong>{esc(observation['history_completeness'])}</strong><small>{observation['event_count']} validated events · {observation['duplicates_removed']} duplicate records removed</small></aside></section>
 <section aria-labelledby="overview"><h2 id="overview">Overview</h2><p class="sub">Observed counts within this dashboard's declared scope. They are not a governance score.</p><div class="metrics">{cards}</div></section>
@@ -572,10 +1221,12 @@ def render_development_monitor_html(monitor: DevelopmentMonitor) -> str:
 <section class="panel limits"><div><h2>Observation boundary</h2><p><b>{esc(observation['scope'])}</b> from {esc(observation['started_at'])} to {esc(observation['ended_at'])}.</p><p class="sub">Source events: {esc(", ".join(f"{key}={value}" for key, value in observation['source_event_counts'].items()))}.</p><p class="sub">Cross-stage discovery comparison is unavailable because the event contract has no cross-stage finding identity or resolution link.</p></div><div class="missing"><h3>Missing sources</h3><ul>{missing}</ul></div></section>
 <section class="panel"><h2>Claim layers</h2><p class="sub">Facts, cautious interpretation, and unknowns stay visibly separate.</p><div class="claims">{layers}</div></section>
 <section class="panel"><h2>Live Sessions</h2><p class="sub">Current read-model state from each task's latest visible event.</p><div class="metrics">{live_sessions}</div></section>
-<section class="panel"><h2>Protection Events</h2><p class="sub">Observed blocked, failed, stale, or incomplete outcomes. Resolution remains unknown without an explicit link.</p>{protections}</section>
+<section class="panel"><h2>Protection Events</h2><p class="sub">Observed blocked, failed, stale, or incomplete outcomes. Guidance links are read-only navigation; resolution remains unknown without explicit resolution evidence.</p>{protections}</section>
 <section class="panel" aria-labelledby="timeline"><h2 id="timeline">Activity Timeline</h2><p class="sub">When governance triggered, why it triggered, who used it, and what was recorded.</p><ol class="timeline">{timeline}</ol></section>
 <section class="panel" aria-labelledby="tasks"><h2 id="tasks">Task Detail</h2><p class="sub">Latest recorded outcomes and visible task activity. Requirement and architecture correctness remain human judgments.</p>{task_cards}</section>
-<details class="machine"><summary>Embedded machine-readable Monitor</summary><pre>{machine}</pre></details>
+<section class="panel" aria-labelledby="benefit"><h2 id="benefit">Benefit</h2><p class="sub">Single-observation evidence cards, not a governance score or causal benefit claim.</p><p class="sub">Scope <b>{esc(benefit['scope'])}</b> · window {esc(benefit_window['started_at'])} to {esc(benefit_window['ended_at'])}</p><div class="benefit-grid">{benefit_cards}</div><p class="benefit-limit"><b>Claim limit:</b> {esc(benefit['claim_limit'])}</p></section>
+<section class="panel" aria-labelledby="learning"><h2 id="learning">Learning</h2><p class="sub">Current-observation review candidates and exact candidate-bound human judgments, not confirmed root causes, trends, resolution, or general improvements.</p><p class="sub">Scope <b>{esc(learning['scope'])}</b> &middot; window {esc(learning_window['started_at'])} to {esc(learning_window['ended_at'])}</p><p class="sub">Rule: {esc(learning_rule['signal_source'])} appears at least <b>{learning_rule['minimum_occurrences']}</b> times; distinct tasks required <b>{esc(str(learning_rule['requires_distinct_tasks']).lower())}</b>; generalization allowed <b>{esc(str(learning_rule['generalization_allowed']).lower())}</b>.</p><p class="sub">Human review source <b>{esc(learning_review_source['availability'])}</b> &middot; records read {learning_review_source['records_read']} &middot; matched {learning_review_source['matched_records']} &middot; stale {learning_review_source['stale_records']}.</p><div class="benefit-grid">{learning_cards}</div><p class="benefit-limit"><b>Claim limit:</b> {esc(learning['claim_limit'])}</p></section>
+<details class="machine"><summary>Technical audit data (optional)</summary><p class="sub machine-note">Machine-readable JSON for tools and debugging. Ordinary task review does not require this section.</p><pre>{machine}</pre></details>
 </main><footer class="shell">Generated locally · No external requests · No approval, mutation, merge, or deployment authority</footer></body></html>'''
 
 

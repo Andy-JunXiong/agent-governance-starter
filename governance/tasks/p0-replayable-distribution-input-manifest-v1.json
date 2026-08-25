@@ -1,0 +1,100 @@
+{
+  "acceptance_signals": [
+    "Capture the task-start baseline before implementation; excluded predecessor changes remain byte-identical.",
+    "A strict schema and governance/distribution-input-manifest.json contain an exact sorted unique list of safe relative regular files, denied authority, derivation metadata, and an explicit supersession boundary for the unreplayable 199-path observation.",
+    "A read-only internal checker supports only the current pyproject readme, package-find roots, and setuptools data-file declarations; unsupported configuration, unsafe paths, links, or unstable Git/filesystem state fail closed.",
+    "The independently derived current set must exactly equal the persisted list; canonical path and path-plus-content digests are deterministic and disclose no host paths or contents.",
+    "Read-only Git classification distinguishes committed inputs, tracked deltas, deletions, and untracked current overlays without staging or mutation.",
+    "Fixture tests cover pass, missing, extra, unsafe, duplicate, unsorted, unsupported configuration, non-recursive glob, overlay, deletion, link, digest, privacy, and read-only behavior.",
+    "The current repository passes the checker; evidence, STATUS, contract documentation, and the dated log record count, digests, supersession, limits, and no-build boundary.",
+    "All declared commands use supported syntax and pass; no runtime source, consumer, configuration, credential, artifact build, model, Git write, publication, release, or deployment occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-7be1fa3646ac459a924b6a20ae8a6db9 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Add a repository-owned exact distribution-input path manifest and a read-only internal checker. The checker derives package-source and data-file inputs from supported current pyproject declarations, compares them exactly with the persisted sorted list, reports privacy-safe identities, and fails closed on unsafe paths, links, unsupported configuration, drift, or unstable observations. The new contract explicitly supersedes rather than claims to recover the omitted historical 199 paths. Do not build or rerun the Agent journey."
+  },
+  "risk": {
+    "items": [
+      "Incorrect package or glob semantics could omit a build input or include unrelated content; ambiguity must fail closed.",
+      "The dirty worktree contains legitimate untracked package inputs; only independently derived distribution paths may enter the manifest.",
+      "The schema is itself selected by the existing schema data-file rule, so self-inclusion must be deterministic.",
+      "Unsafe paths, links, host details, or source contents must be rejected or excluded from persisted evidence.",
+      "This supersedes an unreplayable observation but does not prove a build, recovery, adoption, reliability, benefit, or ROI.",
+      "Reviewed assumption: Current pyproject readme, package-find roots, and data-files declarations are the build-input sources of truth.",
+      "Reviewed assumption: LICENSE is a required metadata input; supported package sources are regular Python files under declared roots.",
+      "Reviewed assumption: Standard-library TOML, path, glob, hashing, and read-only Git operations are sufficient for the internal checker.",
+      "Reviewed assumption: A future separately admitted rehearsal may consume this contract; this task grants no such authority.",
+      "Reviewed unknown: The final path count and digests until the new contract and current overlays are evaluated together.",
+      "Reviewed unknown: Cross-platform and future-setuptools parity without a later artifact build.",
+      "Reviewed unknown: Whether later packaging declarations require extending the fail-closed supported subset.",
+      "Reviewed unknown: Historical path recovery and future end-to-end journey behavior remain unknown."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      ".codex",
+      "docs/adr",
+      "docs/development-monitor.md",
+      "docs/development-plan.md",
+      "docs/drift-review-reminders.md",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/validation",
+      "schemas/development-monitor.schema.json",
+      "schemas/learning-review.schema.json",
+      "scripts/short_build_root",
+      "src",
+      "tests",
+      "governance/tasks/p0-benefit-view-single-observation-cards-v1.json",
+      "governance/tasks/p0-human-confirmed-learning-review-record-v1.json",
+      "governance/tasks/p0-installed-shared-data-path-contract-diagnostic-v1.json",
+      "governance/tasks/p0-learning-view-current-observation-candidates-v1.json",
+      "governance/tasks/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      "governance/tasks/p0-live-protection-guidance-usability-check-v1.json",
+      "governance/tasks/p0-protection-event-resolution-guidance-links-v1.json",
+      "governance/tasks/p0-retained-installed-shared-template-inspection-v1.json",
+      "governance/tasks/p0-task-detail-actionability-repair-v1.json",
+      "governance/tasks/p0-windows-short-build-root-contract-v1.json"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-replayable-distribution-input-manifest-v1.json",
+      ".agentgov/scope-baselines",
+      "scripts/distribution_input_manifest",
+      "governance/distribution-input-manifest.json",
+      "schemas/distribution-input-manifest.schema.json",
+      "docs/development-automation-contracts.md",
+      "docs/build-validation",
+      "docs/experiments",
+      "STATUS.md",
+      "docs/development-log/2026-08-25.md",
+      "governance/tasks/p0-independent-automatic-journey-rehearsal-v2.json",
+      "governance/tasks/p0-exact-distribution-pathspec-replay-v1.json",
+      "governance/tasks/p0-independent-automatic-journey-rehearsal-v1.json"
+    ]
+  },
+  "task_id": "p0-replayable-distribution-input-manifest-v1",
+  "title": "Replayable distribution input manifest v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-replayable-distribution-input-manifest-v1.json --baseline .agentgov/scope-baselines/p0-replayable-distribution-input-manifest-v1.json",
+    "py -3.11 -m unittest scripts.distribution_input_manifest.test_manifest -v",
+    "py -3.11 -m scripts.distribution_input_manifest check --repository . --manifest governance/distribution-input-manifest.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_package tests.test_initializer tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-replayable-distribution-input-manifest-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/distribution-input-manifest.json",
+    "py -3.11 -m json.tool schemas/distribution-input-manifest.schema.json",
+    "git diff --check"
+  ]
+}

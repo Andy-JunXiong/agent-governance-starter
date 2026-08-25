@@ -1,0 +1,99 @@
+{
+  "acceptance_signals": [
+    "The first execution action after separate task take-up captures the exact task-start baseline, and final comparison reports zero failures while preserving every excluded pre-existing path.",
+    "Development Monitor contract and strict schema advance from 1.7 to 1.8 with one required top-level learning object; the governance-event contract, event store, and event collection remain unchanged.",
+    "The learning object declares current observation scope and window plus one fixed recurrence rule: a repeated-signal candidate requires at least two distinct validated Protection Events in the displayed observation, does not require distinct tasks, and never authorizes generalization.",
+    "One observed-signal card reports only direct counts for the four existing deterministic Protection Event classes, including zero counts, without root-cause, correctness, prevention, improvement, score, percentage, or benefit claims.",
+    "One repeated-signal card lists only Protection Event classes meeting the fixed two-event threshold, with occurrence and distinct-task counts in deterministic order; every item is visibly advisory and states that repetition is a review candidate rather than proof of common cause, false positive, systemic issue, or future recurrence.",
+    "One unavailable-judgments card explicitly states that false-positive disposition, missed-constraint confirmation, override outcome, consumer-local configuration need, and general improvement decision cannot be learned because current events contain no attributed human disposition or resolution data.",
+    "One unknown-limits card preserves causal improvement, applicability outside the current scope and window, transferability, future recurrence, time savings, governance completeness, and return on investment as unknown.",
+    "Empty stores, one-event no-candidate, same-task repetition, cross-task repetition, stable candidate ordering, escaping, strict schema structure, unchanged authority flags, deterministic serialization, and JSON, Markdown, and HTML parity are covered by focused tests.",
+    "HTML and Markdown place a concise Learning section after Benefit and before optional technical audit data while preserving all existing Monitor views, collapsed technical JSON, unknown-resolution behavior, and zero command or mutation controls.",
+    "README, strategic and phase plans, Monitor and automatic-governance guides, automation contracts, current status, and dated log distinguish current-observation learning candidates from human-confirmed learning, cross-window trends, the separate two-snapshot Benefit Monitor, and future generalization.",
+    "A bounded local-browser check confirms that observed signals, advisory repeated candidates, unavailable judgments, and unknown limits are readable and that technical JSON remains collapsed; human usability feedback is recorded only if separately reported.",
+    "Focused Monitor and user-documentation tests, the complete supported Python 3.11 suite, schema parsing, task governance, repository governance, task-start scope comparison, bounded privacy scanning, task JSON, and git diff checks pass."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-44c7ed5a00074c72bb23b9c3e25f44f6 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Advance the development Monitor to contract 1.8 with one strict machine-readable Learning view and matching HTML and Markdown cards derived only from existing validated current-observation Protection Events. The view must separate direct protection-signal inventory, advisory repeated-signal candidates, unavailable human learning judgments, and unknown transferability or impact without new event collection, generalized root-cause claims, or authority."
+  },
+  "risk": {
+    "items": [
+      "Calling repeated protection classes Learning could imply shared root cause or systemic weakness, so candidates must remain advisory and evidence-bounded.",
+      "A fixed two-event threshold is a deterministic display rule, not a validated statistical threshold or quality metric.",
+      "Same-task repetition and cross-task repetition have different review meaning, so each candidate must show only distinct-task count and avoid generalization.",
+      "Human learning judgments cannot be inferred from the product owner's earlier comments or from later passing events.",
+      "The dirty worktree contains prior admitted Monitor work and unrelated excluded paths that the new baseline must preserve.",
+      "Adding a required learning object changes the unreleased Monitor machine contract and requires a version bump plus renderer and documentation parity.",
+      "A new section can overwhelm the Dashboard unless it remains concise and keeps technical data subordinate.",
+      "Reviewed assumption: The existing deterministic Protection Event classifications are the only safe normalized signal vocabulary for Learning View v1.",
+      "Reviewed assumption: Two unique validated Protection Events with the same class are sufficient to label a current-observation review candidate but not a generalizable pattern.",
+      "Reviewed assumption: Distinct task count can be derived without disclosing task identities in the Learning projection.",
+      "Reviewed assumption: Four fixed cards are sufficient to keep observed, advisory, unavailable, and unknown semantics visible.",
+      "Reviewed assumption: The selected Learning direction does not require changing the governance-event contract in this first slice.",
+      "Reviewed unknown: Whether the two-event recurrence rule is useful to the product owner remains unknown until browser and human review.",
+      "Reviewed unknown: Root causes, false positives, missed constraints, override quality, and improvement decisions remain unknown without attributed human disposition evidence.",
+      "Reviewed unknown: Production, cross-browser accessibility, transferability, causal improvement, future recurrence, time savings, governance completeness, and ROI remain unknown.",
+      "Reviewed unknown: The later shape and sequencing of human-confirmed Learning, cross-window trends, and consumer-local configuration evidence remain undecided."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex/config.toml",
+      ".agentgov/scope-baselines/p0-benefit-view-single-observation-cards-v1.json",
+      ".agentgov/scope-baselines/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      ".agentgov/scope-baselines/p0-live-protection-guidance-usability-check-v1.json",
+      ".agentgov/scope-baselines/p0-native-task-admission-summary-card-v1.json",
+      ".agentgov/scope-baselines/p0-protection-event-resolution-guidance-links-v1.json",
+      ".agentgov/scope-baselines/p0-reusable-foreground-stdio-controller-closeout-v1.json",
+      ".agentgov/scope-baselines/p0-task-detail-actionability-repair-v1.json",
+      "docs/validation/live-native-task-admission-summary-visibility-check-2026-08-25.md",
+      "docs/validation/live-protection-guidance-usability-check-2026-08-25.md",
+      "governance/tasks/p0-benefit-view-single-observation-cards-v1.json",
+      "governance/tasks/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      "governance/tasks/p0-live-protection-guidance-usability-check-v1.json",
+      "governance/tasks/p0-protection-event-resolution-guidance-links-v1.json",
+      "governance/tasks/p0-task-detail-actionability-repair-v1.json",
+      "docs/drift-review-reminders.md"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-learning-view-current-observation-candidates-v1.json",
+      ".agentgov/scope-baselines/p0-learning-view-current-observation-candidates-v1.json",
+      "src/agentgov/development_monitor.py",
+      "schemas/development-monitor.schema.json",
+      "tests/test_development_monitor.py",
+      "tests/test_user_documentation.py",
+      "README.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-monitor.md",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/development-plan.md",
+      "docs/development-automation-contracts.md",
+      "docs/development-log/2026-08-25.md",
+      "STATUS.md"
+    ]
+  },
+  "task_id": "p0-learning-view-current-observation-candidates-v1",
+  "title": "Learning View current-observation candidates v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-learning-view-current-observation-candidates-v1.json --baseline .agentgov/scope-baselines/p0-learning-view-current-observation-candidates-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_development_monitor -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-learning-view-current-observation-candidates-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-learning-view-current-observation-candidates-v1.json",
+    "py -3.11 -m json.tool schemas/development-monitor.schema.json",
+    "git diff --check"
+  ]
+}

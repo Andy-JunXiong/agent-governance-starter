@@ -108,7 +108,7 @@ missing local events as proof that no task occurred.
 
 ## Monitor and authority boundary
 
-Development Monitor contract 1.5 displays the due state, reason codes,
+Development Monitor contract 1.6 displays the due state, reason codes,
 dimensions, evidence limits, and the advisory boundary. It does not claim that
 the user read, acknowledged, or resolved the reminder.
 

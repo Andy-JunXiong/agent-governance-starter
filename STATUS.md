@@ -43,52 +43,711 @@ scheduling authority.
 ### Current closeout snapshot
 
 - **Active slice**: human-admitted task
-  `p0-native-task-admission-summary-card-v1` implements the product-owner
-  selected summary-first native task-admission review.
-- **Outcome**: `IMPLEMENTED_LOCAL_VALIDATION_PASS`. The form message now begins
-  with what approval does, the task name and goal, scope-rule and validation
-  counts, material risks and unknowns, and the authority boundary. Exact plan
-  JSON remains below an `audit only` technical-details heading.
-- **Decision clarity**: visible choices now say `Approve only this task`, `Send
-  back for changes`, and `Do not approve`. Their protocol values remain
-  `admit`, `request_changes`, and `reject`.
-- **Authority preservation**: approval still creates only the exact task record.
-  It does not start implementation or authorize scope expansion, Git,
-  publication, release, or deployment. All non-admission and stale-plan paths
-  remain zero-write and fail closed.
-- **Codex-run validation**: all 40 focused MCP tests and all 54 documentation
-  tests pass. The complete supported Python 3.11 suite passes all 1084 tests
-  with 4 platform-limited skips in 171.104 seconds.
-- **Scope and privacy validation**: the first post-take-up action captured local
-  task-start baseline
-  `sha256:92f340990489d303c716f6c994529d04fe20f8e82dc53929227cc6aac52fa122`.
-  The final comparison is `PASS=38 PRESERVED=42 FAIL=0 TOTAL=80` across exactly
-  nine post-start paths. All 22 captured task records remain byte-identical.
-  Task governance is `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance
-  is `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; diff and bounded privacy checks pass.
-  No raw prompt, source, patch, output, absolute host path, credential, or user
-  identity is added to the form or baseline.
-- **User-reported validation**: the product owner selected summary-card-first
-  through resolved alignment journey
-  `mcpj-655db0274fef47b68f16107e5dfd671a`, admitted the exact task, and
-  separately instructed the Agent to execute it. This establishes direction
-  and authority, not visual proof of the changed host rendering.
-- **Advisory review**: the distinct native current-Agent self-review completed
-  with result `srv-a033e2c62c4458dd10074cc92d487f7d`. It found the selected
-  requirement, implementation, scope, privacy, and authority boundaries
-  consistent after Markdown escaping and summary-list bounding were added. It
-  retains live host rendering as an explicit unknown and is not independent
+  `p0-evidence-gated-short-root-cleanup-v1` implements an explicit durable-
+  evidence receipt and noninteractive cleanup gate in the repository-internal
+  short-build-root helper.
+- **Outcome**: `IMPLEMENTED_LOCAL_VALIDATION_PASS`. Cleanup now requires a
+  repository-relative regular non-link evidence file whose canonical SHA-256
+  matches, and the evidence is revalidated immediately before the existing
+  exact-root remover is called.
+- **Transport result**: the gate never calls `input`, reads stdin, or branches
+  on TTY state. TTY-reported, redirected, and already-closed input states use
+  the same explicit receipt and pass the same cleanup path.
+- **Failure preservation**: missing, absolute, traversal, directory, malformed-
+  digest, mismatched-digest, changed-after-receipt, and symbolic-link evidence
+  fail before cleanup. Tests confirm the exact root remains when validation
+  fails.
+- **User-reported validation**: the product owner admitted proposal
+  `prp-2186fb4fb7254ea7acbbc6186c0c4f30` through the native form and separately
+  instructed execution. This is task authority, not product acceptance.
+- **Codex-run validation**: all 12 focused short-root tests pass with 2
+  platform-limited symbolic-link skips; all 55 focused documentation tests
+  pass; and the complete supported Python 3.11 suite passes all 1102 tests with
+  5 platform-limited skips in 163.241 seconds. Task governance is
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance is
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Task JSON and `git diff --check` pass.
+  Final scope is `PASS=35 PRESERVED=28 FAIL=0 TOTAL=63`; exactly seven
+  post-capture paths changed, all matching the requirement's exact
+  implementation and closeout list.
+- **Pending validation**: none within this local helper task. A consuming
+  artifact-driver replay, cross-platform link execution, and end-to-end
+  journey behavior require separately admitted work.
+- **Incomplete**: the helper contract is implemented, but a future artifact
+  driver has not consumed it. No artifact was rebuilt and the historical
+  artifact-parity task remains stopped at its recorded EOF deviation.
+- **Authority preservation**: no wheel build, dependency installation,
+  network, public CLI or installed-package change, consumer, external Agent,
+  model, credential, Git mutation, commit, push, publication, release,
+  deployment, or external write occurred.
+- **Advisory review**: a distinct bounded current-Agent pass found the
+  validation-before-removal ordering, no-stdin architecture, static path/link
+  containment, exact digest requirement, failure preservation, privacy, exact
+  changed paths, and denied authority consistent. It retains concurrent
+  adversarial filesystem replacement and future caller integration as
+  unknowns. This task had no resolved alignment journey, so no native self-
+  review result is claimed. The completion-record tool is not exposed.
+- **Next product review**: after formal validation, decide whether to admit one
+  no-retry artifact-driver replay that consumes the new gate. This entry grants
+  no downstream authority.
+
+### Previous manifest-driven artifact parity proof snapshot
+
+- **Active slice**: human-admitted task
+  `p0-manifest-driven-artifact-parity-proof-v1` runs the selected bounded
+  artifact-parity direction from resolved alignment journey
+  `mcpj-307fd958853441f29d111205b412e4ec`.
+- **Outcome**:
+  `STOPPED_AT_EVIDENCE_HANDSHAKE_TRANSPORT_AFTER_ARTIFACT_PARITY`. Exactly one
+  offline build succeeded and every selected wheel payload passed, but the
+  foreground driver received closed standard input while waiting for the
+  evidence-before-cleanup continuation. No build retry or repair occurred.
+- **Input and staging**: exactly 186 manifest paths were copied with 186 byte
+  matches, zero links or extras, and exact path/content digest matches.
+- **Artifact observation**: one wheel contains 189 regular members. All 76
+  expected package payloads and 107 expected data payloads are present with
+  183 byte matches and zero missing, extra, or mismatched managed members. Six
+  generated metadata members are recorded separately; unexpected unmanaged
+  members are zero. Wheel SHA-256 is
+  `sha256:bba4350f3bff9313eb16273d8cac425a6542e16d9a86183d557cf6ce79aac023`.
+- **Evidence and cleanup**: sanitized evidence was written while the one short
+  root and wheel still existed. Bounded cleanup then verified the root and
+  artifact identity, removed 1 of 1 task roots, and found 0 remaining roots.
+  Evidence is in
+  `docs/build-validation/manifest-driven-artifact-parity-proof-v1-2026-08-25.md`.
+- **User-reported validation**: none.
+- **Codex-run validation**: all eight admitted commands were invoked and
+  passed. The manifest checker verified all 186 inputs; the 18 focused
+  manifest/short-root tests passed with 2 platform-limited skips; the complete
+  supported Python 3.11 suite passed all 1102 tests with 5 platform-limited
+  skips in 168.724 seconds. Task governance returned
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance returned
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Task JSON, `git diff --check`, the
+  zero-short-root gate, and final scope
+  `PASS=17 PRESERVED=40 FAIL=0 TOTAL=57` passed.
+- **Pending validation**: none within this stopped task. Cross-platform,
+  future-setuptools, repaired transport, and end-to-end behavior would require
+  separately admitted work.
+- **Incomplete**: the evidence-handshake transport acceptance signal is
+  unsatisfied even though artifact payload parity passed. Cross-platform,
+  future-setuptools, and end-to-end journey behavior remain unknown.
+- **Authority preservation**: no dependency install, network, external Agent,
+  model, consumer form, package declaration, runtime source, checker, helper,
+  test, user configuration, credential, Git mutation, commit, push,
+  publication, release, deployment, or full journey occurred.
+- **Advisory review**: distinct native current-Agent review
+  `srv-b6844e103871c733be7ddc28a3e35ec6` found the stopped requirement,
+  one-build boundary, payload evidence, scope, privacy, cleanup, denied
+  authority, and remaining unknowns consistent. It is a separate self-review
+  pass, not independent assurance. The native completion-record tool is not
+  exposed, so no completion record is claimed or fabricated.
+- **Next product review**: review the stopped transport outcome before choosing
+  a retry, command-synthesis repair, or end-to-end rehearsal. This entry grants
+  no downstream authority.
+
+### Previous independent automatic-governance journey rehearsal v2 snapshot
+
+- Task `p0-independent-automatic-journey-rehearsal-v2` remains stopped at
+  `STOPPED_AT_NON_REPLAYABLE_EXACT_PATHSPEC_PREFLIGHT`. Its durable evidence is
+  `docs/experiments/independent-automatic-journey-rehearsal-v2-2026-08-25.md`.
+- The new 186-path current manifest supersedes the missing replay contract; it
+  does not recover the historical 199 paths or retroactively satisfy that
+  rehearsal.
+
+### Previous exact distribution pathspec replay snapshot
+
+- Task `p0-exact-distribution-pathspec-replay-v1` passed its one exact build,
+  installation, shared-template, and cleanup gates. Its durable evidence
+  remains in
+  `docs/build-validation/exact-distribution-pathspec-replay-v1-2026-08-25.md`;
+  the current v2 preflight shows that the record is not independently
+  replayable without its omitted 199-path manifest.
+
+### Previous retained installed shared-template inspection snapshot
+
+- Task `p0-retained-installed-shared-template-inspection-v1` passed every
+  technical installed-template gate but stopped acceptance because its broad
+  archive staged 747 committed files instead of the exact 199 distribution
+  inputs. Its durable evidence remains in
+  `docs/build-validation/retained-installed-shared-template-inspection-v1-2026-08-25.md`.
+
+### Previous installed shared-data path diagnostic snapshot
+
+- **Active slice**: human-admitted task
+  `p0-installed-shared-data-path-contract-diagnostic-v1` performs the selected
+  no-build diagnostic from resolved alignment journey
+  `mcpj-e694d12fc43b4fae8c2ec12dfcb5820b`.
+- **Outcome**:
+  `PATH_ASSUMPTION_SUPPORTED_PRESENCE_AND_DIGEST_UNRESOLVED`. Repository
+  declarations, pip 24.0 wheel installation behavior, pip's synthetic-prefix
+  scheme result, and Python 3.11's Windows `nt_venv` scheme agree that a wheel
+  `data/share/...` member targets `<runtime>/share/...`.
+- **Gate decomposition**: the prior runtime-root path assumption is supported
+  for the inspected local toolchain. Whether the removed runtime contained the
+  shared template and whether its bytes matched the source remain unknown.
+- **Evidence boundary**: the result is contract-level evidence, not proof of
+  the removed runtime's exact configuration. The wheel and runtime were not
+  reconstructed. Sanitized evidence is in
+  `docs/build-validation/installed-shared-data-path-contract-diagnostic-v1-2026-08-25.md`.
+- **Implementation boundary**: no product source, packaging declaration, test,
+  or prior short-root helper changed. The previous helper and build evidence
+  are read-only inputs to this diagnostic.
+- **User-reported validation**: none for this diagnostic.
+- **Codex-run validation**: the short-root suite passes 7 tests with 1
+  platform-limited skip. The complete Python 3.11 product suite passes all
+  1102 tests with 5 platform-limited skips in 168.423 seconds. Task governance
+  is `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance is
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Task JSON and `git diff --check` pass.
+- **Validation-contract gap**: the admitted command list names an unavailable
+  `python` launcher and nonexistent `agentgov task validate` / `agentgov repo
+  validate` forms. Those invocations failed before validation and wrote
+  nothing; their real `py -3.11` plus `agentgov check ...` equivalents passed.
+  The admitted task was not rewritten.
+- **Scope boundary**: the baseline was captured only after initial diagnosis
+  and document drafting were exactly reverted; it therefore begins at capture
+  digest `sha256:761b45d804b4aadf13d40e58e2eecd6c275373d9965c758546d80e908edc0795`
+  and does not prove earlier state. Final post-capture comparison is
+  `PASS=19 PRESERVED=22 FAIL=0 TOTAL=41`.
+- **Advisory review**: distinct native current-Agent self-review
+  `srv-eac6541cb05f7f95fa5851dd19c12e9e` found the requirement decomposition,
+  documentation-only architecture, post-capture scope, toolchain inference,
+  privacy, retained unknowns, and denied authority consistent. It preserved
+  the command and capture gaps and is not independent assurance. The native
+  task-completion-record tool is unavailable, so no completion record is
+  claimed.
+- **Authority preservation**: no AgentGov wheel build or installation,
+  virtual-environment creation, model or consumer rehearsal, network request,
+  credential access, Git mutation, publication, release, deployment, or
+  external write was performed or authorized.
+- **Pending validation**: actual wheel-member presence, installed-file
+  presence, and source/installed byte identity remain unverified for an exact
+  current artifact.
+- **Incomplete**: installed-template correctness and independent rehearsal v2
+  remain unestablished. Native completion evidence is not claimed while the
+  admitted command defect and historical pre-capture boundary remain open.
+- **Next product review**: decide whether to admit one exact-current-source
+  build/install inspection that retains the wheel and runtime until member,
+  actual scheme, presence, and byte-identity gates are recorded separately.
+  This is review input only and grants no downstream authority.
+
+### Previous Windows short build-root snapshot
+
+- **Active slice**: human-admitted task
+  `p0-windows-short-build-root-contract-v1` implements and validates the
+  repository-internal short Windows build-root boundary selected through
+  resolved alignment journey `mcpj-85e00f9b9e04452fae958be7ecd5d788`.
+- **Outcome**:
+  `STOPPED_AFTER_WHEEL_BUILD_AT_INSTALLED_SHARED_TEMPLATE_CHECK`. The helper is
+  implemented and one exact-current-source build produced one wheel. The
+  ordered offline runtime validation then stopped at the combined installed
+  shared-template presence-and-digest gate.
+- **Build-gate result**: the formerly failing projected target measured 207
+  characters under the short root, compared with 264 in rehearsal v1. Seven
+  current overlays matched byte-for-byte, one 188-member wheel was produced,
+  and the installed-version gate passed before the later template check. This
+  clears the v1 wheel-build blocker but does not establish full repair-task or
+  automatic-journey success.
+- **Unknown boundary**: because the exact temporary root was removed, current
+  evidence cannot distinguish a wrong installed-location assumption from an
+  absent or byte-different shared template. No rebuild, alternate path,
+  artifact substitution, or download was used.
+- **Implementation boundary**: `scripts.short_build_root` creates only a short
+  fixed-format direct child of the operating-system temporary directory,
+  rejects unsafe or over-budget projected paths before writing, emits no host
+  path in its representation or normalized report, and cleans only the exact
+  verified non-link root.
+- **Cleanup and privacy**: one task-owned short root was created and removed.
+  No task-owned asynchronous process was started. Sanitized evidence is in
+  `docs/build-validation/windows-short-build-root-contract-v1-2026-08-25.md`.
+- **User-reported validation**: none for this build contract.
+- **Codex-run validation**: all 7 focused short-root tests pass with 1
+  platform-limited skip. The complete supported Python 3.11 product suite
+  passes all 1102 tests with 5 platform-limited skips in 160.340 seconds. Task
+  governance is `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance is
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Task JSON parsing and
+  `git diff --check` pass.
+- **Scope and privacy boundary**: final task-start comparison is
+  `PASS=17 PRESERVED=22 FAIL=0 TOTAL=39`; all post-start deltas are admitted
+  and every excluded path is byte-identical. The bounded privacy scan reports
+  zero findings.
+- **Advisory review**: distinct native current-Agent self-review
+  `srv-ff4abd2557c7c69c7d286775516c201d` found the partial-requirement
+  attribution, internal-tool architecture, scope, implementation, cleanup
+  security, privacy, unknowns, and denied authority consistent. It explicitly
+  retains the installed shared-template acceptance signal as unsatisfied and
+  is not independent assurance. No completion record is claimed because full
+  task acceptance was not satisfied and the native completion-record tool is
+  not exposed in this session.
+- **Authority preservation**: no external Codex or model call, consumer form,
+  network request, Git operation, commit, push, publication, release,
+  deployment, credential change, or external write was performed or
+  authorized.
+- **Pending validation**: the installed shared-template location and byte
+  identity remain unresolved. Rehearsal v2, product-owner usability,
+  portability, production, cross-browser, accessibility, and external-model
+  behavior remain unknown.
+- **Incomplete**: the installed shared-template acceptance signal is not
+  satisfied, and independent rehearsal v2 has not started or been authorized.
+- **Next product review**: decide whether to admit one no-rebuild installed-
+  shared-data location/digest diagnostic before considering rehearsal v2. This
+  is review input only and authorizes no task, source change, build, Git,
+  publication, release, deployment, or external action.
+
+### Previous independent automatic journey rehearsal snapshot
+
+- **Active slice**: human-admitted task
+  `p0-independent-automatic-journey-rehearsal-v1` attempted one clean,
+  remote-free synthetic journey from exact current source, with a mandatory
+  stop at the first deviation.
+- **Outcome**:
+  `STOPPED_AT_WHEEL_BUILD_PATH_LENGTH_BEFORE_FIXTURE_AND_MODEL`. The first and
+  only wheel build failed while copying a packaged template to a measured
+  264-character target path. The observation is consistent with the legacy
+  Windows path-length boundary, but does not prove sole causality.
+- **Protocol result**: the run stopped without repair, shorter-root retry,
+  artifact substitution, or source change. No wheel, installed runtime,
+  synthetic fixture repository, fixture commit, external Codex session, model
+  request, native consumer form, or consumer AgentGov call was produced.
+- **Evidence boundary**: one binary-safe staged source tree used seven exact
+  current overlays whose byte digests matched. One retained build backend was
+  digest-verified and installed offline into a fresh Python 3.11 build
+  environment. The sanitized experiment record is
+  `docs/experiments/independent-automatic-journey-rehearsal-v1-2026-08-25.md`.
+- **Cleanup and privacy**: the single task-owned operating-system temporary
+  root was removed. No task-owned asynchronous process was started. Stored
+  evidence omits absolute paths, process identifiers, raw output, source,
+  patches, prompts, responses, credentials, and session identifiers.
+- **User-reported validation**: none for this rehearsal.
+- **Codex-run validation**: the first focused documentation run found one
+  missing stable-record link in the development log. The link was added without
+  changing the rehearsal result; the corrected run passes all 55 tests. The
+  complete supported Python 3.11 suite passes all 1102 tests with 5 platform-
+  limited skips in 157.801 seconds. Task governance is
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance is
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Task JSON parsing and
+  `git diff --check` pass.
+- **Scope and privacy boundary**: final task-start comparison is
+  `PASS=15 PRESERVED=20 FAIL=0 TOTAL=35`; all post-start deltas are in the
+  admitted include scope and every excluded path is byte-identical. The
+  persisted-evidence privacy scan reports zero findings.
+- **Advisory review**: distinct native current-Agent self-review
+  `srv-f7ba5d19b6d2810efe76f09515f8af79` found the first-deviation requirement,
+  artifact boundary, scope, implementation, cleanup, privacy, unknowns, and
+  denied authority consistent. It is a separate advisory pass, not independent
+  assurance. The native task completion-record tool is not exposed in this
+  session, so no completion record is claimed or fabricated.
+- **Authority preservation**: no Starter or consumer Git operation, commit,
+  push, publication, release, deployment, credential change, or external write
+  was performed or authorized.
+- **Pending validation**: a successful short-root wheel build, installed
+  runtime, fixture journey, current-host consumer behavior, product-owner
+  usability, production, cross-browser, accessibility, and external-model
+  behavior remain unknown.
+- **Incomplete**: the intended automatic user journey was not exercised. Its
+  proposal, admission, take-up, edit, validation, completion, self-review,
+  Monitor-card, and handoff behavior therefore remain unknown.
+- **Next product review**: decide whether a separately admitted slice should
+  harden the short Windows build-root contract and rerun the independent
+  rehearsal. This is review input only and authorizes no task, source change,
+  Git operation, publication, release, deployment, or external action.
+
+### Previous Human-confirmed Learning snapshot
+
+- **Active slice**: human-admitted task
+  `p0-human-confirmed-learning-review-record-v1` advances the development
+  Monitor from contract 1.8 to 1.9 while keeping lifecycle events and their
+  exports unchanged.
+- **Outcome**: `IMPLEMENTED_VALIDATED_REVIEW_READY`. A strict create-only local
+  `agentgov.learning-review` record and `agentgov review learning` command can
+  now bind an attributed human-product-owner judgment to the exact current
+  repeated-signal candidate.
+- **Write boundary**: preview is read-only by default. `--apply` requires an
+  interactive terminal and exact `RECORD`; immediately before exclusive
+  creation the command reloads validated events and rechecks the signal class,
+  two-event rule, sorted event identities, and candidate digest. Unsafe,
+  malformed, duplicate, stale, cancelled, or non-interactive attempts write
+  nothing.
+- **Judgment boundary**: the only dispositions are
+  `confirmed_constraint_gap`, `false_positive`, `intentional_override`,
+  `consumer_configuration_needed`, `improvement_candidate`, and
+  `no_change_needed`. The canonical actor role is workflow attribution, not
+  personal authentication. Every authority flag is false, including
+  resolution authority.
+- **Monitor evidence boundary**: local Monitor generation projects only reviews
+  matching an exact current candidate. The human card shows fixed zero-
+  inclusive disposition counts and bounded attributed judgments without task
+  or source-event identities. Stale records are counted but not projected;
+  exported, CI-only, and combined observations state that the review source is
+  unavailable.
+- **Contract separation**: a Learning judgment is neither a lifecycle event nor
+  proof of handling, resolution, common cause, correctness, recurrence,
+  improvement, prevention, benefit, time savings, completeness, or ROI.
+  Multi-observation trends and denominator-aware Benefit comparison remain
+  separate possible future work.
+- **Agent-observed browser validation**: a loopback-only fixture with two
+  cross-task scope failures and one exact `false_positive` review rendered the
+  human card as `recorded`, with `human product owner` and
+  `resolution=unknown`. Source counts were read 1, matched 1, stale 0; the
+  Learning region exposed no task or event identity, technical JSON remained
+  collapsed, and the page contained zero forms, buttons, or external links.
+  The tab, local server, temporary script, and temporary directory were
+  removed.
+- **User-reported validation**: none for Human-confirmed Learning review v1.
+- **Codex-run validation**: all 91 focused tests pass with one platform-limited
+  skip. The complete supported Python 3.11 suite passes all 1101 tests with 5
+  platform-limited skips in 162.749 seconds. Task governance is
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance is
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Task, Learning-review, and Monitor JSON
+  documents parse, and `git diff --check` passes.
+- **Scope and privacy boundary**: the first execution action captured baseline
+  `sha256:a5e472f0cc004c67fdadd25106cab878fc7aabcbb61b1f570fc15711d26cd2b6`.
+  The final comparison is `PASS=32 PRESERVED=10 FAIL=0 TOTAL=42`. A whole-file
+  scan identified only three disclosed synthetic rejection fixtures already in
+  `tests/test_event_store.py`; the baseline-bounded scan of all 21 allowed paths
+  reports zero task-delta findings.
+- **Advisory review**: distinct native current-Agent self-review
+  `srv-c54d016d344292892c206bbc57de333d` found the requirement, sidecar
+  architecture, scope, implementation, confirmation and path security, data
+  minimization, privacy, unknown-resolution, and denied-authority boundaries
+  consistent. It is a separate advisory pass, not independent assurance. The
+  native task completion-record tool is not exposed in this session, so no
+  completion record is claimed or fabricated.
+- **Authority preservation**: no commit, push, publication, release,
+  deployment, installation, network request, or external write was used or
+  authorized.
+- **Pending validation**: product-owner usability judgment, production and
+  cross-browser behavior, accessibility, packaging, consumer compatibility,
+  personal authentication, conflicts, amendment, revocation, supersession,
+  and real-world disposition-vocabulary sufficiency remain unknown.
+- **Incomplete**: none inside the admitted implementation slice.
+- **Next product review**: use a real repeated Protection Event candidate to
+  judge whether the six dispositions and preview are understandable before
+  choosing multi-observation trends or denominator-aware cross-window Benefit.
+  This is review input only and authorizes no task, Git operation, publication,
+  release, deployment, or external action.
+
+### Previous Learning View current-observation snapshot
+
+- **Active slice**: human-admitted task
+  `p0-learning-view-current-observation-candidates-v1` advances the development
+  Monitor from contract 1.7 to 1.8 without changing governance-event
+  collection.
+- **Outcome**: `IMPLEMENTED_VALIDATED_REVIEW_READY`. JSON, Markdown, and HTML
+  now derive one deterministic four-card Learning projection from validated
+  Protection Events in the current displayed observation.
+- **Visible evidence boundary**: direct zero-inclusive counts cover the four
+  existing Protection Event classes. A class becomes an advisory repeated-
+  signal candidate at two unique events; the projection reports occurrences,
+  distinct-task count, and whether repetition crosses tasks, but never task
+  identities or a generalized pattern.
+- **Unavailable and unknown evidence**: false-positive disposition, missed-
+  constraint confirmation, override outcome, consumer-local configuration
+  need, and improvement decisions are unavailable because events contain no
+  attributed human disposition. Causal improvement, outside-scope
+  applicability, transferability, future recurrence, time savings,
+  governance completeness, and ROI remain unknown.
+- **Contract separation**: same-task repetition is sufficient for the fixed
+  display rule and distinct tasks are not required. The rule is not a
+  statistical threshold and does not prove common cause, systemic weakness,
+  correctness, prevention, transferability, or future recurrence. The
+  separate two-snapshot Benefit Monitor remains unchanged.
+- **Agent-observed browser validation**: a loopback-only fixture rendered two
+  repeated candidates: one within one task and one across two tasks. Each of
+  the four Learning card headings appeared exactly once, advisory and unknown
+  labels remained visible, technical audit JSON stayed collapsed, and the
+  page exposed zero forms, buttons, or external links. The tab, hidden
+  loopback process, and temporary directory were removed.
+- **User-reported validation**: none for Learning View v1. Earlier Task Detail
+  feedback remains documentation evidence only and is not promoted into
+  Learning runtime data.
+- **Codex-run validation**: all 19 focused Monitor tests and all 54
+  user-documentation tests pass. The complete supported Python 3.11 suite
+  passes all 1088 tests with 4 platform-limited skips in 171.509 seconds. Task
+  governance is `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance is
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Task and Monitor schema JSON parse, and
+  `git diff --check` passes.
+- **Scope and privacy boundary**: the first execution action captured baseline
+  `sha256:da16f9b55e57afa11fe6961dc7013437392b4245d716eb00ec11e0498ff9608a`.
+  The bounded allowed-path secret-pattern scan reports zero findings. The
+  final comparison is `PASS=25 PRESERVED=9 FAIL=0 TOTAL=34`; all current
+  deltas are inside the captured include scope and all excluded pre-existing
+  paths remain byte-identical at their Git layers.
+- **Advisory review**: distinct native current-Agent self-review
+  `srv-66f11d822de3860993f8de8c57342463` found the evidence-layer separation,
+  deterministic projection architecture, renderer and schema binding, task
+  scope, data minimization, security, privacy, and denied-authority boundaries
+  consistent. It is a separate advisory pass, not independent assurance.
+- **Authority preservation**: the Dashboard remains a self-contained read
+  model. No command, decision, policy, exception, approval, Git, publication,
+  release, deployment, network, or external-write authority was added or used.
+- **Pending validation**: product-owner usability judgment, production and
+  cross-browser behavior, accessibility, future consumer compatibility, and
+  recurrence-rule usefulness remain unknown.
+- **Incomplete**: none inside the admitted implementation slice.
+- **Next product review**: decide whether a later separately admitted slice
+  should add attributed human-confirmed Learning, multi-observation trends, or
+  denominator-aware cross-window Benefit comparison. This is review input
+  only and authorizes no task, Git operation, publication, release, deployment,
+  or external action.
+
+### Previous Benefit View single-observation snapshot
+
+- **Active slice**: human-admitted task
+  `p0-benefit-view-single-observation-cards-v1` advances the development
+  Monitor from contract 1.6 to 1.7 without changing governance-event
+  collection.
+- **Outcome**: `IMPLEMENTED_VALIDATED_REVIEW_READY`. JSON, Markdown, and HTML
+  now derive one deterministic five-card Benefit projection for the current
+  observation scope and window.
+- **Visible evidence boundary**: `observed_fact` contains only existing direct
+  counts; `reproduced_comparison` and `human_feedback` are unavailable;
+  `supported_inference` is advisory and limited to review prioritization; and
+  `unknown` preserves counterfactual outcomes, semantic correctness, causal
+  benefit, time savings, governance completeness, and ROI.
+- **Contract separation**: the separate two-snapshot Benefit Monitor remains
+  unchanged and is not imported, replaced, or relabeled. Cross-window evidence,
+  attributed feedback collection, trends, and Learning remain future work.
+- **Agent-observed browser validation**: a loopback-only fixture with one scope
+  failure and one verified completion rendered all five uniquely named Benefit
+  cards. Comparison and attributed feedback were visibly unavailable, review
+  prioritization was advisory, technical audit JSON remained collapsed, and
+  the page exposed zero forms, buttons, or external links. The tab, hidden
+  loopback process, and temporary directory were removed.
+- **User-reported validation**: none for Benefit View v1. The earlier Task
+  Detail clarity report remains documentation evidence only and is not promoted
+  into runtime `human_feedback` data.
+- **Codex-run validation**: all 18 focused Monitor tests and all 54
+  user-documentation tests pass. The complete supported Python 3.11 suite
+  passes all 1087 tests with 4 platform-limited skips in 157.379 seconds. Task
+  governance is `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance is
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; both JSON documents parse and
+  `git diff --check` passes.
+- **Scope and privacy boundary**: the first execution action captured baseline
+  `sha256:a68a93b7289c8b898891dff240918cf1b0fada6521020dd5c79fdcaef1602dc1`.
+  The bounded allowed-path secret-pattern scan reports zero findings. The final
+  comparison is `PASS=23 PRESERVED=8 FAIL=0 TOTAL=31`; all current deltas are
+  inside the captured include scope and all excluded pre-existing paths remain
+  byte-identical at their Git layers.
+- **Advisory review**: distinct native current-Agent self-review
+  `srv-99505f77f20d82e5306a443b41f088b9` found the selected requirement,
+  deterministic projection architecture, scope, renderer parity, authority,
+  security, privacy, and missing-evidence boundaries consistent. It is a
+  separate advisory pass, not independent assurance.
+- **Authority preservation**: the Dashboard remains a self-contained read
+  model. No command, decision, policy, exception, approval, Git, publication,
+  release, deployment, network, or external-write authority was added or used.
+- **Pending validation**: product-owner usability judgment, cross-browser
+  behavior, and accessibility remain unknown. Agent-run rendering evidence does
+  not establish causal benefit, prevention, time savings, completeness, ROI,
+  handling, or resolution.
+- **Incomplete**: none inside the admitted implementation slice.
+- **Next product review**: decide whether the next separately admitted slice
+  should prioritize Learning evidence or denominator-aware cross-window Benefit
+  comparison. This is review input only and authorizes no task, Git operation,
+  publication, release, deployment, or external action.
+
+### Previous Task Detail actionability repair snapshot
+
+- **Active slice**: human-admitted task
+  `p0-task-detail-actionability-repair-v1` repairs the existing Monitor 1.6
+  Task Detail presentation without changing its JSON or event contracts.
+- **Outcome**: `IMPLEMENTED_VALIDATED_REVIEW_READY`. Every supported
+  Protection Event guidance link now targets the deterministic anchor of its
+  matching task card. Protected cards are prominent and open by default;
+  unaffected tasks remain compact.
+- **Visible decision context**: the matching card shows the latest recorded
+  protection class, outcome, reason codes, existing counters, deterministic
+  next human review action, and unchanged unknown-resolution boundary. Affected
+  paths are explicitly unavailable because the current event contract records
+  counts rather than paths; no path is inferred.
+- **Technical-data hierarchy**: the embedded JSON remains available but is
+  collapsed under `Technical audit data (optional)` and states that ordinary
+  task review does not require it.
+- **Agent-observed browser validation**: a loopback-only fixture produced one
+  Protection Event. Its guidance resolved to the matching task-specific
+  fragment; the protected card was visible, prominent, and open in the current
+  viewport with all decision context present. Technical JSON remained closed,
+  and the page exposed zero external links, buttons, or forms. The browser tab,
+  hidden loopback process, and task-owned temporary directory were removed.
+- **User-reported validation**: after the repaired page was opened directly at
+  the matching Task Detail card, the product owner separately reported that
+  the result was now clear. The prior report that the old detail was
+  insufficient is preserved in the previous snapshot below.
+- **Codex-run validation**: all 17 focused Monitor tests and all 54
+  user-documentation tests pass. The complete supported Python 3.11 suite
+  passes all 1086 tests with 4 platform-limited skips in 157.454 seconds. Task
+  governance is `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance is
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; task JSON and `git diff --check` pass.
+- **Scope and evidence boundary**: first action after take-up captured baseline
+  `sha256:af863e065c290567367927283efdb7f827edaf5e1fc10d407b737b73d907dd4d`.
+  The final comparison is `PASS=19 PRESERVED=8 FAIL=0 TOTAL=27`; excluded prior
+  source, schemas, tests, tasks, validation evidence, host configuration, ADRs,
+  and strategic plan remain preserved. A bounded secret-pattern scan reports
+  zero findings.
+- **Advisory review**: distinct native current-Agent self-review
+  `srv-abe763bab1ba293cfbcb862389110784` found requirement, architecture,
+  implementation, scope, security, data, privacy, and authority boundaries
+  consistent. It is a separate advisory pass, not independent assurance.
+- **Authority preservation**: this presentation-only repair adds no command,
+  decision, mutation, exception, Git, publication, release, deployment, or
+  external-write authority. Contract 1.6, the strict Monitor schema, and the
+  governance-event schema are unchanged.
+- **Pending validation**: cross-browser behavior and accessibility remain
+  unknown. The bounded browser check and one positive human report do not prove
+  production behavior, causal benefit, handling, remediation, or true
+  cross-event resolution.
+- **Incomplete**: none inside the admitted implementation slice.
+- **Next product review**: the immediate Task Detail clarity gap is closed for
+  this bounded experience. Review whether to return to the planned
+  Benefit/Learning views or choose another unmet need; the positive report does
+  not authorize either direction or any task, Git, publication, release,
+  deployment, or external action.
+
+### Previous live protection-guidance usability snapshot
+
+- **Active slice**: human-admitted task
+  `p0-live-protection-guidance-usability-check-v1` performs one bounded
+  fixture-backed current-browser review of Monitor 1.6 Protection Event
+  guidance and its Task Detail destination.
+- **Outcome**: `USER_REPORTED_INSUFFICIENT`. The internal link worked and its
+  label was clear, but the product owner did not see Task Detail after the
+  first handoff and later confirmed that the visible detail was insufficient
+  for choosing the next action.
+- **Agent-observed validation**: one loopback-only self-contained Monitor page
+  exposed exactly one guidance link to `#tasks`. Clicking it set that fragment,
+  resolved to one Task Detail target, and exposed zero external links, buttons,
+  or forms. A later visual recheck found the current viewport in the expanded
+  embedded machine-readable Monitor with Task Detail above the viewport.
+- **User-reported validation**: the guidance label was clear. The destination
+  was not initially noticed, the machine-readable block required explanation,
+  and the product owner explicitly agreed that current Task Detail was
+  insufficient after it was made visible.
+- **Product gap**: successful anchor navigation is not sufficient usability.
+  The observed destination is not prominent enough, expanded technical JSON
+  can dominate attention, and Task Detail provides high-level status and
+  counters without the exact failed boundary, affected paths, or smallest
+  concrete next human action.
+- **Evidence boundary**: this is one fixture-backed current-browser result. It
+  does not prove production or cross-browser behavior, accessibility, causal
+  benefit, remediation, handling, prevention, or cross-event resolution.
+- **Scope and cleanup**: the first effective capture created baseline
+  `sha256:f2f707ec4575a573a972b7cdc43cc411bd1225bc7d5ba2a32ec4802adc0bd5cc`.
+  The preceding option mismatch was rejected before any write. The browser tab,
+  loopback process, and task-owned temporary directory were removed; the
+  temporary content is not recoverable. The final comparison is
+  `PASS=6 PRESERVED=13 FAIL=0 TOTAL=19`.
+- **Codex-run validation**: all 70 focused Monitor and user-documentation tests
+  pass. Task governance is `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository
+  governance is `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Task JSON, bounded privacy
+  scanning with zero findings, and `git diff --check` pass.
+- **Advisory review**: distinct native current-Agent self-review
+  `srv-e9e53298a6beb41ffd3df19cc5734f86` found the requirement, user-versus-Agent
+  evidence attribution, scope, privacy, implementation non-change, and denied
+  authority consistent. It is advisory current-Agent judgment, not independent
   assurance.
-- **Pending validation**: a fresh installed/current-host proposal review has not
-  yet visually confirmed the new ordering. Codex owns final form chrome, and a
-  native collapsible technical-details control remains unknown.
-- **Incomplete**: none inside the admitted source, test, and documentation
-  slice. Installation, publication, consumer activation, and live host replay
-  are outside this task and remain unperformed.
-- **Next product review**: decide whether to run one separately admitted live
-  native proposal-review check to confirm that the quick summary is visibly
-  first. This entry grants no replay, installation, Git, or publication
-  authority.
+- **Authority preservation**: no Monitor source, schema, test, package,
+  installation, consumer, Git, publication, release, deployment, or external
+  state changed. The check grants no task or remediation authority.
+- **Pending validation**: none for the admitted current-browser judgment. A
+  later improved design would need its own admitted implementation and fresh
+  usability validation.
+- **Incomplete**: none inside this validation-only task.
+- **Next product review**: decide whether to propose a small Task Detail
+  usability repair that surfaces the exact failure, affected paths, and next
+  human action while keeping technical JSON subordinate. This result does not
+  authorize that repair or any Git, publication, release, deployment, or
+  external action.
+
+### Previous protection-guidance implementation snapshot
+
+- **Active slice**: human-admitted task
+  `p0-protection-event-resolution-guidance-links-v1` upgrades the development
+  Monitor from contract 1.5 to 1.6 with deterministic read-only guidance for
+  each supported Protection Event.
+- **Outcome**: `IMPLEMENTED_VALIDATED_REVIEW_READY`. Scope boundary,
+  validation failure, stale evidence, and incomplete completion now carry
+  fixed action identifiers and labels that navigate to visible Task Detail.
+  JSON contains only bounded guidance data, Markdown links to `#task-detail`,
+  and self-contained HTML links to `#tasks`.
+- **Evidence boundary**: every Protection Event still reports
+  `observed_resolution_unknown`. Guidance availability proves only that the
+  report can navigate to task context; it does not prove review, remediation,
+  handling, causal prevention, or cross-event resolution.
+- **Authority preservation**: the Dashboard remains a read model. The strict
+  schema permits only `task_detail` or unavailable, renderers fail closed on
+  invalid targets and escape labels, and no external URL, button, script,
+  command, decision, mutation, policy, Git, publication, release, or
+  deployment authority was added.
+- **Codex-run validation**: all 16 focused Monitor tests and all 54
+  user-documentation tests pass. The complete supported Python 3.11 suite
+  passes all 1085 tests with 4 platform-limited skips in 152.363 seconds. The
+  Monitor schema parses and `git diff --check` passes. Task governance is
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance is
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; bounded privacy scanning passes with zero
+  findings.
+- **Scope boundary**: the first post-take-up action captured the exact baseline
+  with digest
+  `sha256:3d9dd858211404cdcfd67b35e489745731827b1753de9abd118b24e0f162583c`.
+  The admitted implementation and documentation paths changed while excluded
+  prior task, evidence, baseline, host configuration, ADR, CLI, event, export,
+  drift-review, and top-level strategic-plan paths remain preserved. The final
+  comparison is `PASS=14 PRESERVED=3 FAIL=0 TOTAL=17`.
+- **User-reported validation**: the product owner selected this direction,
+  admitted the exact native task proposal, and separately instructed
+  execution. No rendered-link usability or external-host result is claimed.
+- **Advisory review**: distinct native current-Agent self-review
+  `srv-c462bb81898334cbdddb546a94d90e1a` found the requirement, architecture,
+  scope, security, implementation, privacy, and authority boundaries
+  consistent. It is a separate advisory pass, not independent assurance.
+- **Pending validation**: whether users find Task Detail sufficient for
+  choosing the next human action remains unknown. Host-specific accessibility,
+  usability, causal benefit, and true cross-event resolution evidence are not
+  established.
+- **Incomplete**: none inside the admitted implementation slice.
+- **Next product review**: use one real protection-event experience to review
+  whether Task Detail is sufficient, then decide whether Benefit/Learning views
+  or an independent automatic-journey rehearsal is the next requirement. This
+  entry grants no task, implementation, Git, publication, release, deployment,
+  or external authority.
+
+### Previous live-visibility closeout snapshot
+
+- **Active slice**: human-admitted task
+  `p0-live-native-task-admission-summary-visibility-check-v1` performs one
+  bounded current-host visual check of the summary-first proposal form.
+- **Outcome**: `USER_REPORTED_CURRENT_HOST_PASS`. The product owner reported
+  that the human-facing summary appeared before the audit-only technical JSON
+  and that the three decision choices were clear.
+- **Evidence boundary**: visual ordering and clarity are user-reported. Native
+  protocol output establishes exact task admission and record creation, but it
+  does not prove rendering. One current-host result is not cross-host or future
+  host-version proof.
+- **Authority preservation**: the form created only the exact check task record.
+  The product owner separately instructed execution. No summary-card source,
+  test, installation, Git, publication, release, or deployment change is
+  authorized or performed.
+- **Codex-run validation**: task governance is
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance is
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; all 54 user-documentation tests pass.
+  Bounded privacy scanning and `git diff --check` also pass.
+- **Scope boundary**: the corrected task-start capture succeeded with digest
+  `sha256:ebe7d0999a71c2941b289a6de38b39e02764958fc2ef3a363f650f300b5c1a42`.
+  The preceding capture command used the wrong option and was rejected before
+  any write. The comparison is `PASS=4 PRESERVED=1 FAIL=0 TOTAL=5`.
+  Separate SHA-256 comparison preserves both prior local scope baselines and
+  the host configuration.
+- **Advisory review**: distinct native current-Agent self-review
+  `srv-5c73e02fc02ac47e4dae8275e13bb9fb` found the evidence attribution, scope,
+  implementation non-change, and privacy boundary consistent. It retains the
+  stated host and baseline unknowns and is not independent assurance.
+- **Pending validation**: whether the current host exposes a collapsible
+  technical-details control remains unknown because the human report covered
+  ordering and decision clarity only.
+- **Incomplete**: none inside the admitted evidence slice. Implementation work
+  is not part of this task.
+- **Next product review**: after closeout, decide whether the observed
+  current-host pass is sufficient or whether a later cross-host presentation
+  check is worth proposing. This entry grants no task, replay, installation,
+  Git, publication, release, or deployment authority.
 
 ### Previous controller closeout snapshot
 
@@ -2114,7 +2773,7 @@ authorized queue and do not select the next requirement.
   authority. Its consumer changes remain uncommitted and unpushed.
 - Development source now implements a combined drift-review reminder: one
   strict default cadence becomes due after three verified tasks or seven days,
-  foreground cycles surface a subordinate non-blocking card, Monitor 1.5 shows
+  foreground cycles surface a subordinate non-blocking card, Monitor 1.6 shows
   the same state, and future workflow versions can emit a scheduled GitHub
   warning/summary without failing the job. Review and snooze records are
   create-only and human-confirmed. Requirement, architecture, and functionality
@@ -2149,9 +2808,10 @@ authorized queue and do not select the next requirement.
 - The first ADR-0013 implementation slice is now present in development source:
   a versioned read-only active-session state projection backs `next`, and a
   strict vendor-neutral trigger contract covers repository, task, change,
-  scope-decision, validation, completion, and review events. Monitor 1.5 adds
-  Live Sessions and Protection Events as honest read models with unknown
-  resolution unless a future explicit link exists. Development source now also
+  scope-decision, validation, completion, and review events. Monitor 1.6 shows
+  Live Sessions and Protection Events as honest read models, adds bounded
+  read-only Task Detail guidance, and keeps actual resolution unknown unless a
+  future explicit cross-event record exists. Development source now also
   implements one `agentgov dev` foreground cycle and minimal reference adapter:
   scope and completion events invoke the existing deterministic cores and
   refresh the Dashboard; human review can hand off verified work. Development

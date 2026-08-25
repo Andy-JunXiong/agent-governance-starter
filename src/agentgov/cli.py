@@ -182,6 +182,14 @@ from agentgov.development_session import (
     resolve_active_task,
 )
 from agentgov.event_store import LocalStateError, append_governance_event
+from agentgov.learning_review import (
+    LEARNING_DISPOSITIONS,
+    LEARNING_SIGNAL_CLASSES,
+    LearningReviewPolicyError,
+    build_learning_review,
+    revalidate_learning_review,
+    write_learning_review,
+)
 from agentgov.foreground_coordinator import (
     CoordinatorPolicyError,
     render_foreground_cycle_json,
@@ -2997,6 +3005,60 @@ def _review_drift(
     return EXIT_PASS
 
 
+def _review_learning(
+    repository: Path,
+    *,
+    signal_class: str,
+    disposition: str,
+    reason_codes: tuple[str, ...],
+    apply_record: bool,
+    recorded_at: str | None,
+) -> int:
+    try:
+        review = build_learning_review(
+            repository,
+            signal_class=signal_class,
+            disposition=disposition,
+            reason_codes=reason_codes,
+            recorded_at=recorded_at,
+        )
+        print(json.dumps(asdict(review), ensure_ascii=False, indent=2, sort_keys=True))
+        print(
+            "DESTINATION .agentgov/learning-reviews/"
+            f"{review.review_id}.json"
+        )
+        print(
+            "NOTE this human judgment does not prove handling, resolution, "
+            "shared cause, future recurrence, or benefit"
+        )
+        if not apply_record:
+            print("DRY_RUN no Learning review was written")
+            return EXIT_PASS
+        if not sys.stdin.isatty():
+            print("CANCELLED Learning review apply requires an interactive terminal")
+            return EXIT_FAIL
+        try:
+            decision = input(
+                "Type RECORD to create this immutable local Learning review: "
+            )
+        except EOFError:
+            decision = ""
+        if decision != "RECORD":
+            print("CANCELLED Learning review was not created")
+            return EXIT_FAIL
+        revalidate_learning_review(repository, review)
+        written = write_learning_review(repository, review)
+    except (LearningReviewPolicyError, LocalStateError, OSError, UnicodeError, ValueError) as exc:
+        print(f"ERROR review learning: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    print(f"RECORDED {written}")
+    print(
+        "NOTE this record grants no resolution, scope, code, Git, release, or "
+        "deployment authority"
+    )
+    return EXIT_PASS
+
+
 def _export_development_events(
     repository: Path,
     *,
@@ -3475,6 +3537,52 @@ def build_parser() -> argparse.ArgumentParser:
             record_outcome=args.record_outcome,
             snooze=args.snooze,
             apply_record=args.apply_record,
+        )
+    )
+    learning_review_parser = review_targets.add_parser(
+        "learning",
+        help="Preview or explicitly record one human judgment for a current repeated Protection Event class.",
+    )
+    learning_review_parser.add_argument(
+        "repository",
+        nargs="?",
+        type=Path,
+        default=Path("."),
+        help="Repository whose current local Learning candidate is reviewed.",
+    )
+    learning_review_parser.add_argument(
+        "--signal-class",
+        required=True,
+        choices=LEARNING_SIGNAL_CLASSES,
+        help="Current repeated Protection Event class to review.",
+    )
+    learning_review_parser.add_argument(
+        "--disposition",
+        required=True,
+        choices=LEARNING_DISPOSITIONS,
+        help="Fixed human judgment; this is not a resolution claim.",
+    )
+    learning_review_parser.add_argument(
+        "--reason-code",
+        action="append",
+        default=[],
+        help="Optional bounded snake_case reason code; repeat at most ten times.",
+    )
+    learning_review_parser.add_argument(
+        "--apply",
+        dest="apply_record",
+        action="store_true",
+        help="Create the exact confirmed immutable local record; grants no downstream authority.",
+    )
+    learning_review_parser.add_argument("--as-of", dest="recorded_at", help=argparse.SUPPRESS)
+    learning_review_parser.set_defaults(
+        handler=lambda args: _review_learning(
+            args.repository,
+            signal_class=args.signal_class,
+            disposition=args.disposition,
+            reason_codes=tuple(args.reason_code),
+            apply_record=args.apply_record,
+            recorded_at=args.recorded_at,
         )
     )
     release_review_parser = review_targets.add_parser(

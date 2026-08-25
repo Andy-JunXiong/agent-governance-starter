@@ -1,0 +1,108 @@
+{
+  "acceptance_signals": [
+    "The first execution action after separate task take-up captures the exact task-start baseline, and final comparison reports zero failures while preserving every excluded pre-existing path.",
+    "Development Monitor contract and strict schema advance from 1.6 to 1.7 with one required top-level benefit object; the governance-event contract and event collection remain unchanged.",
+    "The benefit object declares the current observation scope and window and contains deterministic privacy-bounded cards for observed_fact, reproduced_comparison, supported_inference, human_feedback, and unknown.",
+    "The observed_fact card contains only direct current-scope counts already present in the validated Monitor overview, with no percentage, score, prevented-outcome, time-saved, or return-on-investment claim.",
+    "The reproduced_comparison card is explicitly unavailable with no baseline, denominator, applicability rule, or cross-window result invented; the existing separate two-snapshot Benefit Monitor is not imported or relabeled.",
+    "The supported_inference card is visibly advisory and may state only that recorded protection context can support review prioritization, never that AgentGov prevented an incident or caused an outcome.",
+    "The human_feedback card is explicitly unavailable because current Monitor events do not carry attributed feedback; the previously recorded product-owner comment remains documentation evidence and is not silently promoted into runtime data.",
+    "The unknown card explicitly preserves missing counterfactual outcomes, semantic correctness, causal benefit, time savings, governance completeness, and return on investment.",
+    "HTML and Markdown add a concise Benefit section before optional technical audit data, preserve all existing Overview, Live Sessions, Protection Events, Timeline, Task Detail, drift reminder, claim layers, and unknown-resolution behavior, and expose no command or mutation control.",
+    "Empty stores, multiple tasks, protection and no-protection fixtures, unavailable comparison and feedback, escaping, stable ordering and serialization, strict schema rejection, unchanged authority flags, and renderer parity are covered by focused tests.",
+    "README, strategic and phase plans, Monitor and automatic-governance guides, automation contracts, current status, and dated log distinguish the new single-observation Dashboard view from the existing two-snapshot comparison and any future trend or Learning work.",
+    "A bounded local-browser check confirms the Benefit cards are readable and subordinate technical JSON remains collapsed, while human usability feedback is recorded only if separately reported.",
+    "Focused Monitor and user-documentation tests, the complete supported Python 3.11 suite, schema parsing, task governance, repository governance, task-start scope comparison, bounded privacy scanning, task JSON, and git diff checks pass."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-514afa79f3f4417ea6df24d50e605393 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Advance the development Monitor to contract 1.7 with a strict machine-readable Benefit view and matching HTML and Markdown single-observation cards derived only from existing validated Monitor data, separating observed facts, explicitly unavailable reproduced comparison, bounded supported inference, explicitly unavailable human feedback, and unknown causal benefit without new event collection or authority."
+  },
+  "risk": {
+    "items": [
+      "Presenting governance activity counts under a Benefit heading could imply value or prevention, so every observed card must state its evidence class and claim limit.",
+      "A machine-readable Benefit section can drift from rendered HTML or Markdown unless all formats derive from one deterministic projection.",
+      "The currently dirty Monitor schema, source, tests, and documentation contain prior admitted work; the new baseline must distinguish and preserve excluded paths.",
+      "Importing the existing two-snapshot Benefit Monitor would violate the selected single-observation scope and couple unrelated contracts.",
+      "Including the product owner's earlier clarity comment in runtime output would manufacture event data and is prohibited.",
+      "A schema version bump affects current source-of-truth documentation and fixtures even though no stable release or consumer migration is authorized.",
+      "Many cards could overwhelm the repaired Task Detail hierarchy, so the view must remain concise and keep technical JSON subordinate.",
+      "Reviewed assumption: Adding a required machine-readable benefit field is a contract change and should advance the Monitor schema version to 1.7.",
+      "Reviewed assumption: Existing validated overview counts and observation metadata are sufficient for the selected single-observation observed-fact card.",
+      "Reviewed assumption: The separate two-snapshot benefit comparison modules remain valid but are outside this Dashboard slice.",
+      "Reviewed assumption: A fixed five-card ordering makes missing evidence visible and avoids silently omitting unsupported claim classes.",
+      "Reviewed assumption: Human feedback must remain unavailable at runtime until a future attributed event contract records it.",
+      "Reviewed unknown: Whether the five-card presentation is sufficient for the product owner remains unknown until the bounded browser review.",
+      "Reviewed unknown: Cross-window trends, baseline selection, denominators, applicability rules, and matched comparisons remain outside v1.",
+      "Reviewed unknown: Learning View scope and sequencing after this slice remain undecided.",
+      "Reviewed unknown: Production, cross-browser accessibility, causal benefit, time savings, and return on investment remain unknown."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex/config.toml",
+      ".agentgov/scope-baselines/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      ".agentgov/scope-baselines/p0-live-protection-guidance-usability-check-v1.json",
+      ".agentgov/scope-baselines/p0-native-task-admission-summary-card-v1.json",
+      ".agentgov/scope-baselines/p0-protection-event-resolution-guidance-links-v1.json",
+      ".agentgov/scope-baselines/p0-reusable-foreground-stdio-controller-closeout-v1.json",
+      ".agentgov/scope-baselines/p0-task-detail-actionability-repair-v1.json",
+      "docs/validation/live-native-task-admission-summary-visibility-check-2026-08-25.md",
+      "docs/validation/live-protection-guidance-usability-check-2026-08-25.md",
+      "governance/tasks/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      "governance/tasks/p0-live-protection-guidance-usability-check-v1.json",
+      "governance/tasks/p0-protection-event-resolution-guidance-links-v1.json",
+      "governance/tasks/p0-task-detail-actionability-repair-v1.json",
+      "docs/drift-review-reminders.md",
+      "src/agentgov/benefits.py",
+      "src/agentgov/benefit_monitor.py",
+      "schemas/benefit-comparison.schema.json",
+      "schemas/benefit-monitor.schema.json",
+      "tests/test_benefits.py",
+      "tests/test_benefit_monitor.py",
+      "docs/governance-model.md",
+      "docs/adr",
+      "src/agentgov/event_store.py",
+      "schemas/governance-event.schema.json"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-benefit-view-single-observation-cards-v1.json",
+      ".agentgov/scope-baselines/p0-benefit-view-single-observation-cards-v1.json",
+      "src/agentgov/development_monitor.py",
+      "schemas/development-monitor.schema.json",
+      "tests/test_development_monitor.py",
+      "tests/test_user_documentation.py",
+      "README.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-monitor.md",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/development-plan.md",
+      "docs/development-automation-contracts.md",
+      "docs/development-log/2026-08-25.md",
+      "STATUS.md"
+    ]
+  },
+  "task_id": "p0-benefit-view-single-observation-cards-v1",
+  "title": "Benefit View single-observation cards v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-benefit-view-single-observation-cards-v1.json --baseline .agentgov/scope-baselines/p0-benefit-view-single-observation-cards-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_development_monitor -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-benefit-view-single-observation-cards-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-benefit-view-single-observation-cards-v1.json",
+    "py -3.11 -m json.tool schemas/development-monitor.schema.json",
+    "git diff --check"
+  ]
+}

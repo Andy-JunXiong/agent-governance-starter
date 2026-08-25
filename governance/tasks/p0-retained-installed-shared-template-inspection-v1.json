@@ -1,0 +1,103 @@
+{
+  "acceptance_signals": [
+    "Preflight finds exactly one retained setuptools 84.0.0 wheel matching the previously recorded SHA-256 before any temporary root or build attempt.",
+    "Exactly one short task root stages committed distribution inputs plus the exact bounded current distribution overlay, and exactly one offline wheel-build attempt emits at most one wheel.",
+    "Before cleanup, durable sanitized evidence independently records exact shared-template wheel-member presence, the installed runtime's actual data scheme and normalized target, installed-file presence, and source-to-installed byte identity as pass, fail, or unknown.",
+    "The driver retains the verified short-root object while evidence is written, accepts only the bounded cleanup continuation, then removes the exact task-owned root and records the cleanup result.",
+    "Any preflight, build, install, member, scheme, presence, or digest deviation stops subsequent product-journey work without repair, retry, alternate artifact, or rehearsal v2.",
+    "STATUS.md and the dated development log state the exact bounded outcome, validation results, remaining unknowns, and denied authority without modifying product source, packaging declarations, tests, or the prior short-root implementation."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-4e715fe7fcac47549a79c3eef3e1f51e and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Using the validated short Windows build-root helper and the one already retained digest-matched setuptools 84.0.0 wheel, perform one exact-current-source offline wheel build and one fresh offline installation. Keep the task-owned wheel and runtime alive until a sanitized repository evidence record separately records exact wheel-member presence, actual runtime data scheme and normalized destination, installed-file presence, and source-to-installed byte identity. Then clean up the exact task root. Stop at the first deviation, do not repair any defect, and do not begin rehearsal v2."
+  },
+  "risk": {
+    "items": [
+      "A build or install deviation must stop the run without an in-task repair or second attempt.",
+      "The foreground driver temporarily retains a wheel and runtime; cleanup must use only the exact verified short-root object after evidence is durable.",
+      "The dirty worktree makes source-overlay expansion possible; only the exact distribution inputs used by the prior build protocol may be overlaid.",
+      "Sanitized evidence must omit absolute paths, process identifiers, raw command output, source content, prompts, responses, credentials, and session identities.",
+      "No product source or packaging modification, consumer fixture, external model, network request, credential access, Git mutation, commit, push, publication, release, deployment, or external write is authorized.",
+      "Reviewed assumption: Read-only preflight observed exactly one local setuptools 84.0.0 wheel with the previously recorded expected digest.",
+      "Reviewed assumption: The repository-internal short-root helper remains byte-identical to its validated implementation.",
+      "Reviewed assumption: The current dirty worktree can be reproduced from committed distribution inputs plus a deterministic exact overlay without copying unrelated runtime data.",
+      "Reviewed assumption: The current host can keep one foreground Python driver alive while the sanitized evidence is written before cleanup.",
+      "Reviewed unknown: Whether the new wheel contains the exact shared template member.",
+      "Reviewed unknown: Whether the fresh runtime contains the installed shared template at its actual scheme-derived destination.",
+      "Reviewed unknown: Whether source and installed template bytes match.",
+      "Reviewed unknown: Whether a deterministic packaging or installation defect will be observed.",
+      "Reviewed unknown: Whether a retained-artifact success would justify admitting rehearsal v2."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "docs/adr",
+      "docs/development-automation-contracts.md",
+      "docs/development-monitor.md",
+      "docs/development-plan.md",
+      "docs/drift-review-reminders.md",
+      "docs/experiments",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/validation",
+      "schemas",
+      "src",
+      "tests",
+      ".agentgov/scope-baselines/p0-benefit-view-single-observation-cards-v1.json",
+      ".agentgov/scope-baselines/p0-human-confirmed-learning-review-record-v1.json",
+      ".agentgov/scope-baselines/p0-independent-automatic-journey-rehearsal-v1.json",
+      ".agentgov/scope-baselines/p0-learning-view-current-observation-candidates-v1.json",
+      ".agentgov/scope-baselines/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      ".agentgov/scope-baselines/p0-live-protection-guidance-usability-check-v1.json",
+      ".agentgov/scope-baselines/p0-native-task-admission-summary-card-v1.json",
+      ".agentgov/scope-baselines/p0-protection-event-resolution-guidance-links-v1.json",
+      ".agentgov/scope-baselines/p0-reusable-foreground-stdio-controller-closeout-v1.json",
+      ".agentgov/scope-baselines/p0-task-detail-actionability-repair-v1.json",
+      ".agentgov/scope-baselines/p0-windows-short-build-root-contract-v1.json"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-retained-installed-shared-template-inspection-v1.json",
+      ".agentgov/scope-baselines/p0-retained-installed-shared-template-inspection-v1.json",
+      "docs/build-validation/retained-installed-shared-template-inspection-v1-2026-08-25.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-25.md",
+      "docs/build-validation/installed-shared-data-path-contract-diagnostic-v1-2026-08-25.md",
+      "docs/build-validation/windows-short-build-root-contract-v1-2026-08-25.md",
+      "scripts/short_build_root",
+      ".agentgov/scope-baselines/p0-installed-shared-data-path-contract-diagnostic-v1.json",
+      "governance/tasks/p0-benefit-view-single-observation-cards-v1.json",
+      "governance/tasks/p0-human-confirmed-learning-review-record-v1.json",
+      "governance/tasks/p0-independent-automatic-journey-rehearsal-v1.json",
+      "governance/tasks/p0-installed-shared-data-path-contract-diagnostic-v1.json",
+      "governance/tasks/p0-learning-view-current-observation-candidates-v1.json",
+      "governance/tasks/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      "governance/tasks/p0-live-protection-guidance-usability-check-v1.json",
+      "governance/tasks/p0-protection-event-resolution-guidance-links-v1.json",
+      "governance/tasks/p0-task-detail-actionability-repair-v1.json",
+      "governance/tasks/p0-windows-short-build-root-contract-v1.json"
+    ]
+  },
+  "task_id": "p0-retained-installed-shared-template-inspection-v1",
+  "title": "Inspect retained wheel and installed shared template with separate gates",
+  "validation_commands": [
+    "py -3.11 -m unittest scripts.short_build_root.test_root -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-retained-installed-shared-template-inspection-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-retained-installed-shared-template-inspection-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-retained-installed-shared-template-inspection-v1.json --baseline .agentgov/scope-baselines/p0-retained-installed-shared-template-inspection-v1.json",
+    "git diff --check"
+  ]
+}

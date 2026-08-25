@@ -1,0 +1,108 @@
+{
+  "acceptance_signals": [
+    "The first execution action after separate human take-up captures this exact task-start baseline before any repository or temporary-fixture write.",
+    "Final comparison has zero failures; current task deltas stay in scope; excluded dirty paths and the seven classification-only predecessor task records remain byte-identical.",
+    "One system-temporary synthetic repository contains only non-sensitive content, zero remotes, and exactly one permitted local baseline commit before the Agent turn.",
+    "Current source is binary-safely allowlisted into temporary staging, built once into a digest-identified wheel without Starter mutation, and installed in a fresh Python 3.11 runtime.",
+    "No-model gates verify artifact and CLI identity, fixture state, user configuration and trust digests, ambient process baseline, required MCP startup, and expected tool inventory.",
+    "Exactly one ordinary low-risk request starts one external Codex turn without AgentGov names, protocol JSON, coaching, retry, or a second session.",
+    "Evidence distinguishes proposal, human decision, take-up, implementation, validation, native completion when callable, self-review, completion card, handoff, terminal state, and first deviation.",
+    "Any failed gate, unusable human form, unexpected persistence, scope drift, host or MCP error, mutation, or stalled state stops without repair, restart, substitution, or second turn.",
+    "Retained evidence excludes raw request, response, transcript, source, patch, validation output, credentials, absolute paths, external session IDs, process IDs, and private reasoning.",
+    "Post-state proves measured user state unchanged, no task process remains, fixture has no remote or extra commit, and exact task-owned temporary assets are removed.",
+    "Experiment record, STATUS, dated log, and documentation tests agree on outcome, interactions, limits, and denied authority.",
+    "Focused and full tests, governance checks, task JSON, scope comparison, privacy scan, and git diff check pass."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-de669814cffd463286b413e50387545f and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Run one bounded exact-artifact automatic-governance rehearsal in a new system-temporary, remote-free synthetic non-NYC repository with one permitted local baseline commit. Build the exact current AgentGov source from an allowlisted temporary staging copy, install it in a fresh Python 3.11 runtime, pass no-model host and MCP gates, then start exactly one ordinary low-risk external Codex turn without governance coaching, internal JSON, repeated next queries, manually composed lifecycle commands, or special confirmation words. Observe proposal review, human admission if reached, separate task take-up, the bounded edit, declared validation, native completion when callable, current-Agent review, completion card, handoff, and first deviation. Stop without repair or retry, retain only sanitized evidence, remove task-owned temporary assets, preserve user configuration and trust state, and make no Starter source fix or external Git, publication, release, deployment, or NYC change."
+  },
+  "risk": {
+    "items": [
+      "The single external turn uses the existing authenticated Codex entitlement and may fail or consume usage before completion.",
+      "Dirty-source staging could include unrelated material unless the binary-safe package allowlist and digest gates pass.",
+      "A fixture or host binding could target Starter, an existing consumer, or user state unless resolved path and digest gates pass.",
+      "The local baseline commit is permitted only inside the verified remote-free fixture and grants no Starter or consumer Git authority.",
+      "Native form mediation may be unavailable or require one visible human decision; the run must count it and never bypass it.",
+      "Host, protocol, Adapter, or completion-tool surfaces may differ and must fail closed.",
+      "Cleanup is destructive only for exact verified task-owned system-temporary paths after evidence is retained.",
+      "One synthetic run cannot prove adoption, reliability, causal benefit, time savings, ROI, production readiness, or repeatability.",
+      "Reviewed assumption: Python 3.11, local build tooling, Git, Codex, and an authenticated Codex entitlement are available.",
+      "Reviewed assumption: Current source can be staged and built without downloading a dependency.",
+      "Reviewed assumption: A synthetic README-only task can be implemented and validated without downloads.",
+      "Reviewed assumption: Existing controller, process observer, and MCP Adapter can be used without source changes.",
+      "Reviewed assumption: The product owner can answer one native task-admission form if reached.",
+      "Reviewed assumption: Starter HEAD and every excluded dirty path remain unchanged.",
+      "Reviewed unknown: Whether the exact current source builds and installs from the allowlisted staging copy.",
+      "Reviewed unknown: Whether the Agent selects required AgentGov tools from an ordinary request without coaching.",
+      "Reviewed unknown: Whether native form elicitation is available and bound in the external session.",
+      "Reviewed unknown: Whether take-up, completion recording, review, completion card, and handoff all occur.",
+      "Reviewed unknown: Whether the host writes state outside measured configuration, trust, process, and temporary boundaries.",
+      "Reviewed unknown: Whether one synthetic run is representative of a real consumer."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".agentgov/scope-baselines/p0-benefit-view-single-observation-cards-v1.json",
+      ".agentgov/scope-baselines/p0-human-confirmed-learning-review-record-v1.json",
+      ".agentgov/scope-baselines/p0-learning-view-current-observation-candidates-v1.json",
+      ".agentgov/scope-baselines/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      ".agentgov/scope-baselines/p0-live-protection-guidance-usability-check-v1.json",
+      ".agentgov/scope-baselines/p0-native-task-admission-summary-card-v1.json",
+      ".agentgov/scope-baselines/p0-protection-event-resolution-guidance-links-v1.json",
+      ".agentgov/scope-baselines/p0-reusable-foreground-stdio-controller-closeout-v1.json",
+      ".agentgov/scope-baselines/p0-task-detail-actionability-repair-v1.json",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "docs/development-automation-contracts.md",
+      "docs/development-monitor.md",
+      "docs/development-plan.md",
+      "docs/drift-review-reminders.md",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/adr",
+      "docs/validation",
+      "schemas",
+      "src",
+      "tests/test_development_monitor.py",
+      "tests/test_event_store.py",
+      "tests/test_learning_review.py"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-independent-automatic-journey-rehearsal-v1.json",
+      ".agentgov/scope-baselines/p0-independent-automatic-journey-rehearsal-v1.json",
+      "docs/experiments/independent-automatic-journey-rehearsal-v1-2026-08-25.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-25.md",
+      "tests/test_user_documentation.py",
+      "governance/tasks/p0-benefit-view-single-observation-cards-v1.json",
+      "governance/tasks/p0-human-confirmed-learning-review-record-v1.json",
+      "governance/tasks/p0-learning-view-current-observation-candidates-v1.json",
+      "governance/tasks/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      "governance/tasks/p0-live-protection-guidance-usability-check-v1.json",
+      "governance/tasks/p0-protection-event-resolution-guidance-links-v1.json",
+      "governance/tasks/p0-task-detail-actionability-repair-v1.json"
+    ]
+  },
+  "task_id": "p0-independent-automatic-journey-rehearsal-v1",
+  "title": "Independent automatic user-journey rehearsal v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-independent-automatic-journey-rehearsal-v1.json --baseline .agentgov/scope-baselines/p0-independent-automatic-journey-rehearsal-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-independent-automatic-journey-rehearsal-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-independent-automatic-journey-rehearsal-v1.json",
+    "git diff --check"
+  ]
+}

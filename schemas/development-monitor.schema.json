@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://agentgov.dev/schemas/development-monitor-v1.5.json",
+  "$id": "https://agentgov.dev/schemas/development-monitor-v1.9.json",
   "title": "AgentGov Development Monitor",
   "type": "object",
   "additionalProperties": false,
-  "required": ["contract", "schema_version", "generated_at", "observation", "overview", "live_sessions", "protection_events", "timeline", "tasks", "drift_review", "claim_layers", "authority_boundary"],
+  "required": ["contract", "schema_version", "generated_at", "observation", "overview", "live_sessions", "protection_events", "timeline", "tasks", "benefit", "learning", "drift_review", "claim_layers", "authority_boundary"],
   "properties": {
     "contract": {"const": "agentgov.development-monitor"},
-    "schema_version": {"const": "1.5"},
+    "schema_version": {"const": "1.9"},
     "generated_at": {"type": "string", "minLength": 1},
     "observation": {
       "type": "object",
@@ -63,6 +63,8 @@
     "protection_events": {"type": "array", "items": {"$ref": "#/$defs/protectionEvent"}},
     "timeline": {"type": "array", "items": {"$ref": "#/$defs/timelineEvent"}},
     "tasks": {"type": "array", "items": {"$ref": "#/$defs/task"}},
+    "benefit": {"$ref": "#/$defs/benefitView"},
+    "learning": {"$ref": "#/$defs/learningView"},
     "drift_review": {"$ref": "drift-review-status.schema.json"},
     "claim_layers": {
       "type": "object",
@@ -131,7 +133,7 @@
     "protectionEvent": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["protection_id", "source_event_id", "source_scope", "occurred_at", "task_id", "protection_type", "observed_outcome", "status", "reason_codes", "evidence_ref"],
+      "required": ["protection_id", "source_event_id", "source_scope", "occurred_at", "task_id", "protection_type", "observed_outcome", "status", "guidance", "reason_codes", "evidence_ref"],
       "properties": {
         "protection_id": {"type": "string", "pattern": "^protection:evt-[0-9a-f]{32}$"},
         "source_event_id": {"type": "string", "pattern": "^evt-[0-9a-f]{32}$"},
@@ -141,9 +143,313 @@
         "protection_type": {"enum": ["scope_boundary", "validation_failure", "stale_evidence", "incomplete_completion"]},
         "observed_outcome": {"enum": ["failed", "stale", "needs_evidence"]},
         "status": {"const": "observed_resolution_unknown"},
+        "guidance": {"$ref": "#/$defs/protectionGuidance"},
         "reason_codes": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}},
         "evidence_ref": {"anyOf": [{"$ref": "#/$defs/path"}, {"type": "null"}]}
       }
+    },
+    "protectionGuidance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["availability", "action_id", "label", "target", "semantics"],
+      "properties": {
+        "availability": {"enum": ["available", "unavailable"]},
+        "action_id": {
+          "enum": ["review_scope_boundary", "review_validation_failure", "refresh_stale_evidence", "complete_missing_evidence", null]
+        },
+        "label": {"type": "string", "minLength": 1},
+        "target": {"enum": ["task_detail", null]},
+        "semantics": {"const": "read_only_navigation"}
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "availability": {"const": "available"},
+            "action_id": {"enum": ["review_scope_boundary", "review_validation_failure", "refresh_stale_evidence", "complete_missing_evidence"]},
+            "target": {"const": "task_detail"}
+          }
+        },
+        {
+          "properties": {
+            "availability": {"const": "unavailable"},
+            "action_id": {"type": "null"},
+            "label": {"const": "Resolution guidance unavailable"},
+            "target": {"type": "null"}
+          }
+        }
+      ]
+    },
+    "benefitView": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["comparison_mode", "scope", "observation_window", "cards", "claim_limit"],
+      "properties": {
+        "comparison_mode": {"const": "single_observation_only"},
+        "scope": {"enum": ["local_session", "exported_development", "ci_only", "combined"]},
+        "observation_window": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["started_at", "ended_at"],
+          "properties": {
+            "started_at": {"type": ["string", "null"]},
+            "ended_at": {"type": ["string", "null"]}
+          }
+        },
+        "cards": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/benefitCard"}
+        },
+        "claim_limit": {"const": "Single-observation cards do not prove causal benefit, prevention, time savings, governance completeness, or return on investment."}
+      }
+    },
+    "benefitCard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["card_id", "claim_class", "status", "semantics", "title", "summary", "reason_codes", "metrics"],
+      "properties": {
+        "card_id": {"enum": ["current_scope_activity", "cross_window_comparison", "review_prioritization", "attributed_human_feedback", "causal_benefit_limits"]},
+        "claim_class": {"enum": ["observed_fact", "reproduced_comparison", "supported_inference", "human_feedback", "unknown"]},
+        "status": {"enum": ["observed", "supported", "unavailable", "unknown"]},
+        "semantics": {"enum": ["observed", "advisory", "human_judgment", "unknown"]},
+        "title": {"type": "string", "minLength": 1},
+        "summary": {"type": "string", "minLength": 1},
+        "reason_codes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}},
+        "metrics": {"$ref": "#/$defs/metrics"}
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "card_id": {"const": "current_scope_activity"},
+            "claim_class": {"const": "observed_fact"},
+            "status": {"const": "observed"},
+            "semantics": {"const": "observed"}
+          }
+        },
+        {
+          "properties": {
+            "card_id": {"const": "cross_window_comparison"},
+            "claim_class": {"const": "reproduced_comparison"},
+            "status": {"const": "unavailable"},
+            "semantics": {"const": "observed"},
+            "metrics": {"maxProperties": 0}
+          }
+        },
+        {
+          "properties": {
+            "card_id": {"const": "review_prioritization"},
+            "claim_class": {"const": "supported_inference"},
+            "status": {"enum": ["supported", "unavailable"]},
+            "semantics": {"const": "advisory"}
+          }
+        },
+        {
+          "properties": {
+            "card_id": {"const": "attributed_human_feedback"},
+            "claim_class": {"const": "human_feedback"},
+            "status": {"const": "unavailable"},
+            "semantics": {"const": "human_judgment"},
+            "metrics": {"maxProperties": 0}
+          }
+        },
+        {
+          "properties": {
+            "card_id": {"const": "causal_benefit_limits"},
+            "claim_class": {"const": "unknown"},
+            "status": {"const": "unknown"},
+            "semantics": {"const": "unknown"},
+            "metrics": {"maxProperties": 0}
+          }
+        }
+      ]
+    },
+    "learningView": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "scope", "observation_window", "recurrence_rule", "human_review_source", "cards", "claim_limit"],
+      "properties": {
+        "mode": {"const": "current_observation_candidates"},
+        "scope": {"enum": ["local_session", "exported_development", "ci_only", "combined"]},
+        "observation_window": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["started_at", "ended_at"],
+          "properties": {
+            "started_at": {"type": ["string", "null"]},
+            "ended_at": {"type": ["string", "null"]}
+          }
+        },
+        "recurrence_rule": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["signal_source", "minimum_occurrences", "requires_distinct_tasks", "generalization_allowed"],
+          "properties": {
+            "signal_source": {"const": "protection_type"},
+            "minimum_occurrences": {"const": 2},
+            "requires_distinct_tasks": {"const": false},
+            "generalization_allowed": {"const": false}
+          }
+        },
+        "human_review_source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["availability", "source_kind", "records_read", "matched_records", "stale_records"],
+          "properties": {
+            "availability": {"enum": ["available", "unavailable"]},
+            "source_kind": {"enum": ["repository_local_learning_reviews", "absent_from_selected_event_source"]},
+            "records_read": {"$ref": "#/$defs/count"},
+            "matched_records": {"$ref": "#/$defs/count"},
+            "stale_records": {"$ref": "#/$defs/count"}
+          }
+        },
+        "cards": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/learningCard"}
+        },
+        "claim_limit": {"const": "Current-observation repetition does not prove shared root cause, false-positive status, systemic weakness, improvement, transferability, future recurrence, or causal benefit."}
+      }
+    },
+    "learningCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["signal_id", "candidate_digest", "occurrences", "distinct_tasks", "cross_task"],
+      "properties": {
+        "signal_id": {"enum": ["scope_boundary", "validation_failure", "stale_evidence", "incomplete_completion"]},
+        "candidate_digest": {"$ref": "#/$defs/sha256"},
+        "occurrences": {"type": "integer", "minimum": 2},
+        "distinct_tasks": {"type": "integer", "minimum": 1},
+        "cross_task": {"type": "boolean"}
+      }
+    },
+    "learningJudgment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["signal_id", "disposition", "recorded_at", "actor_role", "semantics", "resolution", "reason_codes"],
+      "properties": {
+        "signal_id": {"enum": ["scope_boundary", "validation_failure", "stale_evidence", "incomplete_completion"]},
+        "disposition": {"enum": ["confirmed_constraint_gap", "false_positive", "intentional_override", "consumer_configuration_needed", "improvement_candidate", "no_change_needed"]},
+        "recorded_at": {"type": "string", "minLength": 1},
+        "actor_role": {"const": "human_product_owner"},
+        "semantics": {"const": "human_judgment"},
+        "resolution": {"const": "unknown"},
+        "reason_codes": {"type": "array", "maxItems": 10, "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}}
+      }
+    },
+    "learningCard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["card_id", "learning_class", "status", "semantics", "title", "summary", "reason_codes", "metrics", "candidates", "judgments", "topics"],
+      "properties": {
+        "card_id": {"enum": ["observed_protection_signals", "repeated_protection_signals", "human_learning_judgments", "learning_limits"]},
+        "learning_class": {"enum": ["observed_signal", "repeated_signal_candidate", "human_judgment", "unknown"]},
+        "status": {"enum": ["observed", "candidates_observed", "none_observed", "unavailable", "recorded", "unknown"]},
+        "semantics": {"enum": ["observed", "advisory", "human_judgment", "unknown"]},
+        "title": {"type": "string", "minLength": 1},
+        "summary": {"type": "string", "minLength": 1},
+        "reason_codes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}},
+        "metrics": {"$ref": "#/$defs/metrics"},
+        "candidates": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/learningCandidate"}},
+        "judgments": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/learningJudgment"}},
+        "topics": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"enum": ["false_positive_disposition", "missed_constraint_confirmation", "override_outcome", "consumer_local_configuration_need", "general_improvement_decision", "causal_improvement", "outside_scope_applicability", "transferability", "future_recurrence", "time_savings", "governance_completeness", "return_on_investment"]}
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "card_id": {"const": "observed_protection_signals"},
+            "learning_class": {"const": "observed_signal"},
+            "status": {"const": "observed"},
+            "semantics": {"const": "observed"},
+            "metrics": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["scope_boundary", "validation_failure", "stale_evidence", "incomplete_completion"],
+              "properties": {
+                "scope_boundary": {"$ref": "#/$defs/count"},
+                "validation_failure": {"$ref": "#/$defs/count"},
+                "stale_evidence": {"$ref": "#/$defs/count"},
+                "incomplete_completion": {"$ref": "#/$defs/count"}
+              }
+            },
+            "candidates": {"maxItems": 0},
+            "judgments": {"maxItems": 0},
+            "topics": {"maxItems": 0}
+          }
+        },
+        {
+          "properties": {
+            "card_id": {"const": "repeated_protection_signals"},
+            "learning_class": {"const": "repeated_signal_candidate"},
+            "status": {"enum": ["candidates_observed", "none_observed"]},
+            "semantics": {"const": "advisory"},
+            "metrics": {"maxProperties": 0},
+            "judgments": {"maxItems": 0},
+            "topics": {"maxItems": 0}
+          },
+          "oneOf": [
+            {"properties": {"status": {"const": "candidates_observed"}, "candidates": {"minItems": 1}}},
+            {"properties": {"status": {"const": "none_observed"}, "candidates": {"maxItems": 0}}}
+          ]
+        },
+        {
+          "properties": {
+            "card_id": {"const": "human_learning_judgments"},
+            "learning_class": {"const": "human_judgment"},
+            "semantics": {"const": "human_judgment"},
+            "candidates": {"maxItems": 0},
+            "topics": {"const": ["false_positive_disposition", "missed_constraint_confirmation", "override_outcome", "consumer_local_configuration_need", "general_improvement_decision"]}
+          },
+          "oneOf": [
+            {
+              "properties": {
+                "status": {"const": "unavailable"},
+                "metrics": {"maxProperties": 0},
+                "judgments": {"maxItems": 0}
+              }
+            },
+            {
+              "properties": {
+                "status": {"const": "recorded"},
+                "metrics": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["matched_reviews", "confirmed_constraint_gap", "false_positive", "intentional_override", "consumer_configuration_needed", "improvement_candidate", "no_change_needed"],
+                  "properties": {
+                    "matched_reviews": {"type": "integer", "minimum": 1},
+                    "confirmed_constraint_gap": {"$ref": "#/$defs/count"},
+                    "false_positive": {"$ref": "#/$defs/count"},
+                    "intentional_override": {"$ref": "#/$defs/count"},
+                    "consumer_configuration_needed": {"$ref": "#/$defs/count"},
+                    "improvement_candidate": {"$ref": "#/$defs/count"},
+                    "no_change_needed": {"$ref": "#/$defs/count"}
+                  }
+                },
+                "judgments": {"minItems": 1}
+              }
+            }
+          ]
+        },
+        {
+          "properties": {
+            "card_id": {"const": "learning_limits"},
+            "learning_class": {"const": "unknown"},
+            "status": {"const": "unknown"},
+            "semantics": {"const": "unknown"},
+            "metrics": {"maxProperties": 0},
+            "candidates": {"maxItems": 0},
+            "judgments": {"maxItems": 0},
+            "topics": {"const": ["causal_improvement", "outside_scope_applicability", "transferability", "future_recurrence", "time_savings", "governance_completeness", "return_on_investment"]}
+          }
+        }
+      ]
     },
     "task": {
       "type": "object",

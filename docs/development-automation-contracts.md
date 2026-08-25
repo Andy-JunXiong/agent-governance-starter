@@ -103,9 +103,21 @@ Implemented now:
 - strict Python trigger validation;
 - privacy-bounded working-copy correlation;
 - existing `next` active-session routing backed by the projection;
-- Monitor 1.5 Live Sessions, Protection Events, and drift-review reminder read
-  models, with stable source-event-derived identity, explicitly unknown
+- Monitor 1.9 Live Sessions, Protection Events, Benefit, Learning, and drift-review
+  reminder read models, with stable source-event-derived identity,
+  schema-bounded read-only
+  guidance to matching Task Detail cards, prominent default-open protection
+  context, subordinate collapsed machine JSON, explicitly unavailable affected
+  paths under the unchanged count-only event contract, explicitly unknown
   protection resolution, and advisory-only semantic drift conclusions;
+  Benefit uses a strict single-observation five-card projection over current
+  validated counts, with comparison and attributed feedback unavailable,
+  supported inference advisory, and causal benefit unknown;
+  Learning uses a strict current-observation four-card projection over the
+  existing Protection Event classes, with a fixed two-event advisory recurrence
+  rule. An exact candidate-bound immutable local record may supply a canonical-
+  role human judgment; stale records and non-local sources remain unavailable,
+  while handling, resolution, generalization, and impact stay unknown;
 - `agentgov.foreground-cycle` 1.0 and `agentgov dev`, which run one disclosed
   foreground adapter/coordinator cycle without hand-authored JSON;
 - a minimal reference adapter that derives working-copy identity, active task
@@ -327,7 +339,8 @@ Implemented native MCP Adapter boundary:
 
 Not yet implemented:
 
-- explicit cross-event protection resolution links;
+- explicit cross-event protection resolution evidence; Monitor 1.6 guidance
+  links navigate within the read model but do not record handling or resolution;
 - a packaged Claude Code or IDE adapter; the first Codex Adapter is present in
   development source;
 - external live proof for the installed Codex `1.3.0` production task-proposal
@@ -349,7 +362,10 @@ Not yet implemented:
   task/scope/completion decision callbacks;
 - a background or cross-process session manager; stream mode is deliberately
   foreground and exists only for the lifetime of the connected host process;
-- Benefit and Learning views.
+- denominator-aware cross-window Benefit evidence and multi-observation trends;
+  Monitor 1.9 includes only bounded single-observation Benefit, current-
+  observation Learning candidates, and local exact candidate-bound human
+  judgment records;
 
 ## Internal task-start scope-baseline bridge
 
@@ -390,6 +406,70 @@ closeout documents are the only admitted post-start repository changes. Final
 comparison evidence is recorded separately and remains a review input, not a
 retroactive cumulative-scope pass or public integration claim.
 
+## Internal replayable distribution-input manifest
+
+`governance/distribution-input-manifest.json` is the repository-owned exact
+input declaration for the currently supported packaging subset. Its strict
+schema is `schemas/distribution-input-manifest.schema.json`, and the read-only
+internal checker is invoked with:
+
+```powershell
+py -3.11 -m scripts.distribution_input_manifest check --repository . --manifest governance/distribution-input-manifest.json
+```
+
+The checker supports only the current string project readme, explicit
+`tool.setuptools.packages.find.where` roots, and
+`tool.setuptools.data-files` source patterns. `LICENSE` and `pyproject.toml`
+are fixed metadata inputs. Package roots select regular `.py` files; data-file
+patterns use Python glob semantics, so `*` is non-recursive unless the
+declaration contains `**`. Unknown setuptools selection keys, unsafe or
+non-normalized paths, empty patterns, links, non-regular files, Git changes
+during observation, or filesystem changes during the double derivation fail
+closed.
+
+The persisted list must be safe, sorted, unique, and exactly equal to the
+independently derived current list. The checker reports deterministic
+identities for the canonical newline-separated path list and the path plus
+per-file SHA-256 list. It classifies selected inputs as committed, tracked
+delta, untracked overlay, or deletion using read-only Git commands. Output
+contains repository-relative identities and digests only, never host paths or
+source contents.
+
+This contract explicitly supersedes the omitted 199-path observation from the
+exact-distribution replay. It does not claim to recover those paths, validate
+setuptools beyond the supported subset, prove an artifact, or authorize a
+build, journey, Git write, publication, release, or deployment. Any future
+consumer or rehearsal requires separate admission.
+
+## Internal evidence-gated short-root cleanup
+
+`scripts.short_build_root` now exposes a repository-internal evidence receipt
+and evidence-gated cleanup operation for bounded artifact work. This extends
+the existing verified short-root boundary; it is not part of the public
+`agentgov` CLI or installed package.
+
+The receipt accepts only a normalized repository-relative path, requires every
+path component and the final regular file to be non-symbolic-link, resolves the
+file beneath the supplied existing repository, and matches an exact canonical
+`sha256:<64-lowercase-hex>` identity. Creating a receipt does not authorize or
+perform cleanup. The gate revalidates the same file and identity immediately
+before delegating exactly once to the existing exact-root removal helper.
+Missing, changed, unsafe, linked, escaping, malformed, or byte-mismatched
+evidence stops before removal.
+
+The gate has no prompt, stdin read, or TTY branch. Interactive, redirected, and
+closed-input callers supply the same explicit programmatic receipt, so EOF is
+not a cleanup-control transport. Normalized reports retain only the digest,
+booleans, contract identity, and denied authority; host paths and evidence
+contents are excluded.
+
+This contract neither runs nor retries a build, proves future artifact parity,
+nor authorizes a consumer, external Agent, model, Git operation, publication,
+release, deployment, or external write. Direct low-level cleanup remains for
+older internal callers; a workflow claiming evidence-before-cleanup must use
+the evidence-gated operation. A future artifact or journey run requires its own
+task admission.
+
 ## Next requirement review
 
 Do not select the next slice automatically. Review the completed
@@ -397,4 +477,5 @@ natural-language Alignment Adapter rehearsal with the human product owner.
 The selected Codex production materialization/native review source slice is now
 implemented. Remaining candidates include installing and freshly replaying it,
 another host, full-journey wall-clock/interrupt observation, or explicit
-protection-resolution links; their order must follow product-owner review.
+cross-event protection-resolution evidence; their order must follow
+product-owner review.

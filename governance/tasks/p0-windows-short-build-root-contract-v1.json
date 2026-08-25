@@ -1,0 +1,95 @@
+{
+  "acceptance_signals": [
+    "A repository-internal Python helper creates exactly one direct child of the resolved operating-system temporary directory with a short fixed-format task-owned name and fails closed when the projected build path exceeds the declared budget.",
+    "The helper rejects absolute, traversal, empty, and unsafe projected relative paths; its public representation and normalized report expose no absolute host path.",
+    "Bounded cleanup accepts only the exact verified direct-child short-root shape, rejects symbolic links and out-of-bound targets, and removes only the admitted task-owned root.",
+    "Focused tests cover creation, uniqueness, path budgeting, unsafe input, privacy-safe representation, cleanup, and cleanup rejection behavior without weakening existing tests.",
+    "One fresh short root stages exact current distribution inputs binary-safely, verifies every current overlay digest, builds exactly one wheel using the retained digest-verified local build backend with no index or dependency resolution, installs it into one fresh Python 3.11 environment, and validates version plus packaged shared-template availability.",
+    "The build/install validation uses zero network, external Codex, model, consumer form, Git mutation, publication, release, deployment, or credential operations and removes its exact temporary root.",
+    "Sanitized evidence records counts, digests needed for reproducibility, normalized outcomes, unknowns, cleanup, and denied authority without absolute paths, process identifiers, raw command output, source content, credentials, prompts, responses, or transcripts.",
+    "The v1 rehearsal evidence and all excluded pre-existing changes remain byte-identical; rehearsal v2 remains explicitly not started and not authorized."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-9e8bbf31c5a94d8aa0709e0a93602951 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Add the smallest repository-internal, deterministic short Windows build-root allocator and bounded cleanup contract, validate it with focused tests and one exact-current-source offline wheel build plus fresh install, record sanitized evidence, and stop before any external Codex or model journey. Rehearsal v2 remains a separately admitted future task."
+  },
+  "risk": {
+    "items": [
+      "A cleanup helper is destructive if its ownership and direct-child checks are wrong, so it must fail closed and receive adversarial tests.",
+      "A short root can make the observed build pass without proving that path length was the sole v1 cause or that the later automatic journey succeeds.",
+      "The repository already contains unrelated uncommitted work; the task-start baseline must preserve every excluded path byte-for-byte.",
+      "The retained local build backend is host-local evidence; its expected digest must match before use and no download fallback is allowed.",
+      "Reviewed assumption: The operating-system temporary directory is writable and short enough that a direct child with the fixed short name fits the declared build-path budget.",
+      "Reviewed assumption: The retained setuptools 84.0.0 wheel remains available locally with the previously verified digest.",
+      "Reviewed assumption: Exact current distribution overlays can be identified from Git state and staged without copying unrelated runtime or secret data.",
+      "Reviewed unknown: Whether the legacy Windows path-length boundary was the sole cause of the v1 missing-directory error remains unknown.",
+      "Reviewed unknown: Whether the automatic proposal-through-handoff journey succeeds after artifact preparation remains unknown until a separately admitted rehearsal v2.",
+      "Reviewed unknown: Behavior on Windows hosts whose operating-system temporary base is itself too long remains unknown and must fail closed rather than choose an alternate host path automatically."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "docs/adr",
+      "docs/development-automation-contracts.md",
+      "docs/development-monitor.md",
+      "docs/development-plan.md",
+      "docs/drift-review-reminders.md",
+      "docs/experiments",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/validation",
+      "schemas",
+      "src",
+      "tests",
+      ".agentgov/scope-baselines/p0-benefit-view-single-observation-cards-v1.json",
+      ".agentgov/scope-baselines/p0-human-confirmed-learning-review-record-v1.json",
+      ".agentgov/scope-baselines/p0-independent-automatic-journey-rehearsal-v1.json",
+      ".agentgov/scope-baselines/p0-learning-view-current-observation-candidates-v1.json",
+      ".agentgov/scope-baselines/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      ".agentgov/scope-baselines/p0-live-protection-guidance-usability-check-v1.json",
+      ".agentgov/scope-baselines/p0-native-task-admission-summary-card-v1.json",
+      ".agentgov/scope-baselines/p0-protection-event-resolution-guidance-links-v1.json",
+      ".agentgov/scope-baselines/p0-reusable-foreground-stdio-controller-closeout-v1.json",
+      ".agentgov/scope-baselines/p0-task-detail-actionability-repair-v1.json"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-windows-short-build-root-contract-v1.json",
+      ".agentgov/scope-baselines/p0-windows-short-build-root-contract-v1.json",
+      "scripts/short_build_root",
+      "docs/build-validation/windows-short-build-root-contract-v1-2026-08-25.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-25.md",
+      "governance/tasks/p0-benefit-view-single-observation-cards-v1.json",
+      "governance/tasks/p0-human-confirmed-learning-review-record-v1.json",
+      "governance/tasks/p0-independent-automatic-journey-rehearsal-v1.json",
+      "governance/tasks/p0-learning-view-current-observation-candidates-v1.json",
+      "governance/tasks/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      "governance/tasks/p0-live-protection-guidance-usability-check-v1.json",
+      "governance/tasks/p0-protection-event-resolution-guidance-links-v1.json",
+      "governance/tasks/p0-task-detail-actionability-repair-v1.json"
+    ]
+  },
+  "task_id": "p0-windows-short-build-root-contract-v1",
+  "title": "Windows short build-root contract v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-windows-short-build-root-contract-v1.json --baseline .agentgov/scope-baselines/p0-windows-short-build-root-contract-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest scripts.short_build_root.test_root -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-windows-short-build-root-contract-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-windows-short-build-root-contract-v1.json",
+    "git diff --check"
+  ]
+}

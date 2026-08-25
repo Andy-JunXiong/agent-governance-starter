@@ -490,9 +490,38 @@ Implemented as a two-snapshot, read-only comparison in release candidate
 matched finding denominators plus status transitions. It does not infer
 causality, prevented incidents, time savings, governance coverage, or ROI.
 
-The next slice requires real NYC CI observations and a separate event contract
-for project-test status, PR outcome, timestamps, human disposition, and
-retention before trend reporting is admitted.
+Development Monitor 1.7 adds a separate single-observation Benefit view in
+development source. It uses only validated current-scope Monitor counts and
+keeps five claim classes visible. Reproduced comparison and attributed human
+feedback are explicitly unavailable because this view has no selected baseline
+or feedback event; supported inference remains advisory and causal benefit,
+time savings, completeness, and ROI remain unknown. This view does not import,
+replace, or relabel the two-snapshot comparison above.
+
+Development Monitor 1.8 adds a separate current-observation Learning view. It
+counts the four existing deterministic Protection Event classes and treats a
+class appearing in at least two unique validated events as an advisory review
+candidate. The rule does not require separate tasks and is a display rule, not
+a statistical threshold or permission to generalize. False-positive status,
+missed constraints, override outcomes, consumer-local configuration needs, and
+general improvements remain unavailable without attributed human disposition
+or resolution evidence. Applicability outside the displayed scope and window,
+transferability, future recurrence, causal improvement, time savings,
+completeness, and ROI remain unknown.
+
+Development Monitor 1.9 adds one separate, immutable local human Learning
+review contract. A preview binds a fixed disposition to the exact sorted
+source-event identities and digest of a current repeated candidate; exact
+interactive confirmation and immediate freshness revalidation are required
+before exclusive creation. The canonical human-product-owner role is workflow
+attribution, not personal authentication. Matched reviews remain human
+judgment rather than handling, resolution, common cause, recurrence, or
+benefit. The lifecycle event and redacted export contracts stay unchanged, so
+stale and non-local review sources remain unavailable.
+
+Trend reporting still requires real NYC CI observations and a separate event
+contract for project-test status, PR outcome, timestamps, human disposition,
+and retention before it can be admitted.
 
 ### Release review evidence
 
@@ -618,6 +647,10 @@ Keep `artifact_drift` separate from future `behavioral_drift`.
 
 Only begin after NYC Taxi, GLAP, and Bitcoin-style use cases have supplied
 real adoption evidence.
+
+Monitor 1.9's repository-local current-observation candidates and exact-bound
+human judgments are not this
+multi-project phase and provide no cross-project or future-recurrence evidence.
 
 Possible work:
 
