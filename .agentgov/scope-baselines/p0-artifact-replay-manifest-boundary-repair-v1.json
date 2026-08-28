@@ -1,0 +1,376 @@
+{
+  "baseline_digest": "sha256:af663859440d0f746c11daecab545aa542aac40dbd9b6078ea7c2ea3aaa6672f",
+  "capture_claim": "boundary_begins_at_this_capture; earlier state is not proven",
+  "comparison_base_sha": "734b427163175396fae71dc557fc90d676395b84",
+  "contract": "agentgov.task-start-scope-baseline",
+  "exclusions": [
+    "ignored untracked paths are omitted by git ls-files --exclude-standard",
+    "untracked paths beneath .agentgov are local tool state and are excluded",
+    "tracked .agentgov paths and tracked .gitignore changes remain included"
+  ],
+  "layers": [
+    {
+      "changes": [],
+      "name": "committed"
+    },
+    {
+      "changes": [],
+      "name": "staged"
+    },
+    {
+      "changes": [
+        {
+          "identity_digest": "sha256:d75c1abb26e0a8cb846e3c4820c2533c29fdbe9f6dd846071c811db515b9184c",
+          "identity_kind": "patch",
+          "layer": "unstaged",
+          "old_path": null,
+          "path": "STATUS.md",
+          "status": "modified"
+        },
+        {
+          "identity_digest": "sha256:84fbbb13ffc21b687e6d4428922d8c70867358b21b462088fc2bc32a42bea131",
+          "identity_kind": "patch",
+          "layer": "unstaged",
+          "old_path": null,
+          "path": "docs/development-automation-contracts.md",
+          "status": "modified"
+        }
+      ],
+      "name": "unstaged"
+    },
+    {
+      "changes": [
+        {
+          "identity_digest": "sha256:4cca2d57edeaddfe52d3e6c4dd4d774192bbdbcab4e84e07df73e14a861c0348",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": ".codex/config.toml",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:5c7c31e92b563578a4a414ec4f7f27f22867e079cc7621078b9f7914fc7fada3",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "docs/build-validation/artifact-invocation-transport-readiness-gate-v1-2026-08-26.md",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:94b32224f3c8229e5d10d06526006f927873d382fc3aa7c34d0de19cca169d2e",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "docs/build-validation/minimal-artifact-invocation-caller-gate-v1-2026-08-26.md",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:7f970505c5573aada6b36eed3c2c4fec65b6a17ec943f8552c5d8672748922ea",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "docs/build-validation/minimal-noninteractive-artifact-driver-v1-2026-08-26.md",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:75e7ba936e32b1f8b717d16c684161703737bc6d3e873eca604805cfef25edd0",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "docs/build-validation/no-retry-artifact-driver-gate-replay-v1-2026-08-26.md",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:77a757a2905f482381b40abda7688472f9812ec599acfe10f473c80f2a95f806",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "docs/build-validation/real-action-artifact-driver-replay-v1-2026-08-26.md",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:f123c4f056233aa81cd5a59d6d73697042c2df48ebd765d596050c4bf0d0abb4",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "docs/development-log/2026-08-26.md",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:484789ecbdf4a22dde3196ee68fe9d20a5310a285f3aca14a7683b3289541c95",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "governance/tasks/p0-artifact-invocation-transport-readiness-gate-v1.json",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:0a8734f8395eaf709419658953ebaf6235c20b1bb239b66e40b0ed5687324eca",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "governance/tasks/p0-artifact-replay-manifest-boundary-repair-v1.json",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:8e7b8b04beb96222020da3c4062ef91387c15fdb3843f3ba71fa28fcb59e56df",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "governance/tasks/p0-bounded-artifact-replay-harness-v1.json",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:8794b1e1b1fd54352c9a7bd78311b151a09f79192e69725f5634422c95e2fba0",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "governance/tasks/p0-bounded-artifact-replay-identity-bridge-v1.json",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:42253e18d5d80dd7c5cb68b580c5a9dc16b89caf265d8ae7c05293e164306ded",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "governance/tasks/p0-interview-ready-artifact-replay-close-loop-v1.json",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:781afbb8d89dcf1309f11350655931d50fee088f31bfe53ae1fe226cfb6de330",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "governance/tasks/p0-minimal-artifact-invocation-caller-gate-v1.json",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:7bc9e44292770ddfb57574d2a72349200cf687cad35cc81841e8d27c2b1b82fe",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "governance/tasks/p0-minimal-noninteractive-artifact-driver-v1.json",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:acfe4a0a311f40a5acc655cafcab33b38eafb633d84d1913b2876403432e2575",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "governance/tasks/p0-no-retry-artifact-driver-gate-replay-v1.json",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:5bf7996c3131d8efab69c3afcfe194eedb2fc1dcc96a6cf64013b1a4d931caa4",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "governance/tasks/p0-real-action-artifact-driver-replay-v1.json",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:a0bfefe3d2421790a18c0f3735e2fcfb8ef3a056da6e66f458fe30518829f9a8",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "governance/tasks/p0-real-composed-artifact-caller-replay-recovery-v1.json",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:1c0a9e1c74fc923dd2972ed7995c30549ae59017dd09887662906e412f43280d",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "governance/tasks/p0-real-composed-artifact-caller-replay-v1.json",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:d55f4a150394ae6a675848a6a80193536a1e07e962e4fcf63c67c04aed03319d",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "governance/tasks/p0-real-composed-artifact-identity-bridge-replay-v1.json",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:e7ad834a0692396ac77cf3e526ad1190a39fafa5bdb172e8e00a87f0bd89d58d",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "scripts/artifact_invocation_caller/__init__.py",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:56123222ed19fe0d7768394b76c5e9f2aacebef50443c121554178c45e5933bf",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "scripts/artifact_invocation_caller/caller.py",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:5c51892fd7e576817b7e8a5b82a09dfc3825876230f7bf1e89bc7b8c416e95f9",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "scripts/artifact_invocation_caller/test_caller.py",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:87e6f03c131267d3f01c514261f53bd6351977883ce0610d0dd8f1b7e41c0042",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "scripts/artifact_invocation_readiness/__init__.py",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:e15d07ec4163a1c2a0b2843dc8c32bd3c1c5d74e84a9a59ac866cf3471587317",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "scripts/artifact_invocation_readiness/readiness.py",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:c48d52919c4434eccc9d3a9e23116d5bdd3c5834bcaba0872bf58dfd8d130297",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "scripts/artifact_invocation_readiness/test_readiness.py",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:6af1012068c1515a8d027e8eb18c5470a43feca56b27fbb91183a6c8ff14d602",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "scripts/artifact_replay_controller/__init__.py",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:4074abff2815332002c09029b395a6087b86e70914061053b69cd41f37b3fb61",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "scripts/artifact_replay_controller/__main__.py",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:28bb44a11bc17a39b5a5d092acb10b089ecf558bcd5b68daa810d5ce17f98617",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "scripts/artifact_replay_controller/controller.py",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:53e5cb82905cf6287e58b1a83d548b031ef8aff117eaf66ece802361e04a8edd",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "scripts/artifact_replay_controller/test_controller.py",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:d0c40c2d5b01d2156530d987269ea4f4e1c9354376edaa68bd5a4ce1b24cc748",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "scripts/artifact_replay_driver/__init__.py",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:d0fa8a9602cf41e97c64725d750c50efefe8e945ad40cf9a6fe0afafdc59862e",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "scripts/artifact_replay_driver/driver.py",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:91f0187d71f6bcd6bf3fb106cafef4ff40ca574662c3c23a40a08e5d57ac1d0f",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "scripts/artifact_replay_driver/test_driver.py",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:fa8fd8fe4b0828517eed1365b3cf34bdc14549f20b9614c55bb7ff3582e0cb7e",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "scripts/artifact_replay_harness/__init__.py",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:dd63ab0e86fb7e43fa348f89c9ae858c8ef65f3bd7401bfe2bb3d76f5689d2a1",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "scripts/artifact_replay_harness/harness.py",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:fece1681de8ad7509d7860582b0edf6824e6ce226425709b45fea173395b3ade",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "scripts/artifact_replay_harness/test_harness.py",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:b5ade29ffca5450cd3ef85785580b069884d2551f95fa4c38a4a86ac6e4dd575",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "scripts/artifact_replay_harness/worker.py",
+          "status": "untracked"
+        }
+      ],
+      "name": "untracked"
+    }
+  ],
+  "schema_version": "1.0",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "docs/build-validation/artifact-invocation-transport-readiness-gate-v1-2026-08-26.md",
+      "docs/build-validation/minimal-artifact-invocation-caller-gate-v1-2026-08-26.md",
+      "docs/build-validation/minimal-noninteractive-artifact-driver-v1-2026-08-26.md",
+      "docs/build-validation/no-retry-artifact-driver-gate-replay-v1-2026-08-26.md",
+      "docs/build-validation/real-action-artifact-driver-replay-v1-2026-08-26.md",
+      "governance/tasks/p0-artifact-invocation-transport-readiness-gate-v1.json",
+      "governance/tasks/p0-bounded-artifact-replay-harness-v1.json",
+      "governance/tasks/p0-bounded-artifact-replay-identity-bridge-v1.json",
+      "governance/tasks/p0-interview-ready-artifact-replay-close-loop-v1.json",
+      "governance/tasks/p0-minimal-artifact-invocation-caller-gate-v1.json",
+      "governance/tasks/p0-minimal-noninteractive-artifact-driver-v1.json",
+      "governance/tasks/p0-no-retry-artifact-driver-gate-replay-v1.json",
+      "governance/tasks/p0-real-action-artifact-driver-replay-v1.json",
+      "governance/tasks/p0-real-composed-artifact-caller-replay-recovery-v1.json",
+      "governance/tasks/p0-real-composed-artifact-caller-replay-v1.json",
+      "governance/tasks/p0-real-composed-artifact-identity-bridge-replay-v1.json",
+      "scripts/artifact_invocation_caller",
+      "scripts/artifact_invocation_readiness",
+      "scripts/artifact_replay_driver",
+      "scripts/artifact_replay_harness"
+    ],
+    "include_paths": [
+      ".agentgov/scope-baselines",
+      "STATUS.md",
+      "docs/development-automation-contracts.md",
+      "docs/development-log/2026-08-26.md",
+      "governance/tasks/p0-artifact-replay-manifest-boundary-repair-v1.json",
+      "scripts/artifact_replay_controller"
+    ]
+  },
+  "snapshot_change_set_digest": "sha256:2682dfbcde92caf26fa6391efa4eb719a12ee599082f4feb494b0d2b7bef5295",
+  "snapshot_head_sha": "734b427163175396fae71dc557fc90d676395b84",
+  "task": {
+    "digest": "sha256:d6f87f6d3a0b03f57f48945da4d10c4e66de4c5b49a0f4e7ede92307b6fd3b17",
+    "path": "governance/tasks/p0-artifact-replay-manifest-boundary-repair-v1.json",
+    "task_id": "p0-artifact-replay-manifest-boundary-repair-v1"
+  }
+}

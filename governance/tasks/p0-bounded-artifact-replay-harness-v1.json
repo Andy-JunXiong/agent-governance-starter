@@ -1,0 +1,83 @@
+{
+  "acceptance_signals": [
+    "A matching human-admitted task and create-only task-start baseline exist before implementation writes.",
+    "One immutable UTF-8 source is encoded once and bound by exact byte length and SHA-256 for both dry and actual worker requests.",
+    "The parent launches a fixed repository module with an argument vector and JSON stdin; it never transports replay source as multiline python -c text.",
+    "The worker validates the protocol, digest and length, compiles the source, resolves source-owned imports during isolated execution, and exposes only a fixed dry or actual mode global.",
+    "The worker and parent suppress raw source output, stderr, traceback, host paths, environment, credentials and process details, returning only bounded status, phase and reason-code facts.",
+    "Actual mode is attempted exactly once only after dry mode passes; any first deviation stops with no retry and zero actual attempts when dry fails.",
+    "Fixture tests cover dry and actual success, syntax failure, import failure, initialization or execution failure, malformed protocol, transport failure or timeout, source identity mismatch, raw-output suppression, and no-retry gating.",
+    "All tests use harmless local fixture sources and mocks and never invoke the real artifact caller, readiness probe, replay driver, action, build, cleanup, network, or evidence writer.",
+    "Existing dirty-worktree content outside the exact included paths remains byte-identical; existing baselines and pre-task shared-document content are preservation-only except for the new baseline and bounded additions.",
+    "Focused tests, full supported tests, task and repository governance checks, task-start scope validation, JSON parsing and git diff checks pass.",
+    "No real artifact replay, dependency installation, external Agent or model, Git mutation, commit, push, publication, release, deployment, or broader journey occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-54cf500a0d5c4d7d80921bf306f111f2 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Add one dependency-free repository-internal two-phase artifact replay harness that transports one UTF-8 source through a fixed Python module worker over bounded JSON stdin, compiles and executes the same digest-bound source first in dry mode and only then in actual mode, resolves source-owned imports inside the worker, and converts worker, compilation, import, initialization, execution, timeout, and protocol failures into stable privacy-bounded reason codes. The implementation and fixture tests must not call the real artifact caller, readiness probe, replay driver, action, build, cleanup, or network."
+  },
+  "risk": {
+    "items": [
+      "A child can emit arbitrary bytes at the OS descriptor level; the parent must never surface captured raw output and must fail closed on non-protocol output.",
+      "A child may hang; the parent must enforce one bounded timeout and must not retry.",
+      "Shared documentation files already contain user work; only bounded append or contract additions may be made.",
+      "Broad baseline-prefix inclusion is preservation-only for every pre-existing baseline.",
+      "This harness reduces transport failure risk but does not authorize or prove a real replay.",
+      "Reviewed assumption: Python 3.11 or newer stdlib subprocess, json, base64, hashlib and compile behavior is available.",
+      "Reviewed assumption: A fixed module worker invoked from the repository root is a portable replacement for the failed multiline python -c boundary.",
+      "Reviewed assumption: Source-owned imports can be exercised through fixture modules without executing any real artifact capability.",
+      "Reviewed assumption: The existing co-located scripts test convention remains appropriate for this internal harness.",
+      "Reviewed unknown: Whether all supported Windows launcher variants preserve JSON stdin and module arguments identically.",
+      "Reviewed unknown: Whether a future real replay source needs an additional bounded result channel beyond process success.",
+      "Reviewed unknown: Cross-platform behavior, adversarial child behavior, adoption impact, time savings and causal product benefit remain unproven."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "docs/build-validation",
+      "governance/tasks/p0-artifact-invocation-transport-readiness-gate-v1.json",
+      "governance/tasks/p0-minimal-artifact-invocation-caller-gate-v1.json",
+      "governance/tasks/p0-minimal-noninteractive-artifact-driver-v1.json",
+      "governance/tasks/p0-no-retry-artifact-driver-gate-replay-v1.json",
+      "governance/tasks/p0-real-action-artifact-driver-replay-v1.json",
+      "governance/tasks/p0-real-composed-artifact-caller-replay-recovery-v1.json",
+      "governance/tasks/p0-real-composed-artifact-caller-replay-v1.json",
+      "scripts/artifact_invocation_caller",
+      "scripts/artifact_invocation_readiness",
+      "scripts/artifact_replay_driver"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-bounded-artifact-replay-harness-v1.json",
+      ".agentgov/scope-baselines",
+      "scripts/artifact_replay_harness/__init__.py",
+      "scripts/artifact_replay_harness/harness.py",
+      "scripts/artifact_replay_harness/worker.py",
+      "scripts/artifact_replay_harness/test_harness.py",
+      "docs/development-automation-contracts.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-26.md"
+    ]
+  },
+  "task_id": "p0-bounded-artifact-replay-harness-v1",
+  "title": "Bounded artifact replay harness v1",
+  "validation_commands": [
+    "py -3.11 -m unittest scripts.artifact_replay_harness.test_harness -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-bounded-artifact-replay-harness-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-bounded-artifact-replay-harness-v1.json --baseline .agentgov/scope-baselines/p0-bounded-artifact-replay-harness-v1.json",
+    "py -3.11 -m json.tool governance/tasks/p0-bounded-artifact-replay-harness-v1.json",
+    "git diff --check"
+  ]
+}

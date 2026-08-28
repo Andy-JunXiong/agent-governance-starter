@@ -1,0 +1,91 @@
+{
+  "acceptance_signals": [
+    "Resolved journey mcpj-e1b17bdc141b4511bf3f49fb302cdd43 and a matching human-admitted task exist before repository implementation writes.",
+    "A create-only task-start scope baseline is captured before repair writes.",
+    "The fixed controller completes the existing Git-backed distribution manifest check exactly once before calling the Harness.",
+    "The controller refuses any manifest deviation before a dry or actual worker is launched.",
+    "Only normalized manifest path count, path digest, and content digest are bound into the controller-owned internal source; no Git executable, PATH, command, source, host path, or raw output is added to the external request or bounded reports.",
+    "The Harness worker-side replay function performs no Git subprocess and re-derives distribution paths plus path and content identities from repository files before dry PASS.",
+    "Worker-side identity drift stops dry execution, leaves actual attempts at zero, and performs no caller, readiness, driver, build, evidence, or cleanup action.",
+    "Harmless fixtures prove controller preflight ordering, normalized fact binding, worker-side revalidation, state drift detection, privacy, and zero retry.",
+    "Focused controller, combined artifact-chain, documentation, and full supported tests pass.",
+    "The repair task performs no real controller replay, build, evidence creation, or cleanup; a future real replay requires separate admission.",
+    "Only admitted files change and every pre-existing excluded path and unrelated scope baseline remains byte-identical.",
+    "No network, dependency installation, Git mutation, commit, push, publication, release, deployment, public CLI, scheduler, or generic framework is introduced."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-e6052bc4089d4dedbbf48576447bd5c3 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Implement the human-selected manifest-boundary repair from resolved journey mcpj-e1b17bdc141b4511bf3f49fb302cdd43. Move the Git-backed distribution manifest check into the fixed controller process before Harness invocation. Bind its normalized path count and path/content identities into the internally constructed replay source. Inside the Harness worker, re-derive distribution inputs and revalidate manifest and filesystem identities without launching Git or depending on PATH. Add harmless fixtures for ordering, state drift, bounded privacy, and no retry. Validate the repair only; do not execute another real artifact replay."
+  },
+  "risk": {
+    "items": [
+      "Moving Git-backed observation across the controller and worker boundary creates a point-in-time race; worker-side filesystem re-derivation and digest comparison must fail closed.",
+      "Pre-existing dirty-worktree files under broad included prefixes are preservation-only unless explicitly changed by this repair.",
+      "The Harness remains containment rather than a security sandbox.",
+      "A passing fixture repair does not prove that a future real replay will reach build, evidence, or cleanup.",
+      "The previously stopped replay task is exhausted and grants no retry authority.",
+      "Reviewed assumption: derive_distribution_inputs and canonical digest helpers inspect repository files without invoking Git.",
+      "Reviewed assumption: The fixed controller process has the intended read-only Git observation capability already exercised by manifest validation.",
+      "Reviewed assumption: Normalized manifest facts can be placed only in the internally generated source configuration without expanding external caller input.",
+      "Reviewed unknown: Whether a future separately admitted real replay passes readiness, build, evidence, and cleanup after this repair.",
+      "Reviewed unknown: Cross-platform behavior, repeated reliability, interviewer response, adoption, time savings, and return on investment remain unknown."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "docs/build-validation/artifact-invocation-transport-readiness-gate-v1-2026-08-26.md",
+      "docs/build-validation/minimal-artifact-invocation-caller-gate-v1-2026-08-26.md",
+      "docs/build-validation/minimal-noninteractive-artifact-driver-v1-2026-08-26.md",
+      "docs/build-validation/no-retry-artifact-driver-gate-replay-v1-2026-08-26.md",
+      "docs/build-validation/real-action-artifact-driver-replay-v1-2026-08-26.md",
+      "governance/tasks/p0-artifact-invocation-transport-readiness-gate-v1.json",
+      "governance/tasks/p0-bounded-artifact-replay-harness-v1.json",
+      "governance/tasks/p0-bounded-artifact-replay-identity-bridge-v1.json",
+      "governance/tasks/p0-interview-ready-artifact-replay-close-loop-v1.json",
+      "governance/tasks/p0-minimal-artifact-invocation-caller-gate-v1.json",
+      "governance/tasks/p0-minimal-noninteractive-artifact-driver-v1.json",
+      "governance/tasks/p0-no-retry-artifact-driver-gate-replay-v1.json",
+      "governance/tasks/p0-real-action-artifact-driver-replay-v1.json",
+      "governance/tasks/p0-real-composed-artifact-caller-replay-recovery-v1.json",
+      "governance/tasks/p0-real-composed-artifact-caller-replay-v1.json",
+      "governance/tasks/p0-real-composed-artifact-identity-bridge-replay-v1.json",
+      "scripts/artifact_invocation_caller",
+      "scripts/artifact_invocation_readiness",
+      "scripts/artifact_replay_driver",
+      "scripts/artifact_replay_harness"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-artifact-replay-manifest-boundary-repair-v1.json",
+      ".agentgov/scope-baselines",
+      "scripts/artifact_replay_controller",
+      "docs/development-automation-contracts.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-26.md"
+    ]
+  },
+  "task_id": "p0-artifact-replay-manifest-boundary-repair-v1",
+  "title": "Artifact replay manifest boundary repair v1",
+  "validation_commands": [
+    "py -3.11 -m unittest scripts.artifact_replay_controller.test_controller -v",
+    "py -3.11 -m unittest scripts.artifact_replay_controller.test_controller scripts.artifact_replay_harness.test_harness scripts.artifact_invocation_caller.test_caller scripts.artifact_invocation_readiness.test_readiness scripts.artifact_replay_driver.test_driver scripts.distribution_input_manifest.test_manifest scripts.short_build_root.test_root -v",
+    "py -3.11 -m scripts.distribution_input_manifest check --repository . --manifest governance/distribution-input-manifest.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-artifact-replay-manifest-boundary-repair-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-artifact-replay-manifest-boundary-repair-v1.json --baseline .agentgov/scope-baselines/p0-artifact-replay-manifest-boundary-repair-v1.json",
+    "py -3.11 -m json.tool governance/tasks/p0-artifact-replay-manifest-boundary-repair-v1.json",
+    "git diff --check"
+  ]
+}

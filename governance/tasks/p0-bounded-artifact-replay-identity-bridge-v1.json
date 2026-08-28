@@ -1,0 +1,85 @@
+{
+  "acceptance_signals": [
+    "A matching human-admitted task and create-only task-start baseline exist before implementation writes.",
+    "The resolved alignment journey mcpj-7f437c4bba4a45689835b0600fc68074 selects the identity-bridge direction.",
+    "The worker creates one read-only mapping only after Base64 decoding and both raw and encoded identity checks pass.",
+    "The mapping contains exactly source_length, source_sha256, encoded_length, and encoded_sha256 from the validated worker request.",
+    "Dry and actual execution receive identical identity values alongside the existing ARTIFACT_REPLAY_MODE value.",
+    "Caller-supplied source and the parent request cannot provide, replace, or mutate the identity context.",
+    "An attempted source mutation fails closed without changing the context, retrying, or reaching actual mode after a dry deviation.",
+    "Reports and representations still exclude source text, host paths, raw output, traceback, environment, credentials, and process details.",
+    "Fixture tests cover exact mapping values, immutability, dry and actual parity, mutation rejection, malformed identity rejection, and existing no-retry behavior.",
+    "Tests use only harmless local fixture source and mocks and never call the real caller, readiness probe, driver, action, build, evidence writer, cleanup, or network.",
+    "Existing dirty-worktree content outside the exact included paths remains byte-identical; pre-task shared-file content and prior baselines are preserved apart from bounded additions and the new baseline.",
+    "Focused, related, documentation and full supported tests plus task, repository, scope, JSON, privacy, zero-root, whitespace and diff checks pass.",
+    "No real artifact replay, dependency installation, external Agent or model, Git mutation, commit, push, publication, release, deployment, or broader journey occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-44c21a236d2a435ba59afdf769013963 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Extend the dependency-free internal artifact replay harness worker with one immutable source-identity context derived only from the already validated parent payload. Dry and actual source execution must receive the same mapping of raw and Base64 byte lengths and SHA-256 identities alongside the existing mode global, so a future separately admitted replay can bind its readiness request to the exact harness-prepared source. Add harmless fixture coverage only; do not execute any real artifact capability."
+  },
+  "risk": {
+    "items": [
+      "Exposing mutable identity data would allow source-side drift; the mapping must be read-only and derived only after strict validation.",
+      "Adding caller-controlled identity fields to the parent request would defeat binding and is prohibited.",
+      "The harness remains source execution containment rather than a security sandbox.",
+      "Shared documentation and harness files already contain admitted prior work and must preserve their pre-task content outside bounded additions.",
+      "A real replay is not authorized by this bridge task.",
+      "Reviewed assumption: types.MappingProxyType provides a sufficient stdlib read-only mapping boundary for normalized scalar identity values.",
+      "Reviewed assumption: The worker is the correct owner because it already validates the payload identities before compiling or executing source.",
+      "Reviewed assumption: A future source can construct the existing readiness request directly from this context without another harness change.",
+      "Reviewed unknown: Whether a future real replay reveals another integration deviation after identity binding.",
+      "Reviewed unknown: Cross-platform behavior, hostile-source containment, adoption, time savings, causal benefit and return on investment remain unproven."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "docs/build-validation",
+      "governance/tasks/p0-artifact-invocation-transport-readiness-gate-v1.json",
+      "governance/tasks/p0-bounded-artifact-replay-harness-v1.json",
+      "governance/tasks/p0-minimal-artifact-invocation-caller-gate-v1.json",
+      "governance/tasks/p0-minimal-noninteractive-artifact-driver-v1.json",
+      "governance/tasks/p0-no-retry-artifact-driver-gate-replay-v1.json",
+      "governance/tasks/p0-real-action-artifact-driver-replay-v1.json",
+      "governance/tasks/p0-real-composed-artifact-caller-replay-recovery-v1.json",
+      "governance/tasks/p0-real-composed-artifact-caller-replay-v1.json",
+      "scripts/artifact_invocation_caller",
+      "scripts/artifact_invocation_readiness",
+      "scripts/artifact_replay_driver",
+      "scripts/artifact_replay_harness/__init__.py"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-bounded-artifact-replay-identity-bridge-v1.json",
+      ".agentgov/scope-baselines",
+      "scripts/artifact_replay_harness/harness.py",
+      "scripts/artifact_replay_harness/worker.py",
+      "scripts/artifact_replay_harness/test_harness.py",
+      "docs/development-automation-contracts.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-26.md"
+    ]
+  },
+  "task_id": "p0-bounded-artifact-replay-identity-bridge-v1",
+  "title": "Bounded artifact replay identity bridge v1",
+  "validation_commands": [
+    "py -3.11 -m unittest scripts.artifact_replay_harness.test_harness -v",
+    "py -3.11 -m unittest scripts.artifact_replay_harness.test_harness scripts.artifact_invocation_caller.test_caller scripts.artifact_invocation_readiness.test_readiness scripts.artifact_replay_driver.test_driver -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-bounded-artifact-replay-identity-bridge-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-bounded-artifact-replay-identity-bridge-v1.json --baseline .agentgov/scope-baselines/p0-bounded-artifact-replay-identity-bridge-v1.json",
+    "py -3.11 -m json.tool governance/tasks/p0-bounded-artifact-replay-identity-bridge-v1.json",
+    "git diff --check"
+  ]
+}

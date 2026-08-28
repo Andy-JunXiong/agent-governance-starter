@@ -1,0 +1,101 @@
+{
+  "acceptance_signals": [
+    "STATUS.md and docs/development-log/2026-08-28.md accurately record the completed work, validation state, limits, and Git closeout.",
+    "Only the named delivery files and matching task baselines are staged.",
+    "Local Codex configuration and excluded historical baselines remain unstaged.",
+    "The full repository tests and artifact script tests pass without test weakening.",
+    "Task governance, repository governance, and captured scope have zero FAIL findings.",
+    "Task JSON, evidence hash, secret-safety review, whitespace checks, and staged diff checks pass.",
+    "Origin is fetched and remote divergence stops the closeout without rewriting history.",
+    "One non-release commit is created on main and pushed non-force to origin/main.",
+    "Local HEAD and origin/main match after push.",
+    "No release, deployment, hosting, package publication, pull request, force push, or history rewrite occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-238d4a95d4e443e1961059a9c5e89ef9 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Update the current status and dated development log for the completed accumulated AgentGov artifact replay and bilingual interview work, validate the intended delivery, stage only the related files, create one non-release commit on main, fetch origin to detect divergence, and push the commit non-force to origin/main. Keep local Codex configuration and unrelated historical scope baselines outside the commit."
+  },
+  "risk": {
+    "items": [
+      "Local configuration and unrelated baselines could be staged accidentally.",
+      "The accumulated delivery spans source, tests, evidence, task records, and public documentation.",
+      "Evidence and documentation require secret-safety review.",
+      "Remote main may have diverged.",
+      "The push must remain one ordinary non-force update to origin/main.",
+      "The closeout must not be described as release, deployment, hosting, publication, or adoption.",
+      "Reviewed assumption: The current dirty AgentGov artifact replay and bilingual interview files are the completed work intended for this closeout.",
+      "Reviewed assumption: The named modified and untracked delivery paths form one accumulated delivery.",
+      "Reviewed assumption: The Git remote named origin and branch main are the requested destination.",
+      "Reviewed assumption: The selected scope baselines correspond to included task records.",
+      "Reviewed assumption: Local Codex configuration and excluded historical baselines are not delivery artifacts.",
+      "Reviewed unknown: Whether origin/main has advanced.",
+      "Reviewed unknown: Whether staged content contains secret-like or host-specific material requiring removal.",
+      "Reviewed unknown: The final commit identifier.",
+      "Reviewed unknown: Whether Git transport authentication will succeed.",
+      "Reviewed unknown: Publication, adoption, interview outcome, and production behavior are not established."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".openai",
+      "docs/development-log/INDEX.md",
+      "docs/guide.css",
+      "docs/guide.js",
+      ".agentgov/scope-baselines/p0-benefit-view-single-observation-cards-v1.json",
+      ".agentgov/scope-baselines/p0-evidence-gated-short-root-cleanup-v1.json",
+      ".agentgov/scope-baselines/p0-exact-distribution-pathspec-replay-v1.json",
+      ".agentgov/scope-baselines/p0-human-confirmed-learning-review-record-v1.json",
+      ".agentgov/scope-baselines/p0-independent-automatic-journey-rehearsal-v1.json",
+      ".agentgov/scope-baselines/p0-independent-automatic-journey-rehearsal-v2.json",
+      ".agentgov/scope-baselines/p0-installed-shared-data-path-contract-diagnostic-v1.json",
+      ".agentgov/scope-baselines/p0-learning-view-current-observation-candidates-v1.json",
+      ".agentgov/scope-baselines/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      ".agentgov/scope-baselines/p0-live-protection-guidance-usability-check-v1.json",
+      ".agentgov/scope-baselines/p0-manifest-driven-artifact-parity-proof-v1.json",
+      ".agentgov/scope-baselines/p0-native-task-admission-summary-card-v1.json",
+      ".agentgov/scope-baselines/p0-protection-event-resolution-guidance-links-v1.json",
+      ".agentgov/scope-baselines/p0-replayable-distribution-input-manifest-v1.json",
+      ".agentgov/scope-baselines/p0-retained-installed-shared-template-inspection-v1.json",
+      ".agentgov/scope-baselines/p0-reusable-foreground-stdio-controller-closeout-v1.json",
+      ".agentgov/scope-baselines/p0-task-detail-actionability-repair-v1.json",
+      ".agentgov/scope-baselines/p0-windows-short-build-root-contract-v1.json"
+    ],
+    "include_paths": [
+      "README.md",
+      "STATUS.md",
+      "docs",
+      "governance/tasks",
+      ".agentgov/scope-baselines",
+      "scripts/artifact_invocation_caller",
+      "scripts/artifact_invocation_readiness",
+      "scripts/artifact_replay_controller",
+      "scripts/artifact_replay_driver",
+      "scripts/artifact_replay_harness",
+      "tests"
+    ]
+  },
+  "task_id": "p0-2026-08-28-session-closeout-v1",
+  "title": "2026-08-28 session closeout",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s scripts -p \"test_*.py\" -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-2026-08-28-session-closeout-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-2026-08-28-session-closeout-v1.json --baseline .agentgov/scope-baselines/p0-2026-08-28-session-closeout-v1.json",
+    "Get-FileHash docs/build-validation/post-repair-no-retry-artifact-replay-v1-2026-08-27.md -Algorithm SHA256",
+    "py -3.11 -m json.tool governance/tasks/p0-2026-08-28-session-closeout-v1.json",
+    "git diff --check",
+    "git diff --cached --check"
+  ]
+}

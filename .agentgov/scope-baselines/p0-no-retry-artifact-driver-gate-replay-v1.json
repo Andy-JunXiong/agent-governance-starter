@@ -1,0 +1,82 @@
+{
+  "baseline_digest": "sha256:9aecded3f03e8e93d172950275fe01087c0c8d8f625cd370228c91e8ed05e4a4",
+  "capture_claim": "boundary_begins_at_this_capture; earlier state is not proven",
+  "comparison_base_sha": "734b427163175396fae71dc557fc90d676395b84",
+  "contract": "agentgov.task-start-scope-baseline",
+  "exclusions": [
+    "ignored untracked paths are omitted by git ls-files --exclude-standard",
+    "untracked paths beneath .agentgov are local tool state and are excluded",
+    "tracked .agentgov paths and tracked .gitignore changes remain included"
+  ],
+  "layers": [
+    {
+      "changes": [],
+      "name": "committed"
+    },
+    {
+      "changes": [],
+      "name": "staged"
+    },
+    {
+      "changes": [],
+      "name": "unstaged"
+    },
+    {
+      "changes": [
+        {
+          "identity_digest": "sha256:4cca2d57edeaddfe52d3e6c4dd4d774192bbdbcab4e84e07df73e14a861c0348",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": ".codex/config.toml",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:acfe4a0a311f40a5acc655cafcab33b38eafb633d84d1913b2876403432e2575",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "governance/tasks/p0-no-retry-artifact-driver-gate-replay-v1.json",
+          "status": "untracked"
+        }
+      ],
+      "name": "untracked"
+    }
+  ],
+  "schema_version": "1.0",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "docs/adr",
+      "docs/development-automation-contracts.md",
+      "docs/development-monitor.md",
+      "docs/development-plan.md",
+      "docs/drift-review-reminders.md",
+      "docs/experiments",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/validation",
+      "governance/distribution-input-manifest.json",
+      "schemas",
+      "scripts",
+      "src",
+      "tests"
+    ],
+    "include_paths": [
+      ".agentgov/scope-baselines",
+      "STATUS.md",
+      "docs/build-validation/no-retry-artifact-driver-gate-replay-v1-2026-08-26.md",
+      "docs/development-log/2026-08-26.md",
+      "governance/tasks/p0-no-retry-artifact-driver-gate-replay-v1.json"
+    ]
+  },
+  "snapshot_change_set_digest": "sha256:e42f4a7c7c574a095c47ec264754acfa3f50ebb6f952881cd70aff7b95d56eea",
+  "snapshot_head_sha": "734b427163175396fae71dc557fc90d676395b84",
+  "task": {
+    "digest": "sha256:bbfe849baba3164f471c2a18dba40b9d6815f4c3cb930197c34fe9ad585cfad5",
+    "path": "governance/tasks/p0-no-retry-artifact-driver-gate-replay-v1.json",
+    "task_id": "p0-no-retry-artifact-driver-gate-replay-v1"
+  }
+}

@@ -3,65 +3,91 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Agent Governance Starter Kit 的 5–10 分钟中文面试讲解。">
+  <meta name="description" content="AgentGov 两分钟默认面试路线，以及按岗位展开的五到七分钟证据演示。">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; img-src 'self'">
-  <title>面试讲解 — Agent Governance Starter Kit</title>
+  <title>面试指南 — AgentGov</title>
   <link rel="icon" href="favicon.ico" type="image/svg+xml">
   <link rel="stylesheet" href="guide.css">
 </head>
 <body>
-  <nav class="shell">
-    <a class="brand" href="index.html"><span class="mark">AG</span>Agent Governance Starter Kit</a>
+  <nav class="shell" aria-label="主导航">
+    <a class="brand" href="index.html"><span class="mark">AG</span>AgentGov</a>
     <div class="nav-links">
-      <a href="index.html">首页</a>
-      <a href="portfolio.html">证据作品集</a>
+      <a href="interview-demo.zh-CN.html">现场 Demo</a>
+      <a href="project-interview.zh-CN.html">项目背景</a>
+      <a href="portfolio.html">证据</a>
       <a href="quickstart.zh-CN.html">快速入门</a>
       <span class="language-switch" aria-label="语言"><a href="interview-guide.html" lang="en" hreflang="en">EN</a><a href="interview-guide.zh-CN.html" lang="zh-CN" aria-current="page">中文</a></span>
     </div>
   </nav>
-  <p class="release-strip"><strong>版本边界：</strong>稳定版 <code>0.2.1</code> 可安装；公开预发行版 <code>0.3.0rc1</code> 与开发源继续扩展 Coding Agent 旅程。</p>
+  <p class="release-strip"><strong>版本边界：</strong>稳定版 <code>0.2.1</code> 可安装；公开预发行版 <code>0.3.0rc1</code> 与开发源继续扩展 Coding Agent 生命周期。</p>
   <header class="shell">
-    <span class="eyebrow">5–10 分钟讲解路径</span>
-    <h1>讲清产品，展示证据，主动说明边界。</h1>
-    <p class="lead">面试演示顺序：问题、架构、可视化报告、最新治理旅程，以及项目不会掩盖的限制。</p>
+    <span class="eyebrow">默认两分钟 · 可扩展到 5–10 分钟以内</span>
+    <h1>只讲一个故事。证据只在需要时打开。</h1>
+    <p class="lead"><a href="interview-demo.zh-CN.html">引导式 Demo</a>负责面试官看到什么；这份指南只负责你的准备，<a href="project-interview.zh-CN.html">项目故事</a>是可选背景。</p>
   </header>
   <main class="shell">
     <section class="emphasis">
       <h2>30 秒定位</h2>
-      <p>Agent Governance 是面向 AI 辅助开发的仓库原生控制层。它把人工拥有的任务意图、架构上下文、允许修改的文件范围、新鲜验证证据和明确复核连接起来。确定性检查只报告事实；语义判断和高后果权限继续由人掌握。</p>
-      <p><strong>版本边界：</strong>稳定版 <code>0.2.1</code> 提供可安装的仓库治理 CLI；公开预发行版 <code>0.3.0rc1</code> 与更新开发源继续扩展 Coding Agent 生命周期治理。</p>
+      <p>AI Coding Agent 可以写出测试通过的代码，同时又做了人根本没有要求的事。测试通过也不会告诉你，是不是已经有人同意让这个改动继续往前走。</p>
+      <p>我做 AgentGov，是为了把任务、这个任务允许修改的文件、当前运行产生的证据，以及人的决定连在仓库里。软件检查它能检查的事实，下一步仍然由人决定。</p>
+      <p>后来更难的问题是，我发现自己逐渐把更多工作放到 GitHub 和交付上，反而离 AgentGov 最初要解决的问题越来越远。</p>
+      <p class="cut-point"><strong>停顿点 1：</strong>如果对方只问“你做了什么”，讲到这里即可。</p>
     </section>
-    <section>
-      <h2>面试故事线</h2>
+
+    <section id="two-minute">
+      <h2>完整的两分钟回答</h2>
       <ol>
-        <li><strong>问题：</strong>AI 写代码很快，但需求归属、范围、证据和权限经常仍是隐含的。</li>
-        <li><strong>架构：</strong>仓库文件拥有事实，无依赖 Python CLI 检查契约，宿主 Adapter 协调交互，人保留判断。</li>
-        <li><strong>可视化：</strong>打开经过清洗的 <code>0.3.0rc1</code> <a href="demo-governance-report.zh-CN.html">示例报告</a>，筛选 PASS、WARN、FAIL、ADVISORY。</li>
-        <li><strong>当前证据：</strong>在<a href="portfolio.html">证据作品集</a>中追踪任务的对齐、范围、验证、自审、状态和暂停。</li>
-        <li><strong>最新安全切片：</strong>解释不可变 reservation、create-only claim 和单独的 immutable recovery evidence。</li>
-        <li><strong>诚实收尾：</strong>说明仍未知的事实和必须由人决定的事项。</li>
+        <li><strong>0:00–0:30 · 问题。</strong>Coding Agent 可以写出好代码，但仍然做了人没有要求的事。只看测试通过，不能知道它是否留在任务内、结果是否仍然对应当前代码，或者是否已经有人批准下一步。</li>
+        <li><strong>0:30–0:55 · 我先做了什么。</strong>我从软件能够稳定检查的部分开始，做了一个小型 Python CLI。它读取任务、允许修改的文件和工作过程产生的证据，然后说明某件事通过、失败，还是仍然需要人判断。它不会把这些检查变成“这个改动是正确的”。</li>
+        <li><strong>0:55–1:25 · 偏移如何发生。</strong>一次 consumer 实验暴露了安装、Windows 路径和 onboarding 摩擦，所以我先改这些，然后是 CI，再然后是 PR 流程。这些功能确实有用，测试也一直通过。但在连续几次常规价值复核中，我发现自己可以很清楚地解释 GitHub 机制，却越来越难把它们和原始业务问题连起来。我把累积实现和最初需求放在一起检查，确认产品方向已经偏移。</li>
+        <li><strong>1:25–2:00 · 我改了什么，学到了什么。</strong>我保留了 PR 和 CI，但把它们移出中心。主产品回到开发循环：人定义任务，Agent 在约定边界里工作，当前文件和测试被检查，最后人决定下一步。验证能证明一个功能能工作，却不能告诉我是否还在做正确的产品。我现在自己做这项产品复核，而不是再把它自动化成一个新功能。</li>
       </ol>
+      <p class="cut-point"><strong>停顿点 2：</strong>这是完整默认回答。没有追问时，不必打开浏览器。</p>
     </section>
-    <section>
-      <h2>一张图理解架构</h2>
+
+    <section class="checklist" id="screen-share">
+      <h2>五到七分钟屏幕演示</h2>
+      <ol>
+        <li data-route-step="demo"><strong>0:00–3:00 · 运行场景。</strong>打开<a href="interview-demo.zh-CN.html">退款引导 Demo</a>，从精确准入推进到 <code>REVIEW_READY</code>。</li>
+        <li data-route-step="architecture"><strong>3:00–3:40 · 说明分工。</strong>直接使用 Demo 中的四个角色：人、模拟 Agent、AgentGov 和 Demo 脚本。</li>
+        <li data-route-step="story"><strong>3:40–4:30 · 产品追问。</strong>只有对方追问产品为什么这样设计，才打开<a href="project-interview.zh-CN.html">项目背景</a>。</li>
+        <li data-route-step="artifact"><strong>4:30–6:00 · 工程追问。</strong>工程岗位再打开<a href="artifact-replay-interview.zh-CN.html">artifact replay 深入案例</a>。</li>
+        <li data-route-step="evidence"><strong>6:00–6:30 · 按需核验。</strong>只有对方质疑某项结论时，才打开<a href="portfolio.html">证据作品集</a>。</li>
+        <li data-route-step="close"><strong>6:30–7:00 · 诚实收尾。</strong>主动说明版本边界和一个相关未知项。</li>
+      </ol>
+      <p><strong>停顿点 3：</strong>引导式 Demo 之后，产品回答已经完整。<strong>停顿点 4：</strong>artifact replay 之后，工程回答已经完整。</p>
+    </section>
+
+    <section id="role-branches">
+      <h2>只选一个岗位分支</h2>
       <div class="states">
-        <div class="state"><strong>Core 契约</strong>可移植的任务、finding、evidence 和 authority 语义。</div>
-        <div class="state"><strong>仓库 Policy</strong>风险、路由、架构上下文和已准入范围。</div>
-        <div class="state"><strong>宿主 Adapter</strong>原生交互和精确的人类决定协调。</div>
-        <div class="state"><strong>产品界面</strong>CLI、Monitor、HTML 报告和公开证据页面。</div>
+        <div class="state" data-role-branch="engineering"><strong>软件或 AI 工程</strong>强调 fail-closed 边界、新鲜证据、确定性与建议性的区别，以及两次 replay 失败。底层修复大多由 Agent 提出，我负责审查批准。</div>
+        <div class="state" data-role-branch="platform"><strong>平台或基础设施</strong>强调仓库原生契约、Host Adapter、CI 重放、权限分离、create-only 持久化，以及恢复不能静默替换 owner。</div>
+        <div class="state" data-role-branch="product"><strong>产品或技术产品</strong>强调持续价值复核、确认偏移、先回到核心 MVP，以及任务级验证为什么不能替代跨功能产品判断。</div>
       </div>
-      <p><strong>人类权限保持独立：</strong>需求、架构判断、例外、Git、发布、release 和部署。</p>
     </section>
-    <section class="checklist">
-      <h2>最新开发源证据链</h2>
-      <ol>
-        <li><strong>Reserve：</strong>在精确人工确认下创建一个不可变 correlation reservation。</li>
-        <li><strong>Claim：</strong>独占创建一个持久的运行前 owner claim，不修改 reservation。</li>
-        <li><strong>Recover：</strong>只读检查有界的精确 claim bytes，并单独记录不可变 supersession evidence。</li>
-        <li><strong>继续受限：</strong>恢复保留原 claim，不创建 replacement owner，也不授予 replay 权限。</li>
-      </ol>
-      <a class="button" href="clean-target-replay-preflight.html">阅读完整 replay 安全契约</a>
+
+    <section>
+      <h2>一眼看懂架构</h2>
+      <div class="states">
+        <div class="state"><strong>Core 契约</strong>可移植的任务、finding、evidence 与 authority 语义。</div>
+        <div class="state"><strong>仓库 Policy</strong>风险、路由、架构上下文和已准入范围。</div>
+        <div class="state"><strong>Host Adapter</strong>原生交互和精确的人类决定协调。</div>
+        <div class="state"><strong>产品界面</strong>CLI、Monitor、报告与公开证据页面。</div>
+      </div>
+      <p><strong>人的权限保持独立：</strong>需求、产品与架构判断、例外、Git、发布、release 和部署。</p>
     </section>
+
+    <section>
+      <h2>准确说明“谁做了决定”</h2>
+      <ul>
+        <li><strong>Airbnb：</strong>写入前准入、保留最初的人类准入，是我提出的；分阶段权限共同形成；独立 completion marker 由 Agent 提议、我批准。</li>
+        <li><strong>Artifact replay：</strong>固定 Harness 边界共同形成；transport、manifest、readiness 和 filesystem 等底层修复大多由 Agent 提议、我批准；把清理前与清理后证据分开，是我坚持的决定。</li>
+        <li><strong>观察到系统运行不等于作者身份：</strong>一次有界运行不能证明广泛采用、可移植性、重复可靠性或独立保证。</li>
+      </ul>
+    </section>
+
     <section>
       <h2>可复现命令</h2>
       <h3>已发布稳定版 CLI</h3>
@@ -73,39 +99,50 @@ agentgov check repository .</code></pre>
       <pre><code>$env:PYTHONPATH = "src"
 python -m agentgov --help
 python -m unittest discover -s tests -v</code></pre>
-      <p>Replay 安全命令默认只预览。面试时不要使用 <code>--apply</code>，除非另有准入的 disposable-consumer 任务和精确人工确认。</p>
+      <p>面试时不要使用 <code>--apply</code>，除非另有已准入的 disposable-consumer 任务和精确的人类确认。</p>
     </section>
+
     <section>
-      <h2>建议打开的证据</h2>
+      <h2>证据菜单</h2>
       <div class="states">
-        <a class="state" href="index.html"><strong>产品首页</strong>问题、差异、架构和当前边界。</a>
+        <a class="state" href="interview-demo.zh-CN.html"><strong>引导式面试 Demo</strong>默认给你和面试官共同使用的页面。</a>
+        <a class="state" href="project-interview.zh-CN.html"><strong>项目背景</strong>真实的产品偏移故事。</a>
+        <a class="state" href="governed-refund-walkthrough.html"><strong>退款治理</strong>60 到 90 秒的稳定产品示例。</a>
+        <a class="state" href="artifact-replay-interview.zh-CN.html"><strong>Artifact replay</strong>两次失败的工程深入案例。</a>
         <a class="state" href="portfolio.html"><strong>证据作品集</strong>生命周期、案例、契约和非声明。</a>
-        <a class="state" href="demo-governance-report.zh-CN.html"><strong>示例报告</strong><code>0.3.0rc1</code> finding 语义快照。</a>
-        <a class="state" href="quickstart.zh-CN.html"><strong>快速入门</strong>稳定安装和开发预览。</a>
+        <a class="state" href="demo-governance-report.zh-CN.html"><strong>说明性示例报告</strong>清洗后的 <code>0.3.0rc1</code> fixture 快照，不是最新工作流。</a>
+        <a class="state" href="../STATUS.md"><strong>当前状态</strong>最近一次验证后的仓库事实。</a>
       </div>
     </section>
-    <section>
-      <h2>常见面试问题</h2>
-      <h3>为什么不只是另一个 linter？</h3>
-      <p>它同时绑定人工拥有的任务、架构上下文、路径范围、验证快照、建议性复核和权限边界，并拒绝从静态检查推断语义正确性。</p>
-      <h3>为什么不做治理评分？</h3>
-      <p>单一分数会掩盖“契约满足、诚实不完整、确定性失败、只能由人判断”之间的差别。</p>
+
+    <section id="questions">
+      <h2>常见面试追问</h2>
+      <h3>为什么不只是一个 linter？</h3>
+      <p>因为它还把人的任务、架构上下文、路径范围、证据新鲜度、建议性复核和权限边界绑定起来，同时拒绝从静态检查推断需求价值。</p>
+      <h3>为什么区分 PASS、WARN、FAIL 和 ADVISORY？</h3>
+      <p>单一分数会掩盖契约满足、诚实的不完整、确定性失败，以及只能由人判断的问题之间的差别。</p>
+      <h3>为什么不能自动检测产品漂移？</h3>
+      <p>任务证据只能说明实现是否匹配已准入任务，不能说明一串各自合理的任务是否仍在推进正确的产品。跨功能的价值复核才提供这个判断。</p>
+      <h3>最强的工程证据是什么？</h3>
+      <p>简短产品回答用退款边界；工程深挖用 artifact replay：受限 worker 因隐藏 Git 依赖失败两次，限制没有放宽，可信事实移入边界内，唯一一次修复后回放无重试完成。</p>
+      <h3>Artifact replay 的修复是谁设计的？</h3>
+      <p>固定 Harness 边界共同形成。底层修复大多由 Agent 提出，我审查并批准；我坚持把清理前和清理后证据分开。</p>
       <h3>下一步做什么？</h3>
-      <p>尚未决定或授权。最强候选是在 claim-to-Harness consume 之前定义 recovered-correlation re-ownership 契约。</p>
+      <p>本指南不决定也不授权下一项需求。完成功能后应回到人的产品复核，而不是自动继续开发。</p>
     </section>
+
     <section>
-      <h2>主动说明的限制</h2>
+      <h2>技术追问与诚实限制</h2>
       <ul>
-        <li>静态检查不能证明需求价值、架构质量、审阅者理解程度或测试充分性。</li>
-        <li>示例报告是清洗后的说明性快照，不是最新开发工作流的证明。</li>
-        <li>Recovery 不认证具体操作者，也不授权 replay。</li>
-        <li>网络文件系统独占语义、断电耐久性和真实消费者恢复仍未验证。</li>
-        <li>没有外部证据证明这些文档能改善面试结果。</li>
+        <li>静态检查不能证明需求价值、架构质量、审阅者理解或测试充分性。</li>
+        <li>稳定版 <code>0.2.1</code> 不包含最新开发源生命周期。</li>
+        <li>Replay 链保留不可变 reservation、create-only claim 和 immutable recovery；恢复不创建 replacement owner，也不授权 replay。</li>
+        <li>一次 Airbnb 工作流和一次 artifact replay 不能证明广泛采用、可移植性、重复可靠性或生产安全。</li>
       </ul>
     </section>
-    <div class="next"><a class="button dark" href="portfolio.html">追踪证据</a><a class="button" href="demo-governance-report.zh-CN.html">打开示例报告</a></div>
+    <div class="next"><a class="button dark" href="interview-demo.zh-CN.html">从引导式 Demo 开始</a><a class="button" href="project-interview.zh-CN.html">打开项目背景</a></div>
   </main>
-  <footer class="shell">Agent Governance Starter Kit · 中文面试讲解 · 先有证据，再作声明</footer>
+  <footer class="shell">AgentGov · 面试指南 · 一个故事，按需打开证据</footer>
   <script src="guide.js" defer></script>
 </body>
 </html>

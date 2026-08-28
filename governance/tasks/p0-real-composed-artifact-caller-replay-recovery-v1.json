@@ -1,0 +1,89 @@
+{
+  "acceptance_signals": [
+    "The new human-admitted recovery task and create-only task-start baseline exist before dry harness execution, real probe, root allocation, evidence write, staging, action, or build.",
+    "Every pre-existing changed path is classified; existing baseline files beneath the included prefix are preservation-only and every excluded predecessor path remains byte-identical.",
+    "One UTF-8 source is encoded once with one fixed length and SHA-256 and is used unchanged for dry and actual modes.",
+    "The outermost launcher catches compile, import, initialization, and execution exceptions and emits only a bounded reason code without traceback, host path, raw output, source, environment, credential, or process detail.",
+    "Dry mode resolves every required import, including denied_authority_request from scripts.artifact_invocation_readiness.readiness, validates fixed constants, manifest identities, launcher/backend regular-file identities, absent evidence target, and zero short roots, then exits before request construction with zero caller, probe, driver, action, and build attempts.",
+    "Only after dry PASS does actual mode construct one ArtifactInvocationCallerRequest and call run_ready_artifact_replay exactly once.",
+    "The caller performs one fresh real fixed readiness probe and allows exactly one unchanged driver invocation only after strict normalized PASS.",
+    "The injected action stages all 186 manifest-selected regular inputs with exact byte parity, performs one offline no-index no-dependency no-build-isolation no-cache wheel build, validates all managed wheel payload bytes, and returns one privacy-bounded evidence document.",
+    "The unchanged driver exclusively writes and fsyncs the new recovery evidence, creates its exact receipt, performs evidence-gated cleanup, and returns root absence to the caller.",
+    "Success reports one caller, readiness, probe, driver, action, and build attempt, cleanup true, root absent, ephemeral readiness receipt, denied authority, and a final zero-root observation.",
+    "Any dry or actual first deviation stops without a second dry or actual run, caller, probe, driver, action, build, retry, repair, alternate backend, manual cleanup, or false success claim; any private recovery root remains untouched.",
+    "Only the new recovery task, baseline, recovery evidence, STATUS, and dated log may change; all implementations, manifests, tests, contracts, prior tasks, prior evidence, prior baselines, and configuration remain byte-identical.",
+    "Focused and full supported tests plus manifest, task, repository, scope, JSON, privacy, evidence identity, zero-root, whitespace, and diff checks pass.",
+    "No dependency installation, network, public CLI, scheduler, persistent readiness receipt, external Agent, model, Git mutation, commit, push, publication, release, deployment, retry, repair, or broader journey occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-1a91d6b970764729bca09be5364890c7 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Recover the prior pre-caller stop with a new bounded evidence-only task. Capture a new create-only task-start baseline, then use the exact same encoded one-off source for a non-executing dry mode and one actual mode. Dry mode must compile the source, resolve every repository import including denied_authority_request from its defining readiness module, initialize bounded constants, confirm the manifest, fixed launcher, backend wheel, evidence target, and zero short roots, and exit before request construction. Both modes must be wrapped by an outermost bounded exception handler that emits no raw traceback or host path. Only after dry PASS may actual mode call run_ready_artifact_replay exactly once, permitting one readiness probe before at most one driver, action, offline wheel build, driver-owned evidence write, receipt, and gated cleanup. Stop at the first deviation without retry, repair, alternate backend, implementation change, or manual cleanup."
+  },
+  "risk": {
+    "items": [
+      "A second one-off source could drift from the dry-checked source; one shared encoded byte string, length, and digest must bind both modes.",
+      "Import or initialization failure could again expose a host path; the outermost wrapper must contain exceptions before Python prints a traceback.",
+      "One actual replay may fail after allocating a short root; the private recovery handle must remain untouched because manual cleanup is not authorized.",
+      "The readiness result is point-in-time and cannot eliminate launcher, backend, or root replacement races.",
+      "The readiness checker still bounds launcher output only after capture.",
+      "The dirty worktree contains the stopped predecessor and five earlier slices; broad baseline-prefix inclusion grants no authority to alter them.",
+      "Reviewed assumption: The compatible local Python 3.12 launcher and exact retained backend wheel remain available.",
+      "Reviewed assumption: The corrected import can use the defining readiness module without a repository implementation change.",
+      "Reviewed assumption: The prior action pattern remains suitable for one current offline wheel build.",
+      "Reviewed assumption: Dry mode can exercise import and initialization boundaries without invoking the caller.",
+      "Reviewed assumption: The new recovery evidence target and dated log provide sufficient bounded closeout surfaces.",
+      "Reviewed unknown: Whether dry mode passes all corrected imports and initialization on the current host.",
+      "Reviewed unknown: Whether the sole actual readiness probe and composed replay succeed.",
+      "Reviewed unknown: The exact wheel and generated metadata identities produced by the current build.",
+      "Reviewed unknown: Whether another first deviation exists after the corrected import.",
+      "Reviewed unknown: Cross-platform behavior, adversarial replacement, recovery behavior, repeated reliability, adoption, time savings, causal benefit, and return on investment remain unknown."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "docs/development-automation-contracts.md",
+      "docs/build-validation/artifact-invocation-transport-readiness-gate-v1-2026-08-26.md",
+      "docs/build-validation/minimal-artifact-invocation-caller-gate-v1-2026-08-26.md",
+      "docs/build-validation/minimal-noninteractive-artifact-driver-v1-2026-08-26.md",
+      "docs/build-validation/no-retry-artifact-driver-gate-replay-v1-2026-08-26.md",
+      "docs/build-validation/real-action-artifact-driver-replay-v1-2026-08-26.md",
+      "governance/tasks/p0-artifact-invocation-transport-readiness-gate-v1.json",
+      "governance/tasks/p0-minimal-artifact-invocation-caller-gate-v1.json",
+      "governance/tasks/p0-minimal-noninteractive-artifact-driver-v1.json",
+      "governance/tasks/p0-no-retry-artifact-driver-gate-replay-v1.json",
+      "governance/tasks/p0-real-action-artifact-driver-replay-v1.json",
+      "governance/tasks/p0-real-composed-artifact-caller-replay-v1.json",
+      "scripts"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-real-composed-artifact-caller-replay-recovery-v1.json",
+      ".agentgov/scope-baselines",
+      "docs/build-validation/real-composed-artifact-caller-replay-recovery-v1-2026-08-26.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-26.md"
+    ]
+  },
+  "task_id": "p0-real-composed-artifact-caller-replay-recovery-v1",
+  "title": "Real composed artifact caller replay recovery v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-real-composed-artifact-caller-replay-recovery-v1.json --baseline .agentgov/scope-baselines/p0-real-composed-artifact-caller-replay-recovery-v1.json",
+    "py -3.11 -m scripts.distribution_input_manifest check --repository . --manifest governance/distribution-input-manifest.json",
+    "py -3.11 -m unittest scripts.artifact_invocation_caller.test_caller scripts.artifact_invocation_readiness.test_readiness scripts.artifact_replay_driver.test_driver scripts.distribution_input_manifest.test_manifest scripts.short_build_root.test_root -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-real-composed-artifact-caller-replay-recovery-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-real-composed-artifact-caller-replay-recovery-v1.json",
+    "git diff --check"
+  ]
+}

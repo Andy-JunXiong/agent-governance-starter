@@ -1,0 +1,93 @@
+{
+  "acceptance_signals": [
+    "The exact human-admitted task record exists and a create-only task-start baseline is captured before any evidence write, temporary-root allocation, staging, or build.",
+    "Every pre-existing changed path is classified: existing .agentgov scope baselines are preservation-only inputs under the included baseline prefix, and .codex remains excluded and byte-identical.",
+    "Read-only preflight verifies the current distribution-input manifest and both persisted digests, one compatible retained local build backend, the current evidence-gated short-root helper API, and zero existing task-owned short roots; any deviation stops before allocation.",
+    "Exactly one verified short root receives exactly the current manifest-selected regular files with no links, unsafe paths, extras, or source-to-stage byte mismatches.",
+    "Exactly one offline no-isolation wheel build runs without retry, repair, alternate backend, dependency installation, or network access and emits at most one wheel; failure stops later artifact claims.",
+    "Artifact analysis records managed package and data payload parity, generated metadata separately, wheel identity, and the first deviation without exposing host paths, raw output, source contents, credentials, or process identities.",
+    "Before cleanup, the same noninteractive artifact driver writes the declared sanitized durable evidence file, computes its exact canonical SHA-256, creates the repository-relative evidence receipt, and calls remove_short_build_root_after_evidence without input, stdin, or TTY-dependent control flow.",
+    "The gated cleanup revalidates evidence, removes only the exact verified task root, returns a privacy-bounded success result, and a final read-only check finds zero task roots; any evidence or cleanup failure leaves the root for bounded recovery and records no success.",
+    "STATUS and the dated development log distinguish Codex-run validation, pending validation, incomplete work, authority limits, and the next product review without rewriting prior task outcomes.",
+    "Only the new task record and baseline, the new dated build-validation record, STATUS, and the new dated development log may change; all product code, helpers, manifests, schemas, tests, prior task records, prior evidence, local configuration, and other documentation remain byte-identical.",
+    "The declared focused and complete Python 3.11 tests, manifest check, task and repository governance checks, task JSON parse, final scope comparison, zero-root check, and diff whitespace check pass.",
+    "No second build, public CLI or installed-package change, external Agent, model, consumer form, credential access, Git mutation, commit, push, publication, release, deployment, or full governance journey occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-5f4dac9a5f9244bb8c5b7cb7d252a0fd and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Perform one bounded offline artifact-driver replay from exactly the current persisted distribution-input manifest. Before allocation, require the manifest checker, retained local build prerequisites, current short-root helper identity, and zero pre-existing task roots to pass. Allocate exactly one verified short root, stage only manifest-selected current regular files, run exactly one no-isolation wheel build without retry or repair, and retain the root through artifact analysis. The same noninteractive driver writes sanitized durable evidence at the declared repository-relative path, computes its canonical SHA-256 identity, creates an explicit evidence receipt, invokes remove_short_build_root_after_evidence without reading stdin or branching on TTY state, and confirms the exact root is absent. Stop at the first deviation and do not change product code or prior evidence."
+  },
+  "risk": {
+    "items": [
+      "Any manifest, prerequisite, staging, build, artifact, evidence, receipt, cleanup, scope, or validation deviation stops the replay without repair or a second build.",
+      "The evidence file must be durable before receipt creation and gated cleanup; a premature or mismatched receipt must not remove the root.",
+      "The current dirty inventory contains legitimate local baseline evidence and local MCP configuration; broad prefixes grant no authority to alter predecessor baselines or .codex.",
+      "A one-off foreground driver is validation evidence only and does not create a supported public workflow or prove future repeated reliability.",
+      "The temporary root and wheel may remain after a gated failure; recovery may remove only the exact verified task-owned root after durable evidence and must not claim replay success.",
+      "Reviewed assumption: The persisted manifest still matches exactly the current supported distribution inputs at take-up.",
+      "Reviewed assumption: A compatible retained local build frontend and backend remain available offline without installation.",
+      "Reviewed assumption: The existing short-root helper and evidence-gated cleanup API remain unchanged and suitable for this exact one-run caller.",
+      "Reviewed assumption: The repository can create the declared new dated evidence and log paths without altering prior records.",
+      "Reviewed unknown: Whether the single wheel build and payload parity still match the previous artifact observation.",
+      "Reviewed unknown: Whether the one-off driver completes the new receipt and cleanup path in the current closed-input host.",
+      "Reviewed unknown: Cross-platform behavior, future toolchain behavior, repeated reliability, adoption, time savings, causal benefit, and return on investment remain unproven.",
+      "Reviewed assumption: The resolved alignment journey selected this exact bounded replay direction.",
+      "Reviewed assumption: No product or helper code change is required to test the caller-side integration.",
+      "Reviewed assumption: The existing .agentgov baseline files are local governance evidence that must remain byte-identical except for the exact new task baseline.",
+      "Reviewed assumption: The existing .codex configuration is local host configuration and remains excluded.",
+      "Reviewed unknown: The exact current artifact identity and managed payload result before the one permitted build runs.",
+      "Reviewed unknown: Whether the current host completes the evidence receipt and gated cleanup path without a first deviation.",
+      "Reviewed unknown: Whether a later product requirement should persist a reusable artifact driver after this one-run result."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "docs/adr",
+      "docs/development-automation-contracts.md",
+      "docs/development-monitor.md",
+      "docs/development-plan.md",
+      "docs/drift-review-reminders.md",
+      "docs/experiments",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/validation",
+      "governance/distribution-input-manifest.json",
+      "schemas",
+      "scripts",
+      "src",
+      "tests"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-no-retry-artifact-driver-gate-replay-v1.json",
+      ".agentgov/scope-baselines",
+      "docs/build-validation/no-retry-artifact-driver-gate-replay-v1-2026-08-26.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-26.md"
+    ]
+  },
+  "task_id": "p0-no-retry-artifact-driver-gate-replay-v1",
+  "title": "No-retry artifact-driver cleanup-gate replay v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-no-retry-artifact-driver-gate-replay-v1.json --baseline .agentgov/scope-baselines/p0-no-retry-artifact-driver-gate-replay-v1.json",
+    "py -3.11 -m scripts.distribution_input_manifest check --repository . --manifest governance/distribution-input-manifest.json",
+    "py -3.11 -m unittest scripts.distribution_input_manifest.test_manifest scripts.short_build_root.test_root -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-no-retry-artifact-driver-gate-replay-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-no-retry-artifact-driver-gate-replay-v1.json",
+    "git diff --check"
+  ]
+}

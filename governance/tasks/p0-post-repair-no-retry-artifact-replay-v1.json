@@ -1,0 +1,75 @@
+{
+  "acceptance_signals": [
+    "Resolved journey mcpj-b6e7aa5a13f545f1ae0924e1e2189739 and a matching human-admitted execution task exist before repository execution writes.",
+    "A create-only task-start scope baseline is captured before the replay.",
+    "Fresh read-only preflight passes the exact 186-path manifest identities, compatible retained Python 3.11 launcher and expected pip and setuptools versions, exact retained backend-wheel digest, absent evidence target, zero short roots, task governance, captured scope, and whitespace.",
+    "The fixed controller is invoked exactly once by module name with one strict JSON stdin request; no alternate invocation or second controller call occurs.",
+    "The controller performs one outer manifest admission, one Harness dry attempt, and at most one Harness actual attempt; readiness, driver, action, and build are each attempted at most once.",
+    "On PASS, one privacy-bounded evidence file is durably written, its receipt is revalidated, the exact short root is removed, and the final short-root count is zero.",
+    "On any first deviation, execution stops without retry, repair, alternate backend, implementation change, manual cleanup, or false success; any private recovery root remains untouched.",
+    "The bounded controller result and closeout expose only normalized status, phase, reason, identities, and attempt counts, never source, host paths, raw output, traceback, environment, credentials, or process details.",
+    "Every pre-existing file under the broadly included task, baseline, and build-validation prefixes remains byte-identical; only the new admitted task, its baseline, possible new real evidence, STATUS.md, and the 2026-08-27 log may change.",
+    "All excluded code, contracts, configuration, and prior dated log paths remain byte-identical.",
+    "Post-run task governance, repository governance, captured scope, user-documentation tests, manifest state, zero-short-root observation where safe, task JSON, and git diff --check pass.",
+    "No network, dependency installation, Git mutation, commit, push, publication, release, deployment, or external-Agent action occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-0d633d1e3f55466b8381d3dc15295915 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Execute the previously human-selected post-repair real replay direction from resolved journey mcpj-b6e7aa5a13f545f1ae0924e1e2189739. Make no implementation changes. Capture a create-only scope baseline, perform fresh read-only preflight for the exact 186-path manifest identities, compatible retained Python 3.11 launcher, retained setuptools 84.0.0 wheel identity, absent evidence target, and zero short roots, then invoke the fixed artifact replay controller exactly once through its strict JSON stdin request. Accept either bounded PASS or the first bounded deviation as the complete one-attempt outcome. Never retry, repair, switch backend, manually clean a recovery root, or expose private paths or raw output. Record the exact bounded outcome in STATUS.md and the dated development log."
+  },
+  "risk": {
+    "items": [
+      "The task intentionally allows one real local build and evidence-gated short-root cleanup; the first deviation exhausts the task and cannot be retried.",
+      "If the driver allocates a short root and later fails before validated evidence, the private recovery root must remain untouched under this task.",
+      "Broad task, baseline, and build-validation prefixes are used only to satisfy bounded scope cardinality; every pre-existing member is preservation-only.",
+      "The Harness is containment rather than a security sandbox.",
+      "A single successful replay does not prove cross-platform behavior, repeated reliability, interviewer response, adoption, time savings, causal benefit, or return on investment.",
+      "Reviewed assumption: The previously observed retained Python 3.11 build environment and exact setuptools 84.0.0 wheel remain locally available subject to fresh preflight.",
+      "Reviewed assumption: The repaired controller, caller, and driver chain validated by the immediately preceding task is the exact code used for this one replay.",
+      "Reviewed assumption: The repository and evidence target remain stable between preflight and the sole controller invocation.",
+      "Reviewed unknown: Whether the one real replay completes the offline wheel build, durable evidence write, receipt validation, and gated cleanup.",
+      "Reviewed unknown: The exact built wheel identity and evidence identity if the replay passes."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "docs/development-automation-contracts.md",
+      "docs/development-log/2026-08-26.md",
+      "scripts/artifact_invocation_caller",
+      "scripts/artifact_invocation_readiness",
+      "scripts/artifact_replay_controller",
+      "scripts/artifact_replay_driver",
+      "scripts/artifact_replay_harness"
+    ],
+    "include_paths": [
+      "governance/tasks",
+      ".agentgov/scope-baselines",
+      "docs/build-validation",
+      "STATUS.md",
+      "docs/development-log/2026-08-27.md"
+    ]
+  },
+  "task_id": "p0-post-repair-no-retry-artifact-replay-v1",
+  "title": "Post-repair no-retry artifact replay v1",
+  "validation_commands": [
+    "py -3.11 -m unittest scripts.artifact_replay_controller.test_controller scripts.artifact_replay_harness.test_harness scripts.artifact_invocation_caller.test_caller scripts.artifact_invocation_readiness.test_readiness scripts.artifact_replay_driver.test_driver scripts.distribution_input_manifest.test_manifest scripts.short_build_root.test_root -v",
+    "py -3.11 -m scripts.distribution_input_manifest check --repository . --manifest governance/distribution-input-manifest.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-post-repair-no-retry-artifact-replay-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-post-repair-no-retry-artifact-replay-v1.json --baseline .agentgov/scope-baselines/p0-post-repair-no-retry-artifact-replay-v1.json",
+    "py -3.11 -m json.tool governance/tasks/p0-post-repair-no-retry-artifact-replay-v1.json",
+    "git diff --check"
+  ]
+}

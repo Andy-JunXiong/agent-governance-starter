@@ -1,7 +1,7 @@
 # Agent Governance Starter Kit
 
 [![CI](https://github.com/Andy-JunXiong/agent-governance-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/Andy-JunXiong/agent-governance-starter/actions/workflows/ci.yml)
-[![Live Demo](https://img.shields.io/badge/Live_Demo-open-0f8294)](https://andy-junxiong.github.io/agent-governance-starter/)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-open-0f8294)](https://andy-junxiong.github.io/agent-governance-starter/interview-demo.html)
 
 **Make AI-assisted repositories reviewable by default.**
 
@@ -10,14 +10,14 @@ coding agent was allowed to do, checks deterministic repository facts, keeps
 semantic uncertainty visible as `ADVISORY`, and separates verified completion
 from permission to commit, merge, publish, release, or deploy.
 
-[![Agent Governance from task intent to verified evidence](docs/assets/agentgov-social-preview.jpg)](https://andy-junxiong.github.io/agent-governance-starter/)
+[![Agent Governance from task intent to verified evidence](docs/assets/agentgov-social-preview.jpg)](https://andy-junxiong.github.io/agent-governance-starter/interview-demo.html)
 
 <p align="center">
   <strong>Follow one coding-agent task from intent to bounded handoff.</strong>
   <br><br>
-  <a href="https://andy-junxiong.github.io/agent-governance-starter/"><strong>Open the interactive product demo &rarr;</strong></a>
+  <a href="https://andy-junxiong.github.io/agent-governance-starter/interview-demo.html"><strong>Open the interviewer-facing demo &rarr;</strong></a>
   &nbsp;&middot;&nbsp;
-  <a href="https://andy-junxiong.github.io/agent-governance-starter/governed-refund-walkthrough.html">Follow the 60-to-90-second walkthrough</a>
+  <a href="https://andy-junxiong.github.io/agent-governance-starter/project-interview.html">Read the project background</a>
   &nbsp;&middot;&nbsp;
   <a href="https://andy-junxiong.github.io/agent-governance-starter/portfolio.html">Inspect the evidence portfolio</a>
   &nbsp;&middot;&nbsp;
@@ -192,9 +192,9 @@ output, modify `safe.directory`, or weaken required-server startup behavior.
 
 ## Governed example
 
-The [60-to-90-second governed refund walkthrough](docs/governed-refund-walkthrough.html)
-shows a development-source journey in which a broad task is narrowed by a
-human, a changed-file scope failure blocks completion, and fresh evidence
+The [interviewer-facing refund demo](docs/interview-demo.html) visualizes a
+development-source journey in which a broad task is narrowed by a human, a
+changed-file scope failure blocks completion, and fresh evidence
 supports a bounded handoff. It is a product demonstration, not proof that an
 automatic primary experience works in every host or project.
 
@@ -268,6 +268,8 @@ owner rather than being duplicated here.
 ### Use the product
 
 - [Product homepage](docs/index.html): the plain-language public product story.
+- [Interviewer-facing demo](docs/interview-demo.html): the guided six-step
+  refund scenario for live presentation.
 - [Public product site](https://andy-junxiong.github.io/agent-governance-starter/)
   and [public evidence portfolio](https://andy-junxiong.github.io/agent-governance-starter/portfolio.html):
   rendered entry and evidence surfaces.
@@ -332,8 +334,13 @@ owner rather than being duplicated here.
   session evidence.
 - [Evidence portfolio](docs/portfolio.html): claims connected to their limits
   and repository sources.
-- [Interview guide](docs/interview-guide.md): reviewer-oriented presentation
-  order, commands, evidence, and honest limitations.
+- [Interview guide](docs/interview-guide.md): presenter-only timing, prompts,
+  role branches, evidence, and honest limitations.
+- [Artifact replay interview walkthrough](docs/artifact-replay-interview-walkthrough.md):
+  a focused three-to-five-minute engineering story backed by the recorded
+  one-attempt replay, with presentation-ready
+  [English](docs/artifact-replay-interview.html) and
+  [简体中文](docs/artifact-replay-interview.zh-CN.html) HTML pages.
 - [Human adoption pilot](docs/human-adoption-pilot.md), its
   [record template](docs/human-adoption-record.template.md), and the
   [uncoached participant handout](docs/uncoached-onboarding-handout.md): genuine

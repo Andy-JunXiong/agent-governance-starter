@@ -1,0 +1,91 @@
+{
+  "acceptance_signals": [
+    "Resolved journey mcpj-f8d4eaea8b9e4f24888d0072e44c0f30 and a matching human-admitted task exist before implementation writes.",
+    "A create-only task-start scope baseline is captured before repair writes.",
+    "The fixed controller passes only normalized exact manifest paths and identities through the internal caller request; the external controller request remains unchanged.",
+    "The driver launches no Git subprocess and requires no PATH while re-deriving distribution inputs and validating exact path count, path digest, and content digest before short-root allocation.",
+    "Any invalid or drifted manifest fact stops at driver preflight with action attempts zero, no short-root allocation, no evidence write, and no cleanup claim.",
+    "Caller and controller preserve one readiness attempt, at most one driver attempt, and at most one artifact action attempt.",
+    "Harmless tests prove successful fact propagation, Git-free driver preflight, drift rejection, privacy-bounded reports, and zero retry.",
+    "Focused controller/caller/driver tests, the combined artifact chain, documentation tests, and the full supported suite pass.",
+    "The repair task performs no real controller replay, build, evidence creation, or cleanup; that requires a separate admitted replay task.",
+    "Only admitted files change and every pre-existing excluded path and unrelated scope baseline remains byte-identical.",
+    "No network, dependency installation, Git mutation, commit, push, publication, release, deployment, public CLI, scheduler, or generic framework is introduced."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-064c96dd4a2b487b867d449acafa843d and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Implement the human-selected direction from resolved journey mcpj-f8d4eaea8b9e4f24888d0072e44c0f30. Extend only the internal controller-to-caller-to-driver request so the controller-bound exact manifest path list, path count, path digest, and content digest reach the driver. Before short-root allocation, the driver must re-derive distribution inputs and revalidate exact path and content identities using repository files only, without launching Git or requiring PATH. Preserve the external controller request, no-retry behavior, build action, evidence format, and evidence-gated cleanup. Add harmless tests and documentation. Validate this repair only; do not run the real replay in this task."
+  },
+  "risk": {
+    "items": [
+      "The internal caller and driver request contracts change together; incomplete propagation must fail closed and be fixture-protected.",
+      "Filesystem identities are point-in-time observations; actual driver validation must occur immediately before root allocation.",
+      "Pre-existing dirty-worktree files under broad included prefixes are preservation-only unless explicitly changed by this repair.",
+      "The Harness remains containment rather than a security sandbox.",
+      "A passing repair does not prove the later real build, evidence, cleanup, cross-platform behavior, repeated reliability, interviewer response, adoption, time savings, or return on investment.",
+      "Reviewed assumption: derive_distribution_inputs and canonical digest helpers inspect repository files without invoking Git.",
+      "Reviewed assumption: The fixed controller-bound manifest facts were already validated once with the Git-backed checker before Harness invocation.",
+      "Reviewed assumption: The controller worker source can pass normalized manifest paths and identities through the existing private caller request without changing external input.",
+      "Reviewed unknown: Whether the separately admitted post-repair real replay will pass readiness, build, evidence, and cleanup."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "docs/build-validation/artifact-invocation-transport-readiness-gate-v1-2026-08-26.md",
+      "docs/build-validation/minimal-artifact-invocation-caller-gate-v1-2026-08-26.md",
+      "docs/build-validation/minimal-noninteractive-artifact-driver-v1-2026-08-26.md",
+      "docs/build-validation/no-retry-artifact-driver-gate-replay-v1-2026-08-26.md",
+      "docs/build-validation/real-action-artifact-driver-replay-v1-2026-08-26.md",
+      "governance/tasks/p0-artifact-invocation-transport-readiness-gate-v1.json",
+      "governance/tasks/p0-artifact-replay-manifest-boundary-repair-v1.json",
+      "governance/tasks/p0-bounded-artifact-replay-harness-v1.json",
+      "governance/tasks/p0-bounded-artifact-replay-identity-bridge-v1.json",
+      "governance/tasks/p0-interview-ready-artifact-replay-close-loop-v1.json",
+      "governance/tasks/p0-minimal-artifact-invocation-caller-gate-v1.json",
+      "governance/tasks/p0-minimal-noninteractive-artifact-driver-v1.json",
+      "governance/tasks/p0-no-retry-artifact-driver-gate-replay-v1.json",
+      "governance/tasks/p0-real-action-artifact-driver-replay-v1.json",
+      "governance/tasks/p0-real-composed-artifact-caller-replay-recovery-v1.json",
+      "governance/tasks/p0-real-composed-artifact-caller-replay-v1.json",
+      "governance/tasks/p0-real-composed-artifact-identity-bridge-replay-v1.json",
+      "scripts/artifact_invocation_readiness",
+      "scripts/artifact_replay_harness"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-artifact-driver-filesystem-manifest-boundary-v1.json",
+      ".agentgov/scope-baselines",
+      "scripts/artifact_replay_controller",
+      "scripts/artifact_invocation_caller",
+      "scripts/artifact_replay_driver",
+      "docs/build-validation/artifact-driver-filesystem-manifest-boundary-v1-2026-08-26.md",
+      "docs/development-automation-contracts.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-26.md"
+    ]
+  },
+  "task_id": "p0-artifact-driver-filesystem-manifest-boundary-v1",
+  "title": "Artifact driver filesystem manifest boundary v1",
+  "validation_commands": [
+    "py -3.11 -m unittest scripts.artifact_replay_driver.test_driver scripts.artifact_invocation_caller.test_caller scripts.artifact_replay_controller.test_controller -v",
+    "py -3.11 -m unittest scripts.artifact_replay_controller.test_controller scripts.artifact_replay_harness.test_harness scripts.artifact_invocation_caller.test_caller scripts.artifact_invocation_readiness.test_readiness scripts.artifact_replay_driver.test_driver scripts.distribution_input_manifest.test_manifest scripts.short_build_root.test_root -v",
+    "py -3.11 -m scripts.distribution_input_manifest check --repository . --manifest governance/distribution-input-manifest.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-artifact-driver-filesystem-manifest-boundary-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-artifact-driver-filesystem-manifest-boundary-v1.json --baseline .agentgov/scope-baselines/p0-artifact-driver-filesystem-manifest-boundary-v1.json",
+    "py -3.11 -m json.tool governance/tasks/p0-artifact-driver-filesystem-manifest-boundary-v1.json",
+    "git diff --check"
+  ]
+}

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Why I built AgentGov, how useful delivery work pulled it off course, and how I brought the product back to its original problem.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; img-src 'self'">
+  <title>I built AgentGov—and noticed its center of gravity drifting</title>
+  <link rel="icon" href="favicon.ico" type="image/svg+xml">
+  <link rel="stylesheet" href="project-interview.css">
+</head>
+<body class="project-story-page">
+  <nav aria-label="Primary navigation">
+    <div class="shell nav-inner">
+      <a class="brand" href="index.html"><span class="mark">AG</span>Agent Governance Starter Kit</a>
+      <div class="nav-links">
+        <a href="interview-demo.html">Live demo</a>
+        <a href="interview-guide.html">Interview guide</a>
+        <a href="portfolio.html">Evidence portfolio</a>
+        <span class="language-switch" aria-label="Language"><a href="project-interview.html" lang="en" aria-current="page">EN</a><a href="project-interview.zh-CN.html" lang="zh-CN" hreflang="zh-CN">中文</a></span>
+      </div>
+    </div>
+  </nav>
+  <header class="story-hero shell">
+    <span class="eyebrow">The AgentGov project story</span>
+    <h1>I built AgentGov—and noticed its center of gravity drifting.</h1>
+    <p class="lead">Every feature still worked. The tests stayed green. But I was getting better at explaining GitHub mechanics and worse at explaining what new value I was adding to the original product problem.</p>
+  </header>
+
+  <main>
+    <section class="story-act" id="problem">
+      <div class="shell act-grid">
+        <aside class="act-aside"><span class="act-number">01</span></aside>
+        <div class="act-copy">
+          <h2>Why I built it</h2>
+          <p class="spoken">A coding agent can write code that passes its tests and still do more than the person actually asked for. Green tests also do not tell you whether anyone has approved the change to move forward.</p>
+          <p class="support">I started with the part software could check reliably. AgentGov reads the task a person wrote, the files allowed for that task, and the evidence produced during the work. It can say something passed, failed, or still needs a person. I deliberately did not let those checks turn into “this change is correct.”</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="story-act" id="drift">
+      <div class="shell act-grid">
+        <aside class="act-aside"><span class="act-number">02</span></aside>
+        <div class="act-copy">
+          <h2>How I noticed it was drifting</h2>
+          <p class="spoken">A consumer exercise exposed real friction around installation, Windows paths, onboarding, and understanding the commands. I started improving those things. Then CI. Then PR workflows. None of those changes were bad. They were useful, and the tests stayed green.</p>
+          <blockquote class="turning-quote">I was getting better at explaining how the GitHub features worked—and finding it harder to explain what the next feature added to the original business problem.</blockquote>
+          <p class="spoken">The warning came from a habit I already had. After every feature, I wrote down its short-term benefit, long-term benefit, and how it connected to the next stage. After several features, GitHub and delivery language were taking over the roadmap, while the connection to the original business requirement was becoming harder to explain.</p>
+          <p class="support">I did not treat that feeling as proof. I went back and compared the accumulated work with the original requirement. The individual features were fine. The product direction had drifted.</p>
+          <div class="signal-list" aria-label="Drift signals">
+            <article><strong>The features worked</strong><span>Local quality was not the problem.</span></article>
+            <article><strong>The roadmap changed</strong><span>Delivery mechanics were becoming the main story.</span></article>
+            <article><strong>The original value blurred</strong><span>Each new connection to the business problem was harder to explain.</span></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="story-act" id="decision">
+      <div class="shell act-grid">
+        <aside class="act-aside"><span class="act-number">03</span></aside>
+        <div class="act-copy">
+          <h2>What I changed</h2>
+          <p class="spoken">I did not throw away the PR or CI work. I moved it out of the center. I returned to the smallest version of the original development loop first, then added detail around it.</p>
+          <p class="support">The main product became easy to say again: a person describes the task, agrees which files may change, the agent does the work, software checks the current files and tests, and a person decides what happens next. PR and CI can replay the same facts afterwards as a backstop.</p>
+          <div class="architecture-flow" aria-label="AgentGov development loop">
+            <span>Person describes the task</span><span>Files are agreed</span><span>Agent makes the change</span><span>Changed files are checked</span><span>Current tests run</span><span>Person reviews</span><span>Person decides</span><span>PR and CI recheck later</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="story-act" id="proof">
+      <div class="shell act-grid">
+        <aside class="act-aside"><span class="act-number">04</span></aside>
+        <div class="act-copy">
+          <h2>One example makes the product concrete</h2>
+          <p class="spoken">In the refund demo, the agent fixes the calculation correctly but also changes an approval rule nobody asked it to touch. The tests can still be green. AgentGov compares the changed files with the task, blocks completion, and leaves the real choice to a person.</p>
+          <div class="proof-grid single-proof">
+            <article class="proof-card">
+              <span class="proof-kind">Guided refund demo</span>
+              <h3>The requested fix stays. The extra rule change goes.</h3>
+              <p>The demo shows the whole sequence in six steps, including the blocked state and the final return to human review.</p>
+              <a href="interview-demo.html">Open the refund demo →</a>
+            </article>
+          </div>
+          <div class="lesson-panel">
+            <h2>Verification can prove a change works. It cannot tell me whether I am still building the right product.</h2>
+            <p class="spoken">Nothing inside AgentGov solves that product question automatically. I have to go back to the original problem and check whether the last several features are still strengthening it.</p>
+            <p class="support">I now treat that as a development habit, not another feature to automate.</p>
+          </div>
+          <div class="story-actions">
+            <a class="story-button primary" href="interview-demo.html">Open the refund demo</a>
+            <a class="story-button" href="artifact-replay-interview.html">See the engineering failure story</a>
+            <a class="story-button" href="interview-guide.html">Prepare the interview route</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="shell">Agent Governance Starter Kit · Why I built it, how it drifted, and what I changed</div></footer>
+</body>
+</html>

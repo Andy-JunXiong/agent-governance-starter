@@ -1,0 +1,98 @@
+{
+  "acceptance_signals": [
+    "The exact human-admitted task record exists and a create-only task-start baseline is captured before any evidence write, temporary-root allocation, staging, or build.",
+    "Every pre-existing changed path is classified: existing scope baselines are preservation-only inputs beneath the included baseline prefix, while prior evidence, prior tasks, driver implementation, automation documentation, and local configuration remain excluded and byte-identical.",
+    "Read-only preflight verifies the current distribution-input manifest and both persisted digests, one compatible retained local build backend, the persisted artifact replay driver and evidence-gated short-root APIs, and zero existing task-owned short roots; any deviation stops before allocation.",
+    "Exactly one call to run_artifact_replay supplies one injected real action, the current manifest reference, bounded projected paths, and one new normalized repository-relative evidence target.",
+    "The injected action receives only the verified short root, stages exactly the current manifest-selected regular files without links, unsafe paths, extras, or byte mismatches, and invokes one offline no-index, no-dependency, no-build-isolation, no-cache wheel build.",
+    "The real action is attempted exactly once without retry, repair, alternate backend, dependency installation, or network access and emits exactly one wheel or stops at the first deviation.",
+    "Artifact analysis separates managed package and data payload parity from generated metadata and returns one bounded LF-normalized ArtifactEvidence document without host paths, raw output, source contents, credentials, or process identities.",
+    "The persisted driver exclusively writes and fsyncs the evidence, computes its exact canonical SHA-256, creates the repository-relative receipt, and calls remove_short_build_root_after_evidence only after receipt creation without stdin or TTY control flow.",
+    "Success requires the driver result to report one action attempt, manifest identities, evidence write and revalidation, gated cleanup removal, and exact-root absence; a final read-only zero-root check agrees.",
+    "Any manifest, allocation, action, staging, build, artifact, evidence, receipt, or cleanup deviation stops without a second action and does not record cleanup success; a validated root is preserved when evidence has not authorized removal.",
+    "STATUS and the dated development log distinguish pre-cleanup immutable evidence from the post-driver cleanup observation, Codex-run validation, unknowns, authority limits, and the next product review without rewriting prior facts.",
+    "Only the new task record and baseline, the new dated build-validation evidence, STATUS, and the existing dated development log may change; every product, helper, manifest, schema, test, prior record, prior evidence, local configuration, and other documentation path remains byte-identical.",
+    "The declared driver, manifest, short-root, complete Python 3.11, task and repository governance, task JSON, final scope, privacy, zero-root, and diff whitespace checks pass.",
+    "No second build, retained background backend, dependency installation, network request, public CLI, installed-package change, external Agent, model, consumer form, credential access, Git mutation, commit, push, publication, release, deployment, scheduling, retry, repair, or full governance journey occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-8e376c9239d14d94afa3ae93f07a6e08 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Perform exactly one bounded offline wheel-build action through the persisted repository-internal run_artifact_replay driver. Before allocation, require the current distribution-input manifest, retained local no-isolation build prerequisites, driver and short-root contracts, zero pre-existing task roots, and a create-only task-start baseline to pass. The injected action receives only the verified short root, stages exactly the manifest-selected regular files, runs exactly one offline no-dependency wheel build without retry or repair, validates managed payload parity, and returns one sanitized ArtifactEvidence document. The persisted driver must exclusively and durably write that new repository-relative evidence, create its receipt, invoke the existing evidence-gated cleanup, and return a privacy-bounded success confirming one action attempt and exact-root absence. Stop at the first deviation and do not modify implementation files or prior evidence."
+  },
+  "risk": {
+    "items": [
+      "A caller could bypass the persisted driver for evidence or cleanup; the action receives only the short root and the driver must own the evidence target, receipt, cleanup call, and normalized result.",
+      "A build or analysis failure after allocation preserves the exact short root and stops the task; cleanup must not be inferred or performed outside the validated evidence gate.",
+      "The one permitted real build cannot be retried, repaired, or substituted, even if the first deviation appears locally recoverable.",
+      "The action-generated evidence precedes cleanup and therefore cannot itself claim the later cleanup result; STATUS and the dated log own the post-driver observation.",
+      "The dirty worktree contains completed driver work and predecessor evidence; broad baseline inclusion grants no authority to alter any predecessor file.",
+      "Artifact inspection could leak host paths, raw subprocess output, source contents, or credentials; only counts, canonical digests, booleans, bounded reason codes, and denied authority may persist.",
+      "Reviewed assumption: One offline wheel build remains the smallest representative real artifact action.",
+      "Reviewed assumption: The retained Python 3.11, pip, and setuptools toolchain can build the current project without network access or dependency installation.",
+      "Reviewed assumption: The current manifest checker still reports the same normalized manifest identities before allocation.",
+      "Reviewed assumption: The persisted run_artifact_replay, create_short_build_root, create_evidence_receipt, and remove_short_build_root_after_evidence contracts remain unchanged and suitable for the exact replay.",
+      "Reviewed assumption: A foreground one-off invocation can call the persisted driver without adding a public CLI or repository implementation file.",
+      "Reviewed assumption: The existing dated development log may receive one append-only section while preserving earlier session facts.",
+      "Reviewed assumption: A successful driver return is sufficient to attribute evidence writing, receipt creation, and gated cleanup to the persisted caller boundary.",
+      "Reviewed unknown: The exact wheel identity and generated metadata identity produced by the one permitted current build.",
+      "Reviewed unknown: Whether the current real action completes successfully through the persisted driver on this host.",
+      "Reviewed unknown: Whether the real caller needs additional stable observation fields beyond the current privacy-bounded result.",
+      "Reviewed unknown: Cross-platform behavior, concurrent adversarial replacement, recovery after failure, future toolchain behavior, repeated reliability, adoption, time savings, causal benefit, and return on investment.",
+      "Reviewed unknown: Whether a broader end-to-end governance journey should be proposed after this replay."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "docs/adr",
+      "docs/build-validation/minimal-noninteractive-artifact-driver-v1-2026-08-26.md",
+      "docs/build-validation/no-retry-artifact-driver-gate-replay-v1-2026-08-26.md",
+      "docs/development-automation-contracts.md",
+      "docs/development-monitor.md",
+      "docs/development-plan.md",
+      "docs/drift-review-reminders.md",
+      "docs/experiments",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/validation",
+      "governance/distribution-input-manifest.json",
+      "governance/tasks/p0-minimal-noninteractive-artifact-driver-v1.json",
+      "governance/tasks/p0-no-retry-artifact-driver-gate-replay-v1.json",
+      "schemas",
+      "scripts",
+      "src",
+      "tests"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-real-action-artifact-driver-replay-v1.json",
+      ".agentgov/scope-baselines",
+      "docs/build-validation/real-action-artifact-driver-replay-v1-2026-08-26.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-26.md"
+    ]
+  },
+  "task_id": "p0-real-action-artifact-driver-replay-v1",
+  "title": "Real-action artifact-driver replay v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-real-action-artifact-driver-replay-v1.json --baseline .agentgov/scope-baselines/p0-real-action-artifact-driver-replay-v1.json",
+    "py -3.11 -m scripts.distribution_input_manifest check --repository . --manifest governance/distribution-input-manifest.json",
+    "py -3.11 -m unittest scripts.artifact_replay_driver.test_driver scripts.distribution_input_manifest.test_manifest scripts.short_build_root.test_root -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-real-action-artifact-driver-replay-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-real-action-artifact-driver-replay-v1.json",
+    "git diff --check"
+  ]
+}

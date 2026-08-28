@@ -1,0 +1,86 @@
+{
+  "acceptance_signals": [
+    "The human-admitted task and create-only task-start baseline exist before any real probe, root allocation, evidence write, staging, action, or build.",
+    "Every pre-existing changed path is classified; existing baseline files beneath the included baseline prefix are preservation-only and every excluded predecessor path remains byte-identical.",
+    "Read-only preflight verifies the manifest identities, one compatible fixed launcher, one exact retained backend wheel, unchanged readiness/caller/driver/root contracts, and zero task-owned short roots before invocation.",
+    "Exactly one run_ready_artifact_replay call receives one private InvocationTransportRequest plus the unchanged driver arguments and one injected real action.",
+    "The caller performs exactly one real fixed readiness probe and accepts only its fresh normalized PASS before exactly one driver invocation.",
+    "The injected action stages exactly the manifest-selected regular inputs, invokes one offline no-index no-dependency no-build-isolation no-cache wheel build, validates managed payload parity, and returns one privacy-bounded evidence document.",
+    "The unchanged driver exclusively writes and fsyncs the new evidence, creates its receipt, calls evidence-gated cleanup, and reports exact-root absence.",
+    "Success reports readiness_attempts=1, driver_attempts=1, action_attempts=1, cleanup_removed=true, exact nested PASS reports, denied authority, and a final zero-root observation.",
+    "Any first deviation stops without retry, repair, alternate backend, second caller/probe/driver/action/build, manual cleanup, or a false success claim; any private recovery root remains untouched pending separate human-controlled recovery.",
+    "Only the admitted task, new baseline, new evidence, STATUS, and dated log may change; checker, caller, driver, manifest, tests, prior records, prior evidence, contracts, and configuration remain byte-identical.",
+    "Focused and full supported tests plus manifest, task, repository, scope, JSON, privacy, zero-root, whitespace, and diff checks pass.",
+    "No dependency installation, network request, public CLI, scheduler, external Agent, model, Git mutation, commit, push, publication, release, deployment, retry, repair, or broader end-to-end journey occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-fd9d6f666d704b62924bf13057c62974 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Perform exactly one bounded real offline wheel-build replay through the repository-internal run_ready_artifact_replay caller. Capture a create-only task-start baseline and pass read-only preflight before the call. The caller must execute one fresh real readiness probe before exactly one unchanged driver invocation; the injected action stages the current manifest-selected inputs, performs one offline no-index no-dependency no-build-isolation no-cache wheel build, validates payload parity, and returns one sanitized evidence document for driver-owned durable write and evidence-gated cleanup. Stop at the first deviation without retry, repair, alternate backend, manual cleanup, implementation changes, or a second replay."
+  },
+  "risk": {
+    "items": [
+      "One real replay may fail after allocating a short root; the wrapper must preserve the private recovery handle and no cleanup outside the validated evidence gate is authorized.",
+      "The readiness result is point-in-time and cannot eliminate launcher, backend, or root replacement races after observation.",
+      "The checker bounds output only after process capture, so a misbehaving launcher remains a known memory-risk gap.",
+      "A foreground one-off invocation could accidentally bypass the wrapper; call structure and normalized report must prove the wrapper owned readiness-before-driver ordering.",
+      "The dirty worktree contains five completed predecessor slices; broad baseline-prefix inclusion grants no authority to alter prior baseline files.",
+      "Evidence could leak host paths, process output, source content, credentials, or action representations; persisted output is restricted to normalized counts, digests, booleans, bounded reason codes, and denied authority.",
+      "Reviewed assumption: The existing retained offline build inputs and compatible launcher/backend remain available on this host.",
+      "Reviewed assumption: One real offline wheel build is the smallest representative composed caller replay.",
+      "Reviewed assumption: The current manifest-selected inputs and unchanged action pattern remain suitable for exact parity validation.",
+      "Reviewed assumption: A foreground one-off invocation can call the persisted wrapper without adding a public CLI or repository implementation file.",
+      "Reviewed assumption: The existing dated log can receive one append-only closeout section while preserving earlier facts.",
+      "Reviewed unknown: Whether the current fixed readiness probe passes against the available launcher and backend on this host.",
+      "Reviewed unknown: Whether the real composed caller replay succeeds on its single permitted attempt.",
+      "Reviewed unknown: The exact wheel and generated metadata identities produced by the permitted build.",
+      "Reviewed unknown: Whether a later task should prioritize pre-capture output quota hardening.",
+      "Reviewed unknown: Cross-platform behavior, adversarial replacement, recovery behavior, repeated reliability, adoption, time savings, causal benefit, and return on investment remain unknown."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "docs/development-automation-contracts.md",
+      "docs/build-validation/artifact-invocation-transport-readiness-gate-v1-2026-08-26.md",
+      "docs/build-validation/minimal-artifact-invocation-caller-gate-v1-2026-08-26.md",
+      "docs/build-validation/minimal-noninteractive-artifact-driver-v1-2026-08-26.md",
+      "docs/build-validation/no-retry-artifact-driver-gate-replay-v1-2026-08-26.md",
+      "docs/build-validation/real-action-artifact-driver-replay-v1-2026-08-26.md",
+      "governance/tasks/p0-artifact-invocation-transport-readiness-gate-v1.json",
+      "governance/tasks/p0-minimal-artifact-invocation-caller-gate-v1.json",
+      "governance/tasks/p0-minimal-noninteractive-artifact-driver-v1.json",
+      "governance/tasks/p0-no-retry-artifact-driver-gate-replay-v1.json",
+      "governance/tasks/p0-real-action-artifact-driver-replay-v1.json",
+      "scripts"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-real-composed-artifact-caller-replay-v1.json",
+      ".agentgov/scope-baselines",
+      "docs/build-validation/real-composed-artifact-caller-replay-v1-2026-08-26.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-26.md"
+    ]
+  },
+  "task_id": "p0-real-composed-artifact-caller-replay-v1",
+  "title": "Real composed artifact caller replay v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-real-composed-artifact-caller-replay-v1.json --baseline .agentgov/scope-baselines/p0-real-composed-artifact-caller-replay-v1.json",
+    "py -3.11 -m scripts.distribution_input_manifest check --repository . --manifest governance/distribution-input-manifest.json",
+    "py -3.11 -m unittest scripts.artifact_invocation_caller.test_caller scripts.artifact_invocation_readiness.test_readiness scripts.artifact_replay_driver.test_driver scripts.distribution_input_manifest.test_manifest scripts.short_build_root.test_root -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-real-composed-artifact-caller-replay-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-real-composed-artifact-caller-replay-v1.json",
+    "git diff --check"
+  ]
+}

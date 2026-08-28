@@ -1,0 +1,107 @@
+{
+  "acceptance_signals": [
+    "English and Simplified Chinese demo pages preserve exactly six interactive states, the real PASS, FAIL, BLOCKED, and REVIEW_READY product states, and the existing Back, Next, and Restart contract.",
+    "The demo uses ordinary engineering language, explains actor provenance once, and does not repeat not-AgentGov or non-claim disclaimers through the six steps.",
+    "The demo retains one concise disclosure that it is a guided replay based on a verified development-source scenario rather than a live run.",
+    "The project story follows the factual human causal sequence: the long-standing benefit-note habit, growing ease explaining GitHub and delivery mechanics, increasing difficulty connecting them to the original business requirement, comparison with the original requirement, confirmed drift, and re-centering.",
+    "The project story does not invent a single dramatic turning point, does not narrate Acts or cut points to the interviewer, and presents one primary proof rather than a three-card completeness pattern.",
+    "The presenter guide owns timing, cut points, role branches, authorship answers, release caveats, optional evidence links, and what-not-to-claim; its 30-second and two-minute spoken copy is conversational and can be read aloud naturally.",
+    "Artifact replay preserves the two-failure engineering sequence, PATH-free worker boundary, trusted Git observation decision, no-retry replay, evidence-before-cleanup rule, and exact deeper evidence links while reducing visible evidence taxonomy and repeated disclaimers.",
+    "Interviewer-facing copy uses concrete events and causal verbs before internal governance vocabulary, while evidence records, ADRs, executable examples, and technical contracts remain unchanged.",
+    "Authorship remains truthful: default interviewer surfaces do not repeatedly foreground Agent contribution, while the presenter guide and engineering deep dive retain one concise accurate answer for direct questioning.",
+    "English and Simplified Chinese versions remain equivalent in facts and claim strength without sounding like literal governance-document translations.",
+    "The homepage preserves the guided demo as the primary interview entry and uses normal engineering language for the interview-facing copy.",
+    "Tests protect factual state order, actor and permission boundaries, bilingual links, local assets, exact link resolution, and surface responsibilities without requiring repeated disclaimers or locking the pages to governance prose.",
+    "Focused interview, artifact, user-documentation, and product-site tests; task and repository governance; exact scope validation; task JSON parsing; and git diff checks pass.",
+    "All pre-existing changed paths outside the admitted scope remain byte-identical, and existing changes inside admitted files are preserved except for this bounded narrative revision and closeout records."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-5e080e7c50964b85958daf0358d8d1bb and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Rewrite the existing bilingual interviewer-facing AgentGov surfaces so evidence discipline remains an accuracy constraint without becoming the visible narrative voice. Preserve the guided refund interaction and verified engineering evidence, make the demo and project story concrete and conversational, keep presenter mechanics and authorship guidance in the presenter guide, reduce repeated meta framing in artifact replay, and do not invent a dramatic turning point."
+  },
+  "risk": {
+    "items": [
+      "Simplifying language could accidentally weaken the distinction between passing tests, scope checking, and human approval.",
+      "Removing repeated disclaimers could make the static guided replay look like live execution.",
+      "A conversational rewrite could invent a dramatic event or personal motivation not supplied by the product owner.",
+      "Reducing authorship language could overstate the human's low-level design contribution or hide material Agent involvement.",
+      "Bilingual rewrites could diverge in causal sequence or claim strength.",
+      "Artifact replay simplification could remove the engineering trade-off that makes the case credible.",
+      "Brittle exact-copy tests could force future pages back toward documentation language.",
+      "Admitted files already contain accumulated work that must be preserved outside the exact narrative changes.",
+      "The Sites building guidance normally proceeds to hosting, but repository governance prohibits hosting or publication without separate explicit approval.",
+      "Reviewed assumption: The product owner's confirmed factual account of the benefit-note habit and accumulated drift is the narrative source of truth.",
+      "Reviewed assumption: The existing six-step demo interaction, responsive design, local JavaScript, and product-state sequence are correct and do not need redesign.",
+      "Reviewed assumption: FAIL, BLOCKED, and REVIEW_READY are meaningful product outputs and should remain visible even while surrounding prose becomes conversational.",
+      "Reviewed assumption: One short guided-replay disclosure is sufficient on each interviewer-facing demo page when deeper provenance remains linked.",
+      "Reviewed assumption: The refund demo is the default proof for product and general interviews; artifact replay is the optional engineering proof.",
+      "Reviewed assumption: The existing evidence and ADR layers remain technically rigorous and are not part of this copy-focused pass.",
+      "Reviewed assumption: Existing static HTML, CSS, and local-asset architecture is sufficient; no framework migration, image generation, external dependency, or new page is needed.",
+      "Reviewed assumption: Repository governance overrides the Sites skill hosting handoff; the user authorized implementation but not hosting, publication, Git operations, release, or deployment.",
+      "Reviewed unknown: The final spoken duration and naturalness remain unknown until the product owner rehearses the revised copy aloud.",
+      "Reviewed unknown: Real interviewer comprehension and which follow-up proof will be requested remain unknown.",
+      "Reviewed unknown: External publication suitability and the final public URL remain unknown because hosting is not authorized.",
+      "Reviewed unknown: Interview outcome improvement remains unknown."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "README.md",
+      "docs/development-automation-contracts.md",
+      "docs/governed-refund-walkthrough.html",
+      "docs/interview-demo.css",
+      "docs/interview-demo.js",
+      "docs/build-validation",
+      "docs/development-log/2026-08-26.md",
+      "docs/guide.css",
+      "docs/guide.js",
+      "examples/governed-refund-demo",
+      "scripts",
+      "tests/test_governed_refund_walkthrough.py"
+    ],
+    "include_paths": [
+      "governance/tasks",
+      ".agentgov/scope-baselines",
+      "STATUS.md",
+      "docs/development-log/2026-08-27.md",
+      "docs/index.html",
+      "docs/interview-demo.html",
+      "docs/interview-demo.zh-CN.html",
+      "docs/project-interview.html",
+      "docs/project-interview.zh-CN.html",
+      "docs/project-interview.css",
+      "docs/interview-guide.md",
+      "docs/interview-guide.html",
+      "docs/interview-guide.zh-CN.html",
+      "docs/artifact-replay-interview-walkthrough.md",
+      "docs/artifact-replay-interview.html",
+      "docs/artifact-replay-interview.zh-CN.html",
+      "docs/artifact-replay-interview.css",
+      "tests/test_interview_demo.py",
+      "tests/test_interview_documentation.py",
+      "tests/test_product_site.py",
+      "tests/test_user_documentation.py"
+    ]
+  },
+  "task_id": "p0-interview-narrative-voice-de-ai-pass-v1",
+  "title": "Interview narrative voice de-AI pass v1",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest tests.test_interview_demo tests.test_interview_documentation tests.test_product_site tests.test_user_documentation -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check task governance/tasks/p0-interview-narrative-voice-de-ai-pass-v1.json",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-interview-narrative-voice-de-ai-pass-v1.json --baseline .agentgov/scope-baselines/p0-interview-narrative-voice-de-ai-pass-v1.json",
+    "py -3.11 -m json.tool governance/tasks/p0-interview-narrative-voice-de-ai-pass-v1.json",
+    "git diff --check"
+  ]
+}

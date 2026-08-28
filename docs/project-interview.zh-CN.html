@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="我为什么做 AgentGov，有用的交付工作如何把产品带偏，以及我如何把它拉回最初的问题。">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; img-src 'self'">
+  <title>我做了 AgentGov，也逐渐发现它的重心正在偏移</title>
+  <link rel="icon" href="favicon.ico" type="image/svg+xml">
+  <link rel="stylesheet" href="project-interview.css">
+</head>
+<body class="project-story-page">
+  <nav aria-label="主导航">
+    <div class="shell nav-inner">
+      <a class="brand" href="index.html"><span class="mark">AG</span>Agent Governance Starter Kit</a>
+      <div class="nav-links">
+        <a href="interview-demo.zh-CN.html">现场 Demo</a>
+        <a href="interview-guide.zh-CN.html">面试指南</a>
+        <a href="portfolio.html">证据作品集</a>
+        <span class="language-switch" aria-label="语言"><a href="project-interview.html" lang="en" hreflang="en">EN</a><a href="project-interview.zh-CN.html" lang="zh-CN" aria-current="page">中文</a></span>
+      </div>
+    </div>
+  </nav>
+  <header class="story-hero shell">
+    <span class="eyebrow">AgentGov 项目故事</span>
+    <h1>我做了 AgentGov，也逐渐发现它的重心正在偏移。</h1>
+    <p class="lead">功能没有坏，测试也一直是绿的。但我越来越容易解释 GitHub 相关功能怎么工作，却越来越难解释它们给最初的问题增加了什么价值。</p>
+  </header>
+
+  <main>
+    <section class="story-act" id="problem">
+      <div class="shell act-grid">
+        <aside class="act-aside"><span class="act-number">01</span></aside>
+        <div class="act-copy">
+          <h2>我为什么做它</h2>
+          <p class="spoken">Coding Agent 可以写出测试通过的代码，同时又做了人根本没要求的事。测试通过也不会告诉你，是不是已经有人同意让这个改动继续往前走。</p>
+          <p class="support">我先做软件能够稳定检查的部分。AgentGov 会读人写下的任务、这个任务允许修改的文件，以及工作过程产生的证据。它可以说某件事通过了、失败了，或者仍然需要人来判断。我没有让它把这些检查自动变成“这个改动是正确的”。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="story-act" id="drift">
+      <div class="shell act-grid">
+        <aside class="act-aside"><span class="act-number">02</span></aside>
+        <div class="act-copy">
+          <h2>我是怎么发现它开始偏移的</h2>
+          <p class="spoken">一次 consumer 实验暴露了真实摩擦：安装、Windows 路径、onboarding，还有命令理解。我开始改这些问题，然后是 CI，再然后是 PR 流程。这些功能都不是坏功能，它们确实有用，测试也一直是绿的。</p>
+          <blockquote class="turning-quote">我越来越容易解释这些 GitHub 功能怎么工作，却越来越难解释下一个功能到底给原来的业务问题增加了什么价值。</blockquote>
+          <p class="spoken">警告来自我本来就有的一个习惯。每做完一个功能，我都会写它的短期价值、长期价值，以及它和下一阶段的关系。连续几个功能之后，GitHub 和交付语言越来越主导路线图，而它们与原始业务需求的关系越来越难解释。</p>
+          <p class="support">我没有把这种感觉当成证明。我回去把累积实现和最初需求放在一起检查。每个功能单独看都没错，但产品方向确实偏了。</p>
+          <div class="signal-list" aria-label="漂移信号">
+            <article><strong>功能都能工作</strong><span>问题不在局部质量。</span></article>
+            <article><strong>路线图变了</strong><span>交付机制逐渐变成主线。</span></article>
+            <article><strong>原始价值变模糊</strong><span>每个新功能越来越难连回业务问题。</span></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="story-act" id="decision">
+      <div class="shell act-grid">
+        <aside class="act-aside"><span class="act-number">03</span></aside>
+        <div class="act-copy">
+          <h2>我改了什么</h2>
+          <p class="spoken">我没有把 PR 或 CI 工作丢掉，而是把它们移出了中心。我先回到原始开发循环的最小版本，然后再补充周围细节。</p>
+          <p class="support">主产品重新变得容易说清：人描述任务，约定可以改哪些文件，Agent 完成工作，软件检查当前文件和测试，最后人决定下一步。PR 和 CI 在之后重新检查同一组事实，作为后盾。</p>
+          <div class="architecture-flow" aria-label="AgentGov 开发循环">
+            <span>人描述任务</span><span>约定可改文件</span><span>Agent 完成改动</span><span>检查实际文件</span><span>运行当前测试</span><span>人复核</span><span>人决定</span><span>PR 与 CI 稍后再检查</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="story-act" id="proof">
+      <div class="shell act-grid">
+        <aside class="act-aside"><span class="act-number">04</span></aside>
+        <div class="act-copy">
+          <h2>一个例子就能把产品说具体</h2>
+          <p class="spoken">在退款 Demo 里，Agent 正确修好了计算，同时又改了一条没有人要求的审批规则。测试仍然可以是绿的。AgentGov 把实际改动文件和任务对照，阻止完成，并把真正的选择留给人。</p>
+          <div class="proof-grid single-proof">
+            <article class="proof-card">
+              <span class="proof-kind">引导式退款 Demo</span>
+              <h3>保留请求中的修复，删掉额外规则改动。</h3>
+              <p>Demo 用六步展示完整过程，包括被阻断的状态，以及最后回到人工复核。</p>
+              <a href="interview-demo.zh-CN.html">打开退款 Demo →</a>
+            </article>
+          </div>
+          <div class="lesson-panel">
+            <h2>验证可以证明一个改动能工作，却不能告诉我是不是还在做正确的产品。</h2>
+            <p class="spoken">AgentGov 里没有什么东西能自动回答这个产品问题。我必须自己回到最初的问题，检查最近几个功能是不是仍然在加强它。</p>
+            <p class="support">我现在把这当成一个开发习惯，而不是另一个等待自动化的功能。</p>
+          </div>
+          <div class="story-actions">
+            <a class="story-button primary" href="interview-demo.zh-CN.html">打开退款 Demo</a>
+            <a class="story-button" href="artifact-replay-interview.zh-CN.html">看工程失败故事</a>
+            <a class="story-button" href="interview-guide.zh-CN.html">准备面试路线</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="shell">Agent Governance Starter Kit · 我为什么做它、它如何偏移、我改了什么</div></footer>
+</body>
+</html>

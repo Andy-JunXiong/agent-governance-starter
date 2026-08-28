@@ -1,0 +1,80 @@
+{
+  "acceptance_signals": [
+    "A matching human-admitted task exists before repository writes for the bilingual HTML slice.",
+    "A create-only task-start scope baseline is captured before page edits.",
+    "The English and Simplified Chinese HTML pages are complete semantic equivalents with reciprocal language switching and are usable as a three-to-five-minute presentation.",
+    "Both pages include the problem, controller-to-Harness-to-caller-to-driver architecture, two manifest-boundary failures and repairs, the sole 1/1/1 no-retry result, verified artifact metrics, evidence-gated cleanup, tradeoffs, honest limitations, likely interviewer questions, and repository-relative evidence links.",
+    "Both pages accurately retain wheel SHA-256 sha256:64f48914b60ae9a7638275f1a9f3b3727bc15b7226c76b37babe08475bae685a and evidence SHA-256 ffc06da3060b459ff39c8602365126a860e8228dd6320c8c88f69cbc8c6b8715.",
+    "The pages use the existing guide stylesheet plus one page-specific local stylesheet, responsive semantic HTML, visible focus behavior, accessible labels, and a restrictive local-resource Content Security Policy without inline scripts or styles.",
+    "README and the Markdown walkthrough expose both language pages without changing the established release boundary.",
+    "Focused tests protect reciprocal language links, critical evidence facts, presentation sections, restrictive CSP, local-only assets, and valid UTF-8 Chinese without common mojibake markers.",
+    "The immutable replay evidence remains byte-identical with SHA-256 ffc06da3060b459ff39c8602365126a860e8228dd6320c8c88f69cbc8c6b8715, and excluded implementation, contract, configuration, evidence, shared-style, shared-script, and prior-log paths remain unchanged.",
+    "User-documentation tests, task governance, repository governance, captured scope, immutable evidence hash, task JSON, and git diff --check pass.",
+    "No image generation, replay, build action, dependency installation, network access, Git mutation, commit, push, hosting, publication, release, deployment, or external-Agent action occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-054822a697bc4a059b880e5a6783ea37 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Create two local static presentation pages for the completed artifact replay: one English HTML page and one Simplified Chinese HTML page. Reuse the existing Agent Governance visual language, add one page-specific responsive stylesheet, and present the three-to-five-minute story through a strong hero, architecture flow, repair timeline, verified-result metric cards, evidence-gated cleanup explanation, tradeoffs, honest limitations, likely questions, and evidence links. Add reciprocal EN and Chinese switching plus navigation from README and the Markdown walkthrough. Add focused documentation tests, and update STATUS.md and the 2026-08-27 log. Keep receipt-validated evidence and execution code unchanged. Build locally only; do not host, publish, replay, commit, or push."
+  },
+  "risk": {
+    "items": [
+      "Chinese text must remain valid UTF-8 and avoid mojibake introduced by editing.",
+      "The two language pages can drift semantically unless tests protect shared evidence facts and reciprocal links.",
+      "A polished presentation must not overstate one Windows replay as portability or repeated reliability.",
+      "Repository publication and hosting require separate human authority and are excluded from this task.",
+      "The repository contains unrelated pre-existing changes that must remain preserved and unstaged.",
+      "Reviewed assumption: The existing guide.css supplies the base brand and layout primitives; one additive page stylesheet is sufficient for the focused flow, timeline, and metric presentation.",
+      "Reviewed assumption: Typography, CSS shapes, and existing local assets are sufficient; original imagery is unnecessary.",
+      "Reviewed assumption: Static HTML that opens directly from the repository and remains compatible with the existing document layout best matches the requested interview use.",
+      "Reviewed assumption: The existing Markdown walkthrough and receipt-validated evidence are the authoritative content sources.",
+      "Reviewed unknown: Actual visual rendering in every browser because explicit browser UI QA was not requested.",
+      "Reviewed unknown: Actual spoken duration for a particular presenter.",
+      "Reviewed unknown: Whether the pages improve interview outcomes."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".openai",
+      "docs/development-automation-contracts.md",
+      "docs/build-validation",
+      "docs/development-log/2026-08-26.md",
+      "docs/guide.css",
+      "docs/guide.js",
+      "scripts"
+    ],
+    "include_paths": [
+      "governance/tasks",
+      ".agentgov/scope-baselines",
+      "docs/artifact-replay-interview.html",
+      "docs/artifact-replay-interview.zh-CN.html",
+      "docs/artifact-replay-interview.css",
+      "docs/artifact-replay-interview-walkthrough.md",
+      "README.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-27.md",
+      "tests/test_user_documentation.py"
+    ]
+  },
+  "task_id": "p0-bilingual-artifact-replay-html-walkthrough-v1",
+  "title": "Bilingual artifact replay HTML walkthrough v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-bilingual-artifact-replay-html-walkthrough-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-bilingual-artifact-replay-html-walkthrough-v1.json --baseline .agentgov/scope-baselines/p0-bilingual-artifact-replay-html-walkthrough-v1.json",
+    "Get-FileHash docs/build-validation/post-repair-no-retry-artifact-replay-v1-2026-08-27.md -Algorithm SHA256",
+    "py -3.11 -m json.tool governance/tasks/p0-bilingual-artifact-replay-html-walkthrough-v1.json",
+    "git diff --check"
+  ]
+}

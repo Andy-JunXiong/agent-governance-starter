@@ -470,6 +470,249 @@ older internal callers; a workflow claiming evidence-before-cleanup must use
 the evidence-gated operation. A future artifact or journey run requires its own
 task admission.
 
+## Internal noninteractive artifact replay driver
+
+`scripts.artifact_replay_driver` is a dependency-free repository-internal
+orchestrator over the existing distribution-input manifest checker and
+short-root evidence gate. It has no `__main__.py`, public `agentgov` command,
+installed-package surface, scheduler, backend selector, network behavior, or
+retry policy.
+
+The driver accepts one repository, one normalized repository-relative
+manifest reference, projected paths for the existing short-root allocator,
+one normalized repository-relative evidence target, and one injected action.
+It requires the existing manifest checker to return a bounded passing
+observation before allocating at most one verified root. The action receives
+only that exact `ShortBuildRoot` and is invoked at most once. The driver does
+not interpret that callback as build, dependency, network, external-Agent,
+model, Git, publication, release, or deployment authority.
+
+The action returns `ArtifactEvidence`, whose text is excluded from
+representations. The driver accepts only non-empty, LF-normalized, bounded
+UTF-8 text without unsupported control characters. Semantic truth,
+completeness, and sanitization remain caller responsibilities; the structural
+check does not convert caller claims into verified facts. The evidence parent
+must already be a real repository directory. Unsafe, linked, escaping,
+missing-parent, or existing targets fail before allocation. The final file is
+created exclusively, flushed, and `fsync`ed before its exact SHA-256 is passed
+to `create_evidence_receipt`.
+
+Only after receipt creation does the driver call
+`remove_short_build_root_after_evidence`. It never prompts, reads stdin, or
+branches on TTY state. Success reports contain manifest counts and digests,
+one action attempt, the evidence digest, revalidation and cleanup booleans,
+root absence, and denied authority; they exclude host paths and contents.
+
+The first manifest, allocation, action, evidence, receipt, or cleanup
+deviation stops without a second action. Before a validated receipt authorizes
+removal, the exact root remains available only through a private recovery
+handle on the normalized failure object. The driver does not silently perform
+ungated failure cleanup. Recovery, a real artifact run, or an end-to-end
+journey requires its own exact authority and evidence boundary.
+
+## Internal artifact invocation transport readiness
+
+`scripts.artifact_invocation_readiness` is a dependency-free, repository-
+internal pre-action checker. It has no `__main__.py`, public `agentgov`
+command, installed surface, generic command-runner interface, payload input,
+or artifact-build dependency. The existing artifact replay driver is
+unchanged and does not consume or enforce the readiness result. A future
+caller must run this check before deciding that its driver/action transport is
+available.
+
+The frozen request accepts only the normalized `base64_utf8_v1` declaration,
+encoded length and SHA-256 identity, private launcher and retained-backend
+wheel references, the expected wheel digest and Python/pip/setuptools
+versions, and the exact all-false authority mapping. It never accepts caller
+source, encoded payload bytes, commands, or arguments, and therefore cannot
+decode or execute caller content.
+
+All non-process gates run first. The launcher and backend wheel must be
+existing regular non-link files, and the wheel bytes must match the declared
+identity. A read-only temporary-directory observation requires zero direct
+task roots. For compatibility with the current allocator and the admitted
+future assumption, exact lowercase `agv-<8-hex>` and `agv-<16-hex>` names are
+both treated as task roots; any one stops readiness.
+
+Only then may the checker run one module-owned Python capability probe. It
+uses the selected launcher in isolated mode, a fixed source constant, closed
+stdin, captured output, a bounded allowlist environment, and a ten-second
+timeout. It reports normalized Python, pip, and setuptools versions plus
+callable `build_wheel` and vendored-wheel booleans. It cannot accept a caller
+command or retry. A second zero-root observation is required immediately
+before PASS.
+
+PASS exposes only contract and schema identities, bounded encoding and wheel
+identities, normalized versions and capability booleans,
+`probe_attempts=1`, `short_root_count=0`, no-stdin/no-TTY facts, and denied
+authority. Malformed metadata, requested authority, unsafe files, digest or
+version mismatch, an existing root, timeout, exception, nonzero exit,
+malformed output, or missing capability returns the first bounded reason code
+with zero or one probe attempt. Host paths, source, payloads, stdout, stderr,
+environment values, and raw exceptions are never reported.
+
+This receipt is point-in-time deterministic evidence, not execution or
+downstream authority. File replacement and a root appearing after the final
+observation remain race limits. The checker does not invoke the driver,
+allocate or clean a root, build, install, use network, start an Agent or model,
+mutate Git, publish, release, deploy, schedule, repair, or authorize any of
+those actions.
+
+## Internal minimal artifact invocation caller gate
+
+`scripts.artifact_invocation_caller` is the first concrete repository-
+internal caller that enforces the readiness-before-driver ordering. It is a
+dependency-free wrapper over the unchanged
+`scripts.artifact_invocation_readiness` checker and unchanged
+`scripts.artifact_replay_driver`. It has no `__main__.py`, public command,
+installed surface, scheduler, backend selection, generic command runner,
+receipt store, or independent build behavior.
+
+The frozen caller request contains one private `InvocationTransportRequest`
+and the exact existing driver arguments. Private repository, manifest,
+projected-path, evidence, launcher, backend, and action values are excluded
+from representations and normalized reports. The wrapper accepts no caller
+source, encoded payload bytes, command, or transport arguments beyond those
+already owned by the two upstream contracts.
+
+For every call, `check_invocation_readiness` is invoked exactly once. The
+wrapper requires an `InvocationReadinessResult` whose complete normalized
+schema, identities, versions, capabilities, zero-root fact, no-input/no-TTY
+facts, one probe attempt, and all-false authority request match the existing
+readiness contract. An upstream readiness deviation, exception, malformed
+type, non-PASS state, schema drift, or authority drift stops in the readiness
+phase with zero driver calls.
+
+Only after that fresh receipt validates does the wrapper call
+`run_artifact_replay` once with the exact original driver arguments and
+action. The receipt stays in memory and is neither written nor passed into the
+driver. The wrapper validates the complete returned `ArtifactReplayResult`
+schema and its denied authority before composing a stable nested PASS report.
+This does not change the driver's own manifest, root, action, evidence,
+receipt, cleanup, recovery, or retry semantics.
+
+A driver deviation is normalized as one driver-phase result without another
+readiness check or driver call. When the unchanged driver exposes its private
+recovery error, the wrapper retains that exact object behind a private
+recovery property without placing a root or path in the public report.
+Unexpected exceptions and malformed success results remain bounded and do not
+leak their text.
+
+Success reports contain the two validated upstream reports,
+`readiness_attempts=1`, `driver_attempts=1`, no-input/no-TTY facts, and denied
+downstream authority. The wrapper does not retry, repair, persist readiness,
+build, install, use network, start an Agent or model, mutate Git, publish,
+release, deploy, or schedule. The receipt remains point-in-time; a real
+composed invocation, receipt persistence, or driver-level receipt enforcement
+requires separate product review and task authority.
+
+## Internal bounded artifact replay harness
+
+`scripts.artifact_replay_harness` owns the repository-internal process
+transport boundary that the first two composed replay attempts had implemented
+as one-off shell text. It is dependency-free, has no installed or public CLI
+surface, and does not select, create, or authorize replay source. A future
+admitted replay may supply one private UTF-8 source and one fixed local Python
+executable; that separate task remains responsible for every action performed
+by the source.
+
+The parent encodes the source exactly once. It records the raw and Base64 byte
+lengths and SHA-256 identities, then sends the same encoded value and identities
+first in `dry` mode and, only after dry PASS, once in `actual` mode. Both child
+processes use the fixed argument vector `python -B -m
+scripts.artifact_replay_harness.worker`, a repository-root working directory,
+a bounded environment allowlist, JSON stdin, captured output, and one bounded
+timeout. Replay source is never placed in a `python -c` argument.
+
+The fixed worker strictly validates the request and both source identities,
+decodes UTF-8, compiles with a synthetic filename, and executes initialization
+with `ARTIFACT_REPLAY_MODE` set to `dry` or `actual`. Only after raw and encoded
+identity validation, it also constructs the read-only
+`ARTIFACT_REPLAY_SOURCE_IDENTITY` mapping. That mapping contains exactly the raw
+and Base64 byte lengths and SHA-256 identities already supplied and validated
+by the worker. The parent request and replay source have no field or parameter
+for replacing those values.
+
+The source must define a zero-argument `artifact_replay_main` entry point.
+Source-owned imports resolve during initialization, before that entry point is
+called. The worker checks that the identity global still refers to the exact
+read-only mapping after initialization and again after entry-point execution.
+Mutation raises a bounded source failure; replacement returns
+`source_identity_context_drift`. Syntax, import, initialization,
+missing-entry-point, and execution deviations retain their distinct stable
+reason codes.
+
+Python-level source stdout and stderr are discarded. The parent never exposes
+captured stdout, stderr, traceback, source, host path, environment, credential,
+or process details; malformed, oversized, non-UTF-8, mixed raw/protocol output
+fails closed as `worker_protocol_invalid`. Launch errors, timeouts, and
+unexpected transport exceptions are also normalized without their raw text.
+The first dry deviation leaves actual attempts at zero, and an actual deviation
+does not repeat either phase.
+
+The harness is transport containment, not a security sandbox or authority
+grant. Descriptor-level output can invalidate the bounded protocol, and hostile
+source can still consume resources or perform actions available to the child
+process. Any real caller, probe, driver, build, cleanup, network, Git,
+publication, release, or deployment use therefore requires an independently
+admitted task. The v1 fixture suite uses only harmless local source and proves
+the fixed Windows module/stdin boundary without invoking those capabilities.
+
+## Fixed artifact replay controller
+
+`scripts.artifact_replay_controller` is the repository-owned entry point for a
+single real artifact replay. Its external request is strict JSON on stdin and
+contains only the fixed launcher, pinned backend wheel identity, expected tool
+versions, repository-relative evidence target, and bounded timeout. The request
+has no replay-source, command, build-argument, cleanup, retry, or persistence
+field.
+
+Before constructing replay source, the controller resolves the repository and
+runs the existing Git-backed distribution manifest checker exactly once. A
+deviation stops in controller preflight before either Harness worker can start.
+Only the normalized path count, path digest, and content digest from a passing
+result cross into the controller-owned runtime configuration; no Git
+executable, command, `PATH`, raw output, or host path is added to the external
+request or bounded report.
+
+The controller constructs its replay source internally. That source imports one
+fixed controller-owned function and forwards the worker-provided
+`ARTIFACT_REPLAY_MODE`, immutable `ARTIFACT_REPLAY_SOURCE_IDENTITY`, and the
+controller-owned configuration containing those manifest facts. The controller
+then calls `scripts.artifact_replay_harness` directly. It never creates dynamic
+parent `python -c` text and never accepts caller-controlled Python source.
+
+Inside the worker, the fixed function re-derives distribution inputs from the
+repository files, compares them with the declared manifest paths, and
+recomputes the path and content identities. This second observation performs no
+Git subprocess and does not depend on ambient executable search. A mismatch in
+`dry` mode stops before readiness, caller, driver, action, evidence, or cleanup,
+leaving actual attempts at zero. In `actual` mode, the same validated paths feed
+the admitted sequence: readiness, caller, manifest staging, offline wheel
+build, wheel-payload verification, evidence creation, and receipt-gated
+cleanup. Every phase is attempted at most once. Any deviation returns one
+bounded controller result and no retry is performed.
+
+The actual caller-to-driver handoff carries the same controller-bound manifest
+path list, path count, path digest, and content digest as private internal
+arguments. Immediately before allocating a short build root, the driver
+re-derives distribution inputs and recomputes both identities from regular
+repository files. It no longer imports or calls the Git-backed manifest
+checker. Invalid facts or point-in-time filesystem drift therefore stop at
+driver preflight with zero artifact-action attempts and no root, evidence, or
+cleanup claim. This third observation keeps the Harness environment `PATH`-free
+without weakening the controller's outer Git-backed admission check.
+
+This controller narrows invocation mechanics; it does not grant task, build,
+cleanup, Git, publication, release, deployment, or external authority. Fixture
+tests use harmless local substitutes. A real controller request is permitted
+only by an independently admitted task whose exact scope covers all intended
+effects and evidence.
+
+The manifest-boundary repair was fixture-only. It changed no Harness child
+environment, ran no real controller replay, and created no artifact evidence.
+A real replay after this repair still requires a separately admitted task.
+
 ## Next requirement review
 
 Do not select the next slice automatically. Review the completed

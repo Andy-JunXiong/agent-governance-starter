@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A three-to-five-minute evidence-backed artifact replay interview walkthrough.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; img-src 'self'">
+  <title>Artifact replay interview walkthrough — Agent Governance Starter Kit</title>
+  <link rel="icon" href="favicon.ico" type="image/svg+xml">
+  <link rel="stylesheet" href="guide.css">
+  <link rel="stylesheet" href="artifact-replay-interview.css">
+</head>
+<body class="artifact-page">
+  <nav class="shell" aria-label="Primary navigation">
+    <a class="brand" href="index.html"><span class="mark">AG</span>Agent Governance Starter Kit</a>
+    <div class="nav-links">
+      <a href="portfolio.html">Evidence portfolio</a>
+      <a href="interview-guide.html">Full interview guide</a>
+      <a href="quickstart.html">Quickstart</a>
+      <span class="language-switch" aria-label="Language"><a href="artifact-replay-interview.html" lang="en" aria-current="page">EN</a><a href="artifact-replay-interview.zh-CN.html" lang="zh-CN" hreflang="zh-CN">中文</a></span>
+    </div>
+  </nav>
+  <header class="shell">
+    <span class="eyebrow">A real debugging story · 3–5 minutes</span>
+    <h1>I wanted to know whether cleanup was truly evidence-gated.</h1>
+    <p class="lead">The first replay stopped before it reached the build. I could have widened the worker environment to make the error disappear. I chose to keep the boundary and move the trusted facts instead—and that exposed a second hidden dependency.</p>
+    <div class="hero-meta" aria-label="Outcome summary">
+      <div class="hero-card primary"><span>The question</span><strong>Would cleanup wait?</strong>Only a valid evidence receipt should unlock removal.</div>
+      <div class="hero-card"><span>First replay</span><strong>STOPPED</strong>Before the build</div>
+      <div class="hero-card"><span>Boundary repairs</span><strong>2</strong>No wider PATH</div>
+      <div class="hero-card"><span>Next allowed replay</span><strong>PASS</strong>One attempt</div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="story-opening" data-section="story-arc" aria-labelledby="story-title">
+      <p class="section-kicker">The failure sequence</p>
+      <h2 id="story-title">The worker failed twice before one replay finally completed.</h2>
+      <p class="story-voice">I did not start this replay to prove that Python could build a wheel. I started it to answer one narrower question: would the caller remove temporary state only after durable evidence had been written and revalidated?</p>
+      <div class="story-grid">
+        <article class="story-step"><span class="time">01</span><strong>I set one testable question</strong><p>Evidence first, cleanup second—would the real caller preserve that order?</p></article>
+        <article class="story-step"><span class="time">02</span><strong>The dry run stopped</strong><p>A PATH-free worker tried to launch bare Git before actual execution.</p></article>
+        <article class="story-step"><span class="time">03</span><strong>I kept the worker restricted</strong><p>I chose to pass validated facts inward instead of restoring broad executable access.</p></article>
+        <article class="story-step"><span class="time">04</span><strong>A second dependency surfaced</strong><p>The actual driver still called the Git-backed checker one layer deeper.</p></article>
+        <article class="story-step"><span class="time">05</span><strong>The next allowed replay passed</strong><p>One controller, one dry, one actual, durable evidence, then zero roots.</p></article>
+      </div>
+    </section>
+
+    <section class="emphasis" data-section="problem" aria-labelledby="problem-title">
+      <p class="section-kicker">01 · The first stopped run</p>
+      <h2 id="problem-title">The first replay never reached the build.</h2>
+      <p>I allowed one no-retry replay to test the real cleanup path. The dry worker stopped first: its environment intentionally had no <code>PATH</code>, but the manifest check still tried to launch bare <code>git</code>.</p>
+      <p>That failure mattered because it showed the restriction was real. The easy fix would have been to put Git back into the worker environment. That would make the symptom disappear by weakening the boundary I was trying to test.</p>
+      <div class="speaker-note"><strong>The decision:</strong> I did not retry the exhausted task, and I did not treat a wider environment as the default repair.</div>
+    </section>
+
+    <section data-section="architecture" aria-labelledby="architecture-title">
+      <p class="section-kicker">02 · The decision</p>
+      <h2 id="architecture-title">I chose to move trusted facts, not widen the worker.</h2>
+      <p>In plain language: Git could stay outside. The restricted path only needed the exact list of files and the identities that the controller had already checked. Internally, that became a split between a Git-backed entry check and filesystem-only revalidation.</p>
+      <div class="flow" aria-label="Artifact replay architecture">
+        <div class="flow-step" tabindex="0" aria-describedby="en-flow-controller"><strong>Controller</strong><small>Git-backed manifest admission</small><span class="more-cue">Hover or focus</span><span class="detail-panel" id="en-flow-controller" role="tooltip"><strong>Observed boundary</strong><p>The controller performed the sole Git-backed admission before either Harness worker started.</p><small>Source: filesystem-boundary repair and 2026-08-27 closeout.</small></span></div>
+        <div class="flow-step" tabindex="0" aria-describedby="en-flow-harness"><strong>Harness</strong><small>One dry, then at most one actual</small><span class="more-cue">Hover or focus</span><span class="detail-panel" id="en-flow-harness" role="tooltip"><strong>Attempt containment</strong><p>The recorded run used one dry worker and one actual worker. The contract allowed no retry.</p><small>Observed: controller/dry/actual = 1/1/1.</small></span></div>
+        <div class="flow-step" tabindex="0" aria-describedby="en-flow-caller"><strong>Caller + readiness</strong><small>Immutable identity bridge</small><span class="more-cue">Hover or focus</span><span class="detail-panel" id="en-flow-caller" role="tooltip"><strong>Private fact handoff</strong><p>The caller forwarded controller-bound manifest paths, count, and digests after one readiness result.</p><small>No host path, raw output, environment, or credential crossed the public result.</small></span></div>
+        <div class="flow-step" tabindex="0" aria-describedby="en-flow-driver"><strong>Driver</strong><small>Filesystem-only revalidation</small><span class="more-cue">Hover or focus</span><span class="detail-panel" id="en-flow-driver" role="tooltip"><strong>Point-in-time equality</strong><p>The driver re-derived regular files and recomputed both identities before allocating a short root.</p><small>Drift stops as manifest_preflight_failed with zero action attempts.</small></span></div>
+        <div class="flow-step" tabindex="0" aria-describedby="en-flow-action"><strong>Action → evidence → cleanup</strong><small>Offline build and receipt gate</small><span class="more-cue">Hover or focus</span><span class="detail-panel" id="en-flow-action" role="tooltip"><strong>Earned cleanup</strong><p>One offline build wrote evidence exclusively; cleanup followed only after receipt revalidation.</p><small>Observed final short-root count: 0.</small></span></div>
+      </div>
+      <p class="boundary-note">Only the exact manifest paths, count, path digest, and content digest cross inward. Source text, host paths, raw output, traceback, environment, credentials, and process details do not.</p>
+    </section>
+
+    <section data-section="repairs" aria-labelledby="repairs-title">
+      <p class="section-kicker">03 · The second hidden dependency</p>
+      <h2 id="repairs-title">The first repair was necessary, but inspection showed it was not sufficient.</h2>
+      <p>After moving admission to the controller, read-only inspection followed the actual path. The caller reached the driver—but the driver still imported the same Git-backed checker. The coupling had moved out of the dry worker and remained one layer deeper.</p>
+      <p>The Agent proposed most of the low-level repairs. I evaluated and approved them against the boundary I wanted to preserve: the worker would remain <code>PATH</code>-free, and cleanup would still wait for verified evidence.</p>
+      <div class="repair-grid">
+        <article class="repair-card">
+          <span class="repair-number">01</span>
+          <h3>I moved Git admission outside the worker</h3>
+          <p class="failure"><strong>Failure:</strong> the worker intentionally had no <code>PATH</code>, but its manifest check launched <code>git</code>.</p>
+          <p class="repair"><strong>Repair:</strong> move the sole Git-backed admission to the controller and pass only normalized manifest facts inward.</p>
+        </article>
+        <article class="repair-card">
+          <span class="repair-number">02</span>
+          <h3>I removed the same dependency from the driver</h3>
+          <p class="failure"><strong>Failure:</strong> inspection found the driver still imported the Git-backed checker before the build.</p>
+          <p class="repair"><strong>Repair:</strong> re-derive regular files and both identities from the filesystem before root allocation.</p>
+        </article>
+      </div>
+      <div class="speaker-note"><strong>Key design choice:</strong> preserve the restricted environment instead of widening it. Drift now returns <code>manifest_preflight_failed</code> with zero action attempts, no root, no evidence, and no cleanup claim.</div>
+    </section>
+
+    <section class="checklist" data-section="results" aria-labelledby="results-title">
+      <p class="section-kicker">04 · What happened next</p>
+      <h2 id="results-title">I allowed one new replay. It ran once and completed the gate.</h2>
+      <p>This exact repaired chain completed without retry. All <strong>186 / 186</strong> declared inputs matched byte for byte, and the recorded identities supported both the artifact result and the cleanup decision.</p>
+      <div class="metric-grid">
+        <div class="metric" tabindex="0" aria-describedby="en-metric-attempts"><span>Controller / dry / actual</span><strong>1 / 1 / 1</strong><small>Exactly one each</small><span class="evidence-kind observed">Observed</span><span class="detail-panel" id="en-metric-attempts" role="tooltip"><strong>Exact attempt accounting</strong><p>One controller invocation produced one dry attempt and one actual attempt. No second invocation occurred.</p><small>Source: recorded controller PASS and dated closeout.</small></span></div>
+        <div class="metric" tabindex="0" aria-describedby="en-metric-build"><span>Build</span><strong>1 wheel</strong><small>Return code 0</small><span class="evidence-kind observed">Observed</span><span class="detail-panel" id="en-metric-build" role="tooltip"><strong>Offline action result</strong><p>The single artifact action returned code 0 and emitted exactly one wheel.</p><small>No network, dependency installation, or alternate backend occurred.</small></span></div>
+        <div class="metric" tabindex="0" aria-describedby="en-metric-members"><span>Wheel members</span><strong>189</strong><small>Regular members</small><span class="evidence-kind observed">Observed</span><span class="detail-panel" id="en-metric-members" role="tooltip"><strong>Inventory relationship</strong><p>189 regular members = 183 managed byte matches + 6 generated metadata members.</p><small>Inventory SHA-256 is retained in the durable replay evidence.</small></span></div>
+        <div class="metric" tabindex="0" aria-describedby="en-metric-parity"><span>Managed parity</span><strong>183 / 0</strong><small>Matches / mismatches</small><span class="evidence-kind observed">Observed</span><span class="detail-panel" id="en-metric-parity" role="tooltip"><strong>Payload equality</strong><p>All 183 managed wheel members matched the expected bytes; zero managed members differed.</p><small>This is artifact parity, not cross-platform reliability.</small></span></div>
+        <div class="metric" tabindex="0" aria-describedby="en-metric-generated"><span>Generated metadata</span><strong>6</strong><small>Expected members</small><span class="evidence-kind observed">Observed</span><span class="detail-panel" id="en-metric-generated" role="tooltip"><strong>Expected build output</strong><p>Six members were classified as generated packaging metadata rather than manifest-managed source payload.</p><small>183 managed + 6 generated = 189 regular members.</small></span></div>
+        <div class="metric" tabindex="0" aria-describedby="en-metric-unmanaged"><span>Unexpected unmanaged</span><strong>0</strong><small>No extra members</small><span class="evidence-kind observed">Observed</span><span class="detail-panel" id="en-metric-unmanaged" role="tooltip"><strong>Closed inventory</strong><p>Every regular member was classified as either a managed byte match or expected generated metadata.</p><small>No unexpected unmanaged member was observed.</small></span></div>
+        <div class="metric" tabindex="0" aria-describedby="en-metric-retries"><span>Retries</span><strong>0</strong><small>No alternate invocation</small><span class="evidence-kind observed">Observed</span><span class="detail-panel" id="en-metric-retries" role="tooltip"><strong>No-retry boundary</strong><p>There was no retry, repair during execution, alternate backend, or manual cleanup.</p><small>The earlier failed task remained exhausted; this was a separately allowed replay.</small></span></div>
+        <div class="metric" tabindex="0" aria-describedby="en-metric-roots"><span>Final roots</span><strong>0</strong><small>After receipt gate</small><span class="evidence-kind observed">Observed</span><span class="detail-panel" id="en-metric-roots" role="tooltip"><strong>Post-cleanup observation</strong><p>After the evidence write and receipt revalidation, the exact short root was removed and the final count was zero.</p><small>This fact is separate from the durable file's intentionally pre-cleanup wording.</small></span></div>
+      </div>
+      <p class="hash-line"><strong>Built wheel SHA-256</strong><code class="hash">sha256:64f48914b60ae9a7638275f1a9f3b3727bc15b7226c76b37babe08475bae685a</code></p>
+      <p class="hash-line"><strong>Durable evidence SHA-256</strong><code class="hash">ffc06da3060b459ff39c8602365126a860e8228dd6320c8c88f69cbc8c6b8715</code></p>
+    </section>
+
+    <section data-section="cleanup" aria-labelledby="cleanup-title">
+      <p class="section-kicker">05 · The question answered</p>
+      <h2 id="cleanup-title">Yes—on this run, cleanup waited for evidence.</h2>
+      <p>This was the behavior I set out to verify. The build succeeding was not enough; the evidence had to be written exclusively and its receipt had to match before removal became valid.</p>
+      <div class="gate-grid">
+        <div class="gate-card"><strong>Before cleanup</strong><p>Exclusive evidence write succeeds and the receipt is revalidated against the exact durable bytes.</p></div>
+        <div class="gate-arrow" aria-hidden="true">→</div>
+        <div class="gate-card pass"><strong>Cleanup allowed</strong><p>Remove only the exact short root, then observe a final short-root count of zero.</p></div>
+      </div>
+      <p class="speaker-note"><strong>If evidence fails:</strong> retain the private recovery root. Do not manually clean it or claim success under the exhausted task.</p>
+      <p class="boundary-note">This answers one local Windows replay. Cross-platform behavior and repeated reliability would need separate runs.</p>
+    </section>
+
+    <section data-section="questions" aria-labelledby="questions-title">
+      <p class="section-kicker">Interview follow-ups</p>
+      <h2 id="questions-title">Likely questions</h2>
+      <details open><summary>Why not restore <code>PATH</code> or give the worker Git?</summary><p>That widens the execution boundary to solve a data-flow problem. The controller already owns Git observation, while the driver proves point-in-time filesystem equality.</p></details>
+      <details><summary>Why observe the manifest more than once?</summary><p>The observations answer different questions: Git-backed admission before execution and filesystem equality immediately before resource allocation.</p></details>
+      <details><summary>Why preserve a failed temporary root?</summary><p>Deleting before durable evidence would destroy diagnostic state and create an unsupported cleanup claim. Recovery needs separate approval.</p></details>
+      <details><summary>What would you build next?</summary><p>Not yet decided. Candidates for product review are a clearer post-cleanup evidence template or a separate portability and repetition study.</p></details>
+    </section>
+
+    <section data-section="evidence" aria-labelledby="evidence-title">
+      <p class="section-kicker">Open the proof</p>
+      <h2 id="evidence-title">Evidence behind the story</h2>
+      <div class="evidence-grid">
+        <a class="evidence-link" href="build-validation/post-repair-no-retry-artifact-replay-v1-2026-08-27.md"><strong>Immutable replay evidence</strong><span>Inputs, artifact identities, inventory, attempt and privacy boundaries.</span></a>
+        <a class="evidence-link" href="../STATUS.md"><strong>Current repository status</strong><span>PASS, receipt revalidation, gated cleanup, zero-root observation, and validation.</span></a>
+        <a class="evidence-link" href="development-log/2026-08-27.md"><strong>Dated development log</strong><span>The sole post-repair execution and documentation closeout.</span></a>
+        <a class="evidence-link" href="artifact-replay-interview-walkthrough.md"><strong>Markdown speaker notes</strong><span>The compact source narrative and evidence boundaries.</span></a>
+      </div>
+    </section>
+
+    <div class="next"><a class="button dark" href="artifact-replay-interview.zh-CN.html">用中文讲解</a><a class="button" href="interview-guide.html">Open the full interview guide</a></div>
+  </main>
+  <footer class="shell">Agent Governance Starter Kit · Artifact replay · Two failures, one preserved boundary</footer>
+</body>
+</html>

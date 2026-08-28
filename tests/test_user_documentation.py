@@ -141,6 +141,13 @@ ISOLATED_EXECUTION_ADR = (
 ISOLATED_EXECUTION_REHEARSAL = ROOT / "docs/isolated-tool-execution-rehearsal.md"
 GUIDE_SCRIPT = ROOT / "docs/guide.js"
 GUIDE_STYLE = ROOT / "docs/guide.css"
+ARTIFACT_REPLAY_INTERVIEW_WEB = ROOT / "docs/artifact-replay-interview.html"
+ARTIFACT_REPLAY_INTERVIEW_ZH_WEB = (
+    ROOT / "docs/artifact-replay-interview.zh-CN.html"
+)
+ARTIFACT_REPLAY_INTERVIEW_STYLE = (
+    ROOT / "docs/artifact-replay-interview.css"
+)
 PUBLIC_JOURNEY_HTML = (
     "index.html",
     "portfolio.html",
@@ -187,9 +194,10 @@ class UserDocumentationTests(unittest.TestCase):
 
         self.assertEqual(first_routes.count("<a href="), 4)
         for anchor in (
-            "https://andy-junxiong.github.io/agent-governance-starter/\"",
             "https://andy-junxiong.github.io/agent-governance-starter/"
-            "governed-refund-walkthrough.html",
+            "interview-demo.html",
+            "https://andy-junxiong.github.io/agent-governance-starter/"
+            "project-interview.html",
             "https://andy-junxiong.github.io/agent-governance-starter/"
             "portfolio.html",
             "https://andy-junxiong.github.io/agent-governance-starter/"
@@ -2009,7 +2017,11 @@ class UserDocumentationTests(unittest.TestCase):
                     if parsed.scheme or parsed.netloc:
                         continue
                     target = (page.parent / parsed.path).resolve() if parsed.path else page
-                    self.assertTrue(target.is_relative_to(docs.resolve()))
+                    self.assertTrue(
+                        target.is_relative_to(docs.resolve())
+                        or target == (ROOT / "STATUS.md").resolve(),
+                        f"{name}: resource escapes the public docs boundary: {reference}",
+                    )
                     rendered_source = (
                         target.with_suffix(".md") if target.suffix == ".html" else target
                     )
@@ -2082,6 +2094,7 @@ class UserDocumentationTests(unittest.TestCase):
         for english, chinese in (
             ("quickstart.html", "quickstart.zh-CN.html"),
             ("interview-guide.html", "interview-guide.zh-CN.html"),
+            ("artifact-replay-interview.html", "artifact-replay-interview.zh-CN.html"),
             ("existing-repository-adoption.html", "existing-repository-adoption.zh-CN.html"),
             ("generated-files-guide.html", "generated-files-guide.zh-CN.html"),
             ("troubleshooting.html", "troubleshooting.zh-CN.html"),
@@ -2104,6 +2117,126 @@ class UserDocumentationTests(unittest.TestCase):
         ):
             with self.subTest(template=template):
                 self.assertIn("@media", (docs / template).read_text(encoding="utf-8"))
+
+    def test_bilingual_artifact_replay_walkthrough_is_evidence_bounded(self) -> None:
+        english = ARTIFACT_REPLAY_INTERVIEW_WEB.read_text(encoding="utf-8")
+        chinese = ARTIFACT_REPLAY_INTERVIEW_ZH_WEB.read_text(encoding="utf-8")
+        stylesheet = ARTIFACT_REPLAY_INTERVIEW_STYLE.read_text(encoding="utf-8")
+
+        self.assertIn('href="artifact-replay-interview.zh-CN.html"', english)
+        self.assertIn('href="artifact-replay-interview.html"', chinese)
+        for text in (english, chinese):
+            with self.subTest(language=text[:24]):
+                self.assertIn(
+                    "default-src 'none'; style-src 'self'; img-src 'self'",
+                    text,
+                )
+                self.assertIn('href="guide.css"', text)
+                self.assertIn('href="artifact-replay-interview.css"', text)
+                self.assertNotIn("<script", text)
+                self.assertNotIn("<style", text)
+                self.assertNotIn("https://", text)
+                self.assertNotIn("http://", text)
+                for section in (
+                    "story-arc",
+                    "problem",
+                    "architecture",
+                    "repairs",
+                    "results",
+                    "cleanup",
+                    "questions",
+                    "evidence",
+                ):
+                    self.assertIn(f'data-section="{section}"', text)
+                self.assertNotIn('data-section="truth-model"', text)
+                self.assertNotIn('data-section="limitations"', text)
+                for fact in (
+                    "1 / 1 / 1",
+                    "186 / 186",
+                    "sha256:64f48914b60ae9a7638275f1a9f3b3727bc15b7226c76b37babe08475bae685a",
+                    "ffc06da3060b459ff39c8602365126a860e8228dd6320c8c88f69cbc8c6b8715",
+                ):
+                    self.assertIn(fact, text)
+                self.assertEqual(text.count('class="metric" tabindex="0"'), 8)
+                self.assertEqual(text.count('class="flow-step" tabindex="0"'), 5)
+                self.assertEqual(text.count('role="tooltip"'), 13)
+                self.assertIn('aria-describedby="', text)
+
+                self.assertLess(
+                    text.index('data-section="story-arc"'),
+                    text.index('data-section="architecture"'),
+                )
+                self.assertLess(
+                    text.index('data-section="architecture"'),
+                    text.index('data-section="results"'),
+                )
+
+        english_story = (
+            "I wanted to know whether cleanup was truly evidence-gated.",
+            "The first replay never reached the build.",
+            "I chose to move trusted facts, not widen the worker.",
+            "The first repair was necessary, but inspection showed it was not sufficient.",
+            "I allowed one new replay. It ran once and completed the gate.",
+            "Yes—on this run, cleanup waited for evidence.",
+        )
+        chinese_story = (
+            "我只想确认一件事：清理真的会等证据通过吗？",
+            "第一次回放根本没有走到构建。",
+            "我选择移动可信事实，而不是扩大 worker。",
+            "第一次修复是必要的，但静态检查证明它还不够。",
+            "我允许了一次新回放。它只运行一次，并走完了门控。",
+            "是的——至少在这一次回放里，清理等到了证据。",
+        )
+        for text, story in ((english, english_story), (chinese, chinese_story)):
+            positions = [text.index(phrase) for phrase in story]
+            self.assertEqual(positions, sorted(positions))
+
+        for invented_claim in (
+            "I kept watching AI coding tools",
+            "My first instinct was to add more checks",
+            "Because I tried one and it lied",
+            "I started this project after",
+            "我最初以为治理就是增加更多规则",
+            "我试过一个评分",
+        ):
+            self.assertNotIn(invented_claim, english)
+            self.assertNotIn(invented_claim, chinese)
+
+        for mojibake in ("涓", "鈥", "锛", "鏄"):
+            self.assertNotIn(mojibake, chinese)
+        self.assertIn(
+            "Cross-platform behavior and repeated reliability would need separate runs.",
+            english,
+        )
+        self.assertIn("跨平台行为和重复可靠性需要单独运行来验证", chinese)
+        self.assertIn("The Agent proposed most of the low-level repairs.", english)
+        self.assertIn("底层修复大多由 Agent 提出", chinese)
+        self.assertIn(".metric > .evidence-kind", stylesheet)
+        self.assertIn("189 regular members = 183 managed byte matches + 6 generated metadata members", english)
+        self.assertIn("189 个普通成员 = 183 个受管字节匹配 + 6 个生成元数据成员", chinese)
+        self.assertIn("@media (max-width: 620px)", stylesheet)
+        self.assertIn(":focus-visible", stylesheet)
+        self.assertIn(".metric:hover .detail-panel", stylesheet)
+        self.assertIn(".metric:focus .detail-panel", stylesheet)
+        self.assertIn(".story-opening", stylesheet)
+        self.assertIn(".story-voice", stylesheet)
+        self.assertIn("background: #f0eef5", stylesheet)
+        self.assertNotIn("#dfff79", stylesheet.lower())
+
+        readme = README.read_text(encoding="utf-8")
+        markdown = (ROOT / "docs/artifact-replay-interview-walkthrough.md").read_text(
+            encoding="utf-8"
+        )
+        for target in (
+            "docs/artifact-replay-interview.html",
+            "docs/artifact-replay-interview.zh-CN.html",
+        ):
+            self.assertIn(target, readme)
+        for target in (
+            "artifact-replay-interview.html",
+            "artifact-replay-interview.zh-CN.html",
+        ):
+            self.assertIn(target, markdown)
 
 
 class EvidenceFreshnessDocumentationTests(unittest.TestCase):

@@ -1,0 +1,91 @@
+{
+  "acceptance_signals": [
+    "The resolved journey mcpj-703752b5a1ca40108777e476398056fa and a matching human-admitted task exist before any repository write or real artifact action.",
+    "A create-only task-start scope baseline is captured before dry execution, probe, root allocation, evidence write, action, or build.",
+    "One UTF-8 source is encoded once and used unchanged for dry and actual modes through the fixed module and JSON-stdin harness.",
+    "The source reads exactly four validated identity scalars from ARTIFACT_REPLAY_SOURCE_IDENTITY and uses them to construct the readiness-bound caller request; it supplies no caller-controlled identity context.",
+    "Dry mode resolves every required import, validates constants, current manifest identities, one compatible fixed launcher and backend wheel, absent evidence target, and zero short roots, then exits before request construction with zero caller, probe, driver, action, and build attempts.",
+    "Only after dry PASS does actual mode construct one ArtifactInvocationCallerRequest and call run_ready_artifact_replay exactly once.",
+    "The caller performs one fresh real readiness probe and invokes the unchanged driver only after strict PASS.",
+    "The action stages every manifest-selected regular input with byte parity, performs one offline no-index no-dependency no-build-isolation no-cache wheel build, validates managed wheel payload bytes, and returns one privacy-bounded evidence document.",
+    "The driver exclusively writes and flushes the new evidence, creates its exact receipt, calls evidence-gated cleanup, and confirms the short root is absent.",
+    "Success reports exactly one actual, caller, probe, driver, action, and build attempt with cleanup true and final zero short roots.",
+    "Any first deviation stops without a second dry or actual attempt, retry, repair, alternate backend, implementation change, manual cleanup, or false success claim; any private recovery root remains untouched.",
+    "Only the new task, new baseline, new evidence, STATUS, and dated log may change; all existing dirty content and excluded predecessor paths remain byte-identical.",
+    "Focused and full tests plus manifest, task, repository, scope, JSON, privacy, evidence-identity, zero-root, whitespace, and diff checks pass.",
+    "No dependency installation, network, external Agent or model, Git mutation, commit, push, publication, release, deployment, or follow-on authority occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-e8dff2ec2c774fe28a5b0b0571041121 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Perform exactly one bounded real composed artifact replay through the validated repository harness and immutable source-identity bridge. Capture a create-only task-start baseline first. Use one encoded source unchanged for one dry attempt and, only after dry PASS, at most one actual attempt. Dry must resolve imports and revalidate the manifest, fixed launcher and backend wheel, exact identity binding, absent new evidence target, and zero short roots without constructing a caller request. Actual must construct one caller request from the harness-provided identity context, run one fresh readiness probe, then at most one unchanged driver, action, offline wheel build, durable privacy-bounded evidence write, receipt, evidence-gated cleanup, and root-absence confirmation. Stop at the first deviation without retry, repair, alternate backend, implementation change, or manual cleanup."
+  },
+  "risk": {
+    "items": [
+      "A real replay may fail after allocating a private short root; the no-manual-cleanup boundary may leave it for a separately authorized recovery.",
+      "The readiness result is point-in-time and cannot eliminate launcher, backend, or temporary-root replacement races.",
+      "The harness contains output and failures but is not a security sandbox.",
+      "The dirty worktree contains several earlier admitted slices; broad baseline-prefix inclusion is preservation-only for every pre-existing baseline.",
+      "A successful build validates one current host execution, not cross-platform or repeated reliability.",
+      "The evidence writer must never persist source text, raw output, traceback, host paths, environment, credentials, process details, or the ephemeral readiness receipt.",
+      "Reviewed assumption: The previously observed compatible fixed launcher and exact cached backend wheel remain available, subject to fresh read-only revalidation.",
+      "Reviewed assumption: The existing action pattern can perform the current manifest-bound offline wheel build without repository implementation changes.",
+      "Reviewed assumption: The new identity mapping is sufficient to bind the readiness request to the exact harness-prepared source.",
+      "Reviewed assumption: The new evidence target is absent before actual execution.",
+      "Reviewed unknown: Whether fresh dry validation passes on the current host.",
+      "Reviewed unknown: Whether the sole actual composed replay succeeds.",
+      "Reviewed unknown: The exact wheel and managed payload identities produced by the current build.",
+      "Reviewed unknown: Whether another first deviation exists after identity binding.",
+      "Reviewed unknown: Cross-platform behavior, adversarial replacement, recovery behavior, repeated reliability, adoption, time savings, causal benefit, and return on investment remain unknown."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "docs/development-automation-contracts.md",
+      "docs/build-validation/artifact-invocation-transport-readiness-gate-v1-2026-08-26.md",
+      "docs/build-validation/minimal-artifact-invocation-caller-gate-v1-2026-08-26.md",
+      "docs/build-validation/minimal-noninteractive-artifact-driver-v1-2026-08-26.md",
+      "docs/build-validation/no-retry-artifact-driver-gate-replay-v1-2026-08-26.md",
+      "docs/build-validation/real-action-artifact-driver-replay-v1-2026-08-26.md",
+      "governance/tasks/p0-artifact-invocation-transport-readiness-gate-v1.json",
+      "governance/tasks/p0-bounded-artifact-replay-harness-v1.json",
+      "governance/tasks/p0-bounded-artifact-replay-identity-bridge-v1.json",
+      "governance/tasks/p0-minimal-artifact-invocation-caller-gate-v1.json",
+      "governance/tasks/p0-minimal-noninteractive-artifact-driver-v1.json",
+      "governance/tasks/p0-no-retry-artifact-driver-gate-replay-v1.json",
+      "governance/tasks/p0-real-action-artifact-driver-replay-v1.json",
+      "governance/tasks/p0-real-composed-artifact-caller-replay-recovery-v1.json",
+      "governance/tasks/p0-real-composed-artifact-caller-replay-v1.json",
+      "scripts"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-real-composed-artifact-identity-bridge-replay-v1.json",
+      ".agentgov/scope-baselines",
+      "docs/build-validation/real-composed-artifact-identity-bridge-replay-v1-2026-08-26.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-26.md"
+    ]
+  },
+  "task_id": "p0-real-composed-artifact-identity-bridge-replay-v1",
+  "title": "Real composed artifact identity-bridge replay v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-real-composed-artifact-identity-bridge-replay-v1.json --baseline .agentgov/scope-baselines/p0-real-composed-artifact-identity-bridge-replay-v1.json",
+    "py -3.11 -m scripts.distribution_input_manifest check --repository . --manifest governance/distribution-input-manifest.json",
+    "py -3.11 -m unittest scripts.artifact_replay_harness.test_harness scripts.artifact_invocation_caller.test_caller scripts.artifact_invocation_readiness.test_readiness scripts.artifact_replay_driver.test_driver scripts.distribution_input_manifest.test_manifest scripts.short_build_root.test_root -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-real-composed-artifact-identity-bridge-replay-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-real-composed-artifact-identity-bridge-replay-v1.json",
+    "git diff --check"
+  ]
+}

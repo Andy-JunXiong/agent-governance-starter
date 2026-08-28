@@ -126,16 +126,16 @@ class GovernedRefundWalkthroughTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
         landing = (ROOT / "docs" / "index.html").read_text(encoding="utf-8")
 
-        self.assertIn("docs/governed-refund-walkthrough.html", top_readme)
+        self.assertIn("docs/interview-demo.html", top_readme)
         self.assertIn("../../docs/governed-refund-walkthrough.html", demo_readme)
         self.assertEqual(
-            landing.count('href="governed-refund-walkthrough.html"'), 1
+            landing.count('href="interview-demo.html"'), 3
         )
-        link_position = landing.index('href="governed-refund-walkthrough.html"')
+        link_position = landing.index('href="interview-demo.html"')
         self.assertLess(landing.index('<section id="example">'), link_position)
         self.assertLess(link_position, landing.index('<section id="report">'))
         self.assertIn(
-            "Open the 60-to-90-second governed walkthrough</a", landing
+            "Open the refund demo</a", landing
         )
         contrast_rule = landing.split(".case-wrap .button.light {", 1)[1].split(
             "}", 1

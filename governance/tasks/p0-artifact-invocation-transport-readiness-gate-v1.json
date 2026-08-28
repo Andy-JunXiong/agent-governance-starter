@@ -1,0 +1,91 @@
+{
+  "acceptance_signals": [
+    "The human-admitted task and create-only baseline exist before implementation; every pre-existing changed path is classified and all predecessor files remain byte-identical.",
+    "A dependency-free internal module exists only under scripts/artifact_invocation_readiness with no __main__.py, public CLI, installed surface, command-runner interface, or artifact build dependency.",
+    "A frozen request accepts normalized encoding algorithm, encoded length and SHA-256 only; private launcher and backend-wheel references; expected versions and wheel identity; and an exact all-false authority mapping.",
+    "The checker never accepts caller source or encoded payload bytes, never decodes or executes caller content, and runs only one module-owned fixed launcher capability probe after non-process gates pass.",
+    "Launcher and backend references must be existing regular non-link files and backend bytes must match the expected digest; unsafe, missing, linked, malformed, or mismatched input stops before probing.",
+    "The fixed probe uses closed stdin, isolated Python mode, a bounded timeout, a module-owned script, and a bounded environment; it reports only normalized versions and required capability booleans.",
+    "The checker observes the temporary directory without writing and requires zero direct agv task roots before probe or readiness PASS.",
+    "Any denied-authority request, malformed metadata, unsafe path, digest mismatch, existing root, probe exception, timeout, nonzero exit, malformed output, version mismatch, or missing capability returns the first bounded reason with at most one probe attempt.",
+    "PASS output contains only contract identity, bounded encoding and backend identities, normalized versions, capability booleans, probe_attempts=1, short_root_count=0, no-stdin and no-TTY facts, and denied authority.",
+    "Fixture tests cover PASS, all first-deviation classes, fixed probe construction, closed stdin, one attempt, privacy, no caller execution surface, and no public CLI.",
+    "Documentation labels this deterministic internal pre-action readiness evidence, assigns ordering to future callers, and does not claim the unchanged artifact driver enforces or consumes it.",
+    "Only the admitted task, baseline, new readiness module, exact automation-contract section, new evidence, STATUS, and existing dated log may change; every other path remains byte-identical.",
+    "Focused, documentation, and complete Python 3.11 tests plus task, repository, scope, JSON, privacy, zero-root, and whitespace checks pass.",
+    "No real artifact action or build, installation, network, driver call, root allocation or cleanup, public CLI, installed change, external Agent, model, Git, publication, release, deployment, scheduling, retry, repair, or full journey occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-0b90697c46ab4f17b0625fea820a01f2 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Implement one dependency-free internal checker under scripts/artifact_invocation_readiness. Before a future artifact driver or action is considered available, validate normalized encoding metadata, private regular non-link launcher and retained-backend wheel references, expected backend-wheel SHA-256, one fixed bounded launcher capability probe, zero existing task-owned short roots, and an exact all-false authority request. Never accept, decode, or execute caller source; invoke the driver; allocate or remove a root; build; read stdin; branch on TTY; install; use network; or retry. Return a privacy-bounded PASS receipt or the first bounded reason code. Add fixture tests and document that callers, not the unchanged driver, own precondition ordering."
+  },
+  "risk": {
+    "items": [
+      "Calling this a gate could overstate enforcement because the unchanged driver does not consume its receipt; documentation must assign ordering to callers.",
+      "A launcher probe could become a command runner; its command and script must be module-owned constants with no caller source or arguments.",
+      "Private paths or subprocess details could leak through representations or errors; every report must remain normalized.",
+      "Launcher or backend replacement and a root appearing after observation remain point-in-time race limits.",
+      "The dirty worktree contains three completed artifact slices; broad baseline inclusion grants no authority to alter predecessor files.",
+      "Reviewed assumption: Metadata without payload bytes is sufficient to validate the transport declaration without decoding caller content.",
+      "Reviewed assumption: A fixed isolated metadata probe can establish bounded launcher readiness without building or networking.",
+      "Reviewed assumption: The temporary-root name contract remains agv followed by sixteen lowercase hexadecimal characters.",
+      "Reviewed assumption: The receipt is non-authorizing evidence for a future caller and is not consumed by the current driver.",
+      "Reviewed assumption: Fixture injection can cover probe failure states without a real artifact action.",
+      "Reviewed unknown: Whether a future caller should persist the receipt or keep it ephemeral.",
+      "Reviewed unknown: Whether the driver should later require a receipt through a separately admitted contract change.",
+      "Reviewed unknown: Cross-platform executable and filesystem race behavior.",
+      "Reviewed unknown: Whether stronger file-handle pinning is needed against replacement.",
+      "Reviewed unknown: Whether this gate measurably reduces friction or failures.",
+      "Reviewed unknown: Whether a broader end-to-end journey remains worthwhile."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "docs/build-validation/minimal-noninteractive-artifact-driver-v1-2026-08-26.md",
+      "docs/build-validation/no-retry-artifact-driver-gate-replay-v1-2026-08-26.md",
+      "docs/build-validation/real-action-artifact-driver-replay-v1-2026-08-26.md",
+      "governance/distribution-input-manifest.json",
+      "governance/tasks/p0-minimal-noninteractive-artifact-driver-v1.json",
+      "governance/tasks/p0-no-retry-artifact-driver-gate-replay-v1.json",
+      "governance/tasks/p0-real-action-artifact-driver-replay-v1.json",
+      "scripts/artifact_replay_driver",
+      "scripts/distribution_input_manifest",
+      "scripts/short_build_root",
+      "scripts/task_start_scope_baseline",
+      "src",
+      "tests"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-artifact-invocation-transport-readiness-gate-v1.json",
+      ".agentgov/scope-baselines",
+      "scripts/artifact_invocation_readiness",
+      "docs/development-automation-contracts.md",
+      "docs/build-validation/artifact-invocation-transport-readiness-gate-v1-2026-08-26.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-26.md"
+    ]
+  },
+  "task_id": "p0-artifact-invocation-transport-readiness-gate-v1",
+  "title": "Artifact invocation transport readiness gate v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-artifact-invocation-transport-readiness-gate-v1.json --baseline .agentgov/scope-baselines/p0-artifact-invocation-transport-readiness-gate-v1.json",
+    "py -3.11 -m unittest scripts.artifact_invocation_readiness.test_readiness scripts.artifact_replay_driver.test_driver scripts.short_build_root.test_root -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-artifact-invocation-transport-readiness-gate-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-artifact-invocation-transport-readiness-gate-v1.json",
+    "git diff --check"
+  ]
+}

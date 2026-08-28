@@ -30,7 +30,8 @@ class ProductSiteTests(unittest.TestCase):
             "Let a person decide",
             "Start with one repository.",
             "Illustrative example",
-            "Guided walkthrough",
+            "Interview demo",
+            "Presenter guide",
             "Passing checks never approve a merge, release, or deployment.",
         ):
             self.assertIn(phrase, content)
@@ -97,13 +98,13 @@ class ProductSiteTests(unittest.TestCase):
         self.assertEqual(product_note.count('href="portfolio.html#boundary"'), 1)
         self.assertIn("See current evidence and limits →", product_note)
 
-        walkthrough_labels = re.findall(
+        presenter_labels = re.findall(
             r'<a[^>]+href="interview-guide\.html"[^>]*>\s*([^<]+?)\s*</a\s*>',
             content,
         )
         self.assertEqual(
-            walkthrough_labels,
-            ["Guided walkthrough", "Guided walkthrough"],
+            presenter_labels,
+            ["Presenter guide", "Presenter guide"],
         )
 
         footer_evidence = content.split(
@@ -135,7 +136,9 @@ class ProductSiteTests(unittest.TestCase):
         content = SITE.read_text(encoding="utf-8")
 
         self.assertIn('href="demo-governance-report.html"', content)
+        self.assertIn('href="interview-demo.html"', content)
         self.assertIn('href="interview-guide.html"', content)
+        self.assertTrue((ROOT / "docs/interview-demo.html").is_file())
         self.assertTrue((ROOT / "docs/interview-guide.html").is_file())
         self.assertTrue((ROOT / "docs/demo-governance-report.html").is_file())
         self.assertIn("https://github.com/Andy-JunXiong/agent-governance-starter", content)
@@ -220,6 +223,7 @@ class ProductSiteTests(unittest.TestCase):
         self.assertIn("](docs/index.html)", readme)
         self.assertIn("](docs/demo-governance-report.html)", readme)
         self.assertIn("](docs/interview-guide.md)", readme)
+        self.assertIn("](docs/interview-demo.html)", readme)
         self.assertIn("## Product overview", readme)
         self.assertNotIn("## Interview snapshot", readme)
 

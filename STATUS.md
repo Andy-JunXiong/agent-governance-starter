@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-08-25
+Last verified: 2026-08-28
 
 ## Current-status contract
 
@@ -41,6 +41,938 @@ interactive confirmation and stale-plan revalidation; it adds no automatic
 scheduling authority.
 
 ### Current closeout snapshot
+
+- **Active slice**: human-admitted task
+  `p0-2026-08-28-session-closeout-v2` closes the accumulated artifact replay,
+  bilingual interview demo, whole-project story, presenter guide, and de-AI
+  narrative work into one reviewed non-release source-history delivery. Native
+  proposal `prp-0808294ea37643ccbb8ed118ddcb03d6` and baseline
+  `sha256:5ed4d9bc671e36066c586caf9b9e985f341708828ffb45acb17d3e913b5815dc`
+  bind the final closeout. The earlier v1 closeout remains a superseded record
+  because its baseline correctly excluded the later manifest refresh.
+- **Outcome**: AgentGov now has a presenter-ready bilingual route: a concise
+  project answer, one six-step refund demo, a factual whole-project drift and
+  repair story, and an optional artifact replay engineering deep dive. The
+  accumulated artifact controller, caller, readiness, driver, Harness, tests,
+  task records, and durable evidence remain connected to those public surfaces.
+- **Integrity correction**: full validation caught that the README is one of
+  the exact 186 distribution inputs. The interview-link update changed only the
+  manifest content identity, not its path set. The product owner selected a
+  separate identity refresh through resolved journey
+  `mcpj-6cba12f8f7184a8d9228cd01febddb6e`; native proposal
+  `prp-787d1c97b3464fcd82a43e8860e1496e` admitted task
+  `p0-readme-manifest-identity-refresh-replay-v1`, with baseline
+  `sha256:cc2f0e79235e46a3263476253ccc94374903aa39b063a8cdce66bf157d64dfd2`.
+  The refreshed manifest remains 186 paths with path identity
+  `sha256:cfea3a3632bd75d1f4db51168d257c465987d3fe620fda2449abcd86f42fcd03`
+  and new content identity
+  `sha256:b00be073afa541c3130cc620c84bd2bba2afa7b48ec4e70a4ff74998bc7fb8d9`.
+- **Fresh replay result**: after 78 artifact-chain tests passed, fresh preflight
+  confirmed the retained Python 3.11.9 / pip 24.0 / setuptools 84.0.0
+  environment, backend-wheel identity, absent evidence target, and zero short
+  roots. The fixed controller was invoked exactly once and returned `PASS` with
+  controller/dry/actual attempts `1/1/1`, no retry, 186/186 byte matches, one
+  built wheel with SHA-256
+  `sha256:c898ce93bb8b8a820bd68d909393096fcdc2f9a4ecb04509a4dd44acb75bac4a`,
+  durable evidence SHA-256
+  `d6c96190bc867a697f22a4cc7ea759c7d1ae7c25fac8a657178d60e5b51bac7f`,
+  and final short-root count zero. The prior evidence remains byte-identical at
+  `ffc06da3060b459ff39c8602365126a860e8228dd6320c8c88f69cbc8c6b8715`.
+- **User-reported validation**: the product owner requested the end-of-day
+  documentation, commit, and non-force main push, then explicitly selected the
+  identity-refresh path when the README-manifest dependency surfaced. This is
+  direction and Git authorization, not independent validation of the pages or
+  replay.
+- **Codex-run validation**: the full repository suite passes 1,111 tests with
+  five Windows privilege-limited symbolic-link skips; the complete scripts
+  suite passes 111 tests with six such skips; the exact artifact chain passes
+  78 tests with five such skips; and 88 focused interview and public-entry tests
+  pass. Manifest, task JSON, task governance
+  (`PASS=3 WARN=1 FAIL=0 ADVISORY=3`), repository governance
+  (`PASS=26 WARN=2 FAIL=0 ADVISORY=4`), whitespace, staged-diff, secret-safety,
+  and absolute-host-path checks pass. Final v2 captured-scope counts are recorded
+  in `docs/development-log/2026-08-28.md`. Fetch found local and remote main at
+  the same pre-commit revision with divergence `0/0`.
+- **Advisory review**: native current-Agent self-review
+  `srv-fe956072419f5578994e91e4a2c1fbb8` completed as a distinct advisory pass.
+  It found the selected requirement split, unchanged 186-path architecture,
+  new content identity, one-attempt replay, v2 scope, updated entry tests,
+  privacy boundary, and denied downstream authorities consistent. Independent
+  assurance, portability, repeated reliability, and external outcomes remain
+  unknown.
+- **Pending validation**: actual interview pacing, interviewer comprehension,
+  external publication suitability, adoption, production behavior, portability,
+  repeated replay reliability, and interview outcome remain unknown.
+- **Incomplete**: none within the admitted local implementation, validation,
+  and Git-closeout scope once the final checks and push recorded below succeed.
+- **Next product review**: rehearse the 30-second answer, two-minute project
+  story, and six-step demo aloud; then decide whether copy or pacing needs a
+  separately admitted revision. This grants no automatic task, release,
+  deployment, hosting, or publication authority.
+
+### 2026-08-27 session handoff
+
+- **Development state**: the accumulated artifact replay caller chain,
+  no-retry execution evidence, bilingual interview walkthrough, evidence-detail
+  interaction, and first-person story rewrite are feature-complete for today's
+  admitted work. No replay or implementation attempt remains pending.
+- **Human authority**: the product owner explicitly authorized one end-of-day
+  commit and one ordinary non-force push to `origin/main`. Native task
+  `p0-session-closeout-push-main-v1` limits that closeout to the reviewed
+  artifact replay source, tests, evidence, governance records, and related
+  documentation.
+- **Preserved local state**: `.codex` configuration and unrelated historical
+  `.agentgov` scope baselines are local-only and are not part of the intended
+  commit.
+- **Authority boundary**: this handoff is a Git source-history closeout, not a
+  release, deployment, hosting action, package publication, or claim of product
+  adoption. Git history owns the final commit and transport identity.
+
+### Previous bilingual artifact replay evidence-detail snapshot
+
+- **Active slice**: human-admitted task
+  `p0-bilingual-artifact-replay-evidence-detail-ui-v1` refines both artifact
+  replay presentation pages from the product owner's screenshot review.
+- **Outcome**: the fluorescent result treatment is replaced with a restrained
+  paper, ink, muted-purple, and soft-sage palette consistent with the existing
+  guide system. Both pages now label `Observed`, `Derived explanation`, and
+  `Unknown` material explicitly.
+- **Concrete interaction**: all five architecture steps and all eight result
+  metrics expose definition, relationship, and evidence-boundary detail on
+  mouse hover and keyboard focus. The 189-member card now explains the exact
+  `183 managed + 6 generated = 189 regular` relationship; related cards explain
+  zero mismatches, zero unexpected members, zero retries, and receipt-gated
+  zero-root cleanup.
+- **Evidence boundary**: recorded attempt counts, artifact identities, replay
+  sequence, and cleanup observations remain labeled as real evidence. The timed
+  story, architecture grouping, and interview phrasing are labeled as editorial
+  abstraction. Portability, repeated reliability, time saving, adoption, and
+  interview benefit remain unknown.
+- **User-reported validation**: the product owner identified excessive
+  brightness, inconsistent visual hierarchy, abstract content, and unclear
+  evidence provenance, then admitted proposal
+  `prp-0c02d43eb2ac41d59bccf8453b71c80b`. This supplied task admission and
+  design feedback, not independent acceptance.
+- **Codex-run validation**: create-only task-start baseline
+  `sha256:a961bed739e8e9e33441457fd6e76656b61b34b51b8d294ff5fc57745feb9f64`
+  was captured before edits. All 56 user-documentation tests pass. Local browser
+  QA confirms the muted result panel, Chinese evidence taxonomy, visible
+  `Wheel members 189` detail on both focus and hover, and the English language
+  route. Task governance is `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository
+  governance is `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; and captured scope is
+  `PASS=29 PRESERVED=29 FAIL=0 TOTAL=58`. Immutable evidence hash, task JSON,
+  whitespace, and `git diff --check` pass.
+- **Advisory review**: a distinct bounded current-Agent review found the palette,
+  bilingual evidence taxonomy, concrete relationships, hover and focus
+  accessibility, critical identities, scope, and denied hosting authority
+  consistent. It retains touch usability in a real presentation, other-browser
+  rendering, preferred density, and interview benefit as unknown. This fully
+  specified task had no new resolved alignment journey, so no native self-review
+  result is claimed. The native task completion-record tool is not exposed.
+- **Pending validation**: none in the admitted local refinement task.
+- **Incomplete**: none in the admitted local refinement task.
+- **Next product review**: rehearse with the new evidence disclosures and decide
+  whether the remaining need is content reduction or touch-first disclosure.
+  This grants no task, Git, hosting, publication, release, or deployment
+  authority.
+
+### Previous bilingual artifact replay HTML snapshot
+
+- **Active slice**: human-admitted task
+  `p0-bilingual-artifact-replay-html-walkthrough-v1` implements the requested
+  bilingual browser presentation over the completed artifact replay.
+- **Outcome**: new
+  [English](docs/artifact-replay-interview.html) and
+  [Simplified Chinese](docs/artifact-replay-interview.zh-CN.html) HTML pages
+  provide equivalent three-to-five-minute presentation routes with a hero,
+  timed story, architecture flow, two-repair sequence, verified metric cards,
+  cleanup gate, honest limits, likely questions, and evidence links. They share
+  one additive responsive stylesheet and the established guide visual system.
+- **Discoverability**: README and the Markdown walkthrough link both language
+  pages. Each HTML page links to the other language, the full interview guide,
+  quickstart, portfolio, and bounded evidence sources.
+- **Evidence and authority boundary**: the HTML pages cite rather than rewrite
+  receipt-validated evidence. No replay, build, implementation, shared guide
+  asset, hosting, publication, Git operation, release, or deployment occurred.
+- **User-reported validation**: the product owner requested both English and
+  Chinese pages and admitted proposal `prp-054822a697bc4a059b880e5a6783ea37`
+  through the native form. This supplied task admission, not independent visual
+  or product acceptance.
+- **Codex-run validation**: create-only task-start baseline
+  `sha256:503e8b37a70950a0c6ee710bf01d6b62e88456cdaca8ffd6cfdf0e42d1962f96`
+  was captured before page edits. All 56 user-documentation tests pass,
+  including the focused bilingual, responsive, CSP, UTF-8, evidence-fact, and
+  navigation coverage. Task governance is
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance is
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; and captured scope is
+  `PASS=28 PRESERVED=27 FAIL=0 TOTAL=55`. The immutable evidence hash, task JSON,
+  whitespace, and `git diff --check` pass.
+- **Advisory review**: a distinct bounded current-Agent pass found the two
+  languages aligned on sections, attempt counts, artifact identities, cleanup
+  semantics, evidence links, non-claims, local-asset policy, and denied hosting
+  authority. It retains actual browser rendering, spoken duration, and
+  interview benefit as unknown. This fully specified task had no new resolved
+  alignment journey, so no native self-review result is claimed. The native
+  task completion-record tool is not exposed in this session.
+- **Pending validation**: browser visual QA was not requested and remains
+  unknown; no deterministic task validation is pending.
+- **Incomplete**: none in the admitted local bilingual-page task.
+- **Next product review**: open both local pages and rehearse the timed route,
+  then decide whether browser-specific visual QA or publication is actually
+  needed. This is review input only and grants no task, Git, hosting,
+  publication, release, or deployment authority.
+
+### Previous artifact replay Markdown walkthrough snapshot
+
+- **Active slice**: human-admitted documentation task
+  `p0-artifact-replay-interview-walkthrough-v1` implements the selected
+  interview-packaging direction from resolved alignment journey
+  `mcpj-ea817cbb30274487959e92fe5a68a103`.
+- **Outcome**: the new
+  [artifact replay interview walkthrough](docs/artifact-replay-interview-walkthrough.md)
+  turns the completed evidence chain into a focused three-to-five-minute story.
+  It covers the problem, controller-to-driver architecture, two manifest-boundary
+  repairs, the sole post-repair run, evidence-gated cleanup, tradeoffs, honest
+  limitations, and likely interviewer questions. README navigation now links it.
+- **Evidence boundary**: the walkthrough cites rather than rewrites the durable
+  replay evidence. That file remains byte-identical with SHA-256
+  `ffc06da3060b459ff39c8602365126a860e8228dd6320c8c88f69cbc8c6b8715`.
+  No replay, build, implementation, contract, prior evidence, or prior-log path
+  changed under this documentation task.
+- **User-reported validation**: the product owner selected the walkthrough
+  direction and admitted proposal `prp-0a32f822898d461f9c2d5492aab116d2`
+  through the native form. This supplied direction and task admission, not
+  independent product acceptance.
+- **Codex-run validation**: create-only task-start baseline
+  `sha256:5698cf9894883b96d6de81e5fb6d4f0404759ecaab709cf45e336d57c1d42f12`
+  was captured before documentation edits. All 55 user-documentation tests
+  pass. Task governance is `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository
+  governance is `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; and captured scope is
+  `PASS=21 PRESERVED=27 FAIL=0 TOTAL=48`. The immutable evidence hash, task JSON,
+  whitespace, and `git diff --check` pass.
+- **Advisory review**: distinct native current-Agent self-review
+  `srv-af358ab0c280c088103127d900784095` found the requirement, architecture,
+  recorded identities, scope, privacy, and denied-authority boundaries
+  consistent. It retained actual speaking time, interviewer preference,
+  adversarial resistance, portability, repeated reliability, and interview
+  benefit as unknown. It is advisory rather than independent assurance. The
+  native task completion-record tool is not exposed in this session, so no
+  completion record is claimed.
+- **Pending validation**: none in the admitted documentation task.
+- **Incomplete**: none in the admitted documentation task.
+- **Next product review**: rehearse the walkthrough and decide whether the real
+  unmet need is a tighter spoken version, an evidence-template revision, or a
+  separately admitted portability/repetition study. This is review input only
+  and grants no task, Git, publication, release, or deployment authority.
+
+### Previous post-repair no-retry artifact replay snapshot
+
+- **Active slice**: human-admitted task
+  `p0-post-repair-no-retry-artifact-replay-v1` executed the selected one-attempt
+  real replay direction from resolved alignment journey
+  `mcpj-b6e7aa5a13f545f1ae0924e1e2189739`.
+- **Outcome**: `PASS`. The fixed controller completed one Git-backed admission,
+  one Harness dry attempt, one Harness actual attempt, one readiness probe, one
+  driver/action, one offline wheel build, one durable evidence write, one
+  receipt revalidation, and one evidence-gated cleanup.
+- **Artifact evidence**: all 186 manifest inputs were copied with 186 byte
+  matches. The build emitted one wheel with SHA-256
+  `sha256:64f48914b60ae9a7638275f1a9f3b3727bc15b7226c76b37babe08475bae685a`,
+  189 regular members, 183 managed byte matches, zero managed mismatches, six
+  generated metadata members, and zero unexpected unmanaged members. The
+  durable evidence identity is
+  `sha256:ffc06da3060b459ff39c8602365126a860e8228dd6320c8c88f69cbc8c6b8715`.
+- **Cleanup and attempt boundary**: the final short-root count is zero. The
+  controller was invoked exactly once and was not retried. No repair, alternate
+  backend, manual cleanup, network, dependency installation, Git mutation,
+  publication, release, deployment, external Agent, or model action occurred.
+- **Preflight note**: a hand-written diagnostic probe initially omitted the
+  product's `PYTHONNOUSERSITE` isolation and failed before controller execution.
+  The fixed bounded readiness probe then identified exactly one retained Python
+  3.11.9 / pip 24.0 / setuptools 84.0.0 candidate with vendored-wheel support.
+  This diagnostic was not a controller, formal readiness, driver, action, or
+  build attempt.
+- **Evidence wording limit**: the controller-owned durable evidence template
+  retains its earlier static heading/date and intentionally claims only the
+  state before gated cleanup. The bounded controller `PASS` result and final
+  zero-short-root observation supply the separate post-cleanup facts; the
+  durable evidence file was not edited after receipt validation.
+- **User-reported validation**: the product owner selected the post-repair real
+  replay and admitted proposal `prp-0d633d1e3f55466b8381d3dc15295915`
+  through the native form. This supplied execution direction and task
+  admission, not independent acceptance.
+- **Codex-run validation**: create-only task-start baseline
+  `sha256:9d2be71eff91920182d567117a49a339f46e592946fd35f18805b50cb1ce2703`
+  was captured before execution. Fresh manifest, toolchain, wheel, evidence
+  absence, zero-root, task, scope, and whitespace preflight passed. Immediate
+  post-run scope is `PASS=22 PRESERVED=20 FAIL=0 TOTAL=42`; the durable evidence
+  exists and the final short-root count is zero.
+- **Final governance and integrity**: the combined controller, Harness, caller,
+  readiness, driver, manifest, and short-root run passes 78 tests with five
+  Windows privilege-limited symbolic-link skips; all 55 user-documentation
+  tests pass. Task governance is `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository
+  governance is `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; and final captured scope is
+  `PASS=24 PRESERVED=20 FAIL=0 TOTAL=44`. Manifest, task JSON, zero short roots,
+  whitespace, and `git diff --check` pass.
+- **Advisory review**: distinct native current-Agent self-review
+  `srv-19f1a033c247e0c082e72a3054bb8192` found the requirement,
+  architecture chain, one-attempt execution, artifact identities, cleanup,
+  scope, privacy, and denied-authority boundaries consistent. It retained the
+  static evidence-heading/date limitation, unknown cross-platform and repeated
+  reliability, and lack of adversarial sandbox proof. It is advisory rather
+  than independent assurance. The native task completion-record tool is not
+  exposed in this session, so no completion record is claimed.
+- **Pending validation**: none. No replay attempt remains or is permitted.
+- **Incomplete**: none in the admitted execution or deterministic validation.
+- **Next product review**: package the successful evidence chain into a concise
+  interview walkthrough without changing the validated evidence file. This is
+  review input only and grants no task, Git, publication, release, or deployment
+  authority.
+
+### Previous interview-ready artifact replay snapshot
+
+- **Active slice**: human-admitted task
+  `p0-interview-ready-artifact-replay-close-loop-v1` implemented the fixed
+  repository-internal controller and attempted its one real, no-retry replay,
+  selected through resolved alignment journey
+  `mcpj-920c2bf73d3d4d26b25e43c178edd60f`.
+- **Outcome**: `STOPPED_AT_FIRST_DEVIATION`. The fixed manifest, compatible
+  launcher, retained backend wheel, absent evidence target, zero short roots,
+  and task scope passed read-only preflight. The controller reached the Harness
+  through fixed module plus JSON stdin transport, but the single dry worker
+  returned bounded `harness_source_execution_failed`, so actual never ran.
+- **Attempt accounting**: controller attempts were 1, Harness dry attempts were
+  1, and Harness actual attempts were 0. Callers, readiness checks, formal
+  probes, drivers, actions, builds, evidence writes, cleanup calls, retries,
+  and repairs were all 0. The planned evidence target remains absent and the
+  final short-root count is 0.
+- **Root-cause boundary**: the bounded worker intentionally discarded the raw
+  source exception. Static inspection identifies a likely contract mismatch:
+  dry preflight calls the manifest checker, which launches bare `git`, while
+  the Harness child environment intentionally omits `PATH`. Confirming or
+  repairing that hypothesis would require another execution and is therefore
+  not claimed under this no-retry task.
+- **Privacy boundary**: the controller returned only normalized JSON. It did
+  not expose source, host paths, captured output, environment, credentials,
+  process details, exception text, or traceback.
+- **Authority boundary**: the first dry deviation exhausted this task's sole
+  replay attempt. No actual run, repair, retry, manual cleanup, network,
+  dependency installation, Git operation, publication, release, or deployment
+  occurred.
+- **User-reported validation**: the product owner selected the fastest bounded
+  interview-closeout direction and admitted proposal
+  `prp-04fbe1a7a9af4fd087734cec931e22e6` through the native form. This supplied
+  direction and task admission, not independent product acceptance.
+- **Codex-run validation**: create-only task-start baseline
+  `sha256:7eca40f485ae4f483063902e773f545ee83bc61c722ee342f848e4856c656ced`
+  captured successfully. All 6 controller fixtures pass. The combined
+  controller, Harness, caller, readiness, driver, manifest, and short-root run
+  passes 75 tests with 5 Windows privilege-limited symbolic-link skips; the
+  complete supported Python 3.11 suite passes all 1102 tests with 5
+  platform-limited skips in 172.866 seconds; and all 55 user-documentation
+  tests pass. The 186-path manifest and its path/content identities pass. Task
+  governance is `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance is
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; and final captured scope is
+  `PASS=11 PRESERVED=29 FAIL=0 TOTAL=40`. Task JSON, evidence absence, zero
+  short roots, bounded persisted-content privacy, whitespace, and `git diff
+  --check` pass.
+- **Advisory review**: distinct native current-Agent self-review
+  `srv-9f7bf9f9a717154b84987913ce47e3e4` found the controller implementation,
+  validation, scope, privacy, and denied-authority boundaries consistent. It
+  also retained the unmet gated-cleanup proof, likely Git/environment contract
+  mismatch, suppressed exact exception, and unknown cross-platform and
+  interview benefits. It is advisory rather than independent assurance. The
+  native task completion-record tool is not exposed in this session, so no
+  completion record is claimed.
+- **Pending validation**: none within this stopped no-retry execution; the next
+  validation requires a newly reviewed repair direction and separately
+  admitted task.
+- **Incomplete**: the fixed controller and bounded transport are implemented,
+  but the real replay did not reach caller, readiness, driver, build, evidence,
+  or cleanup. Correct caller use of receipt-gated cleanup remains unverified.
+- **Blocker / stop condition**: do not retry this task. A new product decision
+  must resolve how Git-backed manifest observation is made available at the
+  bounded worker boundary without weakening its environment contract.
+- **Next product review**: choose between moving the already-completed manifest
+  observation outside the worker or admitting one fixed Git-executable input
+  to the worker boundary, then decide whether to authorize a new one-attempt
+  replay. This entry grants no implementation or execution authority.
+
+### Previous bounded artifact replay identity-bridge snapshot
+
+- **Active slice**: human-admitted task
+  `p0-bounded-artifact-replay-identity-bridge-v1` implements the missing source-
+  identity binding selected through resolved alignment journey
+  `mcpj-7f437c4bba4a45689835b0600fc68074`.
+- **Outcome**: `PASS`. After validating decoded source bytes plus raw and
+  Base64 lengths and SHA-256 identities, the worker now exposes those four
+  exact values through one `MappingProxyType` context. Dry and actual source
+  execution receive the same identity mapping alongside their fixed mode.
+- **Integrity boundary**: the parent request has no caller-controlled identity
+  fields. Source attempts to mutate the mapping fail; attempts to replace its
+  global binding are detected after initialization and entry-point execution
+  as `source_identity_context_drift`.
+- **Authority boundary**: this fixture-only task did not call the real artifact
+  caller, readiness probe, driver, action, build, evidence writer, cleanup,
+  network, Agent, model, Git, publication, release, or deployment capability.
+- **User-reported validation**: the product owner selected option 1, resolving
+  the architecture drift toward the minimal bridge, and admitted proposal
+  `prp-44c21a236d2a435ba59afdf769013963` through the native form.
+- **Codex-run validation**: create-only task-start baseline
+  `sha256:5e9dfa727ee336786cada1209ad4657cda8b2369a45e40ee4d0583f1b20b31bd`
+  captured successfully. All 12 focused harness fixtures pass, including exact
+  mapping values, immutability, dry/actual parity, mutation and replacement
+  rejection, malformed identity rejection, privacy, and no-retry behavior.
+  The combined harness, caller, readiness, and driver run passes 46 tests with
+  2 Windows privilege-limited symbolic-link skips; all 55 user-documentation
+  tests pass; and the complete supported Python 3.11 suite passes all 1102
+  tests with 5 platform-limited skips in 176.635 seconds. Task governance is
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance is
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; and final captured scope is
+  `PASS=13 PRESERVED=24 FAIL=0 TOTAL=37`. Task JSON, bounded privacy and
+  forbidden-component scans, zero short-root observation, whitespace, and
+  `git diff --check` pass.
+- **Advisory review**: distinct native current-Agent self-review
+  `srv-073a6b49d16c8fb49bd127d411e0ade0` found the requirement, worker-owned
+  identity architecture, scope, implementation, privacy, and denied-authority
+  boundaries consistent. It retains the unknown future integration deviation,
+  cross-platform behavior, and hostile-source containment limits and is not
+  independent assurance. The native task completion-record tool is not
+  exposed in this session, so no completion record is claimed.
+- **Pending validation**: none within this bounded bridge task after the
+  complete validation reported above.
+- **Incomplete**: the bridge implementation is complete, but no real composed
+  replay has yet consumed the identity context.
+- **Blocker / stop condition**: do not perform a real replay under this bridge
+  task. It requires a separate admitted task owning the caller, probe, driver,
+  action, build, evidence, cleanup, and failure-recovery boundary.
+- **Next product review**: decide whether to admit one no-retry real composed
+  caller replay that binds its readiness request to this exact context. This
+  entry grants no such authority.
+
+### Previous bounded artifact replay harness snapshot
+
+- **Active slice**: human-admitted task
+  `p0-bounded-artifact-replay-harness-v1` implements the internal transport
+  prerequisite selected after two one-off replay bootstrap failures.
+- **Outcome**: `PASS`. The repository now has a dependency-free two-phase
+  harness that encodes one UTF-8 source once, binds its raw and encoded byte
+  identities, sends it through JSON stdin to a fixed module worker, and runs
+  actual mode exactly once only after dry PASS. Replay source is never carried
+  as multiline `python -c` argument text.
+- **Failure containment**: the worker distinguishes protocol, identity,
+  compilation, import, initialization, entry-point, and execution deviations.
+  The parent normalizes launch, timeout, raw-output, stderr, malformed-response,
+  and other transport deviations without exposing captured output, traceback,
+  source, host path, environment, credential, or process details. Any first
+  dry deviation leaves actual attempts at zero; neither phase retries.
+- **Authority boundary**: the harness executes only caller-supplied source and
+  grants no authority to that source. This task used harmless fixtures and did
+  not call the real artifact caller, readiness probe, replay driver, action,
+  build, evidence writer, cleanup, network, Agent, model, Git, publication,
+  release, or deployment capability.
+- **User-reported validation**: the product owner requested the recommended
+  harness and admitted proposal `prp-54cf500a0d5c4d7d80921bf306f111f2`
+  through the native task-review form.
+- **Codex-run validation**: the create-only task-start baseline
+  `sha256:648e75afd1d9a6a59c3719170940470ae6a693f1eed44613f293f22c83d166ba`
+  captured successfully. All 9 focused harness fixtures pass, including the
+  real fixed module/stdin process boundary on Windows and bounded syntax,
+  import, initialization, execution, identity, timeout, raw-output, ordering,
+  and no-retry cases. The combined harness, caller, readiness, driver,
+  manifest, and short-root run passes 66 tests with 5 Windows privilege-limited
+  symbolic-link skips; all 55 documentation tests pass; and the complete
+  supported Python 3.11 suite passes all 1102 tests with 5 platform-limited
+  skips in 164.406 seconds. Task governance is
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance is
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; final captured scope is
+  `PASS=11 PRESERVED=22 FAIL=0 TOTAL=33`. Task JSON, bounded privacy and
+  forbidden-component scans, zero short-root observation, whitespace, and
+  `git diff --check` pass.
+- **Pending validation**: none within the bounded implementation task after
+  the complete validation reported in this snapshot.
+- **Incomplete**: no real composed artifact replay has used this harness yet;
+  therefore caller readiness, artifact creation, evidence, and cleanup remain
+  unproved end to end.
+- **Blocker / stop condition**: do not use the harness for a real replay under
+  this task. Real source execution requires a separately admitted replay whose
+  scope owns every resulting action and failure-recovery boundary.
+- **Next product review**: decide whether to admit one no-retry real composed
+  caller replay through this tested harness. This entry is review input only
+  and grants no execution or downstream authority.
+
+### Previous real composed artifact caller replay recovery snapshot
+
+- **Active slice**: human-admitted recovery task
+  `p0-real-composed-artifact-caller-replay-recovery-v1` follows the corrected
+  single-replay direction selected through resolved alignment journey
+  `mcpj-16cd8cebb28e4dfeb45359f2c7b3b4e4`.
+- **Outcome**: `STOPPED_AT_OUTER_WRAPPER_PARSE_BEFORE_DRY_SOURCE`. The recovery
+  command created one in-memory encoded source, but PowerShell's multiline
+  argument transport produced invalid `python -c` syntax in the outer wrapper.
+  The encoded dry source was never compiled or executed.
+- **Baseline and preflight**: create-only recovery baseline
+  `sha256:739f96c2697c3c38aa91be39aa4c704a4b58949910bed71fafc1265bc8061571`
+  was captured before harness execution. The 186-path manifest and canonical
+  identities, compatible fixed launcher, retained backend-wheel identity,
+  absent recovery and predecessor evidence targets, and zero short roots all
+  passed read-only preflight.
+- **Attempt accounting**: outer dry-wrapper process attempts were 1. Encoded
+  dry-source executions, actual-wrapper executions, caller calls, readiness
+  probes, driver calls, actions, builds, cleanups, and retries were all 0. Both
+  evidence targets remain absent and the final short-root count is zero.
+- **Fail-closed boundary**: the recovery task prohibits a second dry run after
+  its first deviation. The Agent did not change quoting, switch transport,
+  re-encode, or start dry or actual mode again.
+- **Privacy deviation**: the invalid outer wrapper emitted a transient Python
+  syntax-traceback fragment plus PowerShell command-location metadata. No
+  absolute host path was observed in that fragment, and no traceback, command
+  text, source, environment value, credential, or process detail was persisted
+  as repository evidence. Raw traceback output nevertheless violates the
+  intended bounded-wrapper result.
+- **User-reported validation**: the product owner selected corrected recovery,
+  admitted proposal `prp-1a91d6b970764729bca09be5364890c7` through the
+  native form, and separately instructed execution. These actions did not
+  authorize a second dry run or a different transport after failure.
+- **Codex-run validation**: task governance is
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; the new baseline captured and rechecked;
+  manifest, launcher/backend, evidence-target-absence, and zero-root preflight
+  passed. All 57 focused caller, readiness, driver, manifest, and short-root
+  tests pass with 5 Windows privilege-limited symbolic-link skips; all 55 user-
+  documentation tests pass; and the complete supported Python 3.11 suite
+  passes all 1102 tests with 5 platform-limited skips in 175.458 seconds.
+  Repository governance is `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; task JSON,
+  whitespace, zero-root, and `git diff --check` pass. Final scope is
+  `PASS=5 PRESERVED=22 FAIL=0 TOTAL=27`.
+- **Pending validation**: none for the recorded recovery failure closeout. The
+  real replay is not pending validation; it did not occur.
+- **Advisory review**: distinct native current-Agent review
+  `srv-2a9d99333bd0ed04c165d010720edcc2` confirms that recovery was not
+  achieved and that dry preflight depended on the same untested multiline
+  process-argument transport it was supposed to validate. This circular
+  boundary let Python parsing fail before bounded exception containment. The
+  review confirms the no-second-dry and scope boundaries, records the transient
+  raw traceback as a security deviation, and recommends fixture-tested harness
+  ownership of process transport before another real replay. This is self-
+  review, not independent assurance or new-task authority.
+- **Incomplete**: dry source execution and the real composed caller replay are
+  incomplete. No caller PASS, readiness receipt, artifact, durable recovery
+  evidence, or cleanup result exists.
+- **Blocker / stop condition**: two separately admitted one-off attempts have
+  now stopped in harness bootstrap before the caller. Another direct replay
+  would require another task and would repeat an untested integration pattern.
+- **Next product review**: prefer a separately admitted, fixture-tested,
+  repository-internal bounded harness contract before any further real replay.
+  It should validate the exact Windows process argument transport, import
+  resolution, compile behavior, and outermost exception containment without a
+  real probe, driver, action, or build. This entry grants no such authority.
+
+### Previous real composed artifact caller replay snapshot
+
+- **Active slice**: human-admitted task
+  `p0-real-composed-artifact-caller-replay-v1` follows the real composed replay
+  direction selected through resolved alignment journey
+  `mcpj-3471ff9782b24074a8cd5c82ccc78703`.
+- **Outcome**: `STOPPED_AT_FIRST_DEVIATION_BEFORE_CALLER`. The one-off replay
+  harness compiled, but its runtime import expected
+  `denied_authority_request` at the readiness package root even though that
+  helper is defined only in the private readiness module. Request construction
+  never began.
+- **Baseline and preflight**: create-only baseline
+  `sha256:471ebddaa1c0712dd5662f9660ad7b5bf3354e75c223c21cbc7039ea209a924c`
+  was captured before any invocation. The 186-path manifest and both canonical
+  identities passed; one existing Python 3.12.13 / pip 26.0.1 / setuptools
+  83.0.0 launcher reported the required fixed-probe capabilities; the retained
+  backend wheel digest matched; the evidence target was absent; and the short-
+  root count was zero.
+- **Attempt accounting**: harness execution attempts were 1. Caller,
+  readiness-probe, driver, action, build, cleanup, and retry attempts were all
+  0. No evidence file or recovery root was created, and a final short-root
+  observation remained zero.
+- **Fail-closed boundary**: the admitted task forbids retry or repair after the
+  first deviation. The Agent therefore did not correct the import and did not
+  launch a second harness, caller, probe, driver, action, or build.
+- **Privacy deviation**: Python emitted an uncaught import traceback containing
+  an absolute host path in transient command output. No host path, traceback,
+  raw output, source content, credential, environment value, or process
+  identity was persisted in repository evidence.
+- **User-reported validation**: the product owner selected the real composed
+  replay, admitted proposal `prp-fd9d6f666d704b62924bf13057c62974`
+  through the native form, and separately instructed execution. These actions
+  grant direction and task authority, not product acceptance or retry
+  authority.
+- **Codex-run validation**: task governance passed with
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; the task-start baseline captured and
+  rechecked successfully; manifest preflight passed with 186 committed inputs;
+  launcher/backend, evidence-target-absence, contract-identity, and zero-root
+  preflight checks passed. All 57 focused caller, readiness, driver, manifest,
+  and short-root tests pass with 5 Windows privilege-limited symbolic-link
+  skips; all 55 user-documentation tests pass; and the complete supported
+  Python 3.11 suite passes all 1102 tests with 5 platform-limited skips in
+  177.120 seconds. Repository governance is
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; task JSON, whitespace, zero-root, and
+  `git diff --check` pass. Final scope is
+  `PASS=5 PRESERVED=21 FAIL=0 TOTAL=26`.
+- **Pending validation**: none for the recorded failure closeout. The real
+  caller replay itself is not pending validation; it did not occur.
+- **Advisory review**: distinct native current-Agent review
+  `srv-f272e93cf8832ce80757187da823d7e7` confirms that the selected outcome was
+  not achieved, the no-retry boundary was preserved, the import assumption
+  belongs to the one-off harness rather than evidence of a caller or driver
+  defect, the transient absolute-path traceback is a real security deviation,
+  and final scope remains bounded. It recommends a separately admitted
+  recovery decision with import-resolution preflight and outermost bounded
+  exception handling. This is self-review, not independent assurance or retry
+  authority.
+- **Incomplete**: the admitted real composed replay outcome is incomplete.
+  There is no caller PASS, readiness receipt, driver result, artifact, durable
+  replay evidence, or cleanup result.
+- **Blocker / stop condition**: the current task's no-retry boundary is
+  exhausted. Any corrected replay requires a separate human-admitted recovery
+  task and a new start baseline; this status entry grants no such authority.
+- **Next product review**: decide whether to admit one corrected bounded replay
+  that imports the denied-authority helper from its defining module and
+  suppresses raw traceback output, or stop with the fixture-only caller
+  evidence. This is review input only.
+
+### Previous minimal artifact invocation caller gate snapshot
+
+- **Active slice**: human-admitted task
+  `p0-minimal-artifact-invocation-caller-gate-v1` implements the minimal
+  caller direction selected through resolved alignment journey
+  `mcpj-af1b00ba2376472890d521fe1cfb1f4a`.
+- **Outcome**: `IMPLEMENTED_LOCAL_VALIDATION_PASS`. A new dependency-free
+  internal wrapper requires one fresh validated readiness PASS before it can
+  invoke the unchanged artifact replay driver once.
+- **Enforced ordering**: request validation precedes exactly one readiness
+  call; the complete readiness type, schema, identity, version, capability,
+  zero-root, no-input/no-TTY, attempt, and authority report is validated
+  before the driver is reachable. Every readiness deviation produces zero
+  driver calls.
+- **Driver boundary**: after readiness PASS, the wrapper forwards the exact
+  existing repository, manifest, projected paths, evidence target, and action
+  to `run_artifact_replay` once. Driver deviations never cause a second
+  readiness or driver call. A driver's private recovery error remains
+  available privately without entering the public report.
+- **Ephemeral receipt and privacy**: the readiness receipt stays only in
+  memory and is not passed into the driver. PASS contains two validated nested
+  reports and bounded attempt facts; failures contain phase and normalized
+  reason only. Paths, caller values, actions, exception text, and private
+  recovery state are excluded.
+- **User-reported validation**: the product owner selected the minimal caller
+  direction, admitted proposal `prp-cfaca43bb260472687c1496e4a3eab1f`
+  through the native form, and separately instructed execution. These are
+  direction and task authority, not independent product acceptance.
+- **Codex-run validation**: all 46 focused caller, readiness, driver, and
+  short-root tests pass with 4 Windows privilege-limited symbolic-link skips;
+  all 55 user-documentation tests pass; and the complete supported Python
+  3.11 suite passes all 1102 tests with 5 platform-limited skips in 181.192
+  seconds. Task governance is `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository
+  governance is `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Task JSON,
+  privacy/surface, zero-root, whitespace, and `git diff --check` pass. Final
+  scope is `PASS=11 PRESERVED=15 FAIL=0 TOTAL=26`; every new or evolved path
+  is admitted and all fifteen excluded predecessor paths remain byte-
+  identical.
+- **Baseline-area audit**: all 23 local baseline files pass their internal
+  canonical-digest validation. The 22 prior files have current aggregate
+  identity
+  `sha256:47515c87204234709058ccb43d99680d2427d7b54306f4d2da60e08abf0f9eed`,
+  and every last-write time precedes this task's new baseline capture. The
+  task-start helper intentionally excludes untracked `.agentgov` state, so
+  this is a current-Agent action/timestamp audit rather than a Git-layer
+  before/after proof.
+- **Pending validation**: none within the admitted fixture-only task.
+- **Advisory review**: distinct native current-Agent review
+  `srv-581dc4e0320923148ea761e653ae2335` found the selected caller
+  requirement, readiness-before-driver composition, strict upstream report
+  validation, scope, privacy, private recovery preservation, and denied
+  authority consistent. It retains real composed/cross-platform behavior,
+  point-in-time replacement races, pre-capture launcher-output quota, direct-
+  driver bypass, and future receipt persistence or driver binding as explicit
+  unknowns. This is a separate self-review pass, not independent assurance.
+  The native task-completion-record tool is not exposed in this session, so
+  no completion record is claimed or fabricated.
+- **Incomplete**: no implementation, validation, or advisory-review item is
+  incomplete within the admitted task. A real composed call was an explicit
+  non-goal.
+- **Authority preservation**: no real readiness probe, driver, root allocation
+  or cleanup, action, build, installation, network, retry, repair, receipt
+  persistence, external Agent, model, Git mutation, publication, release,
+  deployment, scheduling, public CLI, or end-to-end journey occurred or was
+  authorized.
+- **Next product review**: after formal validation and advisory review, decide
+  whether one separately admitted real composed replay is warranted or
+  whether receipt persistence/output hardening should be reviewed first. This
+  entry grants no downstream authority.
+
+### Previous artifact invocation transport readiness snapshot
+
+- **Active slice**: human-admitted task
+  `p0-artifact-invocation-transport-readiness-gate-v1` implements the
+  pre-action direction selected through resolved alignment journey
+  `mcpj-926e428f144e49d09b57d9921173384d`.
+- **Outcome**: `IMPLEMENTED_LOCAL_VALIDATION_PASS`. A new dependency-free
+  internal checker validates normalized transport metadata, private launcher
+  and retained-backend references, the backend digest, denied authority, zero
+  task roots, and one fixed bounded capability probe before returning a
+  privacy-bounded readiness receipt.
+- **Caller-owned ordering**: the checker accepts no caller source, payload,
+  command, or arguments and cannot invoke the artifact driver. The existing
+  driver is unchanged and does not consume this receipt; a future caller must
+  run and require the checker first.
+- **First-deviation boundary**: metadata, authority, path, wheel identity, and
+  initial zero-root checks occur before any process. The only process is one
+  module-owned isolated Python probe with closed stdin, bounded environment
+  and timeout. Probe/output/version/capability failures stop after that one
+  attempt, and a second zero-root observation is required before PASS.
+- **Short-root compatibility**: the current allocator's exact
+  `agv-<8-lowercase-hex>` shape and the admitted future
+  `agv-<16-lowercase-hex>` assumption are both treated as task roots, so
+  either shape fails closed rather than being overlooked.
+- **User-reported validation**: the product owner selected the transport-
+  readiness direction, admitted proposal
+  `prp-0b90697c46ab4f17b0625fea820a01f2` through the native form, and
+  separately instructed execution. These are direction and task authority,
+  not independent product acceptance.
+- **Codex-run validation**: all 37 focused readiness, driver, and short-root
+  tests pass with 4 Windows privilege-limited symbolic-link skips; all 55
+  user-documentation tests pass; and the complete supported Python 3.11 suite
+  passes all 1102 tests with 5 platform-limited skips in 155.402 seconds. Task
+  governance is `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance is
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Task JSON, privacy/surface, zero-root,
+  whitespace, and `git diff --check` pass. Final scope is
+  `PASS=11 PRESERVED=9 FAIL=0 TOTAL=20`; all new and evolved paths are inside
+  the admitted scope and all nine excluded predecessor paths remain byte-
+  identical.
+- **Pending validation**: none within the admitted fixture-only task.
+- **Advisory review**: distinct native current-Agent review
+  `srv-4e5d7275d5cb68dc7e1776bf685b33e5` found the selected requirement,
+  non-process-before-probe architecture, caller-owned ordering, scope,
+  first-deviation behavior, privacy, and denied authority consistent. It
+  retains real cross-platform probe behavior, file-replacement races, excess
+  launcher output before post-process size rejection, and future receipt
+  persistence/enforcement as explicit unknowns. This is a separate self-
+  review pass, not independent assurance. The native task-completion-record
+  tool is not exposed in this session, so no completion record is claimed or
+  fabricated.
+- **Incomplete**: no implementation, validation, or advisory-review item is
+  incomplete within the admitted task. A real probe and caller integration
+  were explicit non-goals.
+- **Authority preservation**: no caller payload was accepted or decoded; no
+  real probe, driver, root allocation or cleanup, action, build, installation,
+  network, retry, external Agent, model, Git mutation, publication, release,
+  deployment, scheduling, repair, or full journey occurred or was authorized.
+- **Next product review**: after formal validation and advisory review, decide
+  whether a separately admitted caller should consume the receipt, persist it,
+  or leave the current point-in-time check ephemeral. This entry grants no
+  downstream authority.
+
+### Previous real-action artifact-driver replay snapshot
+
+- **Active slice**: human-admitted task
+  `p0-real-action-artifact-driver-replay-v1` executes the bounded real-action
+  direction selected through resolved alignment journey
+  `mcpj-3c98a91e04bb41a79af117293ec4f37e`.
+- **Outcome**: `REAL_ACTION_ARTIFACT_DRIVER_REPLAY_PASS`. The persisted
+  repository-internal driver invoked one real offline wheel action, wrote and
+  revalidated its exact evidence receipt, called the existing cleanup gate,
+  and confirmed the exact short root was absent.
+- **Caller attribution**: the injected action owned only staging, one build,
+  artifact inspection, and its sanitized returned payload. The persisted
+  driver owned manifest preflight, short-root allocation, the exclusive
+  durable evidence write, receipt creation, gated cleanup, and the normalized
+  result.
+- **Artifact observation**: all 186 manifest inputs copied with byte identity
+  and zero links. The single build emitted one wheel with 189 regular members;
+  all 76 package and 107 data payloads produced 183 byte matches and zero
+  mismatches, with six generated metadata members and zero unexpected
+  unmanaged members. The wheel identity is
+  `sha256:247b1a7fb72ff8ea941d884e1e2e76613730d4c91ba0ab59ee521b9ae74ab217`.
+- **Driver result**: `action_attempts=1`, `evidence_written=true`,
+  `evidence_revalidated=true`, `cleanup_removed=true`, and
+  `root_absent=true`. Evidence identity is
+  `sha256:77a757a2905f482381b40abda7688472f9812ec599acfe10f473c80f2a95f806`;
+  the immediate post-driver short-root count is zero.
+- **Pre-action transport disclosure**: one read-only system-environment probe
+  incorrectly required independent `wheel` distribution metadata instead of
+  checking the already retained setuptools backend, and two host command-
+  encoding attempts failed before launching Python. All three occurred before
+  driver invocation, evidence creation, root allocation, or build. The real
+  action and build were each attempted exactly once and were not retried.
+- **User-reported validation**: the product owner selected the real-action
+  direction, admitted proposal `prp-8e376c9239d14d94afa3ae93f07a6e08`
+  through the native form, and separately instructed execution. These are
+  direction and task authority, not independent product acceptance.
+- **Codex-run validation**: the current manifest and both identities passed
+  before allocation; the retained Python 3.11 / pip 24.0 / setuptools 84.0.0
+  backend and its cached wheel identity matched; the driver returned PASS and
+  an immediate read-only check found zero short roots. All 35 focused driver,
+  manifest, and short-root tests pass with 4 Windows privilege-limited
+  symbolic-link skips; the complete supported Python 3.11 suite passes all
+  1102 tests with 5 platform-limited skips in 159.678 seconds. Task governance
+  is `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance is
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Task JSON, privacy, evidence identity,
+  zero-root, whitespace, and `git diff --check` pass. Final scope is
+  `PASS=6 PRESERVED=9 FAIL=0 TOTAL=15`; only STATUS, this task's immutable
+  build-validation record, and the dated log changed after capture, while all
+  nine excluded predecessor paths remain byte-identical.
+- **Pending validation**: none within the bounded replay.
+- **Advisory review**: distinct native current-Agent review
+  `srv-99484eb1ff3f5e94b92623f73fe24b27` found the selected real-action
+  requirement, driver-owned orchestration, evidence-before-cleanup sequence,
+  payload observation, scope, security, privacy, and denied authority
+  consistent. It treats the pre-action host defects as separately disclosed
+  transport evidence rather than action or build retries, while retaining
+  whether invocation-transport readiness should become a future deterministic
+  precondition as an explicit question. Cross-platform, concurrent,
+  future-toolchain, recovery, repeated-reliability, adoption, causal-benefit,
+  and ROI outcomes remain unknown. This is a separate self-review pass, not
+  independent assurance. The native task-completion-record tool is not
+  exposed in this session, so no completion record is claimed or fabricated.
+- **Incomplete**: the real action, evidence, receipt, and cleanup path are
+  complete, formal validation passes, and no item remains incomplete within
+  the admitted task.
+- **Authority preservation**: no second action or build, dependency
+  installation, network, retained background backend, public CLI,
+  installed-package change, external Agent, model, consumer form, credential,
+  Git mutation, commit, push, publication, release, deployment, scheduling,
+  retry, repair, or full governance journey occurred or was authorized.
+- **Next product review**: after formal validation and advisory review, decide
+  whether this single real caller is sufficient or whether to propose a
+  broader end-to-end governance journey. This entry grants no downstream
+  authority.
+
+### Previous minimal noninteractive artifact driver snapshot
+
+- **Active slice**: human-admitted task
+  `p0-minimal-noninteractive-artifact-driver-v1` implements the minimal
+  repository-internal direction selected through resolved alignment journey
+  `mcpj-3db912cb51964c5782430d651c223a41`.
+- **Outcome**: `IMPLEMENTED_LOCAL_VALIDATION_PASS`. A new
+  dependency-free internal driver composes the existing manifest checker,
+  verified short-root allocator, evidence receipt, and gated cleanup without
+  changing those contracts or adding a public CLI.
+- **One-attempt boundary**: one injected action receives only the verified
+  short root and is invoked at most once. Manifest, allocation, action,
+  evidence, receipt, or cleanup failure stops at its first bounded reason code
+  without retry, repair, substitution, or silent ungated cleanup.
+- **Evidence ordering**: the driver requires a normalized new repository-
+  relative target, exclusive-creates caller-sanitized bounded evidence,
+  flushes and `fsync`s it, computes the exact SHA-256, creates the receipt, and
+  only then invokes the existing evidence-gated remover.
+- **Transport and privacy**: closed, redirected, and TTY-reported stdin states
+  share the same path; `input` is never called. Success and failure reports
+  exclude host paths, contents, and raw exceptions and retain only bounded
+  counts, digests, booleans, reason codes, and denied authority.
+- **User-reported validation**: the product owner selected the minimal-driver
+  direction, admitted proposal `prp-dcfd28255d964c43b7773589bdb650ba`
+  through the native form, and separately instructed take-up. These are
+  direction and task authority, not product acceptance.
+- **Codex-run validation**: all 24 focused driver and short-root tests pass
+  with 3 Windows privilege-limited symbolic-link skips; all 55 user-
+  documentation tests pass; and the complete supported Python 3.11 suite
+  passes all 1102 tests with 5 platform-limited skips in 167.903 seconds. Task
+  governance is `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance is
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Task JSON, privacy, zero-root,
+  whitespace, and `git diff --check` pass. Final scope is
+  `PASS=10 PRESERVED=3 FAIL=0 TOTAL=13`; all seven post-capture paths are
+  admitted, and the prior replay evidence, prior task, and local MCP config
+  are byte-identical.
+- **Pending validation**: none within this bounded implementation.
+- **Advisory review**: distinct native current-Agent review
+  `srv-d5527863960da8481216eeb9820e332d` found the selected requirement,
+  internal composition architecture, one-action and evidence-before-cleanup
+  sequencing, scope preservation, privacy boundary, and denied authority
+  consistent. It retains future real-caller observation fields,
+  recovery/concurrency needs, cross-platform adversarial replacement, and
+  semantic evidence completeness as unknowns. This is a separate self-review
+  pass, not independent assurance. The native task-completion-record tool is
+  not exposed in this session, so no completion record is claimed or
+  fabricated.
+- **Incomplete**: no implementation or validation item is incomplete within
+  the admitted task. No real artifact action or end-to-end journey has yet
+  consumed the persisted driver; those are separate product decisions.
+- **Authority preservation**: no real build, retained backend, dependency
+  installation, network, public CLI, installed-package change, external
+  Agent, model, consumer form, credential, Git mutation, commit, push,
+  publication, release, deployment, scheduling, retry, repair, or full
+  journey occurred.
+- **Next product review**: after formal validation, decide whether to admit one
+  no-retry real-action or end-to-end journey that consumes the persisted
+  driver. This entry grants no downstream authority.
+
+### Previous no-retry artifact-driver gate replay snapshot
+
+- **Active slice**: human-admitted task
+  `p0-no-retry-artifact-driver-gate-replay-v1` runs the bounded direction
+  selected through resolved alignment journey
+  `mcpj-4d64acbcd0bc4f0e8b4a2902e4f78b0e`.
+- **Outcome**: `ARTIFACT_DRIVER_GATE_REPLAY_PASS`. One noninteractive driver
+  completed exactly one offline no-isolation build, wrote and flushed durable
+  evidence, created an exact evidence receipt, invoked the evidence-gated
+  cleanup operation, and confirmed zero task-owned short roots. No retry,
+  repair, alternate backend, dependency installation, or network occurred.
+- **Input and staging**: the current manifest passed at 186 paths with path
+  identity
+  `sha256:cfea3a3632bd75d1f4db51168d257c465987d3fe620fda2449abcd86f42fcd03`
+  and content identity
+  `sha256:a986da7096e257b90e984084373f923ad460ff4c95f172a08fe4cf2d1fccacaf`.
+  All 186 files copied with byte identity, zero links or extras, both staged
+  identities matched, and the longest projected path was 201 of 240.
+- **Artifact observation**: the one wheel has 189 regular members. All 76
+  package payloads and 107 data payloads are present with 183 byte matches,
+  zero missing, unexpected, or mismatched managed members, six separately
+  classified generated metadata members, and zero unexpected unmanaged
+  members. The member-inventory and generated-member identities match the
+  prior parity observation. The whole-wheel identity is
+  `sha256:4e973258ed2d7e0fd35a9598cf5a6c9cdb9875a87415522f51c726911b267513`;
+  whole-archive byte reproducibility was not an acceptance signal.
+- **Evidence and transport**: immutable pre-cleanup evidence is
+  `docs/build-validation/no-retry-artifact-driver-gate-replay-v1-2026-08-26.md`
+  with receipt identity
+  `sha256:75e7ba936e32b1f8b717d16c684161703737bc6d3e873eca604805cfef25edd0`.
+  The gate revalidated that identity, returned `cleanup_removed=true`,
+  `reads_stdin=false`, and `depends_on_tty=false`, and left zero `agv-*`
+  roots. The previous closed-input handshake deviation did not recur.
+- **User-reported validation**: the product owner selected the bounded replay,
+  admitted proposal `prp-5f4dac9a5f9244bb8c5b7cb7d252a0fd` through the
+  native form, and separately instructed take-up. These are direction and task
+  authority, not product acceptance.
+- **Codex-run validation**: the manifest, prerequisite, helper-identity,
+  zero-root, staging, single-build, artifact-parity, evidence-receipt, and
+  gated-cleanup observations pass. All 23 focused manifest and short-root
+  tests pass with 3 Windows privilege-limited symbolic-link skips. The full
+  supported Python 3.11 suite passes all 1102 tests with 5 platform-limited
+  skips in 158.209 seconds. Task governance is
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance is
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. The task JSON, manifest, zero-root,
+  `git diff --check`, and task-start scope comparison pass. The final scope
+  comparison contains 4 passing and 1 preserved findings with no failure; the
+  only post-capture paths are the admitted STATUS, evidence, and dated-log
+  paths.
+- **Pending validation**: none within this bounded local replay.
+- **Incomplete**: no implementation or validation item is incomplete within
+  the admitted task. The successful one-off driver is not a persisted or
+  supported public workflow, and no external governance journey ran.
+- **Advisory review**: distinct native current-Agent review
+  `srv-9b009882addb50a90ad3594b42222d7a` found the selected requirement,
+  one-build boundary, same-process evidence and cleanup architecture, scope
+  preservation, no-network and no-stdin security boundary, payload evidence,
+  and denied authority consistent. It keeps archive-byte variation,
+  concurrent adversarial replacement, reusable-driver need, cross-platform,
+  future-toolchain, repeated-reliability, and external-journey behavior as
+  unknowns. This is a separate self-review pass, not independent assurance.
+  The native task-completion-record tool is not exposed, so no completion
+  record is claimed or fabricated.
+- **Authority preservation**: no product code, helper, manifest, schema, test,
+  prior evidence, local configuration, public CLI, installed package,
+  external Agent, model, consumer form, credential, Git mutation, commit,
+  push, publication, release, deployment, or full journey changed or ran.
+- **Next product review**: after formal validation, decide whether a reusable
+  noninteractive artifact driver is needed before any separately admitted
+  end-to-end journey replay. This entry grants no downstream authority.
+
+### Previous evidence-gated short-root cleanup snapshot
 
 - **Active slice**: human-admitted task
   `p0-evidence-gated-short-root-cleanup-v1` implements an explicit durable-

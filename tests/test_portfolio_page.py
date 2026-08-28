@@ -28,7 +28,8 @@ class EvidencePortfolioTests(unittest.TestCase):
         self.assertIn(
             "[![Agent Governance from task intent to verified evidence]"
             "(docs/assets/agentgov-social-preview.jpg)]"
-            "(https://andy-junxiong.github.io/agent-governance-starter/)",
+            "(https://andy-junxiong.github.io/agent-governance-starter/"
+            "interview-demo.html)",
             showcase,
         )
         self.assertLess(

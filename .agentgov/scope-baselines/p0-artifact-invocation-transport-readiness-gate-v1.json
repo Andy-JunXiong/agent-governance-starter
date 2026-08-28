@@ -1,0 +1,178 @@
+{
+  "baseline_digest": "sha256:320f314ef368841d045f94ee2dbe1db65dedb6c38502d3cee25b7a6784cda36f",
+  "capture_claim": "boundary_begins_at_this_capture; earlier state is not proven",
+  "comparison_base_sha": "734b427163175396fae71dc557fc90d676395b84",
+  "contract": "agentgov.task-start-scope-baseline",
+  "exclusions": [
+    "ignored untracked paths are omitted by git ls-files --exclude-standard",
+    "untracked paths beneath .agentgov are local tool state and are excluded",
+    "tracked .agentgov paths and tracked .gitignore changes remain included"
+  ],
+  "layers": [
+    {
+      "changes": [],
+      "name": "committed"
+    },
+    {
+      "changes": [],
+      "name": "staged"
+    },
+    {
+      "changes": [
+        {
+          "identity_digest": "sha256:065f9b2fd00dc5c1c933c8697795d8b4827073edffee8594fc2e1db96acbe723",
+          "identity_kind": "patch",
+          "layer": "unstaged",
+          "old_path": null,
+          "path": "STATUS.md",
+          "status": "modified"
+        },
+        {
+          "identity_digest": "sha256:d927353d7077417595edddff91eb402fd89a9362a0e2bf940c9ee3beebda0253",
+          "identity_kind": "patch",
+          "layer": "unstaged",
+          "old_path": null,
+          "path": "docs/development-automation-contracts.md",
+          "status": "modified"
+        }
+      ],
+      "name": "unstaged"
+    },
+    {
+      "changes": [
+        {
+          "identity_digest": "sha256:4cca2d57edeaddfe52d3e6c4dd4d774192bbdbcab4e84e07df73e14a861c0348",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": ".codex/config.toml",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:7f970505c5573aada6b36eed3c2c4fec65b6a17ec943f8552c5d8672748922ea",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "docs/build-validation/minimal-noninteractive-artifact-driver-v1-2026-08-26.md",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:75e7ba936e32b1f8b717d16c684161703737bc6d3e873eca604805cfef25edd0",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "docs/build-validation/no-retry-artifact-driver-gate-replay-v1-2026-08-26.md",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:77a757a2905f482381b40abda7688472f9812ec599acfe10f473c80f2a95f806",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "docs/build-validation/real-action-artifact-driver-replay-v1-2026-08-26.md",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:c72820f8f05fd72bb854f237970ec3d8f2e7317308ce117eeca090f003a48b97",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "docs/development-log/2026-08-26.md",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:484789ecbdf4a22dde3196ee68fe9d20a5310a285f3aca14a7683b3289541c95",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "governance/tasks/p0-artifact-invocation-transport-readiness-gate-v1.json",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:7bc9e44292770ddfb57574d2a72349200cf687cad35cc81841e8d27c2b1b82fe",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "governance/tasks/p0-minimal-noninteractive-artifact-driver-v1.json",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:acfe4a0a311f40a5acc655cafcab33b38eafb633d84d1913b2876403432e2575",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "governance/tasks/p0-no-retry-artifact-driver-gate-replay-v1.json",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:5bf7996c3131d8efab69c3afcfe194eedb2fc1dcc96a6cf64013b1a4d931caa4",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "governance/tasks/p0-real-action-artifact-driver-replay-v1.json",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:d0c40c2d5b01d2156530d987269ea4f4e1c9354376edaa68bd5a4ce1b24cc748",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "scripts/artifact_replay_driver/__init__.py",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:d0fa8a9602cf41e97c64725d750c50efefe8e945ad40cf9a6fe0afafdc59862e",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "scripts/artifact_replay_driver/driver.py",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:91f0187d71f6bcd6bf3fb106cafef4ff40ca574662c3c23a40a08e5d57ac1d0f",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "scripts/artifact_replay_driver/test_driver.py",
+          "status": "untracked"
+        }
+      ],
+      "name": "untracked"
+    }
+  ],
+  "schema_version": "1.0",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "docs/build-validation/minimal-noninteractive-artifact-driver-v1-2026-08-26.md",
+      "docs/build-validation/no-retry-artifact-driver-gate-replay-v1-2026-08-26.md",
+      "docs/build-validation/real-action-artifact-driver-replay-v1-2026-08-26.md",
+      "governance/distribution-input-manifest.json",
+      "governance/tasks/p0-minimal-noninteractive-artifact-driver-v1.json",
+      "governance/tasks/p0-no-retry-artifact-driver-gate-replay-v1.json",
+      "governance/tasks/p0-real-action-artifact-driver-replay-v1.json",
+      "scripts/artifact_replay_driver",
+      "scripts/distribution_input_manifest",
+      "scripts/short_build_root",
+      "scripts/task_start_scope_baseline",
+      "src",
+      "tests"
+    ],
+    "include_paths": [
+      ".agentgov/scope-baselines",
+      "STATUS.md",
+      "docs/build-validation/artifact-invocation-transport-readiness-gate-v1-2026-08-26.md",
+      "docs/development-automation-contracts.md",
+      "docs/development-log/2026-08-26.md",
+      "governance/tasks/p0-artifact-invocation-transport-readiness-gate-v1.json",
+      "scripts/artifact_invocation_readiness"
+    ]
+  },
+  "snapshot_change_set_digest": "sha256:9684ecf984a348cfb2b32ac4fdddde278f3387e2a3a38c538fa95b10fbe9ffdf",
+  "snapshot_head_sha": "734b427163175396fae71dc557fc90d676395b84",
+  "task": {
+    "digest": "sha256:c4d28a7bb80ccf5cc25f8a7c532da26274398cdf36c670faf12260b9790e8763",
+    "path": "governance/tasks/p0-artifact-invocation-transport-readiness-gate-v1.json",
+    "task_id": "p0-artifact-invocation-transport-readiness-gate-v1"
+  }
+}

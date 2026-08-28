@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A six-step AgentGov demo: a refund fix crosses its agreed boundary, gets blocked, and returns ready for human review.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; img-src 'self'">
+  <title>Live interview demo — AgentGov</title>
+  <link rel="icon" href="favicon.ico" type="image/svg+xml">
+  <link rel="stylesheet" href="interview-demo.css">
+</head>
+<body>
+  <nav class="demo-shell demo-nav" aria-label="Primary navigation">
+    <a class="demo-brand" href="index.html"><span class="demo-mark">AG</span>AgentGov</a>
+    <div class="demo-nav-links">
+      <a href="project-interview.html">Project background</a>
+      <a href="interview-guide.html">Presenter guide</a>
+      <span class="language-switch" aria-label="Language"><a href="interview-demo.html" lang="en" aria-current="page">EN</a><a href="interview-demo.zh-CN.html" lang="zh-CN" hreflang="zh-CN">中文</a></span>
+    </div>
+  </nav>
+  <p class="maturity-strip"><strong>Guided replay:</strong> based on a verified future-0.3 scenario, not a live run or stable <code>0.2.1</code> behavior.</p>
+
+  <header class="demo-shell demo-hero">
+    <div>
+      <span class="demo-eyebrow">Guided refund example</span>
+      <h1>A coding agent changed too much. What happens next?</h1>
+      <p class="demo-lead">A small bug fix passes its tests, but the agent also changes a rule nobody asked it to touch.</p>
+    </div>
+    <aside class="time-card">
+      <strong>3–4 minutes</strong>
+      <span>Six steps · one observable scenario · optional technical follow-up</span>
+    </aside>
+  </header>
+
+  <main class="demo-shell" data-interview-demo>
+    <section class="scenario-brief" aria-label="Scenario boundary">
+      <article class="brief-card">
+        <span>Human request</span>
+        <strong>Fix the refund calculation bug.</strong>
+      </article>
+      <article class="brief-card allowed">
+        <span>Allowed for this task</span>
+        <code>refunds/calculation.py</code>
+      </article>
+      <article class="brief-card denied">
+        <span>Separate decision</span>
+        <code>refunds/approval_policy.py</code>
+      </article>
+    </section>
+
+    <section class="demo-workspace" aria-label="Guided refund scenario">
+      <div class="progress-region">
+        <div class="progress-summary">
+          <strong>Scenario progress</strong>
+          <span data-step-counter>1 / 6</span>
+        </div>
+        <ol class="progress-track" aria-label="Demo steps">
+          <li data-progress-step aria-current="step">Boundary</li>
+          <li data-progress-step>Extra change</li>
+          <li data-progress-step>Check</li>
+          <li data-progress-step>Decision</li>
+          <li data-progress-step>Revert</li>
+          <li data-progress-step>Review</li>
+        </ol>
+      </div>
+
+      <div class="demo-stage">
+        <section class="demo-step" data-demo-step="1" data-announcement="Step 1 of 6: a person allows one file for the task.">
+          <div class="step-heading">
+            <span class="step-number">01</span>
+            <div class="step-title">
+              <h2>The person sets the boundary.</h2>
+              <p>Fix the refund calculation. Changing the approval rule would be a separate decision.</p>
+            </div>
+            <span class="status-pill admitted">ALLOWED</span>
+          </div>
+          <div class="actor-grid">
+            <article class="actor-card active"><strong>Person</strong><p>Defines the task and allows one file.</p></article>
+            <article class="actor-card"><strong>Coding agent</strong><p>Works on the requested change.</p></article>
+            <article class="actor-card"><strong>AgentGov</strong><p>Checks the changed files against that boundary.</p></article>
+            <article class="actor-card"><strong>Demo script</strong><p>Replays the example so the same sequence can be shown again.</p></article>
+          </div>
+        </section>
+
+        <section class="demo-step" data-demo-step="2" data-announcement="Step 2 of 6: the simulated coding agent fixes the calculation and changes an approval rule that was not part of the task." hidden>
+          <div class="step-heading">
+            <span class="step-number">02</span>
+            <div class="step-title">
+              <h2>The agent fixes the bug—and one thing it was not asked to.</h2>
+              <p>The calculation fix is correct. But the agent also raises the human approval limit from 100 to 500.</p>
+            </div>
+            <span class="status-pill script">SIMULATED AGENT</span>
+          </div>
+          <div class="code-grid">
+            <article class="code-card">
+              <header><code>refunds/calculation.py</code><span class="status-pill pass">IN SCOPE</span></header>
+              <pre><code><span class="line-remove">- return subtotal</span>
+<span class="line-add">+ return subtotal - eligible_refund</span>
+
+# requested calculation repair</code></pre>
+            </article>
+            <article class="code-card out-of-scope">
+              <header><code>refunds/approval_policy.py</code><span class="status-pill fail">OUT OF SCOPE</span></header>
+              <pre><code><span class="line-remove">- HUMAN_APPROVAL_LIMIT = 100</span>
+<span class="line-add">+ HUMAN_APPROVAL_LIMIT = 500</span>
+
+# nobody asked for this change</code></pre>
+            </article>
+          </div>
+        </section>
+
+        <section class="demo-step" data-demo-step="3" data-announcement="Step 3 of 6: AgentGov reports one pass and one fail, so completion is blocked." hidden>
+          <div class="step-heading">
+            <span class="step-number">03</span>
+            <div class="step-title">
+              <h2>AgentGov catches the extra change.</h2>
+              <p>One changed file is allowed for this task. One is not.</p>
+            </div>
+            <span class="status-pill blocked">BLOCKED</span>
+          </div>
+          <div class="evidence-grid">
+            <article class="evidence-card pass"><strong>PASS · allowed file</strong><p><code>refunds/calculation.py</code> matches the task.</p></article>
+            <article class="evidence-card fail"><strong>FAIL · extra file</strong><p><code>refunds/approval_policy.py</code> was not approved for this task.</p></article>
+          </div>
+          <div class="result-banner blocked">
+            <strong>Completion: BLOCKED</strong>
+            <p>The work is not automatically undone. It simply cannot be called complete in its current form.</p>
+          </div>
+        </section>
+
+        <section class="demo-step" data-demo-step="4" data-announcement="Step 4 of 6: the human declines to expand the scope." hidden>
+          <div class="step-heading">
+            <span class="step-number">04</span>
+            <div class="step-title">
+              <h2>A person decides what happens next.</h2>
+              <p>There is a real choice: expand the task, or remove the extra change.</p>
+            </div>
+            <span class="status-pill human">HUMAN DECISION</span>
+          </div>
+          <div class="decision-options">
+            <article class="decision-card"><strong>Expand the task</strong><p>Review the approval-rule change as a separate piece of work.</p></article>
+            <article class="decision-card selected"><strong>Remove the extra change</strong><p>Selected. The approval rule is not part of this task.</p></article>
+          </div>
+        </section>
+
+        <section class="demo-step" data-demo-step="5" data-announcement="Step 5 of 6: the demo script restores only the out-of-scope file." hidden>
+          <div class="step-heading">
+            <span class="step-number">05</span>
+            <div class="step-title">
+              <h2>The out-of-scope change is reverted.</h2>
+              <p>For reproducibility, the demo script restores <code>approval_policy.py</code> to its original value.</p>
+            </div>
+            <span class="status-pill script">DEMO SCRIPT</span>
+          </div>
+          <div class="remediation-flow">
+            <article><strong>Keep the requested fix</strong><span>The refund calculation remains changed.</span></article>
+            <article><strong>Restore the approval rule</strong><span>The limit goes back from 500 to 100.</span></article>
+            <article><strong>Run the checks again</strong><span>The current files are checked, not an earlier result.</span></article>
+          </div>
+        </section>
+
+        <section class="demo-step" data-demo-step="6" data-announcement="Step 6 of 6: the current scope and validation pass, so the work is ready for human review." hidden>
+          <div class="step-heading">
+            <span class="step-number">06</span>
+            <div class="step-title">
+              <h2>Ready for review—not accepted.</h2>
+              <p>The extra change is gone. The requested fix and its tests now pass the current checks.</p>
+            </div>
+            <span class="status-pill ready">REVIEW_READY</span>
+          </div>
+          <div class="review-grid">
+            <article><strong>Allowed files only</strong><span>PASS</span></article>
+            <article><strong>Refund tests</strong><span>PASSED</span></article>
+            <article><strong>Current run checked</strong><span>VERIFIED</span></article>
+            <article><strong>AgentGov state</strong><span>REVIEW_READY</span></article>
+          </div>
+          <div class="result-banner ready">
+            <strong>A person still reviews the change.</strong>
+            <p><code>REVIEW_READY</code> is not permission to merge, release, or deploy.</p>
+          </div>
+        </section>
+      </div>
+
+      <div class="demo-controls">
+        <div class="control-group">
+          <button class="demo-button" type="button" data-demo-action="back">← Back</button>
+          <button class="demo-button primary" type="button" data-demo-action="next">Next step →</button>
+          <button class="demo-button" type="button" data-demo-action="restart">Restart</button>
+        </div>
+        <span class="demo-announcer" data-demo-announcer role="status" aria-live="polite"></span>
+      </div>
+    </section>
+  </main>
+
+  <section class="demo-shell demo-followup">
+    <h2>Where the conversation can go next</h2>
+    <div class="followup-links">
+      <a href="governed-refund-walkthrough.html"><strong>How this example works</strong><span>See the executable scenario and the four roles behind it.</span></a>
+      <a href="project-interview.html"><strong>Why I built AgentGov</strong><span>How useful delivery work gradually pulled the product off course.</span></a>
+      <a href="artifact-replay-interview.html"><strong>A harder engineering case</strong><span>Follow two Windows failures and the boundary I chose not to weaken.</span></a>
+    </div>
+  </section>
+  <footer class="demo-shell demo-footer">AgentGov · Guided interview demo · Software checks the facts; a person decides what happens next.</footer>
+  <script src="interview-demo.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+{
+  "acceptance_signals": [
+    "The v2 task and create-only baseline include the completed identity-refresh outputs and have zero captured-scope failures.",
+    "STATUS.md and docs/development-log/2026-08-28.md accurately record the accumulated delivery, identity refresh, sole replay, validation, review, and Git closeout.",
+    "The full repository suite passes 1111 tests with only the five recorded Windows symbolic-link skips.",
+    "The artifact chain passes 78 tests with five recorded Windows symbolic-link skips and the manifest check passes.",
+    "The prior replay evidence retains SHA-256 ffc06da3060b459ff39c8602365126a860e8228dd6320c8c88f69cbc8c6b8715 and the new evidence retains SHA-256 d6c96190bc867a697f22a4cc7ea759c7d1ae7c25fac8a657178d60e5b51bac7f.",
+    "Task governance and repository governance have zero FAIL findings.",
+    "Task JSON, distribution manifest JSON, secret-safety review, whitespace, git diff --check, and staged diff checks pass.",
+    "Only reviewed delivery files and selected matching baselines are staged; local Codex configuration and excluded historical baselines remain unstaged.",
+    "Origin is fetched before commit and any divergence stops without force push or discarded work.",
+    "One non-release commit is created on main and pushed non-force to origin/main.",
+    "Local HEAD and origin/main match after push.",
+    "No release, deployment, hosting, package publication, pull request, force push, or history rewrite occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-0808294ea37643ccbb8ed118ddcb03d6 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Replace the pre-refresh closeout boundary with a final closeout that includes the human-selected and completed README manifest identity refresh and its one-attempt replay evidence. Finalize current status and the dated development log, validate the complete accumulated delivery, stage only the related source, tests, evidence, governance records, selected baselines, and documentation, fetch origin, create one non-release commit on main, and push it non-force to origin/main. Preserve local Codex configuration and unrelated historical baselines."
+  },
+  "risk": {
+    "items": [
+      "The broad accumulated delivery requires exact staged-path review to avoid including local-only files.",
+      "The identity refresh adds a new manifest digest, controller constant, and replay evidence that must remain internally consistent.",
+      "Remote main may have diverged.",
+      "The push must remain one ordinary non-force update to origin/main.",
+      "The Git closeout must not be represented as a release, deployment, hosting action, publication, or adoption result.",
+      "Reviewed assumption: The human-selected identity refresh and sole replay completed the only scope expansion required by the README update.",
+      "Reviewed assumption: The current dirty worktree is the accumulated completed delivery requested for closeout.",
+      "Reviewed assumption: The Git remote named origin and branch main are the requested destination.",
+      "Reviewed assumption: The explicitly excluded baselines and local Codex configuration are not delivery artifacts.",
+      "Reviewed assumption: No release, deployment, hosting, or publication workflow is part of the closeout.",
+      "Reviewed unknown: Whether origin/main has advanced.",
+      "Reviewed unknown: Whether final staged secret-safety review finds material requiring removal.",
+      "Reviewed unknown: The final commit identifier.",
+      "Reviewed unknown: Whether Git transport authentication succeeds.",
+      "Reviewed unknown: External publication, adoption, interview outcome, and production behavior remain unknown."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".openai",
+      ".agentgov/scope-baselines/p0-benefit-view-single-observation-cards-v1.json",
+      ".agentgov/scope-baselines/p0-evidence-gated-short-root-cleanup-v1.json",
+      ".agentgov/scope-baselines/p0-exact-distribution-pathspec-replay-v1.json",
+      ".agentgov/scope-baselines/p0-human-confirmed-learning-review-record-v1.json",
+      ".agentgov/scope-baselines/p0-independent-automatic-journey-rehearsal-v1.json",
+      ".agentgov/scope-baselines/p0-independent-automatic-journey-rehearsal-v2.json",
+      ".agentgov/scope-baselines/p0-installed-shared-data-path-contract-diagnostic-v1.json",
+      ".agentgov/scope-baselines/p0-learning-view-current-observation-candidates-v1.json",
+      ".agentgov/scope-baselines/p0-live-native-task-admission-summary-visibility-check-v1.json",
+      ".agentgov/scope-baselines/p0-live-protection-guidance-usability-check-v1.json",
+      ".agentgov/scope-baselines/p0-manifest-driven-artifact-parity-proof-v1.json",
+      ".agentgov/scope-baselines/p0-native-task-admission-summary-card-v1.json",
+      ".agentgov/scope-baselines/p0-protection-event-resolution-guidance-links-v1.json",
+      ".agentgov/scope-baselines/p0-replayable-distribution-input-manifest-v1.json",
+      ".agentgov/scope-baselines/p0-retained-installed-shared-template-inspection-v1.json",
+      ".agentgov/scope-baselines/p0-reusable-foreground-stdio-controller-closeout-v1.json",
+      ".agentgov/scope-baselines/p0-task-detail-actionability-repair-v1.json",
+      ".agentgov/scope-baselines/p0-windows-short-build-root-contract-v1.json"
+    ],
+    "include_paths": [
+      "README.md",
+      "STATUS.md",
+      "docs",
+      "governance",
+      "scripts",
+      "tests",
+      ".agentgov/scope-baselines"
+    ]
+  },
+  "task_id": "p0-2026-08-28-session-closeout-v2",
+  "title": "2026-08-28 session closeout v2",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s scripts -p \"test_*.py\" -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-2026-08-28-session-closeout-v2.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-2026-08-28-session-closeout-v2.json --baseline .agentgov/scope-baselines/p0-2026-08-28-session-closeout-v2.json",
+    "py -3.11 -m scripts.distribution_input_manifest check --repository . --manifest governance/distribution-input-manifest.json",
+    "Get-FileHash docs/build-validation/post-repair-no-retry-artifact-replay-v1-2026-08-27.md -Algorithm SHA256",
+    "Get-FileHash docs/build-validation/readme-manifest-identity-refresh-replay-v1-2026-08-28.md -Algorithm SHA256",
+    "py -3.11 -m json.tool governance/tasks/p0-2026-08-28-session-closeout-v2.json",
+    "py -3.11 -m json.tool governance/distribution-input-manifest.json",
+    "git diff --check",
+    "git diff --cached --check"
+  ]
+}

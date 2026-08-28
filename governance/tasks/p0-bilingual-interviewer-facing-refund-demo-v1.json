@@ -1,0 +1,108 @@
+{
+  "acceptance_signals": [
+    "New English and Simplified Chinese interview-demo pages present equivalent natural-language versions of one concrete refund scenario and link to each other.",
+    "The first viewport states the request, admitted file boundary, non-admitted approval-policy boundary, maturity boundary, and one obvious start action without requiring the interviewer to read project history.",
+    "A presenter can move forward, backward, and restart across exactly six meaningful scenario states using visible controls and keyboard-focusable elements; the current step and progress are programmatically exposed.",
+    "The scenario preserves exact actor attribution: the demo simulates the coding Agent changing both files; AgentGov changes no code and reports scope evidence; the human declines expansion; the demo script restores only the out-of-scope file; fresh AgentGov evidence returns REVIEW_READY.",
+    "The demo never claims live execution, automatic prevention, automatic rollback, final human acceptance, merge authority, release authority, deployment authority, or stable 0.2.1 support for the development-source journey.",
+    "Within-scope and out-of-scope code changes are visually distinguishable, BLOCKED and REVIEW_READY are visually clear, and the page explains deterministic facts versus human judgment without a governance score or evidence dashboard.",
+    "The homepage and README make the interview demo the primary interview-facing entry; the Project Story is labelled as project background and the Interview Guide as presenter preparation.",
+    "The Interview Guide routes the presenter to start with the demo and uses the Project Story and artifact replay only as optional product and engineering follow-up.",
+    "Taxi and Airbnb proof links no longer point to nonexistent HTML targets and resolve under the local static server.",
+    "The eight-stage architecture flow stays within its container at the observed desktop width and reflows to four, two, and one columns without horizontal overflow.",
+    "All pages use local assets, restrictive CSP, semantic HTML, visible keyboard focus, reduced-motion-safe behavior, and responsive layouts; no framework migration, external asset, generated image, persistence, or network-dependent runtime is added.",
+    "Focused demo, walkthrough, interview-documentation, and product-site tests; task and repository governance; exact scope validation; task JSON parsing; and git diff checks pass.",
+    "Browser QA confirms the English and Chinese demo start, forward/back/restart interaction, broken-link repair, and architecture-flow containment at representative desktop and narrow widths.",
+    "All pre-existing changed content is preserved outside the admitted paths; existing changes inside included README, status, guides, index, tests, and dated log are preserved except for bounded demo integration and closeout updates."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-9c47df2a589f459d995bcd1781e394b4 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Create a bilingual interviewer-facing AgentGov demo built around the existing governed-refund executable scenario. The demo must let a presenter advance through one concrete request, exact human admission, simulated Agent overreach, AgentGov scope evidence and BLOCKED completion, a human decision declining expansion, clearly labelled demo-script remediation, fresh verification, and REVIEW_READY. Reposition the existing Project Story as background material and the Interview Guide as presenter notes, make the new demo the primary interview entry, and fix the observed broken proof links and architecture-flow overflow."
+  },
+  "risk": {
+    "items": [
+      "The guided page could imply live execution or claim that AgentGov stopped or restored an external coding Agent.",
+      "Actor attribution could blur the simulated Agent, AgentGov, human, and demo-script responsibilities.",
+      "The demo could become another dense governance dashboard instead of one observable scenario.",
+      "Bilingual states could drift in claim strength, timing, or button behavior.",
+      "Changing homepage and README navigation could regress existing product-site contracts.",
+      "Existing Guide, Story, README, index, tests, STATUS, and dated-log paths already contain pre-existing work that must be preserved.",
+      "Broad governance task and baseline prefixes contain earlier work that must remain byte-identical except for this task and its baseline.",
+      "The two broken links currently pass tests because the test accepts a Markdown fallback for an HTML URL; the new validation must require the actual linked target.",
+      "Responsive CSS must correct the observed overflow without breaking other story layouts.",
+      "The Sites building guidance normally proceeds to hosting, but repository governance prohibits hosting or publication without separate explicit human approval.",
+      "Reviewed assumption: The existing governed-refund executable demo and walkthrough are the evidence source for the interviewer-facing scenario.",
+      "Reviewed assumption: The demo is a transparent guided visualization over verified scenario facts, not a browser execution of the Python demo.",
+      "Reviewed assumption: English is the likely interviewer-facing default and Simplified Chinese is required for rehearsal and Chinese-language interviews.",
+      "Reviewed assumption: The current static documentation architecture, guide visual vocabulary, and local JavaScript are sufficient.",
+      "Reviewed assumption: A six-step guided scenario is short enough for a three-to-four-minute interview demonstration.",
+      "Reviewed assumption: The existing Project Story and Interview Guide remain useful when assigned narrower background and presenter-note responsibilities.",
+      "Reviewed assumption: The user requested implementation and visual correction, but did not authorize hosting, publication, Git operations, release, or deployment.",
+      "Reviewed unknown: Actual three-to-four-minute delivery time remains unknown until human rehearsal.",
+      "Reviewed unknown: Real interviewer comprehension and preferred role branch remain unknown.",
+      "Reviewed unknown: The local visualization does not prove that the Python executable demo runs in the interview environment.",
+      "Reviewed unknown: External publication suitability and the final public URL remain unknown because hosting is not authorized.",
+      "Reviewed unknown: Interview outcome improvement remains unknown."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "docs/development-automation-contracts.md",
+      "docs/artifact-replay-interview-walkthrough.md",
+      "docs/artifact-replay-interview.css",
+      "docs/artifact-replay-interview.html",
+      "docs/artifact-replay-interview.zh-CN.html",
+      "docs/build-validation",
+      "docs/development-log/2026-08-26.md",
+      "docs/guide.css",
+      "docs/guide.js",
+      "examples/governed-refund-demo",
+      "scripts",
+      "tests/test_user_documentation.py"
+    ],
+    "include_paths": [
+      "governance/tasks",
+      ".agentgov/scope-baselines",
+      "README.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-27.md",
+      "docs/index.html",
+      "docs/interview-demo.html",
+      "docs/interview-demo.zh-CN.html",
+      "docs/interview-demo.css",
+      "docs/interview-demo.js",
+      "docs/project-interview.html",
+      "docs/project-interview.zh-CN.html",
+      "docs/project-interview.css",
+      "docs/interview-guide.md",
+      "docs/interview-guide.html",
+      "docs/interview-guide.zh-CN.html",
+      "docs/governed-refund-walkthrough.html",
+      "tests/test_interview_demo.py",
+      "tests/test_interview_documentation.py",
+      "tests/test_product_site.py",
+      "tests/test_governed_refund_walkthrough.py"
+    ]
+  },
+  "task_id": "p0-bilingual-interviewer-facing-refund-demo-v1",
+  "title": "Bilingual interviewer-facing refund demo v1",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest tests.test_interview_demo tests.test_governed_refund_walkthrough tests.test_interview_documentation tests.test_product_site -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check task governance/tasks/p0-bilingual-interviewer-facing-refund-demo-v1.json",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-bilingual-interviewer-facing-refund-demo-v1.json --baseline .agentgov/scope-baselines/p0-bilingual-interviewer-facing-refund-demo-v1.json",
+    "py -3.11 -m json.tool governance/tasks/p0-bilingual-interviewer-facing-refund-demo-v1.json",
+    "git diff --check"
+  ]
+}

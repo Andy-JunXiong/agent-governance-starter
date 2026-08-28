@@ -16,6 +16,10 @@ PUBLIC_PAGES = (
     DOCS / "quickstart.zh-CN.html",
     DOCS / "interview-guide.html",
     DOCS / "interview-guide.zh-CN.html",
+    DOCS / "interview-demo.html",
+    DOCS / "interview-demo.zh-CN.html",
+    DOCS / "project-interview.html",
+    DOCS / "project-interview.zh-CN.html",
 )
 STABLE_WHEEL = (
     'pipx install "https://github.com/Andy-JunXiong/'
@@ -156,6 +160,120 @@ class InterviewDocumentationTests(unittest.TestCase):
         self.assertIn('href="interview-guide.html"', chinese)
         self.assertIn('aria-current="page"', english)
         self.assertIn('aria-current="page"', chinese)
+
+    def test_interview_guide_owns_delivery_without_duplicating_the_story(self) -> None:
+        english = (DOCS / "interview-guide.html").read_text(encoding="utf-8")
+        chinese = (DOCS / "interview-guide.zh-CN.html").read_text(encoding="utf-8")
+        markdown = (DOCS / "interview-guide.md").read_text(encoding="utf-8")
+
+        self.assertEqual(english.count('data-role-branch="'), 3)
+        self.assertEqual(chinese.count('data-role-branch="'), 3)
+        self.assertEqual(english.count('data-route-step="'), 6)
+        self.assertEqual(chinese.count('data-route-step="'), 6)
+        self.assertGreaterEqual(english.count("Cut point"), 4)
+        self.assertGreaterEqual(chinese.count("停顿点"), 4)
+
+        for page, story, replay in (
+            (english, "project-interview.html", "artifact-replay-interview.html"),
+            (
+                chinese,
+                "project-interview.zh-CN.html",
+                "artifact-replay-interview.zh-CN.html",
+            ),
+        ):
+            self.assertIn(f'href="{story}"', page)
+            self.assertIn('href="governed-refund-walkthrough.html"', page)
+            self.assertIn(f'href="{replay}"', page)
+            self.assertIn('href="portfolio.html"', page)
+            self.assertIn("0.2.1", page)
+            self.assertIn("0.3.0rc1", page)
+            self.assertNotIn("sha256:", page.lower())
+
+        for phrase in (
+            "Two-minute default route",
+            "Five-to-seven-minute screen-share expansion",
+            "Software or AI engineering",
+            "Platform or infrastructure",
+            "Product or technical product",
+            "The Agent proposed most low-level repairs",
+            "cannot detect product drift automatically",
+        ):
+            self.assertIn(phrase, markdown)
+
+        for target in (
+            "project-interview.html",
+            "governed-refund-walkthrough.html",
+            "artifact-replay-interview.html",
+            "portfolio.html",
+        ):
+            self.assertIn(f"]({target})", markdown)
+
+        self.assertIn("默认两分钟", chinese)
+        self.assertIn("底层修复大多由 Agent 提出", chinese)
+        self.assertIn("为什么不能自动检测产品漂移", chinese)
+        self.assertIn("AI coding agents can write code that passes tests", english)
+        self.assertIn("How drift happened", english)
+        self.assertIn("偏移如何发生", chinese)
+        self.assertNotIn(
+            "No external evidence proves that this documentation improves interview outcomes.",
+            english,
+        )
+        self.assertNotIn("没有外部证据证明这些页面能改善面试结果", chinese)
+
+    def test_whole_project_story_is_bilingual_human_and_discoverable(self) -> None:
+        english = (DOCS / "project-interview.html").read_text(encoding="utf-8")
+        chinese = (DOCS / "project-interview.zh-CN.html").read_text(encoding="utf-8")
+        home = (DOCS / "index.html").read_text(encoding="utf-8")
+
+        self.assertIn('<html lang="en">', english)
+        self.assertIn('<html lang="zh-CN">', chinese)
+        self.assertIn('href="project-interview.zh-CN.html"', english)
+        self.assertIn('href="project-interview.html"', chinese)
+        self.assertIn('href="project-interview.html"', home)
+        self.assertIn('aria-current="page"', english)
+        self.assertIn('aria-current="page"', chinese)
+        self.assertEqual(english.count('class="architecture-flow"'), 1)
+        self.assertEqual(chinese.count('class="architecture-flow"'), 1)
+        self.assertEqual(english.count('class="proof-card"'), 1)
+        self.assertEqual(chinese.count('class="proof-card"'), 1)
+        self.assertEqual(english.count('class="story-act"'), 4)
+        self.assertEqual(chinese.count('class="story-act"'), 4)
+
+        for page in (english, chinese):
+            self.assertNotIn("sha256:", page.lower())
+            self.assertNotIn("Observed / Derived / Unknown", page)
+            self.assertNotIn("C:\\Users", page)
+            self.assertIn("default-src 'none'; style-src 'self'; img-src 'self'", page)
+            self.assertIn("project-interview.css", page)
+            self.assertNotIn('class="act-label"', page)
+            self.assertNotIn('class="cut-point"', page)
+            self.assertNotIn('class="limits"', page)
+            self.assertNotIn("Clean cut", page)
+
+        for phrase in (
+            "I built AgentGov",
+            "center of gravity",
+            "short-term benefit",
+            "GitHub and delivery language were taking over the roadmap",
+            "compared the accumulated work with the original requirement",
+            "I did not throw away the PR or CI work",
+            "Verification can prove a change works",
+            "I now treat that as a development habit",
+            "Open the refund demo",
+        ):
+            self.assertIn(phrase, english)
+
+        for phrase in (
+            "我做了 AgentGov",
+            "短期价值",
+            "GitHub 和交付语言越来越主导路线图",
+            "把累积实现和最初需求放在一起检查",
+            "我没有把 PR 或 CI 工作丢掉",
+            "是不是还在做正确的产品",
+            "我现在把这当成一个开发习惯",
+            "打开退款 Demo",
+        ):
+            self.assertIn(phrase, chinese)
 
     def test_generated_demo_snapshots_remain_byte_identical(self) -> None:
         for name, expected in DEMO_HASHES.items():

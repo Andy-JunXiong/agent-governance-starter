@@ -1,0 +1,87 @@
+{
+  "acceptance_signals": [
+    "The human-admitted task and create-only task-start baseline exist before implementation; every pre-existing changed path is classified, every predecessor file and prior baseline remains byte-identical, and no excluded path changes.",
+    "A dependency-free repository-internal package exists only under scripts/artifact_invocation_caller with no __main__.py, public CLI, installed-package surface, scheduler, receipt store, generic command runner, backend selector, build implementation, or network behavior.",
+    "One frozen caller request composes an existing InvocationTransportRequest with the unchanged driver arguments and private action reference; private values and action representations never appear in normalized reports.",
+    "The wrapper calls check_invocation_readiness exactly once before any run_artifact_replay call and accepts only an InvocationReadinessResult whose normalized report is PASS, probe_attempts=1, short_root_count=0, no-stdin/no-TTY, and exact denied authority.",
+    "Any InvocationReadinessError, unexpected readiness exception, malformed result, non-PASS report, or report-schema/authority drift returns the first bounded readiness-phase reason and invokes the driver zero times.",
+    "Only after validated fresh readiness PASS does the wrapper call the unchanged run_artifact_replay exactly once with the exact caller-supplied driver arguments and action; it never persists the readiness receipt or passes it into the driver.",
+    "A successful unchanged ArtifactReplayResult yields one combined privacy-bounded PASS report containing nested readiness and driver reports, readiness_attempts=1, driver_attempts=1, no-stdin/no-TTY, and exact denied authority.",
+    "Any ArtifactReplayDriverError, unexpected driver exception, malformed driver result, or driver report-schema/authority drift returns the first bounded driver-phase reason without a second readiness check, driver call, action, cleanup path, repair, or retry by the wrapper.",
+    "Fixture tests prove strict readiness-before-driver ordering, zero driver calls on every readiness deviation class, exactly one driver call after PASS, exact argument forwarding, PASS composition, driver failure handling, one-attempt accounting, privacy, three stdin/TTY states, no persistence, no caller-content execution, and no public CLI.",
+    "Documentation explicitly states the wrapper is the first concrete caller to enforce fresh readiness ordering, the readiness receipt stays ephemeral, and the unchanged checker and driver do not independently enforce the combined journey.",
+    "Only the admitted task, new baseline file, new wrapper package, exact automation-contract section, new evidence record, STATUS, and existing dated log may change; all other paths and earlier baselines remain byte-identical.",
+    "Focused, documentation, and complete supported Python 3.11 tests plus task, repository, scope, JSON, privacy, zero-root, whitespace, and git diff checks pass.",
+    "No real readiness probe, driver execution, root allocation or cleanup, artifact action or build, installation, network, retry, repair, external Agent, model, Git mutation, commit, push, publication, release, deployment, scheduling, receipt persistence, public CLI, or end-to-end journey occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-cfaca43bb260472687c1496e4a3eab1f and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Implement one dependency-free repository-internal wrapper under scripts/artifact_invocation_caller that calls the existing artifact invocation readiness checker exactly once and invokes the unchanged artifact replay driver exactly once only after a valid fresh readiness PASS. Readiness failure or malformed readiness result must prevent driver invocation and return one privacy-bounded first-deviation result. Driver failure must not retry readiness, driver, or action. The readiness receipt remains in memory only. Use fixture tests exclusively; do not run a real probe, root, action, or build."
+  },
+  "risk": {
+    "items": [
+      "Calling the wrapper a caller gate could overstate driver enforcement; documentation and reports must attribute ordering to the wrapper only.",
+      "The wrapper could accidentally retry or invoke the driver after readiness failure; fixture call counts and ordered events must fail closed.",
+      "Composing nested reports could leak private request, path, action, stdout, stderr, or exception values; only existing normalized reports and bounded wrapper fields may be exposed.",
+      "The readiness result is point-in-time and may become stale after the final zero-root observation; this fixture-only slice cannot eliminate concurrent filesystem races.",
+      "A broad baseline directory is included only to create the new baseline; all 22 pre-existing baseline files must remain byte-identical.",
+      "The dirty worktree contains four completed artifact slices; broad documentation inclusion grants no authority to alter predecessor evidence, tasks, checker, or driver.",
+      "Reviewed assumption: A minimal wrapper is the smallest vertical slice that exercises the selected caller-owned ordering.",
+      "Reviewed assumption: The existing InvocationReadinessResult and ArtifactReplayResult normalized contracts are sufficient for strict composition without changing either upstream module.",
+      "Reviewed assumption: Fixture injection can prove orchestration and first-deviation behavior without executing a real probe, driver, action, root, or build.",
+      "Reviewed assumption: An in-memory combined result satisfies the selected ephemeral receipt direction.",
+      "Reviewed unknown: Whether a later caller should persist the readiness receipt.",
+      "Reviewed unknown: Whether the driver should eventually accept or independently validate a receipt.",
+      "Reviewed unknown: Cross-platform behavior of a real composed call.",
+      "Reviewed unknown: Concurrent launcher/backend/root replacement after the readiness observation.",
+      "Reviewed unknown: Whether a misbehaving launcher requires a pre-capture output quota in a separate checker hardening task.",
+      "Reviewed unknown: Whether this wrapper measurably reduces failures, time, or operational friction."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "docs/build-validation/artifact-invocation-transport-readiness-gate-v1-2026-08-26.md",
+      "docs/build-validation/minimal-noninteractive-artifact-driver-v1-2026-08-26.md",
+      "docs/build-validation/no-retry-artifact-driver-gate-replay-v1-2026-08-26.md",
+      "docs/build-validation/real-action-artifact-driver-replay-v1-2026-08-26.md",
+      "governance/tasks/p0-artifact-invocation-transport-readiness-gate-v1.json",
+      "governance/tasks/p0-minimal-noninteractive-artifact-driver-v1.json",
+      "governance/tasks/p0-no-retry-artifact-driver-gate-replay-v1.json",
+      "governance/tasks/p0-real-action-artifact-driver-replay-v1.json",
+      "scripts/artifact_invocation_readiness",
+      "scripts/artifact_replay_driver"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-minimal-artifact-invocation-caller-gate-v1.json",
+      ".agentgov/scope-baselines",
+      "scripts/artifact_invocation_caller",
+      "docs/development-automation-contracts.md",
+      "docs/build-validation/minimal-artifact-invocation-caller-gate-v1-2026-08-26.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-26.md"
+    ]
+  },
+  "task_id": "p0-minimal-artifact-invocation-caller-gate-v1",
+  "title": "Minimal artifact invocation caller gate v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-minimal-artifact-invocation-caller-gate-v1.json --baseline .agentgov/scope-baselines/p0-minimal-artifact-invocation-caller-gate-v1.json",
+    "py -3.11 -m unittest scripts.artifact_invocation_caller.test_caller scripts.artifact_invocation_readiness.test_readiness scripts.artifact_replay_driver.test_driver scripts.short_build_root.test_root -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-minimal-artifact-invocation-caller-gate-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-minimal-artifact-invocation-caller-gate-v1.json",
+    "git diff --check"
+  ]
+}

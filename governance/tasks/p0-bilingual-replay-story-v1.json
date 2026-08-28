@@ -1,0 +1,80 @@
+{
+  "acceptance_signals": [
+    "A matching human-admitted task and create-only baseline exist before page edits.",
+    "Both pages lead with the recorded verification question and present the stop, decision, two repairs, one successful replay, and learning in chronological first-person order.",
+    "Every first-person factual statement maps to a recorded repository event; project origin, initial personal beliefs, score experiments, and interview benefits are not invented.",
+    "Plain-language explanation precedes internal terminology, and each primary section contains a concrete moment, decision, failure, or result.",
+    "Architecture, metrics, evidence taxonomy, hover and focus detail, restrictive CSP, responsive layout, and muted palette remain supporting proof.",
+    "Both pages retain 1/1/1 attempts, zero retry, 186 of 186 inputs, wheel SHA-256 sha256:64f48914b60ae9a7638275f1a9f3b3727bc15b7226c76b37babe08475bae685a, evidence SHA-256 ffc06da3060b459ff39c8602365126a860e8228dd6320c8c88f69cbc8c6b8715, and final zero roots.",
+    "English and Chinese express the same verified chronology using natural phrasing in each language.",
+    "Focused tests protect story order, evidence-bounded first person, absent invented claims, critical facts, bilingual equivalence, interaction, UTF-8, CSP, and palette.",
+    "Local browser QA verifies Chinese story order, supporting evidence placement, one detail disclosure, and English navigation.",
+    "Immutable replay evidence remains byte-identical, and all excluded paths remain preserved.",
+    "User-documentation tests, governance, captured scope, evidence hash, task JSON, and git diff --check pass.",
+    "No replay, build, network, Git mutation, commit, push, hosting, publication, release, deployment, or external-Agent action occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-cc64124b25a24bb58cfadf0c6e46a2d2 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Rewrite the English and Simplified Chinese artifact replay presentation pages as a chronological first-person engineering story using only recorded repository events. Lead with the verification question, the first PATH-free worker stop, the human-selected decision to keep the worker restricted and pass validated manifest facts, the second hidden driver dependency, the filesystem-only repair, and the sole successful 1/1/1 replay. Keep architecture, metrics, evidence taxonomy, hashes, hover and focus disclosures, and unknowns as supporting proof. Do not invent project origins, personal motivations, score experiments, or unrecorded failures. Add focused tests and closeout documentation. Validate locally only."
+  },
+  "risk": {
+    "items": [
+      "First-person copy must not imply unrecorded biography.",
+      "Technical proof must remain visible after moving the story forward.",
+      "Chinese must not read as literal translation.",
+      "Existing accessibility and evidence identities must remain intact.",
+      "Hosting and publication remain separately controlled.",
+      "Reviewed assumption: Recorded replay events are sufficient for a strong focused story without an AgentGov origin narrative.",
+      "Reviewed assumption: The existing evidence-detail interaction and palette remain appropriate.",
+      "Reviewed assumption: The focused artifact pages should be rewritten before the general interview guide.",
+      "Reviewed unknown: The personal origin story for AgentGov as a whole.",
+      "Reviewed unknown: Preferred spoken phrasing after rehearsal.",
+      "Reviewed unknown: Whether the revision improves interview outcomes."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".openai",
+      "README.md",
+      "docs/artifact-replay-interview-walkthrough.md",
+      "docs/development-automation-contracts.md",
+      "docs/build-validation",
+      "docs/development-log/2026-08-26.md",
+      "docs/guide.css",
+      "docs/guide.js",
+      "scripts"
+    ],
+    "include_paths": [
+      "governance/tasks",
+      ".agentgov/scope-baselines",
+      "docs/artifact-replay-interview.html",
+      "docs/artifact-replay-interview.zh-CN.html",
+      "docs/artifact-replay-interview.css",
+      "STATUS.md",
+      "docs/development-log/2026-08-27.md",
+      "tests/test_user_documentation.py"
+    ]
+  },
+  "task_id": "p0-bilingual-replay-story-v1",
+  "title": "Bilingual replay story v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-bilingual-replay-story-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-bilingual-replay-story-v1.json --baseline .agentgov/scope-baselines/p0-bilingual-replay-story-v1.json",
+    "Get-FileHash docs/build-validation/post-repair-no-retry-artifact-replay-v1-2026-08-27.md -Algorithm SHA256",
+    "py -3.11 -m json.tool governance/tasks/p0-bilingual-replay-story-v1.json",
+    "git diff --check"
+  ]
+}

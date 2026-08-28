@@ -1,0 +1,122 @@
+{
+  "baseline_digest": "sha256:6d4b19f18acf5144013cc3412783047f7aa04bf6a04756da1150cbcfae46ca47",
+  "capture_claim": "boundary_begins_at_this_capture; earlier state is not proven",
+  "comparison_base_sha": "734b427163175396fae71dc557fc90d676395b84",
+  "contract": "agentgov.task-start-scope-baseline",
+  "exclusions": [
+    "ignored untracked paths are omitted by git ls-files --exclude-standard",
+    "untracked paths beneath .agentgov are local tool state and are excluded",
+    "tracked .agentgov paths and tracked .gitignore changes remain included"
+  ],
+  "layers": [
+    {
+      "changes": [],
+      "name": "committed"
+    },
+    {
+      "changes": [],
+      "name": "staged"
+    },
+    {
+      "changes": [
+        {
+          "identity_digest": "sha256:6b32d25e7c600625ce7977666f73ae83d127f95dec10ba01c82047919b2fd6e6",
+          "identity_kind": "patch",
+          "layer": "unstaged",
+          "old_path": null,
+          "path": "STATUS.md",
+          "status": "modified"
+        }
+      ],
+      "name": "unstaged"
+    },
+    {
+      "changes": [
+        {
+          "identity_digest": "sha256:4cca2d57edeaddfe52d3e6c4dd4d774192bbdbcab4e84e07df73e14a861c0348",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": ".codex/config.toml",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:75e7ba936e32b1f8b717d16c684161703737bc6d3e873eca604805cfef25edd0",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "docs/build-validation/no-retry-artifact-driver-gate-replay-v1-2026-08-26.md",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:6a44f0a4b9a8ef3c91c9fe5ac64a309bf92418bf88912de25ae5d1448669a2bf",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "docs/development-log/2026-08-26.md",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:7bc9e44292770ddfb57574d2a72349200cf687cad35cc81841e8d27c2b1b82fe",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "governance/tasks/p0-minimal-noninteractive-artifact-driver-v1.json",
+          "status": "untracked"
+        },
+        {
+          "identity_digest": "sha256:acfe4a0a311f40a5acc655cafcab33b38eafb633d84d1913b2876403432e2575",
+          "identity_kind": "file",
+          "layer": "untracked",
+          "old_path": null,
+          "path": "governance/tasks/p0-no-retry-artifact-driver-gate-replay-v1.json",
+          "status": "untracked"
+        }
+      ],
+      "name": "untracked"
+    }
+  ],
+  "schema_version": "1.0",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "docs/adr",
+      "docs/build-validation/no-retry-artifact-driver-gate-replay-v1-2026-08-26.md",
+      "docs/development-monitor.md",
+      "docs/development-plan.md",
+      "docs/drift-review-reminders.md",
+      "docs/experiments",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/validation",
+      "governance/distribution-input-manifest.json",
+      "governance/tasks/p0-no-retry-artifact-driver-gate-replay-v1.json",
+      "schemas",
+      "scripts/build_release_manifest.py",
+      "scripts/distribution_input_manifest",
+      "scripts/foreground_stdio",
+      "scripts/short_build_root",
+      "scripts/task_start_scope_baseline",
+      "src",
+      "tests"
+    ],
+    "include_paths": [
+      ".agentgov/scope-baselines",
+      "STATUS.md",
+      "docs/build-validation/minimal-noninteractive-artifact-driver-v1-2026-08-26.md",
+      "docs/development-automation-contracts.md",
+      "docs/development-log/2026-08-26.md",
+      "governance/tasks/p0-minimal-noninteractive-artifact-driver-v1.json",
+      "scripts/artifact_replay_driver"
+    ]
+  },
+  "snapshot_change_set_digest": "sha256:9e826e2449a864cbc4032a119d87c80360c67f01692665534b19abb86880f1b2",
+  "snapshot_head_sha": "734b427163175396fae71dc557fc90d676395b84",
+  "task": {
+    "digest": "sha256:e2e2fa39e96381e4801046a35ad41a3418a42b375f4a32ad1cce0af23d1d0df6",
+    "path": "governance/tasks/p0-minimal-noninteractive-artifact-driver-v1.json",
+    "task_id": "p0-minimal-noninteractive-artifact-driver-v1"
+  }
+}

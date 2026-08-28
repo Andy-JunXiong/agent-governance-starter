@@ -1,0 +1,98 @@
+{
+  "acceptance_signals": [
+    "The resolved journey mcpj-920c2bf73d3d4d26b25e43c178edd60f and a matching human-admitted task exist before implementation writes or real artifact actions.",
+    "A create-only task-start baseline is captured before controller implementation.",
+    "The controller is a fixed repository module and never receives, generates, or launches dynamic parent python command text.",
+    "Its external request is strict JSON containing only normalized configuration and private file references; replay source is not an input field and private values are excluded from reports and representations.",
+    "The controller constructs one internal UTF-8 replay source, calls run_bounded_artifact_replay directly in its fixed process, and returns only bounded status, phase, reason, identity, and attempt facts.",
+    "Harmless fixtures cover valid Harness handoff, strict malformed input rejection, source exclusion, bounded unexpected errors, private representations, exact attempt accounting, and zero retry without invoking caller, readiness, driver, action, build, evidence, cleanup, or network.",
+    "Focused controller and related tests plus the full supported suite pass before the sole real replay.",
+    "Fresh read-only preflight verifies the 186-path manifest identities, one compatible fixed launcher, retained backend wheel digest, absent new evidence target, and zero short roots.",
+    "The sole real controller run uses the exact Harness-provided encoded identity values in the readiness request, runs dry before at most one actual attempt, and performs no second controller or Harness run.",
+    "On success the caller performs one readiness probe before one driver/action/offline build, the driver durably writes privacy-bounded evidence, creates its exact receipt, calls evidence-gated cleanup, and confirms the short root is absent.",
+    "Any first real deviation stops without retry, repair, alternate backend, implementation change, manual cleanup, or false success; any private recovery root remains untouched.",
+    "Interview evidence explains the architecture chain, exact attempt counts, privacy and authority limits, validation, observed outcome, and remaining unknowns without exposing source, host paths, raw output, traceback, environment, credentials, or process details.",
+    "Only the admitted controller, task, baseline, new evidence, automation contract, STATUS, and dated log may change; every excluded predecessor path remains byte-identical.",
+    "Task, repository, scope, JSON, privacy, evidence-identity, zero-root, whitespace, diff, focused, documentation, and full-suite checks pass or honestly record the first stopped deviation.",
+    "No network, dependency installation, external Agent or model, Git mutation, commit, push, publication, release, deployment, public CLI, scheduler, generic framework, or follow-on authority occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-04fbe1a7a9af4fd087734cec931e22e6 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Deliver one minimal interview-ready vertical slice. Add a fixed repository-internal artifact replay controller module that accepts only a strict bounded configuration over JSON stdin, constructs the identity-bound real replay source internally, calls the existing bounded Harness directly without dynamic parent python command text, and returns only normalized bounded JSON. Add harmless fixture coverage for strict input, private representations, exact Harness handoff, dry-before-actual behavior inherited from the Harness, bounded failures, and zero retry. After focused and full tests pass, run the fixed controller exactly once against the current manifest and compatible offline backend. The sole real run may perform one Harness dry and, only after PASS, one actual caller/readiness/driver/action/build/evidence/gated-cleanup path. Stop at the first real deviation without repair or retry. Produce concise interview-readable evidence and closeout documentation."
+  },
+  "risk": {
+    "items": [
+      "Combining implementation and one real replay is faster but requires all fixture and full validation to pass before the single real attempt.",
+      "A real replay may fail after allocating a private short root; the no-manual-cleanup boundary may leave it for separately authorized recovery.",
+      "The readiness result is point-in-time and cannot eliminate launcher, backend, or temporary-root replacement races.",
+      "The controller and Harness provide failure containment but are not a security sandbox.",
+      "The dirty worktree contains multiple earlier admitted slices; broad included prefixes are preservation-only for all pre-existing content.",
+      "An interview-readable closeout must not overclaim cross-platform, repeated reliability, adoption, time savings, causal benefit, or return on investment.",
+      "Reviewed assumption: A strict fixed module with JSON stdin is the smallest reliable replacement for dynamic parent python command transport.",
+      "Reviewed assumption: The existing Harness can be called directly from the controller process without changing its worker protocol.",
+      "Reviewed assumption: The previously observed compatible launcher and exact cached backend wheel remain available subject to fresh preflight.",
+      "Reviewed assumption: The existing manifest-bound offline action pattern remains suitable for one real build.",
+      "Reviewed unknown: Whether the controller source template needs an additional bounded configuration field after fixtures exercise it.",
+      "Reviewed unknown: Whether the sole real replay reaches successful gated cleanup.",
+      "Reviewed unknown: The exact wheel and evidence identities produced by the real build.",
+      "Reviewed unknown: Cross-platform behavior, hostile-source containment, recovery behavior, repeated reliability, interviewer response, adoption, time savings, causal benefit, and return on investment remain unknown."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "docs/build-validation/artifact-invocation-transport-readiness-gate-v1-2026-08-26.md",
+      "docs/build-validation/minimal-artifact-invocation-caller-gate-v1-2026-08-26.md",
+      "docs/build-validation/minimal-noninteractive-artifact-driver-v1-2026-08-26.md",
+      "docs/build-validation/no-retry-artifact-driver-gate-replay-v1-2026-08-26.md",
+      "docs/build-validation/real-action-artifact-driver-replay-v1-2026-08-26.md",
+      "governance/tasks/p0-artifact-invocation-transport-readiness-gate-v1.json",
+      "governance/tasks/p0-bounded-artifact-replay-harness-v1.json",
+      "governance/tasks/p0-bounded-artifact-replay-identity-bridge-v1.json",
+      "governance/tasks/p0-minimal-artifact-invocation-caller-gate-v1.json",
+      "governance/tasks/p0-minimal-noninteractive-artifact-driver-v1.json",
+      "governance/tasks/p0-no-retry-artifact-driver-gate-replay-v1.json",
+      "governance/tasks/p0-real-action-artifact-driver-replay-v1.json",
+      "governance/tasks/p0-real-composed-artifact-caller-replay-recovery-v1.json",
+      "governance/tasks/p0-real-composed-artifact-caller-replay-v1.json",
+      "governance/tasks/p0-real-composed-artifact-identity-bridge-replay-v1.json",
+      "scripts/artifact_invocation_caller",
+      "scripts/artifact_invocation_readiness",
+      "scripts/artifact_replay_driver",
+      "scripts/artifact_replay_harness"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-interview-ready-artifact-replay-close-loop-v1.json",
+      ".agentgov/scope-baselines",
+      "scripts/artifact_replay_controller",
+      "docs/development-automation-contracts.md",
+      "docs/build-validation/interview-ready-artifact-replay-close-loop-v1-2026-08-26.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-26.md"
+    ]
+  },
+  "task_id": "p0-interview-ready-artifact-replay-close-loop-v1",
+  "title": "Interview-ready artifact replay close loop v1",
+  "validation_commands": [
+    "py -3.11 -m unittest scripts.artifact_replay_controller.test_controller -v",
+    "py -3.11 -m unittest scripts.artifact_replay_controller.test_controller scripts.artifact_replay_harness.test_harness scripts.artifact_invocation_caller.test_caller scripts.artifact_invocation_readiness.test_readiness scripts.artifact_replay_driver.test_driver scripts.distribution_input_manifest.test_manifest scripts.short_build_root.test_root -v",
+    "py -3.11 -m scripts.distribution_input_manifest check --repository . --manifest governance/distribution-input-manifest.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-interview-ready-artifact-replay-close-loop-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-interview-ready-artifact-replay-close-loop-v1.json --baseline .agentgov/scope-baselines/p0-interview-ready-artifact-replay-close-loop-v1.json",
+    "py -3.11 -m json.tool governance/tasks/p0-interview-ready-artifact-replay-close-loop-v1.json",
+    "git diff --check"
+  ]
+}

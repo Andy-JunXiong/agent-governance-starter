@@ -1,0 +1,85 @@
+{
+  "acceptance_signals": [
+    "The English and Simplified Chinese pages tell the same five-act project story in natural first-person language, with Chinese independently written rather than translated sentence by sentence.",
+    "The default story supports an approximately two-minute spoken route with clean cut points and a five-to-seven-minute screen-share expansion.",
+    "The turning point uses the human-confirmed repeated benefit-to-core-requirement mismatch and does not invent a single dramatic discovery event.",
+    "The page distinguishes human-originated decisions, jointly formed decisions, Agent-proposed repairs approved by the human, and observed system behavior without overstating personal invention or mechanical enforcement.",
+    "The main story uses at most one architecture diagram and three substantial proof points, and contains no SHA-256 values, evidence taxonomy legend, large command block, or full internal Kernel and Adapter taxonomy.",
+    "Airbnb is presented as one observed live Agent and human workflow, artifact replay as one bounded Windows engineering-depth case, and Taxi as product-learning context rather than broad adoption proof.",
+    "The page states that task-level verification cannot decide whether the right product is being built and does not claim automated product-drift detection.",
+    "Stable release and development-source capabilities remain visibly distinct, and unsupported adoption, security, portability, and repeated-reliability claims are absent.",
+    "Both pages use local assets only, restrictive CSP, semantic HTML, visible keyboard focus, reciprocal language navigation, working evidence links, and responsive layouts without narrow-screen overflow.",
+    "The homepage receives one minimal discoverability link; no README, Portfolio, Interview Guide, runtime, release, ADR, or governance-framework restructuring occurs.",
+    "Focused interview and product-site tests, task and repository governance, exact scope validation, task JSON parsing, and git diff checks pass.",
+    "All pre-existing changed content is preserved outside the exact included paths; pre-existing files under the broad task and baseline prefixes are preservation-only, and existing STATUS and dated-log content is preserved except for bounded updates."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-bc5d4f62f7cd45689d9978bffa07a1a4 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Create one minimal English and Simplified Chinese public interview-story surface for AgentGov. The story must use the human-confirmed first-person account of gradual product and architecture drift, the rapid return to the development-time governance MVP, and evidence-bounded Airbnb and artifact-replay proof points. Add one minimal homepage entry and focused documentation tests. Do not modify the existing Interview Guide in this slice."
+  },
+  "risk": {
+    "items": [
+      "First-person wording could overstate motivations or authorship beyond the human-confirmed account.",
+      "The public page could regress into a governance dashboard or duplicate the existing Interview Guide.",
+      "Airbnb or artifact-replay wording could overstate general adoption, independent assurance, or mechanical enforcement.",
+      "Stable and development-source behavior could be mixed in one product claim.",
+      "Broad existing task and baseline prefixes contain pre-existing work that must remain byte-identical except for the new task and baseline.",
+      "STATUS.md and the dated log already contain pre-existing work that must be preserved.",
+      "Browser rendering and actual spoken duration require separate observed validation.",
+      "Reviewed assumption: The human is AgentGov's primary and sole product and engineering owner.",
+      "Reviewed assumption: The human has long used short-term benefit, long-term benefit, and next-stage connection reviews after features.",
+      "Reviewed assumption: The human first verified accumulated drift, then rapidly returned development to the core MVP before adding detail features.",
+      "Reviewed assumption: The confirmed decision-attribution list is the source for personal, joint, and Agent-proposed architecture wording.",
+      "Reviewed assumption: The existing site visual system and local assets are sufficient; no generated imagery or client-side application state is needed.",
+      "Reviewed unknown: Actual two-minute speaking duration remains unknown until the human rehearses the implemented route.",
+      "Reviewed unknown: Cross-browser and touch behavior remain unknown until browser QA.",
+      "Reviewed unknown: The Interview Guide integration remains a separate Slice 2 task and is not authorized here."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "README.md",
+      "docs/development-automation-contracts.md",
+      "docs/artifact-replay-interview-walkthrough.md",
+      "docs/artifact-replay-interview.css",
+      "docs/artifact-replay-interview.html",
+      "docs/artifact-replay-interview.zh-CN.html",
+      "docs/build-validation",
+      "docs/development-log/2026-08-26.md",
+      "scripts",
+      "tests/test_user_documentation.py"
+    ],
+    "include_paths": [
+      "governance/tasks",
+      ".agentgov/scope-baselines",
+      "docs/project-interview.html",
+      "docs/project-interview.zh-CN.html",
+      "docs/project-interview.css",
+      "docs/index.html",
+      "tests/test_interview_documentation.py",
+      "STATUS.md",
+      "docs/development-log/2026-08-27.md"
+    ]
+  },
+  "task_id": "p0-whole-project-interview-public-story-v1",
+  "title": "Whole-project bilingual interview public story v1",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest tests.test_interview_documentation tests.test_product_site -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check task governance/tasks/p0-whole-project-interview-public-story-v1.json",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-whole-project-interview-public-story-v1.json --baseline .agentgov/scope-baselines/p0-whole-project-interview-public-story-v1.json",
+    "py -3.11 -m json.tool governance/tasks/p0-whole-project-interview-public-story-v1.json",
+    "git diff --check"
+  ]
+}

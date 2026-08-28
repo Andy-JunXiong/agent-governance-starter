@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="基于真实证据的三到五分钟 artifact replay 面试讲解页。">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; img-src 'self'">
+  <title>Artifact replay 面试讲解 — Agent Governance Starter Kit</title>
+  <link rel="icon" href="favicon.ico" type="image/svg+xml">
+  <link rel="stylesheet" href="guide.css">
+  <link rel="stylesheet" href="artifact-replay-interview.css">
+</head>
+<body class="artifact-page">
+  <nav class="shell" aria-label="主导航">
+    <a class="brand" href="index.html"><span class="mark">AG</span>Agent Governance Starter Kit</a>
+    <div class="nav-links">
+      <a href="portfolio.html">证据作品集</a>
+      <a href="interview-guide.zh-CN.html">完整面试指南</a>
+      <a href="quickstart.zh-CN.html">快速开始</a>
+      <span class="language-switch" aria-label="语言"><a href="artifact-replay-interview.html" lang="en" hreflang="en">EN</a><a href="artifact-replay-interview.zh-CN.html" lang="zh-CN" aria-current="page">中文</a></span>
+    </div>
+  </nav>
+  <header class="shell">
+    <span class="eyebrow">一个真实的调试故事 · 3–5 分钟</span>
+    <h1>我只想确认一件事：清理真的会等证据通过吗？</h1>
+    <p class="lead">第一次真实回放连构建都没走到。我可以给 worker 恢复 PATH，让错误消失；但我选择保留限制，把可信事实换一种方式传进去。这个选择又暴露了第二个隐藏依赖。</p>
+    <div class="hero-meta" aria-label="结果摘要">
+      <div class="hero-card primary"><span>我要回答的问题</span><strong>清理会等待吗？</strong>只有有效证据回执才能允许删除。</div>
+      <div class="hero-card"><span>第一次回放</span><strong>STOPPED</strong>构建之前</div>
+      <div class="hero-card"><span>边界修复</span><strong>2</strong>没有扩大 PATH</div>
+      <div class="hero-card"><span>下一次允许的回放</span><strong>PASS</strong>只运行一次</div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="story-opening" data-section="story-arc" aria-labelledby="story-title">
+      <p class="section-kicker">失败链</p>
+      <h2 id="story-title">Worker 连续失败两次，之后的一次新回放才完整走通。</h2>
+      <p class="story-voice">我做这次回放，不是为了证明 Python 能构建 wheel。我只想验证一个更窄的问题：调用方是否真的会先把证据持久化并复核回执，然后才删除临时状态？</p>
+      <div class="story-grid">
+        <article class="story-step"><span class="time">01</span><strong>我先提出一个可验证的问题</strong><p>先有证据、再清理——真实调用方是否真的遵守这个顺序？</p></article>
+        <article class="story-step"><span class="time">02</span><strong>Dry run 先停了</strong><p>PATH-free worker 在 actual 之前尝试启动裸 Git。</p></article>
+        <article class="story-step"><span class="time">03</span><strong>我保留了受限环境</strong><p>没有恢复宽泛的可执行访问，而是把已经验证的事实传进去。</p></article>
+        <article class="story-step"><span class="time">04</span><strong>第二个依赖又出现了</strong><p>Actual 路径里的 driver 仍在调用基于 Git 的 checker。</p></article>
+        <article class="story-step"><span class="time">05</span><strong>下一次允许的回放通过</strong><p>一次 controller、一次 dry、一次 actual，证据持久化后根目录归零。</p></article>
+      </div>
+    </section>
+
+    <section class="emphasis" data-section="problem" aria-labelledby="problem-title">
+      <p class="section-kicker">01 · 第一次停止</p>
+      <h2 id="problem-title">第一次回放根本没有走到构建。</h2>
+      <p>我允许了一次不重试的真实回放，用它验证实际清理路径。结果 dry worker 先停了：这个环境有意不提供 <code>PATH</code>，但 manifest 检查仍然尝试启动裸 <code>git</code>。</p>
+      <p>这个失败反而证明限制真的生效了。最省事的做法是把 Git 塞回 worker，让报错消失；但那等于为了通过测试，削弱我原本想验证的边界。</p>
+      <div class="speaker-note"><strong>决定：</strong>我没有重试已经耗尽的任务，也没有把扩大环境当成默认修复。</div>
+    </section>
+
+    <section data-section="architecture" aria-labelledby="architecture-title">
+      <p class="section-kicker">02 · 我做出的选择</p>
+      <h2 id="architecture-title">我选择移动可信事实，而不是扩大 worker。</h2>
+      <p>先用人话说：Git 可以留在外面。受限路径真正需要的，只是 controller 已经检查过的精确文件列表和身份摘要。落实到内部设计，就是把基于 Git 的入口检查与仅依赖文件系统的即时复核拆开。</p>
+      <div class="flow" aria-label="Artifact replay 架构">
+        <div class="flow-step" tabindex="0" aria-describedby="zh-flow-controller"><strong>Controller</strong><small>基于 Git 的 manifest 准入</small><span class="more-cue">悬停或聚焦</span><span class="detail-panel" id="zh-flow-controller" role="tooltip"><strong>真实边界</strong><p>Controller 在任何 Harness worker 启动前完成唯一一次基于 Git 的准入。</p><small>来源：filesystem boundary 修复记录与 2026-08-27 闭环。</small></span></div>
+        <div class="flow-step" tabindex="0" aria-describedby="zh-flow-harness"><strong>Harness</strong><small>一次 dry，之后至多一次 actual</small><span class="more-cue">悬停或聚焦</span><span class="detail-panel" id="zh-flow-harness" role="tooltip"><strong>尝试次数约束</strong><p>已记录回放使用一个 dry worker 和一个 actual worker，契约不允许重试。</p><small>真实观测：controller/dry/actual = 1/1/1。</small></span></div>
+        <div class="flow-step" tabindex="0" aria-describedby="zh-flow-caller"><strong>Caller + readiness</strong><small>不可变身份桥</small><span class="more-cue">悬停或聚焦</span><span class="detail-panel" id="zh-flow-caller" role="tooltip"><strong>私有事实传递</strong><p>Caller 在一次 readiness 通过后转发 controller 绑定的路径、数量和摘要。</p><small>主机路径、原始输出、环境与凭证不会进入公开结果。</small></span></div>
+        <div class="flow-step" tabindex="0" aria-describedby="zh-flow-driver"><strong>Driver</strong><small>仅文件系统复核</small><span class="more-cue">悬停或聚焦</span><span class="detail-panel" id="zh-flow-driver" role="tooltip"><strong>即时一致性</strong><p>Driver 在分配短根目录前重新派生普通文件并计算两个身份摘要。</p><small>发生漂移时以 manifest_preflight_failed 停止，action 尝试为零。</small></span></div>
+        <div class="flow-step" tabindex="0" aria-describedby="zh-flow-action"><strong>Action → 证据 → 清理</strong><small>离线构建与回执门控</small><span class="more-cue">悬停或聚焦</span><span class="detail-panel" id="zh-flow-action" role="tooltip"><strong>赢得清理权限</strong><p>一次离线构建独占写入证据，只有回执复核后才执行清理。</p><small>真实观测：最终短根目录数量为 0。</small></span></div>
+      </div>
+      <p class="boundary-note">只有精确 manifest 路径、数量、路径摘要与内容摘要向内传递。源码文本、主机路径、原始输出、traceback、环境、凭证和进程细节都不会越过公开边界。</p>
+    </section>
+
+    <section data-section="repairs" aria-labelledby="repairs-title">
+      <p class="section-kicker">03 · 第二个隐藏依赖</p>
+      <h2 id="repairs-title">第一次修复是必要的，但静态检查证明它还不够。</h2>
+      <p>把准入移到 controller 后，我沿 actual 路径继续检查。Caller 已经能到达 driver，但 driver 仍在导入同一个 Git checker。Dry worker 的问题修掉了，同样的耦合却还藏在更深一层。</p>
+      <p>底层修复大多由 Agent 提出，我对照想要保留的边界评估并批准：worker 继续没有 <code>PATH</code>，cleanup 仍然必须等证据验证完成。</p>
+      <div class="repair-grid">
+        <article class="repair-card">
+          <span class="repair-number">01</span>
+          <h3>我把 Git 准入移出了 worker</h3>
+          <p class="failure"><strong>失败：</strong>worker 有意不提供 <code>PATH</code>，但 manifest 检查仍启动了 <code>git</code>。</p>
+          <p class="repair"><strong>修复：</strong>把唯一基于 Git 的准入移到 controller，只向受限路径传递规范化 manifest 事实。</p>
+        </article>
+        <article class="repair-card">
+          <span class="repair-number">02</span>
+          <h3>我从 driver 移除了同一个依赖</h3>
+          <p class="failure"><strong>失败：</strong>静态检查发现 driver 在构建前仍导入基于 Git 的 checker。</p>
+          <p class="repair"><strong>修复：</strong>在分配短构建根目录前，从文件系统重新派生普通文件并计算两个身份摘要。</p>
+        </article>
+      </div>
+      <div class="speaker-note"><strong>关键设计选择：</strong>保留受限环境，而不是扩大它。发生漂移时返回 <code>manifest_preflight_failed</code>，action 尝试为零，不创建根目录、不写证据，也不声称清理。</div>
+    </section>
+
+    <section class="checklist" data-section="results" aria-labelledby="results-title">
+      <p class="section-kicker">04 · 接下来发生了什么</p>
+      <h2 id="results-title">我允许了一次新回放。它只运行一次，并走完了门控。</h2>
+      <p>这条修复后的精确链路没有重试。声明的输入实现了 <strong>186 / 186</strong> 字节匹配，已记录的身份同时支持制品结果和清理决定。</p>
+      <div class="metric-grid">
+        <div class="metric" tabindex="0" aria-describedby="zh-metric-attempts"><span>Controller / dry / actual</span><strong>1 / 1 / 1</strong><small>各一次</small><span class="evidence-kind observed">真实观测</span><span class="detail-panel" id="zh-metric-attempts" role="tooltip"><strong>精确尝试计数</strong><p>一次 controller 调用产生一次 dry 与一次 actual，没有第二次调用。</p><small>来源：受限 controller PASS 与当天闭环。</small></span></div>
+        <div class="metric" tabindex="0" aria-describedby="zh-metric-build"><span>构建</span><strong>1 wheel</strong><small>返回码 0</small><span class="evidence-kind observed">真实观测</span><span class="detail-panel" id="zh-metric-build" role="tooltip"><strong>离线 action 结果</strong><p>唯一 artifact action 返回码为 0，并且只产出一个 wheel。</p><small>没有网络、依赖安装或替代 backend。</small></span></div>
+        <div class="metric" tabindex="0" aria-describedby="zh-metric-members"><span>Wheel 成员</span><strong>189</strong><small>普通成员</small><span class="evidence-kind observed">真实观测</span><span class="detail-panel" id="zh-metric-members" role="tooltip"><strong>成员关系</strong><p>189 个普通成员 = 183 个受管字节匹配 + 6 个生成元数据成员。</p><small>成员清单摘要保存在持久回放证据中。</small></span></div>
+        <div class="metric" tabindex="0" aria-describedby="zh-metric-parity"><span>受管内容一致性</span><strong>183 / 0</strong><small>匹配 / 不匹配</small><span class="evidence-kind observed">真实观测</span><span class="detail-panel" id="zh-metric-parity" role="tooltip"><strong>Payload 字节一致</strong><p>183 个受管 wheel 成员全部匹配预期字节，不匹配数量为零。</p><small>这是制品一致性，不等于跨平台可靠性。</small></span></div>
+        <div class="metric" tabindex="0" aria-describedby="zh-metric-generated"><span>生成的元数据</span><strong>6</strong><small>预期成员</small><span class="evidence-kind observed">真实观测</span><span class="detail-panel" id="zh-metric-generated" role="tooltip"><strong>预期构建产物</strong><p>这六项被分类为构建生成的 packaging metadata，而不是 manifest 管理的源码 payload。</p><small>183 个受管 + 6 个生成 = 189 个普通成员。</small></span></div>
+        <div class="metric" tabindex="0" aria-describedby="zh-metric-unmanaged"><span>意外非受管成员</span><strong>0</strong><small>没有额外成员</small><span class="evidence-kind observed">真实观测</span><span class="detail-panel" id="zh-metric-unmanaged" role="tooltip"><strong>闭合清单</strong><p>所有普通成员都属于受管字节匹配或预期生成元数据。</p><small>没有观测到意外非受管成员。</small></span></div>
+        <div class="metric" tabindex="0" aria-describedby="zh-metric-retries"><span>重试</span><strong>0</strong><small>没有替代调用</small><span class="evidence-kind observed">真实观测</span><span class="detail-panel" id="zh-metric-retries" role="tooltip"><strong>不重试边界</strong><p>没有重试、执行中修复、替代 backend 或手工清理。</p><small>更早的失败任务保持耗尽；这是另行允许的回放。</small></span></div>
+        <div class="metric" tabindex="0" aria-describedby="zh-metric-roots"><span>最终根目录</span><strong>0</strong><small>通过回执门控后</small><span class="evidence-kind observed">真实观测</span><span class="detail-panel" id="zh-metric-roots" role="tooltip"><strong>清理后观测</strong><p>证据写入并复核回执后，精确短根目录被删除，最终数量为零。</p><small>这个事实独立于持久文件有意保留的“清理前”措辞。</small></span></div>
+      </div>
+      <p class="hash-line"><strong>构建 wheel SHA-256</strong><code class="hash">sha256:64f48914b60ae9a7638275f1a9f3b3727bc15b7226c76b37babe08475bae685a</code></p>
+      <p class="hash-line"><strong>持久证据 SHA-256</strong><code class="hash">ffc06da3060b459ff39c8602365126a860e8228dd6320c8c88f69cbc8c6b8715</code></p>
+    </section>
+
+    <section data-section="cleanup" aria-labelledby="cleanup-title">
+      <p class="section-kicker">05 · 最初的问题有了答案</p>
+      <h2 id="cleanup-title">是的——至少在这一次回放里，清理等到了证据。</h2>
+      <p>这就是我一开始要验证的行为。构建成功还不够；证据必须独占写入，而且回执必须重新匹配，删除动作才成立。</p>
+      <div class="gate-grid">
+        <div class="gate-card"><strong>清理之前</strong><p>独占证据写入成功，并针对持久化后的精确字节重新校验回执。</p></div>
+        <div class="gate-arrow" aria-hidden="true">→</div>
+        <div class="gate-card pass"><strong>允许清理</strong><p>只删除精确短根目录，随后观测到最终短根目录数量为零。</p></div>
+      </div>
+      <p class="speaker-note"><strong>如果证据失败：</strong>保留私有 recovery root。不能在已耗尽的任务中手工清理或声称成功。</p>
+      <p class="boundary-note">这里回答的是一次本地 Windows 回放。跨平台行为和重复可靠性需要单独运行来验证。</p>
+    </section>
+
+    <section data-section="questions" aria-labelledby="questions-title">
+      <p class="section-kicker">面试追问</p>
+      <h2 id="questions-title">可能被问到的问题</h2>
+      <details open><summary>为什么不恢复 <code>PATH</code> 或给 worker 提供 Git？</summary><p>那是在用扩大执行边界解决数据流问题。Controller 已负责 Git 观测，而 driver 负责证明执行前的即时文件系统一致性。</p></details>
+      <details><summary>为什么要多次观测 manifest？</summary><p>它们回答不同问题：执行前的 Git 准入，以及资源分配前的文件系统一致性。</p></details>
+      <details><summary>为什么失败时保留临时根目录？</summary><p>在持久证据之前删除会破坏诊断现场，并产生没有依据的清理声明。Recovery 需要单独批准。</p></details>
+      <details><summary>下一步会开发什么？</summary><p>尚未决定。产品复核候选包括更清晰的清理后证据模板，或单独开展一次可移植性与重复性研究。</p></details>
+    </section>
+
+    <section data-section="evidence" aria-labelledby="evidence-title">
+      <p class="section-kicker">打开证据</p>
+      <h2 id="evidence-title">讲述背后的依据</h2>
+      <div class="evidence-grid">
+        <a class="evidence-link" href="build-validation/post-repair-no-retry-artifact-replay-v1-2026-08-27.md"><strong>不可变回放证据</strong><span>输入、制品身份、成员清单、尝试次数与隐私边界。</span></a>
+        <a class="evidence-link" href="../STATUS.md"><strong>当前仓库状态</strong><span>PASS、回执复核、门控清理、零根目录观测与验证结果。</span></a>
+        <a class="evidence-link" href="development-log/2026-08-27.md"><strong>当天开发日志</strong><span>唯一修复后执行与文档闭环。</span></a>
+        <a class="evidence-link" href="artifact-replay-interview-walkthrough.md"><strong>Markdown 讲稿</strong><span>紧凑的文字来源与证据边界。</span></a>
+      </div>
+    </section>
+
+    <div class="next"><a class="button dark" href="artifact-replay-interview.html">Present in English</a><a class="button" href="interview-guide.zh-CN.html">打开完整面试指南</a></div>
+  </main>
+  <footer class="shell">Agent Governance Starter Kit · Artifact replay · 两次失败，一个没有放宽的边界</footer>
+</body>
+</html>

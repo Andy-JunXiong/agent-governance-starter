@@ -1,0 +1,74 @@
+{
+  "acceptance_signals": [
+    "Resolved journey mcpj-ea817cbb30274487959e92fe5a68a103 and a matching human-admitted task exist before repository writes.",
+    "A create-only task-start scope baseline is captured before documentation edits.",
+    "One concise repository-local walkthrough is usable as a three-to-five-minute interview story and covers the problem, controller-to-caller-to-driver architecture, diagnosed boundaries, bounded repairs, sole no-retry replay, evidence-gated cleanup, tradeoffs, limitations, and likely questions.",
+    "The walkthrough accurately records one controller invocation, one dry attempt, one actual attempt, one successful result, the built-wheel SHA256 sha256:64f48914b60ae9a7638275f1a9f3b3727bc15b7226c76b37babe08475bae685a, and the evidence SHA256 ffc06da3060b459ff39c8602365126a860e8228dd6320c8c88f69cbc8c6b8715.",
+    "The walkthrough links to the current status, dated closeout, and immutable replay evidence and is discoverable from README.md.",
+    "The immutable replay evidence remains byte-identical with SHA256 ffc06da3060b459ff39c8602365126a860e8228dd6320c8c88f69cbc8c6b8715, and excluded implementation, contracts, configuration, prior evidence, and prior log paths remain unchanged.",
+    "Claims distinguish observed facts from unknown cross-platform behavior, repeated reliability, interviewer response, adoption, time savings, causal benefit, and return on investment.",
+    "STATUS.md and the 2026-08-27 development log record this documentation-only closeout without granting authority for another requirement.",
+    "User-documentation tests, task governance, repository governance, captured scope, immutable evidence hash, task JSON, and git diff --check pass.",
+    "No replay, build, dependency installation, network access, Git mutation, commit, push, publication, release, deployment, or external-Agent action occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-0a32f822898d461f9c2d5492aab116d2 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Implement the human-selected direction from resolved journey mcpj-ea817cbb30274487959e92fe5a68a103 as a documentation-only interview deliverable. Create one concise repository-local three-to-five-minute artifact replay walkthrough, add one README navigation entry, and record the completed slice in STATUS.md and the 2026-08-27 development log. Explain the problem, controller-to-caller-to-driver architecture, the two boundary failures and repairs, the sole no-retry replay result, evidence-gated cleanup, engineering tradeoffs, honest limitations, and likely interviewer questions. Cite the immutable replay evidence and exact recorded identities without editing that evidence, rerunning the replay, or changing implementation."
+  },
+  "risk": {
+    "items": [
+      "The repository has unrelated pre-existing changes; they must remain preserved and unstaged.",
+      "The validated evidence file is immutable for this task and must not be reformatted or regenerated.",
+      "A single successful replay must not be overstated as reliability, portability, adoption, time-saving, or hiring evidence.",
+      "The existing bilingual web interview guide remains unchanged; this task adds a focused artifact-replay companion rather than resynchronizing all interview surfaces.",
+      "Reviewed assumption: The current immutable replay evidence, STATUS.md snapshot, and 2026-08-27 development log are the authoritative sources for the interview story.",
+      "Reviewed assumption: A standalone Markdown walkthrough plus one README navigation link is the smallest discoverable deliverable and does not change the existing bilingual web interview guide.",
+      "Reviewed assumption: The walkthrough can cite existing repository-relative evidence without reproducing private paths, raw output, source content, credentials, or process details.",
+      "Reviewed unknown: Whether a particular interviewer will prefer a deeper code walkthrough or a shorter product narrative.",
+      "Reviewed unknown: Whether this documentation improves interview outcomes.",
+      "Reviewed unknown: Cross-platform behavior and repeated reliability beyond the one recorded Windows replay."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "docs/development-automation-contracts.md",
+      "docs/build-validation",
+      "docs/development-log/2026-08-26.md",
+      "scripts/artifact_invocation_caller",
+      "scripts/artifact_invocation_readiness",
+      "scripts/artifact_replay_controller",
+      "scripts/artifact_replay_driver",
+      "scripts/artifact_replay_harness"
+    ],
+    "include_paths": [
+      "governance/tasks",
+      ".agentgov/scope-baselines",
+      "docs/artifact-replay-interview-walkthrough.md",
+      "README.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-27.md"
+    ]
+  },
+  "task_id": "p0-artifact-replay-interview-walkthrough-v1",
+  "title": "Artifact replay interview walkthrough v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-artifact-replay-interview-walkthrough-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-artifact-replay-interview-walkthrough-v1.json --baseline .agentgov/scope-baselines/p0-artifact-replay-interview-walkthrough-v1.json",
+    "Get-FileHash docs/build-validation/post-repair-no-retry-artifact-replay-v1-2026-08-27.md -Algorithm SHA256",
+    "py -3.11 -m json.tool governance/tasks/p0-artifact-replay-interview-walkthrough-v1.json",
+    "git diff --check"
+  ]
+}

@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="AgentGov 六步演示：一个退款修复超出了约定范围，被阻断后重新回到等待人工复核的状态。">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; img-src 'self'">
+  <title>现场面试 Demo — AgentGov</title>
+  <link rel="icon" href="favicon.ico" type="image/svg+xml">
+  <link rel="stylesheet" href="interview-demo.css">
+</head>
+<body>
+  <nav class="demo-shell demo-nav" aria-label="主导航">
+    <a class="demo-brand" href="index.html"><span class="demo-mark">AG</span>AgentGov</a>
+    <div class="demo-nav-links">
+      <a href="project-interview.zh-CN.html">项目背景</a>
+      <a href="interview-guide.zh-CN.html">讲解指南</a>
+      <span class="language-switch" aria-label="语言"><a href="interview-demo.html" lang="en" hreflang="en">EN</a><a href="interview-demo.zh-CN.html" lang="zh-CN" aria-current="page">中文</a></span>
+    </div>
+  </nav>
+  <p class="maturity-strip"><strong>引导式回放：</strong>基于已验证的 future-0.3 场景，不是现场执行，也不代表稳定版 <code>0.2.1</code> 的行为。</p>
+
+  <header class="demo-shell demo-hero">
+    <div>
+      <span class="demo-eyebrow">退款任务引导示例</span>
+      <h1>Coding Agent 改多了。接下来会发生什么？</h1>
+      <p class="demo-lead">一个小的退款修复通过了测试，但 Agent 还改了一条没有人要求它动的规则。</p>
+    </div>
+    <aside class="time-card">
+      <strong>3–4 分钟</strong>
+      <span>六个步骤 · 一个可观察场景 · 可选技术深挖</span>
+    </aside>
+  </header>
+
+  <main class="demo-shell" data-interview-demo>
+    <section class="scenario-brief" aria-label="场景边界">
+      <article class="brief-card">
+        <span>人的请求</span>
+        <strong>修复退款金额计算错误。</strong>
+      </article>
+      <article class="brief-card allowed">
+        <span>本任务允许</span>
+        <code>refunds/calculation.py</code>
+      </article>
+      <article class="brief-card denied">
+        <span>需要单独决定</span>
+        <code>refunds/approval_policy.py</code>
+      </article>
+    </section>
+
+    <section class="demo-workspace" aria-label="退款治理引导场景">
+      <div class="progress-region">
+        <div class="progress-summary">
+          <strong>场景进度</strong>
+          <span data-step-counter>1 / 6</span>
+        </div>
+        <ol class="progress-track" aria-label="Demo 步骤">
+          <li data-progress-step aria-current="step">边界</li>
+          <li data-progress-step>额外改动</li>
+          <li data-progress-step>检查</li>
+          <li data-progress-step>决定</li>
+          <li data-progress-step>撤回</li>
+          <li data-progress-step>复核</li>
+        </ol>
+      </div>
+
+      <div class="demo-stage">
+        <section class="demo-step" data-demo-step="1" data-announcement="第 1 步，共 6 步：人只允许这个任务修改一个文件。">
+          <div class="step-heading">
+            <span class="step-number">01</span>
+            <div class="step-title">
+              <h2>人先定下边界。</h2>
+              <p>修复退款计算。如果要改审批规则，那应该是另一个决定。</p>
+            </div>
+            <span class="status-pill admitted">已允许</span>
+          </div>
+          <div class="actor-grid">
+            <article class="actor-card active"><strong>人</strong><p>定义任务，并且只允许修改一个文件。</p></article>
+            <article class="actor-card"><strong>Coding Agent</strong><p>负责完成请求中的修复。</p></article>
+            <article class="actor-card"><strong>AgentGov</strong><p>对照这个边界检查实际改动的文件。</p></article>
+            <article class="actor-card"><strong>Demo 脚本</strong><p>回放同一场景，让这个过程可以重复展示。</p></article>
+          </div>
+        </section>
+
+        <section class="demo-step" data-demo-step="2" data-announcement="第 2 步，共 6 步：Demo 模拟 Coding Agent 同时修改一个已准入文件和一个未准入文件。" hidden>
+          <div class="step-heading">
+            <span class="step-number">02</span>
+            <div class="step-title">
+              <h2>Agent 修好了 bug——也多改了一处。</h2>
+              <p>退款计算修好了。但 Agent 还把人工审批上限从 100 提高到了 500。</p>
+            </div>
+            <span class="status-pill script">模拟 Agent</span>
+          </div>
+          <div class="code-grid">
+            <article class="code-card">
+              <header><code>refunds/calculation.py</code><span class="status-pill pass">范围内</span></header>
+              <pre><code><span class="line-remove">- return subtotal</span>
+<span class="line-add">+ return subtotal - eligible_refund</span>
+
+# 请求中的计算修复</code></pre>
+            </article>
+            <article class="code-card out-of-scope">
+              <header><code>refunds/approval_policy.py</code><span class="status-pill fail">范围外</span></header>
+              <pre><code><span class="line-remove">- HUMAN_APPROVAL_LIMIT = 100</span>
+<span class="line-add">+ HUMAN_APPROVAL_LIMIT = 500</span>
+
+# 没有人要求这个改动</code></pre>
+            </article>
+          </div>
+        </section>
+
+        <section class="demo-step" data-demo-step="3" data-announcement="第 3 步，共 6 步：AgentGov 报告一个通过和一个失败，因此完成状态被阻断。" hidden>
+          <div class="step-heading">
+            <span class="step-number">03</span>
+            <div class="step-title">
+              <h2>AgentGov 发现了额外改动。</h2>
+              <p>一个改动文件属于本任务，另一个不属于。</p>
+            </div>
+            <span class="status-pill blocked">BLOCKED</span>
+          </div>
+          <div class="evidence-grid">
+            <article class="evidence-card pass"><strong>PASS · 允许的文件</strong><p><code>refunds/calculation.py</code> 符合任务范围。</p></article>
+            <article class="evidence-card fail"><strong>FAIL · 额外文件</strong><p><code>refunds/approval_policy.py</code> 没有获得本任务的批准。</p></article>
+          </div>
+          <div class="result-banner blocked">
+            <strong>完成状态：BLOCKED</strong>
+            <p>现有改动不会自动消失；只是这个任务现在还不能算完成。</p>
+          </div>
+        </section>
+
+        <section class="demo-step" data-demo-step="4" data-announcement="第 4 步，共 6 步：人拒绝扩大范围。" hidden>
+          <div class="step-heading">
+            <span class="step-number">04</span>
+            <div class="step-title">
+              <h2>接下来怎么办，仍然由人决定。</h2>
+              <p>现在有一个真实决定：扩大任务，或者删掉额外改动。</p>
+            </div>
+            <span class="status-pill human">人的决定</span>
+          </div>
+          <div class="decision-options">
+            <article class="decision-card"><strong>扩大任务</strong><p>把审批规则改动当成一件单独的工作来评估。</p></article>
+            <article class="decision-card selected"><strong>删掉额外改动</strong><p>已选择。审批规则不属于这个任务。</p></article>
+          </div>
+        </section>
+
+        <section class="demo-step" data-demo-step="5" data-announcement="第 5 步，共 6 步：Demo 脚本只恢复范围外文件。" hidden>
+          <div class="step-heading">
+            <span class="step-number">05</span>
+            <div class="step-title">
+              <h2>超出范围的改动被撤回。</h2>
+              <p>为了让场景可重复，Demo 脚本把 <code>approval_policy.py</code> 恢复到原来的值。</p>
+            </div>
+            <span class="status-pill script">DEMO 脚本</span>
+          </div>
+          <div class="remediation-flow">
+            <article><strong>保留请求中的修复</strong><span>退款计算改动留下来。</span></article>
+            <article><strong>恢复审批规则</strong><span>上限从 500 回到 100。</span></article>
+            <article><strong>重新检查</strong><span>检查当前文件，而不是沿用上一次结果。</span></article>
+          </div>
+        </section>
+
+        <section class="demo-step" data-demo-step="6" data-announcement="第 6 步，共 6 步：当前范围和测试通过，工作可以交给人复核。" hidden>
+          <div class="step-heading">
+            <span class="step-number">06</span>
+            <div class="step-title">
+              <h2>可以复核——还没有接受。</h2>
+              <p>额外改动已经删除。请求中的修复和它的测试现在通过当前检查。</p>
+            </div>
+            <span class="status-pill ready">REVIEW_READY</span>
+          </div>
+          <div class="review-grid">
+            <article><strong>只有允许的文件</strong><span>PASS</span></article>
+            <article><strong>退款测试</strong><span>PASSED</span></article>
+            <article><strong>已检查当前运行</strong><span>VERIFIED</span></article>
+            <article><strong>AgentGov 状态</strong><span>REVIEW_READY</span></article>
+          </div>
+          <div class="result-banner ready">
+            <strong>仍然需要人来复核改动。</strong>
+            <p><code>REVIEW_READY</code> 不等于可以 merge、release 或部署。</p>
+          </div>
+        </section>
+      </div>
+
+      <div class="demo-controls">
+        <div class="control-group">
+          <button class="demo-button" type="button" data-demo-action="back">← 上一步</button>
+          <button class="demo-button primary" type="button" data-demo-action="next">下一步 →</button>
+          <button class="demo-button" type="button" data-demo-action="restart">重新开始</button>
+        </div>
+        <span class="demo-announcer" data-demo-announcer role="status" aria-live="polite"></span>
+      </div>
+    </section>
+  </main>
+
+  <section class="demo-shell demo-followup">
+    <h2>这个例子还可以继续谈什么</h2>
+    <div class="followup-links">
+      <a href="governed-refund-walkthrough.html"><strong>这个例子如何运作</strong><span>查看可执行场景以及背后的四个角色。</span></a>
+      <a href="project-interview.zh-CN.html"><strong>我为什么做 AgentGov</strong><span>一些有用的交付功能如何逐渐把产品带偏。</span></a>
+      <a href="artifact-replay-interview.zh-CN.html"><strong>一个更难的工程案例</strong><span>两次 Windows 失败，以及我选择不放宽的边界。</span></a>
+    </div>
+  </section>
+  <footer class="demo-shell demo-footer">AgentGov · 引导式面试 Demo · 软件检查事实，人决定下一步</footer>
+  <script src="interview-demo.js" defer></script>
+</body>
+</html>

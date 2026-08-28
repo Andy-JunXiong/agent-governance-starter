@@ -3,65 +3,91 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A five-to-ten-minute interview walkthrough for Agent Governance Starter Kit.">
+  <meta name="description" content="A two-minute AgentGov interview route with role branches and a five-to-seven-minute evidence expansion.">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; img-src 'self'">
-  <title>Interview walkthrough — Agent Governance Starter Kit</title>
+  <title>Interview guide — AgentGov</title>
   <link rel="icon" href="favicon.ico" type="image/svg+xml">
   <link rel="stylesheet" href="guide.css">
 </head>
 <body>
-  <nav class="shell">
-    <a class="brand" href="index.html"><span class="mark">AG</span>Agent Governance Starter Kit</a>
+  <nav class="shell" aria-label="Primary">
+    <a class="brand" href="index.html"><span class="mark">AG</span>AgentGov</a>
     <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="portfolio.html">Evidence portfolio</a>
+      <a href="interview-demo.html">Live demo</a>
+      <a href="project-interview.html">Project background</a>
+      <a href="portfolio.html">Evidence</a>
       <a href="quickstart.html">Quickstart</a>
       <span class="language-switch" aria-label="Language"><a href="interview-guide.html" lang="en" aria-current="page">EN</a><a href="interview-guide.zh-CN.html" lang="zh-CN" hreflang="zh-CN">中文</a></span>
     </div>
   </nav>
-  <p class="release-strip"><strong>Release boundary:</strong> stable <code>0.2.1</code> is installable; published <code>0.3.0rc1</code> and development source extend the coding-agent journey.</p>
+  <p class="release-strip"><strong>Release boundary:</strong> stable <code>0.2.1</code> is installable; published <code>0.3.0rc1</code> and development source extend the Coding Agent journey.</p>
   <header class="shell">
-    <span class="eyebrow">Five-to-ten-minute walkthrough</span>
-    <h1>Explain the product, show the evidence, name the boundary.</h1>
-    <p class="lead">A presentation path for interviews: problem, architecture, live report, latest governed journey, and the limitations the project refuses to hide.</p>
+    <span class="eyebrow">Two minutes by default · expand to seven</span>
+    <h1>Tell one story. Open evidence only when it earns its place.</h1>
+    <p class="lead">The <a href="interview-demo.html">guided demo</a> owns what the interviewer sees. This guide is presenter preparation; the <a href="project-interview.html">project story</a> is optional background.</p>
   </header>
   <main class="shell">
     <section class="emphasis">
       <h2>Thirty-second positioning</h2>
-      <p>Agent Governance is a repository-native control layer for AI-assisted software development. It connects human-owned task intent to architecture context, bounded file scope, fresh validation evidence, and explicit review. Deterministic checks report facts; people retain semantic and consequential authority.</p>
-      <p><strong>Release boundary:</strong> stable <code>0.2.1</code> provides the installable repository-governance CLI. Published prerelease <code>0.3.0rc1</code> and newer development source extend that foundation into coding-agent lifecycle governance.</p>
+      <p>AI coding agents can write code that passes tests and still do more than the person actually asked for. Passing tests also do not tell you whether anyone has approved the change to move forward.</p>
+      <p>I built AgentGov to keep the task, the files allowed for it, the evidence from the current run, and the human decision connected inside the repository. Software checks the facts it can check. A person still decides what happens next.</p>
+      <p>The harder part came later: I realised I was gradually building more around GitHub and delivery while moving away from the original problem I wanted AgentGov to solve.</p>
+      <p class="cut-point"><strong>Cut point 1:</strong> stop here when the interviewer only asks what you built.</p>
     </section>
-    <section>
-      <h2>The interview story</h2>
+
+    <section id="two-minute">
+      <h2>The complete two-minute answer</h2>
       <ol>
-        <li><strong>Problem:</strong> AI coding is fast while task ownership, scope, evidence, and authority can remain implicit.</li>
-        <li><strong>Architecture:</strong> repository files own truth, a dependency-free Python CLI checks facts, host adapters mediate interaction, and humans retain judgment.</li>
-        <li><strong>Visible demo:</strong> filter the illustrative <code>0.3.0rc1</code> <a href="demo-governance-report.html">sample report</a> by PASS, WARN, FAIL, and ADVISORY.</li>
-        <li><strong>Current evidence:</strong> trace one admitted task through alignment, scope, validation, self-review, status, and pause in the <a href="portfolio.html">evidence portfolio</a>.</li>
-        <li><strong>Latest safety slice:</strong> explain immutable reservation, create-only claim, and separate immutable recovery evidence.</li>
-        <li><strong>Close honestly:</strong> identify what remains unknown and what still requires a human decision.</li>
+        <li><strong>0:00–0:30 · The gap.</strong> A coding agent can produce good code and still do something the person did not ask for. Passing tests alone do not tell you whether it stayed inside the task, whether the result still describes the current code, or whether anybody approved the next step.</li>
+        <li><strong>0:30–0:55 · What I built first.</strong> I started with the part software could check reliably. I built a small Python CLI that reads the task, the files allowed for it, and the evidence produced during the work. It can say something passed, failed, or still needs a person. It does not turn those checks into “this change is correct.”</li>
+        <li><strong>0:55–1:25 · How drift happened.</strong> A consumer exercise exposed installation, Windows path, and onboarding friction, so I improved those things. Then CI. Then PR workflows. The features were useful and their tests stayed green. But after several of my normal benefit reviews, I noticed I could explain the GitHub mechanics clearly while finding it harder to connect them to the original business problem. I compared the accumulated work with the original requirement and confirmed that the product direction had drifted.</li>
+        <li><strong>1:25–2:00 · What changed and what I learned.</strong> I kept the PR and CI work but moved it out of the center. The main product returned to the development loop: a person defines the task, the agent works inside an agreed boundary, the current files and tests are checked, and a person decides what happens next. Verification can prove a feature works; it cannot tell me whether I am still building the right product. I now make that product review myself instead of automating it as another feature.</li>
       </ol>
+      <p class="cut-point"><strong>Cut point 2:</strong> this is a complete answer. Do not open a browser unless the interviewer asks for proof or architecture.</p>
     </section>
+
+    <section class="checklist" id="screen-share">
+      <h2>Five-to-seven-minute screen-share route</h2>
+      <ol>
+        <li data-route-step="demo"><strong>0:00–3:00 · Run the scenario.</strong> Open the <a href="interview-demo.html">guided refund demo</a> and advance from exact admission to <code>REVIEW_READY</code>.</li>
+        <li data-route-step="architecture"><strong>3:00–3:40 · Name the split.</strong> Use the four actors already visible in the demo: human, simulated Agent, AgentGov, and demo script.</li>
+        <li data-route-step="story"><strong>3:40–4:30 · Product follow-up.</strong> Open the <a href="project-interview.html">project background</a> only if asked why the product was built this way.</li>
+        <li data-route-step="artifact"><strong>4:30–6:00 · Engineering follow-up.</strong> For an engineering audience, open the <a href="artifact-replay-interview.html">artifact replay deep dive</a>.</li>
+        <li data-route-step="evidence"><strong>6:00–6:30 · Evidence on demand.</strong> Open the <a href="portfolio.html">portfolio</a> only to answer a challenged claim.</li>
+        <li data-route-step="close"><strong>6:30–7:00 · Honest close.</strong> Name the release boundary and one relevant unknown.</li>
+      </ol>
+      <p><strong>Cut point 3:</strong> after the guided demo, the product answer is complete. <strong>Cut point 4:</strong> after artifact replay, the engineering answer is complete.</p>
+    </section>
+
+    <section id="role-branches">
+      <h2>Choose one role branch</h2>
+      <div class="states">
+        <div class="state" data-role-branch="engineering"><strong>Software or AI engineering</strong>Emphasize fail-closed boundaries, fresh evidence, deterministic versus advisory semantics, and the two replay failures. The Agent proposed most low-level repairs; I reviewed and approved them.</div>
+        <div class="state" data-role-branch="platform"><strong>Platform or infrastructure</strong>Emphasize repository-native contracts, host adapters, CI replay, authority separation, create-only persistence, and recovery that cannot silently replace ownership.</div>
+        <div class="state" data-role-branch="product"><strong>Product or technical product</strong>Emphasize repeated benefit review, verified drift, the return to the core MVP, and why task-level verification cannot make the cross-feature product decision.</div>
+      </div>
+    </section>
+
     <section>
       <h2>Architecture in one view</h2>
       <div class="states">
         <div class="state"><strong>Core contracts</strong>Portable task, finding, evidence, and authority semantics.</div>
         <div class="state"><strong>Repository policy</strong>Risk, routing, architecture context, and accepted scope.</div>
         <div class="state"><strong>Host adapters</strong>Native interaction and exact human-decision mediation.</div>
-        <div class="state"><strong>Product surfaces</strong>CLI, Monitor, HTML report, and public evidence pages.</div>
+        <div class="state"><strong>Product surfaces</strong>CLI, Monitor, reports, and public evidence pages.</div>
       </div>
-      <p><strong>Human authority remains separate:</strong> requirements, architecture judgment, exceptions, Git, publication, release, and deployment.</p>
+      <p><strong>Human authority remains separate:</strong> requirements, product and architecture judgment, exceptions, Git, publication, release, and deployment.</p>
     </section>
-    <section class="checklist">
-      <h2>Latest development-source evidence chain</h2>
-      <ol>
-        <li><strong>Reserve:</strong> create one immutable correlation reservation under exact human confirmation.</li>
-        <li><strong>Claim:</strong> exclusively create one durable pre-run owner claim without mutating the reservation.</li>
-        <li><strong>Recover:</strong> inspect exact bounded claim bytes and separately record immutable supersession evidence.</li>
-        <li><strong>Remain bounded:</strong> recovery preserves the original claim, creates no replacement owner, and grants no replay authority.</li>
-      </ol>
-      <a class="button" href="clean-target-replay-preflight.html">Read the exact replay-safety contract</a>
+
+    <section>
+      <h2>Keep authorship precise</h2>
+      <ul>
+        <li><strong>Airbnb:</strong> admission before write and preservation of the original human admission were human-originated. Stage-specific authority was joint. A separate completion marker was Agent-proposed and human-approved.</li>
+        <li><strong>Artifact replay:</strong> the fixed Harness boundary was joint. Most low-level transport, manifest, readiness, and filesystem repairs were Agent-proposed and human-approved. Separating pre-cleanup from post-cleanup evidence was human-originated.</li>
+        <li><strong>Observed behavior is not authorship:</strong> one bounded run does not prove broad adoption, portability, repeated reliability, or independent assurance.</li>
+      </ul>
     </section>
+
     <section>
       <h2>Reproducible commands</h2>
       <h3>Published stable CLI</h3>
@@ -73,39 +99,50 @@ agentgov check repository .</code></pre>
       <pre><code>$env:PYTHONPATH = "src"
 python -m agentgov --help
 python -m unittest discover -s tests -v</code></pre>
-      <p>The replay-safety CLI is preview-first. Do not use <code>--apply</code> in an interview without a separately admitted disposable-consumer task and exact human confirmation.</p>
+      <p>Do not use <code>--apply</code> during an interview without a separately admitted disposable-consumer task and exact human confirmation.</p>
     </section>
+
     <section>
-      <h2>Evidence to open</h2>
+      <h2>Evidence menu</h2>
       <div class="states">
-        <a class="state" href="index.html"><strong>Product home</strong>Problem, differentiator, architecture, and current boundary.</a>
+        <a class="state" href="interview-demo.html"><strong>Guided interview demo</strong>The default presenter-and-interviewer surface.</a>
+        <a class="state" href="project-interview.html"><strong>Project background</strong>The factual product-drift story.</a>
+        <a class="state" href="governed-refund-walkthrough.html"><strong>Governed refund</strong>The 60-to-90-second stable product example.</a>
+        <a class="state" href="artifact-replay-interview.html"><strong>Artifact replay</strong>The focused two-failure engineering story.</a>
         <a class="state" href="portfolio.html"><strong>Evidence portfolio</strong>Lifecycle, cases, contracts, and non-claims.</a>
-        <a class="state" href="demo-governance-report.html"><strong>Sample report</strong>Illustrative <code>0.3.0rc1</code> finding semantics.</a>
-        <a class="state" href="quickstart.html"><strong>Quickstart</strong>Stable installation and development preview.</a>
+        <a class="state" href="demo-governance-report.html"><strong>Illustrative sample report</strong>A sanitized <code>0.3.0rc1</code> fixture snapshot, not the newest workflow.</a>
+        <a class="state" href="../STATUS.md"><strong>Current status</strong>The latest validated repository reality.</a>
       </div>
     </section>
-    <section>
+
+    <section id="questions">
       <h2>Likely questions</h2>
-      <h3>Why is this not just another linter?</h3>
-      <p>It binds the human-owned task, architecture context, path scope, validation snapshot, advisory review, and authority boundary while refusing to infer semantic correctness from static checks.</p>
-      <h3>Why no governance score?</h3>
-      <p>A score would hide the difference between a satisfied contract, honest incompleteness, a deterministic failure, and a judgment only a person can make.</p>
-      <h3>What comes next?</h3>
-      <p>Not yet decided or authorized. The strongest candidate is a recovered-correlation re-ownership contract before any claim-to-Harness consume transition.</p>
+      <h3>Why is this more than a linter?</h3>
+      <p>It binds the human-owned task, architecture context, path scope, evidence freshness, advisory review, and authority boundary while refusing to infer requirement value from static checks.</p>
+      <h3>Why separate PASS, WARN, FAIL, and ADVISORY?</h3>
+      <p>One score would hide the difference between a satisfied deterministic contract, honest incompleteness, a deterministic failure, and a judgment only a person can make.</p>
+      <h3>Why can AgentGov not detect product drift automatically?</h3>
+      <p>Task evidence can show that implementation matches an admitted task. It cannot decide whether a sequence of individually useful tasks still advances the right product. My repeated benefit review supplied that cross-feature judgment.</p>
+      <h3>What is the strongest engineering evidence?</h3>
+      <p>Use the refund boundary for a compact product answer. For engineering depth, use the artifact replay: a restricted worker failed twice on hidden Git dependencies, the restriction stayed intact, trusted facts moved inward, and the sole post-repair replay completed without retry.</p>
+      <h3>Who designed the artifact-replay fixes?</h3>
+      <p>The fixed Harness boundary was joint. The Agent proposed most low-level repairs; I reviewed and approved them. I insisted on separating pre-cleanup and post-cleanup evidence.</p>
+      <h3>What would you build next?</h3>
+      <p>Not decided or authorized by this guide. Completion is the point for a human product review, not automatic feature continuation.</p>
     </section>
+
     <section>
-      <h2>Honest limitations</h2>
+      <h2>Technical follow-up and honest limits</h2>
       <ul>
         <li>Static checks cannot prove requirement value, architecture quality, reviewer comprehension, or test sufficiency.</li>
-        <li>The sample report is a sanitized illustrative snapshot, not proof of the newest development workflow.</li>
-        <li>Recovery does not authenticate the individual operator or authorize replay.</li>
-        <li>Network-filesystem exclusivity, power-loss durability, and real-consumer recovery remain unvalidated.</li>
-        <li>No external evidence proves that this documentation improves interview outcomes.</li>
+        <li>Stable <code>0.2.1</code> does not contain the newest development-source lifecycle.</li>
+        <li>The replay chain preserves an immutable reservation, a create-only claim, and immutable recovery evidence. Recovery creates no replacement owner and grants no replay authority.</li>
+        <li>One Airbnb workflow and one artifact replay do not prove broad adoption, portability, repeated reliability, or production security.</li>
       </ul>
     </section>
-    <div class="next"><a class="button dark" href="portfolio.html">Trace the evidence</a><a class="button" href="demo-governance-report.html">Open the sample report</a></div>
+    <div class="next"><a class="button dark" href="interview-demo.html">Start the guided demo</a><a class="button" href="project-interview.html">Open project background</a></div>
   </main>
-  <footer class="shell">Agent Governance Starter Kit · Interview walkthrough · Evidence before assertion</footer>
+  <footer class="shell">AgentGov · Interview guide · One story, evidence on demand</footer>
   <script src="guide.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,91 @@
+{
+  "acceptance_signals": [
+    "The Markdown guide clearly owns interview delivery: timed talk tracks, cut points, role branches, likely questions, demo transitions, and evidence navigation rather than repeating the standalone story verbatim.",
+    "The English and Simplified Chinese HTML guides expose equivalent whole-project interview routes in natural language and link to their matching-language standalone project story.",
+    "A default approximately two-minute route has explicit safe stopping points, and a five-to-seven-minute screen-share route names when to open the stable refund demo, artifact replay deep dive, and evidence portfolio.",
+    "Role branches cover at least software or AI engineering, platform or infrastructure, and product or technical product audiences without inventing new project outcomes.",
+    "Likely questions address why the project is more than a linter, how advisory and deterministic checks differ, why product drift remains a human judgment, what the strongest engineering evidence is, and what would be built next.",
+    "Decision-attribution language remains consistent with the confirmed Airbnb and artifact-replay list and does not present Agent-proposed low-level repairs as solely human-invented architecture.",
+    "Stable 0.2.1 capability remains distinct from 0.3.0rc1 and development-source journeys; unsupported adoption, security, portability, repeated-reliability, and interview-success claims remain absent.",
+    "The existing focused artifact replay story remains a technical follow-up rather than replacing the whole-project narrative.",
+    "All guide pages keep local assets only, restrictive CSP, semantic HTML, visible keyboard focus, working repository-relative links, and responsive behavior without new client-side state.",
+    "Focused interview-documentation and product-site tests, task and repository governance, exact scope validation, task JSON parsing, and git diff checks pass.",
+    "All pre-existing changed content is preserved outside the exact included paths; pre-existing files under broad task and baseline prefixes are preservation-only, and existing STATUS, test, and dated-log content is preserved except for bounded Slice 2 updates."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-89b0b53c0da348be8ddd4bef31dfcebe and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Revise the existing English and Simplified Chinese Interview Guide surfaces so they operationalize the admitted whole-project story for interviews without duplicating the standalone public pages. Add a compact two-minute default route with explicit cut points, a five-to-seven-minute screen-share expansion, role-specific branches, likely follow-up questions, and clear navigation among the whole-project story, stable refund demo, artifact-replay deep dive, and evidence portfolio. Preserve the distinction between stable release and development-source capability, human product judgment and mechanical task checks, and human-originated, joint, and Agent-proposed decisions."
+  },
+  "risk": {
+    "items": [
+      "The guide could duplicate the standalone story and recreate the evidence-dashboard problem identified in prior feedback.",
+      "Adding multiple role branches could make the default route too dense or blur the single central narrative.",
+      "Bilingual guide variants could drift in structure, claim strength, or navigation.",
+      "Decision-attribution wording could overstate individual authorship or understate the Agent's design contribution.",
+      "Stable and development-source behavior could be mixed into one release claim.",
+      "Existing Interview Guide content includes useful commands and evidence routes that must be preserved or deliberately integrated.",
+      "tests/test_interview_documentation.py, STATUS.md, and the dated log already contain Slice 1 and pre-existing work that must be preserved.",
+      "Broad governance task and baseline prefixes contain pre-existing work that must remain byte-identical except for the new Slice 2 task and baseline.",
+      "Reviewed assumption: The human-confirmed project ownership, long-standing benefit-review habit, drift correction sequence, and decision-attribution list remain the narrative source of truth.",
+      "Reviewed assumption: The standalone public pages created in Slice 1 are complete enough to serve as the concise visual story surface.",
+      "Reviewed assumption: The current Guide visual system and local assets are sufficient; no generated imagery, JavaScript application state, or framework migration is needed.",
+      "Reviewed assumption: Interview Guide Markdown remains the detailed operational source while the bilingual HTML pages provide concise live-presenting routes.",
+      "Reviewed assumption: The primary audiences are software or AI engineering, platform or infrastructure, and product or technical product interviewers.",
+      "Reviewed assumption: Slice 2 is local documentation work only and does not authorize hosting, publication, Git operations, release, or deployment.",
+      "Reviewed unknown: Actual two-minute and five-to-seven-minute timing remains unknown until the human rehearses the revised guide.",
+      "Reviewed unknown: Which role branch performs best in a real interview remains unknown.",
+      "Reviewed unknown: Cross-browser, narrow-device, and touch behavior remains unknown until observed browser QA.",
+      "Reviewed unknown: External publication suitability and interview outcome remain unknown.",
+      "Reviewed unknown: No product requirement beyond packaging the already selected whole-project story is authorized."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "README.md",
+      "docs/development-automation-contracts.md",
+      "docs/index.html",
+      "docs/project-interview.css",
+      "docs/project-interview.html",
+      "docs/project-interview.zh-CN.html",
+      "docs/artifact-replay-interview-walkthrough.md",
+      "docs/artifact-replay-interview.css",
+      "docs/artifact-replay-interview.html",
+      "docs/artifact-replay-interview.zh-CN.html",
+      "docs/build-validation",
+      "docs/development-log/2026-08-26.md",
+      "scripts",
+      "tests/test_user_documentation.py"
+    ],
+    "include_paths": [
+      "governance/tasks",
+      ".agentgov/scope-baselines",
+      "docs/interview-guide.md",
+      "docs/interview-guide.html",
+      "docs/interview-guide.zh-CN.html",
+      "tests/test_interview_documentation.py",
+      "STATUS.md",
+      "docs/development-log/2026-08-27.md"
+    ]
+  },
+  "task_id": "p0-whole-project-interview-guide-integration-v1",
+  "title": "Whole-project Interview Guide integration v1",
+  "validation_commands": [
+    "$env:PYTHONPATH='src'; py -3.11 -m unittest tests.test_interview_documentation tests.test_product_site -v",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check task governance/tasks/p0-whole-project-interview-guide-integration-v1.json",
+    "$env:PYTHONPATH='src'; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH='src'; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-whole-project-interview-guide-integration-v1.json --baseline .agentgov/scope-baselines/p0-whole-project-interview-guide-integration-v1.json",
+    "py -3.11 -m json.tool governance/tasks/p0-whole-project-interview-guide-integration-v1.json",
+    "git diff --check"
+  ]
+}

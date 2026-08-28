@@ -1,0 +1,98 @@
+{
+  "acceptance_signals": [
+    "The exact human-admitted task record exists and a create-only task-start baseline is captured before implementation; every pre-existing changed path is classified and excluded prior replay evidence, task record, local configuration, and predecessor baseline files remain byte-identical.",
+    "A dependency-free repository-internal module exists only under scripts/artifact_replay_driver and composes the existing scripts.distribution_input_manifest and scripts.short_build_root contracts without modifying or duplicating their build-input, receipt, or exact-root removal authority.",
+    "The driver validates its repository, projected paths, evidence reference, callable action, and evidence payload before or at their fail-closed boundary and allocates at most one verified short root.",
+    "The injected artifact action receives only the verified root, is invoked at most once, and cannot be retried, repaired, substituted, scheduled, or treated as permission for network, dependency installation, an external Agent, model, Git, release, deployment, or publication.",
+    "On success, the driver exclusively creates one normalized repository-relative regular non-link evidence file, flushes and fsyncs it before computing the exact canonical SHA-256 and calling create_evidence_receipt.",
+    "The driver calls remove_short_build_root_after_evidence only after receipt creation, never calls input, never reads stdin, never branches on TTY state, and returns a privacy-bounded result confirming evidence revalidation, cleanup, one action attempt, and exact-root absence without host paths or contents.",
+    "An action exception, malformed evidence payload, unsafe or existing evidence path, evidence write failure, receipt failure, changed evidence, or gated cleanup failure stops at the first deviation, invokes no second action, records no cleanup success, and preserves the root whenever validated evidence did not authorize removal.",
+    "Fixture-backed tests cover success, exact one-attempt behavior, action failure, unsafe and pre-existing evidence paths, exclusive-create behavior, durable flush ordering, digest and receipt binding, changed evidence, cleanup failure, root preservation, closed stdin, TTY-reported input, redirected input, privacy-bounded representation, and no public CLI.",
+    "Documentation labels the driver deterministic internal orchestration, distinguishes injected fixture actions from a real artifact build, and preserves advisory product judgments and denied authority.",
+    "No real wheel or artifact build, retained backend use, dependency installation, network request, public CLI or installed-package change, external Agent, model, consumer form, credential access, Git mutation, publication, release, deployment, scheduling, retry, repair, or full journey occurs.",
+    "Only the new task record and baseline, scripts/artifact_replay_driver implementation and tests, the exact internal-contract documentation, new dated validation record, STATUS, and the existing dated development log may change; every other path remains byte-identical.",
+    "The focused driver and short-root tests, user-documentation tests, complete Python 3.11 suite, task and repository governance, final scope comparison, task JSON parse, privacy scan, zero-short-root check, and diff whitespace check pass."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-dcfd28255d964c43b7773589bdb650ba and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Implement one lightweight repository-internal, dependency-free artifact replay driver under scripts/artifact_replay_driver. The driver accepts one injected artifact action, allocates one verified short root through the existing helper, invokes the action at most once, exclusively writes and durably flushes one normalized repository-relative evidence document, computes its canonical SHA-256, creates an explicit receipt through the existing evidence API, invokes evidence-gated cleanup without reading stdin or branching on TTY state, and returns only a privacy-bounded normalized result. Fail closed at the first action, evidence, receipt, or cleanup deviation without retry; before validated evidence, or when evidence validation fails, preserve the exact root and record no cleanup success. Add fixture-backed tests and document the internal contract. Do not run a real artifact build or an external journey."
+  },
+  "risk": {
+    "items": [
+      "A sequencing defect could remove a root before evidence is durable; exclusive creation, flush and fsync ordering, receipt creation, and gated cleanup call order require direct fixture assertions.",
+      "A one-attempt abstraction could accidentally retry through exception handling or callback substitution; the action identity and invocation count must remain exact and failure tests must preserve the first deviation.",
+      "An unsafe evidence path or link could overwrite unrelated repository data; normalized containment, no-link ancestors, existing-target rejection, and exclusive create must fail before evidence authority.",
+      "A normalized result could leak a host path, evidence contents, or raw exception; representations and reports must contain only bounded reason codes, counts, digests, booleans, and denied authority.",
+      "The dirty worktree contains the completed replay closeout and local governance evidence; the new task may build on STATUS and the dated log but must preserve the prior task record, replay evidence, local configuration, and predecessor baselines byte-for-byte.",
+      "Reviewed assumption: An injected action boundary is sufficient to fixture-test one-attempt orchestration without performing another real build.",
+      "Reviewed assumption: The existing create_short_build_root, create_evidence_receipt, and remove_short_build_root_after_evidence APIs remain the correct allocation, receipt, and removal authorities.",
+      "Reviewed assumption: A repository-internal module under scripts does not change the public or installed AgentGov product surface.",
+      "Reviewed unknown: Whether a later end-to-end journey will need additional artifact metadata beyond the privacy-bounded result.",
+      "Reviewed unknown: Whether repeated real builds will justify stronger reproducibility, concurrency, or recovery contracts.",
+      "Reviewed unknown: Cross-platform filesystem semantics, adoption, time savings, causal reliability benefit, and return on investment remain unproven.",
+      "Reviewed assumption: The resolved alignment journey selected a minimal persisted driver before any broader end-to-end replay.",
+      "Reviewed assumption: The prior one-off replay is sufficient implementation evidence for the sequencing contract but does not authorize another real build.",
+      "Reviewed assumption: The existing 2026-08-26 development log may receive an additional append-only session section while preserving its earlier replay facts.",
+      "Reviewed unknown: The smallest stable artifact observation shape required by a future real caller.",
+      "Reviewed unknown: Whether evidence recovery after a failed action should become a separate future contract.",
+      "Reviewed unknown: Whether a later public surface is ever warranted; this task explicitly keeps the driver internal."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "docs/adr",
+      "docs/build-validation/no-retry-artifact-driver-gate-replay-v1-2026-08-26.md",
+      "docs/development-monitor.md",
+      "docs/development-plan.md",
+      "docs/drift-review-reminders.md",
+      "docs/experiments",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/validation",
+      "governance/distribution-input-manifest.json",
+      "governance/tasks/p0-no-retry-artifact-driver-gate-replay-v1.json",
+      "schemas",
+      "scripts/build_release_manifest.py",
+      "scripts/distribution_input_manifest",
+      "scripts/foreground_stdio",
+      "scripts/short_build_root",
+      "scripts/task_start_scope_baseline",
+      "src",
+      "tests"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-minimal-noninteractive-artifact-driver-v1.json",
+      ".agentgov/scope-baselines",
+      "scripts/artifact_replay_driver",
+      "docs/development-automation-contracts.md",
+      "docs/build-validation/minimal-noninteractive-artifact-driver-v1-2026-08-26.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-26.md"
+    ]
+  },
+  "task_id": "p0-minimal-noninteractive-artifact-driver-v1",
+  "title": "Minimal noninteractive artifact driver v1",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-minimal-noninteractive-artifact-driver-v1.json --baseline .agentgov/scope-baselines/p0-minimal-noninteractive-artifact-driver-v1.json",
+    "py -3.11 -m unittest scripts.artifact_replay_driver.test_driver scripts.short_build_root.test_root -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-minimal-noninteractive-artifact-driver-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-minimal-noninteractive-artifact-driver-v1.json",
+    "git diff --check"
+  ]
+}

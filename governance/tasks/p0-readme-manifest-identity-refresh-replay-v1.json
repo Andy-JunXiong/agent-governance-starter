@@ -1,0 +1,77 @@
+{
+  "acceptance_signals": [
+    "A create-only task-start baseline exists before manifest or controller edits.",
+    "The manifest retains exactly 186 sorted paths and the existing path digest while its content digest equals the freshly derived identity for the README-inclusive worktree.",
+    "The controller expected content digest matches the refreshed manifest and no other runtime behavior is changed.",
+    "The prior replay evidence remains byte-identical with SHA-256 ffc06da3060b459ff39c8602365126a860e8228dd6320c8c88f69cbc8c6b8715.",
+    "The artifact chain and full repository tests pass after the identity refresh.",
+    "Fresh preflight confirms the manifest, a compatible retained Python 3.11 backend wheel, an absent new evidence target, and zero short roots before execution.",
+    "The fixed controller is invoked exactly once with one strict JSON stdin request and a new 2026-08-28 evidence target.",
+    "The replay performs no retry, alternate invocation, network access, dependency installation, external Agent, model, Git, publication, release, or deployment action.",
+    "A PASS durably writes new evidence and gates exact cleanup; a first deviation stops without repair, retry, manual cleanup, or false success.",
+    "STATUS.md and docs/development-log/2026-08-28.md distinguish the historical replay from the new maintenance replay and state the exact observed result.",
+    "Task governance, repository governance, captured scope, manifest check, task JSON, whitespace, and git diff checks have zero failures.",
+    "All pre-existing accumulated delivery files outside the exact manifest, controller constant, new task and baseline, new evidence, status, and dated log changes remain byte-identical."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-787d1c97b3464fcd82a43e8860e1496e and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Implement the separately selected artifact-identity refresh required by the README interview-material update. Keep the exact 186 manifest paths and path digest unchanged, refresh only the derived manifest content digest and the fixed controller identity constant, validate the repaired chain, then after fresh local preflight invoke the fixed controller exactly once with a new evidence target. Accept PASS or the first bounded deviation as the one-attempt result, never retry or overwrite prior replay evidence, record the result, and return to the already admitted Git closeout task."
+  },
+  "risk": {
+    "items": [
+      "Changing the manifest identity invalidates the controller until both values are updated consistently.",
+      "A real replay may allocate a short root that must remain untouched if evidence-gated cleanup does not complete.",
+      "The sole controller attempt cannot be retried under this task.",
+      "Broad directory scope is used to classify the accumulated dirty worktree; every pre-existing file outside the exact refresh outputs must remain unchanged.",
+      "A successful local maintenance replay does not prove portability, adoption, interview benefit, or production behavior.",
+      "Reviewed assumption: The README is the only declared distribution input whose bytes changed relative to the current manifest.",
+      "Reviewed assumption: The existing 186-path set and canonical path digest remain correct.",
+      "Reviewed assumption: The retained Python 3.11 and setuptools backend wheel may still be locally available subject to fresh preflight.",
+      "Reviewed assumption: The existing artifact replay implementation and no-retry boundaries remain unchanged.",
+      "Reviewed assumption: The previously recorded replay remains valid historical evidence for its original content identity.",
+      "Reviewed unknown: Whether a compatible retained backend wheel is still locally available.",
+      "Reviewed unknown: Whether the single replay reaches PASS or stops at the first bounded deviation.",
+      "Reviewed unknown: The exact new built-wheel and evidence identities if the replay passes.",
+      "Reviewed unknown: Cross-platform behavior and repeated reliability remain unknown."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      ".openai"
+    ],
+    "include_paths": [
+      "README.md",
+      "STATUS.md",
+      "docs",
+      "governance/distribution-input-manifest.json",
+      "governance/tasks",
+      ".agentgov/scope-baselines",
+      "scripts",
+      "tests"
+    ]
+  },
+  "task_id": "p0-readme-manifest-identity-refresh-replay-v1",
+  "title": "README manifest identity refresh and replay v1",
+  "validation_commands": [
+    "py -3.11 -m unittest scripts.artifact_replay_controller.test_controller scripts.artifact_replay_harness.test_harness scripts.artifact_invocation_caller.test_caller scripts.artifact_invocation_readiness.test_readiness scripts.artifact_replay_driver.test_driver scripts.distribution_input_manifest.test_manifest scripts.short_build_root.test_root -v",
+    "py -3.11 -m scripts.distribution_input_manifest check --repository . --manifest governance/distribution-input-manifest.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-readme-manifest-identity-refresh-replay-v1.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-readme-manifest-identity-refresh-replay-v1.json --baseline .agentgov/scope-baselines/p0-readme-manifest-identity-refresh-replay-v1.json",
+    "Get-FileHash docs/build-validation/post-repair-no-retry-artifact-replay-v1-2026-08-27.md -Algorithm SHA256",
+    "py -3.11 -m json.tool governance/tasks/p0-readme-manifest-identity-refresh-replay-v1.json",
+    "git diff --check"
+  ]
+}
