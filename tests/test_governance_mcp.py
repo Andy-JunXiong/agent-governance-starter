@@ -30,12 +30,15 @@ from agentgov.codex_mcp import (
 from agentgov.governance_mcp import (
     MCP_BASE_TOOL_NAMES,
     MCP_DRIFT_REVIEW_TOOL_NAME,
+    MCP_FORM_TOOL_NAMES,
     MCP_NATIVE_ACCOUNTABLE_OWNER,
     MCP_PROTOCOL_VERSION,
     MCP_SERVER_VERSION,
     MCP_SERVER_INSTRUCTIONS,
     MCP_TASK_COMPLETION_TOOL_NAME,
     MCP_TASK_PROPOSAL_TOOL_NAME,
+    MCP_TOOL_POLICIES,
+    MCP_TOOL_POLICY_BY_NAME,
     MCP_TOOL_NAMES,
     GovernanceMcpAdapter,
     GovernanceMcpError,
@@ -340,6 +343,117 @@ def run_cli(stdin_text: str, *args: str) -> tuple[int, str, str]:
 
 
 class GovernanceMcpProtocolTests(unittest.TestCase):
+    def test_tool_policy_is_canonical_for_catalog_discovery_and_routing(self) -> None:
+        policies = MCP_TOOL_POLICIES
+        catalog = governance_mcp_tools()
+
+        self.assertEqual(len(policies), 8)
+        self.assertEqual(len({policy.name for policy in policies}), len(policies))
+        self.assertEqual(tuple(policy.name for policy in policies), MCP_TOOL_NAMES)
+        self.assertEqual(tuple(tool["name"] for tool in catalog), MCP_TOOL_NAMES)
+        self.assertEqual(set(MCP_TOOL_POLICY_BY_NAME), set(MCP_TOOL_NAMES))
+        self.assertEqual(
+            tuple(
+                policy.name
+                for policy in policies
+                if policy.discovery_gate == "base"
+            ),
+            MCP_BASE_TOOL_NAMES,
+        )
+        self.assertEqual(
+            tuple(
+                policy.name
+                for policy in policies
+                if policy.discovery_gate == "form_elicitation"
+            ),
+            MCP_FORM_TOOL_NAMES,
+        )
+
+        common_non_grants = {
+            "code_change",
+            "scope_expansion",
+            "exception",
+            "git_operations",
+            "publication",
+            "release",
+            "deployment",
+        }
+        catalog_by_name = {tool["name"]: tool for tool in catalog}
+        for policy in policies:
+            with self.subTest(tool=policy.name):
+                owner = (
+                    GovernanceMcpAdapter
+                    if policy.route_kind == "adapter"
+                    else GovernanceMcpServer
+                )
+                self.assertTrue(callable(getattr(owner, policy.handler_name, None)))
+                self.assertEqual(
+                    policy.discovery_gate == "base",
+                    policy.route_kind == "adapter",
+                )
+                self.assertTrue(policy.effect_kind)
+                self.assertTrue(policy.persistence_mode)
+                self.assertTrue(policy.decision_source)
+                self.assertTrue(policy.enforcement_owner)
+                self.assertTrue(
+                    common_non_grants.issubset(policy.downstream_non_grants)
+                )
+                self.assertEqual(
+                    catalog_by_name[policy.name]["annotations"]["readOnlyHint"],
+                    not policy.repository_write,
+                )
+
+        write_effects = {
+            policy.name: (
+                policy.effect_kind,
+                policy.persistence_mode,
+                policy.decision_source,
+                policy.enforcement_owner,
+            )
+            for policy in policies
+            if policy.repository_write
+        }
+        self.assertEqual(
+            write_effects,
+            {
+                MCP_TASK_COMPLETION_TOOL_NAME: (
+                    "append_local_completion_evidence",
+                    "exclusive_create_local_evidence",
+                    "none",
+                    "task_completion_effect_boundary",
+                ),
+                MCP_TASK_PROPOSAL_TOOL_NAME: (
+                    "create_admitted_task_record",
+                    "exclusive_create_task_record",
+                    "native_human_form",
+                    "native_form_task_admission_boundary",
+                ),
+                MCP_DRIFT_REVIEW_TOOL_NAME: (
+                    "create_drift_review_record_and_refresh_monitor",
+                    "create_only_record_with_derived_monitor_refresh",
+                    "native_human_form",
+                    "native_form_drift_review_boundary",
+                ),
+            },
+        )
+
+        server = GovernanceMcpServer(adapter())
+        server.dispatch(
+            rpc(
+                1,
+                "initialize",
+                {
+                    "protocolVersion": "2025-11-25",
+                    "capabilities": {"elicitation": {"form": {}}},
+                    "clientInfo": {"name": "fixture", "version": "1"},
+                },
+            )
+        )
+        before = server.dispatch(rpc(2, "tools/list", {}))["result"]["tools"]
+        server.adapter.call_tool(MCP_TOOL_NAMES[0], start_arguments())
+        after = server.dispatch(rpc(3, "tools/list", {}))["result"]["tools"]
+        self.assertEqual(before, after)
+
     def test_current_discovery_legacy_initialize_and_tool_list_are_deterministic(self) -> None:
         server = GovernanceMcpServer(adapter())
         discovered = server.dispatch(rpc(1, "server/discover", {"_meta": {}}))

@@ -140,6 +140,25 @@ only the bounded local evidence writes described below:
 6. `agentgov_task_completion_record` revalidates one exact admitted task and
    appends its declared-validation and deterministic completion evidence.
 
+The development source now keeps one internal MCP tool-policy definition for
+all eight tools. It is the canonical source for tool identity, base versus
+native-form discovery, Adapter versus foreground-form routing, repository
+effect classification, persistence mode, human-decision source, enforcement
+owner, and explicit downstream non-grants. Tool names, discovery groups,
+dispatch routing, and read-only annotations are derived from that definition;
+deterministic tests also require every declared handler to exist and every
+tool to retain the shared denial of code, scope, exception, Git, publication,
+release, and deployment authority.
+
+This policy is intentionally not a lifecycle authorization registry. Alignment
+journey state, exact task admission, complete Git scope, evidence freshness,
+and drift-review due state remain fresh checks inside the existing call or
+effect boundary. A lifecycle transition therefore does not change
+`tools/list`: clients without form elicitation continue to discover six tools,
+and form-capable clients continue to discover eight. Dynamic lifecycle hiding,
+Git execution, OAuth/RBAC/IAM, and host-authority audit events remain outside
+this Adapter change.
+
 Development Adapter `1.3.0` conditionally advertises a sixth tool,
 `agentgov_task_proposal_review`, only when the initialized client declares MCP
 form elicitation support. The current Codex Agent supplies normalized low-risk

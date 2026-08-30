@@ -98,6 +98,60 @@ AIRBNB_NATIVE_COMPLETION_END_TO_END_RECOVERY = (
     / "docs/experiments/airbnb-native-completion-end-to-end-recovery-2026-08-21.md"
 )
 CURRENT_NATIVE_COMPLETION_LOG = ROOT / "docs/development-log/2026-08-21.md"
+LIVE_CODEX_MCP_CONSUMER_BINDING = (
+    ROOT
+    / "docs/consumer-validation/live-codex-mcp-consumer-binding-evidence-v1-2026-08-30.md"
+)
+LIVE_CODEX_MCP_CONSUMER_LOG = (
+    ROOT
+    / "docs/development-log/2026-08-30-live-codex-mcp-consumer-binding-evidence.md"
+)
+CODEX_EIGHT_TOOL_DISCOVERY_REPLAY = (
+    ROOT
+    / "docs/consumer-validation/codex-eight-tool-discovery-replay-v1-2026-08-31.md"
+)
+CODEX_EIGHT_TOOL_DISCOVERY_LOG = (
+    ROOT
+    / "docs/development-log/2026-08-31-codex-eight-tool-discovery-replay.md"
+)
+CODEX_INSTALLED_LAUNCHER_DIAGNOSTIC = (
+    ROOT
+    / "docs/consumer-validation/codex-installed-launcher-initialize-diagnostic-v1-2026-08-31.md"
+)
+CODEX_INSTALLED_LAUNCHER_DIAGNOSTIC_LOG = (
+    ROOT
+    / "docs/development-log/2026-08-31-codex-installed-launcher-initialize-diagnostic.md"
+)
+CODEX_LIVE_CLIENT_INITIALIZE_BOUNDARY_REPLAY = (
+    ROOT
+    / "docs/consumer-validation/codex-live-client-initialize-boundary-replay-v1-2026-08-31.md"
+)
+CODEX_LIVE_CLIENT_INITIALIZE_BOUNDARY_LOG = (
+    ROOT
+    / "docs/development-log/2026-08-31-codex-live-client-initialize-boundary-replay.md"
+)
+CODEX_INITIALIZE_SCHEMA_VERSION_DIFFERENTIAL = (
+    ROOT
+    / "docs/consumer-validation/codex-initialize-schema-version-differential-v1-2026-08-31.md"
+)
+CODEX_INITIALIZE_SCHEMA_VERSION_DIFFERENTIAL_LOG = (
+    ROOT
+    / "docs/development-log/2026-08-31-codex-initialize-schema-version-differential.md"
+)
+CODEX_REPOSITORY_CONTEXT_SCHEMA_DIFFERENTIAL = (
+    ROOT
+    / "docs/consumer-validation/codex-repository-context-schema-differential-v1-2026-08-31.md"
+)
+CODEX_REPOSITORY_CONTEXT_SCHEMA_DIFFERENTIAL_LOG = (
+    ROOT
+    / "docs/development-log/2026-08-31-codex-repository-context-schema-differential.md"
+)
+SESSION_CLOSEOUT_MAIN_PUSH_LOG = (
+    ROOT / "docs/development-log/2026-08-31-session-closeout-main-push.md"
+)
+SESSION_CLOSEOUT_MAIN_PUSH_TASK = (
+    ROOT / "governance/tasks/p0-session-closeout-main-push-2026-08-31-v1.json"
+)
 ADAPTER_1_5_INSTALLED_PREFLIGHT = (
     ROOT / "docs/experiments/adapter-1-5-installed-preflight-2026-08-15.md"
 )
@@ -651,6 +705,391 @@ class UserDocumentationTests(unittest.TestCase):
             "not yet decided",
         ):
             self.assertIn(phrase, log)
+
+    def test_live_codex_mcp_consumer_binding_evidence_is_bounded(self) -> None:
+        self.assertTrue(LIVE_CODEX_MCP_CONSUMER_BINDING.is_file())
+        self.assertTrue(LIVE_CODEX_MCP_CONSUMER_LOG.is_file())
+
+        evidence = LIVE_CODEX_MCP_CONSUMER_BINDING.read_text(encoding="utf-8")
+        normalized = " ".join(evidence.split())
+        status = " ".join(STATUS.read_text(encoding="utf-8").split())
+        log = " ".join(LIVE_CODEX_MCP_CONSUMER_LOG.read_text(encoding="utf-8").split())
+
+        for phrase in (
+            "PARTIAL_COMPATIBILITY_CONFIRMED_WITH_CONFIGURED_SIX_TOOL_SURFACE",
+            "current Codex host",
+            "codex mcp list --json",
+            "enabled_tools",
+            "required=true",
+            "startup_timeout_sec=10",
+            "tool_timeout_sec=60",
+            "current callable surface",
+            "host-configured omissions",
+            "agentgov_task_completion_record",
+            "agentgov_drift_review_record",
+            "agentgov_self_review_start",
+            "agentgov_self_review_complete",
+            "https://developers.openai.com/codex/mcp/",
+            "not an Adapter failure",
+            "independent assurance",
+            "Cross-host compatibility",
+        ):
+            self.assertIn(phrase, normalized)
+
+        for tool_name in (
+            "agentgov_alignment_start",
+            "agentgov_alignment_update",
+            "agentgov_alignment_resolve",
+            "agentgov_self_review_start",
+            "agentgov_self_review_complete",
+            "agentgov_task_proposal_review",
+        ):
+            self.assertIn(tool_name, evidence)
+
+        for text in (status, log):
+            self.assertIn("p0-live-codex-mcp-consumer-binding-evidence-v1", text)
+            self.assertIn("six-tool", text)
+
+        lowered = evidence.lower()
+        for forbidden in (
+            "c:\\users",
+            "raw prompt",
+            "raw response",
+            "transcript",
+            "credential",
+            "password=",
+            "token=",
+        ):
+            self.assertNotIn(forbidden, lowered)
+
+    def test_codex_eight_tool_discovery_replay_is_bounded(self) -> None:
+        self.assertTrue(CODEX_EIGHT_TOOL_DISCOVERY_REPLAY.is_file())
+        self.assertTrue(CODEX_EIGHT_TOOL_DISCOVERY_LOG.is_file())
+
+        evidence = CODEX_EIGHT_TOOL_DISCOVERY_REPLAY.read_text(encoding="utf-8")
+        normalized = " ".join(evidence.split())
+        status = " ".join(STATUS.read_text(encoding="utf-8").split())
+        log = " ".join(CODEX_EIGHT_TOOL_DISCOVERY_LOG.read_text(encoding="utf-8").split())
+
+        for phrase in (
+            "EIGHT_TOOL_DISCOVERY_CONFIRMED_NO_STATEFUL_INVOCATION",
+            "Codex CLI 0.146.0",
+            "one-off configuration override",
+            "deferred tool discovery",
+            "tool search",
+            "no AgentGov tool-call event",
+            "Discovery does not prove invocation",
+            "4cca2d57edeaddfe52d3e6c4dd4d774192bbdbcab4e84e07df73e14a861c0348",
+            "https://developers.openai.com/codex/mcp/",
+        ):
+            self.assertIn(phrase, normalized)
+
+        for tool_name in (
+            "agentgov_alignment_start",
+            "agentgov_alignment_update",
+            "agentgov_alignment_resolve",
+            "agentgov_self_review_start",
+            "agentgov_self_review_complete",
+            "agentgov_task_proposal_review",
+            "agentgov_task_completion_record",
+            "agentgov_drift_review_record",
+        ):
+            self.assertIn(tool_name, evidence)
+
+        for text in (status, log):
+            self.assertIn("p0-codex-eight-tool-discovery-replay-v1", text)
+            self.assertIn("p0-codex-eight-tool-discovery-replay-v2", text)
+            self.assertIn("discovery-only", text)
+            self.assertIn("srv-93b23c7f2c410b16a15660136a2153dc", text)
+
+        lowered = evidence.lower()
+        for forbidden in (
+            "c:\\users",
+            "thread_id",
+            "raw prompt",
+            "raw response",
+            "transcript",
+            "credential",
+            "password=",
+            "token=",
+        ):
+            self.assertNotIn(forbidden, lowered)
+
+    def test_codex_installed_launcher_initialize_diagnostic_is_bounded(self) -> None:
+        self.assertTrue(CODEX_INSTALLED_LAUNCHER_DIAGNOSTIC.is_file())
+        self.assertTrue(CODEX_INSTALLED_LAUNCHER_DIAGNOSTIC_LOG.is_file())
+
+        evidence = CODEX_INSTALLED_LAUNCHER_DIAGNOSTIC.read_text(encoding="utf-8")
+        normalized = " ".join(evidence.split())
+        status = " ".join(STATUS.read_text(encoding="utf-8").split())
+        log = " ".join(
+            CODEX_INSTALLED_LAUNCHER_DIAGNOSTIC_LOG.read_text(encoding="utf-8").split()
+        )
+
+        for phrase in (
+            "LOCAL_STDIO_INITIALIZE_PASSED_WITH_SERVER_VERSION_SKEW",
+            "serverInfo.version",
+            "installed launcher reported Adapter server version `1.6.0`",
+            "current source reported `1.7.0`",
+            "same eight form-capable tools",
+            "did not reproduce",
+            "does not establish that version skew caused",
+            "No AgentGov tool was invoked",
+            "4cca2d57edeaddfe52d3e6c4dd4d774192bbdbcab4e84e07df73e14a861c0348",
+        ):
+            self.assertIn(phrase, normalized)
+
+        for text in (status, log):
+            self.assertIn("p0-codex-installed-launcher-initialize-diagnostic-v1", text)
+            self.assertIn("mcpj-8991aa45f87842a99038e6f78e50c9eb", text)
+            self.assertIn("srv-e959070dab8852ed65e972d6ccc4963f", text)
+            self.assertIn("1.6.0", text)
+            self.assertIn("1.7.0", text)
+
+        lowered = evidence.lower()
+        for forbidden in (
+            "c:\\users",
+            "thread_id",
+            "raw prompt",
+            "raw response",
+            "transcript",
+            "credential",
+            "password=",
+            "token=",
+        ):
+            self.assertNotIn(forbidden, lowered)
+
+    def test_codex_live_client_initialize_boundary_replay_is_bounded(self) -> None:
+        self.assertTrue(CODEX_LIVE_CLIENT_INITIALIZE_BOUNDARY_REPLAY.is_file())
+        self.assertTrue(CODEX_LIVE_CLIENT_INITIALIZE_BOUNDARY_LOG.is_file())
+
+        evidence = CODEX_LIVE_CLIENT_INITIALIZE_BOUNDARY_REPLAY.read_text(
+            encoding="utf-8"
+        )
+        normalized = " ".join(evidence.split())
+        status = " ".join(STATUS.read_text(encoding="utf-8").split())
+        log = " ".join(
+            CODEX_LIVE_CLIENT_INITIALIZE_BOUNDARY_LOG.read_text(
+                encoding="utf-8"
+            ).split()
+        )
+
+        for phrase in (
+            "REAL_CODEX_INITIALIZE_BOUNDARY_DIVERGED_CURRENT_SOURCE_FAILED",
+            "Codex CLI 0.146.0",
+            "exactly one",
+            "did not retry",
+            "current-source binding failed before a model turn began",
+            "`initialize`, `closed`, `-32603`",
+            "No AgentGov tool was invoked",
+            "developers.openai.com/codex/mcp/",
+            "developers.openai.com/codex/config-basic/",
+            "4cca2d57edeaddfe52d3e6c4dd4d774192bbdbcab4e84e07df73e14a861c0348",
+            "7dada88a8ccff3dfa40dd52783719e5aced5b293202979ba3d5b75f027b498e7",
+            "do not establish whether version skew",
+        ):
+            self.assertIn(phrase, normalized)
+
+        for text in (status, log):
+            self.assertIn("p0-codex-live-client-initialize-boundary-replay-v1", text)
+            self.assertIn("mcpj-2560c6f047ee4c50a872521d35179ba3", text)
+            self.assertIn("p0-codex-installed-launcher-initialize-diagnostic-v1", text)
+            self.assertIn("srv-4f8b243f2ff5bd9dd3eb60d4a3e33320", text)
+            self.assertIn("PASS=5 FAIL=16 ADVISORY=0", text)
+            self.assertIn("1.6.0", text)
+            self.assertIn("1.7.0", text)
+
+        lowered = evidence.lower()
+        for forbidden in (
+            "c:\\users",
+            "thread_id",
+            "session_id",
+            "process_id",
+            "raw prompt",
+            "raw response",
+            "transcript",
+            "credential",
+            "password=",
+            "token=",
+        ):
+            self.assertNotIn(forbidden, lowered)
+
+    def test_codex_initialize_schema_version_differential_fails_closed(self) -> None:
+        self.assertTrue(CODEX_INITIALIZE_SCHEMA_VERSION_DIFFERENTIAL.is_file())
+        self.assertTrue(CODEX_INITIALIZE_SCHEMA_VERSION_DIFFERENTIAL_LOG.is_file())
+
+        evidence = CODEX_INITIALIZE_SCHEMA_VERSION_DIFFERENTIAL.read_text(
+            encoding="utf-8"
+        )
+        normalized = " ".join(evidence.split())
+        status = " ".join(STATUS.read_text(encoding="utf-8").split())
+        log = " ".join(
+            CODEX_INITIALIZE_SCHEMA_VERSION_DIFFERENTIAL_LOG.read_text(
+                encoding="utf-8"
+            ).split()
+        )
+
+        for phrase in (
+            "LOCAL_SCHEMA_DIFFERENTIAL_BLOCKED_BEFORE_MCP_RESPONSE",
+            "started exactly once",
+            "Both processes exited `2`",
+            "JSON response lines | `0` | `0`",
+            "did not reach initialize metadata",
+            "not evidence that the two versions have equal",
+            "did not independently reconfirm either version",
+            "plausible explanation",
+            "inference only",
+            "does not identify a schema difference",
+            "4cca2d57edeaddfe52d3e6c4dd4d774192bbdbcab4e84e07df73e14a861c0348",
+            "7dada88a8ccff3dfa40dd52783719e5aced5b293202979ba3d5b75f027b498e7",
+        ):
+            self.assertIn(phrase, normalized)
+
+        for text in (status, log):
+            self.assertIn("p0-codex-initialize-schema-version-differential-v1", text)
+            self.assertIn("mcpj-a8e7b33cccb044c3ac013b523a2e032f", text)
+            self.assertIn("prp-fe9f9caf3db54f6a823175fbd4ded2df", text)
+            self.assertIn("srv-fee8df2987d96b8fd8f51223205cd8c1", text)
+            self.assertIn("PASS=5 FAIL=19 ADVISORY=0", text)
+            self.assertIn("p0-codex-live-client-initialize-boundary-replay-v1", text)
+            self.assertIn("1.6.0", text)
+            self.assertIn("1.7.0", text)
+
+        lowered = evidence.lower()
+        for forbidden in (
+            "c:\\users",
+            "thread_id",
+            "session_id",
+            "process_id",
+            "raw request",
+            "raw response",
+            "transcript",
+            "credential",
+            "password=",
+            "token=",
+        ):
+            self.assertNotIn(forbidden, lowered)
+
+    def test_codex_repository_context_schema_differential_is_bounded(self) -> None:
+        self.assertTrue(CODEX_REPOSITORY_CONTEXT_SCHEMA_DIFFERENTIAL.is_file())
+        self.assertTrue(CODEX_REPOSITORY_CONTEXT_SCHEMA_DIFFERENTIAL_LOG.is_file())
+
+        evidence = CODEX_REPOSITORY_CONTEXT_SCHEMA_DIFFERENTIAL.read_text(
+            encoding="utf-8"
+        )
+        normalized = " ".join(evidence.split())
+        status = " ".join(STATUS.read_text(encoding="utf-8").split())
+        log = " ".join(
+            CODEX_REPOSITORY_CONTEXT_SCHEMA_DIFFERENTIAL_LOG.read_text(
+                encoding="utf-8"
+            ).split()
+        )
+
+        for phrase in (
+            "LOCAL_MCP_RESPONSES_MATCH_EXCEPT_INSTRUCTIONS_AND_SERVER_VERSION",
+            "started exactly once",
+            "Both exited `0`",
+            "JSON response lines | `2` | `2`",
+            "Standard error | empty | empty",
+            "Tool field, description, and input-schema difference counts were all zero",
+            "59bb371ffee5d4d65405a3ca79103f886881dba33946165a2bc7200951d5ca19",
+            "41a738c82d05b3bdbf4f036c1e153f81d09f4c931944ac223153d8dc0894ca90",
+            "`2435`",
+            "`2661`",
+            "501dbb994307b54c2fb050a90765f85e8a3fa12a3d645d0f2d68c3d197e1ad88",
+            "de376b10ca9261c1ddf35565ecfcdb6213192b8ca5fb31ac5b5878e261960d27",
+            "No retry occurred",
+            "No real Codex client was started",
+            "does not establish that the instructions difference",
+            "root cause remains unknown",
+            "4cca2d57edeaddfe52d3e6c4dd4d774192bbdbcab4e84e07df73e14a861c0348",
+            "7dada88a8ccff3dfa40dd52783719e5aced5b293202979ba3d5b75f027b498e7",
+        ):
+            self.assertIn(phrase, normalized)
+
+        for tool_name in (
+            "agentgov_alignment_start",
+            "agentgov_alignment_update",
+            "agentgov_alignment_resolve",
+            "agentgov_self_review_start",
+            "agentgov_self_review_complete",
+            "agentgov_task_proposal_review",
+            "agentgov_task_completion_record",
+            "agentgov_drift_review_record",
+        ):
+            self.assertIn(tool_name, evidence)
+
+        for text in (status, log):
+            self.assertIn("p0-codex-repository-context-schema-differential-v1", text)
+            self.assertIn("mcpj-0b3ac31ba5954a9695921f9a0bdcc798", text)
+            self.assertIn("prp-92c93b0be7de4f3d8e4f59f30004f420", text)
+            self.assertIn("srv-86f972d5b535ff303eed10e037330bef", text)
+            self.assertIn("p0-codex-initialize-schema-version-differential-v1", text)
+            self.assertIn("1.6.0", text)
+            self.assertIn("1.7.0", text)
+
+        lowered = evidence.lower()
+        for forbidden in (
+            "c:\\users",
+            "thread_id",
+            "session_id",
+            "process_id",
+            "raw request",
+            "raw response",
+            "raw instructions",
+            "transcript",
+            "credential",
+            "password=",
+            "token=",
+        ):
+            self.assertNotIn(forbidden, lowered)
+
+    def test_session_closeout_main_push_preserves_scope_and_authority(self) -> None:
+        self.assertTrue(SESSION_CLOSEOUT_MAIN_PUSH_LOG.is_file())
+        self.assertTrue(SESSION_CLOSEOUT_MAIN_PUSH_TASK.is_file())
+
+        log = SESSION_CLOSEOUT_MAIN_PUSH_LOG.read_text(encoding="utf-8")
+        normalized = " ".join(log.split())
+        status = " ".join(STATUS.read_text(encoding="utf-8").split())
+        task = SESSION_CLOSEOUT_MAIN_PUSH_TASK.read_text(encoding="utf-8")
+
+        for phrase in (
+            "READY_FOR_AUTHORIZED_GIT_CLOSEOUT",
+            "mcpj-0a1a9b58d1bf480e9602ab92474570ec",
+            "prp-591a4043bf4e46b993b927fba7c7eef1",
+            "p0-session-closeout-main-push-2026-08-31-v1",
+            "option `1`",
+            "canonical policy definition",
+            "six-base/eight-form-capable catalog remains unchanged",
+            "current-source binding with normalized `-32603` evidence",
+            "root cause remains unknown",
+            "ordinary non-force push",
+            "Git history",
+            "No pull request, force-push, release, deployment",
+        ):
+            self.assertIn(phrase, normalized)
+
+        for text in (status, task):
+            self.assertIn("p0-session-closeout-main-push-2026-08-31-v1", text)
+            self.assertIn(".agentgov", text)
+            self.assertIn(".codex", text)
+        self.assertIn("origin/main", status)
+        self.assertIn("origin main", task)
+
+        lowered = log.lower()
+        for forbidden in (
+            "c:\\users",
+            "thread_id",
+            "session_id",
+            "process_id",
+            "raw request",
+            "raw response",
+            "transcript",
+            "credential",
+            "password=",
+            "token=",
+        ):
+            self.assertNotIn(forbidden, lowered)
 
     def test_minimum_sufficient_kernel_baseline_is_consistent_and_bounded(self) -> None:
         readme = README.read_text(encoding="utf-8")

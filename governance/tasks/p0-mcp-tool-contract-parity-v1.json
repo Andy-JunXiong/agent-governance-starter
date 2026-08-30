@@ -1,0 +1,53 @@
+{
+  "acceptance_signals": [
+    "One internal policy definition covers all eight unique MCP tools and removes duplicated identity, discovery-gate, and routing classification.",
+    "Clients without form elicitation still discover exactly six base tools and form-capable clients still discover exactly eight tools in the existing order.",
+    "Deterministic tests prove catalog, discovery gate, ordinary dispatch, interactive form routing, effect classification, enforcement ownership, and downstream non-grants remain in parity.",
+    "Lifecycle, task, scope, evidence, and human-decision checks remain fresh call-time or effect-boundary enforcement and are not duplicated as metadata predicates.",
+    "Current MCP public behavior remains unchanged and relevant focused and full repository validation pass."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-1eb71c1b97204842b144caf08c9016da and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Consolidate the existing AgentGov MCP tool identity, discovery gate, routing class, effect metadata, enforcement ownership, and downstream non-grants into one minimal internal policy surface, then add deterministic parity tests while preserving all current runtime behavior and call-time governance checks."
+  },
+  "risk": {
+    "items": [
+      "A metadata registry could become a second source of truth unless names, discovery gates, and route classification are derived from it.",
+      "Refactoring form routing could accidentally change the interactive native elicitation path.",
+      "Over-modeling lifecycle predicates would enlarge the Adapter and duplicate existing enforcement.",
+      "Reviewed assumption: The current six-base and eight-form-capable tool catalogs are the intended development-source behavior.",
+      "Reviewed assumption: This change requires no Kernel ontology, public release identity, Git execution, authority registry, or audit-event expansion.",
+      "Reviewed assumption: Historical version evidence remains historical; only current MCP contract guidance and current repository reality need clarification."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".agentgov/scope-baselines",
+      ".codex"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-mcp-tool-contract-parity-v1.json",
+      "src/agentgov/governance_mcp.py",
+      "tests/test_governance_mcp.py",
+      "docs/governance-mcp-adapter.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-30-mcp-tool-contract-parity.md"
+    ]
+  },
+  "task_id": "p0-mcp-tool-contract-parity-v1",
+  "title": "Add deterministic MCP tool contract parity",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_governance_mcp -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v"
+  ]
+}

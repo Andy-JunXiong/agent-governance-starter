@@ -1,0 +1,80 @@
+{
+  "acceptance_signals": [
+    "Installed Adapter 1.6.0 and current-source Adapter 1.7.0 each receive exactly one bounded local form-capable initialize, initialized-notification, and tools-list sequence with equivalent inputs and no retry.",
+    "Normalized evidence compares initialize metadata, server capabilities, exact tool-name sets, tool-description fingerprints, and recursively normalized input-schema structure, and identifies the first attributable response difference or explicitly reports none.",
+    "No real Codex client is started, no AgentGov tool is invoked, no stateful completion or drift transition occurs, and installed packages, AgentGov runtime source, and permanent Codex configuration remain unchanged.",
+    "Durable evidence retains no raw requests, raw responses, absolute paths, credentials, host identity, process or session identifiers, or full source content, and separates observed differences from root-cause, portability, and reliability claims.",
+    "Evidence, status, dated log, task record, and documentation test agree; focused tests, full baseline, task and repository governance, read-only scope, privacy, hash, and whitespace checks are recorded."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-fe9f9caf3db54f6a823175fbd4ded2df and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Run exactly one read-only local MCP differential against the configured installed Adapter 1.6.0 launcher and exactly one against current-source Adapter 1.7.0 using the same form-capable initialize, initialized notification, and tools-list sequence; normalize initialize metadata, capabilities, tool identities, descriptions, and input-schema structure to identify the first response difference relevant to the prior real Codex initialize closure, then stop without another real Codex startup, retry, repair, source change, package change, permanent configuration change, AgentGov tool invocation, or stateful workflow."
+  },
+  "risk": {
+    "items": [
+      "The local form-capable request is the closest reconstructable fixture but is not proven byte-identical to the discarded real Codex client request.",
+      "Comparing full schema structures could expose implementation text; durable evidence must retain only normalized field paths, counts, types, and cryptographic fingerprints.",
+      "The first response difference may be unrelated to the real Codex -32603 closure and must not be labeled causal without client evidence.",
+      "A one-observation-per-binding differential cannot establish repeat reliability or cross-host portability.",
+      "The dirty worktree contains pre-existing changes in shared documentation and test files; this task may append only bounded content and must preserve prior material.",
+      "Reviewed assumption: The configured installed launcher still reports Adapter 1.6.0 and current source still reports 1.7.0.",
+      "Reviewed assumption: Both launchers can complete the bounded local MCP sequence without receiving source or package changes.",
+      "Reviewed assumption: Canonical recursive schema normalization can identify structural differences without retaining full schema content.",
+      "Reviewed assumption: Existing paths outside the five included targets belong to prior work and remain excluded.",
+      "Reviewed unknown: Whether initialize capability fields differ beyond server version.",
+      "Reviewed unknown: Whether any tool description or input-schema structural difference is the first Codex-relevant divergence.",
+      "Reviewed unknown: Whether the prior real-client closure depends on request fields absent from the bounded local form-capable fixture.",
+      "Reviewed unknown: Whether Codex rejects a particular schema construct or the failure arises elsewhere in initialization."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      "docs/governance-mcp-adapter.md",
+      "docs/consumer-validation/codex-eight-tool-discovery-replay-v1-2026-08-31.md",
+      "docs/consumer-validation/codex-installed-launcher-initialize-diagnostic-v1-2026-08-31.md",
+      "docs/consumer-validation/codex-live-client-initialize-boundary-replay-v1-2026-08-31.md",
+      "docs/consumer-validation/live-codex-mcp-consumer-binding-evidence-v1-2026-08-30.md",
+      "docs/development-log/2026-08-30-live-codex-mcp-consumer-binding-evidence.md",
+      "docs/development-log/2026-08-30-mcp-tool-contract-parity.md",
+      "docs/development-log/2026-08-31-codex-eight-tool-discovery-replay.md",
+      "docs/development-log/2026-08-31-codex-installed-launcher-initialize-diagnostic.md",
+      "docs/development-log/2026-08-31-codex-live-client-initialize-boundary-replay.md",
+      "governance/tasks/p0-codex-eight-tool-discovery-replay-v1.json",
+      "governance/tasks/p0-codex-eight-tool-discovery-replay-v2.json",
+      "governance/tasks/p0-codex-installed-launcher-initialize-diagnostic-v1.json",
+      "governance/tasks/p0-codex-live-client-initialize-boundary-replay-v1.json",
+      "governance/tasks/p0-live-codex-mcp-consumer-binding-evidence-v1.json",
+      "governance/tasks/p0-mcp-tool-contract-parity-v1.json",
+      "src",
+      "tests/test_governance_mcp.py"
+    ],
+    "include_paths": [
+      "STATUS.md",
+      "docs/consumer-validation/codex-initialize-schema-version-differential-v1-2026-08-31.md",
+      "docs/development-log/2026-08-31-codex-initialize-schema-version-differential.md",
+      "governance/tasks/p0-codex-initialize-schema-version-differential-v1.json",
+      "tests/test_user_documentation.py"
+    ]
+  },
+  "task_id": "p0-codex-initialize-schema-version-differential-v1",
+  "title": "Compare Codex-facing initialize and tool schemas across Adapter versions",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-codex-initialize-schema-version-differential-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

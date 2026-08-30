@@ -1,0 +1,61 @@
+{
+  "acceptance_signals": [
+    "A real Codex CLI run using a one-off configuration override discovers exactly the canonical eight AgentGov MCP tool names.",
+    "The project .codex/config.toml content digest is identical before and after the replay.",
+    "The replay does not invoke agentgov_task_completion_record or agentgov_drift_review_record.",
+    "The evidence document clearly distinguishes tool discovery from successful stateful invocation.",
+    "Focused documentation tests and the full baseline test suite pass without weakening existing tests."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-400e337a2caf45d7b43002e414d9a4f5 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Use a one-off Codex CLI configuration override to collect bounded evidence that a real Codex consumer discovers exactly the canonical eight AgentGov MCP tools, without changing project MCP configuration or invoking completion and drift-review workflows."
+  },
+  "risk": {
+    "items": [
+      "Windows command-line TOML quoting may prevent the one-off override from parsing; if so, stop without editing project configuration.",
+      "A consumer-visible tool list proves discovery only and must not be reported as completion or drift-review execution evidence.",
+      "Reviewed assumption: The installed Codex CLI supports one-off -c configuration overrides with higher precedence than project configuration.",
+      "Reviewed assumption: The local AgentGov MCP server continues to advertise the canonical eight-tool contract.",
+      "Reviewed unknown: The exact real Codex discovery output shape may differ by installed CLI version, but any adaptation must remain read-only and within the admitted evidence scope."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      "docs/governance-mcp-adapter.md",
+      "docs/consumer-validation/live-codex-mcp-consumer-binding-evidence-v1-2026-08-30.md",
+      "docs/development-log/2026-08-30-live-codex-mcp-consumer-binding-evidence.md",
+      "docs/development-log/2026-08-30-mcp-tool-contract-parity.md",
+      "governance/tasks/p0-live-codex-mcp-consumer-binding-evidence-v1.json",
+      "governance/tasks/p0-mcp-tool-contract-parity-v1.json",
+      "src",
+      "tests/test_governance_mcp.py"
+    ],
+    "include_paths": [
+      "STATUS.md",
+      "docs/consumer-validation/codex-eight-tool-discovery-replay-v1-2026-08-31.md",
+      "docs/development-log/2026-08-31-codex-eight-tool-discovery-replay.md",
+      "governance/tasks/p0-codex-eight-tool-discovery-replay-v1.json",
+      "tests/test_user_documentation.py"
+    ]
+  },
+  "task_id": "p0-codex-eight-tool-discovery-replay-v1",
+  "title": "Real Codex eight-tool discovery replay",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "agentgov govern task governance/tasks/p0-codex-eight-tool-discovery-replay-v1.json",
+    "git diff --check"
+  ]
+}

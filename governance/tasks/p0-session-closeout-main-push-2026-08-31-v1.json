@@ -1,0 +1,71 @@
+{
+  "acceptance_signals": [
+    "STATUS.md and the dated closeout log identify the accumulated capability, consumer-validation chain, final validation, remaining real-client root-cause unknown, human-selected commit boundary, and Git authority limits.",
+    "The complete intended product diff contains only the reviewed source, tests, documentation, evidence, logs, and admitted task records; .agentgov and .codex remain untracked and unstaged.",
+    "All focused and full tests, task and repository governance, privacy, protected-hash, secret-safety, and whitespace checks pass or retain explicitly bounded platform skips.",
+    "The current branch is main, origin is the expected repository, fetch shows no unhandled divergence, and the staged diff exactly matches the reviewed product scope.",
+    "One ordinary non-force commit is created and pushed explicitly to origin main; no PR, release, deployment, force-push, or other external action occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-591a4043bf4e46b993b927fba7c7eef1 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Update the current status and one dated session-closeout log for the accumulated governed AgentGov MCP integration and Codex consumer-validation work, validate the complete intended product diff, preserve local AgentGov and Codex state outside version control, then use the product owner's separate explicit Git authorization to create one ordinary commit and push it non-force to origin main."
+  },
+  "risk": {
+    "items": [
+      "The worktree contains accumulated changes from multiple admitted tasks; the closeout must preserve attribution and stage only the enumerated current product paths.",
+      "A direct push changes shared remote history, although the product owner explicitly authorized one ordinary non-force push to origin main.",
+      "Remote main may have advanced; fetch and divergence inspection must stop the closeout rather than discard work or force-push.",
+      "Local .agentgov events and scope baselines and .codex configuration are privacy-bounded machine state and must not be staged.",
+      "The current-source real Codex initialize closure remains unexplained and must not be presented as fixed.",
+      "Reviewed assumption: The human selection of option 1 means all currently changed governed product work under the admitted prefixes belongs in one closeout commit.",
+      "Reviewed assumption: The existing remote URL is the intended GitHub repository and main is the intended destination branch.",
+      "Reviewed assumption: The existing source, test, documentation, evidence, log, and task changes are accumulated work already reviewed and validated in prior admitted slices.",
+      "Reviewed assumption: Git transport credentials remain available through the configured credential helper.",
+      "Reviewed unknown: Whether origin main advanced after the current local snapshot.",
+      "Reviewed unknown: Whether direct Git transport authentication will succeed.",
+      "Reviewed unknown: Whether the final GitHub commit will trigger downstream CI; no CI outcome is claimed by this task."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".agentgov",
+      ".codex"
+    ],
+    "include_paths": [
+      "STATUS.md",
+      "docs/governance-mcp-adapter.md",
+      "src/agentgov/governance_mcp.py",
+      "tests/test_governance_mcp.py",
+      "tests/test_user_documentation.py",
+      "docs/consumer-validation",
+      "docs/development-log/2026-08-30-live-codex-mcp-consumer-binding-evidence.md",
+      "docs/development-log/2026-08-30-mcp-tool-contract-parity.md",
+      "docs/development-log/2026-08-31-codex-eight-tool-discovery-replay.md",
+      "docs/development-log/2026-08-31-codex-initialize-schema-version-differential.md",
+      "docs/development-log/2026-08-31-codex-installed-launcher-initialize-diagnostic.md",
+      "docs/development-log/2026-08-31-codex-live-client-initialize-boundary-replay.md",
+      "docs/development-log/2026-08-31-codex-repository-context-schema-differential.md",
+      "docs/development-log/2026-08-31-session-closeout-main-push.md",
+      "governance/tasks"
+    ]
+  },
+  "task_id": "p0-session-closeout-main-push-2026-08-31-v1",
+  "title": "Close out and push accumulated governed work to main",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_governance_mcp tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-session-closeout-main-push-2026-08-31-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

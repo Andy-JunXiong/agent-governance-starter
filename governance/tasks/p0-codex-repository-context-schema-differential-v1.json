@@ -1,0 +1,83 @@
+{
+  "acceptance_signals": [
+    "Installed and current-source bindings each receive exactly one equivalent form-capable initialize, initialized-notification, and tools-list sequence from the repository working context, with no further retry.",
+    "If responses exist, normalized evidence compares server metadata, capabilities, exact tool names, description fingerprints, and recursively normalized input schemas and identifies the first attributable difference or explicit equality at the retained boundary.",
+    "If either process fails, normalized safe stderr marker categories and output counts identify the first bounded failure class without retaining raw streams, and execution stops.",
+    "No real Codex client starts, no AgentGov tool is invoked, no stateful transition occurs, and installed packages, AgentGov runtime source, and permanent Codex configuration remain unchanged.",
+    "Evidence, status, dated log, task record, and documentation test agree; focused tests, full baseline, task and repository governance, read-only scope, privacy, hashes, and whitespace checks are recorded."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-92c93b0be7de4f3d8e4f59f30004f420 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "From the repository working context, start the configured installed AgentGov binding exactly once and current repository source exactly once, send each the same form-capable initialize, initialized notification, and tools-list sequence, and normalize process status, safe stderr marker categories, initialize metadata, capabilities, tool descriptions, and input-schema structure to identify the first comparable difference; stop without any further retry, real Codex startup, repair, source or package change, permanent configuration change, AgentGov tool invocation, or stateful workflow."
+  },
+  "risk": {
+    "items": [
+      "This is one separately admitted retry of a blocked local comparison; any process failure must stop without another attempt.",
+      "The repository context may include dirty-worktree state and therefore does not isolate released 1.7.0 behavior from current source state.",
+      "Safe stderr marker classification may not identify the exact failure when no allowed marker matches.",
+      "A structural difference may be unrelated to the real Codex -32603 closure and must not be labeled causal.",
+      "The dirty worktree contains pre-existing changes in shared documentation and test files; this task may append only bounded content and preserve prior material.",
+      "Reviewed assumption: Both bindings can use the repository working context without modifying repository files.",
+      "Reviewed assumption: The installed binding receives no source-tree PYTHONPATH and current source receives only the required source module binding.",
+      "Reviewed assumption: The same form-capable local request remains the closest retained fixture but is not proven byte-identical to Codex.",
+      "Reviewed assumption: Existing paths outside the five included targets belong to prior work and remain excluded.",
+      "Reviewed unknown: Whether repository context removes the shared exit-2 stop.",
+      "Reviewed unknown: Whether initialize response content differs beyond the known server version.",
+      "Reviewed unknown: Whether any description or input-schema structure differs between the bindings.",
+      "Reviewed unknown: Whether any observed difference explains the real Codex initialize closure."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      "docs/governance-mcp-adapter.md",
+      "docs/consumer-validation/codex-eight-tool-discovery-replay-v1-2026-08-31.md",
+      "docs/consumer-validation/codex-initialize-schema-version-differential-v1-2026-08-31.md",
+      "docs/consumer-validation/codex-installed-launcher-initialize-diagnostic-v1-2026-08-31.md",
+      "docs/consumer-validation/codex-live-client-initialize-boundary-replay-v1-2026-08-31.md",
+      "docs/consumer-validation/live-codex-mcp-consumer-binding-evidence-v1-2026-08-30.md",
+      "docs/development-log/2026-08-30-live-codex-mcp-consumer-binding-evidence.md",
+      "docs/development-log/2026-08-30-mcp-tool-contract-parity.md",
+      "docs/development-log/2026-08-31-codex-eight-tool-discovery-replay.md",
+      "docs/development-log/2026-08-31-codex-initialize-schema-version-differential.md",
+      "docs/development-log/2026-08-31-codex-installed-launcher-initialize-diagnostic.md",
+      "docs/development-log/2026-08-31-codex-live-client-initialize-boundary-replay.md",
+      "governance/tasks/p0-codex-eight-tool-discovery-replay-v1.json",
+      "governance/tasks/p0-codex-eight-tool-discovery-replay-v2.json",
+      "governance/tasks/p0-codex-initialize-schema-version-differential-v1.json",
+      "governance/tasks/p0-codex-installed-launcher-initialize-diagnostic-v1.json",
+      "governance/tasks/p0-codex-live-client-initialize-boundary-replay-v1.json",
+      "governance/tasks/p0-live-codex-mcp-consumer-binding-evidence-v1.json",
+      "governance/tasks/p0-mcp-tool-contract-parity-v1.json",
+      "src",
+      "tests/test_governance_mcp.py"
+    ],
+    "include_paths": [
+      "STATUS.md",
+      "docs/consumer-validation/codex-repository-context-schema-differential-v1-2026-08-31.md",
+      "docs/development-log/2026-08-31-codex-repository-context-schema-differential.md",
+      "governance/tasks/p0-codex-repository-context-schema-differential-v1.json",
+      "tests/test_user_documentation.py"
+    ]
+  },
+  "task_id": "p0-codex-repository-context-schema-differential-v1",
+  "title": "Retry the local schema differential from repository context",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-codex-repository-context-schema-differential-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

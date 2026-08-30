@@ -1,0 +1,70 @@
+{
+  "acceptance_signals": [
+    "The installed and current-source launchers are exercised through the same bounded local MCP initialize and tool-list sequence, with the first reproducible difference recorded.",
+    "Evidence distinguishes installation or packaging compatibility from AgentGov workflow semantics and makes no repair or causal claim beyond observed facts.",
+    "Permanent Codex configuration retains its content digest, AgentGov runtime source is unchanged by this task, and no stateful completion or drift tool is invoked.",
+    "The new evidence, current status, dated log, and documentation contract test agree on the outcome and remaining unknowns.",
+    "Focused documentation tests, the full baseline suite, supported task and repository checks, and whitespace validation pass without weakening tests."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-439c5c4d39c94938a36fa99f98fd9e75 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Perform one bounded read-only comparison of the configured installed AgentGov launcher and the current repository source at MCP initialize and tool-discovery boundaries, record the first reproducible deviation without repairing it, and preserve permanent Codex configuration, AgentGov runtime, and all stateful governance tools."
+  },
+  "risk": {
+    "items": [
+      "The worktree contains pre-existing included changes in STATUS.md and tests/test_user_documentation.py; this task must append only its bounded facts and preserve all prior content.",
+      "The installed launcher may terminate before returning structured MCP output; evidence must report that boundary without retaining local paths, process identifiers, raw streams, or credentials.",
+      "A local diagnostic can establish the first observed deviation but cannot prove root cause, portability, repeated reliability, or successful stateful invocation.",
+      "The task must stop before package repair, installation changes, permanent configuration changes, or stateful governance calls.",
+      "Reviewed assumption: The configured installed launcher and the current repository source can both be invoked locally without modifying their code or configuration.",
+      "Reviewed assumption: A disposable local STDIO harness is sufficient to compare initialize and tools-list behavior.",
+      "Reviewed assumption: Existing changes outside the five included paths belong to prior work and remain excluded.",
+      "Reviewed unknown: Whether the first deviation is caused by packaged source contents, installed dependency versions, command resolution, or another distribution boundary.",
+      "Reviewed unknown: Whether the installed launcher behaves differently across a clean environment or another Codex version."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      "docs/governance-mcp-adapter.md",
+      "docs/consumer-validation/codex-eight-tool-discovery-replay-v1-2026-08-31.md",
+      "docs/consumer-validation/live-codex-mcp-consumer-binding-evidence-v1-2026-08-30.md",
+      "docs/development-log/2026-08-30-live-codex-mcp-consumer-binding-evidence.md",
+      "docs/development-log/2026-08-30-mcp-tool-contract-parity.md",
+      "docs/development-log/2026-08-31-codex-eight-tool-discovery-replay.md",
+      "governance/tasks/p0-codex-eight-tool-discovery-replay-v1.json",
+      "governance/tasks/p0-codex-eight-tool-discovery-replay-v2.json",
+      "governance/tasks/p0-live-codex-mcp-consumer-binding-evidence-v1.json",
+      "governance/tasks/p0-mcp-tool-contract-parity-v1.json",
+      "src",
+      "tests/test_governance_mcp.py"
+    ],
+    "include_paths": [
+      "STATUS.md",
+      "docs/consumer-validation/codex-installed-launcher-initialize-diagnostic-v1-2026-08-31.md",
+      "docs/development-log/2026-08-31-codex-installed-launcher-initialize-diagnostic.md",
+      "governance/tasks/p0-codex-installed-launcher-initialize-diagnostic-v1.json",
+      "tests/test_user_documentation.py"
+    ]
+  },
+  "task_id": "p0-codex-installed-launcher-initialize-diagnostic-v1",
+  "title": "Diagnose installed Codex AgentGov launcher initialization",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-codex-installed-launcher-initialize-diagnostic-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

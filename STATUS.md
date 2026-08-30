@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-08-28
+Last verified: 2026-08-31
 
 ## Current-status contract
 
@@ -42,73 +42,136 @@ scheduling authority.
 
 ### Current closeout snapshot
 
-- **Active slice**: human-admitted task
-  `p0-2026-08-28-session-closeout-v2` closes the accumulated artifact replay,
-  bilingual interview demo, whole-project story, presenter guide, and de-AI
-  narrative work into one reviewed non-release source-history delivery. Native
-  proposal `prp-0808294ea37643ccbb8ed118ddcb03d6` and baseline
-  `sha256:5ed4d9bc671e36066c586caf9b9e985f341708828ffb45acb17d3e913b5815dc`
-  bind the final closeout. The earlier v1 closeout remains a superseded record
-  because its baseline correctly excluded the later manifest refresh.
-- **Outcome**: AgentGov now has a presenter-ready bilingual route: a concise
-  project answer, one six-step refund demo, a factual whole-project drift and
-  repair story, and an optional artifact replay engineering deep dive. The
-  accumulated artifact controller, caller, readiness, driver, Harness, tests,
-  task records, and durable evidence remain connected to those public surfaces.
-- **Integrity correction**: full validation caught that the README is one of
-  the exact 186 distribution inputs. The interview-link update changed only the
-  manifest content identity, not its path set. The product owner selected a
-  separate identity refresh through resolved journey
-  `mcpj-6cba12f8f7184a8d9228cd01febddb6e`; native proposal
-  `prp-787d1c97b3464fcd82a43e8860e1496e` admitted task
-  `p0-readme-manifest-identity-refresh-replay-v1`, with baseline
-  `sha256:cc2f0e79235e46a3263476253ccc94374903aa39b063a8cdce66bf157d64dfd2`.
-  The refreshed manifest remains 186 paths with path identity
-  `sha256:cfea3a3632bd75d1f4db51168d257c465987d3fe620fda2449abcd86f42fcd03`
-  and new content identity
-  `sha256:b00be073afa541c3130cc620c84bd2bba2afa7b48ec4e70a4ff74998bc7fb8d9`.
-- **Fresh replay result**: after 78 artifact-chain tests passed, fresh preflight
-  confirmed the retained Python 3.11.9 / pip 24.0 / setuptools 84.0.0
-  environment, backend-wheel identity, absent evidence target, and zero short
-  roots. The fixed controller was invoked exactly once and returned `PASS` with
-  controller/dry/actual attempts `1/1/1`, no retry, 186/186 byte matches, one
-  built wheel with SHA-256
-  `sha256:c898ce93bb8b8a820bd68d909393096fcdc2f9a4ecb04509a4dd44acb75bac4a`,
-  durable evidence SHA-256
-  `d6c96190bc867a697f22a4cc7ea759c7d1ae7c25fac8a657178d60e5b51bac7f`,
-  and final short-root count zero. The prior evidence remains byte-identical at
-  `ffc06da3060b459ff39c8602365126a860e8228dd6320c8c88f69cbc8c6b8715`.
-- **User-reported validation**: the product owner requested the end-of-day
-  documentation, commit, and non-force main push, then explicitly selected the
-  identity-refresh path when the README-manifest dependency surfaced. This is
-  direction and Git authorization, not independent validation of the pages or
-  replay.
-- **Codex-run validation**: the full repository suite passes 1,111 tests with
-  five Windows privilege-limited symbolic-link skips; the complete scripts
-  suite passes 111 tests with six such skips; the exact artifact chain passes
-  78 tests with five such skips; and 88 focused interview and public-entry tests
-  pass. Manifest, task JSON, task governance
-  (`PASS=3 WARN=1 FAIL=0 ADVISORY=3`), repository governance
-  (`PASS=26 WARN=2 FAIL=0 ADVISORY=4`), whitespace, staged-diff, secret-safety,
-  and absolute-host-path checks pass. Final v2 captured-scope counts are recorded
-  in `docs/development-log/2026-08-28.md`. Fetch found local and remote main at
-  the same pre-commit revision with divergence `0/0`.
+- **Active closeout**: resolved alignment journey
+  `mcpj-0a1a9b58d1bf480e9602ab92474570ec` offered three explicit Git-closeout
+  boundaries. The human selected option `1`: commit all reviewed accumulated
+  product source, tests, documentation, evidence, logs, and task records while
+  excluding local `.agentgov` and `.codex` state. Native proposal
+  `prp-591a4043bf4e46b993b927fba7c7eef1` admitted task
+  `p0-session-closeout-main-push-2026-08-31-v1`; the human separately entered
+  `REPLACE` to take up that task.
+- **Closeout outcome**: `READY_FOR_AUTHORIZED_GIT_CLOSEOUT`. The accumulated
+  product result combines the canonical eight-tool MCP policy implementation
+  with the six-tool live binding, eight-tool discovery, installed/current local
+  initialization, real-client initialize-boundary replay, and corrected local
+  response differential. The catalog remains six base tools plus two
+  form-capable tools; dynamic lifecycle hiding and Git execution remain out of
+  scope.
+- **Git authority**: the product owner explicitly authorized one ordinary
+  commit and one non-force push to `origin/main`. The task and alignment records
+  grant no Git authority themselves. `.agentgov` and `.codex` remain local-only;
+  no PR, force-push, release, deployment, or package publication is authorized.
+- **Codex-run validation**: the focused documentation suite passed all 104
+  tests. The full baseline passed all 1,119 tests with 5 expected skips. Task
+  governance reported `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance
+  reported `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; and whitespace, high-confidence
+  secret-pattern, and local-identity-path scans passed. The protected local
+  Codex configuration and installed-launcher hashes remained unchanged. After
+  `git fetch origin`, `HEAD...origin/main` was `0 0`. Raw worktree scope
+  reported 28 admitted product paths and one expected failure for the excluded
+  `.codex/config.toml`; that local file remains outside the Git boundary.
+  Advisory native self-review `srv-018dc1dabef9d97fbb45b119beb121ef`
+  completed without expanding authority.
+- **User-reported validation**: the product owner ended today's work, selected
+  the accumulated-work boundary as option `1`, and supplied the exact
+  `REPLACE` task-takeover confirmation.
+- **Pending validation**: exact staged-path and staged-diff review, followed by
+  the authorized commit and ordinary non-force Git transport.
+- **Incomplete**: none in the accumulated product implementation or evidence
+  chain. Only the authorized Git commit and transport remain pending.
+- **Evidence limit**: the accumulated evidence does not explain the real Codex
+  current-source `-32603` initialize closure, establish repeat reliability or
+  portability, or prove adoption, prevented incidents, or business benefit.
+- **Next product review**: after the authorized push, review the remaining
+  real-client root-cause unknown and jointly decide whether to stop, compare
+  instruction semantics safely, or inspect another separately admitted client
+  boundary. This entry grants no next-task authority.
+
+#### Latest completed product slice
+
+- **Latest product slice**: resolved alignment journey
+  `mcpj-0b3ac31ba5954a9695921f9a0bdcc798` selected one corrected
+  repository-context comparison. Native proposal
+  `prp-92c93b0be7de4f3d8e4f59f30004f420`, admitted task
+  `p0-codex-repository-context-schema-differential-v1`, and the human's
+  separate `REPLACE` bind the diagnostic.
+- **Outcome**: bounded evidence reports
+  `LOCAL_MCP_RESPONSES_MATCH_EXCEPT_INSTRUCTIONS_AND_SERVER_VERSION`. The
+  installed and current-source bindings each started exactly once from the
+  repository context, exited `0`, emitted two JSON response lines, no other
+  standard output, and empty standard error. No retry occurred.
+- **First difference**: both initialize results have the same protocol,
+  top-level fields, and capabilities fingerprint. Their complete eight-tool
+  responses share SHA-256
+  `41a738c82d05b3bdbf4f036c1e153f81d09f4c931944ac223153d8dc0894ca90`;
+  installed-only, current-only, tool-field, description, and input-schema
+  difference counts are all zero. The only initialize differences are
+  `instructions` and `serverInfo.version`; the first non-version difference is
+  `instructions`, retained only by encoded length and fingerprint.
+- **Upstream connection**: the slice follows the real-client boundary task
+  `p0-codex-initialize-schema-version-differential-v1`, journey
+  `mcpj-a8e7b33cccb044c3ac013b523a2e032f`, proposal
+  `prp-fe9f9caf3db54f6a823175fbd4ded2df`, and advisory review
+  `srv-fee8df2987d96b8fd8f51223205cd8c1`. That blocked comparison retained
+  historical raw scope `PASS=5 FAIL=19 ADVISORY=0`. Its upstream live-client
+  boundary task was
+  `p0-codex-live-client-initialize-boundary-replay-v1`, journey
+  `mcpj-2560c6f047ee4c50a872521d35179ba3`, and advisory review
+  `srv-4f8b243f2ff5bd9dd3eb60d4a3e33320`. That replay found installed success
+  and a current-source `-32603` initialize closure; its historical raw scope
+  result remains `PASS=5 FAIL=16 ADVISORY=0`. The earlier local
+  installed-versus-source diagnostic, task
+  `p0-codex-installed-launcher-initialize-diagnostic-v1`,
+  journey `mcpj-8991aa45f87842a99038e6f78e50c9eb`, and advisory review
+  `srv-e959070dab8852ed65e972d6ccc4963f`. That diagnostic established Adapter
+  `1.6.0` versus `1.7.0` version skew while both passed minimal local STDIO
+  initialization. The preceding discovery-only closeout retained review
+  `srv-93b23c7f2c410b16a15660136a2153dc`. This slice preserves the prior
+  six-tool permanent-binding task
+  `p0-live-codex-mcp-consumer-binding-evidence-v1`, eight-tool discovery task
+  `p0-codex-eight-tool-discovery-replay-v1`, and corrected closeout task
+  `p0-codex-eight-tool-discovery-replay-v2` rather than replacing their
+  results.
+- **Configuration preservation**: the project `.codex/config.toml` retained the
+  same SHA-256 digest before and after diagnosis:
+  `4cca2d57edeaddfe52d3e6c4dd4d774192bbdbcab4e84e07df73e14a861c0348`.
+  The installed executable also retained digest
+  `7dada88a8ccff3dfa40dd52783719e5aced5b293202979ba3d5b75f027b498e7`.
+  Its permanent six-tool allow-list was not edited, and no package or AgentGov
+  runtime source was changed.
+- **Preserved boundary**: the slice does not invoke
+  `agentgov_task_completion_record` or `agentgov_drift_review_record`, change
+  AgentGov runtime or Codex configuration, transfer ownership of prior changes,
+  or authorize Git, publication, release, or deployment.
+- **Codex-run validation**: all 62 focused documentation tests and the complete
+  1,118-test repository suite pass with five Windows privilege-limited
+  symbolic-link skips. Task governance reports
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance reports
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; whitespace, privacy, and hash checks
+  pass. The read-only raw scope view reports
+  `PASS=5 FAIL=22 ADVISORY=0` because it keeps pre-existing excluded paths
+  visible as failures; no exception or ownership transfer is claimed.
+- **User-reported validation**: none.
 - **Advisory review**: native current-Agent self-review
-  `srv-fe956072419f5578994e91e4a2c1fbb8` completed as a distinct advisory pass.
-  It found the selected requirement split, unchanged 186-path architecture,
-  new content identity, one-attempt replay, v2 scope, updated entry tests,
-  privacy boundary, and denied downstream authorities consistent. Independent
-  assurance, portability, repeated reliability, and external outcomes remain
-  unknown.
-- **Pending validation**: actual interview pacing, interviewer comprehension,
-  external publication suitability, adoption, production behavior, portability,
-  repeated replay reliability, and interview outcome remain unknown.
-- **Incomplete**: none within the admitted local implementation, validation,
-  and Git-closeout scope once the final checks and push recorded below succeed.
-- **Next product review**: rehearse the 30-second answer, two-minute project
-  story, and six-step demo aloud; then decide whether copy or pacing needs a
-  separately admitted revision. This grants no automatic task, release,
-  deployment, hosting, or publication authority.
+  `srv-86f972d5b535ff303eed10e037330bef` completed as a distinct pass over
+  requirement conformance, implementation, scope, privacy, architecture, and
+  bounded value. It confirmed the compared tool and capability equality while
+  retaining real-client cause, repeated reliability, independent privacy
+  assurance, portability, and external outcomes as unknown. This is
+  self-review, not independent assurance. Prior reviews remain attached only
+  to their respective upstream tasks.
+- **Pending validation**: none within the admitted local comparison closeout.
+- **Incomplete**: none in the admitted local comparison.
+- **Evidence limit**: the observation rules out compared tool-set,
+  tool-description, tool-input-schema, and capabilities differences only at
+  this local fixture boundary. It does not identify the live Codex failure's
+  root cause, causal effect of instructions or version, portability, repeated
+  reliability, stateful semantics, independent assurance, adoption, prevented
+  incidents, or business benefit.
+- **Next product review**: decide whether the next bounded investigation should
+  compare instruction semantics without retaining sensitive content, inspect a
+  separately admitted real-client boundary, or stop. No direction is selected
+  or authorized by this entry.
 
 ### 2026-08-27 session handoff
 

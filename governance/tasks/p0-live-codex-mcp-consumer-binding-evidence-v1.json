@@ -1,0 +1,62 @@
+{
+  "acceptance_signals": [
+    "A dated consumer-validation record names the current Codex host as the measured consumer and retains only normalized, repository-safe facts.",
+    "The record proves the configured AgentGov server is enabled, the project allow-list and current callable surface both contain the same six named tools, and the current journey successfully exercises proposal form, alignment start/update/resolve, and post-change self-review start/complete.",
+    "The record compares that measured six-tool host binding with the source contract of six base tools and eight form-capable tools, classifies completion and drift review as host-configured omissions, and does not label them Adapter failures.",
+    "No Codex configuration, AgentGov runtime behavior, user configuration, external consumer repository, Git state, release, publication, or deployment is changed.",
+    "A deterministic documentation test protects the measured facts, privacy boundary, official OpenAI documentation reference, and explicit unknowns; focused and full repository validation pass."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-0378bf5dc5dd48d1b61ba598204869d3 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Record one privacy-bounded, reproducible compatibility observation for the current real Codex MCP consumer: confirm the enabled AgentGov server, compare the project six-tool allow-list with the current callable tool surface and the source eight-tool contract, exercise the admitted six-tool journey through native proposal, alignment, and post-change self-review calls, and document the exact host-configuration gap without changing AgentGov behavior or Codex configuration."
+  },
+  "risk": {
+    "items": [
+      "A live current-session observation could be overstated as independent assurance or universal Codex compatibility.",
+      "The current project configuration intentionally allow-lists six tools, so the live host cannot prove eight-tool exposure without a separately authorized configuration change.",
+      "Configuration inspection could expose private values unless evidence is restricted to tool names, enabled state, bounded timeout facts, and normalized CLI status.",
+      "The existing uncommitted parity slice overlaps STATUS.md and must be preserved while the new task changes only its own admitted evidence section.",
+      "Official OpenAI documentation establishes Codex MCP configuration and filtering behavior but does not independently prove AgentGov tool semantics.",
+      "Reviewed assumption: The current Codex session is a real MCP consumer for the project-scoped AgentGov server.",
+      "Reviewed assumption: The active callable AgentGov tool inventory is the host surface available to this Agent in the current session.",
+      "Reviewed assumption: The prior parity changes remain user-owned, uncommitted, and excluded except for the shared current-status surface.",
+      "Reviewed assumption: The resolved alignment journey remains available for the required post-change native self-review.",
+      "Reviewed unknown: Whether a fresh Codex session with an eight-tool allow-list would expose and successfully call completion and drift review remains unproven.",
+      "Reviewed unknown: Cross-host compatibility, repeated reliability, adoption, causal incident reduction, and business benefit remain unknown."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".agentgov/scope-baselines",
+      ".codex",
+      "docs/governance-mcp-adapter.md",
+      "src/agentgov/governance_mcp.py",
+      "tests/test_governance_mcp.py",
+      "docs/development-log/2026-08-30-mcp-tool-contract-parity.md",
+      "governance/tasks/p0-mcp-tool-contract-parity-v1.json"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-live-codex-mcp-consumer-binding-evidence-v1.json",
+      "docs/consumer-validation/live-codex-mcp-consumer-binding-evidence-v1-2026-08-30.md",
+      "tests/test_user_documentation.py",
+      "STATUS.md",
+      "docs/development-log/2026-08-30-live-codex-mcp-consumer-binding-evidence.md"
+    ]
+  },
+  "task_id": "p0-live-codex-mcp-consumer-binding-evidence-v1",
+  "title": "Record live Codex MCP consumer binding evidence",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v"
+  ]
+}

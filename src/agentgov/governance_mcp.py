@@ -86,22 +86,186 @@ MCP_LEGACY_PROTOCOL_VERSIONS = ("2025-11-25", "2025-06-18")
 MCP_SERVER_NAME = "agentgov-governance"
 MCP_SERVER_VERSION = "1.7.0"
 MCP_NATIVE_ACCOUNTABLE_OWNER = "Human product owner"
-MCP_BASE_TOOL_NAMES = (
-    "agentgov_alignment_start",
-    "agentgov_alignment_update",
-    "agentgov_alignment_resolve",
-    "agentgov_self_review_start",
-    "agentgov_self_review_complete",
-    "agentgov_task_completion_record",
+
+
+@dataclass(frozen=True)
+class McpToolPolicy:
+    """Canonical MCP identity, routing, effect, and authority-boundary metadata."""
+
+    name: str
+    discovery_gate: str
+    route_kind: str
+    handler_name: str
+    effect_kind: str
+    persistence_mode: str
+    decision_source: str
+    enforcement_owner: str
+    repository_write: bool
+    downstream_non_grants: tuple[str, ...]
+
+
+_MCP_COMMON_DOWNSTREAM_NON_GRANTS = (
+    "code_change",
+    "scope_expansion",
+    "exception",
+    "git_operations",
+    "publication",
+    "release",
+    "deployment",
 )
-MCP_TASK_COMPLETION_TOOL_NAME = MCP_BASE_TOOL_NAMES[-1]
-MCP_TASK_PROPOSAL_TOOL_NAME = "agentgov_task_proposal_review"
-MCP_DRIFT_REVIEW_TOOL_NAME = "agentgov_drift_review_record"
-MCP_FORM_TOOL_NAMES = (
-    MCP_TASK_PROPOSAL_TOOL_NAME,
-    MCP_DRIFT_REVIEW_TOOL_NAME,
+
+MCP_TOOL_POLICIES = (
+    McpToolPolicy(
+        name="agentgov_alignment_start",
+        discovery_gate="base",
+        route_kind="adapter",
+        handler_name="_alignment_start",
+        effect_kind="foreground_alignment_state",
+        persistence_mode="process_local",
+        decision_source="none",
+        enforcement_owner="governance_mcp_adapter",
+        repository_write=False,
+        downstream_non_grants=(*_MCP_COMMON_DOWNSTREAM_NON_GRANTS, "task_admission"),
+    ),
+    McpToolPolicy(
+        name="agentgov_alignment_update",
+        discovery_gate="base",
+        route_kind="adapter",
+        handler_name="_alignment_update",
+        effect_kind="foreground_alignment_state",
+        persistence_mode="process_local",
+        decision_source="normalized_human_answer",
+        enforcement_owner="governance_mcp_adapter",
+        repository_write=False,
+        downstream_non_grants=(*_MCP_COMMON_DOWNSTREAM_NON_GRANTS, "task_admission"),
+    ),
+    McpToolPolicy(
+        name="agentgov_alignment_resolve",
+        discovery_gate="base",
+        route_kind="adapter",
+        handler_name="_alignment_resolve",
+        effect_kind="foreground_alignment_state",
+        persistence_mode="process_local",
+        decision_source="human_selected_offered_option",
+        enforcement_owner="governance_mcp_adapter",
+        repository_write=False,
+        downstream_non_grants=(*_MCP_COMMON_DOWNSTREAM_NON_GRANTS, "task_admission"),
+    ),
+    McpToolPolicy(
+        name="agentgov_self_review_start",
+        discovery_gate="base",
+        route_kind="adapter",
+        handler_name="_self_review_start",
+        effect_kind="foreground_advisory_review_state",
+        persistence_mode="process_local",
+        decision_source="none",
+        enforcement_owner="governance_mcp_adapter",
+        repository_write=False,
+        downstream_non_grants=(*_MCP_COMMON_DOWNSTREAM_NON_GRANTS, "human_acceptance"),
+    ),
+    McpToolPolicy(
+        name="agentgov_self_review_complete",
+        discovery_gate="base",
+        route_kind="adapter",
+        handler_name="_self_review_complete",
+        effect_kind="foreground_advisory_review_state",
+        persistence_mode="process_local",
+        decision_source="none",
+        enforcement_owner="governance_mcp_adapter",
+        repository_write=False,
+        downstream_non_grants=(*_MCP_COMMON_DOWNSTREAM_NON_GRANTS, "human_acceptance"),
+    ),
+    McpToolPolicy(
+        name="agentgov_task_completion_record",
+        discovery_gate="base",
+        route_kind="adapter",
+        handler_name="_task_completion_record",
+        effect_kind="append_local_completion_evidence",
+        persistence_mode="exclusive_create_local_evidence",
+        decision_source="none",
+        enforcement_owner="task_completion_effect_boundary",
+        repository_write=True,
+        downstream_non_grants=(
+            *_MCP_COMMON_DOWNSTREAM_NON_GRANTS,
+            "requirement_acceptance",
+            "architecture_correctness",
+            "session_start",
+            "session_handoff",
+        ),
+    ),
+    McpToolPolicy(
+        name="agentgov_task_proposal_review",
+        discovery_gate="form_elicitation",
+        route_kind="native_form",
+        handler_name="_serve_task_proposal_call",
+        effect_kind="create_admitted_task_record",
+        persistence_mode="exclusive_create_task_record",
+        decision_source="native_human_form",
+        enforcement_owner="native_form_task_admission_boundary",
+        repository_write=True,
+        downstream_non_grants=(*_MCP_COMMON_DOWNSTREAM_NON_GRANTS, "session_start"),
+    ),
+    McpToolPolicy(
+        name="agentgov_drift_review_record",
+        discovery_gate="form_elicitation",
+        route_kind="native_form",
+        handler_name="_serve_drift_review_call",
+        effect_kind="create_drift_review_record_and_refresh_monitor",
+        persistence_mode="create_only_record_with_derived_monitor_refresh",
+        decision_source="native_human_form",
+        enforcement_owner="native_form_drift_review_boundary",
+        repository_write=True,
+        downstream_non_grants=(
+            *_MCP_COMMON_DOWNSTREAM_NON_GRANTS,
+            "task_admission",
+            "semantic_drift_decision",
+        ),
+    ),
 )
-MCP_TOOL_NAMES = (*MCP_BASE_TOOL_NAMES, *MCP_FORM_TOOL_NAMES)
+
+
+def _index_mcp_tool_policies(
+    policies: Sequence[McpToolPolicy],
+) -> Mapping[str, McpToolPolicy]:
+    index = {policy.name: policy for policy in policies}
+    if len(index) != len(policies):
+        raise RuntimeError("AgentGov MCP tool policy names must be unique")
+    if any(
+        policy.discovery_gate not in {"base", "form_elicitation"}
+        or policy.route_kind not in {"adapter", "native_form"}
+        or (policy.discovery_gate == "base") != (policy.route_kind == "adapter")
+        or not policy.downstream_non_grants
+        for policy in policies
+    ):
+        raise RuntimeError("AgentGov MCP tool policy classification is invalid")
+    return index
+
+
+MCP_TOOL_POLICY_BY_NAME = _index_mcp_tool_policies(MCP_TOOL_POLICIES)
+MCP_TOOL_NAMES = tuple(policy.name for policy in MCP_TOOL_POLICIES)
+MCP_BASE_TOOL_NAMES = tuple(
+    policy.name for policy in MCP_TOOL_POLICIES if policy.discovery_gate == "base"
+)
+MCP_FORM_TOOL_NAMES = tuple(
+    policy.name
+    for policy in MCP_TOOL_POLICIES
+    if policy.discovery_gate == "form_elicitation"
+)
+MCP_TASK_COMPLETION_TOOL_NAME = next(
+    policy.name
+    for policy in MCP_TOOL_POLICIES
+    if policy.handler_name == "_task_completion_record"
+)
+MCP_TASK_PROPOSAL_TOOL_NAME = next(
+    policy.name
+    for policy in MCP_TOOL_POLICIES
+    if policy.handler_name == "_serve_task_proposal_call"
+)
+MCP_DRIFT_REVIEW_TOOL_NAME = next(
+    policy.name
+    for policy in MCP_TOOL_POLICIES
+    if policy.handler_name == "_serve_drift_review_call"
+)
 MAX_PROPOSAL_ELICITATION_MESSAGE_CHARACTERS = 24_000
 _MARKDOWN_ESCAPE_RE = re.compile(r"([\\`*_[\]<>#])")
 MAX_DRIFT_REVIEW_ELICITATION_MESSAGE_CHARACTERS = 12_000
@@ -1093,12 +1257,6 @@ def _drift_review_input_schema() -> Mapping[str, Any]:
 def governance_mcp_tools() -> tuple[Mapping[str, Any], ...]:
     """Return a deterministic tool catalog with strict top-level input schemas."""
 
-    common_annotations = {
-        "readOnlyHint": True,
-        "destructiveHint": False,
-        "idempotentHint": False,
-        "openWorldHint": False,
-    }
     start_input_schema = _tool_schema(
         {
             "subject_type": {"enum": ["work_request", "active_task", "architecture"]},
@@ -1132,7 +1290,6 @@ def governance_mcp_tools() -> tuple[Mapping[str, Any], ...]:
             "title": "Start governed alignment",
             "description": "Use before meaningful development when multiple reasonable directions exist or the Agent is asked to choose what to build. Start one foreground alignment journey from normalized meaning; the human must select the final direction. Do not use for read-only or fully specified low-risk work.",
             "inputSchema": start_input_schema,
-            "annotations": common_annotations,
         },
         {
             "name": MCP_TOOL_NAMES[1],
@@ -1151,7 +1308,6 @@ def governance_mcp_tools() -> tuple[Mapping[str, Any], ...]:
                 },
                 ("journey_handle", "prompt", "answer_summary", "center_patch", "new_questions", "candidate_resolutions", "recommended_resolution_id", "ready_requested"),
             ),
-            "annotations": common_annotations,
         },
         {
             "name": MCP_TOOL_NAMES[2],
@@ -1161,7 +1317,6 @@ def governance_mcp_tools() -> tuple[Mapping[str, Any], ...]:
                 {"journey_handle": _handle_schema(), "decision_prompt": _digest_binding_schema("prompt_id", "^dpr-[0-9a-f]{32}$"), "selected_option_id": {"enum": ["return_to_center", "adopt_new_center", "split_new_requirement", "continue_exploration", "stop"]}},
                 ("journey_handle", "decision_prompt", "selected_option_id"),
             ),
-            "annotations": common_annotations,
         },
         {
             "name": MCP_TOOL_NAMES[3],
@@ -1186,7 +1341,6 @@ def governance_mcp_tools() -> tuple[Mapping[str, Any], ...]:
                 },
                 ("journey_handle", "reason_codes", "allowed_evidence_refs"),
             ),
-            "annotations": common_annotations,
         },
         {
             "name": MCP_TOOL_NAMES[4],
@@ -1196,7 +1350,6 @@ def governance_mcp_tools() -> tuple[Mapping[str, Any], ...]:
                 {"journey_handle": _handle_schema(), "request": _digest_binding_schema("request_id", "^asq-[0-9a-f]{32}$"), "observations": {"type": "array", "minItems": 1, "maxItems": 20, "uniqueItems": True, "items": _observation_schema()}},
                 ("journey_handle", "request", "observations"),
             ),
-            "annotations": common_annotations,
         },
         {
             "name": MCP_TASK_COMPLETION_TOOL_NAME,
@@ -1219,12 +1372,6 @@ def governance_mcp_tools() -> tuple[Mapping[str, Any], ...]:
                 },
                 ("task_path",),
             ),
-            "annotations": {
-                "readOnlyHint": False,
-                "destructiveHint": False,
-                "idempotentHint": False,
-                "openWorldHint": False,
-            },
         },
         {
             "name": MCP_TASK_PROPOSAL_TOOL_NAME,
@@ -1243,12 +1390,6 @@ def governance_mcp_tools() -> tuple[Mapping[str, Any], ...]:
                 "native admission."
             ),
             "inputSchema": _task_proposal_input_schema(),
-            "annotations": {
-                "readOnlyHint": False,
-                "destructiveHint": False,
-                "idempotentHint": False,
-                "openWorldHint": False,
-            },
         },
         {
             "name": MCP_DRIFT_REVIEW_TOOL_NAME,
@@ -1263,15 +1404,20 @@ def governance_mcp_tools() -> tuple[Mapping[str, Any], ...]:
                 "configured interval, or create no record."
             ),
             "inputSchema": _drift_review_input_schema(),
+        },
+    )
+    return tuple(
+        {
+            **tool,
             "annotations": {
-                "readOnlyHint": False,
+                "readOnlyHint": not MCP_TOOL_POLICY_BY_NAME[tool["name"]].repository_write,
                 "destructiveHint": False,
                 "idempotentHint": False,
                 "openWorldHint": False,
             },
-        },
+        }
+        for tool in tools
     )
-    return tools
 
 
 @dataclass(frozen=True)
@@ -1311,17 +1457,10 @@ class GovernanceMcpAdapter:
         self._journeys: dict[str, _Journey] = {}
 
     def call_tool(self, name: str, arguments: Any) -> Mapping[str, Any]:
-        dispatch = {
-            MCP_TOOL_NAMES[0]: self._alignment_start,
-            MCP_TOOL_NAMES[1]: self._alignment_update,
-            MCP_TOOL_NAMES[2]: self._alignment_resolve,
-            MCP_TOOL_NAMES[3]: self._self_review_start,
-            MCP_TOOL_NAMES[4]: self._self_review_complete,
-            MCP_TASK_COMPLETION_TOOL_NAME: self._task_completion_record,
-        }
-        handler = dispatch.get(name)
-        if handler is None:
+        policy = MCP_TOOL_POLICY_BY_NAME.get(name)
+        if policy is None or policy.route_kind != "adapter":
             raise GovernanceMcpError("MCP tool name is unsupported")
+        handler = getattr(self, policy.handler_name)
         try:
             return handler(arguments)
         except ReferenceAlignmentAdapterError as exc:
@@ -2392,7 +2531,9 @@ class GovernanceMcpServer:
         if self._client_supports_form_elicitation:
             return tools
         return tuple(
-            tool for tool in tools if tool["name"] not in MCP_FORM_TOOL_NAMES
+            tool
+            for tool in tools
+            if MCP_TOOL_POLICY_BY_NAME[tool["name"]].discovery_gate == "base"
         )
 
     @staticmethod
@@ -2578,9 +2719,10 @@ class GovernanceMcpServer:
             if not isinstance(params, Mapping) or set(params) - {"name", "arguments", "_meta", "inputResponses", "requestState"}:
                 return self._error(request_id, -32602, "Invalid tools/call params")
             name = params.get("name")
-            if name not in MCP_TOOL_NAMES:
+            policy = MCP_TOOL_POLICY_BY_NAME.get(name) if isinstance(name, str) else None
+            if policy is None:
                 return self._error(request_id, -32602, "Unknown AgentGov tool")
-            if name in MCP_FORM_TOOL_NAMES:
+            if policy.route_kind == "native_form":
                 is_proposal = name == MCP_TASK_PROPOSAL_TOOL_NAME
                 if not self._client_supports_form_elicitation:
                     return self._result(
@@ -2900,16 +3042,18 @@ class GovernanceMcpServer:
                     isinstance(payload, Mapping)
                     and payload.get("method") == "tools/call"
                     and isinstance(payload.get("params"), Mapping)
-                    and payload["params"].get("name") in MCP_FORM_TOOL_NAMES
                 ):
-                    if payload["params"].get("name") == MCP_TASK_PROPOSAL_TOOL_NAME:
-                        response = self._serve_task_proposal_call(
-                            payload, input_stream, output_stream
-                        )
+                    tool_name = payload["params"].get("name")
+                    policy = (
+                        MCP_TOOL_POLICY_BY_NAME.get(tool_name)
+                        if isinstance(tool_name, str)
+                        else None
+                    )
+                    if policy is not None and policy.route_kind == "native_form":
+                        handler = getattr(self, policy.handler_name)
+                        response = handler(payload, input_stream, output_stream)
                     else:
-                        response = self._serve_drift_review_call(
-                            payload, input_stream, output_stream
-                        )
+                        response = self.dispatch(payload)
                 else:
                     response = self.dispatch(payload)
             if response is not None:
