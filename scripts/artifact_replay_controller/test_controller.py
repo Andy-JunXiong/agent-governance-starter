@@ -80,7 +80,7 @@ class ArtifactReplayControllerTests(unittest.TestCase):
         source = captured[0].source
         self.assertIn("execute_real_replay_source", source)
         self.assertIn("ARTIFACT_REPLAY_SOURCE_IDENTITY", source)
-        self.assertIn('"manifest_path_count":186', source)
+        self.assertIn('"manifest_path_count":187', source)
         self.assertIn(controller.EXPECTED_PATH_DIGEST, source)
         self.assertIn(controller.EXPECTED_CONTENT_DIGEST, source)
         self.assertNotIn("check_manifest", source)

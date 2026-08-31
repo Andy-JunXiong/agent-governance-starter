@@ -1,0 +1,82 @@
+{
+  "acceptance_signals": [
+    "Before any execution or repository write after admission, a separate human task take-up captures one immutable task-start scope baseline and all three pre-existing untracked paths remain excluded and byte-identical.",
+    "Read-only preflight verifies exact current source identity, distribution manifest consistency, supported Python 3.12, offline build tooling, Codex availability, repository and user-state boundaries, zero fixture remotes before the turn, and no task-owned temporary residue.",
+    "Exactly one exact-current-source wheel is built without network or dependency download and installed into one fresh task-owned runtime before the consumer journey.",
+    "One new non-sensitive synthetic repository has exactly one local fixture baseline commit, no remote, and one deterministic README-only request.",
+    "Exactly one external Codex session receives one ordinary low-risk request without AgentGov names, internal protocol details, lifecycle commands, coaching, retry, or magic confirmation text.",
+    "Evidence distinguishes every lifecycle stage actually reached and stops at the first deviation without manufacturing proposal, human decision, take-up, edit, validation, completion, self-review, Monitor, or handoff results.",
+    "Any native human form is decided only by the human product owner; the Agent never infers, bypasses, or supplies that decision.",
+    "After privacy-bounded evidence is durable, only exact verified task-owned temporary assets are removed; pre-existing user files, configuration, credentials, trust state, processes, and repository paths remain unchanged.",
+    "The experiment record, current status, and dated log agree on outcome, first deviation, validation states, limits, denied authority, and next product review.",
+    "All declared focused, full-suite, task-governance, repository-governance, scope-baseline, JSON, and whitespace checks pass unless the first deviation explicitly prevents completion verification."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-d8a070579b444e4cae5d17bf674b57f5 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Run exactly one bounded end-to-end automatic governance rehearsal from exact current source in a new non-sensitive remote-free synthetic repository. Use the available supported Python 3.12 runtime for one offline build and isolated install, then start one ordinary low-risk Codex request without AgentGov names, protocol coaching, or magic confirmation text. Observe the actual proposal, human admission if offered, separate task take-up, edit, validation, completion recording, current-Agent review, Monitor visibility, and handoff. Stop at the first reproducibility, scope, privacy, host, protocol, or state-preservation deviation without retry or repair; retain only normalized evidence and remove only exact task-owned temporary assets when safely authorized by evidence."
+  },
+  "risk": {
+    "items": [
+      "The single external Codex session uses the existing authenticated entitlement and may consume usage before the first deviation.",
+      "A native admission form may be unavailable in the external client or may require a visible human decision; the run stops rather than bypassing it.",
+      "Exact-current-source offline build and isolated installation may fail under Python 3.12 even though it satisfies the documented minimum version.",
+      "The experiment creates a temporary synthetic Git repository with one local baseline commit; it has no remote and grants no Git authority over this repository or any real consumer.",
+      "Temporary cleanup is destructive only for exact task-owned roots after identity and evidence gates pass; otherwise recovery state remains untouched.",
+      "One rehearsal cannot establish adoption, repeatability, production reliability, causal benefit, time savings, or return on investment.",
+      "Reviewed assumption: The available Python 3.12 runtime and its existing build tooling can build current source without network access.",
+      "Reviewed assumption: The current distribution manifest remains internally consistent at execution preflight.",
+      "Reviewed assumption: The installed Codex client can start one bounded session against a temporary repository.",
+      "Reviewed assumption: A README-only synthetic change is low risk and deterministically testable.",
+      "Reviewed assumption: The human product owner is available if the external journey presents a native task-admission decision.",
+      "Reviewed unknown: Whether the exact current source builds and installs successfully under the available Python 3.12 toolchain.",
+      "Reviewed unknown: Whether one uncoached ordinary request independently selects the governance tools.",
+      "Reviewed unknown: Whether the external client negotiates and displays native proposal review.",
+      "Reviewed unknown: Which lifecycle stage the single session reaches before success or first deviation.",
+      "Reviewed unknown: Whether all measured local configuration, trust, process, and temporary-state identities remain unchanged after the run."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "docs/assets/linkedin-github-repository-cover.png",
+      "governance/tasks/p0-airbnb-runtime-completion-handoff.json",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "docs/adr",
+      "docs/development-automation-contracts.md",
+      "docs/product-requirements-automatic-governance.md",
+      "governance/distribution-input-manifest.json",
+      "scripts",
+      "src",
+      "tests"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-independent-automatic-journey-rehearsal-v3.json",
+      ".agentgov",
+      "docs/experiments/independent-automatic-journey-rehearsal-v3-2026-08-31.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-31-independent-automatic-journey-rehearsal-v3.md"
+    ]
+  },
+  "task_id": "p0-independent-automatic-journey-rehearsal-v3",
+  "title": "Independent automatic governance journey rehearsal v3",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; & \"$env:LOCALAPPDATA\\Programs\\Python\\Python312\\python.exe\" -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; & \"$env:LOCALAPPDATA\\Programs\\Python\\Python312\\python.exe\" -m unittest discover -s tests -v",
+    "agentgov check task governance/tasks/p0-independent-automatic-journey-rehearsal-v3.json --repository .",
+    "agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; & \"$env:LOCALAPPDATA\\Programs\\Python\\Python312\\python.exe\" -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-independent-automatic-journey-rehearsal-v3.json --baseline .agentgov/scope-baselines/p0-independent-automatic-journey-rehearsal-v3.json",
+    "& \"$env:LOCALAPPDATA\\Programs\\Python\\Python312\\python.exe\" -m json.tool governance/tasks/p0-independent-automatic-journey-rehearsal-v3.json",
+    "git diff --check"
+  ]
+}

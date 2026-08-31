@@ -188,6 +188,7 @@
     "src/agentgov/status.py",
     "src/agentgov/task_contract.py",
     "src/agentgov/task_proposal.py",
+    "src/agentgov/task_start_scope_baseline.py",
     "src/agentgov/update_check.py",
     "src/agentgov/upgrade_pr.py",
     "src/agentgov/upgrade_review.py",
@@ -213,6 +214,6 @@
     "templates/tasks.keep",
     "templates/work-request.template.json"
   ],
-  "path_digest": "sha256:cfea3a3632bd75d1f4db51168d257c465987d3fe620fda2449abcd86f42fcd03",
-  "content_digest": "sha256:b00be073afa541c3130cc620c84bd2bba2afa7b48ec4e70a4ff74998bc7fb8d9"
+  "path_digest": "sha256:79839fec9be5dfb8bb30c41e74a0d8a9a6a11b3587001af6395f7f1b7c506e9a",
+  "content_digest": "sha256:a695fb5afcaadcc2f3382a7a878d4e182070539d61b5e39a0ea663b00874a96c"
 }

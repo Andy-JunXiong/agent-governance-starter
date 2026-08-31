@@ -1,0 +1,84 @@
+{
+  "acceptance_signals": [
+    "STATUS.md and the dated closeout log record both today's v3 stop and the completed 187-path repair, including exact validation, advisory review, completion evidence, remaining unknowns, and Git authority boundaries.",
+    "The complete intended commit contains only the enumerated task records, current manifest/controller/test changes, v3 evidence, and today's logs; local AgentGov state and unrelated user files remain unstaged.",
+    "The manifest check, focused tests, full suite, task and repository governance, task-start scope, JSON parsing, bounded secret and absolute-path scans, and whitespace checks pass.",
+    "The current branch is main, origin is the expected GitHub repository, fetch reports no unhandled divergence, and the staged diff exactly matches the reviewed product scope.",
+    "One ordinary non-force commit is created and pushed explicitly to origin main; no pull request, force-push, release, deployment, publication, or other external action occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-b463f4aea73d4e5d8a27a5c67c9dcf9b and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Update current status and one dated closeout log to record the verified v3 first-deviation rehearsal, the completed 187-path manifest synchronization, final governed evidence, preserved unknowns, and the human-authorized Git boundary. Validate the exact accumulated product diff, preserve local AgentGov state and unrelated user files outside version control, then create one ordinary commit and push it non-force to origin main."
+  },
+  "risk": {
+    "items": [
+      "The worktree contains unrelated user-owned untracked files that must not be staged.",
+      "Local .agentgov state contains privacy-bounded evidence and must remain outside the commit even though it is in task scope for governed session recording.",
+      "A direct push changes shared remote history; remote divergence must be checked without force-push or discarding work.",
+      "A broad staging command could accidentally include excluded files, so staging must use an exact path list.",
+      "The repaired manifest has not been tested through a built artifact or v4 journey and must not be described as end-to-end success.",
+      "Reviewed assumption: The user's request authorizes one ordinary commit and one non-force push of today's reviewed governed product work to the configured origin main.",
+      "Reviewed assumption: The existing v3 and manifest-synchronization changes are complete outputs of their admitted tasks and belong in the same day-closeout commit.",
+      "Reviewed assumption: The configured origin URL and main branch are the intended GitHub destination.",
+      "Reviewed assumption: Git transport credentials remain available through the configured credential helper.",
+      "Reviewed assumption: README, development strategy, ADRs, release identity, public HTML, and localized pages do not own changed truth for this static repair and stopped rehearsal.",
+      "Reviewed unknown: Whether origin main advanced after the last local observation.",
+      "Reviewed unknown: Whether Git transport authentication will succeed.",
+      "Reviewed unknown: Whether downstream GitHub CI will run or pass.",
+      "Reviewed unknown: Whether a future 187-path artifact builds and completes the automatic consumer journey."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "docs/assets/linkedin-github-repository-cover.png",
+      "governance/tasks/p0-airbnb-runtime-completion-handoff.json",
+      "README.md",
+      "DEVELOPMENT_PLAN.md",
+      "AGENTS.md",
+      "docs/adr",
+      "docs/build-validation",
+      "docs/artifact-replay-interview-walkthrough.md",
+      "docs/artifact-replay-interview.html",
+      "docs/artifact-replay-interview.zh-CN.html",
+      "src",
+      "tests"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-session-closeout-main-push-2026-08-31-v2.json",
+      "governance/tasks/p0-independent-automatic-journey-rehearsal-v3.json",
+      "governance/tasks/p0-distribution-manifest-baseline-module-sync-v1.json",
+      "governance/distribution-input-manifest.json",
+      "scripts/artifact_replay_controller/controller.py",
+      "scripts/artifact_replay_controller/test_controller.py",
+      "STATUS.md",
+      "docs/experiments/independent-automatic-journey-rehearsal-v3-2026-08-31.md",
+      "docs/development-log/2026-08-31-independent-automatic-journey-rehearsal-v3.md",
+      "docs/development-log/2026-08-31-distribution-manifest-baseline-module-sync-v1.md",
+      "docs/development-log/2026-08-31-session-closeout-main-push-v2.md",
+      ".agentgov"
+    ]
+  },
+  "task_id": "p0-session-closeout-main-push-2026-08-31-v2",
+  "title": "Close out and push today's governed journey work",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; & \"$env:LOCALAPPDATA\\Programs\\Python\\Python312\\python.exe\" -m scripts.distribution_input_manifest check --repository . --manifest governance/distribution-input-manifest.json",
+    "$env:PYTHONPATH = \"src\"; & \"$env:LOCALAPPDATA\\Programs\\Python\\Python312\\python.exe\" -m unittest scripts.distribution_input_manifest.test_manifest scripts.artifact_replay_controller.test_controller tests.test_interview_documentation tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; & \"$env:LOCALAPPDATA\\Programs\\Python\\Python312\\python.exe\" -m unittest discover -s tests -v",
+    "agentgov check task governance/tasks/p0-session-closeout-main-push-2026-08-31-v2.json --repository .",
+    "agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; & \"$env:LOCALAPPDATA\\Programs\\Python\\Python312\\python.exe\" -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-session-closeout-main-push-2026-08-31-v2.json --baseline .agentgov/scope-baselines/p0-session-closeout-main-push-2026-08-31-v2.json",
+    "& \"$env:LOCALAPPDATA\\Programs\\Python\\Python312\\python.exe\" -m json.tool governance/tasks/p0-session-closeout-main-push-2026-08-31-v2.json",
+    "git diff --check"
+  ]
+}

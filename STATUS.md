@@ -42,6 +42,178 @@ scheduling authority.
 
 ### Current closeout snapshot
 
+#### Today's governed journey Git closeout v2
+
+- **Active slice**: native proposal
+  `prp-b463f4aea73d4e5d8a27a5c67c9dcf9b` admitted task
+  `p0-session-closeout-main-push-2026-08-31-v2` after the product owner
+  explicitly requested the documentation closeout, commit, and push. The
+  product owner then supplied exact `REPLACE`; current source captured
+  task-start baseline
+  `sha256:59ee0db276873265b1f206c991f12c912620116011e175bff409cbaedae3414f`.
+- **Outcome**: `READY_FOR_AUTHORIZED_GIT_CLOSEOUT`. Today's accumulated product
+  change contains the v3 first-deviation evidence and the independently
+  admitted 187-path manifest/controller synchronization. It does not turn the
+  stopped v3 run into an end-to-end success claim.
+- **Source-of-truth reconciliation**: the two admitted task records own exact
+  implementation scope; their dated logs and v3 experiment own session
+  evidence; the manifest, controller, and focused test own the current 187-path
+  behavior. README, development strategy, ADRs, release identity, public HTML,
+  and localized pages own no changed truth for this bounded repair and remain
+  unchanged.
+- **Codex-run validation**: the preceding manifest-repair closeout passed the
+  187-path comparison, all 19 focused tests with one Windows-conditioned skip,
+  the complete 1,134-test suite with six platform-conditioned skips, task and
+  repository governance, task-start scope reconciliation, JSON parsing, and
+  whitespace validation. Fresh closeout validation and exact staged review
+  run before the authorized Git operation.
+- **User-reported validation**: the product owner ended today's work and
+  explicitly authorized one ordinary commit and one non-force push to the
+  configured `origin/main`. This supplies Git authority, not independent
+  product-result acceptance.
+- **Advisory review**: a distinct bounded current-Agent review found the
+  accumulated requirement, source ownership, historical 186/current 187
+  distinction, exact commit scope, and denied downstream authority coherent.
+  High-confidence secret-pattern and local absolute-path scans of the exact
+  intended text paths returned no matches. Because this fully specified
+  closeout started no new alignment journey, no native self-review result is
+  claimed; this pass is not independent assurance or human acceptance.
+- **Pending validation**: fresh closeout validation, remote divergence review,
+  and exact staged-diff review remain before commit and push. Git history owns
+  the future commit identity; this snapshot does not preclaim it.
+- **Incomplete**: none in today's bounded documentation and Git closeout.
+  Artifact build, installed behavior, v4 automatic-journey success, downstream
+  CI, adoption, and business benefit remain unknown.
+- **Preserved boundary**: local `.agentgov` state, `.codex/config.toml`,
+  `docs/assets/linkedin-github-repository-cover.png`, and
+  `governance/tasks/p0-airbnb-runtime-completion-handoff.json` remain outside
+  the intended commit. No pull request, force-push, publication, release,
+  deployment, or other external action is authorized.
+- **Next product review**: after this Git closeout, decide whether to admit one
+  new v4 rehearsal of the repaired 187-path automatic journey. This entry
+  grants no new task or downstream authority.
+
+#### Distribution manifest baseline-module synchronization v1
+
+- **Active slice**: resolved alignment journey
+  `mcpj-c65f17a515b04eaba7080c8682e09df4` recorded the product owner's
+  selection of the coherent minimal repair. Native proposal
+  `prp-e24721b244fe4c648b5180f2c84c0e93` admitted task
+  `p0-distribution-manifest-baseline-module-sync-v1`; the product owner then
+  supplied exact `REPLACE`. Current source captured task-start baseline
+  `sha256:ac4fbb4b3ebab05cc8ce283081c8ea3a37580ca32fe5023e5a479a72ece8af6e`
+  before repair writes.
+- **Outcome**: `CURRENT_DISTRIBUTION_IDENTITIES_SYNCHRONIZED_AT_187_PATHS`.
+  The durable manifest now includes
+  `src/agentgov/task_start_scope_baseline.py` exactly once at its sorted
+  location. Independent derivation and persistence agree on 187 paths, path
+  identity
+  `sha256:79839fec9be5dfb8bb30c41e74a0d8a9a6a11b3587001af6395f7f1b7c506e9a`,
+  and content identity
+  `sha256:a695fb5afcaadcc2f3382a7a878d4e182070539d61b5e39a0ea663b00874a96c`.
+- **Runtime consistency**: the fixed artifact replay controller now binds the
+  same count and identities; its request shape, authority boundary, retry,
+  build, cleanup, and privacy behavior are unchanged. The focused expectation
+  now checks the 187-path transport fact.
+- **Historical boundary**: earlier 186-path tasks, evidence, build records,
+  walkthroughs, demonstrations, and status snapshots remain unchanged because
+  they report their original observed artifacts rather than current identity.
+- **Codex-run validation**: fresh manifest comparison passes with 187 committed
+  inputs, zero differences, zero tracked deltas, and zero untracked overlays.
+  The 19 focused manifest and controller tests pass with one Windows
+  privilege-limited symbolic-link skip. The full suite passes all 1,134 tests
+  with six platform-conditioned skips. Task governance reports
+  `PASS=3`, `WARN=1`, `FAIL=0`, `ADVISORY=3`; repository governance reports
+  `PASS=26`, `WARN=2`, `FAIL=0`, `ADVISORY=4`. The task-start scope check,
+  task JSON parsing, and diff-whitespace check pass.
+- **User-reported validation**: the product owner selected direction `1`,
+  admitted the exact native task, and supplied the separate exact `REPLACE`
+  confirmation. These actions provide direction and task authority, not
+  independent result acceptance.
+- **Advisory review**: distinct native current-Agent self-review
+  `srv-45a0e365efa6b83b40b05743175e747b` found the static repair consistent with
+  the selected direction and preserved the historical and authority
+  boundaries. It keeps artifact-build success, automatic-journey success, and
+  observed user benefit unknown. This is self-review, not independent
+  assurance or human acceptance.
+- **Governed completion**: current-source fallback completion evidence
+  `evd-3384ac3b5e2d49e095948986c0ea8069` ran all eight task-declared commands
+  with exit code zero and reconciled the unchanged governed snapshot as
+  `verified`. The native MCP completion-record tool was not exposed in this
+  session; no native completion result is fabricated.
+- **Pending validation**: none inside the admitted static synchronization. No
+  build or consumer replay is part of this repair.
+- **Incomplete**: none in the admitted static synchronization. Artifact build,
+  installed behavior, and automatic-journey success remain unestablished.
+- **Preserved boundary**: the completed v3 task and evidence, user files,
+  historical 186-path facts, package source, schemas, and public walkthroughs
+  remain unchanged. No build, dependency installation, network request,
+  external Agent or model session, synthetic repository, Git operation,
+  publication, release, deployment, or external write occurred.
+- **Next product review**: decide whether to admit one new v4 rehearsal now
+  that the deterministic artifact-input gate is restored. This entry grants no
+  replay, task, model, Git, publication, release, deployment, or external
+  authority.
+
+#### Independent automatic-governance journey rehearsal v3
+
+- **Active slice**: resolved alignment journey
+  `mcpj-e3a056c978254d30a602c2885f5c5edc` recorded the product owner's choice
+  to resume the automatic journey. Native proposal
+  `prp-d8a070579b444e4cae5d17bf674b57f5` admitted task
+  `p0-independent-automatic-journey-rehearsal-v3`; the product owner then
+  supplied exact `START`. Current source created task-start baseline
+  `sha256:9ce1affec3832e9af4810d51d19b96c3a0d65c13fadbd5f7c1db296c2963f305`
+  before the session pointer and start event.
+- **Outcome**: `STOPPED_AT_DISTRIBUTION_MANIFEST_PREFLIGHT`. The durable
+  distribution manifest declares 186 paths, while fresh exact-current-source
+  derivation returns 187. The missing manifest entry is
+  `src/agentgov/task_start_scope_baseline.py`; declared and derived path and
+  content identities consequently differ.
+- **Protocol result**: the mandatory first-deviation rule stopped the rehearsal
+  before any build, wheel, installation, temporary root, synthetic repository,
+  fixture commit, external Codex session, model request, consumer form, or
+  consumer tool call. No retry, repair, guessed input, or substitution was
+  used.
+- **Codex-run validation**: current-source baseline comparison passed with all
+  three pre-existing untracked exclusions preserved byte-for-byte and the
+  admitted task record unchanged; all three post-start documentation deltas
+  are in scope. The manifest checker produced the bounded deterministic
+  failure above. The focused documentation suite passes all 63 tests. The
+  complete suite passes all 1,134 tests with six platform-limited skips. Task
+  governance is `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance is
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Task JSON and `git diff --check` pass.
+- **User-reported validation**: the product owner selected direction `1`,
+  admitted the exact native task, and supplied the separate exact `START`
+  confirmation. These decisions provide direction and task authority, not
+  independent result acceptance.
+- **Advisory review**: distinct native current-Agent self-review
+  `srv-88c41660caae11d2bf57ded4ddbd33d7` found the first-deviation stop,
+  durable manifest ownership, admitted scope, preserved exclusions, privacy,
+  and authority boundaries consistent. It retained all downstream journey
+  behavior, independent privacy assurance, adoption, reliability, time
+  savings, causal benefit, and return on investment as unknown. This is
+  self-review, not independent assurance or human acceptance.
+- **Pending validation**: none for the bounded first-deviation result. Artifact
+  build and every downstream journey stage were not reached and require a
+  separate repair and newly admitted rehearsal rather than validation under
+  this exhausted run.
+- **Incomplete**: the bounded v3 execution is complete at its required first
+  deviation, but the intended end-to-end automatic user journey remains
+  unestablished.
+- **Preserved boundary**: the manifest, product source, scripts, tests,
+  configuration, user state, and three pre-existing untracked paths remain
+  unchanged. No network, dependency download, Git operation, publication,
+  release, deployment, or external write occurred.
+- **Evidence**: normalized durable evidence is in
+  `docs/experiments/independent-automatic-journey-rehearsal-v3-2026-08-31.md`;
+  the dated session record is
+  `docs/development-log/2026-08-31-independent-automatic-journey-rehearsal-v3.md`.
+- **Next product review**: decide whether to admit one narrow distribution
+  manifest synchronization for the newly packaged baseline module before any
+  fresh automatic-journey rehearsal. This entry grants no repair, retry, task,
+  Git, publication, release, deployment, or external authority.
+
 #### Preserved-exclusion completion baseline integration
 
 - **Active slice**: resolved architecture alignment journey
