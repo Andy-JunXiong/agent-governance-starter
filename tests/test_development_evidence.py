@@ -1,22 +1,32 @@
+import base64
 import json
 import contextlib
 import io
+import os
 import shutil
 import subprocess
 import sys
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from unittest import mock
 
 from agentgov.development_evidence import (
     COMPLETION_CONTRACT,
     EVIDENCE_CONTRACT,
+    EvidenceError,
+    _validation_process_argv,
     reconcile_task_completion,
     render_completion_json,
     render_validation_json,
     run_task_validation,
 )
 from agentgov.cli import EXIT_FAIL, EXIT_PASS, main
+from agentgov.task_start_scope_baseline import (
+    capture_task_start_baseline,
+    task_start_baseline_path,
+    write_baseline,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -47,6 +57,11 @@ def write(repository: Path, relative: str, content: str) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
     return path
+
+
+def python_validation_command(source: str) -> str:
+    command = f'"{sys.executable}" -c "{source}"'
+    return f"& {command}" if os.name == "nt" else command
 
 
 def task_document(command: str) -> dict[str, object]:
@@ -88,7 +103,7 @@ def create_repository(parent: Path, command: str | None = None) -> tuple[Path, P
     write(repository, "docs/requirement.md", "# Requirement\n")
     write(repository, "docs/adr/0001.md", "# ADR\n")
     write(repository, "src/app.py", "VALUE = 1\n")
-    validation = command or f'"{sys.executable}" -c "print(\'fixture-pass\')"'
+    validation = command or python_validation_command("print('fixture-pass')")
     task = write(
         repository,
         "governance/tasks/task.json",
@@ -99,8 +114,129 @@ def create_repository(parent: Path, command: str | None = None) -> tuple[Path, P
     return repository, task, run_git(repository, "rev-parse", "HEAD")
 
 
+def capture_start_baseline(repository: Path, task: Path, base: str) -> str:
+    baseline_ref = task_start_baseline_path("fixture-fresh-evidence")
+    baseline = capture_task_start_baseline(
+        repository,
+        task_path=task.relative_to(repository).as_posix(),
+        comparison_base=base,
+    )
+    write_baseline(baseline, repository=repository, output_path=baseline_ref)
+    return baseline_ref
+
+
 @unittest.skipUnless(shutil.which("git"), "Git is required for evidence fixtures")
 class DevelopmentEvidenceTests(unittest.TestCase):
+    def test_windows_validation_argv_is_encoded_noninteractive_powershell(self) -> None:
+        command = '$env:FIXTURE_VALUE = "quoted value"; Write-Output $env:FIXTURE_VALUE'
+
+        argv = _validation_process_argv(command, platform_name="nt")
+        script = base64.b64decode(argv[-1]).decode("utf-16-le")
+
+        self.assertEqual(
+            argv[:-1],
+            (
+                "powershell.exe",
+                "-NoLogo",
+                "-NoProfile",
+                "-NonInteractive",
+                "-EncodedCommand",
+            ),
+        )
+        self.assertIn(command, script)
+        self.assertIn("$agentgovCommandSucceeded = $?", script)
+        self.assertIn("exit $agentgovNativeExitCode", script)
+
+    def test_windows_quoted_executable_compatibility_adds_call_operator(self) -> None:
+        command = f'"{sys.executable}" -c "print(\'fixture-pass\')"'
+
+        argv = _validation_process_argv(command, platform_name="nt")
+        script = base64.b64decode(argv[-1]).decode("utf-16-le")
+
+        self.assertTrue(script.startswith(f"& {command}\n"))
+
+    def test_posix_validation_argv_uses_explicit_bin_sh(self) -> None:
+        command = "printf 'fixture-pass\\n'"
+
+        argv = _validation_process_argv(command, platform_name="posix")
+
+        self.assertEqual(argv, ("/bin/sh", "-c", command))
+
+    def test_unsupported_validation_platform_fails_closed(self) -> None:
+        with self.assertRaisesRegex(EvidenceError, "unsupported on platform"):
+            _validation_process_argv("true", platform_name="fixture-os")
+
+    def test_unavailable_validation_shell_fails_before_evidence_is_written(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            repository, task, base = create_repository(Path(temp_dir))
+            with mock.patch(
+                "agentgov.development_evidence._validation_process_argv",
+                return_value=("agentgov-fixture-missing-shell",),
+            ):
+                with self.assertRaisesRegex(EvidenceError, "validation shell is unavailable"):
+                    run_task_validation(task, repository=repository, comparison_base=base)
+
+            evidence_paths = list((repository / ".agentgov" / "evidence").glob("*.json"))
+            event_paths = list((repository / ".agentgov" / "events").glob("*.json"))
+
+        self.assertEqual(evidence_paths, [])
+        self.assertEqual(event_paths, [])
+
+    @unittest.skipUnless(
+        os.name == "nt" and shutil.which("powershell.exe"),
+        "Windows PowerShell is required for the native validation fixture",
+    )
+    def test_windows_powershell_preserves_quoting_and_environment_assignment(self) -> None:
+        command = (
+            '$env:AGENTGOV_FIXTURE = "quoted value"; '
+            'if ($env:AGENTGOV_FIXTURE -eq "quoted value") { '
+            'Write-Output "fixture-pass" } else { exit 9 }'
+        )
+        with TemporaryDirectory() as temp_dir:
+            repository, task, base = create_repository(Path(temp_dir), command)
+
+            run = run_task_validation(task, repository=repository, comparison_base=base)
+
+        self.assertEqual(run.evidence.outcome, "passed")
+        self.assertEqual(run.evidence.commands[0].exit_code, 0)
+        self.assertIn("fixture-pass", run.transient_outputs[0][0])
+
+    @unittest.skipUnless(
+        os.name == "nt" and shutil.which("powershell.exe"),
+        "Windows PowerShell is required for the native validation fixture",
+    )
+    def test_windows_powershell_propagates_native_and_shell_failures(self) -> None:
+        scenarios = (
+            (python_validation_command("import sys; sys.exit(7)"), 7),
+            ('Write-Error "fixture-shell-failure"', 1),
+        )
+        for command, expected_exit in scenarios:
+            with self.subTest(command=command), TemporaryDirectory() as temp_dir:
+                repository, task, base = create_repository(Path(temp_dir), command)
+
+                run = run_task_validation(task, repository=repository, comparison_base=base)
+
+            self.assertEqual(run.evidence.outcome, "failed")
+            self.assertEqual(run.evidence.commands[0].exit_code, expected_exit)
+
+    @unittest.skipUnless(
+        os.name == "posix" and Path("/bin/sh").exists(),
+        "/bin/sh is required for the POSIX validation fixture",
+    )
+    def test_posix_shell_propagates_success_and_failure(self) -> None:
+        scenarios = (("printf 'fixture-pass\\n'", 0), ("exit 5", 5))
+        for command, expected_exit in scenarios:
+            with self.subTest(command=command), TemporaryDirectory() as temp_dir:
+                repository, task, base = create_repository(Path(temp_dir), command)
+
+                run = run_task_validation(task, repository=repository, comparison_base=base)
+
+            self.assertEqual(run.evidence.commands[0].exit_code, expected_exit)
+            self.assertEqual(
+                run.evidence.outcome,
+                "passed" if expected_exit == 0 else "failed",
+            )
+
     def test_validate_then_finish_before_commit_is_verified_and_local_events_do_not_stale_it(self) -> None:
         with TemporaryDirectory() as temp_dir:
             repository, task, base = create_repository(Path(temp_dir))
@@ -135,9 +271,8 @@ class DevelopmentEvidenceTests(unittest.TestCase):
         self.assertTrue(committed.changes)
 
     def test_validation_generated_nonignored_artifact_is_stale_and_actionable(self) -> None:
-        command = (
-            f'"{sys.executable}" -c "from pathlib import Path; '
-            "Path('generated.txt').write_text('generated')\""
+        command = python_validation_command(
+            "from pathlib import Path; Path('generated.txt').write_text('generated')"
         )
         with TemporaryDirectory() as temp_dir:
             repository, task, base = create_repository(Path(temp_dir), command)
@@ -151,7 +286,9 @@ class DevelopmentEvidenceTests(unittest.TestCase):
         self.assertTrue(any("remove disposable output" in finding.message for finding in report.findings))
 
     def test_failed_validation_cannot_verify_and_raw_output_is_not_persisted(self) -> None:
-        command = f'"{sys.executable}" -c "print(\'private-failure-output\'); raise SystemExit(3)"'
+        command = python_validation_command(
+            "print('private-failure-output'); raise SystemExit(3)"
+        )
         with TemporaryDirectory() as temp_dir:
             repository, task, base = create_repository(Path(temp_dir), command)
 
@@ -164,10 +301,30 @@ class DevelopmentEvidenceTests(unittest.TestCase):
         self.assertNotIn("private-failure-output", persisted)
         self.assertNotIn(command, persisted)
 
+    def test_validation_stops_after_first_failed_command(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            repository, task, base = create_repository(Path(temp_dir))
+            document = json.loads(task.read_text(encoding="utf-8"))
+            document["validation_commands"] = [
+                python_validation_command("raise SystemExit(4)"),
+                python_validation_command(
+                    "from pathlib import Path; Path('should-not-run').write_text('ran')"
+                ),
+            ]
+            task.write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
+
+            run = run_task_validation(task, repository=repository, comparison_base=base)
+            second_command_ran = (repository / "should-not-run").exists()
+
+        self.assertEqual(run.evidence.outcome, "failed")
+        self.assertEqual(len(run.evidence.commands), 1)
+        self.assertEqual(run.evidence.commands[0].exit_code, 4)
+        self.assertFalse(second_command_ran)
+
     def test_ignored_validation_artifact_does_not_stale_evidence(self) -> None:
-        command = (
-            f'"{sys.executable}" -c "from pathlib import Path; '
-            "Path('.cache').mkdir(exist_ok=True); Path('.cache/out').write_text('ignored')\""
+        command = python_validation_command(
+            "from pathlib import Path; Path('.cache').mkdir(exist_ok=True); "
+            "Path('.cache/out').write_text('ignored')"
         )
         with TemporaryDirectory() as temp_dir:
             repository, task, base = create_repository(Path(temp_dir), command)
@@ -234,6 +391,77 @@ class DevelopmentEvidenceTests(unittest.TestCase):
         self.assertEqual(run.evidence.outcome, "passed")
         self.assertEqual(report.state, "needs_evidence")
         self.assertTrue(any(item.check_id == "scope.changed" and item.status == "FAIL" for item in report.findings))
+
+    def test_unchanged_preexisting_exclusion_is_visible_and_does_not_block_completion(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            repository, task, _ = create_repository(Path(temp_dir))
+            document = json.loads(task.read_text(encoding="utf-8"))
+            document["scope"]["exclude_paths"] = ["legacy.txt"]
+            task.write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
+            run_git(repository, "add", task.relative_to(repository).as_posix())
+            run_git(repository, "commit", "--quiet", "-m", "declare predecessor exclusion")
+            base = run_git(repository, "rev-parse", "HEAD")
+            write(repository, "legacy.txt", "predecessor\n")
+            capture_start_baseline(repository, task, base)
+            write(repository, "src/app.py", "VALUE = 2\n")
+
+            run_task_validation(task, repository=repository, comparison_base=base)
+            report = reconcile_task_completion(task, repository=repository)
+
+        self.assertEqual(report.state, "verified")
+        preserved = [item for item in report.findings if item.check_id == "scope.preserved"]
+        self.assertEqual(len(preserved), 1)
+        self.assertEqual(preserved[0].status, "PASS")
+        self.assertIn("non-owned", preserved[0].message)
+        self.assertIn("legacy.txt", preserved[0].message)
+
+    def test_changed_or_malformed_preexisting_exclusion_fails_closed(self) -> None:
+        for scenario in ("changed", "malformed"):
+            with self.subTest(scenario=scenario), TemporaryDirectory() as temp_dir:
+                repository, task, _ = create_repository(Path(temp_dir))
+                document = json.loads(task.read_text(encoding="utf-8"))
+                document["scope"]["exclude_paths"] = ["legacy.txt"]
+                task.write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
+                run_git(repository, "add", task.relative_to(repository).as_posix())
+                run_git(repository, "commit", "--quiet", "-m", "declare predecessor exclusion")
+                base = run_git(repository, "rev-parse", "HEAD")
+                write(repository, "legacy.txt", "predecessor\n")
+                baseline_ref = capture_start_baseline(repository, task, base)
+                if scenario == "changed":
+                    write(repository, "legacy.txt", "changed after start\n")
+                else:
+                    (repository / baseline_ref).write_text("{}\n", encoding="utf-8")
+                write(repository, "src/app.py", "VALUE = 2\n")
+
+                run_task_validation(task, repository=repository, comparison_base=base)
+                report = reconcile_task_completion(task, repository=repository)
+
+            self.assertEqual(report.state, "needs_evidence")
+            self.assertTrue(
+                any(
+                    item.status == "FAIL" and item.check_id == "scope.baseline"
+                    for item in report.findings
+                )
+            )
+
+    def test_missing_baseline_retains_strict_legacy_scope_behavior(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            repository, task, _ = create_repository(Path(temp_dir))
+            document = json.loads(task.read_text(encoding="utf-8"))
+            document["scope"]["exclude_paths"] = ["legacy.txt"]
+            task.write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
+            run_git(repository, "add", task.relative_to(repository).as_posix())
+            run_git(repository, "commit", "--quiet", "-m", "declare predecessor exclusion")
+            base = run_git(repository, "rev-parse", "HEAD")
+            write(repository, "legacy.txt", "predecessor\n")
+
+            run_task_validation(task, repository=repository, comparison_base=base)
+            report = reconcile_task_completion(task, repository=repository)
+
+        self.assertEqual(report.state, "needs_evidence")
+        self.assertTrue(
+            any(item.status == "FAIL" and item.check_id == "scope.changed" for item in report.findings)
+        )
 
     def test_missing_evidence_is_needs_evidence_not_verified(self) -> None:
         with TemporaryDirectory() as temp_dir:

@@ -234,6 +234,12 @@ user journey. Agent protocols such as `requirement-admission`,
 `action-loop-stagnation`, and `reconcile-invariants` advise the coding agent;
 an advisory request is not a mechanical runtime halt.
 
+Confirmed `govern start` now freezes one local, hash-only task-start scope
+baseline. Completion can therefore keep a byte-identical pre-existing excluded
+change visible and non-owned without blocking otherwise fresh evidence; any
+post-start change to that exclusion fails closed. Older sessions without a
+trustworthy pre-write baseline retain strict scope blocking.
+
 Current source includes Codex lifecycle hooks, a foreground Governance MCP
 Adapter, native human-owned task admission where the host supports it, and
 active-Agent self-review after resolved alignment. These are development

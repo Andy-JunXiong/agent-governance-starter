@@ -22,6 +22,13 @@ from agentgov.event_store import (
 )
 from agentgov.git_snapshot import resolve_comparison_base
 from agentgov.path_policy import is_segment_prefix, scope_path_error
+from agentgov.task_start_scope_baseline import (
+    BaselineError,
+    baseline_to_payload,
+    capture_task_start_baseline,
+    task_start_baseline_path,
+    write_baseline,
+)
 from agentgov.task_contract import (
     canonical_task_digest,
     check_development_task,
@@ -79,6 +86,7 @@ class StartPlan:
             values.append(self.session.task_path)
         values.extend(
             (
+                task_start_baseline_path(self.session.task_id),
                 SESSION_RELATIVE_PATH,
                 f".agentgov/events/{self.event_id}.json",
             )
@@ -629,7 +637,11 @@ def apply_start_plan(plan: StartPlan) -> StartResult:
         previous_pointer = pointer.read_bytes()
     planned_pointer = _encoded(asdict(plan.session))
     planned_task = _encoded(plan.task_document)
+    baseline_ref = task_start_baseline_path(plan.session.task_id)
+    baseline_path = plan.root.joinpath(*PurePosixPath(baseline_ref).parts)
+    planned_baseline: bytes | None = None
     created_task = False
+    created_baseline = False
     try:
         if plan.create_task:
             task_path.parent.mkdir(parents=True, exist_ok=True)
@@ -640,6 +652,23 @@ def apply_start_plan(plan: StartPlan) -> StartResult:
         if context.task_digest != plan.session.task_digest:
             raise SessionPolicyError("task content changed after preview; build and review a new start plan")
         selected = tuple(item.path for item in context.selected_governance)
+        try:
+            baseline = capture_task_start_baseline(
+                plan.root,
+                task_path=plan.session.task_path,
+                comparison_base=plan.session.comparison_base_sha,
+            )
+            planned_baseline = _encoded(baseline_to_payload(baseline))
+            write_baseline(
+                baseline,
+                repository=plan.root,
+                output_path=baseline_ref,
+            )
+            created_baseline = True
+        except BaselineError as baseline_exc:
+            raise SessionPolicyError(
+                f"task-start scope baseline could not be captured: {baseline_exc}"
+            ) from baseline_exc
         _write_pointer(plan.root, plan.session)
         _, event_ref = append_governance_event(
             plan.root,
@@ -653,9 +682,14 @@ def apply_start_plan(plan: StartPlan) -> StartResult:
             governance_refs=selected,
             reason_codes=(
                 "start_confirmed",
+                "task_start_baseline_captured",
                 "compact_task_created" if plan.create_task else "admitted_task_selected",
             ),
-            metrics={"selected_governance": len(selected), "task_created": int(plan.create_task)},
+            metrics={
+                "selected_governance": len(selected),
+                "task_created": int(plan.create_task),
+                "scope_baseline_created": 1,
+            },
             occurred_at=plan.session.started_at,
             event_id=plan.event_id,
         )
@@ -669,6 +703,14 @@ def apply_start_plan(plan: StartPlan) -> StartResult:
                     _write_pointer(plan.root, plan.prior_session)
         except Exception as rollback_exc:
             rollback_errors.append(f"session pointer: {rollback_exc}")
+        try:
+            if created_baseline and baseline_path.exists():
+                if planned_baseline is not None and baseline_path.read_bytes() == planned_baseline:
+                    baseline_path.unlink()
+                else:
+                    rollback_errors.append("scope baseline changed concurrently and was preserved")
+        except Exception as rollback_exc:
+            rollback_errors.append(f"scope baseline: {rollback_exc}")
         try:
             if created_task and task_path.exists():
                 if task_path.read_bytes() == planned_task:

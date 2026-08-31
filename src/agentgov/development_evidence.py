@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import base64
 import hashlib
 import json
+import os
 import re
 import subprocess
 import uuid
@@ -22,6 +24,12 @@ from agentgov.git_snapshot import (
     snapshot_to_payload,
 )
 from agentgov.path_policy import evaluate_path_scope
+from agentgov.task_start_scope_baseline import (
+    BaselineError,
+    FindingStatus,
+    check_task_start_baseline,
+    task_start_baseline_path,
+)
 from agentgov.task_contract import (
     canonical_task_digest,
     check_development_task,
@@ -115,6 +123,53 @@ def _command_identity(command: str) -> str:
     return _digest_bytes(command.encode("utf-8"))
 
 
+def _powershell_validation_script(command: str) -> str:
+    executable_match = re.match(r'^(\s*)("[^"\r\n]+")(?=\s)', command)
+    if executable_match is not None:
+        quoted_executable = executable_match.group(2)
+        if (
+            "\\" in quoted_executable
+            or "/" in quoted_executable
+            or quoted_executable.lower().endswith('.exe"')
+        ):
+            command = (
+                executable_match.group(1)
+                + "& "
+                + command[len(executable_match.group(1)) :]
+            )
+    return (
+        f"{command}\n"
+        "$agentgovCommandSucceeded = $?\n"
+        "$agentgovNativeExitCode = $LASTEXITCODE\n"
+        "if ($agentgovCommandSucceeded) { exit 0 }\n"
+        "if ($null -ne $agentgovNativeExitCode -and $agentgovNativeExitCode -ne 0) "
+        "{ exit $agentgovNativeExitCode }\n"
+        "exit 1\n"
+    )
+
+
+def _validation_process_argv(
+    command: str,
+    *,
+    platform_name: str | None = None,
+) -> tuple[str, ...]:
+    platform = os.name if platform_name is None else platform_name
+    if platform == "nt":
+        script = _powershell_validation_script(command)
+        encoded = base64.b64encode(script.encode("utf-16-le")).decode("ascii")
+        return (
+            "powershell.exe",
+            "-NoLogo",
+            "-NoProfile",
+            "-NonInteractive",
+            "-EncodedCommand",
+            encoded,
+        )
+    if platform == "posix":
+        return ("/bin/sh", "-c", command)
+    raise EvidenceError(f"validation command execution is unsupported on platform {platform!r}")
+
+
 def _safe_repository(repository: Path) -> Path:
     if repository.is_symlink() or not repository.exists() or not repository.is_dir():
         raise EvidenceError("repository root must be an existing non-symbolic-link directory")
@@ -174,16 +229,21 @@ def run_task_validation(
         if not isinstance(command, str):
             raise EvidenceError("validation command must be a string")
         started_at = utc_now()
-        completed = subprocess.run(
-            command,
-            cwd=root,
-            shell=True,
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            check=False,
-            timeout=timeout_seconds,
-        )
+        process_argv = _validation_process_argv(command)
+        try:
+            completed = subprocess.run(
+                process_argv,
+                cwd=root,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                check=False,
+                timeout=timeout_seconds,
+            )
+        except FileNotFoundError as exc:
+            raise EvidenceError(
+                f"validation shell is unavailable for platform {os.name!r}"
+            ) from exc
         completed_at = utc_now()
         stdout = completed.stdout.decode("utf-8", errors="replace")
         stderr = completed.stderr.decode("utf-8", errors="replace")
@@ -395,6 +455,77 @@ def _scope_findings(task: Mapping[str, Any], snapshot: CanonicalGitSnapshot) -> 
     return findings
 
 
+def inspect_task_completion_scope(
+    task_path: Path,
+    *,
+    repository: Path,
+    comparison_base: str,
+) -> tuple[CompletionFinding, ...]:
+    """Inspect completion scope with a start baseline, or strict legacy fallback."""
+
+    root = _safe_repository(repository)
+    resolved_task, task = _admitted_task(task_path, root)
+    task_id = str(task["task_id"])
+    try:
+        baseline_ref = task_start_baseline_path(task_id)
+    except BaselineError as exc:
+        return (
+            CompletionFinding(
+                "FAIL",
+                "scope.baseline",
+                f"task-start scope baseline identity is invalid: {exc}",
+            ),
+        )
+    baseline_path = root.joinpath(*Path(baseline_ref).parts)
+    if not baseline_path.exists():
+        snapshot = capture_git_snapshot(root, comparison_base=comparison_base)
+        return tuple(_scope_findings(task, snapshot))
+    try:
+        report = check_task_start_baseline(
+            root,
+            task_path=resolved_task.relative_to(root).as_posix(),
+            baseline_path=baseline_ref,
+        )
+    except BaselineError as exc:
+        return (
+            CompletionFinding(
+                "FAIL",
+                "scope.baseline",
+                f"task-start scope baseline is unreadable or invalid: {exc}",
+            ),
+        )
+    findings: list[CompletionFinding] = []
+    if report.comparison_base_sha != comparison_base:
+        findings.append(
+            CompletionFinding(
+                "FAIL",
+                "scope.baseline",
+                "task-start scope baseline does not match the completion comparison base",
+            )
+        )
+    for item in report.findings:
+        location = item.path or "task binding"
+        if item.old_path is not None:
+            location = f"{item.old_path} -> {location}"
+        if item.status is FindingStatus.PRESERVED:
+            findings.append(
+                CompletionFinding(
+                    "PASS",
+                    "scope.preserved",
+                    f"preserved non-owned pre-existing exclusion at {item.layer}: {location}; {item.message}",
+                )
+            )
+        else:
+            findings.append(
+                CompletionFinding(
+                    item.status.value,
+                    "scope.baseline",
+                    f"{item.layer or 'binding'}: {location}; {item.message}",
+                )
+            )
+    return tuple(findings)
+
+
 def _evidence_integrity_errors(
     evidence: ValidationEvidence,
     task: Mapping[str, Any],
@@ -501,6 +632,13 @@ def _assess_task_completion(
                     )
                     for reason in evidence.mutation_reasons
                 )
+        findings.extend(
+            inspect_task_completion_scope(
+                resolved_task,
+                repository=root,
+                comparison_base=evidence.comparison_base_sha,
+            )
+        )
         current = capture_git_snapshot(root, comparison_base=evidence.comparison_base_sha)
         differences = explain_snapshot_difference(evidence.snapshot_after, current)
         if differences:
@@ -511,7 +649,6 @@ def _assess_task_completion(
             reason_codes.append("snapshot_changed")
         else:
             findings.append(CompletionFinding("PASS", "evidence.fresh", "task, HEAD, index, worktree, rename, and non-ignored untracked identities match validation evidence"))
-        findings.extend(_scope_findings(task, current))
     architecture_refs = task.get("architecture_refs")
     if architecture_refs:
         findings.append(CompletionFinding("ADVISORY", "architecture.review", "passing evidence does not prove requirement or architecture correctness; review the selected architecture context"))
@@ -534,6 +671,7 @@ def _assess_task_completion(
         known_limits=(
             "verified means declared commands passed against an unchanged governed snapshot",
             "verified does not prove requirement satisfaction, architecture correctness, or validation sufficiency",
+            "preserved exclusions remain visible non-owned state and grant no exception or acceptance",
             "local events are not visible to CI unless a later explicit redacted export is performed",
         ),
         event_ref=None,

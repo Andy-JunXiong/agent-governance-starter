@@ -22,6 +22,11 @@ from agentgov.development_session import (
     resolve_active_task,
 )
 from agentgov.event_store import load_governance_events
+from agentgov.task_start_scope_baseline import (
+    check_task_start_baseline,
+    load_baseline,
+    task_start_baseline_path,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -121,8 +126,12 @@ class DevelopmentSessionTests(unittest.TestCase):
             self.assertFalse((repository / ".agentgov").exists())
 
         self.assertEqual(plan.session.comparison_base_sha, base)
-        self.assertEqual(plan.targets[0], ".agentgov/current-task.json")
-        self.assertEqual(plan.targets[1], f".agentgov/events/{plan.event_id}.json")
+        self.assertEqual(
+            plan.targets[0],
+            ".agentgov/scope-baselines/fixture-session.json",
+        )
+        self.assertEqual(plan.targets[1], ".agentgov/current-task.json")
+        self.assertEqual(plan.targets[2], f".agentgov/events/{plan.event_id}.json")
         self.assertEqual(plan.selected_governance, ("AGENTS.md", "governance/tasks/fixture-session.json"))
 
     def test_confirmation_requires_exact_word_and_interactive_terminal(self) -> None:
@@ -145,6 +154,8 @@ class DevelopmentSessionTests(unittest.TestCase):
             )
             result = apply_start_plan(plan)
             session = load_active_session(repository)
+            baseline_ref = task_start_baseline_path(result.session.task_id)
+            baseline = load_baseline(repository=repository, baseline_path=baseline_ref)
             events = load_governance_events(repository / ".agentgov/events").events
             monitor = build_development_monitor(repository)
             created = json.loads((repository / result.session.task_path).read_text(encoding="utf-8"))
@@ -152,6 +163,7 @@ class DevelopmentSessionTests(unittest.TestCase):
         self.assertIsNotNone(session)
         assert session is not None
         self.assertEqual(session.contract, SESSION_CONTRACT)
+        self.assertEqual(baseline.task.digest, session.task_digest)
         self.assertIn("governance/tasks/add-guided-session.json", created["scope"]["include_paths"])
         self.assertTrue(result.created_task)
         self.assertEqual(events[0].event_type, "task.started")
@@ -159,6 +171,60 @@ class DevelopmentSessionTests(unittest.TestCase):
         self.assertEqual(events[0].governance_refs, ("AGENTS.md", "governance/tasks/add-guided-session.json"))
         self.assertEqual(monitor.overview["task_starts"], 1)
         self.assertEqual(monitor.timeline[0]["governance_refs"], ["AGENTS.md", "governance/tasks/add-guided-session.json"])
+
+    def test_start_baseline_preserves_predecessor_exclusion_and_allows_task_delta(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            repository, tasks, base = create_repository(Path(temp_dir))
+            document = json.loads(tasks[0].read_text(encoding="utf-8"))
+            document["scope"]["exclude_paths"] = ["legacy.txt"]
+            tasks[0].write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
+            run_git(repository, "add", tasks[0].relative_to(repository).as_posix())
+            run_git(repository, "commit", "--quiet", "-m", "add exclusion")
+            base = run_git(repository, "rev-parse", "HEAD")
+            write(repository, "legacy.txt", "predecessor\n")
+
+            plan = build_start_plan(repository, task=tasks[0], comparison_base=base)
+            result = apply_start_plan(plan)
+            write(repository, "src/app.py", "VALUE = 2\n")
+            baseline_ref = task_start_baseline_path(result.session.task_id)
+            report = check_task_start_baseline(
+                repository,
+                task_path=result.session.task_path,
+                baseline_path=baseline_ref,
+            )
+
+        self.assertFalse(report.has_failures)
+        self.assertTrue(any(item.status.value == "PRESERVED" for item in report.findings))
+        self.assertTrue(any(item.check_id.startswith("current-delta") for item in report.findings))
+
+    def test_baseline_collision_or_later_start_failure_leaves_session_unchanged(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            repository, tasks, _ = create_repository(Path(temp_dir))
+            baseline_path = repository / task_start_baseline_path("fixture-session")
+            baseline_path.parent.mkdir(parents=True)
+            baseline_path.write_text("pre-existing\n", encoding="utf-8")
+            plan = build_start_plan(repository, task=tasks[0])
+
+            with self.assertRaisesRegex(SessionPolicyError, "baseline could not be captured"):
+                apply_start_plan(plan)
+
+            self.assertEqual(baseline_path.read_text(encoding="utf-8"), "pre-existing\n")
+            self.assertIsNone(load_active_session(repository))
+            self.assertFalse((repository / ".agentgov" / "events").exists())
+
+        with TemporaryDirectory() as temp_dir:
+            repository, tasks, _ = create_repository(Path(temp_dir))
+            plan = build_start_plan(repository, task=tasks[0])
+            baseline_path = repository / task_start_baseline_path("fixture-session")
+
+            with patch(
+                "agentgov.development_session._write_pointer",
+                side_effect=SessionPolicyError("fixture pointer failure"),
+            ), self.assertRaisesRegex(SessionPolicyError, "fixture pointer failure"):
+                apply_start_plan(plan)
+
+            self.assertFalse(baseline_path.exists())
+            self.assertIsNone(load_active_session(repository))
 
     def test_noninteractive_start_previews_but_never_writes(self) -> None:
         with TemporaryDirectory() as temp_dir:

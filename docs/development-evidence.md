@@ -42,7 +42,10 @@ composition interfaces.
 - the task digest, comparison base, snapshot `HEAD`, committed-since-base,
   staged, unstaged, rename, and non-ignored untracked identities remained
   unchanged from validation completion to finish;
-- all canonical changed paths remain inside the task's structured scope.
+- every post-start canonical change remains inside the task's structured scope;
+- any pre-existing excluded change accepted by completion exactly matches the
+  immutable task-start baseline at the same Git layer and remains visible as a
+  non-owned `scope.preserved` finding.
 
 It does not prove that the validation commands were sufficient, the
 requirement was satisfied, or the architecture is correct. Architecture and
@@ -52,6 +55,21 @@ authority.
 
 Without matching evidence, finish reports `needs_evidence`; it never upgrades a
 self-reported completion claim to `verified`.
+
+## Task-start scope baseline
+
+Confirmed `govern start` creates one immutable local baseline before the
+session pointer and start event. It binds the exact admitted task digest,
+comparison base, HEAD, captured include/exclude scope, and per-path identities
+for committed, staged, unstaged, and untracked layers. Rename and copy records
+retain both endpoints.
+
+Completion uses that baseline only to distinguish byte-identical predecessor
+exclusions from post-start drift. A preserved exclusion is a visible `PASS`,
+not task ownership or an exception. Any identity, layer, endpoint, presence,
+task, base, HEAD, or captured-scope mismatch is a `FAIL`. A malformed baseline
+also fails; a missing baseline invokes the previous strict raw-scope behavior
+so older sessions are never upgraded retroactively.
 
 ## Canonical snapshot and exclusions
 
@@ -126,6 +144,18 @@ not complete, development history.
 That is an explicit local execution boundary: users should admit tasks and
 commands only from a repository they trust. AgentGov records command identity
 and outcome but does not sandbox project commands.
+
+Validation command strings use an explicit platform shell. Windows launches
+noninteractive, profile-free `powershell.exe` with an encoded script so
+PowerShell quoting and nonzero native exits survive process invocation. POSIX
+launches `/bin/sh -c`. AgentGov never uses the host language's implicit
+`shell=True` selection. The original admitted string remains the command
+identity; platform argv and Windows exit handling are execution details and do
+not broaden task scope or command authority. Previously admitted Windows
+strings beginning with a quoted executable path receive only PowerShell's
+execution-time call operator; they are not reinterpreted by `cmd.exe` or
+rewritten in the task. A missing or unsupported shell fails closed before
+local validation evidence is recorded.
 
 Evidence has strict structural and internal-integrity checks, but v1 does not
 cryptographically attest a hostile local actor. Signed evidence, runtime

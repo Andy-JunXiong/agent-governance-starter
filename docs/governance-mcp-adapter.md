@@ -217,10 +217,13 @@ Development source Adapter `1.6.0` adds the sixth base tool,
 `agentgov_task_completion_record`. Its only input is one safe
 repository-relative `governance/tasks/*.json` path. Before writing, the
 Adapter revalidates human admission, canonical task identity, the active-task
-binding when one exists, and every path in the complete Git snapshot. A
-matching session retains its recorded comparison base; a sessionless call uses
-current committed HEAD only after the complete current snapshot is within the
-exact task scope. The Adapter then runs only the task's declared validation
+binding when one exists, and baseline-aware completion scope. A matching
+session retains its recorded comparison base and may preserve only exact
+unchanged pre-existing exclusions captured by its immutable start baseline. A
+sessionless call or an older session without a valid baseline uses current
+committed HEAD and the strict complete-snapshot scope rule. Scope failure is
+still detected before validation or local evidence writes. The Adapter then
+runs only the task's declared validation
 commands and reuses `agentgov.development-evidence`,
 `agentgov.development-completion`, `validation.completed`, and
 `completion.reconciled`. Passing fresh evidence returns `verified`; failed,
@@ -603,15 +606,13 @@ blocked: the declared worktree-wide scope command treats 44 pre-existing paths
 that match explicit exclusions as failures. This is not a controller failure
 and is not silently waived.
 
-The repository now has an internal task-start scope-baseline bridge under
-`scripts/task_start_scope_baseline`. A future separately admitted task can use
-it before its first write to bind the exact task digest, HEAD, comparison base,
-captured scope, and privacy-reduced per-path identities across all four Git
-layers. Later comparison preserves only byte-identical pre-existing exclusions;
-post-start excluded, unclassified, changed, or missing identities fail closed.
-The bridge is not a Core, public CLI, installed Adapter, or MCP tool change and
-cannot retroactively validate either its own bootstrap task or the controller
-task.
+The task-start scope-baseline implementation is now installed under
+`agentgov.task_start_scope_baseline` and is captured by confirmed
+`govern start` before other session writes. CLI completion and
+`agentgov_task_completion_record` share its exact preservation rule:
+byte-identical pre-existing exclusions remain visible and non-owned, while
+post-start excluded, unclassified, changed, re-layered, renamed, or missing
+identities fail closed. Missing baselines retain strict legacy scope behavior.
 
 The separately admitted controller-closeout task has now used that boundary as
 its first execution action. Its initial comparison returned
@@ -622,7 +623,8 @@ exclusions. New evidence classifies the controller as
 `REVIEW_READY_BASELINE_BACKED` without rewriting the original stopped outcome
 or claiming its cumulative scope command passed.
 
-Product review may next decide between public baseline integration and one
-separately admitted single-launch Codex initialization retry. This record
-grants no task, Git action, retry, model, cleanup, publication, release, or
-deployment authority.
+The baseline integration closes the former completion dead-end without adding
+a completion state or exception authority. Product review may next return to
+the separately governed independent automatic journey. This record grants no
+task, Git action, retry, model, cleanup, publication, release, or deployment
+authority.

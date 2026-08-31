@@ -711,6 +711,53 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
             )
             self.assertFalse((root / ".agentgov" / "evidence").exists())
 
+    def test_native_completion_uses_active_session_preserved_exclusion_baseline(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            task_path = create_completion_repository(root)
+            task = json.loads(task_path.read_text(encoding="utf-8"))
+            task["scope"]["exclude_paths"] = ["legacy.txt"]
+            task_path.write_text(json.dumps(task, indent=2) + "\n", encoding="utf-8")
+            run_git(root, "add", task_path.relative_to(root).as_posix())
+            run_git(root, "commit", "--quiet", "-m", "declare predecessor exclusion")
+            (root / "legacy.txt").write_text("predecessor\n", encoding="utf-8")
+            apply_start_plan(build_start_plan(root, task=task_path))
+            (root / "src" / "app.py").write_text("VALUE = 2\n", encoding="utf-8")
+
+            result = adapter(repository=root).call_tool(
+                MCP_TASK_COMPLETION_TOOL_NAME,
+                {"task_path": "governance/tasks/native-completion-fixture.json"},
+            )
+
+            self.assertEqual(result["status"], "verified")
+            self.assertEqual(result["execution"]["mode"], "active_session")
+            self.assertEqual(result["findings"]["failures"], 0)
+
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            task_path = create_completion_repository(root)
+            task = json.loads(task_path.read_text(encoding="utf-8"))
+            task["scope"]["exclude_paths"] = ["legacy.txt"]
+            task_path.write_text(json.dumps(task, indent=2) + "\n", encoding="utf-8")
+            run_git(root, "add", task_path.relative_to(root).as_posix())
+            run_git(root, "commit", "--quiet", "-m", "declare predecessor exclusion")
+            (root / "legacy.txt").write_text("predecessor\n", encoding="utf-8")
+            apply_start_plan(build_start_plan(root, task=task_path))
+            (root / "legacy.txt").write_text("changed after start\n", encoding="utf-8")
+            initial_evidence = list((root / ".agentgov").glob("evidence/*.json"))
+
+            with self.assertRaises(GovernanceMcpError) as caught:
+                adapter(repository=root).call_tool(
+                    MCP_TASK_COMPLETION_TOOL_NAME,
+                    {"task_path": "governance/tasks/native-completion-fixture.json"},
+                )
+
+            self.assertEqual(caught.exception.code, "task_completion_scope_blocked")
+            self.assertEqual(
+                list((root / ".agentgov").glob("evidence/*.json")),
+                initial_evidence,
+            )
+
     def test_native_completion_invalid_or_out_of_scope_input_is_zero_write(self) -> None:
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)

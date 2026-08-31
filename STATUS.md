@@ -42,52 +42,230 @@ scheduling authority.
 
 ### Current closeout snapshot
 
-- **Active closeout**: resolved alignment journey
-  `mcpj-0a1a9b58d1bf480e9602ab92474570ec` offered three explicit Git-closeout
-  boundaries. The human selected option `1`: commit all reviewed accumulated
-  product source, tests, documentation, evidence, logs, and task records while
-  excluding local `.agentgov` and `.codex` state. Native proposal
-  `prp-591a4043bf4e46b993b927fba7c7eef1` admitted task
-  `p0-session-closeout-main-push-2026-08-31-v1`; the human separately entered
-  `REPLACE` to take up that task.
-- **Closeout outcome**: `READY_FOR_AUTHORIZED_GIT_CLOSEOUT`. The accumulated
-  product result combines the canonical eight-tool MCP policy implementation
-  with the six-tool live binding, eight-tool discovery, installed/current local
-  initialization, real-client initialize-boundary replay, and corrected local
-  response differential. The catalog remains six base tools plus two
-  form-capable tools; dynamic lifecycle hiding and Git execution remain out of
-  scope.
-- **Git authority**: the product owner explicitly authorized one ordinary
-  commit and one non-force push to `origin/main`. The task and alignment records
-  grant no Git authority themselves. `.agentgov` and `.codex` remain local-only;
-  no PR, force-push, release, deployment, or package publication is authorized.
-- **Codex-run validation**: the focused documentation suite passed all 104
-  tests. The full baseline passed all 1,119 tests with 5 expected skips. Task
-  governance reported `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance
-  reported `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; and whitespace, high-confidence
-  secret-pattern, and local-identity-path scans passed. The protected local
-  Codex configuration and installed-launcher hashes remained unchanged. After
-  `git fetch origin`, `HEAD...origin/main` was `0 0`. Raw worktree scope
-  reported 28 admitted product paths and one expected failure for the excluded
-  `.codex/config.toml`; that local file remains outside the Git boundary.
-  Advisory native self-review `srv-018dc1dabef9d97fbb45b119beb121ef`
-  completed without expanding authority.
-- **User-reported validation**: the product owner ended today's work, selected
-  the accumulated-work boundary as option `1`, and supplied the exact
-  `REPLACE` task-takeover confirmation.
-- **Pending validation**: exact staged-path and staged-diff review, followed by
-  the authorized commit and ordinary non-force Git transport.
-- **Incomplete**: none in the accumulated product implementation or evidence
-  chain. Only the authorized Git commit and transport remain pending.
-- **Evidence limit**: the accumulated evidence does not explain the real Codex
-  current-source `-32603` initialize closure, establish repeat reliability or
-  portability, or prove adoption, prevented incidents, or business benefit.
-- **Next product review**: after the authorized push, review the remaining
-  real-client root-cause unknown and jointly decide whether to stop, compare
-  instruction semantics safely, or inspect another separately admitted client
-  boundary. This entry grants no next-task authority.
+#### Preserved-exclusion completion baseline integration
 
-#### Latest completed product slice
+- **Active slice**: resolved architecture alignment journey
+  `mcpj-dd891f58ebbb4b54bc330f7010d8ed4a` selected the human-owned
+  `adopt_new_center` direction: freeze exact pre-existing exclusions at task
+  start and preserve only byte-identical identities. Native proposal
+  `prp-d1d3bd5ccbe748e8a1c5d6c2862e98e3` admitted task
+  `p0-preserved-exclusion-completion-baseline-v1`; the product owner separately
+  entered `REPLACE`. The task manually bootstrapped its pre-write baseline with
+  digest `sha256:9286077ae464adbf336664869d5ffdc61b232ea2757df13e52b264277df72d50`
+  because automatic capture did not yet exist at its own start boundary.
+- **Outcome**:
+  `PRESERVED_EXCLUSION_BASELINE_CLOSES_COMPLETION_DEAD_END_WITHOUT_SCOPE_EXCEPTION`.
+  Confirmed future `govern start` actions now exclusively create one immutable
+  local, hash-only scope baseline before the session pointer and start event.
+  Start fails atomically on collision, unclassified paths, unstable capture,
+  unsafe paths, or task binding drift and rolls back only its exact new record.
+- **Completion semantics**: CLI completion, handoff inspection, and native MCP
+  completion share the same policy. An exact unchanged pre-existing exclusion
+  remains visible as a non-owned `scope.preserved` PASS. Changed, removed,
+  renamed, copied, re-layered, new, excluded, unclassified, malformed, or stale
+  identities fail closed. A missing trustworthy baseline retains the previous
+  strict scope rule, so older sessions are not upgraded retroactively.
+- **Architecture**: the single implementation now belongs to installed module
+  `agentgov.task_start_scope_baseline`; the historical script import is a
+  compatibility alias, not a second policy implementation. No completion state,
+  task exception, authority grant, or unrelated Kernel concept was added.
+- **Codex-run validation**: 97 focused baseline, session, evidence, and MCP
+  tests pass with two platform-limited skips. The full repository suite passes
+  all 1,135 tests with six platform-limited skips. Task governance reports
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance reports
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; `git diff --check` passes. First formal
+  closeout evidence `evd-735121e5ffa54da9b35aaa25a829a237` ran all five
+  declared commands with zero failures and reached `verified`; all seven
+  pre-existing exclusions were visible `scope.preserved` passes and the
+  evidence snapshot was fresh. After this status and dated-log update, the same
+  five commands are rerun with no later repository edit to re-establish final
+  freshness.
+- **User-reported validation**: the product owner selected option 1, admitted
+  the exact native task, and supplied the separate `REPLACE` confirmation.
+  These decisions provide direction and task authority, not independent result
+  acceptance.
+- **Advisory review**: distinct native current-Agent self-review
+  `srv-6cbb0eb1f8803996b9d90681f1457880` found the requirement, single-policy
+  architecture, admitted scope, fixture coverage, and hash-only data boundary
+  consistent with the selected direction. It is self-review, not independent
+  assurance or human acceptance.
+- **Pending validation**: no Windows-host validation remains pending. POSIX
+  real-host execution, Windows symlink fixtures, an external installed-consumer
+  replay, and unusually large dirty-worktree performance remain unknown.
+- **Incomplete**: none in the admitted implementation, tests, or documentation.
+  No task handoff, commit, push, publication, release, deployment, or external
+  consumer mutation is included in this slice.
+- **Preserved boundary**: `.codex/config.toml`, the predecessor instruction
+  semantics artifacts, the predecessor shell task/log, and its task record stay
+  byte-identical and non-owned. Local baselines grant no exception, semantic
+  acceptance, Git authority, or release authority.
+- **Next product review**: return to the independently governed automatic user
+  journey now that completion no longer deadlocks on unchanged, explicitly
+  excluded predecessor state. This proposal is review input only and grants no
+  task, Git, model, publication, release, deployment, or external authority.
+
+#### Previous shell-aware validation execution snapshot
+
+- **Active slice**: alignment journey
+  `mcpj-aaf61e5e537245fa8d9ebc842b752267` separated shell-aware validation
+  repair from the still-unresolved excluded-path completion policy. Follow-up
+  architecture journey `mcpj-b4d11745806a47569827987b2bb24186` selected the
+  existing string command contract with explicit platform shells. Native
+  proposal `prp-ecb7aa64b869471e8dbe3a98e839930e` admitted task
+  `p0-shell-aware-validation-execution-v1`; the product owner separately
+  entered `REPLACE` to start that exact task.
+- **Outcome**:
+  `DECLARED_VALIDATION_USES_EXPLICIT_PLATFORM_SHELLS_WITH_WINDOWS_EXIT_AND_QUOTING_PRESERVED`.
+  `run_task_validation` no longer uses `shell=True`. Windows now invokes
+  profile-free, noninteractive `powershell.exe` with a UTF-16LE encoded script;
+  POSIX uses `/bin/sh -c`. The original task string remains the persisted
+  command identity.
+- **Windows compatibility**: an execution-only call operator is added when an
+  existing admitted Windows command begins with a quoted path-like executable.
+  This preserves the repository's historical Python fixture commands without
+  rewriting task records or reintroducing `cmd.exe` interpretation.
+- **Failure semantics**: successful commands exit zero; native nonzero exits
+  are preserved; PowerShell failures exit nonzero; unsupported platforms or a
+  missing shell fail before evidence/events are written. Timeout,
+  first-failure stop, transient raw output, persisted digests, snapshot
+  freshness, and denied authority remain unchanged.
+- **Durable contract and guidance**: the fresh-validation evidence
+  specification, evidence guide, and guided development-session guide now
+  describe the explicit shell, compatibility adapter, fail-closed behavior,
+  and unchanged trust boundary. The adapter is not a sandbox.
+- **Codex-run validation**: the final focused evidence suite passes 22 tests
+  with one POSIX-only skip. The four affected evidence, handoff, session, and
+  governance-MCP modules pass all 81 tests with one POSIX-only skip. The full
+  repository suite passes all 1,129 tests with six platform-limited skips. An
+  earlier complete run exposed 12 historical quoted-executable fixture
+  failures; the bounded compatibility adapter resolved all 12 without editing
+  their owning test modules. The combined evidence and user-documentation run
+  passes 86 tests with one POSIX-only skip. Task governance reports
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance reports
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; `git diff --check` and the bounded
+  secret-like assignment scan pass.
+- **User-reported validation**: the product owner selected the split repair and
+  existing-contract architecture directions, admitted the exact native task,
+  and supplied the separate `REPLACE` confirmation. These actions provide
+  direction and task authority, not independent result acceptance.
+- **Advisory review**: distinct native current-Agent self-review
+  `srv-8b63ec4d375b689fa1c1a5630cd02e5a` found the implementation consistent
+  with the selected requirement, architecture, scope, and privacy boundaries.
+  It retained POSIX real-host behavior, external consumer interpretation,
+  hostile-local-actor protection, adoption, time savings, and business value
+  as unknown. This is self-review, not independent assurance or human result
+  acceptance.
+- **Governed completion record**: the native completion tool is not exposed in
+  this Codex session. Repository fallback evidence
+  `evd-108a26df4e044d18a919f7d06c73033d` ran all five declared commands through
+  the repaired executor; all exit codes were zero, the evidence outcome was
+  `passed`, and mutation reasons were empty. Completion nevertheless remained
+  `needs_evidence` solely because reconciliation keeps the five pre-existing,
+  explicitly excluded paths visible as scope failures. The final
+  post-closeout fallback reference remains local under `.agentgov` so recording
+  it cannot invalidate its own tracked snapshot.
+- **Pending validation**: POSIX real-shell execution remains for a POSIX host or
+  CI; no Windows-host validation remains pending within this repair.
+- **Incomplete**: none in the admitted shell-execution implementation, tests,
+  or documentation. The development session cannot become `verified` until
+  the separate excluded-path completion policy is resolved; no exception is
+  claimed.
+- **Preserved boundary**: this slice did not change task schema, excluded-path
+  completion semantics, previous task records or evidence, `.codex`, Git
+  history, release identity, publication, or deployment. Pre-existing user
+  changes remain preserved.
+- **Evidence limit**: POSIX execution has exact argv and platform-gated fixture
+  coverage but was not executed on this Windows host. Cross-platform CI,
+  external consumer behavior, adoption, prevented incidents, time savings,
+  and business benefit remain unknown.
+- **Next product review**: after this shell repair is closed out, separately
+  decide how intentionally excluded local paths such as `.codex/config.toml`
+  should interact with completion reconciliation. That review does not yet
+  authorize a policy change, new task, Git action, release, or deployment.
+
+#### Previous instruction-semantics differential snapshot
+
+- **Active slice**: resolved alignment journey
+  `mcpj-2e6d45b1f46b4f17937714ebdb34c601` offered three post-push directions.
+  The human selected option `1`, safe instruction-semantics comparison. Native
+  proposal `prp-bfc4ca91661d47de8b15e363d96f8d5a` admitted task
+  `p0-codex-instruction-semantics-differential-v1`; the human separately
+  entered `REPLACE` to take up that exact task.
+- **Outcome**:
+  `INSTRUCTION_SEMANTICS_SHARE_16_OF_18_CATEGORIES_CURRENT_ADDS_TWO_INVENTORY_SAFEGUARDS`.
+  The configured installed Adapter `1.6.0` and current source `1.7.0` each
+  started exactly once for one initialize-only request, exited `0`, returned
+  one JSON response line, and had empty standard error. No retry occurred.
+- **Deterministic comparison**: the fixed 18-category rule set reported 16
+  shared categories, zero installed-only categories, and two current-only
+  categories: changed-path include/exclude classification before the admission
+  form and freshness revalidation of that same privacy-bounded inventory.
+  All 19 installed sentence digests were shared; current source added one and
+  removed none. The instruction byte lengths and fingerprints exactly match
+  the preceding repository-context comparison.
+- **Advisory interpretation**: current source adds one inventory-safety
+  sentence rather than removing or contradicting an installed fixed category.
+  Fixed indicators are not a general semantic-equivalence proof and do not
+  establish any effect on the real Codex client.
+- **Upstream connection**: this slice follows task
+  `p0-codex-repository-context-schema-differential-v1`, which ruled out local
+  tool-set, tool-description, tool-input-schema, capability, and protocol
+  differences and retained instructions plus server version as the two
+  initialize differences. The earlier real-client boundary still reports an
+  installed success and current-source `-32603` closure.
+- **Codex-run validation**: the one-attempt execution and privacy-safe result
+  construction passed. All 64 focused documentation tests pass. The complete
+  1,120-test repository suite passes with five Windows privilege-limited
+  symbolic-link skips. Task governance reports
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance reports
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; and `git diff --check` passes. The raw
+  scope view reports `PASS=5 FAIL=1 ADVISORY=0` only because it preserves the
+  pre-existing, explicitly excluded `.codex/config.toml` as a visible failure.
+- **User-reported validation**: the product owner selected direction `1`,
+  admitted the native proposal through the form, and supplied the exact
+  `REPLACE` task-takeover confirmation. This is direction and task authority,
+  not independent result acceptance.
+- **Advisory review**: distinct native current-Agent self-review
+  `srv-9b8c338830991ac03cc4274c2ff2720a` found no requirement, scope, privacy,
+  or authority expansion. It retained fixed-category semantic completeness,
+  client causality, independent privacy assurance, operational value, and
+  business benefit as unknown. This is self-review, not independent assurance
+  or human acceptance.
+- **Governed completion record**: the native MCP completion tool is not exposed
+  in this Codex session. The repository fallback `agentgov govern finish`
+  created local evidence `evd-531c943997724b92ab6bf7888abfd9fa` with outcome
+  `failed` and state `needs_evidence`. Its shell runner rejected the first
+  PowerShell-form validation command before substantive execution, while the
+  same command passed when run directly in PowerShell. Reproduction through
+  the runner's Windows command shell also exited `1`. Completion reconciliation
+  separately retained the excluded `.codex/config.toml` as a scope failure.
+- **Pending validation**: none in the manually executed task-declared checks;
+  a valid governed completion record remains unavailable.
+- **Incomplete**: the comparison, evidence, status, tests, and advisory review
+  are complete, but the active development session is not `verified` because
+  completion reconciliation failed closed. No exception is claimed.
+- **Preserved boundary**: instruction text, raw requests and responses,
+  transcripts, credentials, absolute paths, and local configuration content
+  were not retained. No real Codex client, AgentGov tool, stateful workflow,
+  runtime change, configuration change, Git operation, publication, release,
+  or deployment occurred. `.agentgov` and `.codex` remain local-only.
+- **Evidence limit**: real-client causality, complete semantic equivalence,
+  repeat reliability, portability, independent assurance, adoption, prevented
+  incidents, time savings, and business benefit remain unknown.
+- **Next product review**: first decide whether to admit a separate repair for
+  shell-aware completion validation and the intentional local `.codex`
+  exclusion boundary. Only after that review should the product owner decide
+  whether the byte-level instructions difference warrants one controlled
+  real-client compatibility test or whether to stop the investigation. This
+  entry grants no task, repair, replay, Git, publication, release, or deployment
+  authority.
+
+#### Previous repository-context schema differential snapshot
+
+The superseding Git closeout task
+`p0-session-closeout-main-push-2026-08-31-v1` created commit `e82bc91` and
+completed its authorized ordinary non-force push to `origin/main`; its
+`.agentgov` and `.codex` exclusions remain local-only.
 
 - **Latest product slice**: resolved alignment journey
   `mcpj-0b3ac31ba5954a9695921f9a0bdcc798` selected one corrected

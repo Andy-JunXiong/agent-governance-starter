@@ -1,0 +1,86 @@
+{
+  "acceptance_signals": [
+    "Governed session start captures an immutable privacy-bounded task baseline before implementation writes and fails closed on overwrite, unclassified paths, unstable capture, unsafe paths, or task binding drift.",
+    "The installed package owns the baseline implementation while the prior internal script remains a compatibility wrapper rather than a second policy implementation.",
+    "Completion reports exact unchanged pre-existing excluded identities as visible preserved non-owned findings that do not block otherwise verified completion.",
+    "Any changed, added, removed, renamed, copied, re-layered, newly excluded, unclassified, malformed, missing, or stale baseline identity blocks completion.",
+    "A missing valid task-start baseline preserves the existing strict raw-scope completion behavior for older sessions and direct evidence inspection.",
+    "Native MCP task completion and CLI completion apply the same baseline-aware policy without contradictory raw-scope prechecks.",
+    "Baseline records remain local, hash-only, repository-relative, immutable, and non-authorizing; they contain no raw patch, content, credential, environment, host, process, or human identity.",
+    "Existing evidence freshness, validation command identity, explicit platform shell execution, timeout, validation mutation detection, and authority boundaries remain unchanged.",
+    "Focused fixture tests cover start capture, rollback, collision, preserved exclusion, all material excluded-path drift modes, fallback strict behavior, MCP parity, and handoff freshness.",
+    "Affected user guidance, durable contracts, current status, and dated session evidence describe the integrated journey and its limits.",
+    "Focused and full unit tests, exact task validation, repository validation, and git diff checks pass."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-d1d3bd5ccbe748e8a1c5d6c2862e98e3 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Promote the existing deterministic task-start scope-baseline implementation into the installed AgentGov package and connect it to the governed start and completion journey. Starting a separately admitted task must capture one immutable local baseline before implementation writes. Completion may treat only exact unchanged pre-existing exclusions as visible non-owned preserved findings; every changed, added, removed, renamed, re-layered, unclassified, malformed, missing, or stale exclusion must fail closed. Tasks without a valid start baseline retain the current strict completion behavior. Native MCP completion must use the same completion policy instead of a contradictory raw-scope precheck. Preserve the already implemented shell-aware validation changes in overlapping files without retroactively verifying the predecessor task."
+  },
+  "risk": {
+    "items": [
+      "Capturing after implementation begins would launder earlier drift, so capture must be bound to the separately confirmed session-start transition.",
+      "A predictable baseline path could collide with stale local state; overwrite must remain forbidden and start must fail atomically.",
+      "Mapping preserved exclusions into completion could accidentally hide changed or re-layered work unless every exact Git-layer identity and both rename or copy endpoints are compared.",
+      "The native MCP completion path currently performs raw scope prechecks; removing only those checks must not bypass the baseline-aware completion assessment.",
+      "Promoting an internal prototype could create two policy implementations; the script must delegate to the installed package.",
+      "The development-evidence files already contain an unfinished admitted shell-runner repair; this task must preserve that behavior and explicitly validate the combined state.",
+      "A baseline file is local evidence, not an exception, task ownership transfer, semantic acceptance, Git authority, or release authority.",
+      "Reviewed assumption: The existing task-start baseline implementation and fixture evidence are a valid reusable deterministic mechanism.",
+      "Reviewed assumption: Each newly started task has a unique task identifier and one immutable local baseline path.",
+      "Reviewed assumption: Untracked local AgentGov state remains excluded by the canonical Git snapshot contract.",
+      "Reviewed assumption: The selected completion state names remain needs_evidence and verified; no new Kernel state is required.",
+      "Reviewed unknown: Performance on unusually large dirty worktrees remains unproven and will stay a documented limit.",
+      "Reviewed unknown: Old already-active sessions cannot gain a trustworthy pre-write baseline retroactively and must retain strict behavior."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      "tests/test_user_documentation.py",
+      "docs/consumer-validation/codex-instruction-semantics-differential-v1-2026-08-31.md",
+      "docs/development-log/2026-08-31-codex-instruction-semantics-differential.md",
+      "docs/development-log/2026-08-31-shell-aware-validation-execution.md",
+      "governance/tasks/p0-codex-instruction-semantics-differential-v1.json",
+      "governance/tasks/p0-shell-aware-validation-execution-v1.json"
+    ],
+    "include_paths": [
+      "README.md",
+      "STATUS.md",
+      "src/agentgov/task_start_scope_baseline.py",
+      "src/agentgov/development_session.py",
+      "src/agentgov/development_evidence.py",
+      "src/agentgov/governance_mcp.py",
+      "scripts/task_start_scope_baseline/baseline.py",
+      "tests/test_development_session.py",
+      "tests/test_development_evidence.py",
+      "tests/test_governance_mcp.py",
+      "docs/development-automation-contracts.md",
+      "docs/development-session.md",
+      "docs/development-evidence.md",
+      "docs/governance-mcp-adapter.md",
+      "docs/specs/fresh-validation-evidence-v1.md",
+      "docs/development-log/2026-08-31-preserved-exclusion-completion-baseline.md",
+      "governance/tasks/p0-preserved-exclusion-completion-baseline-v1.json"
+    ]
+  },
+  "task_id": "p0-preserved-exclusion-completion-baseline-v1",
+  "title": "Integrate preserved-exclusion baselines into governed completion",
+  "validation_commands": [
+    "python -m unittest scripts.task_start_scope_baseline.test_baseline tests.test_development_session tests.test_development_evidence tests.test_governance_mcp -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-preserved-exclusion-completion-baseline-v1.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

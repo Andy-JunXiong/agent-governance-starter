@@ -18,12 +18,12 @@ from agentgov.change_scope import (
     GitChangedPathInventory,
     GitInspectionError,
     ScopePolicyError,
-    check_development_scope,
     inventory_changed_paths,
     unclassified_inventory_paths,
 )
 from agentgov.development_evidence import (
     EvidenceError,
+    inspect_task_completion_scope,
     reconcile_task_completion,
     run_task_validation,
 )
@@ -45,10 +45,10 @@ from agentgov.drift_review import (
     write_drift_review_record,
 )
 from agentgov.event_store import LocalStateError
-from agentgov.git_snapshot import GitSnapshotError, capture_git_snapshot, snapshot_paths
+from agentgov.git_snapshot import GitSnapshotError, resolve_comparison_base
 from agentgov.host_interaction import build_host_interaction_capabilities
 from agentgov.human_decision import canonical_document_digest
-from agentgov.path_policy import evaluate_path_scope, scope_path_error
+from agentgov.path_policy import scope_path_error
 from agentgov.reference_alignment_adapter import (
     AlignmentContextDraft,
     ClarificationUpdateDraft,
@@ -2366,18 +2366,7 @@ class GovernanceMcpAdapter:
         root = self.repository.resolve()
         task_path = root.joinpath(*PurePosixPath(task_ref).parts)
         try:
-            scope_report = check_development_scope(task_path, repository=root)
-            if scope_report.has_failures:
-                raise GovernanceMcpError(
-                    "Current repository changes exceed the exact admitted task scope",
-                    code="task_completion_scope_blocked",
-                    stage=MCP_TASK_COMPLETION_TOOL_NAME,
-                    field_path="task_path",
-                    rule="admitted_scope",
-                    retryable=True,
-                )
-
-            comparison_base = scope_report.head_sha
+            comparison_base = resolve_comparison_base(root, "HEAD")
             execution_mode = "head_snapshot"
             active_session = load_active_session(root)
             if active_session is not None:
@@ -2394,27 +2383,18 @@ class GovernanceMcpAdapter:
                 comparison_base = resolved_session.comparison_base_sha
                 execution_mode = "active_session"
 
-            task = load_development_task(task_path)
-            task_scope = task["scope"]
-            snapshot = capture_git_snapshot(
-                root, comparison_base=comparison_base
+            scope_findings = inspect_task_completion_scope(
+                task_path,
+                repository=root,
+                comparison_base=comparison_base,
             )
-            blocked_paths = tuple(
-                path
-                for path in snapshot_paths(snapshot)
-                if not evaluate_path_scope(
-                    path,
-                    includes=task_scope["include_paths"],
-                    excludes=task_scope["exclude_paths"],
-                ).admitted
-            )
-            if blocked_paths:
+            if any(item.status == "FAIL" for item in scope_findings):
                 raise GovernanceMcpError(
-                    "The complete Git snapshot exceeds the exact admitted task scope",
+                    "The complete Git snapshot exceeds the baseline-aware admitted task scope",
                     code="task_completion_scope_blocked",
                     stage=MCP_TASK_COMPLETION_TOOL_NAME,
                     field_path="task_path",
-                    rule="complete_snapshot_scope",
+                    rule="baseline_aware_scope",
                     retryable=True,
                 )
 

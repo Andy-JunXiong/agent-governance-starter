@@ -367,20 +367,21 @@ Not yet implemented:
   observation Learning candidates, and local exact candidate-bound human
   judgment records;
 
-## Internal task-start scope-baseline bridge
+## Integrated task-start scope baseline
 
-The repository now contains an internal, dependency-free bridge at
-`scripts/task_start_scope_baseline`. It is not part of the installed package,
-public `agentgov` CLI, Core contract, Adapter, or development-session format.
+The deterministic implementation now belongs to the installed package at
+`agentgov.task_start_scope_baseline`. The former
+`scripts/task_start_scope_baseline` module is a compatibility alias, not a
+second policy implementation.
 
-For a future separately admitted task, the bridge can be invoked before the
-first implementation write. It validates the admitted task, requires every
-current changed path to be classified, takes stable before/after canonical Git
+Confirmed `govern start` captures the baseline before writing the session
+pointer or start event. It validates the admitted task, requires every current
+changed path to be classified, takes stable before/after canonical Git
 snapshots, and derives a separate SHA-256 identity for every committed-since-
 base, staged, unstaged, and untracked record. Both endpoints of renames and
 copies remain in scope evaluation. A task-contract change, HEAD change,
-unstable capture, malformed or missing baseline, unsafe or symbolic-link path,
-or overwrite attempt fails closed.
+unstable capture, unsafe or symbolic-link path, collision, or overwrite attempt
+fails the start atomically.
 
 Later comparison uses the captured scope rather than silently trusting a
 changed task. Exact pre-existing excluded identities become `PRESERVED`, while
@@ -391,10 +392,13 @@ human/host identity. It can be created only at an explicit relative path below
 `.agentgov/scope-baselines`; that local record is excluded from canonical
 untracked snapshots.
 
-This is a bootstrap capability. It cannot prove work performed before capture,
-cannot retroactively close the task that created it, and does not change the
-existing worktree-wide scope command. Public CLI/session integration remains a
-later architecture decision.
+Completion and the native completion tool now use the same comparison. Exact
+pre-existing excluded identities become visible, non-owned
+`scope.preserved` passes; all mismatches fail. Missing baselines retain strict
+raw-scope behavior, so already-active or historical tasks are not upgraded
+retroactively. The low-level worktree-wide `govern check` remains a direct
+current-scope observation and can still report preserved predecessor changes as
+failures; completion is the baseline-aware lifecycle boundary.
 
 The first governed use now exists. Task
 `p0-reusable-foreground-stdio-controller-closeout-v1` captured its exclusive
@@ -402,9 +406,9 @@ local baseline as the first execution action after take-up and before any
 repository write. The initial comparison returned
 `PASS=20 PRESERVED=49 FAIL=0 TOTAL=69`; controller and baseline-tool fixtures
 then passed without changing their captured excluded identities. Bounded
-closeout documents are the only admitted post-start repository changes. Final
-comparison evidence is recorded separately and remains a review input, not a
-retroactive cumulative-scope pass or public integration claim.
+closeout documents are the only admitted post-start repository changes. That
+historical first-use comparison remains evidence for the mechanism; current
+integration does not rewrite or retroactively complete it.
 
 ## Internal replayable distribution-input manifest
 

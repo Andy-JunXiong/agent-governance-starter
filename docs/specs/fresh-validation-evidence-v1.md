@@ -70,7 +70,31 @@ Canonical exclusions are narrow:
   `.agentgov/` files;
 - a changed tracked `.gitignore` is included like any other tracked change;
 - exclusion reasons and the digest-format version are part of digest metadata
-  so the scope remains explainable.
+so the scope remains explainable.
+
+## Task-start exclusion baseline
+
+A newly confirmed development session must exclusively create
+`.agentgov/scope-baselines/<task-id>.json` before the session pointer, start
+event, or implementation write. The record binds the exact admitted task path,
+task digest, captured scope, comparison base, HEAD, snapshot exclusion rules,
+and privacy-reduced identity of every Git-layer change visible at that boundary.
+It contains repository-relative paths and SHA-256 identities only, never raw
+source, patches, commands, output, credentials, environment values, host or
+human identity.
+
+At completion, an exact baseline identity outside the include scope may be
+reported as `scope.preserved` only when its layer, status, path and any old
+path, identity kind, and digest remain unchanged. It stays visible and
+non-owned. A changed, removed, renamed, copied, re-layered, new, excluded, or
+unclassified identity fails closed. Task, scope, comparison-base, HEAD,
+snapshot-exclusion, malformed-record, symlink, capture-race, and overwrite
+mismatches also fail closed.
+
+A missing baseline never creates one retroactively. Completion instead applies
+the prior strict rule in which every current changed path must be admitted.
+Baseline preservation changes neither the `needs_evidence`/`verified` state
+model nor any task, exception, Git, release, or semantic-acceptance authority.
 
 AgentGov must not write an event into a tracked repository file as a side
 effect of a read-only governance check. Observe writes are limited to the
@@ -103,6 +127,35 @@ affected repository-relative paths and explain the recovery options: inspect
 and retain the generated change as task work, remove the disposable artifact,
 or intentionally add an appropriate ignore rule, then rerun validation.
 AgentGov must not edit `.gitignore` automatically.
+
+## Platform shell execution
+
+The admitted `validation_commands` contract remains an ordered array of
+strings. Each string is interpreted by one explicit platform-native shell;
+AgentGov does not pass it to Python's implicit `shell=True` selection:
+
+- Windows uses `powershell.exe` with `-NoLogo`, `-NoProfile`,
+  `-NonInteractive`, and a UTF-16LE `-EncodedCommand` payload. The encoded
+  payload preserves PowerShell quoting and appends bounded exit handling so a
+  successful command exits zero, a failed native command retains its nonzero
+  exit code, and another PowerShell failure exits nonzero.
+- POSIX uses `/bin/sh -c` with the original command string.
+
+The stable command identity is always calculated from the admitted original
+string, not the platform argv, encoding, or Windows exit-handling suffix. Raw
+standard output and error remain transient; persisted evidence contains only
+their digests. Commands still stop at the first nonzero result, retain the
+declared timeout, and run between the same `S0` and `S1` snapshots.
+
+For compatibility with existing admitted Windows strings whose first token is
+a quoted executable path, the encoded execution payload inserts PowerShell's
+call operator before that token. This bounded adaptation does not rewrite the
+task or command identity and does not reintroduce `cmd.exe` interpretation.
+
+If the platform is unsupported or its required shell cannot be started,
+validation fails closed before an evidence or completion event is written.
+The explicit shell is an execution adapter, not a sandbox or a trust upgrade:
+the accountable human must still admit only project commands they trust.
 
 ## Valid and invalid workflow order
 

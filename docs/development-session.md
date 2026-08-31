@@ -190,8 +190,12 @@ agentgov govern start governance/tasks/my-task.json
 The command first prints the task identity, exact comparison-base commit,
 selected governance paths, every planned write target, and the denied authority
 boundary. A real terminal must then enter exactly `START`. It creates only the
-untracked working-copy pointer and one immutable start event. A different
-active task requires `--replace-active`, a new preview, and exact `REPLACE`.
+immutable local task-start scope baseline, the untracked working-copy pointer,
+and one immutable start event. Baseline creation happens before the pointer or
+event write and refuses overwrite, unclassified paths, an unstable capture, or
+task-binding drift. A later start failure removes only the exact baseline it
+just created. A different active task requires `--replace-active`, a new
+preview, and exact `REPLACE`.
 
 For a low-risk task, the same entry point can scaffold the compact contract:
 
@@ -219,6 +223,14 @@ agentgov monitor development .
 `check` observes current scope. `finish` defaults to the recorded comparison
 base, runs every task-declared validation command, and returns `verified` only
 when the fresh evidence and completion snapshot are unchanged and in scope.
+When a valid task-start baseline exists, byte-identical pre-existing exclusions
+remain visible as non-owned `scope.preserved` passes; changed, missing, renamed,
+re-layered, newly excluded, or unclassified identities fail closed. Sessions
+without a valid pre-write baseline retain the older strict scope behavior.
+The string commands run through explicit platform shells: encoded,
+noninteractive, profile-free Windows PowerShell on Windows and `/bin/sh -c` on
+POSIX. A missing or unsupported shell fails closed; this execution adapter does
+not sandbox a command or make an untrusted repository safe.
 The Monitor displays the start, selected governance paths, checks, validation,
 and completion events. Selection is observed; actual coding-agent consumption
 remains unknown until a separate consumption event exists.
@@ -294,6 +306,9 @@ stable 0.2.1 does not include this development-source interface.
 - A task content or decision change invalidates the pointer. Check and finish
   fail closed until the new task is reviewed through start and
   `--replace-active`.
+- One immutable baseline path is derived from the task ID. A collision or
+  malformed record blocks start; AgentGov never overwrites or retroactively
+  captures it.
 - One active task is supported per Git working copy. Separate Git worktrees
   have separate `.agentgov/current-task.json` pointers.
 
@@ -316,6 +331,11 @@ invariants, and `SKILL.md` metadata remain the only governance declarations.
 The pointer must stay untracked. Untracked `.agentgov/` files are canonically
 excluded from scope and fresh-evidence snapshots; tracked `.agentgov/` changes
 remain visible and can fail scope.
+
+The sibling `.agentgov/scope-baselines/<task-id>.json` record stores only the
+task binding, captured scope, Git-layer metadata, repository-relative paths,
+and SHA-256 identities. It stores no raw content or patch and grants no task,
+exception, Git, completion-acceptance, publication, or release authority.
 
 ## Retained low-level interfaces
 
