@@ -1,0 +1,91 @@
+{
+  "acceptance_signals": [
+    "A separate human task take-up captures one immutable baseline before execution and all pre-existing excluded identities remain unchanged.",
+    "Read-only preflight confirms the 187-path manifest identity, supported Python 3.12, offline build tooling, Codex availability, repository boundaries, zero fixture remotes, and no task-owned residue.",
+    "Exactly one current-source wheel is built without network or dependency download and installed into one fresh task-owned runtime.",
+    "One non-sensitive synthetic repository contains one local baseline commit, no remote, and one deterministic README-only request.",
+    "Exactly one external Codex session receives the ordinary request without AgentGov names, internal protocol details, coaching, retry, or magic confirmation text.",
+    "Evidence records only lifecycle stages actually reached and stops at the first deviation without manufacturing later results or repairing the deviation.",
+    "Any native human form is decided only by the human product owner; the Agent never infers or supplies that decision.",
+    "Only exact verified task-owned temporary assets are removed after durable evidence; user files, configuration, credentials, trust state, processes, and repository paths remain unchanged.",
+    "The v4 experiment, STATUS, and dated log agree on outcome, first deviation, validation state, limits, and next review.",
+    "Declared focused, full-suite, governance, scope-baseline, JSON, and whitespace checks pass unless the recorded first deviation explicitly prevents completion verification."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-b979ba4353ad4352a21240f858500c62 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Run exactly one fresh end-to-end automatic governance rehearsal from the verified 187-path current source in a new non-sensitive remote-free synthetic repository. Build and install one exact-current-source wheel offline into a fresh task-owned runtime, then start one ordinary low-risk Codex request without AgentGov names, protocol coaching, retries, or magic confirmation text. Observe only the lifecycle stages actually reached, stop at the first reproducibility, scope, privacy, host, protocol, or state-preservation deviation, retain normalized evidence, and do not repair any deviation within this task."
+  },
+  "risk": {
+    "items": [
+      "The single external Codex session uses existing authenticated entitlement and may consume usage before the first deviation.",
+      "A native admission form may be unavailable or require a visible human decision; execution stops rather than bypassing it.",
+      "Offline build or isolated installation may fail even though the static 187-path manifest now matches current source.",
+      "The temporary synthetic Git repository has no remote and grants no Git authority over this repository or any real consumer.",
+      "Cleanup is destructive only for exact task-owned temporary roots after identity and evidence gates; otherwise recovery state is preserved.",
+      "One rehearsal cannot establish repeatability, production reliability, adoption, incident reduction, time savings, or business benefit.",
+      "Reviewed assumption: The committed 187-path distribution manifest and fixed controller identities are the latest verified source truth.",
+      "Reviewed assumption: The available Python 3.12 runtime and existing build tooling can attempt an offline current-source build.",
+      "Reviewed assumption: The installed Codex client can start one bounded session against a temporary repository.",
+      "Reviewed assumption: A README-only synthetic change is low risk and deterministically testable.",
+      "Reviewed assumption: The human product owner is available if the external journey presents a native decision.",
+      "Reviewed unknown: Whether the repaired exact current source builds and installs successfully under the available Python 3.12 toolchain.",
+      "Reviewed unknown: Whether the uncoached ordinary request independently selects governance tools.",
+      "Reviewed unknown: Whether the external client negotiates and displays native proposal review.",
+      "Reviewed unknown: Which lifecycle stage the single session reaches before completion or first deviation.",
+      "Reviewed unknown: Whether measured configuration, trust, process, and temporary-state identities remain unchanged after the run."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex",
+      "tests/test_user_documentation.py",
+      "docs/consumer-validation/codex-instruction-semantics-differential-v1-2026-08-31.md",
+      "docs/development-log/2026-08-31-codex-instruction-semantics-differential.md",
+      "docs/development-log/2026-08-31-shell-aware-validation-execution.md",
+      "governance/tasks/p0-codex-instruction-semantics-differential-v1.json",
+      "governance/tasks/p0-shell-aware-validation-execution-v1.json",
+      "docs/assets/linkedin-github-repository-cover.png",
+      "governance/tasks/p0-airbnb-runtime-completion-handoff.json",
+      "governance/tasks/p0-independent-automatic-journey-rehearsal-v3.json",
+      "docs/experiments/independent-automatic-journey-rehearsal-v3-2026-08-31.md",
+      "docs/development-log/2026-08-31-independent-automatic-journey-rehearsal-v3.md",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "docs/adr",
+      "docs/development-automation-contracts.md",
+      "docs/product-requirements-automatic-governance.md",
+      "governance/distribution-input-manifest.json",
+      "scripts",
+      "src",
+      "tests"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-independent-automatic-journey-rehearsal-v4.json",
+      ".agentgov",
+      "docs/experiments/independent-automatic-journey-rehearsal-v4-2026-08-31.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-31-independent-automatic-journey-rehearsal-v4.md"
+    ]
+  },
+  "task_id": "p0-independent-automatic-journey-rehearsal-v4",
+  "title": "Independent automatic governance journey rehearsal v4",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; & \"$env:LOCALAPPDATA\\Programs\\Python\\Python312\\python.exe\" -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; & \"$env:LOCALAPPDATA\\Programs\\Python\\Python312\\python.exe\" -m unittest discover -s tests -v",
+    "agentgov check task governance/tasks/p0-independent-automatic-journey-rehearsal-v4.json --repository .",
+    "agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; & \"$env:LOCALAPPDATA\\Programs\\Python\\Python312\\python.exe\" -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-independent-automatic-journey-rehearsal-v4.json --baseline .agentgov/scope-baselines/p0-independent-automatic-journey-rehearsal-v4.json",
+    "& \"$env:LOCALAPPDATA\\Programs\\Python\\Python312\\python.exe\" -m json.tool governance/tasks/p0-independent-automatic-journey-rehearsal-v4.json",
+    "git diff --check"
+  ]
+}

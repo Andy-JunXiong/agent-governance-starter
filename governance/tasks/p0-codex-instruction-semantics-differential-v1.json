@@ -1,0 +1,62 @@
+{
+  "acceptance_signals": [
+    "The installed and current-source bindings each start exactly once for initialize-only local inspection, with no retry, no real Codex client, no AgentGov tool call, and no stateful workflow.",
+    "The in-memory analyzer emits only JSON-encoded instruction lengths and SHA-256 digests, sentence counts and sentence-digest sets or counts, fixed semantic-category presence, and explicit difference categories; raw instruction text, raw requests, raw responses, absolute paths, credentials, transcripts, and local configuration content are not retained.",
+    "The evidence states which fixed semantic categories are shared, installed-only, or current-only and distinguishes deterministic string/category observations from advisory semantic interpretation.",
+    "The result does not infer that any instruction difference caused the real-client initialization closure and does not authorize another replay, runtime or configuration change, Git operation, publication, release, or deployment.",
+    "STATUS.md, the dated development log, and documentation tests consistently record the selected alignment journey, admitted task, bounded result, upstream evidence connection, validation state, unknowns, and next product-review question.",
+    "Focused documentation tests, the full repository suite, task governance, repository governance, privacy checks protected by tests, and git diff --check pass or retain only explicitly bounded existing skips and advisories."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-bfc4ca91661d47de8b15e363d96f8d5a and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Run exactly one local initialize-only process for the installed AgentGov binding and one for current source, classify their instruction differences in memory against a fixed privacy-safe semantic category set, retain only counts, category presence, sentence fingerprints, and bounded interpretation, and update current status, one consumer-evidence record, one dated development log, and documentation tests without changing runtime behavior or configuration."
+  },
+  "risk": {
+    "items": [
+      "The child-process initialize responses contain raw instruction strings in memory; the analyzer must fail closed and emit no source content if parsing or classification fails.",
+      "Fixed indicator categories can establish only bounded text-derived observations and may miss semantic equivalence or nuance; advisory interpretation must remain labeled and limited.",
+      "The installed and current-source bindings may differ from the prior observed versions or fail to initialize; the task must stop after the single allowed attempt per binding and record the bounded outcome.",
+      "Existing untracked .agentgov and .codex paths are local-only state and must remain excluded, unmodified by implementation, and outside any later Git scope.",
+      "A documentation-only retained result may become stale if either binding changes; versions and fingerprints must bind the observation to this one run.",
+      "Reviewed assumption: The installed launcher and current source are the same two local bindings compared by the immediately preceding repository-context differential.",
+      "Reviewed assumption: A fixed category set covering alignment trigger, human direction ownership, task admission, proposal-review fallback, changed-path inventory, completion evidence, drift review, privacy, fail-closed behavior, and downstream non-grants is sufficient for this bounded comparison.",
+      "Reviewed assumption: The existing documentation test surface is the appropriate deterministic protection for the new evidence and privacy boundary.",
+      "Reviewed unknown: Which fixed semantic categories differ between the two bindings before the one allowed comparison runs.",
+      "Reviewed unknown: Whether sentence-level equality or category presence reflects deeper semantic equivalence.",
+      "Reviewed unknown: Whether any observed difference affects the real Codex client; causality remains outside this task.",
+      "Reviewed unknown: Whether another real-client replay will be useful; that remains a later human product-review decision."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".agentgov",
+      ".codex"
+    ],
+    "include_paths": [
+      "STATUS.md",
+      "docs/consumer-validation/codex-instruction-semantics-differential-v1-2026-08-31.md",
+      "docs/development-log/2026-08-31-codex-instruction-semantics-differential.md",
+      "tests/test_user_documentation.py",
+      "governance/tasks/p0-codex-instruction-semantics-differential-v1.json"
+    ]
+  },
+  "task_id": "p0-codex-instruction-semantics-differential-v1",
+  "title": "Compare MCP instruction semantics without retaining source content",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; python -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; python -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check task governance/tasks/p0-codex-instruction-semantics-differential-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-08-31
+Last verified: 2026-09-01
 
 ## Current-status contract
 
@@ -42,7 +42,122 @@ scheduling authority.
 
 ### Current closeout snapshot
 
-#### Today's governed journey Git closeout v2
+#### Latest governed session closeout v1
+
+- **Active slice**: native proposal
+  `prp-513530c6578740d4ae3d58669e71f7b0` admitted exact task
+  `p0-session-closeout-main-push-2026-09-01-v1`; the product owner then
+  supplied exact `REPLACE`. Current source captured task-start baseline
+  `sha256:07ec37f465684908f5b603c0108aac28681a5d9df774569009ed8e06cab664cf`
+  before the closeout documentation changed.
+- **Accumulated result**: `READY_FOR_AUTHORIZED_GIT_CLOSEOUT`. The intended
+  product diff preserves three distinct outcomes: the instruction-semantics
+  comparison observed an additive current-source inventory safeguard without
+  establishing real-client causality; the shell-aware runner repair replaced
+  implicit Windows shell interpretation while retaining the admitted command
+  strings and evidence identities; and v4 proved the repaired 187-path
+  manifest clears its prior static gate before stopping at the missing
+  offline Python 3.12 build backend.
+- **Completion-state distinction**: the instruction comparison and
+  shell-aware task records retain their historical `needs_evidence` outcomes
+  caused by the then-current shell or excluded-path reconciliation boundary.
+  The later v4 task is `verified` at its required first deviation. This
+  closeout does not rewrite those historical states or describe the automatic
+  consumer journey as successful.
+- **Closeout validation**: all 64 focused documentation tests and all 1,135
+  complete-suite tests pass with six platform-conditioned skips. Task
+  governance reports `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance
+  reports `PASS=26 WARN=2 FAIL=0 ADVISORY=4`. Task-start scope reconciliation,
+  task JSON, `git diff --check`, and bounded privacy scans pass. The one broad
+  secret-pattern hit is an intentional credential-denylist literal in the
+  documentation test; the value-bearing credential scan and local
+  absolute-path scan both return zero files.
+- **Advisory review**: a distinct bounded current-Agent review found the three
+  result states, source-of-truth ownership, intended commit scope, preserved
+  local state, and Git authority boundary coherent. It is self-review, not
+  independent assurance or human acceptance; downstream CI and the unobserved
+  automatic journey remain unknown.
+- **Git boundary**: the product owner explicitly authorized one ordinary
+  commit and one non-force push to the existing `origin/main`. Fetch reports
+  local and remote `main` at the same base with zero divergence before the
+  commit. Exact-path staging excludes all local `.agentgov` state and the
+  preserved `.codex/config.toml`; no pull request, force-push, release,
+  deployment, or other external action is authorized.
+- **Unknowns**: Git transport success and downstream GitHub checks remain
+  unknown until the authorized push. Installed automatic-governance behavior,
+  independent tool selection, repeatability, adoption, prevented incidents,
+  time savings, and business benefit remain unestablished.
+- **Evidence**: the formal closeout record is
+  `docs/development-log/2026-09-01-session-closeout-main-push-v1.md`.
+- **Next product review**: decide whether to admit one narrow offline
+  Python 3.12 build-tooling bootstrap for a future fresh rehearsal or stop the
+  automatic-journey investigation. This entry grants no new task, repair,
+  retry, model, Git, publication, release, or deployment authority.
+
+#### Previous independent automatic-governance journey rehearsal v4
+
+- **Active slice**: resolved alignment journey
+  `mcpj-ebd8235ac4794007a8367abd0317f7e5` recorded the product owner's
+  selection of one fresh, one-attempt v4 rehearsal with a first-deviation
+  stop. Native proposal `prp-b979ba4353ad4352a21240f858500c62` admitted task
+  `p0-independent-automatic-journey-rehearsal-v4`; the product owner then
+  supplied exact `REPLACE`. Current source captured task-start baseline
+  `sha256:19339bdc5f9ebb2ea367c9554465557a2bb9a983dec065425d3eaa7ec2e0c197`
+  before execution.
+- **Outcome**: `STOPPED_AT_OFFLINE_BUILD_TOOLING_PREFLIGHT`. The repaired
+  distribution manifest passes at 187 paths with path identity
+  `sha256:79839fec9be5dfb8bb30c41e74a0d8a9a6a11b3587001af6395f7f1b7c506e9a`
+  and content identity
+  `sha256:a695fb5afcaadcc2f3382a7a878d4e182070539d61b5e39a0ea663b00874a96c`.
+  The next mandatory gate found Python `3.12.10` and pip `25.0.1`, but no
+  installed `setuptools` module and zero retained `setuptools 84.0.0` wheel
+  candidates or expected-digest matches.
+- **First-deviation enforcement**: the task stopped without installing or
+  downloading a backend, switching runtimes, retrying, repairing, or invoking
+  the fixed controller. Wheel builds, isolated runtime installs, synthetic
+  repositories and commits, external Codex sessions and requests, native
+  consumer forms, and downstream lifecycle observations are all zero. Codex
+  CLI `0.146.0` was available but was not started.
+- **Codex-run validation**: the task-start comparison passes with seven
+  byte-identical preserved exclusions and one unchanged included task record;
+  the manifest check passes with zero tracked deltas and zero untracked
+  overlays; the preflight reports zero task-owned short roots. The focused
+  documentation suite passes all 64 tests. The complete suite passes all 1,135
+  tests with six platform-conditioned skips. Task governance reports
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance reports
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; task JSON and `git diff --check` pass.
+- **User-reported validation**: the product owner selected the v4 direction,
+  admitted the exact native proposal, and supplied the separate exact
+  `REPLACE` take-up confirmation. These are direction and task authority, not
+  independent result acceptance.
+- **Advisory review**: distinct native current-Agent self-review
+  `srv-386c5e927b4aa664563ccf3e609aa90f` found the first-deviation attribution,
+  187-path architecture boundary, scope preservation, zero downstream
+  attempts, and privacy limits consistent. It retained installed behavior,
+  automatic tool selection, independent privacy assurance, and user benefit
+  as unknown. This is self-review, not independent assurance or human
+  acceptance.
+- **Pending validation**: none for the unchanged stopped snapshot. No build or
+  external-session validation is pending because those stages were not
+  reached.
+- **Incomplete**: the bounded v4 execution is complete at its required first
+  deviation, but the intended automatic user journey remains unestablished.
+- **Preserved boundary**: no dependency download, network request, build,
+  installation, temporary root, synthetic Git operation, external Agent or
+  model session, source change, configuration change, publication, release,
+  deployment, or cleanup occurred. Existing excluded local paths remain
+  byte-identical and non-owned.
+- **Evidence**: normalized durable evidence is in
+  `docs/experiments/independent-automatic-journey-rehearsal-v4-2026-08-31.md`;
+  the dated session record is
+  `docs/development-log/2026-08-31-independent-automatic-journey-rehearsal-v4.md`.
+- **Next product review**: decide whether to admit one narrow offline
+  Python 3.12 build-tooling bootstrap that provides the exact retained backend
+  without network access, or stop the automatic-journey investigation. This
+  entry grants no repair, download, retry, task, model, Git, publication,
+  release, deployment, or external authority.
+
+#### Previous governed journey Git closeout v2
 
 - **Active slice**: native proposal
   `prp-b463f4aea73d4e5d8a27a5c67c9dcf9b` admitted task

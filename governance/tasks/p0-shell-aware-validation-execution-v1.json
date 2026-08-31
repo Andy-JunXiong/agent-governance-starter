@@ -1,0 +1,66 @@
+{
+  "acceptance_signals": [
+    "Validation command strings remain the admitted task contract and their original text continues to define persisted command identity.",
+    "Windows validation uses an explicit powershell.exe argv with NoLogo, NoProfile, NonInteractive, and UTF-16LE EncodedCommand; source quoting survives and native or PowerShell failure status is propagated.",
+    "POSIX validation uses an explicit /bin/sh -c argv, and subprocess execution no longer uses shell=True.",
+    "Fixture tests cover Windows environment assignment, quoting, success, nonzero native exit propagation, PowerShell failure, POSIX success and failure, unsupported platform or unavailable interpreter fail-closed behavior, and exact platform argv construction.",
+    "Timeout, stop-after-first-failure, transient raw output, persisted output digests, authority denial, and snapshot mutation detection remain unchanged.",
+    "The durable fresh-evidence specification and user workflow documentation state the platform shell and trust boundary without implying sandboxing.",
+    "Focused and full unit tests, the exact task check, repository check, and git diff check complete with all deterministic failures resolved except any separately disclosed pre-existing excluded-path completion limitation."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-ecb7aa64b869471e8dbe3a98e839930e and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Replace implicit shell=True validation execution with an explicit platform-native runner while preserving the existing string command contract, evidence identity, privacy boundary, timeout, first-failure behavior, and snapshot freshness semantics. On Windows, execute an encoded noninteractive Windows PowerShell script and propagate native or PowerShell failure status; on POSIX, execute through /bin/sh -c. This task does not change excluded-path completion semantics."
+  },
+  "risk": {
+    "items": [
+      "PowerShell wrapping or encoding could alter quoting or exit-code behavior if not tested with real Windows subprocesses.",
+      "Platform dispatch could fail on unsupported hosts or hosts missing the declared interpreter; the runner must fail closed with a bounded error.",
+      "Pre-existing excluded changed paths may still prevent formal completion even when the shell repair itself passes; this task must not silently broaden scope or change that separate policy.",
+      "Reviewed assumption: The existing validation_commands array of strings is intentionally retained as platform-native shell source rather than migrated to structured argv metadata.",
+      "Reviewed assumption: Supported Windows environments provide powershell.exe and supported POSIX environments provide /bin/sh.",
+      "Reviewed assumption: The caller launches AgentGov with any required process environment such as PYTHONPATH; task validation commands need not mutate that environment themselves.",
+      "Reviewed unknown: Whether excluded changed paths should be ignored by completion is a separate unresolved requirement and is outside this task.",
+      "Reviewed unknown: Published-package and external consumer rollout are not authorized by this development-source repair."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      "tests/test_user_documentation.py",
+      "docs/consumer-validation/codex-instruction-semantics-differential-v1-2026-08-31.md",
+      "docs/development-log/2026-08-31-codex-instruction-semantics-differential.md",
+      "governance/tasks/p0-codex-instruction-semantics-differential-v1.json"
+    ],
+    "include_paths": [
+      "src/agentgov/development_evidence.py",
+      "tests/test_development_evidence.py",
+      "docs/specs/fresh-validation-evidence-v1.md",
+      "docs/development-evidence.md",
+      "docs/development-session.md",
+      "STATUS.md",
+      "docs/development-log/2026-08-31-shell-aware-validation-execution.md",
+      "governance/tasks/p0-shell-aware-validation-execution-v1.json"
+    ]
+  },
+  "task_id": "p0-shell-aware-validation-execution-v1",
+  "title": "Make declared validation execution shell-aware and deterministic",
+  "validation_commands": [
+    "python -m unittest tests.test_development_evidence -v",
+    "python -m unittest discover -s tests -v",
+    "python -m agentgov check task governance/tasks/p0-shell-aware-validation-execution-v1.json --repository .",
+    "python -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

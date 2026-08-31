@@ -146,6 +146,18 @@ CODEX_REPOSITORY_CONTEXT_SCHEMA_DIFFERENTIAL_LOG = (
     ROOT
     / "docs/development-log/2026-08-31-codex-repository-context-schema-differential.md"
 )
+CODEX_INSTRUCTION_SEMANTICS_DIFFERENTIAL = (
+    ROOT
+    / "docs/consumer-validation/codex-instruction-semantics-differential-v1-2026-08-31.md"
+)
+CODEX_INSTRUCTION_SEMANTICS_DIFFERENTIAL_LOG = (
+    ROOT
+    / "docs/development-log/2026-08-31-codex-instruction-semantics-differential.md"
+)
+CODEX_INSTRUCTION_SEMANTICS_TASK = (
+    ROOT
+    / "governance/tasks/p0-codex-instruction-semantics-differential-v1.json"
+)
 SESSION_CLOSEOUT_MAIN_PUSH_LOG = (
     ROOT / "docs/development-log/2026-08-31-session-closeout-main-push.md"
 )
@@ -1039,6 +1051,71 @@ class UserDocumentationTests(unittest.TestCase):
             "raw instructions",
             "transcript",
             "credential",
+            "password=",
+            "token=",
+        ):
+            self.assertNotIn(forbidden, lowered)
+
+    def test_codex_instruction_semantics_differential_is_privacy_bounded(self) -> None:
+        self.assertTrue(CODEX_INSTRUCTION_SEMANTICS_DIFFERENTIAL.is_file())
+        self.assertTrue(CODEX_INSTRUCTION_SEMANTICS_DIFFERENTIAL_LOG.is_file())
+        self.assertTrue(CODEX_INSTRUCTION_SEMANTICS_TASK.is_file())
+
+        evidence = CODEX_INSTRUCTION_SEMANTICS_DIFFERENTIAL.read_text(
+            encoding="utf-8"
+        )
+        normalized = " ".join(evidence.split())
+        status = " ".join(STATUS.read_text(encoding="utf-8").split())
+        log = " ".join(
+            CODEX_INSTRUCTION_SEMANTICS_DIFFERENTIAL_LOG.read_text(
+                encoding="utf-8"
+            ).split()
+        )
+        task = CODEX_INSTRUCTION_SEMANTICS_TASK.read_text(encoding="utf-8")
+
+        for phrase in (
+            "INSTRUCTION_SEMANTICS_SHARE_16_OF_18_CATEGORIES_CURRENT_ADDS_TWO_INVENTORY_SAFEGUARDS",
+            "each started exactly once",
+            "Both exited `0`",
+            "JSON response lines | `1` | `1`",
+            "Standard-error bytes | `0` | `0`",
+            "36cf7d2906c3e9e1b1fa8f83122f8e26de808577d70faecfe2f2700e2fa0f707",
+            "19 installed sentence digests were present in current source",
+            "current-only count was `1`",
+            "2ae13e9b3f465db6aed300f633f14055da0523c67bd909b96934dfaeb71e9dc5",
+            "Sixteen categories were present in both bindings",
+            "No category was installed-only",
+            "changed paths must be classified",
+            "same privacy-bounded path inventory is revalidated",
+            "not a general semantic-equivalence proof",
+            "real-client root cause remains unknown",
+            "No runtime source, package, Codex configuration",
+        ):
+            self.assertIn(phrase, normalized)
+
+        for text in (status, log, task):
+            self.assertIn(
+                "p0-codex-instruction-semantics-differential-v1", text
+            )
+        for text in (status, log):
+            self.assertIn("mcpj-2e6d45b1f46b4f17937714ebdb34c601", text)
+            self.assertIn("prp-bfc4ca91661d47de8b15e363d96f8d5a", text)
+            self.assertIn("srv-9b8c338830991ac03cc4274c2ff2720a", text)
+            self.assertIn("evd-531c943997724b92ab6bf7888abfd9fa", text)
+            self.assertIn("needs_evidence", text)
+            self.assertIn("not `verified`", text)
+            self.assertIn("1.6.0", text)
+            self.assertIn("1.7.0", text)
+
+        lowered = evidence.lower()
+        for forbidden in (
+            "c:\\users",
+            "thread_id",
+            "session_id",
+            "process_id",
+            "raw instructions",
+            "transcript content",
+            "credential value",
             "password=",
             "token=",
         ):

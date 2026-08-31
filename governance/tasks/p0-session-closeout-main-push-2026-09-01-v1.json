@@ -1,0 +1,72 @@
+{
+  "acceptance_signals": [
+    "STATUS.md and the dated closeout log accurately distinguish the three completed slices, their validation states, first-deviation limits, unknowns, and authority boundaries.",
+    "The intended commit contains only the enumerated product documents, documentation test, and admitted task records; local .agentgov state and .codex/config.toml remain unstaged.",
+    "Focused documentation tests, the complete repository suite, exact closeout task governance, repository governance, task-start scope reconciliation, JSON parsing, privacy checks, and whitespace checks pass with only disclosed platform skips and advisories.",
+    "The branch is main, origin is the configured GitHub repository, fetch shows no unhandled divergence, and the reviewed staged diff matches the admitted product scope.",
+    "Exactly one ordinary non-force commit is created and pushed explicitly to origin main; no force-push, pull request, release, deployment, or other external action occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-513530c6578740d4ae3d58669e71f7b0 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Update current status and one dated closeout log to summarize the completed instruction-semantics differential, shell-aware validation repair record, and v4 first-deviation rehearsal; validate the exact accumulated product diff; preserve local AgentGov and Codex configuration state outside version control; then create one ordinary commit and push it non-force to the existing origin main under the product owner's explicit Git authorization."
+  },
+  "risk": {
+    "items": [
+      "A broad stage could capture local AgentGov evidence or Codex configuration, so staging must use the exact reviewed path list.",
+      "The accumulated records have different completion outcomes and must not be flattened into an end-to-end success claim.",
+      "A direct push changes shared remote history; fetch and divergence checks must pass without force-push or discarded work.",
+      "The v4 rehearsal stopped before build and consumer execution, so closeout must retain those outcomes as unknown.",
+      "Git authentication or downstream GitHub checks may fail independently of local validation.",
+      "Reviewed assumption: The product owner's current request authorizes one ordinary commit and one non-force push to the configured origin main.",
+      "Reviewed assumption: The three visible admitted-task result sets are today's complete intended product scope.",
+      "Reviewed assumption: The configured origin and current main branch are the intended GitHub destination.",
+      "Reviewed assumption: README, development strategy, ADRs, release identity, public HTML, and localized surfaces own no changed truth for this evidence-only closeout.",
+      "Reviewed assumption: Git transport credentials remain available through the configured credential helper.",
+      "Reviewed unknown: Whether origin main advanced after the current local observation.",
+      "Reviewed unknown: Whether direct Git transport authentication will succeed.",
+      "Reviewed unknown: Whether downstream GitHub checks will run or pass.",
+      "Reviewed unknown: Whether a later offline build-tooling bootstrap and fresh rehearsal will establish the unobserved automatic journey."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".codex"
+    ],
+    "include_paths": [
+      "STATUS.md",
+      "tests/test_user_documentation.py",
+      "docs/consumer-validation/codex-instruction-semantics-differential-v1-2026-08-31.md",
+      "docs/development-log/2026-08-31-codex-instruction-semantics-differential.md",
+      "docs/development-log/2026-08-31-shell-aware-validation-execution.md",
+      "docs/development-log/2026-08-31-independent-automatic-journey-rehearsal-v4.md",
+      "docs/experiments/independent-automatic-journey-rehearsal-v4-2026-08-31.md",
+      "governance/tasks/p0-codex-instruction-semantics-differential-v1.json",
+      "governance/tasks/p0-shell-aware-validation-execution-v1.json",
+      "governance/tasks/p0-independent-automatic-journey-rehearsal-v4.json",
+      "governance/tasks/p0-session-closeout-main-push-2026-09-01-v1.json",
+      "docs/development-log/2026-09-01-session-closeout-main-push-v1.md",
+      ".agentgov"
+    ]
+  },
+  "task_id": "p0-session-closeout-main-push-2026-09-01-v1",
+  "title": "Close out and push the latest governed development work",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; & \"$env:LOCALAPPDATA\\Programs\\Python\\Python312\\python.exe\" -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; & \"$env:LOCALAPPDATA\\Programs\\Python\\Python312\\python.exe\" -m unittest discover -s tests -v",
+    "agentgov check task governance/tasks/p0-session-closeout-main-push-2026-09-01-v1.json --repository .",
+    "agentgov check repository .",
+    "$env:PYTHONPATH = \"src\"; & \"$env:LOCALAPPDATA\\Programs\\Python\\Python312\\python.exe\" -m scripts.task_start_scope_baseline check --repository . --task governance/tasks/p0-session-closeout-main-push-2026-09-01-v1.json --baseline .agentgov/scope-baselines/p0-session-closeout-main-push-2026-09-01-v1.json",
+    "& \"$env:LOCALAPPDATA\\Programs\\Python\\Python312\\python.exe\" -m json.tool governance/tasks/p0-session-closeout-main-push-2026-09-01-v1.json",
+    "git diff --check"
+  ]
+}
