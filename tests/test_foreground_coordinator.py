@@ -107,12 +107,17 @@ class ForegroundCoordinatorTests(unittest.TestCase):
             cycle = run_foreground_cycle(root, trigger=trigger)
             events = load_governance_events(root / ".agentgov/events").events
             dashboard = (root / ".agentgov/dashboard.html").read_text(encoding="utf-8")
+            scope_evidence_exists = bool(
+                events[-1].evidence_ref and (root / events[-1].evidence_ref).is_file()
+            )
 
         self.assertEqual(cycle.status, "blocked")
         self.assertEqual(cycle.actions[0]["name"], "check_scope")
         self.assertEqual(cycle.actions[0]["outcome"], "blocked")
         self.assertEqual(events[-1].event_type, "scope.checked")
         self.assertEqual(events[-1].outcome, "failed")
+        self.assertIsNotNone(events[-1].evidence_ref)
+        self.assertTrue(scope_evidence_exists)
         self.assertIn("Protection Events", dashboard)
         self.assertIn("scope boundary", dashboard)
 

@@ -7,6 +7,7 @@ future 0.3 line. It consumes the privacy-bounded events created by
 `agentgov govern start/check/finish` and produces a self-contained local file with:
 
 - Overview;
+- Active Task;
 - Live Sessions;
 - Protection Events;
 - Activity Timeline;
@@ -14,7 +15,17 @@ future 0.3 line. It consumes the privacy-bounded events created by
 - Benefit;
 - Learning.
 
-Monitor contract 1.9 adds exact candidate-bound human Learning reviews to the
+Monitor contract 1.10 adds a local-session-only Active Task projection. It
+binds one admitted task and digest to its canonical development state, admitted
+context, existing activity-event identities, and event-referenced evidence.
+Path-level scope facts appear only when the latest `scope.checked` event points
+to a valid immutable event-referenced scope artifact stored locally for the
+same task and digest;
+otherwise affected paths remain explicitly unavailable. The projection offers
+read-only human-boundary guidance and denies commit, merge, publish, release,
+and deploy authority.
+
+Monitor contract 1.9 added exact candidate-bound human Learning reviews to the
 strict current-observation Learning projection introduced in 1.8 and to the
 single-observation Benefit projection introduced in 1.7, the read-only guidance
 introduced for Protection Events in 1.6, and the shared drift-review
@@ -34,8 +45,9 @@ governance-file edits.
 ADR-0013 makes the Monitor and Dashboard a core automatically refreshed product
 surface rather than a command the ordinary user must remember to run. The
 current static Monitor is the validated read-model foundation. Development
-source now derives Overview, Live Sessions, Protection Events, Activity
-Timeline, Task Detail, Benefit, Learning, and the non-authoritative drift-review reminder.
+source now derives Overview, local Active Task, Live Sessions, Protection
+Events, Activity Timeline, Task Detail, Benefit, Learning, and the
+non-authoritative drift-review reminder.
 Protection Events now provide enum-bounded read-only links to Task Detail; an
 explicit future handling or resolution contract is still required before
 actual handling or resolution can be linked across events. The first single-
@@ -149,6 +161,12 @@ PR, and CI.
 
 Within the displayed observation scope:
 
+- Active Task answers five first-review questions for one exact local session:
+  what requirement is admitted, which path boundary applies, what AgentGov has
+  directly observed, what the canonical state means, and which human boundary
+  comes next. Its activity list references the same canonical event identities
+  used by Timeline. Exported, CI-only, combined, missing-session, or invalid
+  bindings show the detail as unavailable rather than inferring a current task.
 - Timeline answers when governance ran, which command family triggered it,
   which actor class invoked it, which governance paths start selected, recorded
   reason codes, observed counts, and outcome. Selection does not prove agent
@@ -169,8 +187,9 @@ Within the displayed observation scope:
   and completion outcome. A task with a Protection Event is prominent and open
   by default, with the latest protection class, observed outcome and reasons,
   recorded counters, a deterministic next human review action, and the explicit
-  statement that resolution is unknown. The current event contract records
-  counts rather than changed paths, so affected paths are shown as unavailable
+  statement that resolution is unknown. Affected paths appear only when that
+  protection event is the latest scope event referenced by the Active Task's
+  validated path-level artifact; otherwise they are shown as unavailable
   instead of inferred. Tasks without Protection Events remain compact.
 - Benefit uses one strict five-card projection over the current observation:
   `observed_fact` contains only validated direct counts;
@@ -243,6 +262,14 @@ confirmed improvement, portability, or future recurrence. Task identities are
 used only to derive a distinct-task count and are not emitted in the Learning
 projection.
 
+Monitor 1.10 keeps Active Task context artifact-owned and state derived from
+the existing session and lifecycle events. Its immutable scope artifact records
+only repository-relative Git path metadata, matched boundaries, deterministic
+findings, and known limits—never source contents or raw validation output.
+`verified` means only that the declared checks passed on the unchanged admitted
+snapshot; human acceptance, architectural correctness, resolution, and every
+downstream authority remain separate or unknown.
+
 The static HTML escapes event metadata, embeds no source code or raw validation
 output, performs no external requests, and contains no approval, exception,
 commit, merge, deployment, or governance mutation controls. Exported actor
@@ -254,7 +281,8 @@ accepts no external or absolute target.
 
 Generation fails closed on malformed events, unsafe paths, sensitive text,
 invalid authority, unsupported actor/outcome/type, mismatched event filename,
-or conflicting duplicate event IDs. Byte-equivalent duplicate event records
+conflicting duplicate event IDs, or an unsafe, malformed, content-mismatched,
+or task-mismatched scope artifact. Byte-equivalent duplicate event records
 are removed deterministically and disclosed in the observation metadata.
 
 The generated Monitor is a read model. Governance declarations continue to

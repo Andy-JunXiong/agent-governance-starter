@@ -182,6 +182,7 @@ from agentgov.development_session import (
     resolve_active_task,
 )
 from agentgov.event_store import LocalStateError, append_governance_event
+from agentgov.scope_observation import ScopeObservationError, record_scope_observation
 from agentgov.learning_review import (
     LEARNING_DISPOSITIONS,
     LEARNING_SIGNAL_CLASSES,
@@ -2717,37 +2718,28 @@ def _govern_check(
         active_session = None
         if path is None:
             path, active_session = resolve_active_task(repository)
-        report = check_development_scope(path, repository=repository)
-        _, event_ref = append_governance_event(
+        observation = record_scope_observation(
             repository,
-            event_type="scope.checked",
             actor_class=actor_class,
             actor_label=actor_label,
-            task_id=report.task_id,
-            task_digest=report.task_digest,
-            outcome="failed" if report.has_failures else "passed",
-            evidence_ref=None,
             reason_codes=tuple(
                 code
                 for code in (
                     "active_session_used" if active_session is not None else "explicit_check_requested",
-                    "scope_failure" if report.has_failures else None,
                 )
                 if code is not None
             ),
-            metrics={
-                "changes": len(report.changes),
-                "failures": report.count(ScopeFindingStatus.FAIL),
-                "advisories": report.count(ScopeFindingStatus.ADVISORY),
-            },
+            task_path=path,
         )
+        report = observation.report
+        event_ref = observation.event_ref
     except ScopePolicyError as exc:
         print(f"FAIL govern check: {exc}")
         return EXIT_FAIL
     except FileNotFoundError as exc:
         print(f"ERROR govern check: file or executable not found: {exc.filename or exc}", file=sys.stderr)
         return EXIT_ERROR
-    except (GitInspectionError, LocalStateError, SessionPolicyError, OSError, UnicodeError, ValueError) as exc:
+    except (GitInspectionError, LocalStateError, ScopeObservationError, SessionPolicyError, OSError, UnicodeError, ValueError) as exc:
         print(f"ERROR govern check: {exc}", file=sys.stderr)
         return EXIT_ERROR
     renderer = {

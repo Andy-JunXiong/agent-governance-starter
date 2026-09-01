@@ -1,0 +1,80 @@
+{
+  "acceptance_signals": [
+    "Development Monitor exposes one Active Task projection for the exact active local-session task and digest, with human-readable context, canonical state, evidence, existing activity-event references, human boundary guidance, claim limits, and explicitly denied commit, merge, publish, release, and deploy authority.",
+    "Scope checks persist one immutable repository-relative path-level development-scope-report artifact and link it through the existing scope.checked evidence_ref without adding an event type or parallel activity model.",
+    "Historical affected paths appear only from a validated event-referenced scope artifact bound to the same task and digest; missing, unsafe, malformed, stale, exported, CI-only, or mismatched evidence remains visibly unavailable and never inferred.",
+    "JSON, Markdown, and self-contained HTML derive from the same Monitor projection; ordinary copy presents human meaning first while preserving technical state and event codes for audit.",
+    "Completion Verified remains distinct from human acceptance, bounded handoff, and downstream authority; ADVISORY remains non-deterministic and no UI control applies a governance decision.",
+    "Existing Monitor aggregate views, the six-step interview demo, event contract, Kernel concepts, and privacy boundaries remain intact.",
+    "Focused scope-observation, foreground-coordinator, Monitor, session, and documentation tests pass, followed by the complete repository suite and repository governance check."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-50c8325a14c84818bcccc45f01e8401a and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Evolve the existing Development Monitor with a local-session-first Active Task View that lets a first-time user understand one exact admitted task, its allowed scope, observed deterministic facts, current governance state, evidence, next human boundary, and explicitly ungranted downstream authority without learning internal CLI or contract structure."
+  },
+  "risk": {
+    "items": [
+      "Joining task, session, event, and evidence records incorrectly could display stale or mismatched facts, so every binding must fail closed on exact task digest and safe repository-relative references.",
+      "Persisting scope reports changes local observation behavior and must remain immutable, privacy-bounded, untracked AgentGov state with no source content, raw output, prompt, credential, or absolute path.",
+      "Human-friendly copy could overstate completion, resolution, actor identity, prevention, or authority unless claim limits remain visible and tested.",
+      "Adding task detail to the Monitor could create a second source of truth or duplicate timeline data unless the projection references existing canonical events rather than copying UI-specific event semantics.",
+      "Strict Monitor schema evolution requires synchronized JSON, Markdown, HTML, documentation, schema copies, and regression fixtures.",
+      "Reviewed assumption: The first slice supports only the exact active task in local_session observation scope; exported, CI-only, and combined sources show Active Task detail as unavailable.",
+      "Reviewed assumption: The existing development task, session, state, scope report, validation evidence, completion report, governance event, and Monitor contracts can express the minimum user outcome without a new Kernel concept.",
+      "Reviewed assumption: Static Monitor v0 provides read-only human-boundary guidance rather than buttons or decision callbacks.",
+      "Reviewed assumption: A Monitor read-model contract version update is an Application/Product Surface change and preserves the existing lifecycle event contract.",
+      "Reviewed unknown: Whether first-time users can answer the five target questions correctly remains unknown until a separate uncoached product review.",
+      "Reviewed unknown: Any adoption, time-saving, error-reduction, or causal benefit remains unproven and will not be claimed.",
+      "Reviewed unknown: A durable admission timestamp, authenticated file-writer attribution, context-consumption evidence, and cross-event resolution links remain unavailable and outside this task."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      "docs/assets/linkedin-github-repository-cover.png",
+      "governance/tasks/p0-airbnb-runtime-completion-handoff.json"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-active-task-view-v0.json",
+      "src/agentgov/scope_observation.py",
+      "src/agentgov/cli.py",
+      "src/agentgov/foreground_coordinator.py",
+      "src/agentgov/development_monitor.py",
+      "schemas/development-monitor.schema.json",
+      "docs/schemas/development-monitor.schema.json",
+      "docs/schemas/development-monitor.schema.html",
+      "tests/test_scope_observation.py",
+      "tests/test_development_session.py",
+      "tests/test_foreground_coordinator.py",
+      "tests/test_development_monitor.py",
+      "tests/test_user_documentation.py",
+      "docs/development-monitor.md",
+      "docs/development-scope-check.md",
+      "README.md",
+      "STATUS.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/development-log/2026-09-01-active-task-view-v0.md"
+    ]
+  },
+  "task_id": "p0-active-task-view-v0",
+  "title": "Active Task View v0",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_scope_observation tests.test_development_monitor tests.test_foreground_coordinator tests.test_development_session tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-active-task-view-v0.json --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-active-task-view-v0.json",
+    "git diff --check"
+  ]
+}

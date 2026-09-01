@@ -8,7 +8,7 @@ source_path: docs/development-scope-check.md
 
 ## Status
 
-The read-only changed-file scope check is implemented in development source
+The low-level read-only changed-file scope check is implemented in development source
 for the future 0.3 line. It is not included in stable 0.2.1 and is not yet
 published. Guided `govern check` now wraps it and can resolve the task from the
 confirmed working-copy session.
@@ -24,10 +24,27 @@ python -m agentgov check scope governance/tasks/my-task.json `
 `--format json` emits the strict
 [`agentgov.development-scope-report`](../schemas/development-scope-report.schema.json)
 contract. `--format markdown` presents the same findings for human review.
+This low-level command does not persist evidence or append an event.
 
 Exit code `1` means at least one deterministic changed-path boundary failed.
 WARN is not used by this contract: architecture relevance is an `ADVISORY`,
 and operational Git or filesystem errors use exit code `2`.
+
+## Governed path evidence
+
+`agentgov govern check` and the foreground coordinator run the same scope
+decision, persist its complete report as an immutable content-addressed JSON
+artifact under untracked `.agentgov/evidence/`, and bind the existing
+`scope.checked` event to it through `evidence_ref`. Repeated identical reports
+reuse the artifact while each observation keeps its own event identity.
+
+The artifact contains repository-relative path metadata, Git layer and change
+status, old/new endpoints, matched include or exclude prefixes, deterministic
+findings, snapshot `HEAD`, and known limits. It contains no source content, raw
+command output, prompt, credential, personal identity, or absolute path. The
+Monitor accepts it only when its safe reference, content-derived identity,
+contract, task ID, and exact task digest all validate; it never reconstructs
+historical paths from the current working copy.
 
 ## Git facts inspected
 
@@ -71,8 +88,11 @@ that architecture is violated.
 
 ## Authority and limits
 
-The checker does not modify files, index, branch, history, task declarations,
-or exception state. It does not authorize a scope exception, commit, or merge.
+The low-level checker does not modify files, index, branch, history, task
+declarations, or exception state. The governed wrapper writes only the
+untracked immutable scope artifact and existing privacy-bounded event described
+above. Neither form authorizes a scope exception, commit, merge, publication,
+release, or deployment.
 
 This phase covers the working tree only. A WIP commit removes those paths from
 the staged/unstaged inventory. Committed-since-base scope requires the explicit

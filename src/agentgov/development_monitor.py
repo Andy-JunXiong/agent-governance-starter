@@ -15,6 +15,8 @@ from agentgov.development_event_export import (
     DevelopmentExportPolicyError,
     load_development_event_export,
 )
+from agentgov.development_session import SessionPolicyError, resolve_active_task
+from agentgov.development_state import development_state_payload, project_development_state
 from agentgov.event_store import (
     GovernanceEvent,
     governance_event_from_payload,
@@ -31,10 +33,12 @@ from agentgov.learning_review import (
     load_learning_reviews,
     protection_signal_class,
 )
+from agentgov.scope_observation import ScopeObservationError, load_scope_observation
+from agentgov.task_contract import load_development_task
 
 
 MONITOR_CONTRACT = "agentgov.development-monitor"
-MONITOR_SCHEMA_VERSION = "1.9"
+MONITOR_SCHEMA_VERSION = "1.10"
 MONITOR_SCOPES = {"local_session", "exported_development", "ci_only", "combined"}
 
 _PROTECTION_GUIDANCE = {
@@ -67,6 +71,7 @@ class DevelopmentMonitor:
     schema_version: str
     generated_at: str
     observation: Mapping[str, Any]
+    active_task: Mapping[str, Any]
     overview: Mapping[str, int]
     live_sessions: tuple[Mapping[str, Any], ...]
     protection_events: tuple[Mapping[str, Any], ...]
@@ -83,6 +88,239 @@ class DevelopmentMonitor:
 class _ObservedEvent:
     event: GovernanceEvent
     source_scope: str
+
+
+_ACTIVE_TASK_AUTHORITY = {
+    "authorizes_commit": False,
+    "authorizes_merge": False,
+    "authorizes_publish": False,
+    "authorizes_release": False,
+    "authorizes_deploy": False,
+}
+_ACTIVE_TASK_CLAIM_LIMITS = (
+    "Observed Git paths do not identify who changed or restored a file.",
+    "Selected governance context does not prove that a coding agent consumed it.",
+    "Completion Verified does not prove requirement or architecture correctness, human acceptance, or validation sufficiency.",
+    "No task, event, evidence record, Monitor view, or bounded handoff grants commit, merge, publish, release, or deploy authority.",
+    "A later passing event does not prove that an earlier Protection Event was handled or resolved.",
+)
+
+
+def _unavailable_active_task(reason_code: str) -> Mapping[str, Any]:
+    return {
+        "availability": "unavailable",
+        "reason_code": reason_code,
+        "claim_limits": list(_ACTIVE_TASK_CLAIM_LIMITS),
+        "authority": dict(_ACTIVE_TASK_AUTHORITY),
+    }
+
+
+def _state_meaning(stage: str) -> str:
+    return {
+        "active_unchecked": (
+            "Work is associated with this admitted task, but the current scope has not yet been checked."
+        ),
+        "scope_passed": (
+            "The latest scope check found the current changed paths within the admitted path boundary; fresh completion evidence is not yet established."
+        ),
+        "scope_blocked": (
+            "The latest scope check found one or more current changes outside or inconsistent with the admitted path boundary."
+        ),
+        "validation_recorded": (
+            "The task's declared validation was recorded; completion still requires reconciliation against the same unchanged evidence."
+        ),
+        "needs_evidence": (
+            "Completion cannot be verified because the admitted evidence contract is missing, failed, or no longer fresh."
+        ),
+        "review_ready": (
+            "The current change set is within the admitted path scope, and the task's declared checks passed on an unchanged snapshot."
+        ),
+        "handed_off": (
+            "A human ended AgentGov's routing responsibility for this bounded session; downstream authority remains separate."
+        ),
+        "invalid": (
+            "AgentGov cannot safely determine the current task state from the available session and event records."
+        ),
+    }.get(stage, "AgentGov cannot safely explain the current task state.")
+
+
+def _human_boundary(stage: str) -> Mapping[str, Any]:
+    title, guidance = {
+        "active_unchecked": (
+            "Scope evidence required",
+            "Run the existing governed scope observation before treating the current work as in scope.",
+        ),
+        "scope_passed": (
+            "Fresh completion evidence required",
+            "Use only the task's already admitted validation contract and then reconcile completion.",
+        ),
+        "scope_blocked": (
+            "Human scope review required",
+            "Keep the admitted scope and narrow the changes, or prepare a separately reviewed task revision; this view applies neither choice.",
+        ),
+        "validation_recorded": (
+            "Completion reconciliation required",
+            "Re-establish that the recorded validation still belongs to the same unchanged task and snapshot.",
+        ),
+        "needs_evidence": (
+            "Evidence refresh required",
+            "Review the recorded evidence limits and rerun only the admitted validation after the blocking condition is corrected.",
+        ),
+        "review_ready": (
+            "Human review remains required",
+            "Review the bounded work and evidence before any separate handoff or downstream authority decision.",
+        ),
+        "handed_off": (
+            "No downstream authority granted",
+            "The bounded session has ended; commit, merge, publish, release, and deploy remain separate human-owned transitions.",
+        ),
+        "invalid": (
+            "Human investigation required",
+            "Repair or re-establish the exact admitted task, session, and event binding before continuing.",
+        ),
+    }.get(
+        stage,
+        ("Human investigation required", "No safe next guidance is available from the current records."),
+    )
+    return {
+        "availability": "read_only_guidance",
+        "title": title,
+        "guidance": guidance,
+        "decision_applied": False,
+    }
+
+
+def _event_evidence(
+    events: tuple[GovernanceEvent, ...],
+    event_type: str,
+) -> Mapping[str, Any]:
+    matching = tuple(item for item in events if item.event_type == event_type)
+    if not matching:
+        return {"availability": "unavailable", "reason_code": f"{event_type.replace('.', '_')}_not_recorded"}
+    latest = matching[-1]
+    return {
+        "availability": "available",
+        "event_id": latest.event_id,
+        "outcome": latest.outcome,
+        "evidence_ref": latest.evidence_ref,
+        "metrics": dict(sorted(latest.metrics.items())),
+    }
+
+
+def _scope_evidence(
+    root: Path,
+    events: tuple[GovernanceEvent, ...],
+) -> Mapping[str, Any]:
+    matching = tuple(item for item in events if item.event_type == "scope.checked")
+    if not matching:
+        return {"availability": "unavailable", "reason_code": "scope_check_not_recorded"}
+    latest = matching[-1]
+    if latest.evidence_ref is None:
+        return {
+            "availability": "unavailable",
+            "reason_code": "scope_artifact_not_recorded",
+            "event_id": latest.event_id,
+            "outcome": latest.outcome,
+        }
+    try:
+        report = load_scope_observation(
+            root,
+            latest.evidence_ref,
+            expected_task_id=latest.task_id,
+            expected_task_digest=latest.task_digest,
+        )
+    except ScopeObservationError:
+        return {
+            "availability": "unavailable",
+            "reason_code": "scope_artifact_invalid",
+            "event_id": latest.event_id,
+            "outcome": latest.outcome,
+        }
+    affected_paths = []
+    for change in report["changes"]:
+        for endpoint in change["endpoints"]:
+            affected_paths.append(
+                {
+                    "path": endpoint["path"],
+                    "role": endpoint["role"],
+                    "layer": change["layer"],
+                    "change_status": change["status"],
+                    "status": "PASS" if endpoint["admitted"] else "FAIL",
+                    "admitted": endpoint["admitted"],
+                    "matched_include": endpoint["matched_include"],
+                    "matched_exclude": endpoint["matched_exclude"],
+                    "reason": endpoint["reason"],
+                }
+            )
+    return {
+        "availability": "available",
+        "event_id": latest.event_id,
+        "outcome": latest.outcome,
+        "evidence_ref": latest.evidence_ref,
+        "head_sha": report["head_sha"],
+        "affected_paths": affected_paths,
+        "findings": list(report["findings"]),
+        "known_limits": list(report["known_limits"]),
+    }
+
+
+def _active_task_view(
+    root: Path,
+    observation_scope: str,
+    observed_events: tuple[_ObservedEvent, ...],
+) -> Mapping[str, Any]:
+    if observation_scope != "local_session":
+        return _unavailable_active_task("active_task_requires_local_session")
+    try:
+        task_path, session = resolve_active_task(root)
+        document = load_development_task(task_path)
+    except (SessionPolicyError, OSError, UnicodeError, ValueError, json.JSONDecodeError):
+        return _unavailable_active_task("active_task_not_safely_resolved")
+    events = tuple(
+        item.event
+        for item in observed_events
+        if item.event.task_id == session.task_id
+        and item.event.task_digest == session.task_digest
+        and item.event.occurred_at >= session.started_at
+    )
+    state = development_state_payload(project_development_state(session, events))
+    requirement = document["requirement"]
+    scope = document["scope"]
+    decision = document["decision"]
+    return {
+        "availability": "available",
+        "reason_code": "active_task_bound",
+        "identity": {
+            "task_id": session.task_id,
+            "task_digest": session.task_digest,
+            "task_path": task_path.relative_to(root).as_posix(),
+            "title": document["title"],
+            "profile": document["profile"],
+            "decision_state": decision["state"],
+        },
+        "context": {
+            "requirement_summary": requirement["summary"],
+            "goal": document.get("goal"),
+            "non_goals": list(document.get("non_goals", [])),
+            "include_paths": list(scope["include_paths"]),
+            "exclude_paths": list(scope["exclude_paths"]),
+            "architecture_refs": list(document.get("architecture_refs", [])),
+            "acceptance_signals": list(document["acceptance_signals"]),
+        },
+        "governance_state": {
+            **state,
+            "human_meaning": _state_meaning(state["stage"]),
+        },
+        "evidence": {
+            "scope": _scope_evidence(root, events),
+            "validation": _event_evidence(events, "validation.completed"),
+            "completion": _event_evidence(events, "completion.reconciled"),
+        },
+        "activity_event_ids": [item.event_id for item in events],
+        "human_boundary": _human_boundary(state["stage"]),
+        "claim_limits": list(_ACTIVE_TASK_CLAIM_LIMITS),
+        "authority": dict(_ACTIVE_TASK_AUTHORITY),
+    }
 
 
 def _safe_root(repository: Path) -> Path:
@@ -712,6 +950,7 @@ def build_development_monitor(
         "missing_sources": list(missing_sources),
         "cross_stage_discovery_available": False,
     }
+    active_task = _active_task_view(root, observation_scope, observed_events)
     benefit = _benefit_view(observation, overview)
     learning_reviews: tuple[LearningReview, ...] = ()
     review_source_available = observation_scope == "local_session"
@@ -757,6 +996,7 @@ def build_development_monitor(
         schema_version=MONITOR_SCHEMA_VERSION,
         generated_at=monitor_generated_at,
         observation=observation,
+        active_task=active_task,
         overview=overview,
         live_sessions=live_sessions,
         protection_events=protection_events,
@@ -860,6 +1100,7 @@ def _task_attention(
         guidance = {}
     metrics = source_event.get("metrics", {}) if source_event else {}
     return {
+        "source_event_id": protection.get("source_event_id"),
         "protection_type": protection.get("protection_type"),
         "observed_outcome": protection.get("observed_outcome"),
         "reason_codes": tuple(protection.get("reason_codes", ())),
@@ -869,6 +1110,141 @@ def _task_attention(
         ),
         "resolution": "unknown",
     }
+
+
+def _activity_meaning(event_type: str, outcome: str) -> str:
+    if event_type == "task.started":
+        return "Work began under this admitted task record."
+    if event_type == "scope.checked" and outcome == "passed":
+        return "AgentGov checked the current working copy; the observed changed paths were within the admitted path boundary."
+    if event_type == "scope.checked" and outcome == "failed":
+        return "AgentGov observed one or more current changes outside or inconsistent with the admitted path boundary."
+    if event_type == "validation.completed":
+        return "The task's declared validation was run and recorded."
+    if event_type == "completion.reconciled" and outcome == "verified":
+        return "Fresh evidence matched the unchanged admitted task and snapshot."
+    if event_type == "completion.reconciled":
+        return "Completion remains unverified within the admitted evidence contract."
+    if event_type == "session.handed_off":
+        return "A human ended AgentGov's routing responsibility for this bounded session."
+    return "AgentGov recorded a bounded governance observation."
+
+
+def _active_task_events(monitor: DevelopmentMonitor) -> tuple[Mapping[str, Any], ...]:
+    active = monitor.active_task
+    if active.get("availability") != "available":
+        return ()
+    event_ids = set(active.get("activity_event_ids", ()))
+    return tuple(item for item in monitor.timeline if item.get("event_id") in event_ids)
+
+
+def _active_scope_paths_for_event(
+    monitor: DevelopmentMonitor,
+    event_id: Any,
+) -> tuple[Mapping[str, Any], ...] | None:
+    active = monitor.active_task
+    if active.get("availability") != "available":
+        return None
+    evidence = active.get("evidence")
+    if not isinstance(evidence, Mapping):
+        return None
+    scope = evidence.get("scope")
+    if (
+        not isinstance(scope, Mapping)
+        or scope.get("availability") != "available"
+        or scope.get("event_id") != event_id
+    ):
+        return None
+    paths = scope.get("affected_paths")
+    if not isinstance(paths, list):
+        return None
+    return tuple(item for item in paths if isinstance(item, Mapping))
+
+
+def _render_active_task_markdown(monitor: DevelopmentMonitor) -> list[str]:
+    active = monitor.active_task
+    lines = ["", "## Active Task", ""]
+    if active.get("availability") != "available":
+        lines.extend(
+            [
+                "- Availability: `unavailable`",
+                f"- Reason: `{active['reason_code']}`",
+                "- This Monitor does not infer task context from aggregate, exported, or incomplete records.",
+            ]
+        )
+    else:
+        identity = active["identity"]
+        context = active["context"]
+        state = active["governance_state"]
+        boundary = active["human_boundary"]
+        scope = active["evidence"]["scope"]
+        lines.extend(
+            [
+                f"### {identity['title']}",
+                "",
+                f"- Task: `{identity['task_id']}`",
+                f"- Decision: `{identity['decision_state']}`",
+                f"- Requirement: {context['requirement_summary']}",
+                f"- Included paths: `{', '.join(context['include_paths'])}`",
+                f"- Excluded paths: `{', '.join(context['exclude_paths']) or 'none declared'}`",
+                "",
+                "### Current governance state",
+                "",
+                state["human_meaning"],
+                "",
+                f"- Technical state: `{state['stage']}`",
+                f"- Reason: `{state['reason_code']}`",
+                f"- Blocking: `{str(state['blocking']).lower()}`",
+                "",
+                "### Scope evidence",
+                "",
+            ]
+        )
+        if scope["availability"] == "available":
+            if scope["affected_paths"]:
+                lines.extend(["| Status | Path | Change | Why |", "|---|---|---|---|"])
+                for item in scope["affected_paths"]:
+                    reason = str(item["reason"]).replace("|", "\\|").replace("\n", " ")
+                    lines.append(
+                        f"| {item['status']} | `{item['path']}` | `{item['layer']}:{item['change_status']}` | {reason} |"
+                    )
+            else:
+                lines.append("- No staged, unstaged, or non-ignored untracked path was recorded.")
+            lines.append(f"- Evidence: `{scope['evidence_ref']}`")
+        else:
+            lines.extend(
+                [
+                    "- Affected paths: `unavailable`",
+                    f"- Reason: `{scope['reason_code']}`",
+                    "- Paths are not inferred from current repository state or governance references.",
+                ]
+            )
+        lines.extend(
+            [
+                "",
+                "### Human boundary",
+                "",
+                f"- {boundary['title']}: {boundary['guidance']}",
+                "- Decision applied by this view: `false`",
+                "",
+                "### Task activity",
+                "",
+            ]
+        )
+        for event in _active_task_events(monitor):
+            lines.append(
+                f"- `{event['occurred_at']}` - {_activity_meaning(event['event_type'], event['outcome'])} Technical event: `{event['event_type']}` / `{event['outcome']}`."
+            )
+        if not active["activity_event_ids"]:
+            lines.append("- No exact session event is visible.")
+    lines.extend(["", "### Authority not granted", ""])
+    lines.extend(
+        f"- `{key.removeprefix('authorizes_')}`: `NOT GRANTED`"
+        for key in active["authority"]
+    )
+    lines.extend(["", "### Active Task claim limits", ""])
+    lines.extend(f"- {item}" for item in active["claim_limits"])
+    return lines
 
 
 def render_development_monitor_markdown(monitor: DevelopmentMonitor) -> str:
@@ -891,6 +1267,7 @@ def render_development_monitor_markdown(monitor: DevelopmentMonitor) -> str:
         "|---|---:|",
     ]
     lines.extend(f"| {key.replace('_', ' ')} | {value} |" for key, value in monitor.overview.items())
+    lines.extend(_render_active_task_markdown(monitor))
     lines.extend(
         [
             "",
@@ -946,12 +1323,28 @@ def render_development_monitor_markdown(monitor: DevelopmentMonitor) -> str:
             counts = ", ".join(
                 f"{key}={value}" for key, value in attention["metrics"].items()
             ) or "none recorded"
+            affected_paths = _active_scope_paths_for_event(
+                monitor, attention["source_event_id"]
+            )
+            if affected_paths is None:
+                path_lines = [
+                    "- Affected paths: `unavailable` - no valid event-referenced path-level scope artifact is available."
+                ]
+            elif affected_paths:
+                path_lines = [
+                    "- Affected paths: "
+                    + ", ".join(
+                        f"`{item['path']}` ({item['status']})" for item in affected_paths
+                    )
+                ]
+            else:
+                path_lines = ["- Affected paths: `none recorded`"]
             lines.extend(
                 [
                     f"- Needs attention: `{_display(attention['protection_type'])}` / `{_display(attention['observed_outcome'])}`",
                     f"- Observed reasons: `{reasons}`",
                     f"- Recorded counts: `{counts}`",
-                    "- Affected paths: `unavailable` - the current Monitor event contract records counts, not changed paths.",
+                    *path_lines,
                     f"- Next human action: `{_display(attention['next_action'])}`",
                     "- Resolution: `unknown`; navigation and review guidance do not prove handling or resolution.",
                 ]
@@ -1050,10 +1443,106 @@ def render_development_monitor_markdown(monitor: DevelopmentMonitor) -> str:
     return "\n".join(lines)
 
 
+def _render_active_task_html(monitor: DevelopmentMonitor) -> str:
+    esc = lambda value: html.escape(_display(value), quote=True)
+    active = monitor.active_task
+    authority = "".join(
+        '<div class="authority-row"><span>'
+        + esc(key.removeprefix("authorizes_"))
+        + "</span><strong>NOT GRANTED</strong></div>"
+        for key in active["authority"]
+    )
+    limits = "".join(f"<li>{esc(item)}</li>" for item in active["claim_limits"])
+    if active.get("availability") != "available":
+        body = (
+            '<div class="active-unavailable"><strong>Active Task detail unavailable</strong>'
+            f'<p>Reason: <code>{esc(active["reason_code"])}</code></p>'
+            "<p>Task context is not inferred from aggregate, exported, or incomplete records.</p></div>"
+        )
+    else:
+        identity = active["identity"]
+        context = active["context"]
+        state = active["governance_state"]
+        boundary = active["human_boundary"]
+        scope = active["evidence"]["scope"]
+        if scope["availability"] == "available":
+            if scope["affected_paths"]:
+                path_rows = "".join(
+                    '<tr><td><b class="path-status '
+                    + esc(item["status"].lower())
+                    + '">'
+                    + esc(item["status"])
+                    + "</b></td><td><code>"
+                    + esc(item["path"])
+                    + "</code></td><td>"
+                    + esc(f"{item['layer']}:{item['change_status']}")
+                    + "</td><td>"
+                    + esc(item["reason"])
+                    + "</td></tr>"
+                    for item in scope["affected_paths"]
+                )
+                scope_html = (
+                    '<div class="scope-table-wrap"><table class="scope-table"><thead><tr>'
+                    "<th>Status</th><th>Path</th><th>Change</th><th>Why</th>"
+                    f"</tr></thead><tbody>{path_rows}</tbody></table></div>"
+                    f'<p class="evidence-ref">Evidence <code>{esc(scope["evidence_ref"])}</code></p>'
+                )
+            else:
+                scope_html = (
+                    '<p class="empty">No staged, unstaged, or non-ignored untracked path was recorded.</p>'
+                    f'<p class="evidence-ref">Evidence <code>{esc(scope["evidence_ref"])}</code></p>'
+                )
+        else:
+            scope_html = (
+                '<div class="active-unavailable"><strong>Affected paths unavailable</strong>'
+                f'<p>Reason: <code>{esc(scope["reason_code"])}</code></p>'
+                "<p>Paths are not inferred from current repository state or governance references.</p></div>"
+            )
+        activity = "".join(
+            '<li><time>'
+            + esc(event["occurred_at"])
+            + "</time><p>"
+            + esc(_activity_meaning(event["event_type"], event["outcome"]))
+            + "</p><code>"
+            + esc(f"{event['event_type']} / {event['outcome']}")
+            + "</code></li>"
+            for event in _active_task_events(monitor)
+        ) or "<li>No exact session event is visible.</li>"
+        includes = "".join(f"<li><code>{esc(item)}</code></li>" for item in context["include_paths"])
+        excludes = "".join(f"<li><code>{esc(item)}</code></li>" for item in context["exclude_paths"]) or "<li>None declared</li>"
+        body = (
+            '<div class="active-heading"><div><span class="eyebrow">Current governed work</span>'
+            f'<h3>{esc(identity["title"])}</h3><p><code>{esc(identity["task_id"])}</code> &middot; decision <b>{esc(identity["decision_state"])}</b></p>'
+            f'</div><b class="state-pill {esc(state["stage"])}">{esc(state["stage"])}</b></div>'
+            f'<p class="active-requirement">{esc(context["requirement_summary"])}</p>'
+            '<div class="active-grid"><section><h3>Admitted boundary</h3><div class="scope-columns">'
+            f'<div><small>Included</small><ul>{includes}</ul></div><div><small>Excluded</small><ul>{excludes}</ul></div>'
+            "</div></section><section class=\"state-card\"><h3>Current governance state</h3>"
+            f'<p>{esc(state["human_meaning"])}</p><dl><dt>Technical state</dt><dd><code>{esc(state["stage"])}</code></dd>'
+            f'<dt>Reason</dt><dd><code>{esc(state["reason_code"])}</code></dd><dt>Blocking</dt><dd>{esc(str(state["blocking"]).lower())}</dd></dl></section></div>'
+            f'<section class="active-evidence"><h3>Scope evidence</h3>{scope_html}</section>'
+            '<div class="active-grid"><section class="boundary-card"><h3>'
+            + esc(boundary["title"])
+            + "</h3><p>"
+            + esc(boundary["guidance"])
+            + "</p><small>Read-only guidance &middot; decision applied false</small></section>"
+            f'<section><h3>Task activity</h3><ol class="active-activity">{activity}</ol></section></div>'
+        )
+    return (
+        '<section class="panel active-task" id="active-task"><h2>Active Task</h2>'
+        '<p class="sub">One exact local task: context, observed evidence, current state, human boundary, and denied downstream authority.</p>'
+        + body
+        + f'<div class="authority-panel"><h3>Authority not granted</h3>{authority}</div>'
+        + f'<details class="active-limits"><summary>Active Task claim limits</summary><ul>{limits}</ul></details>'
+        + "</section>"
+    )
+
+
 def render_development_monitor_html(monitor: DevelopmentMonitor) -> str:
     esc = lambda value: html.escape(_display(value), quote=True)
     observation = monitor.observation
     drift_review = monitor.drift_review
+    active_task_html = _render_active_task_html(monitor)
     cards = "".join(
         f'<article class="metric"><span>{esc(key)}</span><strong>{value}</strong></article>'
         for key, value in (
@@ -1104,6 +1593,19 @@ def render_development_monitor_html(monitor: DevelopmentMonitor) -> str:
                 counts = ", ".join(
                     f"{key}={value}" for key, value in attention["metrics"].items()
                 ) or "none recorded"
+                affected_paths = _active_scope_paths_for_event(
+                    monitor, attention["source_event_id"]
+                )
+                if affected_paths is None:
+                    affected_paths_html = (
+                        "Unavailable - no valid event-referenced path-level scope artifact is available."
+                    )
+                elif affected_paths:
+                    affected_paths_html = ", ".join(
+                        f"{item['path']} ({item['status']})" for item in affected_paths
+                    )
+                else:
+                    affected_paths_html = "None recorded"
                 attention_html = (
                     '<section class="attention-context" aria-label="Protection context">'
                     '<div class="attention-heading"><span>Needs attention</span>'
@@ -1112,7 +1614,7 @@ def render_development_monitor_html(monitor: DevelopmentMonitor) -> str:
                     f'<div><small>Observed outcome</small><strong>{esc(attention["observed_outcome"])}</strong></div>'
                     f'<div><small>Observed reasons</small><strong>{esc(reasons)}</strong></div>'
                     f'<div><small>Recorded counts</small><strong>{esc(counts)}</strong></div>'
-                    '<div><small>Affected paths</small><strong>Unavailable - the current Monitor event contract records counts, not changed paths.</strong></div>'
+                    f'<div><small>Affected paths</small><strong>{esc(affected_paths_html)}</strong></div>'
                     "</div>"
                     '<p class="next-action"><span>Next human action</span>'
                     f'<strong>{esc(attention["next_action"])}</strong></p>'
@@ -1213,10 +1715,11 @@ def render_development_monitor_html(monitor: DevelopmentMonitor) -> str:
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:">
 <title>AgentGov Development Monitor</title><style>
 :root{{--ink:#12222b;--muted:#617078;--paper:#fffdf7;--wash:#f1eee4;--line:#ddd8ca;--teal:#0d6f69;--amber:#a85e12;--red:#a33d3d;--blue:#315c8a}}*{{box-sizing:border-box}}body{{margin:0;background:var(--wash);color:var(--ink);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}}.shell{{width:min(1120px,calc(100% - 32px));margin:auto}}header{{background:var(--ink);color:white;padding:18px 0}}header .shell{{display:flex;justify-content:space-between;align-items:center;gap:18px}}.brand{{font-weight:850;letter-spacing:.02em}}.scope{{border:1px solid #ffffff55;border-radius:999px;padding:6px 11px;font-size:12px}}main{{padding:42px 0 56px}}.hero{{display:grid;grid-template-columns:1.45fr .75fr;gap:24px;align-items:end;margin-bottom:30px}}.eyebrow{{color:var(--teal);font-size:12px;font-weight:850;letter-spacing:.14em;text-transform:uppercase}}h1{{font-size:clamp(38px,6vw,68px);line-height:.98;letter-spacing:-.045em;margin:10px 0 16px;max-width:780px}}h2{{font-size:27px;letter-spacing:-.02em;margin:0 0 6px}}h3{{margin:0}}a.resolution-link{{color:var(--teal);text-decoration-thickness:2px;text-underline-offset:3px}}a.resolution-link:focus-visible{{outline:3px solid var(--amber);outline-offset:3px}}.lede,.sub,.event p,.task-note{{color:var(--muted)}}.boundary{{background:#e5f3ed;border-left:4px solid var(--teal);padding:18px;border-radius:12px}}.boundary strong{{display:block;font-size:21px}}.metrics{{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:26px 0}}.metric,.panel,.claim,.task{{background:var(--paper);border:1px solid var(--line);border-radius:16px}}.metric{{padding:17px}}.metric span{{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.07em}}.metric strong{{display:block;font-size:28px;margin-top:8px}}.panel{{padding:25px;margin-top:18px}}.limits{{display:grid;grid-template-columns:.8fr 1.2fr;gap:22px}}.missing{{background:#fff3dd;border-radius:12px;padding:16px}}.missing h3{{color:var(--amber)}}.claims{{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}}.claim{{padding:18px}}.claim h3{{text-transform:uppercase;font-size:12px;letter-spacing:.1em}}.claim.observed h3{{color:var(--teal)}}.claim.inferred h3{{color:var(--blue)}}.claim.unknown h3{{color:var(--amber)}}.claim ul,.missing ul{{padding-left:20px;margin-bottom:0}}.timeline{{list-style:none;margin:24px 0 0;padding:0}}.event{{display:grid;grid-template-columns:190px 1fr;gap:24px;padding:0 0 25px 24px;border-left:2px solid var(--line);position:relative}}.event:before{{content:"";position:absolute;width:12px;height:12px;border-radius:50%;background:var(--teal);left:-7px;top:5px}}time{{color:var(--muted);font-size:12px}}.event-head{{display:flex;gap:8px;align-items:center;margin-bottom:6px}}.kind,.outcome{{font-size:11px;font-weight:800;padding:4px 8px;border-radius:999px;background:#e8ecea}}.outcome.verified,.outcome.passed{{background:#dcefe6;color:var(--teal)}}.outcome.failed,.outcome.stale,.outcome.needs_evidence{{background:#f8dfd8;color:var(--red)}}.event p{{margin:4px 0}}.task{{margin-top:11px;overflow:hidden}}summary{{cursor:pointer;display:flex;justify-content:space-between;padding:17px 19px;font-weight:800}}summary b{{color:var(--teal)}}.task-grid{{border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:18px}}.task-grid small{{display:block;color:var(--muted)}}.task-grid strong{{font-size:13px}}.task-note{{padding:0 18px 18px;margin:0}}.empty{{color:var(--muted);padding:20px;border:1px dashed var(--line);border-radius:12px}}details.machine{{margin-top:18px}}pre{{white-space:pre-wrap;word-break:break-word;background:#17272f;color:#e8f3f0;padding:18px;border-radius:12px;font-size:12px}}footer{{padding:25px 0;color:var(--muted)}}@media(max-width:880px){{.metrics{{grid-template-columns:repeat(3,1fr)}}.hero,.limits{{grid-template-columns:1fr}}.claims{{grid-template-columns:1fr}}.task-grid{{grid-template-columns:1fr 1fr}}}}@media(max-width:560px){{header .shell{{align-items:flex-start;flex-direction:column}}.metrics{{grid-template-columns:1fr 1fr}}.event{{grid-template-columns:1fr;gap:5px}}.task-grid{{grid-template-columns:1fr}}}}
-.task[id]{{scroll-margin-top:24px}}.task-attention{{border:2px solid #d18a36;box-shadow:0 0 0 4px #fff3dd}}.task-attention>summary{{background:#fff3dd}}.attention-context{{margin:0 18px 18px;padding:18px;border:1px solid #e8c994;border-radius:12px;background:#fffaf0}}.attention-heading{{display:flex;justify-content:space-between;gap:12px;margin-bottom:14px}}.attention-heading span{{color:var(--amber);font-size:12px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}}.attention-heading strong{{color:var(--red)}}.attention-grid{{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}}.attention-grid small,.next-action span{{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em}}.attention-grid strong{{display:block;font-size:13px}}.next-action{{margin:18px 0 10px;padding:14px;border-left:4px solid var(--teal);background:#e5f3ed}}.next-action strong{{display:block;margin-top:4px}}.benefit-grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px}}.benefit-card{{padding:18px;border:1px solid var(--line);border-radius:14px;background:#fff}}.benefit-card:last-child{{grid-column:1/-1}}.benefit-head{{display:flex;justify-content:space-between;gap:12px;margin-bottom:10px}}.benefit-head span,.benefit-meta small,.benefit-reasons small{{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em}}.benefit-status{{padding:3px 8px;border-radius:999px;background:#e8ecea;font-size:11px}}.benefit-status.observed,.benefit-status.supported{{background:#dcefe6;color:var(--teal)}}.benefit-status.unavailable,.benefit-status.unknown{{background:#fff3dd;color:var(--amber)}}.benefit-card h3{{margin-bottom:8px}}.benefit-card p{{margin:8px 0;color:var(--muted)}}.benefit-meta strong{{display:block;color:var(--ink);font-size:13px}}.benefit-limit{{margin-top:16px;padding:14px;border-left:4px solid var(--amber);background:#fff3dd}}details.machine{{margin-top:28px;border-top:1px solid var(--line);color:var(--muted)}}details.machine>summary{{justify-content:flex-start;padding:16px 0;font-size:13px;font-weight:700}}.machine-note{{margin:0;padding:0 0 14px}}@media(max-width:560px){{.attention-grid,.benefit-grid{{grid-template-columns:1fr}}.benefit-card:last-child{{grid-column:auto}}}}
+.task[id]{{scroll-margin-top:24px}}.task-attention{{border:2px solid #d18a36;box-shadow:0 0 0 4px #fff3dd}}.task-attention>summary{{background:#fff3dd}}.attention-context{{margin:0 18px 18px;padding:18px;border:1px solid #e8c994;border-radius:12px;background:#fffaf0}}.attention-heading{{display:flex;justify-content:space-between;gap:12px;margin-bottom:14px}}.attention-heading span{{color:var(--amber);font-size:12px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}}.attention-heading strong{{color:var(--red)}}.attention-grid{{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}}.attention-grid small,.next-action span{{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em}}.attention-grid strong{{display:block;font-size:13px}}.next-action{{margin:18px 0 10px;padding:14px;border-left:4px solid var(--teal);background:#e5f3ed}}.next-action strong{{display:block;margin-top:4px}}.benefit-grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px}}.benefit-card{{padding:18px;border:1px solid var(--line);border-radius:14px;background:#fff}}.benefit-card:last-child{{grid-column:1/-1}}.benefit-head{{display:flex;justify-content:space-between;gap:12px;margin-bottom:10px}}.benefit-head span,.benefit-meta small,.benefit-reasons small{{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em}}.benefit-status{{padding:3px 8px;border-radius:999px;background:#e8ecea;font-size:11px}}.benefit-status.observed,.benefit-status.supported{{background:#dcefe6;color:var(--teal)}}.benefit-status.unavailable,.benefit-status.unknown{{background:#fff3dd;color:var(--amber)}}.benefit-card h3{{margin-bottom:8px}}.benefit-card p{{margin:8px 0;color:var(--muted)}}.benefit-meta strong{{display:block;color:var(--ink);font-size:13px}}.benefit-limit{{margin-top:16px;padding:14px;border-left:4px solid var(--amber);background:#fff3dd}}.active-heading{{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin:22px 0 14px}}.active-heading h3{{font-size:25px;margin-top:5px}}.state-pill{{padding:7px 11px;border-radius:999px;background:#e8ecea;font-size:12px}}.state-pill.scope_blocked,.state-pill.invalid,.state-pill.needs_evidence{{background:#f8dfd8;color:var(--red)}}.state-pill.review_ready,.state-pill.scope_passed,.state-pill.handed_off{{background:#dcefe6;color:var(--teal)}}.active-requirement{{font-size:18px;max-width:850px}}.active-grid{{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}}.active-grid>section,.active-evidence,.authority-panel,.active-unavailable{{border:1px solid var(--line);border-radius:14px;padding:18px;background:#fff}}.scope-columns{{display:grid;grid-template-columns:1fr 1fr;gap:12px}}.scope-columns small{{color:var(--muted);text-transform:uppercase;font-size:11px}}.scope-columns ul{{padding-left:18px}}.state-card{{border-left:4px solid var(--teal)!important}}.state-card dl{{display:grid;grid-template-columns:max-content 1fr;gap:5px 12px}}.state-card dt{{color:var(--muted)}}.state-card dd{{margin:0}}.scope-table-wrap{{overflow-x:auto}}.scope-table{{width:100%;border-collapse:collapse;margin-top:12px}}.scope-table th,.scope-table td{{text-align:left;border-bottom:1px solid var(--line);padding:10px;vertical-align:top}}.path-status{{font-size:11px}}.path-status.pass{{color:var(--teal)}}.path-status.fail{{color:var(--red)}}.evidence-ref{{color:var(--muted);font-size:12px}}.boundary-card{{background:#e5f3ed!important;border-left:4px solid var(--teal)!important}}.active-activity{{padding-left:20px}}.active-activity li{{margin-bottom:12px}}.active-activity p{{margin:3px 0}}.authority-panel{{margin-top:18px;background:#17272f;color:white}}.authority-panel h3{{margin-bottom:10px}}.authority-row{{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid #ffffff22}}.authority-row strong{{color:#ffd59b;font-size:12px}}.active-limits{{margin-top:12px;border:1px solid var(--line);border-radius:12px}}.active-limits>summary{{justify-content:flex-start}}.active-limits ul{{padding:0 38px 18px}}details.machine{{margin-top:28px;border-top:1px solid var(--line);color:var(--muted)}}details.machine>summary{{justify-content:flex-start;padding:16px 0;font-size:13px;font-weight:700}}.machine-note{{margin:0;padding:0 0 14px}}@media(max-width:560px){{.attention-grid,.benefit-grid,.active-grid,.scope-columns{{grid-template-columns:1fr}}.active-heading{{display:block}}.state-pill{{display:inline-block}}.benefit-card:last-child{{grid-column:auto}}}}
 </style></head><body><header><div class="shell"><div class="brand">AGENTGOV · DEVELOPMENT MONITOR</div><div class="scope">Observation scope · {esc(observation['scope'])}</div></div></header><main class="shell">
 <section class="hero"><div><div class="eyebrow">Govern → Observe → Monitor</div><h1>See governance while development is happening.</h1><p class="lede">A local, static view of when AgentGov ran, why it ran, who invoked it, and what its event records observed—without turning evidence into approval.</p></div><aside class="boundary"><span>History completeness</span><strong>{esc(observation['history_completeness'])}</strong><small>{observation['event_count']} validated events · {observation['duplicates_removed']} duplicate records removed</small></aside></section>
 <section aria-labelledby="overview"><h2 id="overview">Overview</h2><p class="sub">Observed counts within this dashboard's declared scope. They are not a governance score.</p><div class="metrics">{cards}</div></section>
+{active_task_html}
 <section class="panel"><h2>Drift Review Reminder</h2><p><b>{esc(drift_review['state'])}</b> · {esc(', '.join(drift_review['reason_codes']))}</p><p class="sub">Requirement, architecture, and functionality conclusions remain ADVISORY. This deterministic cadence reminder neither decides drift nor grants scope, Git, release, or deployment authority.</p></section>
 <section class="panel limits"><div><h2>Observation boundary</h2><p><b>{esc(observation['scope'])}</b> from {esc(observation['started_at'])} to {esc(observation['ended_at'])}.</p><p class="sub">Source events: {esc(", ".join(f"{key}={value}" for key, value in observation['source_event_counts'].items()))}.</p><p class="sub">Cross-stage discovery comparison is unavailable because the event contract has no cross-stage finding identity or resolution link.</p></div><div class="missing"><h3>Missing sources</h3><ul>{missing}</ul></div></section>
 <section class="panel"><h2>Claim layers</h2><p class="sub">Facts, cautious interpretation, and unknowns stay visibly separate.</p><div class="claims">{layers}</div></section>

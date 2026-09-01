@@ -24,12 +24,15 @@ from agentgov.development_event_export import (
     development_export_default_output,
     write_development_event_export,
 )
+from agentgov.development_session import apply_start_plan, build_start_plan
 from agentgov.event_store import (
     LocalStateError,
     append_governance_event,
     load_governance_events,
 )
 from agentgov.learning_review import build_learning_review, write_learning_review
+from agentgov.initializer import initialize_project
+from agentgov.scope_observation import record_scope_observation
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -68,6 +71,19 @@ def create_repository(parent: Path) -> Path:
     return repository
 
 
+def create_governed_repository(parent: Path) -> Path:
+    repository = parent / "repository"
+    repository.mkdir()
+    initialize_project(repository, project_name="Active Task Monitor Fixture", dry_run=False)
+    run_git(repository, "init", "--quiet")
+    run_git(repository, "config", "user.email", "fixture@example.invalid")
+    run_git(repository, "config", "user.name", "Fixture Author")
+    (repository / "README.md").write_text("# Fixture\n", encoding="utf-8")
+    run_git(repository, "add", ".")
+    run_git(repository, "commit", "--quiet", "-m", "baseline")
+    return repository
+
+
 def add_event(
     repository: Path,
     *,
@@ -102,6 +118,128 @@ def add_event(
 
 @unittest.skipUnless(shutil.which("git"), "Git is required for Monitor fixtures")
 class DevelopmentMonitorTests(unittest.TestCase):
+    def test_active_task_view_binds_context_state_scope_evidence_and_authority(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            repository = create_governed_repository(Path(temp_dir))
+            result = apply_start_plan(
+                build_start_plan(
+                    repository,
+                    title="Inspect one active governed task",
+                    include_paths=("README.md",),
+                    validation_commands=("python --version",),
+                )
+            )
+            (repository / "README.md").write_text("# Fixture\n\nChanged.\n", encoding="utf-8")
+            (repository / "OUTSIDE.md").write_text("outside\n", encoding="utf-8")
+            scope = record_scope_observation(
+                repository,
+                repository / result.session.task_path,
+                actor_class="coding_agent",
+                actor_label="fixture-adapter",
+                reason_codes=("implementation_changed",),
+            )
+
+            monitor = build_development_monitor(repository, generated_at=FIXED_TIME)
+            json_output = json.loads(render_development_monitor_json(monitor))
+            markdown = render_development_monitor_markdown(monitor)
+            html_output = render_development_monitor_html(monitor)
+
+        active = monitor.active_task
+        self.assertEqual(monitor.schema_version, "1.10")
+        self.assertEqual(active["availability"], "available")
+        self.assertEqual(active["identity"]["task_id"], result.session.task_id)
+        self.assertEqual(active["identity"]["task_digest"], result.session.task_digest)
+        self.assertEqual(active["governance_state"]["stage"], "scope_blocked")
+        self.assertTrue(active["governance_state"]["blocking"])
+        self.assertEqual(active["evidence"]["scope"]["evidence_ref"], scope.evidence_ref)
+        by_path = {
+            item["path"]: item
+            for item in active["evidence"]["scope"]["affected_paths"]
+        }
+        self.assertEqual(by_path["README.md"]["status"], "PASS")
+        self.assertEqual(by_path["OUTSIDE.md"]["status"], "FAIL")
+        self.assertEqual(
+            active["activity_event_ids"],
+            [item["event_id"] for item in monitor.timeline],
+        )
+        self.assertTrue(all(value is False for value in active["authority"].values()))
+        self.assertEqual(json_output["active_task"], active)
+        self.assertIn("## Active Task", markdown)
+        self.assertIn("Human scope review required", markdown)
+        self.assertIn("`OUTSIDE.md`", markdown)
+        self.assertIn("Active Task", html_output)
+        self.assertIn("OUTSIDE.md", html_output)
+        self.assertIn("NOT GRANTED", html_output)
+        self.assertNotIn("Agent read", markdown)
+        self.assertNotIn("Agent wrote", html_output)
+
+    def test_active_task_scope_paths_fail_closed_when_artifact_is_invalid(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            repository = create_governed_repository(Path(temp_dir))
+            result = apply_start_plan(
+                build_start_plan(
+                    repository,
+                    title="Reject invalid active task evidence",
+                    include_paths=("README.md",),
+                    validation_commands=("python --version",),
+                )
+            )
+            (repository / "README.md").write_text("# Fixture\n\nChanged.\n", encoding="utf-8")
+            scope = record_scope_observation(
+                repository,
+                repository / result.session.task_path,
+                actor_class="coding_agent",
+                actor_label=None,
+                reason_codes=("implementation_changed",),
+            )
+            (repository / scope.evidence_ref).write_text("{}\n", encoding="utf-8")
+
+            monitor = build_development_monitor(repository, generated_at=FIXED_TIME)
+            markdown = render_development_monitor_markdown(monitor)
+
+        self.assertEqual(monitor.active_task["availability"], "available")
+        self.assertEqual(
+            monitor.active_task["evidence"]["scope"],
+            {
+                "availability": "unavailable",
+                "reason_code": "scope_artifact_invalid",
+                "event_id": next(
+                    item["event_id"]
+                    for item in monitor.timeline
+                    if item["event_type"] == "scope.checked"
+                ),
+                "outcome": "passed",
+            },
+        )
+        self.assertIn("Affected paths: `unavailable`", markdown)
+        self.assertNotIn("README.md` |", markdown)
+
+    def test_active_task_is_unavailable_without_safe_local_session_binding(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            repository = create_repository(Path(temp_dir))
+            add_event(
+                repository,
+                event_type="scope.checked",
+                outcome="failed",
+                occurred_at=FIXED_TIME,
+                actor="ci",
+                label="fixture-ci",
+                metrics={"changes": 1, "failures": 1},
+            )
+
+            local = build_development_monitor(repository, generated_at=FIXED_TIME)
+            ci = build_development_monitor(
+                repository,
+                observation_scope="ci_only",
+                generated_at=FIXED_TIME,
+            )
+
+        self.assertEqual(local.active_task["availability"], "unavailable")
+        self.assertEqual(local.active_task["reason_code"], "active_task_not_safely_resolved")
+        self.assertEqual(ci.active_task["availability"], "unavailable")
+        self.assertEqual(ci.active_task["reason_code"], "active_task_requires_local_session")
+        self.assertTrue(all(value is False for value in ci.active_task["authority"].values()))
+
     def test_monitor_builds_overview_timeline_and_task_detail_in_order(self) -> None:
         with TemporaryDirectory() as temp_dir:
             repository = create_repository(Path(temp_dir))
@@ -201,7 +339,7 @@ class DevelopmentMonitorTests(unittest.TestCase):
             markdown_output = render_development_monitor_markdown(monitor)
             json_output = json.loads(render_development_monitor_json(monitor))
 
-        self.assertEqual(monitor.schema_version, "1.9")
+        self.assertEqual(monitor.schema_version, "1.10")
         self.assertEqual(monitor.overview["protection_events"], 4)
         self.assertEqual(monitor.overview["sessions_needing_attention"], 1)
         self.assertEqual(monitor.live_sessions[0]["state"], "needs_attention")
@@ -264,7 +402,7 @@ class DevelopmentMonitorTests(unittest.TestCase):
         self.assertIn("fresh_evidence_missing", html_output)
         self.assertIn("Affected paths", html_output)
         self.assertIn(
-            "current Monitor event contract records counts, not changed paths",
+            "Unavailable - no valid event-referenced path-level scope artifact is available.",
             html_output,
         )
         self.assertIn("Next human action", html_output)
@@ -964,7 +1102,8 @@ class DevelopmentMonitorTests(unittest.TestCase):
         schema = json.loads((ROOT / "schemas/development-monitor.schema.json").read_text(encoding="utf-8"))
         self.assertFalse(schema["additionalProperties"])
         self.assertEqual(schema["properties"]["contract"]["const"], MONITOR_CONTRACT)
-        self.assertEqual(schema["properties"]["schema_version"]["const"], "1.9")
+        self.assertEqual(schema["properties"]["schema_version"]["const"], "1.10")
+        self.assertIn("active_task", schema["required"])
         self.assertIn("benefit", schema["required"])
         self.assertIn("learning", schema["required"])
         benefit_schema = schema["$defs"]["benefitView"]

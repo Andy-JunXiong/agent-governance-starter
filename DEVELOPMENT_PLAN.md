@@ -519,6 +519,16 @@ judgment rather than handling, resolution, common cause, recurrence, or
 benefit. The lifecycle event and redacted export contracts stay unchanged, so
 stale and non-local review sources remain unavailable.
 
+Development Monitor 1.10 adds one local-session-only Active Task projection.
+It joins the exact admitted task and digest to artifact-owned context, the
+canonical development-state projection, existing event identities, and strict
+event-referenced evidence. Governed scope observations persist the complete
+path-level scope report as immutable untracked local evidence. Invalid,
+mismatched, exported, CI-only, or incomplete bindings remain unavailable, and
+the view offers read-only guidance without applying a human decision or
+granting commit, merge, publish, release, or deploy authority. Uncoached user
+comprehension and product benefit remain unknown pending a separate review.
+
 Trend reporting still requires real NYC CI observations and a separate event
 contract for project-test status, PR outcome, timestamps, human disposition,
 and retention before it can be admitted.
@@ -651,6 +661,8 @@ real adoption evidence.
 Monitor 1.9's repository-local current-observation candidates and exact-bound
 human judgments are not this
 multi-project phase and provide no cross-project or future-recurrence evidence.
+Monitor 1.10's Active Task projection is likewise one repository-local read
+model, not cross-project learning or evidence of general effectiveness.
 
 Possible work:
 

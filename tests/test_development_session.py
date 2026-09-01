@@ -327,9 +327,20 @@ class DevelopmentSessionTests(unittest.TestCase):
             finish_code, finish_stdout, finish_stderr = run_cli(
                 "govern", "finish", "--repository", str(repository), "--format", "json"
             )
+            scope_event = next(
+                item
+                for item in load_governance_events(repository / ".agentgov/events").events
+                if item.event_type == "scope.checked"
+            )
+            scope_evidence_exists = bool(
+                scope_event.evidence_ref
+                and (repository / scope_event.evidence_ref).is_file()
+            )
 
         self.assertEqual(check_code, EXIT_PASS, (check_stdout, check_stderr))
         self.assertIn("EVENT .agentgov/events/", check_stdout)
+        self.assertIsNotNone(scope_event.evidence_ref)
+        self.assertTrue(scope_evidence_exists)
         self.assertEqual(check_stderr, "")
         self.assertEqual(finish_code, EXIT_PASS)
         self.assertEqual(json.loads(finish_stdout)["state"], "verified")

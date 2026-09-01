@@ -7,7 +7,6 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Mapping
 
-from agentgov.change_scope import ScopeFindingStatus, check_development_scope
 from agentgov.development_evidence import reconcile_task_completion, run_task_validation
 from agentgov.development_handoff import apply_handoff_plan, build_handoff_plan
 from agentgov.development_monitor import build_development_monitor, write_development_monitor
@@ -19,7 +18,7 @@ from agentgov.development_session import (
 from agentgov.development_state import development_state_payload, project_development_state
 from agentgov.development_trigger import DevelopmentTrigger, working_copy_digest
 from agentgov.drift_review import DriftReviewPolicyError, build_drift_review_status
-from agentgov.event_store import append_governance_event
+from agentgov.scope_observation import ScopeObservationError, record_scope_observation
 
 
 COORDINATOR_CONTRACT = "agentgov.foreground-cycle"
@@ -90,44 +89,26 @@ def _append_scope_observation(
     task_path: Path,
     trigger: DevelopmentTrigger,
 ) -> tuple[Any, str]:
-    report = check_development_scope(task_path, repository=repository)
+    expected_paths = None
     if trigger.trigger_type == "implementation.changed":
-        observed_paths = tuple(
-            sorted(
-                {
-                    path
-                    for change in report.changes
-                    for path in (change.old_path, change.path)
-                    if path is not None
-                }
-            )
+        expected_paths = tuple(trigger.facts["changed_paths"])
+    try:
+        observation = record_scope_observation(
+            repository,
+            task_path,
+            actor_class=trigger.source["actor_class"],
+            actor_label=trigger.source["adapter_id"],
+            reason_codes=(
+                "foreground_coordinator",
+                "implementation_changed"
+                if trigger.trigger_type == "implementation.changed"
+                else "completion_requested",
+            ),
+            expected_changed_paths=expected_paths,
         )
-        if observed_paths != tuple(trigger.facts["changed_paths"]):
-            raise CoordinatorPolicyError(
-                "working-copy paths changed after the adapter trigger; start a fresh cycle"
-            )
-    _, event_ref = append_governance_event(
-        repository,
-        event_type="scope.checked",
-        actor_class=trigger.source["actor_class"],
-        actor_label=trigger.source["adapter_id"],
-        task_id=report.task_id,
-        task_digest=report.task_digest,
-        outcome="failed" if report.has_failures else "passed",
-        evidence_ref=None,
-        reason_codes=(
-            "foreground_coordinator",
-            "implementation_changed"
-            if trigger.trigger_type == "implementation.changed"
-            else "completion_requested",
-        ) + (("scope_failure",) if report.has_failures else ()),
-        metrics={
-            "changes": len(report.changes),
-            "failures": report.count(ScopeFindingStatus.FAIL),
-            "advisories": report.count(ScopeFindingStatus.ADVISORY),
-        },
-    )
-    return report, event_ref
+    except ScopeObservationError as exc:
+        raise CoordinatorPolicyError(str(exc)) from exc
+    return observation.report, observation.event_ref
 
 
 def _refresh_dashboard(repository: Path, output: Path, *, generated_at: str) -> str:

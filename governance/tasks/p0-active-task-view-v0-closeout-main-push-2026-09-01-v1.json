@@ -1,0 +1,81 @@
+{
+  "acceptance_signals": [
+    "STATUS.md and one dated closeout log accurately record the completed Active Task View v0 result, exact validation evidence, advisory drift conclusion, preserved exclusions, and explicit Git authority boundary.",
+    "The intended commit contains only the 19 previously admitted Active Task View paths plus this exact closeout task and dated closeout log.",
+    "The pre-existing local AgentGov state, Codex configuration, cover image, and Airbnb handoff task remain unstaged and unchanged.",
+    "Relevant documentation tests, task and repository governance checks, JSON and schema consistency, secret-safety checks, and Git diff checks pass before commit.",
+    "A fetch confirms no unresolved remote divergence; one ordinary non-force commit is pushed explicitly to origin/main.",
+    "No force-push, pull request, publication, release, deployment, or broader external action occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-5af0e352ea4d4dea86227825a2ae255e and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Update the exact Active Task View v0 closeout documentation, preserve all pre-existing excluded user work, create one ordinary commit containing only the admitted Active Task View result and closeout records, and push it non-force to the existing origin/main under the human product owner's explicit Git authorization."
+  },
+  "risk": {
+    "items": [
+      "The working tree contains pre-existing excluded local state and user files that must remain unstaged and unchanged.",
+      "A broad stage operation could accidentally include unrelated files, so staging must use the exact confirmed path list and be inspected before commit.",
+      "Remote main may have advanced; fetch and divergence inspection must occur before commit and any divergence must stop the push rather than trigger force or discard.",
+      "Documentation must not overstate the current scope result: 19 task paths passed while three explicitly excluded pre-existing paths remain visible failures because no task-start baseline exists.",
+      "The existing full Python 3.11.9 result is valid only for the Active Task View snapshot; final closeout-only edits require focused documentation and governance revalidation.",
+      "The task record grants no Git authority; commit and push authority comes only from the user's explicit current request and is limited to one ordinary commit and one non-force push to origin/main.",
+      "Reviewed assumption: The user intends the completed Active Task View v0 implementation and its exact admitted documentation, test, and schema artifacts to be included in the commit.",
+      "Reviewed assumption: The current main branch and configured origin are the requested destination.",
+      "Reviewed assumption: The closeout changes are limited to STATUS.md, one admitted closeout task, and one dated closeout log; implementation code will not be changed.",
+      "Reviewed assumption: The already completed Python 3.11.9 full-suite evidence remains applicable because the closeout adds documentation records only.",
+      "Reviewed unknown: GitHub-side checks after push are unknown until the push completes.",
+      "Reviewed unknown: Whether first-time users understand Active Task View without guidance remains unknown.",
+      "Reviewed unknown: Adoption, time savings, error reduction, causal benefit, and ROI remain unknown."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      "docs/assets/linkedin-github-repository-cover.png",
+      "governance/tasks/p0-airbnb-runtime-completion-handoff.json"
+    ],
+    "include_paths": [
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "docs/development-monitor.md",
+      "docs/development-scope-check.md",
+      "schemas/development-monitor.schema.json",
+      "src/agentgov/cli.py",
+      "src/agentgov/development_monitor.py",
+      "src/agentgov/foreground_coordinator.py",
+      "tests/test_development_monitor.py",
+      "tests/test_development_session.py",
+      "tests/test_foreground_coordinator.py",
+      "tests/test_user_documentation.py",
+      "docs/development-log/2026-09-01-active-task-view-v0.md",
+      "docs/schemas/development-monitor.schema.html",
+      "docs/schemas/development-monitor.schema.json",
+      "governance/tasks/p0-active-task-view-v0.json",
+      "src/agentgov/scope_observation.py",
+      "tests/test_scope_observation.py",
+      "governance/tasks/p0-active-task-view-v0-closeout-main-push-2026-09-01-v1.json",
+      "docs/development-log/2026-09-01-active-task-view-v0-closeout.md"
+    ]
+  },
+  "task_id": "p0-active-task-view-v0-closeout-main-push-2026-09-01-v1",
+  "title": "Close out and push Active Task View v0",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-active-task-view-v0-closeout-main-push-2026-09-01-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-active-task-view-v0-closeout-main-push-2026-09-01-v1.json",
+    "git diff --check"
+  ]
+}

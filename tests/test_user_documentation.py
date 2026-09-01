@@ -2347,11 +2347,15 @@ class UserDocumentationTests(unittest.TestCase):
         ):
             self.assertIn(phrase, guide)
         self.assertIn("agentgov review drift . --format github", consumer)
-        self.assertIn("Monitor contract 1.9", monitor)
+        self.assertIn("Monitor contract 1.10", monitor)
+        self.assertIn("local-session-only Active Task projection", monitor)
+        self.assertIn("five first-review questions", monitor)
+        self.assertIn("event-referenced scope artifact", monitor)
+        self.assertIn("commit, merge, publish, release", monitor)
         self.assertIn("read-only guidance", monitor)
         self.assertIn("resolution remains explicitly unknown", monitor)
         self.assertIn("matching deterministic task-card anchor", monitor)
-        self.assertIn("affected paths are shown as unavailable", monitor)
+        self.assertIn("otherwise they are shown as unavailable", monitor)
         self.assertIn("Technical audit data (optional)", monitor)
         self.assertIn("Tasks without Protection Events remain compact", monitor)
         self.assertIn("single-observation Benefit projection", monitor)
@@ -2393,6 +2397,19 @@ class UserDocumentationTests(unittest.TestCase):
             "live Agent selection and end-user UI presentation remain unproven",
             normalized_guide,
         )
+
+    def test_development_monitor_schema_publication_matches_contract_1_10(self) -> None:
+        source = ROOT / "schemas/development-monitor.schema.json"
+        published = ROOT / "docs/schemas/development-monitor.schema.json"
+        browser = ROOT / "docs/schemas/development-monitor.schema.html"
+
+        self.assertEqual(source.read_bytes(), published.read_bytes())
+        schema_text = source.read_text(encoding="utf-8")
+        self.assertIn('"schema_version": {"const": "1.10"}', schema_text)
+        self.assertIn('"active_task": {"$ref": "#/$defs/activeTask"}', schema_text)
+        browser_text = browser.read_text(encoding="utf-8")
+        self.assertIn("layout: reference", browser_text)
+        self.assertIn("include_relative development-monitor.schema.json", browser_text)
 
     def test_clean_target_replay_preflight_is_documented_as_a_non_authorizing_gate(self) -> None:
         guide = (ROOT / "docs/clean-target-replay-preflight.md").read_text(

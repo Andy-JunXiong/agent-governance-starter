@@ -4608,7 +4608,10 @@ authority.
   include/exclude rules. Explicit architecture references remain ADVISORY.
   The low-level scope-only report remains working-tree-specific; explicit
   exception records and action-loop self-reporting are not implemented yet.
-- `agentgov govern check` now appends a privacy-bounded local scope event.
+- `agentgov govern check` now persists the complete path-level scope report as
+  immutable content-addressed local evidence and binds the existing privacy-
+  bounded `scope.checked` event to it. Identical observations reuse the
+  artifact; malformed, unsafe, or task-mismatched evidence fails closed.
   `agentgov govern finish --base` captures canonical committed, staged,
   unstaged, renamed, and non-ignored untracked identities, runs every declared
   validation command, and reconciles `verified` versus `needs_evidence`.
@@ -4621,11 +4624,33 @@ authority.
   closed until a reviewed replacement start. Untracked `.agentgov/` tool state
   is now consistently excluded by both scope and fresh-evidence inventories;
   tracked local state remains visible.
-- `agentgov monitor development` now generates a self-contained static
-  Overview, Activity Timeline, and Task Detail from validated local, exported,
-  CI-only, or combined sources. Every output displays partial history, source
-  counts, per-event source labels, missing inputs, unavailable cross-stage
-  discovery, and separate observed, inferred, and unknown claims.
+- `agentgov monitor development` contract 1.10 now generates a self-contained
+  static Overview, local-session Active Task, Activity Timeline, and Task
+  Detail. Active Task binds one exact admitted task and digest to canonical
+  state, artifact-owned context, event identities, event-referenced scope
+  paths, evidence, read-only human-boundary guidance, claim limits, and denied
+  downstream authority. Exported, CI-only, combined, missing, or invalid
+  bindings remain unavailable. Existing aggregate views and their privacy and
+  advisory boundaries remain intact.
+- **Active Task View v0 validation**: under the exact supported Python 3.11.9,
+  all 115 focused scope-observation, Monitor, coordinator, session, and user-
+  documentation tests passed; the complete repository suite passed all 1,143
+  tests with six platform-conditioned skips. The same complete suite also
+  passed under Python 3.12.10. Task governance is `PASS=3 WARN=1 FAIL=0
+  ADVISORY=3`; repository governance is `PASS=26 WARN=2 FAIL=0 ADVISORY=4`;
+  task JSON parsing and `git diff --check` pass. Current-worktree scope reports
+  19 task-owned paths as PASS and retains three pre-existing, explicitly
+  excluded user paths as visible FAIL rather than treating them as task work.
+- **Active Task View v0 closeout**: on 2026-09-01 the human product owner
+  explicitly authorized documentation closeout, one ordinary commit, and one
+  non-force push to the existing `origin/main`. Native proposal
+  `prp-5af0e352ea4d4dea86227825a2ae255e` admitted exact closeout task
+  `p0-active-task-view-v0-closeout-main-push-2026-09-01-v1`. The intended Git
+  set is the 19 admitted result paths plus that task and its dated closeout
+  record. Local `.agentgov` state, `.codex/config.toml`, the repository-cover
+  image, and the unrelated Airbnb handoff task remain excluded and unstaged.
+  This authorization does not include force-push, a pull request, publication,
+  release, deployment, or any other external action.
 - `agentgov export development` now previews and, after exact interactive
   `EXPORT` confirmation, creates an immutable metadata-only bundle. It removes
   actor labels and local evidence references; rejects CI events, sensitive

@@ -240,6 +240,13 @@ change visible and non-owned without blocking otherwise fresh evidence; any
 post-start change to that exclusion fails closed. Older sessions without a
 trustworthy pre-write baseline retain strict scope blocking.
 
+Development Monitor 1.10 adds a local-session Active Task view: one exact
+admitted requirement, its allowed paths, canonical governance state,
+event-bound scope evidence, plain-language next human boundary, and visibly
+ungranted downstream authority. Governed scope observations now preserve their
+path-level report as immutable untracked local evidence; missing or mismatched
+evidence remains unavailable rather than being inferred.
+
 Current source includes Codex lifecycle hooks, a foreground Governance MCP
 Adapter, native human-owned task admission where the host supports it, and
 active-Agent self-review after resolved alignment. These are development
@@ -308,8 +315,9 @@ owner rather than being duplicated here.
   selection and host capability limits.
 - [Clarification dialogue](docs/clarification-dialogue.md): discussion before a
   durable alignment decision.
-- [Development Monitor](docs/development-monitor.md): local protection state,
-  task context, development-source single-observation Benefit cards, and
+- [Development Monitor](docs/development-monitor.md): local Active Task and
+  protection state, event-bound path evidence, development-source
+  single-observation Benefit cards, and
   current-observation Learning candidates plus exact candidate-bound human
   judgments with explicit evidence limits.
 - [Drift-review reminders](docs/drift-review-reminders.md): advisory foreground
