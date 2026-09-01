@@ -128,6 +128,52 @@ class ScopeObservationTests(unittest.TestCase):
         self.assertEqual(len(evidence_files), 1)
         self.assertEqual(len(events), 2)
 
+    def test_portable_path_with_embedded_sk_sequence_is_recorded(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root, task_path = create_repository(Path(temp_dir))
+            relative = (
+                "governance/tasks/"
+                "p0-active-task-view-uncoached-comprehension-review-v1.json"
+            )
+            path = root.joinpath(*relative.split("/"))
+            path.write_text("{}\n", encoding="utf-8")
+
+            observation = record_scope_observation(
+                root,
+                task_path,
+                actor_class="coding_agent",
+                actor_label=None,
+                reason_codes=("explicit_check_requested",),
+            )
+            payload = load_scope_observation(
+                root,
+                observation.evidence_ref,
+                expected_task_id=observation.report.task_id,
+                expected_task_digest=observation.report.task_digest,
+            )
+
+        self.assertTrue(
+            any(change["path"] == relative for change in payload["changes"])
+        )
+
+    def test_path_with_real_sk_token_shape_still_fails_closed(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root, task_path = create_repository(Path(temp_dir))
+            relative = "src/sk-abcdefghijklmnopqrstuvwxyz123456.txt"
+            root.joinpath(*relative.split("/")).write_text("fixture\n", encoding="utf-8")
+
+            with self.assertRaisesRegex(
+                ScopeObservationError,
+                "scope observation artifact is unavailable",
+            ):
+                record_scope_observation(
+                    root,
+                    task_path,
+                    actor_class="coding_agent",
+                    actor_label=None,
+                    reason_codes=("explicit_check_requested",),
+                )
+
     def test_rejects_mismatched_task_binding_and_unsupported_reference(self) -> None:
         with TemporaryDirectory() as temp_dir:
             root, task_path = create_repository(Path(temp_dir))

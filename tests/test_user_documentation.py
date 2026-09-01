@@ -2349,7 +2349,7 @@ class UserDocumentationTests(unittest.TestCase):
         self.assertIn("agentgov review drift . --format github", consumer)
         self.assertIn("Monitor contract 1.10", monitor)
         self.assertIn("local-session-only Active Task projection", monitor)
-        self.assertIn("five first-review questions", monitor)
+        self.assertIn("six first-review questions", monitor)
         self.assertIn("event-referenced scope artifact", monitor)
         self.assertIn("commit, merge, publish, release", monitor)
         self.assertIn("read-only guidance", monitor)
@@ -2358,6 +2358,14 @@ class UserDocumentationTests(unittest.TestCase):
         self.assertIn("otherwise they are shown as unavailable", monitor)
         self.assertIn("Technical audit data (optional)", monitor)
         self.assertIn("Tasks without Protection Events remain compact", monitor)
+        self.assertIn("guided-first", monitor)
+        self.assertIn("`Full Monitor history`", monitor)
+        self.assertIn("guided or assisted, not uncoached", monitor)
+        self.assertIn("primary HTML entry is guided-first", requirements)
+        self.assertIn(
+            "progressive disclosure, not evidence suppression",
+            normalized_requirements,
+        )
         self.assertIn("single-observation Benefit projection", monitor)
         self.assertIn("reproduced comparison and human feedback are unavailable", monitor)
         self.assertIn("two-snapshot Benefit Monitor is not imported", monitor)

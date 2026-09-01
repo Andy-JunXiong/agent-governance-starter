@@ -1,0 +1,94 @@
+{
+  "acceptance_signals": [
+    "The existing self-contained Monitor HTML opens with a concise, plain-language guided-review panel followed by the Active Task section before aggregate or historical content.",
+    "The guide explains the six review dimensions: admitted requirement, allowed and excluded paths, directly observed evidence, current governance state, next human boundary, and authority not granted.",
+    "Overview, drift reminder, observation boundary, claim layers, Live Sessions, Protection Events, Activity Timeline, Task Detail, Benefit, Learning, and technical audit data remain available within a clearly labeled full-Monitor history disclosure that is closed by default.",
+    "Opening the historical disclosure preserves existing Protection Event navigation to matching Task Detail anchors, attention prominence, task-card open states, and all prior read-model content.",
+    "Scope-blocked evidence, unavailable states, claim limits, and denied commit, merge, publish, release, and deploy authority remain visible and semantically unchanged.",
+    "The page remains static, self-contained, responsive, keyboard-accessible, and free of scripts, authority controls, and external HTTP(S) dependencies.",
+    "The strict Development Monitor JSON contract and schema remain at 1.10 because the change is HTML presentation only; JSON and Markdown output semantics do not change.",
+    "Documentation explains guided-first review and states that guided or assisted observations cannot be reported as uncoached comprehension.",
+    "The earlier v2 uncoached preparation record is append-only updated as stopped before participant observation due to product-owner-reported information overload; it records no participant result.",
+    "All previously changed repair and local governance paths remain preserved, visible, and outside the task.",
+    "No Git operation, publication, release, deployment, analytics, participant recruitment, external data collection, or product claim occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-05754b31e3c648f0a624848fa77255d3 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Implement the human-selected guided-first direction in the existing Development Monitor HTML: place a concise six-dimension review explanation before Active Task, make Active Task the primary page content, and keep the complete historical Monitor available but collapsed or secondary by default without changing the JSON contract, scope evidence, governance state, or denied-authority semantics."
+  },
+  "risk": {
+    "items": [
+      "The working tree contains completed but uncommitted matcher-repair work and unfinished review artifacts; the new task must preserve and not absorb excluded paths.",
+      "Collapsing historical content could reduce discoverability or break fragment navigation to Task Detail if disclosure structure is incorrect.",
+      "Guidance copy could accidentally imply approval, hide scope failures, or overstate evidence.",
+      "A guided-first page could be mislabeled as an uncoached comprehension result.",
+      "Nested disclosure elements and dense path tables must remain keyboard-accessible and usable on narrow screens.",
+      "Changing only HTML while retaining contract 1.10 is valid only if the JSON and Markdown data semantics remain unchanged.",
+      "The product-owner observation is informed feedback, not a genuinely unbriefed participant result.",
+      "Reviewed assumption: Native HTML details and summary elements are sufficient for script-free progressive disclosure in supported browsers.",
+      "Reviewed assumption: The existing Active Task read model already contains all six guided-review dimensions.",
+      "Reviewed assumption: The complete Monitor can remain available inside one default-closed disclosure without changing event or schema contracts.",
+      "Reviewed assumption: The existing internal Protection Event links are used only after the historical disclosure is opened.",
+      "Reviewed assumption: The resolved alignment journey mcpj-6e9eb3200a654494bab750ab583fd0ba remains available for the required post-implementation self-review.",
+      "Reviewed unknown: Whether first-time users will complete the guided review without additional explanation remains unknown until a later bounded observation.",
+      "Reviewed unknown: Whether experienced users prefer the historical disclosure open by default remains unknown.",
+      "Reviewed unknown: Whether a later explicit mode toggle is useful remains outside this slice.",
+      "Reviewed unknown: No independent accessibility audit or cross-browser usability result exists yet."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      "src/agentgov/event_store.py",
+      "tests/test_development_session.py",
+      "tests/test_event_store.py",
+      "tests/test_scope_observation.py",
+      "docs/development-log/2026-09-01-sensitive-token-boundary-repair.md",
+      "governance/tasks/p0-active-task-view-uncoached-comprehension-review-v1.json",
+      "governance/tasks/p0-active-view-uncoached-review-v1.json",
+      "governance/tasks/p0-active-view-uncoached-review-v2.json",
+      "governance/tasks/p0-sensitive-token-boundary-repair-v1.json",
+      "schemas",
+      "docs/schemas",
+      "docs/adr",
+      "docs/assets",
+      "pyproject.toml",
+      "governance/tasks/p0-airbnb-runtime-completion-handoff.json"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-active-guided-first-monitor-v1.json",
+      "src/agentgov/development_monitor.py",
+      "tests/test_development_monitor.py",
+      "tests/test_user_documentation.py",
+      "README.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/product-requirements-automatic-governance.md",
+      "docs/development-monitor.md",
+      "STATUS.md",
+      "docs/development-log/2026-09-02-active-task-guided-first-monitor-v1.md",
+      "docs/experiments/active-task-view-uncoached-comprehension-review-v2-2026-09-01.md",
+      "docs/development-log/2026-09-01-active-task-view-uncoached-comprehension-review-v2.md"
+    ]
+  },
+  "task_id": "p0-active-guided-first-monitor-v1",
+  "title": "Make the existing Active Task Monitor guided-first",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_development_monitor tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-active-guided-first-monitor-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-active-guided-first-monitor-v1.json",
+    "git diff --check"
+  ]
+}

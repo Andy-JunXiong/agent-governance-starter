@@ -170,6 +170,25 @@ class DevelopmentMonitorTests(unittest.TestCase):
         self.assertIn("Active Task", html_output)
         self.assertIn("OUTSIDE.md", html_output)
         self.assertIn("NOT GRANTED", html_output)
+        for guided_label in (
+            "Review one task, not the whole history.",
+            "Requirement",
+            "Path boundary",
+            "Direct evidence",
+            "Current state",
+            "Human boundary",
+            "Authority",
+            "guided or assisted, not uncoached",
+        ):
+            self.assertIn(guided_label, html_output)
+        guide_index = html_output.index('id="review-guide"')
+        active_index = html_output.index('id="active-task"')
+        history_index = html_output.index('<details class="monitor-history">')
+        overview_index = html_output.index('id="overview"')
+        self.assertLess(guide_index, active_index)
+        self.assertLess(active_index, history_index)
+        self.assertLess(history_index, overview_index)
+        self.assertNotIn('<details class="monitor-history" open>', html_output)
         self.assertNotIn("Agent read", markdown)
         self.assertNotIn("Agent wrote", html_output)
 
@@ -1081,6 +1100,9 @@ class DevelopmentMonitorTests(unittest.TestCase):
         self.assertNotIn("<button", output)
         self.assertNotIn("http://", output)
         self.assertNotIn("https://", output)
+        self.assertIn('<details class="monitor-history">', output)
+        self.assertIn("Full Monitor history", output)
+        self.assertNotIn('<details class="monitor-history" open>', output)
         self.assertIn("No approval, mutation, merge, or deployment authority", output)
 
     def test_renderers_are_stable_and_schema_is_strict(self) -> None:

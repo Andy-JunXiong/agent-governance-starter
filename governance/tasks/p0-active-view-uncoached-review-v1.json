@@ -1,0 +1,71 @@
+{
+  "acceptance_signals": [
+    "One self-contained Development Monitor 1.10 HTML page is generated from the exact admitted local-session review task and digest after a governed scope observation, and the tested commit and page digest are recorded.",
+    "One genuinely unbriefed first-time participant receives only the generated page and neutral review questions; the facilitator keeps time and does not explain labels, point to answers, or operate the page for the participant.",
+    "The participant independently answers what requirement is admitted, which paths are allowed or excluded, what AgentGov directly observed, what the current governance state means, what human boundary comes next, and which commit, merge, publish, release, or deploy authority remains ungranted.",
+    "The durable experiment record preserves elapsed time, normalized participant answers without improving them, participant questions, first uncertainty, wrong interpretations, facilitator assistance, browser environment, and an evidence-bounded outcome classification.",
+    "One participant result is presented only as bounded evidence for that participant and page; adoption, general comprehension, time savings, error reduction, causal benefit, governance completeness, and ROI remain unknown.",
+    "STATUS.md and the dated development log distinguish Agent-run preparation and checks from user-reported participant evidence, identify incomplete or pending review steps, and propose no product correction beyond the observed evidence.",
+    "No product code, schema, test, README, strategic plan, Git operation, publication, release, deployment, participant recruitment, analytics, or external data collection occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-2c13657c4c2f44d8969618b9941c2c8d and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Prepare and run one bounded uncoached comprehension review of Development Monitor 1.10 Active Task using a real local-session task, then record the participant's observed understanding, confusion, timing, assistance, and exact evidence limits without changing the product or generalizing from one participant."
+  },
+  "risk": {
+    "items": [
+      "The facilitator could unintentionally coach the participant, so every intervention must be recorded and changes the result classification.",
+      "The current local event directory contains earlier sessions; the generated Active Task binding must be checked against the exact admitted review task and digest before use.",
+      "A participant answer could contain personal or sensitive information, so the durable record must use a pseudonym and omit raw personal data, credentials, absolute paths, and unrelated content.",
+      "One observation could be overstated as general usability or product benefit unless claim limits remain explicit.",
+      "The working tree already contains untracked AgentGov and Codex local state plus the preserved superseded proposal task; all are excluded from tracked task scope and must not be staged, deleted, or claimed.",
+      "The superseded task identifier was rejected by the existing local sensitive-token guard because an incidental character sequence matched a token prefix; this review task does not change or weaken that guard.",
+      "Reviewed assumption: The product owner can provide one genuinely unbriefed participant and report the observed session facts.",
+      "Reviewed assumption: The participant can open one local self-contained HTML file in a browser without needing repository or command knowledge.",
+      "Reviewed assumption: The existing Monitor 1.10 implementation can generate the review page without product changes.",
+      "Reviewed assumption: The replacement identifier avoids the observed token-prefix collision while preserving the exact requirement.",
+      "Reviewed unknown: The participant identity, browser environment, elapsed time, answers, confidence, questions, and outcome are unknown until the live review occurs.",
+      "Reviewed unknown: Whether the generated page exposes a real comprehension gap is unknown.",
+      "Reviewed unknown: Whether the sensitive-token false positive or any participant finding should be corrected later remains a separate human product decision."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      "governance/tasks/p0-active-task-view-uncoached-comprehension-review-v1.json",
+      "src",
+      "tests",
+      "schemas",
+      "docs/schemas",
+      "README.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/assets",
+      "governance/tasks/p0-airbnb-runtime-completion-handoff.json"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-active-view-uncoached-review-v1.json",
+      "docs/experiments/active-task-view-uncoached-comprehension-review-2026-09-01.md",
+      "docs/development-log/2026-09-01-active-task-view-uncoached-comprehension-review.md",
+      "STATUS.md"
+    ]
+  },
+  "task_id": "p0-active-view-uncoached-review-v1",
+  "title": "Review Active Task View with one uncoached first-time user",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-active-view-uncoached-review-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-active-view-uncoached-review-v1.json",
+    "git diff --check"
+  ]
+}

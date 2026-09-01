@@ -355,6 +355,13 @@ episodes. A bounded rolling storage window must not become a semantic turn cap.
 ## Monitor and Dashboard
 
 The Monitor and Dashboard are a core product surface, not an optional report.
+The primary HTML entry is guided-first: a concise six-dimension explanation
+and the exact Active Task appear before the complete historical Monitor. The
+full set of views remains available under one default-closed disclosure, with
+no change to its evidence or authority semantics. This is progressive
+disclosure, not evidence suppression. Any comprehension observation using the
+guide is assisted and must not be reported as uncoached.
+
 They must provide:
 
 1. **Overview** — active sessions, pending human decisions, verified sessions,

@@ -39,7 +39,7 @@ _CREDENTIAL_ASSIGNMENT_RE = re.compile(
 _SECRET_TOKEN_RE = re.compile(
     r"(?i)(?:"
     r"gh[pousr]_[a-z0-9]{20,}"
-    r"|sk-[a-z0-9_-]{20,}"
+    r"|(?<![a-z0-9_])sk-[a-z0-9_-]{20,}"
     r"|AKIA[0-9A-Z]{16}"
     r"|bearer\s+[a-z0-9._~-]{20,}"
     r"|eyJ[a-z0-9_-]{8,}\.[a-z0-9_-]{8,}\.[a-z0-9_-]{8,}"

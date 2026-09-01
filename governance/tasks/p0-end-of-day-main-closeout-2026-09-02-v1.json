@@ -1,0 +1,88 @@
+{
+  "acceptance_signals": [
+    "STATUS and the dated closeout log truthfully summarize the two completed slices, the stopped review preparation, final validation, unknowns, and denied release or deployment authority.",
+    "The intended commit includes every currently changed product source, test, durable task record, and development evidence selected by the human's all-completed-work decision.",
+    "All .agentgov runtime state and .codex configuration remain untracked and unstaged.",
+    "The full supported Python test suite and repository governance checks pass without weakening tests or hiding advisory findings.",
+    "The complete staged diff is reviewed, has no whitespace errors or secret-like content, and exactly matches the admitted file list.",
+    "Origin is fetched before commit; local main is not diverged from origin main.",
+    "One ordinary non-force commit is created on main and pushed explicitly to origin main.",
+    "No force-push, pull request, publication, release, deployment, cleanup, or unrelated external mutation occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-55cf5d7d346e419f98a37e539662761e and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Update the repository closeout documentation for all completed work in the current dirty worktree, preserve the stopped review records as historical evidence, review and validate the exact intended diff, create one ordinary commit on main, and push it without force to origin main."
+  },
+  "risk": {
+    "items": [
+      "The worktree combines two completed slices and stopped review artifacts; omitting a durable task record would make the commit history incomplete.",
+      "Local .agentgov evidence and .codex configuration are non-source state and must not be staged.",
+      "The remote main branch may have advanced; divergence must stop the push rather than trigger rebase, reset, or force.",
+      "Closeout documentation written before the commit cannot preclaim a commit identity or successful push.",
+      "Secret-like strings or local absolute paths must not enter the intended staged text.",
+      "The commit and push are explicitly human-authorized, but release, deployment, pull request, and force-push remain unauthorized.",
+      "Reviewed assumption: The selected all-completed-work scope means every non-local changed path currently visible outside .agentgov and .codex belongs in the single closeout commit.",
+      "Reviewed assumption: The existing guided-first and token-boundary completion evidence remains valid evidence of their individual implementation slices.",
+      "Reviewed assumption: A single commit is acceptable because the human requested one end-of-day closeout and selected all completed work.",
+      "Reviewed unknown: The final commit hash is unknown until the commit is created.",
+      "Reviewed unknown: Remote acceptance is unknown until the ordinary push completes.",
+      "Reviewed unknown: First-time guided comprehension, independent accessibility assurance, and downstream product benefit remain unmeasured."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      "docs/assets",
+      "pyproject.toml",
+      "schemas",
+      "docs/schemas",
+      "docs/adr",
+      "governance/tasks/p0-airbnb-runtime-completion-handoff.json"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-end-of-day-main-closeout-2026-09-02-v1.json",
+      "docs/development-log/2026-09-02-end-of-day-main-closeout.md",
+      "DEVELOPMENT_PLAN.md",
+      "README.md",
+      "STATUS.md",
+      "docs/development-monitor.md",
+      "docs/product-requirements-automatic-governance.md",
+      "src/agentgov/development_monitor.py",
+      "src/agentgov/event_store.py",
+      "tests/test_development_monitor.py",
+      "tests/test_development_session.py",
+      "tests/test_event_store.py",
+      "tests/test_scope_observation.py",
+      "tests/test_user_documentation.py",
+      "docs/development-log/2026-09-01-active-task-view-uncoached-comprehension-review-v2.md",
+      "docs/development-log/2026-09-01-sensitive-token-boundary-repair.md",
+      "docs/development-log/2026-09-02-active-task-guided-first-monitor-v1.md",
+      "docs/experiments/active-task-view-uncoached-comprehension-review-v2-2026-09-01.md",
+      "governance/tasks/p0-active-guided-first-monitor-v1.json",
+      "governance/tasks/p0-active-task-view-uncoached-comprehension-review-v1.json",
+      "governance/tasks/p0-active-view-uncoached-review-v1.json",
+      "governance/tasks/p0-active-view-uncoached-review-v2.json",
+      "governance/tasks/p0-sensitive-token-boundary-repair-v1.json"
+    ]
+  },
+  "task_id": "p0-end-of-day-main-closeout-2026-09-02-v1",
+  "title": "Close out and push all completed 2026-09-02 work",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-end-of-day-main-closeout-2026-09-02-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-end-of-day-main-closeout-2026-09-02-v1.json",
+    "git diff --check"
+  ]
+}

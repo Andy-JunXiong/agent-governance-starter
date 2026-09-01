@@ -247,6 +247,14 @@ ungranted downstream authority. Governed scope observations now preserve their
 path-level report as immutable untracked local evidence; missing or mismatched
 evidence remains unavailable rather than being inferred.
 
+The self-contained HTML is now guided-first: it opens with a six-dimension
+review explanation and the exact Active Task, while aggregate counts, prior
+sessions, Protection Events, timelines, Task Detail, Benefit, Learning, and
+technical audit data remain available under a default-closed `Full Monitor
+history` disclosure. This presentation change does not change the strict 1.10
+JSON contract or Markdown semantics. A comprehension observation made with the
+guide is guided or assisted, not uncoached.
+
 Current source includes Codex lifecycle hooks, a foreground Governance MCP
 Adapter, native human-owned task admission where the host supports it, and
 active-Agent self-review after resolved alignment. These are development

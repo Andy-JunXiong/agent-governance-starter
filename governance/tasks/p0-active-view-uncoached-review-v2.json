@@ -1,0 +1,81 @@
+{
+  "acceptance_signals": [
+    "The v1 review task, its create-only local baseline, and the completed matcher-repair task remain preserved; v2 is explicitly an execution continuation of the same human-selected review outcome rather than a new product requirement.",
+    "One self-contained Development Monitor 1.10 HTML page is generated after v2 governed start and scope observation and is bound to the exact v2 task identity, digest, event identities, and path-level evidence.",
+    "The page truthfully shows any pre-existing non-owned repair changes and current scope-blocked state rather than hiding, waiving, deleting, staging, or attributing them to the review.",
+    "One genuinely unbriefed first-time participant receives only the generated page and neutral questions; the facilitator keeps time and does not explain labels, point to answers, or operate the page.",
+    "The participant independently explains the admitted requirement, allowed and excluded paths, directly observed evidence, current governance state, next human boundary, and authority still ungranted.",
+    "The durable record preserves elapsed time, normalized answers without improving them, questions, first uncertainty, wrong interpretations, assistance, browser environment, page digest, tested commit, and an evidence-bounded outcome classification.",
+    "One participant result is not generalized into adoption, broad comprehension, time savings, error reduction, causal benefit, governance completeness, security effectiveness, or ROI.",
+    "STATUS.md and the dated log distinguish Agent-run preparation from user-reported participant evidence and propose no product correction beyond observed evidence.",
+    "No product code, schema, test, README, strategic plan, Git operation, publication, release, deployment, participant recruitment, analytics, or external data collection occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-87acd360bd7d491e95c650fa4b7faff7 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Continue the already selected Active Task View comprehension review under a fresh immutable task identity because the v1 local start baseline is create-only and cannot be reused after the separately completed matcher repair; generate one evidence-bound local page, run one genuinely uncoached first-time-user review, and record only bounded participant observations without changing the product."
+  },
+  "risk": {
+    "items": [
+      "The working tree contains a completed but uncommitted matcher repair; the review must present that non-owned state truthfully and must not absorb, edit, stage, or claim it.",
+      "The facilitator could coach the participant, so every intervention must be recorded and changes the outcome classification.",
+      "A participant answer could contain personal or sensitive information; use a pseudonym and omit credentials, absolute paths, and unrelated personal content.",
+      "A scope-blocked page may affect comprehension; the record must identify the tested state and must not generalize the result to all Active Task states.",
+      "One observation could be overstated as product benefit unless claim limits remain explicit.",
+      "The existing v1 baseline is immutable local evidence and must not be deleted, renamed, overwritten, or reused.",
+      "Reviewed assumption: The product owner can provide one genuinely unbriefed participant and report the observed facts.",
+      "Reviewed assumption: The participant can open one local self-contained HTML page without repository or command knowledge.",
+      "Reviewed assumption: Reviewing a truthful scope-blocked task is an acceptable first bounded test of the five Active Task questions.",
+      "Reviewed assumption: The matcher repair remains present in the working copy while the page is generated.",
+      "Reviewed unknown: The participant, browser environment, elapsed time, answers, questions, assistance, and outcome remain unknown until the live session.",
+      "Reviewed unknown: Whether a scope-blocked page creates confusion that would not occur in a clean state is unknown.",
+      "Reviewed unknown: Any later product correction remains a separate human decision."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      "governance/tasks/p0-active-task-view-uncoached-comprehension-review-v1.json",
+      "governance/tasks/p0-active-view-uncoached-review-v1.json",
+      "governance/tasks/p0-sensitive-token-boundary-repair-v1.json",
+      "src/agentgov/event_store.py",
+      "tests/test_event_store.py",
+      "tests/test_scope_observation.py",
+      "tests/test_development_session.py",
+      "docs/development-log/2026-09-01-sensitive-token-boundary-repair.md",
+      "src",
+      "tests",
+      "schemas",
+      "docs/schemas",
+      "README.md",
+      "DEVELOPMENT_PLAN.md",
+      "docs/assets",
+      "governance/tasks/p0-airbnb-runtime-completion-handoff.json"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-active-view-uncoached-review-v2.json",
+      "docs/experiments/active-task-view-uncoached-comprehension-review-v2-2026-09-01.md",
+      "docs/development-log/2026-09-01-active-task-view-uncoached-comprehension-review-v2.md",
+      "STATUS.md"
+    ]
+  },
+  "task_id": "p0-active-view-uncoached-review-v2",
+  "title": "Continue the Active Task uncoached comprehension review",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_development_monitor tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-active-view-uncoached-review-v2.json --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-active-view-uncoached-review-v2.json",
+    "git diff --check"
+  ]
+}

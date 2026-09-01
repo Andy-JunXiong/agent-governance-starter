@@ -529,6 +529,15 @@ the view offers read-only guidance without applying a human decision or
 granting commit, merge, publish, release, or deploy authority. Uncoached user
 comprehension and product benefit remain unknown pending a separate review.
 
+The resolved guided-first direction keeps contract 1.10 data semantics and
+the complete Monitor intact while changing the HTML entry experience. A short
+six-dimension guide and Active Task are primary; aggregate and historical
+views are available inside a default-closed `Full Monitor history`
+disclosure. The prepared uncoached review stopped before participant
+observation after the product owner reported that the full page was too dense
+for practical review. Any later observation using the guide is assisted and
+cannot establish uncoached comprehension.
+
 Trend reporting still requires real NYC CI observations and a separate event
 contract for project-test status, PR outcome, timestamps, human disposition,
 and retention before it can be admitted.

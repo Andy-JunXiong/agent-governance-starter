@@ -49,6 +49,7 @@ class EventStoreTests(unittest.TestCase):
             "password=hunter2",
             "ghp_abcdefghijklmnopqrstuvwxyz123456",
             "sk-abcdefghijklmnopqrstuvwxyz123456",
+            "value='sk-abcdefghijklmnopqrstuvwxyz123456'",
         )
         for label in values:
             with self.subTest(label=label), TemporaryDirectory() as temp_dir:
@@ -63,6 +64,25 @@ class EventStoreTests(unittest.TestCase):
                         outcome="passed",
                         evidence_ref=None,
                     )
+
+    def test_embedded_sk_character_sequence_in_portable_task_identity_is_allowed(self) -> None:
+        task_id = "p0-active-task-view-uncoached-comprehension-review-v1"
+        with TemporaryDirectory() as temp_dir:
+            repository = Path(temp_dir)
+            event, event_ref = append_governance_event(
+                repository,
+                event_type="task.started",
+                actor_class="human",
+                actor_label=None,
+                task_id=task_id,
+                task_digest="sha256:" + "a" * 64,
+                outcome="started",
+                evidence_ref=f"governance/tasks/{task_id}.json",
+                governance_refs=(f"governance/tasks/{task_id}.json",),
+            )
+
+        self.assertEqual(event.task_id, task_id)
+        self.assertTrue(event_ref.endswith(f"{event.event_id}.json"))
 
     def test_v1_event_without_governance_refs_remains_readable(self) -> None:
         with TemporaryDirectory() as temp_dir:

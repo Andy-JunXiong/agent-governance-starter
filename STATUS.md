@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-09-01
+Last verified: 2026-09-02
 
 ## Current-status contract
 
@@ -41,6 +41,210 @@ interactive confirmation and stale-plan revalidation; it adds no automatic
 scheduling authority.
 
 ### Current closeout snapshot
+
+#### 2026-09-02 end-of-day main closeout
+
+- **Active slice**: alignment journey
+  `mcpj-c0ff1cf752d14bf29f1c53c295cd7743` records the product owner's choice
+  to commit all completed work from today's dirty worktree. Native proposal
+  `prp-55cf5d7d346e419f98a37e539662761e` admitted exact closeout task
+  `p0-end-of-day-main-closeout-2026-09-02-v1`; the owner then supplied exact
+  `REPLACE` to take over the active session.
+- **Closeout scope**: one intended commit contains the completed sensitive-
+  token boundary repair, the guided-first Development Monitor, their tests and
+  current documentation, five predecessor task records plus this closeout
+  task, and the stopped uncoached-review evidence. Local `.agentgov` runtime
+  state and `.codex` configuration remain explicitly excluded and unstaged.
+- **Current validation**: the token repair and guided-first Monitor each have
+  fresh governed `verified` completion evidence. Guided-first final evidence
+  is `evd-42dfa5e5a5c44c559a4dd8644d70ce96`; its final declared run passed all
+  six commands, including all 1,147 Python 3.11 tests with six platform-
+  conditioned skips. Closeout evidence
+  `evd-b4d4b964f169436aab433e53ce4eb19c` passed all five cumulative declared
+  commands and reconciled the admitted snapshot as `verified`. `origin/main`
+  matched local `main` at `d20cfd5` after fetch. High-confidence scanning found
+  no local absolute path; four secret-pattern matches were inspected and are
+  synthetic rejection fixtures, not credentials. The exact snapshot after
+  this evidence annotation is revalidated once before staging, and its latest
+  identity is reported in the final handoff without another tracked-file edit.
+- **Human authorization**: the product owner explicitly requested updated
+  documentation, one commit, and a push to GitHub `main`, then selected the
+  all-completed-work scope. This authorizes one ordinary non-force commit and
+  push to `origin/main`; it does not authorize force-push, pull request,
+  publication, release, deployment, cleanup, or unrelated external mutation.
+- **Advisory review**: distinct native current-Agent self-review
+  `srv-52e3badfee0a806d52910202da7eae05` found the cumulative requirement,
+  23-path admitted scope, preserved local exclusions, synthetic secret-test
+  fixtures, and ordinary Git boundary consistent with the human-selected
+  direction. Remote acceptance, independent security assurance, and product
+  benefit remain unknown. This is self-review, not independent assurance or
+  human result acceptance.
+- **Pending validation**: no source validation remains pending after the final
+  unchanged-scope refresh. Exact staged identity and Git transport success are
+  procedural evidence owned by Git history and the final handoff rather than
+  preclaimed in this pre-commit snapshot.
+- **Incomplete**: none in the admitted product implementation,
+  documentation, or validation. Commit and push are the separately authorized
+  terminal Git transition, not hidden product work.
+- **Preserved boundary**: first-time guided comprehension, independent
+  accessibility and security assurance, adoption, causal benefit, and ROI
+  remain unknown. The stopped review record contains no participant result.
+- **Evidence**: the dated closeout record is
+  `docs/development-log/2026-09-02-end-of-day-main-closeout.md`.
+- **Next product review**: after this Git closeout, decide whether to admit one
+  bounded assisted first-time comprehension observation. This proposal is
+  review input only and grants no follow-up task or downstream authority.
+
+#### Active Task guided-first Monitor v1
+
+- **Active slice**: resolved alignment journey
+  `mcpj-6e9eb3200a654494bab750ab583fd0ba` records the product owner's choice
+  to make the existing Monitor guided-first. Native proposal
+  `prp-05754b31e3c648f0a624848fa77255d3` admitted exact task
+  `p0-active-guided-first-monitor-v1`; the owner then supplied exact
+  `REPLACE`.
+- **Implemented result**: the self-contained HTML now opens with a concise
+  six-dimension guide and the exact Active Task. Overview, drift reminder,
+  observation boundary, claim layers, Live Sessions, Protection Events,
+  Activity Timeline, Task Detail, Benefit, Learning, and technical audit data
+  remain available inside a default-closed `Full Monitor history` disclosure.
+  JSON and Markdown semantics remain at strict Monitor contract 1.10.
+- **Codex-run validation**: all 89 focused Monitor and documentation tests
+  pass. The complete supported Python 3.11 suite passes all 1,147 tests with
+  six platform-conditioned skips. Task governance reports `PASS=3 WARN=1
+  FAIL=0 ADVISORY=3`; repository governance reports `PASS=26 WARN=2 FAIL=0
+  ADVISORY=4`; task JSON and `git diff --check` pass. Chrome inspection of the
+  regenerated local page confirmed six guide steps before Active Task, a
+  default-closed history disclosure, zero external resources, and successful
+  exact-fragment navigation from a Protection Event to matching Task Detail.
+- **User-reported validation**: the informed owner reported that the earlier
+  complete page exposed too much content and needed explanation. This is
+  product feedback, not an unbriefed participant result or product acceptance.
+- **Advisory review**: distinct native current-Agent self-review
+  `srv-56718c07f7ce38ab7978a5b314b9f594` found the guided-first requirement,
+  presentation-only architecture, admitted scope, self-contained page, and
+  preserved authority boundary consistent with the selected direction. It
+  retains first-time comprehension, independent cross-browser and assistive-
+  technology behavior, and independent security assurance as unknown. This is
+  self-review, not independent assurance or human acceptance.
+- **Governed completion**: the native MCP completion-record tool was not
+  exposed in this session. Repository fallback `agentgov govern finish`
+  final evidence `evd-42dfa5e5a5c44c559a4dd8644d70ce96` ran all six
+  task-declared commands with exit code zero after the final closeout
+  annotation and reconciled the exact governed snapshot as `verified`; every
+  pre-existing excluded path remained byte-identical.
+- **Pending validation**: later first-time guided comprehension remains a
+  separate observation, not part of this implementation task.
+- **Incomplete**: none in the admitted guided-first implementation,
+  documentation, or validation. First-time comprehension and independent
+  accessibility review remain unestablished follow-up evidence, not hidden
+  implementation work.
+- **Preserved boundary**: scope failures, unavailable evidence, claim limits,
+  and denied commit, merge, publish, release, and deploy authority remain
+  unchanged. The matcher repair, local governance state, prior task records,
+  and all excluded paths remain outside this slice.
+- **Evidence**: the dated implementation record is
+  `docs/development-log/2026-09-02-active-task-guided-first-monitor-v1.md`.
+- **Next product review**: after completion, inspect the guided-first page and
+  jointly decide whether one bounded assisted first-time observation should
+  run. This entry grants no follow-up task or downstream authority.
+
+#### Active Task View uncoached comprehension review v2 - preparation checkpoint
+
+- **Active slice**: native proposal
+  `prp-87acd360bd7d491e95c650fa4b7faff7` admitted the fresh continuation task
+  `p0-active-view-uncoached-review-v2`; the product owner supplied exact
+  `REPLACE`. The v2 identity preserves the immutable v1 start baseline and
+  resumes the same human-selected comprehension review after the separately
+  completed matcher repair.
+- **Codex-run preparation**: governed start bound task digest
+  `sha256:51dc2dfd4c3140d98db0e5576123333ac7dd62abede56c3944a705ffb1943708`.
+  The final preparation scope observation persisted path-level evidence with
+  `PASS=4 FAIL=9
+  ADVISORY=0`; the failures are pre-existing explicitly excluded repair,
+  review-task, and local configuration paths. Development Monitor generated a
+  247587-byte self-contained local page at `.agentgov/dashboard.html`, bound
+  to the exact v2 task and events, from tested commit `d20cfd5`; its SHA-256 is
+  `2b7ee056949234f24e8abaa2edb5de74bd015794361046e2c4b2680d230edce7`.
+- **User-reported validation**: none. No participant has been identified or
+  observed, and no browser, elapsed time, answer, confusion, question,
+  assistance, or outcome has been reported.
+- **Pending validation**: none. The planned participant observation stopped
+  before it began after product-owner feedback identified information overload
+  in the full-page stimulus.
+- **Incomplete**: no participant observation or comprehension result exists.
+  The record remains a preparation artifact plus a pre-observation stop.
+- **Preserved boundary**: the page truthfully displays `scope blocked`; v2
+  does not hide, waive, stage, reassign, or edit any excluded change. No
+  product correction, Git operation, publication, release, deployment,
+  recruitment, analytics, or external collection is authorized.
+- **Evidence**: the pending observation protocol is
+  `docs/experiments/active-task-view-uncoached-comprehension-review-v2-2026-09-01.md`;
+  Agent-run preparation is recorded in
+  `docs/development-log/2026-09-01-active-task-view-uncoached-comprehension-review-v2.md`.
+- **Next product review**: superseded by the separately admitted guided-first
+  Monitor slice above. No uncoached result is inferred and this entry grants no
+  follow-up task or downstream authority.
+
+#### Sensitive-token boundary repair v1
+
+- **Active slice**: resolved alignment journey
+  `mcpj-a1cd67fd42e7414bb3d39faef928f349` recorded the product owner's choice
+  to keep the Active Task comprehension review as the product center and split
+  one independent repair. Native proposal
+  `prp-a707d9a11cc14c089ed40c802d103ecf` admitted exact task
+  `p0-sensitive-token-boundary-repair-v1`; the owner then supplied exact
+  `REPLACE`.
+- **Observed blocker**: the shared local-record detector interpreted the
+  incidental `sk-` character sequence spanning the end of `task-` in one
+  preserved review-task identifier as a secret token. The first start rolled
+  back completely. A safe replacement review task started, but its truthful
+  scope report still named the preserved path and therefore failed closed
+  before a scope artifact or participant page could be created.
+- **Implemented result**: only the `sk-` branch now requires a left lexical
+  boundary. A real token remains rejected at text start and after ordinary
+  separators; the existing minimum length, allowed characters, other secret
+  shapes, credential assignments, and absolute-path checks remain unchanged.
+  Event, governed-start, and scope-observation regressions cover both the safe
+  embedded identifier and real token-shaped failures.
+- **Codex-run validation**: all 27 focused event-store, scope-observation, and
+  development-session tests pass. The complete supported Python 3.11 suite
+  passes all 1,147 tests with six platform-conditioned skips. On the real
+  working tree, `govern check` now persists the complete scope artifact and
+  evidence-bound event; five admitted paths pass while `.codex/config.toml`
+  and the two explicitly excluded review-task records remain three visible
+  failures rather than being hidden or waived. Task governance reports
+  `PASS=3 WARN=1 FAIL=0 ADVISORY=3`; repository governance reports
+  `PASS=26 WARN=2 FAIL=0 ADVISORY=4`; task JSON and `git diff --check` pass.
+  The callable native completion-record tool was unavailable, so the existing
+  governed `govern finish` path ran the exact task commands, preserved the
+  three excluded paths byte-identically, reconciled all seven task paths, and
+  returned `verified` with fresh snapshot identities.
+- **User-reported validation**: none for the repair result. The product owner
+  selected, admitted, and took up the repair; those are direction and task
+  decisions, not independent security or product acceptance.
+- **Pending validation**: none for the bounded repair snapshot. `verified`
+  proves only that declared commands passed on an unchanged governed snapshot;
+  it does not prove requirement satisfaction, architecture correctness,
+  validation sufficiency, security completeness, or human acceptance.
+- **Incomplete**: none in the narrow matcher implementation. The separately
+  admitted uncoached comprehension review remains paused and no participant
+  page or participant result exists yet.
+- **Security limit**: this is a boundary correction, not exhaustive secret
+  detection or independent security assurance. It assumes a supported `sk-`
+  token begins at text start or after a separator, not in the middle of an
+  ordinary alphanumeric or underscore word.
+- **Preserved boundary**: both review task records and all local AgentGov,
+  Codex, and unrelated user paths remain preserved and outside the repair. No
+  Git operation, publication, release, deployment, dependency change, record
+  cleanup, or external mutation is authorized.
+- **Evidence**: the dated repair record is
+  `docs/development-log/2026-09-01-sensitive-token-boundary-repair.md`.
+- **Next product review**: after bounded completion review, resume admitted
+  task `p0-active-view-uncoached-review-v1`, generate its evidence-bound Active
+  Task page, and stop for real uncoached participant observations. This entry
+  grants no task-start, product-change, Git, publication, release, deployment,
+  recruitment, or external authority.
 
 #### Latest governed session closeout v1
 

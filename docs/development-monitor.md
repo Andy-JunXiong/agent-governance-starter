@@ -25,6 +25,21 @@ otherwise affected paths remain explicitly unavailable. The projection offers
 read-only human-boundary guidance and denies commit, merge, publish, release,
 and deploy authority.
 
+The HTML presentation is guided-first without changing that strict 1.10 data
+contract. It opens with a concise explanation of six review dimensions and the
+Active Task itself. The complete Overview, drift reminder, observation
+boundary, claim layers, Live Sessions, Protection Events, Activity Timeline,
+Task Detail, Benefit, Learning, and technical audit data remain available
+inside a default-closed `Full Monitor history` disclosure. Opening that
+disclosure preserves existing Protection Event navigation and task-card
+prominence. The page uses native `details` and `summary`, not script or an
+authority-bearing control.
+
+Because the HTML explains what to inspect, any comprehension observation made
+from it is guided or assisted, not uncoached. The guide does not explain away
+scope failures, apply a human decision, or convert observed evidence into
+approval.
+
 Monitor contract 1.9 added exact candidate-bound human Learning reviews to the
 strict current-observation Learning projection introduced in 1.8 and to the
 single-observation Benefit projection introduced in 1.7, the read-only guidance
@@ -161,12 +176,14 @@ PR, and CI.
 
 Within the displayed observation scope:
 
-- Active Task answers five first-review questions for one exact local session:
+- Active Task and its guide answer six first-review questions for one exact
+  local session:
   what requirement is admitted, which path boundary applies, what AgentGov has
   directly observed, what the canonical state means, and which human boundary
-  comes next. Its activity list references the same canonical event identities
-  used by Timeline. Exported, CI-only, combined, missing-session, or invalid
-  bindings show the detail as unavailable rather than inferring a current task.
+  comes next, plus which downstream authority remains ungranted. Its activity
+  list references the same canonical event identities used by Timeline.
+  Exported, CI-only, combined, missing-session, or invalid bindings show the
+  detail as unavailable rather than inferring a current task.
 - Timeline answers when governance ran, which command family triggered it,
   which actor class invoked it, which governance paths start selected, recorded
   reason codes, observed counts, and outcome. Selection does not prove agent
@@ -214,9 +231,10 @@ Within the displayed observation scope:
   outside-scope applicability, transferability, future recurrence, time
   savings, governance completeness, and ROI.
 
-The self-contained HTML keeps the embedded machine-readable JSON collapsed
-under `Technical audit data (optional)`. It is subordinate tool/debugging data;
-ordinary task review does not require opening it.
+The self-contained HTML keeps every aggregate and historical view under `Full
+Monitor history`, closed by default. The embedded machine-readable JSON stays
+further collapsed under `Technical audit data (optional)`. Both are
+subordinate detail; ordinary guided task review does not require opening them.
 
 Passing or verified outcomes are observations, not approval or causal benefit.
 A Learning review records one bounded human disposition, not an explicit

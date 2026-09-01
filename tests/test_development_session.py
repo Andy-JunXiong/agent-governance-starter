@@ -172,6 +172,25 @@ class DevelopmentSessionTests(unittest.TestCase):
         self.assertEqual(monitor.overview["task_starts"], 1)
         self.assertEqual(monitor.timeline[0]["governance_refs"], ["AGENTS.md", "governance/tasks/add-guided-session.json"])
 
+    def test_start_allows_portable_task_identity_with_embedded_sk_sequence(self) -> None:
+        task_id = "p0-active-task-view-uncoached-comprehension-review-v1"
+        with TemporaryDirectory() as temp_dir:
+            repository, _, _ = create_repository(Path(temp_dir), tasks=0)
+            task_path = write(
+                repository,
+                f"governance/tasks/{task_id}.json",
+                json.dumps(task_document(task_id), indent=2) + "\n",
+            )
+            run_git(repository, "add", ".")
+            run_git(repository, "commit", "--quiet", "-m", "add review task")
+
+            result = apply_start_plan(build_start_plan(repository, task=task_path))
+            events = load_governance_events(repository / ".agentgov/events").events
+
+        self.assertEqual(result.session.task_id, task_id)
+        self.assertEqual(events[0].task_id, task_id)
+        self.assertEqual(events[0].event_type, "task.started")
+
     def test_start_baseline_preserves_predecessor_exclusion_and_allows_task_delta(self) -> None:
         with TemporaryDirectory() as temp_dir:
             repository, tasks, base = create_repository(Path(temp_dir))

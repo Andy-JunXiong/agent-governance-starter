@@ -1,0 +1,70 @@
+{
+  "acceptance_signals": [
+    "The shared detector does not classify an sk- character sequence embedded inside a longer ordinary alphanumeric word, including the preserved task-view review identifier, as a secret token.",
+    "A real sk- token of the existing minimum length remains rejected at the start of text and after ordinary separators used in paths, assignments, quoted values, and messages.",
+    "Existing detection of GitHub-style tokens, AWS access keys, bearer tokens, JWT-like values, private-key headers, credential assignments, absolute Windows paths, and absolute POSIX paths remains unchanged.",
+    "Govern start can append a task.started event for a safe admitted task identifier containing task-view without weakening event schema, path, actor, authority, or privacy validation.",
+    "Scope observation can persist and reload a complete report containing a safe repository-relative path with task-view while an exact real secret-shaped value still fails closed.",
+    "Focused event-store, scope-observation, and development-session tests pass, followed by the complete Python 3.11 suite, task and repository governance checks, task JSON parsing, and git diff validation.",
+    "The dated log and STATUS.md record the observed review blocker, the exact bounded repair, validation evidence, residual security limits, and that the uncoached comprehension review remains a separate paused task to resume afterward.",
+    "No preserved proposal or review record is deleted, renamed, hidden, staged, or treated as repaired evidence; no Git operation, publication, release, deployment, dependency change, or external mutation occurs."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-a707d9a11cc14c089ed40c802d103ecf and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Make the shared local-record sensitive-token detector boundary-aware for the sk- token form so ordinary repository-relative identifiers containing an embedded word-suffix sequence can be persisted, while preserving rejection of real secret tokens, credential assignments, absolute paths, and all other existing sensitive patterns."
+  },
+  "risk": {
+    "items": [
+      "Changing secret-token matching can create a false negative, so the repair must add an explicit left lexical boundary only to the sk- branch and retain true-positive tests at start-of-text and after realistic separators.",
+      "The shared detector protects both event and evidence persistence, so focused tests must cover both direct local records and higher-level session and scope-observation paths.",
+      "A narrow matcher repair must not weaken credential-assignment, absolute-path, or other token-pattern checks.",
+      "The current worktree contains two untracked admitted review-task records and local AgentGov and Codex state that are outside this repair and must remain untouched.",
+      "The active uncoached review task is paused by this blocker; completing the repair does not itself complete, validate, or authorize the participant review.",
+      "Reviewed assumption: A secret token in supported local records begins at the start of text or after a non-word separator rather than in the middle of an ordinary alphanumeric word.",
+      "Reviewed assumption: The existing sk- minimum-length and allowed-character contract remains unchanged.",
+      "Reviewed assumption: The current event-store matcher is the single shared enforcement point for the two observed failures.",
+      "Reviewed unknown: Whether other benign identifiers contain equivalent embedded token-prefix collisions is unknown until broader validation runs.",
+      "Reviewed unknown: Whether any external consumer relies on rejecting sk- text embedded inside a longer ordinary word is unknown.",
+      "Reviewed unknown: The participant review outcome remains unknown and outside this repair."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      "governance/tasks/p0-active-task-view-uncoached-comprehension-review-v1.json",
+      "governance/tasks/p0-active-view-uncoached-review-v1.json",
+      "docs/assets/linkedin-github-repository-cover.png",
+      "governance/tasks/p0-airbnb-runtime-completion-handoff.json"
+    ],
+    "include_paths": [
+      "governance/tasks/p0-sensitive-token-boundary-repair-v1.json",
+      "src/agentgov/event_store.py",
+      "tests/test_event_store.py",
+      "tests/test_scope_observation.py",
+      "tests/test_development_session.py",
+      "STATUS.md",
+      "docs/development-log/2026-09-01-sensitive-token-boundary-repair.md"
+    ]
+  },
+  "task_id": "p0-sensitive-token-boundary-repair-v1",
+  "title": "Repair embedded sensitive-token prefix false positives",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_event_store tests.test_scope_observation tests.test_development_session -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-sensitive-token-boundary-repair-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-sensitive-token-boundary-repair-v1.json",
+    "git diff --check"
+  ]
+}
