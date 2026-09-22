@@ -1,0 +1,61 @@
+{
+  "acceptance_signals": [
+    "Start with no unknowns and a continue-exploration candidate fails before journey creation with a bounded retryable diagnostic.",
+    "Update accounts for the answered question, remaining questions, new questions, and inherited candidates; an unusable option fails atomically before human presentation.",
+    "A valid exploration choice with a remaining non-material question still succeeds without granting authority.",
+    "Tests cover the reproduced failure, corrected retries, update candidate inheritance, valid exploration, and unchanged privacy and human decision boundaries.",
+    "Preserve all pre-existing STATUS changes and all excluded changes; update only admitted paths.",
+    "Stop if changes require Core semantics, authority changes, installation, external processes, or scope expansion."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-169697804a8b444582674879cb62e11e and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Add bounded MCP Adapter validation for the existing exploration precondition so start and update cannot present continue-exploration with no remaining question. Return private actionable retryable diagnostics, retain Core semantics and human choice, and add regression evidence and closeout documentation."
+  },
+  "risk": {
+    "items": [
+      "Overbroad validation could reject valid exploratory drafts; validate at the point a decision is presented.",
+      "Updates may inherit candidate options; effective remaining questions must be used.",
+      "Existing unrelated status evidence must be preserved.",
+      "Reviewed assumption: This enforces an existing Core precondition in the MCP Adapter rather than changing the governance contract.",
+      "Reviewed assumption: All 133 existing changed paths are classified: STATUS is included and the other 132 paths are excluded.",
+      "Reviewed unknown: Installed live Adapter behavior after a source repair remains unverified; installation and live replay are outside this task."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      "docs/development-log/2026-09-02-guided-first-comprehension-observation-v1.md",
+      "docs/experiments/guided-first-comprehension-observation-2026-09-02.md",
+      "governance/tasks/p0-guided-first-comprehension-observation-v1.json"
+    ],
+    "include_paths": [
+      "src/agentgov/governance_mcp.py",
+      "tests/test_governance_mcp.py",
+      "docs/governance-mcp-adapter.md",
+      "STATUS.md",
+      "docs/development-log/2026-09-22-exploration-option-precondition-v1.md",
+      "governance/tasks/p0-exploration-option-precondition-v1.json"
+    ]
+  },
+  "task_id": "p0-exploration-option-precondition-v1",
+  "title": "Reject unusable exploration options before human selection",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_governance_mcp tests.test_clarification_dialogue tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-exploration-option-precondition-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-exploration-option-precondition-v1.json",
+    "git diff --check"
+  ]
+}

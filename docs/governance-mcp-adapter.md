@@ -380,6 +380,20 @@ For a no-unknown context it separately reports
 `recommended_resolution_id` / `recommendation_required`; both are retryable
 and preserve atomic start behavior.
 
+The development-source Adapter also rejects an unusable `continue_exploration`
+option before presenting a human decision. A start with no unknowns returns
+`candidate_resolutions` / `normalized_resolution` when that option is
+present, with a fixed explanation that a remaining question is required;
+the advertised start schema expresses the same condition. A ready
+update checks the effective questions after removing the answered question
+and adding new questions, including when it inherits previous candidates.
+If none remain, the same retryable diagnostic is returned before the journey
+advances. Correct the draft by supplying a genuine remaining question or
+revising the candidates; do not invent a question or select a direction for
+the human. Valid exploration with a remaining non-material question retains
+the existing Core behavior. This source repair does not update an installed
+Adapter or establish a successful live-client replay.
+
 ### Alignment Start parity matrix
 
 The audit denominator is the eleven validation families reachable from the

@@ -1952,6 +1952,121 @@ class GovernanceMcpProtocolTests(unittest.TestCase):
         self.assertFalse(diagnostic["retryable"])
         self.assertNotIn("synthetic future internal invariant", json.dumps(diagnostic))
 
+    def test_exploration_without_questions_is_rejected_before_start_and_retry_succeeds(self) -> None:
+        active = adapter()
+        args = start_arguments()
+        args.update(unknowns=[], candidate_resolutions=resolutions(include_continue=True),
+                    recommended_resolution_id="return_to_center")
+        with self.assertRaises(GovernanceMcpError) as caught:
+            active.call_tool(MCP_TOOL_NAMES[0], args)
+        diagnostic = caught.exception.diagnostic()
+        self.assertEqual(diagnostic["error_code"], "alignment_invalid_field")
+        self.assertEqual(diagnostic["field_path"], "candidate_resolutions")
+        self.assertEqual(diagnostic["rule"], "normalized_resolution")
+        self.assertTrue(diagnostic["retryable"])
+        self.assertEqual(active._journeys, {})
+        self.assertIn("requires a remaining question", str(caught.exception))
+        conditional = governance_mcp_tools()[0]["inputSchema"]["allOf"][0]
+        self.assertEqual(
+            conditional["then"]["properties"]["candidate_resolutions"]["items"]["properties"]["id"]["not"],
+            {"const": "continue_exploration"},
+        )
+        self.assertNotIn(args["center"]["outcome"], json.dumps(diagnostic))
+        args["candidate_resolutions"] = resolutions()
+        corrected = active.call_tool(MCP_TOOL_NAMES[0], args)
+        self.assertEqual(corrected["response"]["status"], "ready_for_decision")
+
+    def test_exploration_update_checks_effective_questions_and_is_atomic(self) -> None:
+        for inherited in (False, True):
+            for correction in ("new_question", "replace_candidates"):
+                with self.subTest(inherited=inherited, correction=correction):
+                    active = adapter()
+                    args = start_arguments()
+                    if inherited:
+                        args.update(candidate_resolutions=resolutions(include_continue=True),
+                                    recommended_resolution_id="return_to_center")
+                    started = active.call_tool(MCP_TOOL_NAMES[0], args)
+                    update = dict(
+                        journey_handle=started["journey_handle"],
+                        prompt=prompt_binding(started, "clarification_prompt"),
+                        answer_summary="The current center remains appropriate.",
+                        center_patch=empty_patch(), new_questions=[],
+                        candidate_resolutions=[] if inherited else resolutions(include_continue=True),
+                        recommended_resolution_id=None if inherited else "return_to_center",
+                        ready_requested=True,
+                    )
+                    before = active._journeys[started["journey_handle"]].adapter.journey()
+                    with self.assertRaises(GovernanceMcpError) as caught:
+                        active.call_tool(MCP_TOOL_NAMES[1], update)
+                    self.assertEqual(caught.exception.diagnostic()["rule"], "normalized_resolution")
+                    self.assertTrue(caught.exception.diagnostic()["retryable"])
+                    self.assertEqual(active._journeys[started["journey_handle"]].adapter.journey(), before)
+                    if correction == "new_question":
+                        update["new_questions"] = [{**mcp_question("Would another example help?"), "material": False}]
+                    else:
+                        update.update(candidate_resolutions=resolutions(), recommended_resolution_id="return_to_center")
+                    corrected = active.call_tool(MCP_TOOL_NAMES[1], update)
+                    self.assertEqual(corrected["response"]["status"], "ready_for_decision")
+                    if correction == "new_question":
+                        selected = active.call_tool(MCP_TOOL_NAMES[2], dict(
+                            journey_handle=started["journey_handle"],
+                            decision_prompt=prompt_binding(corrected, "decision_prompt"),
+                            selected_option_id="continue_exploration",
+                        ))
+                        self.assertEqual(selected["response"]["status"], "exploring")
+                        self.assertIsNotNone(selected["response"]["clarification_prompt"])
+                        self.assertFalse(any(selected["authority_boundary"].values()))
+
+    def test_exploration_with_existing_nonmaterial_question_remains_selectable(self) -> None:
+        active = adapter()
+        args = start_arguments()
+        args["unknowns"].append({**mcp_question("Would another example help?"), "material": False})
+        started = active.call_tool(MCP_TOOL_NAMES[0], args)
+        ready = active.call_tool(MCP_TOOL_NAMES[1], dict(
+            journey_handle=started["journey_handle"],
+            prompt=prompt_binding(started, "clarification_prompt"),
+            answer_summary="The current center remains appropriate.",
+            center_patch=empty_patch(), new_questions=[],
+            candidate_resolutions=resolutions(include_continue=True),
+            recommended_resolution_id="return_to_center", ready_requested=True,
+        ))
+        selected = active.call_tool(MCP_TOOL_NAMES[2], dict(
+            journey_handle=started["journey_handle"],
+            decision_prompt=prompt_binding(ready, "decision_prompt"),
+            selected_option_id="continue_exploration",
+        ))
+        self.assertEqual(selected["response"]["status"], "exploring")
+        self.assertEqual(len(selected["response"]["dialogue"]["open_questions"]), 1)
+        self.assertFalse(any(selected["authority_boundary"].values()))
+
+    def test_exploration_candidate_is_allowed_before_readiness(self) -> None:
+        active = adapter()
+        args = start_arguments()
+        args.update(candidate_resolutions=resolutions(include_continue=True),
+                    recommended_resolution_id="return_to_center")
+        started = active.call_tool(MCP_TOOL_NAMES[0], args)
+        exploring = active.call_tool(MCP_TOOL_NAMES[1], dict(
+            journey_handle=started["journey_handle"],
+            prompt=prompt_binding(started, "clarification_prompt"),
+            answer_summary="The draft still needs further discussion.",
+            center_patch=empty_patch(),
+            new_questions=[mcp_question("Which example needs further discussion?")],
+            candidate_resolutions=[],
+            recommended_resolution_id=None, ready_requested=False,
+        ))
+        self.assertEqual(exploring["response"]["status"], "exploring")
+        self.assertIsNone(exploring["response"]["decision_prompt"])
+
+        args["unknowns"][0]["material"] = False
+        ready = active.call_tool(MCP_TOOL_NAMES[0], args)
+        selected = active.call_tool(MCP_TOOL_NAMES[2], dict(
+            journey_handle=ready["journey_handle"],
+            decision_prompt=prompt_binding(ready, "decision_prompt"),
+            selected_option_id="continue_exploration",
+        ))
+        self.assertEqual(selected["response"]["status"], "exploring")
+        self.assertFalse(any(selected["authority_boundary"].values()))
+
     def test_failed_update_is_atomic_and_adapter_assigns_new_question_identity(self) -> None:
         server = GovernanceMcpServer(adapter())
         started = server.dispatch(

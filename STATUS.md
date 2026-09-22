@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-09-02
+Last verified: 2026-09-22
 
 ## Current-status contract
 
@@ -41,6 +41,158 @@ interactive confirmation and stale-plan revalidation; it adds no automatic
 scheduling authority.
 
 ### Current closeout snapshot
+
+#### Installed runtime update v2 - paused for the day, installation pending
+
+- **Active slice**: `p0-installed-runtime-update-v2` is human-admitted and was
+  separately started after exact `REPLACE`. It supersedes the unused v1
+  proposal's incorrect manifest validation command; v1 was never started.
+- **End-of-day decision**: on 2026-09-22 the human requested stopping work,
+  updating the related documentation, and committing and pushing today's
+  reviewed changes to GitHub main. Installation work is suspended. The task's
+  human admission record is unchanged; no completion or fresh installation
+  authority is inferred from the Git operation.
+- **Agent-run preparation**: the exact 188-input manifest passed. A local-only
+  wheel was built with the previously verified, hash-pinned build tools;
+  all 78 Python modules and 107 shared data files match source. The original
+  isolated environment's 272 files and exposed launcher have verified backups.
+- **Current installation**: Adapter 1.6.0 remains unchanged; the prepared
+  package contains Adapter 1.7.0. Package identity remains local-only
+  `0.3.0rc1`. Configuration and the existing tool allowlist are unchanged.
+- **Stop condition**: a broader read-only check found three processes using
+  the installed runtime or its exposed launcher, all with governance-MCP
+  arguments. Replacement requires a fresh zero-process observation. No process
+  was stopped and no background installer exists.
+- **User-reported validation**: none.
+- **Pending validation / incomplete**: actual installation, installed payload
+  and fresh-process protocol checks, client reconnection and final cleanup.
+  Build and recovery material remain in the exact task-owned temporary root.
+  The local session pointer remains recorded for recovery; no completion
+  reconciliation is claimed. On resumption, revalidate the task, current Git
+  state, retained materials and zero-process boundary before installation.
+- **Preparation validation**: all six declared commands passed without
+  validation-time mutation; the focused suite ran 134 tests with three
+  platform skips. Scope comparison reported five passes, eighteen preserved
+  predecessor exclusions and no failures. Final documentation annotations
+  receive one fresh validation record, reported in the handoff.
+- **Advisory review**: native current-Agent review
+  `srv-61c6b9d3b90b48a7afb94646312a46ae` completed for this prepared checkpoint.
+  Installation, actual restoration and current-client activation remain
+  unproved. This is a separate review pass, not independent assurance.
+- **Evidence**: `docs/experiments/installed-runtime-update-2026-09-22.md` and
+  `docs/development-log/2026-09-22-installed-runtime-update-v2.md`.
+- **Next product review**: complete and review this admitted installation
+  after a safe connection boundary. The next feature is not yet decided.
+  Today's separate human Git authorization covers the reviewed source,
+  tests, manifest and durable evidence only; local runtime/configuration and
+  the earlier uncommitted observation records remain outside the commit.
+
+#### Distribution manifest scope-observation synchronization v1
+
+Historical completed repair checkpoint; its next-step decision was superseded
+by the human-selected and separately admitted installation task above.
+
+- **Active slice**: `p0-distribution-manifest-scope-observation-sync-v1` was
+  admitted by native form and separately started after human `REPLACE`.
+- **Implemented**: the manifest includes the independently derived
+  `scope_observation.py` module and now contains exactly 188 sorted inputs.
+  Both canonical digests and the fixed controller count/identities match the
+  current source. Selection, packaging and execution semantics are unchanged.
+- **Agent-run validation**: the new consistency regression reproduced the
+  original failure before repair. The repaired manifest/controller suite ran
+  21 tests successfully with one platform-conditioned skip, retaining
+  mismatch rejection before harness launch.
+- **User-reported validation**: none for this static repair.
+- **Closeout validation**: all six task-declared commands passed in evidence
+  `evd-01c104c849064d7c99f77debd7f81caf`, reconciled as `verified`, with no
+  validation-time mutation. Final documentation annotations are revalidated
+  once; the final evidence identity is reported in the handoff without
+  another tracked edit.
+- **Advisory review**: a distinct current-Agent pass confirmed exact derived
+  input selection, synchronized bindings, preserved mismatch gates, and
+  historical evidence boundaries. This fully specified task did not use a
+  new alignment journey; no native self-review completion is claimed.
+- **Pending validation**: actual current-client activation remains outside
+  this task and unverified.
+- **Incomplete**: none in the admitted static repair and closeout.
+- **Preserved evidence**: the earlier isolated experiment's failed manifest
+  observation and historical 187-path records remain unchanged. This current
+  repair supersedes that unresolved-gap state, not those historical facts.
+- **Evidence**: `docs/development-log/2026-09-22-distribution-manifest-scope-observation-sync-v1.md`.
+- **Next product review**: review the full installed/source difference before
+  deciding whether to activate the repair for a real client. No build,
+  installation, model session, Git action or release follows automatically.
+
+#### Isolated exploration package verification v1
+
+Its unresolved-manifest checkpoint below is superseded by the static repair
+above. All original experiment and validation observations remain historical.
+
+- **Active slice**: `p0-exploration-isolated-package-verification-v1` was
+  admitted by native form and separately started after human `REPLACE`.
+- **Agent-run evidence**: necessary build-tool wheels were downloaded only
+  into a task-owned temporary environment. A separately derived 188-path
+  source snapshot built and installed offline. All 78 package modules and
+  107 data files matched source. Temporary Adapter 1.7.0 passed eight local
+  STDIO requests and fourteen checks, including rejection, corrected retries,
+  valid exploration, unchanged authority, and clean process exit.
+- **User-reported validation**: none; user decisions authorized the bounded
+  work but are not protocol validation or acceptance.
+- **Closeout validation**: all five task-declared checks passed in evidence
+  `evd-bb4230fc2796407aa91c9d4de9969710`, reconciled as `verified`, with no
+  validation-time mutation. Temporary cleanup completed after durable evidence
+  verification. The final documentation annotation is revalidated once and
+  its evidence identity is reported in the handoff without another edit.
+- **Pending validation**: actual current-client activation remains outside
+  this task and unverified.
+- **Incomplete**: none in the bounded build, install, protocol, cleanup, or
+  closeout. The existing observation task remains stopped.
+- **Advisory review**: native current-Agent self-review
+  `srv-2bade364c19822d27e18c2a0db02f2af` completed. It supports the bounded
+  packaged-runtime result and preserved scope, retaining real-client behavior
+  and benefits as unknown. It is not independent assurance or acceptance.
+- **Preserved gap**: the historical distribution manifest fails for one
+  missing existing module and stale digests. A fresh temporary derivation is
+  distinct evidence, not a repair or passing result for that manifest.
+- **Preserved state**: the current pipx installation, client configuration,
+  source, and earlier work are unchanged. No client restart or model session
+  was performed.
+- **Evidence**: `docs/experiments/exploration-isolated-package-verification-2026-09-22.md`
+  and `docs/development-log/2026-09-22-exploration-isolated-package-verification-v1.md`.
+- **Next product review**: consider the historical manifest gap before
+  reviewing the full installed/source difference and activating the repair
+  for an actual client. No new task, installation, manifest repair, Git action,
+  or release follows automatically.
+
+#### Exploration option precondition repair v1
+
+- **Active slice**: exact task `p0-exploration-option-precondition-v1` was
+  admitted by native form and separately started after human `REPLACE`.
+- **Implemented**: the development MCP Adapter rejects a no-question
+  exploration option before start or a ready update presents it. Update checks
+  include answered-question removal, new questions, and inherited candidates.
+  The existing diagnostic category now includes a fixed actionable explanation;
+  Core semantics and human authority remain unchanged.
+- **Agent-run validation**: all six task-declared commands passed, including
+  focused and full test suites, task and repository governance, task JSON, and
+  diff checks. Evidence `evd-e25b7d3f3047494996291e3086a21f57` reconciled as
+  `verified`. The final documentation annotation is revalidated once, with
+  its final evidence identity reported in the handoff without another edit.
+- **User-reported validation**: none for this repair.
+- **Pending validation**: installed live-client replay is outside this task
+  and remains unverified.
+- **Incomplete**: none in the bounded source repair. The older participant
+  observation remains stopped and is not accepted or resumed by this task.
+- **Preserved blocker**: scope observation reports four pre-existing excluded
+  paths. Completion's task-start baseline comparison proves them byte-identical
+  and non-owned; the raw scope observation remains visible, without a waiver.
+- **Advisory review**: distinct current-Agent review found the precondition,
+  schema, atomic retry tests, privacy, and preserved exclusions consistent
+  with the admitted repair. This is not independent review or human acceptance.
+- **Evidence**: `docs/development-log/2026-09-22-exploration-option-precondition-v1.md`.
+- **Next product review**: review this source repair and decide whether a
+  separately admitted installed-client verification is useful. No next task,
+  installation, Git action, publication or release is authorized here.
 
 #### 2026-09-02 end-of-day main closeout
 

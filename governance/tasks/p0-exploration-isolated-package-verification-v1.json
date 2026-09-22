@@ -1,0 +1,72 @@
+{
+  "acceptance_signals": [
+    "Use one verified task-owned temporary root for build tooling, source staging, wheel output, and consumer installation; never change the existing AgentGov pipx environment or client configuration.",
+    "Derive the current exact distribution inputs from pyproject, record path and content identities, copy bytes without source mutation, and verify packaged and installed module identities against staged source.",
+    "Preserve and report the historical distribution manifest failure rather than treating the fresh temporary snapshot as a repair of that manifest.",
+    "Limit network access to necessary build wheels and dependencies from public PyPI; disable index access for project build and consumer installation.",
+    "Verify local protocol rejection of no-question exploration before presentation, correction using the same process, update handling of inherited candidates, and successful valid exploration using synthetic fixture choices only.",
+    "Record only normalized tool versions, hashes, check outcomes, timing and evidence boundaries; no credentials, raw host paths, private source or chat are retained.",
+    "Verify original installed module and configuration hashes remain unchanged; stop on unexpected source, install, protocol, privacy, or state-preservation failure without widening scope.",
+    "Remove only the exact task-owned temporary root after durable evidence is recorded and verified; preserve it with bounded recovery information if cleanup cannot be proved safe.",
+    "This is packaged-runtime protocol evidence, not a real-client restart, model session, automatic tool-selection proof, release or broad benefit claim."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-1ced8e2674f64ad884bd007b00541873 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Download only necessary build-tool wheels from public PyPI into a task-owned temporary environment, derive a fresh exact packaging input snapshot from current source, build an offline local wheel, install only into a temporary consumer, and verify the repaired alignment branches through bounded local protocol calls while preserving the existing installed Adapter and configuration."
+  },
+  "risk": {
+    "items": [
+      "The committed distribution manifest omits one existing source module and its digests differ; a fresh task-owned derivation must be recorded separately.",
+      "Offline build may fail due to packaging configuration or Windows path limits.",
+      "Build-tool downloads must stay within the temporary environment and must not use credentialed indexes.",
+      "Synthetic protocol decision fixtures must not be represented as human task admission or product acceptance.",
+      "Reviewed assumption: The human selected isolated verification and separately permitted necessary build-tool downloads.",
+      "Reviewed assumption: The installed runtime remains read-only while a separate temporary environment exercises the repaired package.",
+      "Reviewed assumption: All 151 existing changed paths are classified: STATUS is included and the other 150 paths are excluded.",
+      "Reviewed unknown: Whether the current package builds and installs successfully with available Python 3.11 and downloaded tooling.",
+      "Reviewed unknown: Whether installed protocol behavior matches the repaired source.",
+      "Reviewed unknown: Current-client activation and real-user benefits remain outside this task."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      "src",
+      "tests",
+      "scripts",
+      "governance/distribution-input-manifest.json",
+      "docs/governance-mcp-adapter.md",
+      "docs/development-log/2026-09-02-guided-first-comprehension-observation-v1.md",
+      "docs/development-log/2026-09-22-exploration-option-precondition-v1.md",
+      "docs/experiments/guided-first-comprehension-observation-2026-09-02.md",
+      "governance/tasks/p0-guided-first-comprehension-observation-v1.json",
+      "governance/tasks/p0-exploration-option-precondition-v1.json"
+    ],
+    "include_paths": [
+      "STATUS.md",
+      "docs/experiments/exploration-isolated-package-verification-2026-09-22.md",
+      "docs/development-log/2026-09-22-exploration-isolated-package-verification-v1.md",
+      "governance/tasks/p0-exploration-isolated-package-verification-v1.json"
+    ]
+  },
+  "task_id": "p0-exploration-isolated-package-verification-v1",
+  "title": "Verify the exploration repair in an isolated package runtime",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_governance_mcp tests.test_user_documentation scripts.distribution_input_manifest.test_manifest scripts.short_build_root.test_root -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-exploration-isolated-package-verification-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-exploration-isolated-package-verification-v1.json",
+    "git diff --check"
+  ]
+}

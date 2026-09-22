@@ -52,12 +52,12 @@ RESULT_CONTRACT = "agentgov.artifact-replay-controller-result"
 SCHEMA_VERSION = "1.0"
 MAX_REQUEST_BYTES = 16_384
 MANIFEST_RELATIVE = "governance/distribution-input-manifest.json"
-EXPECTED_PATH_COUNT = 187
+EXPECTED_PATH_COUNT = 188
 EXPECTED_PATH_DIGEST = (
-    "sha256:79839fec9be5dfb8bb30c41e74a0d8a9a6a11b3587001af6395f7f1b7c506e9a"
+    "sha256:23a850bd924f45a8888fcfe7cbc591ed1edfb30c1735810d60a5833bc210fb54"
 )
 EXPECTED_CONTENT_DIGEST = (
-    "sha256:a695fb5afcaadcc2f3382a7a878d4e182070539d61b5e39a0ea663b00874a96c"
+    "sha256:f222e756b70a8f57ae5ef49db95b257729ad515cdf8066400ab67bf483fb8162"
 )
 IDENTITY_KEYS = (
     "source_length",

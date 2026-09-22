@@ -10,6 +10,7 @@ from pathlib import Path
 from unittest import mock
 
 from scripts.artifact_replay_controller import controller
+from scripts.distribution_input_manifest.manifest import check_manifest
 from scripts.artifact_replay_harness.harness import (
     ArtifactReplayHarnessError,
     ArtifactReplayHarnessResult,
@@ -21,6 +22,29 @@ DIGEST = "sha256:" + "a" * 64
 
 
 class ArtifactReplayControllerTests(unittest.TestCase):
+    def test_current_manifest_matches_source_and_controller_binding(self) -> None:
+        observed = check_manifest(REPOSITORY, Path(controller.MANIFEST_RELATIVE))
+        self.assertEqual(observed["status"], "PASS", observed["errors"])
+        self.assertEqual(observed["path_count"], controller.EXPECTED_PATH_COUNT)
+        self.assertEqual(observed["path_digest"], controller.EXPECTED_PATH_DIGEST)
+        self.assertEqual(observed["content_digest"], controller.EXPECTED_CONTENT_DIGEST)
+
+    def test_stale_path_identity_or_count_stops_before_harness(self) -> None:
+        for field, value in (("path_count", controller.EXPECTED_PATH_COUNT - 1),
+                             ("path_digest", DIGEST)):
+            with self.subTest(field=field):
+                harness = mock.Mock()
+                with self.assertRaises(controller.ArtifactReplayControllerError) as caught:
+                    controller.run_artifact_replay_controller(
+                        self.request(), repository=REPOSITORY, harness_runner=harness,
+                        manifest_checker=lambda _repo, _manifest: {
+                            **self.manifest_result(), field: value,
+                        },
+                    )
+                harness.assert_not_called()
+                self.assertEqual(caught.exception.normalized_report()["reason_code"],
+                                 "manifest_preflight_failed")
+
     def request(self) -> controller.ArtifactReplayControllerRequest:
         return controller.ArtifactReplayControllerRequest(
             python_executable=Path("private-python"),
@@ -80,7 +104,7 @@ class ArtifactReplayControllerTests(unittest.TestCase):
         source = captured[0].source
         self.assertIn("execute_real_replay_source", source)
         self.assertIn("ARTIFACT_REPLAY_SOURCE_IDENTITY", source)
-        self.assertIn('"manifest_path_count":187', source)
+        self.assertIn('"manifest_path_count":188', source)
         self.assertIn(controller.EXPECTED_PATH_DIGEST, source)
         self.assertIn(controller.EXPECTED_CONTENT_DIGEST, source)
         self.assertNotIn("check_manifest", source)

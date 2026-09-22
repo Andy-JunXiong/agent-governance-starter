@@ -1,0 +1,82 @@
+{
+  "acceptance_signals": [
+    "Before repository writes, take up this exact admitted task separately and preserve every excluded predecessor change using the existing task-start scope baseline.",
+    "Use one verified task-owned temporary root for pinned necessary public-PyPI build wheels, isolated build tooling, exact source staging, local wheel and recovery backup; project build and install use no index and no dependency installation.",
+    "Require the current distribution manifest to pass with 188 paths, path digest sha256:23a850bd924f45a8888fcfe7cbc591ed1edfb30c1735810d60a5833bc210fb54 and content digest sha256:f222e756b70a8f57ae5ef49db95b257729ad515cdf8066400ab67bf483fb8162; stop if the reviewed inputs change.",
+    "Record pre-update installed package, configured launcher and configuration hashes; exclusively create and verify a local recovery snapshot of the exact existing isolated environment and exposed launcher, rejecting unresolved links or backup ambiguity.",
+    "Only after a fresh bounded observation proves no process uses the existing environment, install the hash-recorded local wheel there with force-reinstall, no-deps and no-index; stop at prepared status while an existing process remains and never kill or restart unrelated processes.",
+    "Preserve the exposed launcher identity or refresh it only from the verified corresponding inner launcher if installation requires it; preserve project configuration, tool allowlist and pipx management metadata byte-for-byte.",
+    "Verify all packaged and installed Python modules and shared data against the exact staging snapshot; expected package identity remains local-only 0.3.0rc1, Adapter identity becomes 1.7.0, protocol remains 2026-07-28 and runtime dependencies remain empty.",
+    "Run bounded no-model installed-process initialize, discovery and exploration rejection/correction checks; distinguish package replacement, fresh process verification and actual client reconnection, and never claim old foreground calls use new code.",
+    "If installation or post-install checks fail, restore only the verified original snapshot at a safe no-process boundary; if restoration cannot be proved safe, preserve recovery material and stop with bounded failure evidence.",
+    "Record normalized versions, hashes, outcomes, pending activation and recovery state in the included evidence documents and STATUS; retain recovery material until successful activation and remove only the exact verified task-owned temporary root after durable evidence.",
+    "Run task-declared validation and a distinct native advisory review using the resolved alignment while its connection is available; a lost required journey or failed required governance call remains an explicit stop condition.",
+    "No source behavior, current configuration, tool exposure, release identity, Git state, publication, deployment, external model session, consumer repository or follow-on requirement change is authorized."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-0237f2fbfdd94ed69933355340382265 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Build the exact reviewed current source into a local-only wheel, create and verify a recoverable backup, and update only the existing local AgentGov pipx development installation after no process uses that runtime. Preserve the configured launcher target, project configuration and tool allowlist. Verify installed package identities and repaired protocol behavior in a fresh local process, record the client reconnection boundary, and retain explicit pending status until client activation can be established."
+  },
+  "risk": {
+    "items": [
+      "Updating a runtime in use can mix module versions; replacement must wait for a no-process boundary and no pending installer may silently apply after the turn.",
+      "Local package version is unchanged despite different content; exact hashes and Adapter identity are required to distinguish this build from a published artifact.",
+      "Environment replacement is outside the repository and remains subject to the host permission boundary; task admission does not bypass it.",
+      "A disconnected MCP transport loses foreground alignment state; preserve evidence and report any required review or activation that cannot be completed.",
+      "Reviewed assumption: The human selected updating the existing isolated local development installation while preserving configuration after reviewing six added modules, eight changed modules, two added schemas and one changed schema.",
+      "Reviewed assumption: The reviewed source and isolated-package protocol verification have passed; rebuilding the wheel may change its archive hash without changing verified input bytes.",
+      "Reviewed assumption: Necessary build-wheel downloads remain bounded to the task temporary root and public PyPI without credentialed index configuration.",
+      "Reviewed assumption: All 175 existing changed paths are classified: STATUS is included and the other 174 are excluded; one existing governance process currently uses the target runtime.",
+      "Reviewed unknown: Whether host permissions and an available no-process boundary allow replacement in this session.",
+      "Reviewed unknown: Whether the existing exposed launcher requires a bounded refresh after package installation.",
+      "Reviewed unknown: Actual current-client activation remains unproved until a fresh connection is observed; long-term user benefit remains unknown."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      "src",
+      "tests",
+      "scripts",
+      "governance/distribution-input-manifest.json",
+      "docs/governance-mcp-adapter.md",
+      "docs/development-log/2026-09-02-guided-first-comprehension-observation-v1.md",
+      "docs/development-log/2026-09-22-distribution-manifest-scope-observation-sync-v1.md",
+      "docs/development-log/2026-09-22-exploration-isolated-package-verification-v1.md",
+      "docs/development-log/2026-09-22-exploration-option-precondition-v1.md",
+      "docs/experiments/exploration-isolated-package-verification-2026-09-22.md",
+      "docs/experiments/guided-first-comprehension-observation-2026-09-02.md",
+      "governance/tasks/p0-distribution-manifest-scope-observation-sync-v1.json",
+      "governance/tasks/p0-exploration-isolated-package-verification-v1.json",
+      "governance/tasks/p0-exploration-option-precondition-v1.json",
+      "governance/tasks/p0-guided-first-comprehension-observation-v1.json"
+    ],
+    "include_paths": [
+      "STATUS.md",
+      "docs/experiments/installed-runtime-update-2026-09-22.md",
+      "docs/development-log/2026-09-22-installed-runtime-update-v1.md",
+      "governance/tasks/p0-installed-runtime-update-v1.json"
+    ]
+  },
+  "task_id": "p0-installed-runtime-update-v1",
+  "title": "Update the existing isolated AgentGov runtime with verified rollback",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m scripts.distribution_input_manifest.manifest check --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m unittest tests.test_governance_mcp tests.test_user_documentation scripts.distribution_input_manifest.test_manifest scripts.short_build_root.test_root -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check task governance/tasks/p0-installed-runtime-update-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -m agentgov check repository .",
+    "py -3.11 -m json.tool governance/tasks/p0-installed-runtime-update-v1.json",
+    "git diff --check"
+  ]
+}

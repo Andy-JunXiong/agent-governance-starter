@@ -372,6 +372,15 @@ def _alignment_input_error(*, stage: str, field_path: str, rule: str) -> None:
     )
 
 
+def _exploration_question_error(*, stage: str) -> None:
+    raise GovernanceMcpError(
+        "continue_exploration requires a remaining question before presenting a decision; "
+        "supply a genuine question or revise the candidate resolutions and retry",
+        code="alignment_invalid_field", stage=stage,
+        field_path="candidate_resolutions", rule="normalized_resolution", retryable=True,
+    )
+
+
 def _post_selection_input_error(*, stage: str, field_path: str, rule: str) -> None:
     raise GovernanceMcpError(
         "Normalized post-selection input violates the indicated rule; correct it and retry",
@@ -1278,7 +1287,10 @@ def governance_mcp_tools() -> tuple[Mapping[str, Any], ...]:
             },
             "then": {
                 "properties": {
-                    "candidate_resolutions": {"minItems": 2},
+                    "candidate_resolutions": {
+                        "minItems": 2,
+                        "items": {"properties": {"id": {"not": {"const": "continue_exploration"}}}},
+                    },
                     "recommended_resolution_id": {"type": "string"},
                 }
             },
@@ -2148,6 +2160,8 @@ class GovernanceMcpAdapter:
                 rule="candidate_binding",
             )
         if not questions:
+            if "continue_exploration" in candidate_ids:
+                _exploration_question_error(stage=MCP_TOOL_NAMES[0])
             if len(candidates) < 2:
                 raise GovernanceMcpError(
                     "A context without open questions requires at least two stable options",
@@ -2211,6 +2225,19 @@ class GovernanceMcpAdapter:
             ), candidate_resolutions=tuple(args["candidate_resolutions"]),
             recommended_resolution_id=args["recommended_resolution_id"], ready_requested=args["ready_requested"],
         )
+        # Core removes the answered question and inherits candidates when the
+        # update supplies none. Check that effective state before mutation.
+        candidates = draft.candidate_resolutions or active.dialogue.candidate_resolutions
+        remaining = tuple(
+            question for question in active.dialogue.open_questions
+            if question["question_id"] != prompt.question["question_id"]
+        ) + draft.new_questions
+        if (
+            draft.ready_requested is True and not remaining
+            and any(isinstance(item, Mapping) and item.get("id") == "continue_exploration"
+                    for item in candidates)
+        ):
+            _exploration_question_error(stage=MCP_TOOL_NAMES[1])
         response = journey.adapter.answer_from_draft(draft)
         return self._alignment_result(handle, response)
 
