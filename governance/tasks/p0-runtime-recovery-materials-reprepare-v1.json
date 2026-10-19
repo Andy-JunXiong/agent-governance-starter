@@ -1,0 +1,81 @@
+{
+  "acceptance_signals": [
+    "Separately take up the exact admitted task before preparation writes and preserve all pre-existing excluded changes; the reviewed inventory has 174 existing changed paths, with STATUS included and 173 excluded.",
+    "Require the reviewed distribution manifest to pass with 188 inputs, path digest sha256:23a850bd924f45a8888fcfe7cbc591ed1edfb30c1735810d60a5833bc210fb54 and content digest sha256:f222e756b70a8f57ae5ef49db95b257729ad515cdf8066400ab67bf483fb8162; stop on identity drift.",
+    "Create exactly one verified task-owned direct child of the operating-system temporary directory using the existing short-build-root contract; retain its non-sensitive basename and task identity in durable evidence so it can be located after the session.",
+    "Read and freshly inventory the existing isolated runtime, exposed launcher and pipx management metadata; reject links or reparse entries, exclusively create a byte-verified recovery copy, and compare the original before and after preparation. If live files change, stop without claiming a coherent backup.",
+    "Stage only manifest-declared source inputs and build one local wheel offline using isolated hash-pinned build tools. Necessary public-PyPI binary downloads may be confined to the task root with user and credentialed index configuration disabled; verify the exact historical tool-wheel hashes before use.",
+    "Verify all 78 Python modules and 107 shared data payloads against staged inputs. Verify package version remains local-only 0.3.0rc1, Adapter becomes 1.7.0, protocol remains 2026-07-28, and runtime dependencies remain empty.",
+    "Record source, wheel, backup and launcher hashes and normalized counts in included documents; keep absolute host paths and per-file private recovery metadata only inside the temporary task root.",
+    "Produce a reviewable foreground maintenance handoff describing fresh zero-process checks, exact target identity rechecks, later installation and verification, rollback preconditions and explicit client reconnection. Do not execute or schedule those later actions.",
+    "Preserve the existing runtime, exposed launcher, project configuration, tool allowlist and other coding sessions. No process termination or restart, runtime replacement, persistent configuration write, background installer, source change, Git operation, release, deployment or publication is included.",
+    "Run the declared read-only validation and a distinct native current-Agent advisory review for the resolved recovery direction. Retain the verified temporary materials and truthfully distinguish preparation completion from installation and client activation."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-b4f73405fc854d9fa971684ab1a6b6ca and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Prepare a fresh verified recovery snapshot and local-only wheel for the unchanged reviewed AgentGov runtime update after historical temporary material could not be located. Preserve the live isolated installation, configured launcher, project configuration and other coding sessions. Record a bounded foreground maintenance handoff; this task performs no installation or process control."
+  },
+  "risk": {
+    "items": [
+      "A runtime still used by the current coding host must not be replaced; this preparation does not disconnect it.",
+      "A live backup is coherent only if the exact file set and hashes remain stable across copying and build preparation.",
+      "Historical temporary material was not found in accessible locations; access-denied locations prevent claiming global absence or deletion.",
+      "A wheel archive hash may differ while its exact staged payload stays identical; record both identities.",
+      "Temporary cleanup can remove recovery material later; this task records a discoverable basename and requires fresh verification before any later use.",
+      "Reviewed assumption: The human selected re-preparing verified recovery material before addressing installation.",
+      "Reviewed assumption: Source manifest and installed Adapter, exposed launcher and project configuration identities match the historical reviewed checkpoint.",
+      "Reviewed assumption: The current isolated installation contains 272 regular files with no detected reparse entries; fresh inventory remains required.",
+      "Reviewed assumption: All existing changed paths are classified by the proposed include or exclude scope.",
+      "Reviewed unknown: Whether the historical hash-pinned public build wheels remain available or already cached.",
+      "Reviewed unknown: Whether temporary-root permissions permit fresh backup and isolated build.",
+      "Reviewed unknown: The later method of disconnecting the current runtime without disrupting unrelated sessions remains a maintenance decision; no process-control authority is granted here.",
+      "Reviewed unknown: Installation success, rollback execution, client activation and long-term product benefit remain unproved."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      "%SystemDrive%",
+      "src",
+      "tests",
+      "scripts",
+      "schemas",
+      "README.md",
+      "DEVELOPMENT_PLAN.md",
+      "governance/distribution-input-manifest.json",
+      "governance/tasks/p0-installed-runtime-update-v2.json",
+      "governance/tasks/p0-guided-first-comprehension-observation-v1.json",
+      "docs/experiments/installed-runtime-update-2026-09-22.md",
+      "docs/development-log/2026-09-22-installed-runtime-update-v2.md",
+      "docs/development-log/2026-09-02-guided-first-comprehension-observation-v1.md",
+      "docs/experiments/guided-first-comprehension-observation-2026-09-02.md"
+    ],
+    "include_paths": [
+      "STATUS.md",
+      "governance/tasks/p0-runtime-recovery-materials-reprepare-v1.json",
+      "docs/experiments/runtime-recovery-materials-2026-10-19.md",
+      "docs/development-log/2026-10-19-runtime-recovery-materials.md"
+    ]
+  },
+  "task_id": "p0-runtime-recovery-materials-reprepare-v1",
+  "title": "Reprepare verified local runtime recovery materials",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -B -m scripts.distribution_input_manifest check --repository . --manifest governance/distribution-input-manifest.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -B -m unittest tests.test_governance_mcp tests.test_user_documentation scripts.distribution_input_manifest.test_manifest scripts.short_build_root.test_root -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -B -m agentgov check task governance/tasks/p0-runtime-recovery-materials-reprepare-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -B -m agentgov check repository .",
+    "py -3.11 -B -m json.tool governance/tasks/p0-runtime-recovery-materials-reprepare-v1.json",
+    "git diff --check"
+  ]
+}

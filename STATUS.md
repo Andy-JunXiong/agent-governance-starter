@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-09-22
+Last verified: 2026-10-19
 
 ## Current-status contract
 
@@ -42,7 +42,142 @@ scheduling authority.
 
 ### Current closeout snapshot
 
+#### 2026-10-19 end-of-day closeout - development paused by the human
+
+- **Current work**: the human requested stopping for the day, updating related
+  documentation, and committing and pushing today's reviewed evidence to
+  GitHub main. The fully specified documentation closeout task
+  `p0-session-closeout-main-push-2026-10-19-v1` was natively admitted and
+  separately selected through read-only task context. The installation
+  session pointer and all task decisions remain unchanged.
+- **Delivered evidence**: fresh recovery preparation, the guarded foreground
+  maintenance entry point, the pre-install encoding failure, and its verified
+  local helper correction are recorded. Installed Adapter remains 1.6.0;
+  candidate Adapter is 1.7.0, with local-only package identity 0.3.0rc1.
+- **Agent-run validation**: the maintenance task's six declared commands
+  passed, including 134 focused tests with three skips. The corrected helper
+  suite ran 17 tests with one skip. Post-repair documentation tests ran 65
+  tests without failure. All five closeout checks passed; bounded secret
+  scanning and a distinct current-Agent documentation review are recorded in
+  the closeout log. No installation or activation success is claimed.
+- **User-reported validation**: the terminal returned
+  `STOPPED_WITHOUT_INSTALLATION` / `UnicodeDecodeError`; the human then
+  requested the end-of-day stop. No successful installation was reported.
+- **Blocker**: renewed native review returned
+  `self-review has already started for this journey`
+  (`mcp_invalid_request`, non-retryable). The prior review covers only the
+  original helper. No replacement readiness receipt was created.
+- **Pending / incomplete**: resolve the supported review path, freshly verify
+  both retained roots, establish an applicable task/session comparison base,
+  complete review and validation, then explicitly perform installation and
+  client activation. Do not run the existing install command on resumption:
+  a commit advances HEAD beyond its original comparison-base binding.
+- **Retained material**: recovery `agv-fa6298a1`; maintenance `agv-21b9dbfa`.
+  `ready.json` is absent; `ready-before-encoding-repair.json` is historical.
+  No background installer, process control, cleanup, release or deployment
+  was performed. Temporary retention must be reverified next session.
+- **Git boundary**: today's nine selected durable paths only, with the
+  unrelated September STATUS block left unstaged. Local state, configuration,
+  caches and September observation files remain outside the commit. Commit
+  and push outcomes are reported only after their actual execution.
+- **Next product review**: review the maintenance/review limitation and the
+  remaining installation need. The next product feature is not yet decided.
+- **Evidence**: `docs/development-log/2026-10-19-session-closeout-main-push.md`.
+
+#### Foreground runtime installation v1 - paused, encoding repair verified
+
+The end-of-day snapshot above supersedes the active-execution wording below.
+
+- **Active slice**: `p0-runtime-foreground-install-v1` was admitted through
+  native form review and separately started after human terminal `REPLACE`.
+  It explicitly binds the fresh recovery material without changing either
+  predecessor task's decision.
+- **Agent-run preparation**: the original 272-file runtime and backup,
+  launcher, configuration, source manifest and wheel still match. A separate
+  task-owned temporary child `agv-21b9dbfa` contains the foreground helper;
+  recovery child `agv-fa6298a1` remains preserved.
+- **Agent-run validation**: all six declared checks passed, including 134
+  focused tests with three platform skips. Fifteen helper guard tests had one
+  platform skip; the source protocol probe passed five requests. The scope
+  baseline found five passes, eleven preserved exclusions and no failures.
+- **Advisory review**: native current-Agent separate-pass review
+  `srv-3c282bdd44c3e8d0d4d2fa370b9e930d` completed for the prepared handoff.
+  It predates the subsequent encoding repair. The renewed request was rejected
+  because this journey had already started self-review; no new review completed.
+  It is neither independent assurance nor installation or human acceptance.
+- **User-reported validation**: only this project needs the current connection
+  and a maintenance window can be arranged. The later terminal invocation
+  reported `STOPPED_WITHOUT_INSTALLATION` with `UnicodeDecodeError`.
+  Native admission and terminal start are observed transitions.
+- **Agent-run repair verification**: no installation result or pip logs exist;
+  the installed Adapter is still 1.6.0 and its original bytes are unchanged.
+  A legacy CP936 fixture reproduced the UTF-8 decoding failure. Process
+  inventory now travels as ASCII base64 of explicit UTF-8 JSON; 17 helper
+  tests passed with one platform skip, including CP936/UTF-8 and corrupt-data
+  cases. Fresh preflight passed. The earlier readiness receipt is preserved
+  under a historical name and is invalidated for further installation.
+- **Pending validation / incomplete**: actual installation, installed-payload
+  and fresh-process checks, live rollback execution and client activation.
+  The last preflight found six matching runtime processes. Their per-session
+  ownership is not established; no process was stopped.
+- **Stop conditions**: target process occupancy, inadequate target visibility,
+  unsafe paths, any bound identity drift, failed validation or required
+  governance failure. No automatic delayed installation exists.
+- **Next product review**: resolve the review blocker before any new handoff, then reconcile
+  actual installation and activation evidence. The next product feature is
+  not yet decided. This maintenance task grants no Git, release, publication
+  or cleanup authority; the separate end-of-day Git authorization is above.
+- **Evidence**: `docs/experiments/runtime-foreground-install-2026-10-19.md` and
+  `docs/development-log/2026-10-19-runtime-foreground-install.md`.
+
+#### Runtime recovery materials reprepare v1 - preparation complete, installation pending
+
+Completed predecessor checkpoint. The active session is now the foreground
+installation task above; the preserved recovery material remains its input.
+
+- **Active slice**: `p0-runtime-recovery-materials-reprepare-v1` was admitted
+  through the explicitly human-authorized real-terminal fallback after native
+  approval controls were not visible, then separately started with `REPLACE`.
+- **Agent-run preparation**: the unchanged 188-input manifest passed. A fresh
+  backup of 272 environment files and the exposed launcher was byte-verified;
+  the new local wheel matches all 78 Python modules and 107 shared data files.
+  Source, live installation, launcher, configuration and pipx metadata remain
+  unchanged. No process-control or installation operation occurred.
+- **Recovery locator**: temporary child `agv-fa6298a1`, bound by its private
+  owner record to this task. Verify it afresh before later use. Earlier
+  temporary material was not located in accessible locations; deletion is
+  not established. No background installer exists.
+- **Current installation**: Adapter 1.6.0; prepared Adapter 1.7.0; local-only
+  package 0.3.0rc1. No installed capability or client activation is claimed.
+- **User-reported validation**: approval controls were missing; the terminal
+  admission and separate task start were completed. No installed-runtime or
+  product-acceptance validation was reported.
+- **Agent-run validation**: all six declared commands passed; 134 focused
+  tests ran with three platform skips. Task and repository checks reported
+  no failures. Scope comparison found five passes, eight preserved predecessor
+  exclusions and no failures; the Git head is unchanged.
+- **Advisory review**: native current-Agent separate-pass review
+  `srv-77ba92e6a9aa3bffce8f3c4460d82b78` completed. It is not independent
+  assurance or human acceptance. The native task-completion-record tool is
+  unavailable on this connection; no native completion reconciliation is claimed.
+- **Pending validation / incomplete**: no preparation implementation remains.
+  Installation, executed rollback, current-client activation and cleanup are
+  separate pending work. The approval UI rendering issue remains unresolved.
+- **Stop conditions**: input/backup drift, unsafe paths, validation or required
+  governance failure. A later installation still requires a fresh zero-process
+  boundary and its exact task/host authority.
+- **Evidence**: `docs/experiments/runtime-recovery-materials-2026-10-19.md` and
+  `docs/development-log/2026-10-19-runtime-recovery-materials.md`.
+- **Next product review**: review the recovered materials and the exact
+  foreground maintenance path. The next feature is not yet decided. This
+  entry authorizes no installation, process control, Git or external action.
+
 #### Installed runtime update v2 - paused for the day, installation pending
+
+Historical 2026-09-22 checkpoint. The preparation state and session pointer
+below are superseded by the 2026-10-19 recovery-preparation snapshot above;
+the original installation requirement remains unfinished. Historical material
+retention and validation are not fresh verification of today's recovery root.
 
 - **Active slice**: `p0-installed-runtime-update-v2` is human-admitted and was
   separately started after exact `REPLACE`. It supersedes the unused v1

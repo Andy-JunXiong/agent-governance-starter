@@ -1,0 +1,84 @@
+{
+  "acceptance_signals": [
+    "Separately take up the exact admitted task before implementation writes. Preserve existing STATUS additions and all 178 excluded paths from the reviewed 179-path inventory; recheck the same inventory immediately before admission.",
+    "Require the unchanged 188-input manifest with path digest sha256:23a850bd924f45a8888fcfe7cbc591ed1edfb30c1735810d60a5833bc210fb54 and content digest sha256:f222e756b70a8f57ae5ef49db95b257729ad515cdf8066400ab67bf483fb8162. Stop on drift.",
+    "Explicitly adopt read-only recovery material in temporary child agv-fa6298a1, whose owner must remain bound to preparation task p0-runtime-recovery-materials-reprepare-v1 and digest sha256:914a2872963d3b07d25b89f1c9d11c8064bc4d026c9669214315db4a27bf0ace. Preserve that root and all existing contents.",
+    "Require recovery-manifest SHA256 5d3b050f83f665c2ff26409a36a9082b4bd9cd14626ea49b4bf41e326f7f40ed, all 272 original and backup files, launcher, configuration and pipx metadata to match freshly before replacement. Reject unsafe paths, links, reparse points, missing material and partial process visibility.",
+    "Use only candidate agent_governance_starter-0.3.0rc1-py3-none-any.whl with SHA256 35f6914712616edc84728f5b2b12c1851d6e72c688e765d1b170ca52289fb9aa. Reverify its exact 78 Python modules and 107 shared data files against the manifest-bound staging snapshot.",
+    "Create at most one separate task-owned direct temporary child for a reviewable foreground maintenance helper and private logs. It may validate, install, verify and perform bounded verified rollback, but must not stop processes, change configuration, run a background watcher, schedule future execution or automatically wait for disconnection.",
+    "Review helper logic and exercise non-mutating preflight plus negative guards before any live install. Require an explicit human foreground invocation for disconnected maintenance, immediate zero-process observation covering executable paths and command arguments, exact target revalidation, and applicable host permission. Exit without installation when any precondition fails.",
+    "Only at that safe boundary install the verified local wheel into the exact existing isolated environment with force-reinstall, no-deps and no-index, disabling user and credentialed index configuration. Preserve project configuration, tool allowlist and pipx metadata. Preserve the exposed launcher or refresh it only from the verified corresponding installed inner launcher if required.",
+    "Verify all installed modules and shared data, local-only package version 0.3.0rc1, Adapter 1.7.0, protocol 2026-07-28 and empty runtime dependencies. Run bounded no-model fresh-process initialization, discovery and exploration rejection and correction checks, then exit those test processes.",
+    "If replacement or verification fails, restore only the original verified snapshot at a fresh zero-process boundary, restrict every resolved restore target to the exact original runtime and launcher, and verify the original file set. Stop with retained evidence if safe restoration cannot be established.",
+    "Do not terminate or restart any existing process or unrelated coding session. The human must choose the actual disconnect operation after affected connections are identified; if ownership remains ambiguous, stop before disconnection. Persistent configuration edits, source edits, Git operations, external model calls, publication, release and deployment are excluded.",
+    "Record normalized hashes, versions, validation results, remaining blockers and maintenance instructions only in included documents. Keep private absolute locators and per-file recovery metadata in the task temporary root. Retain both roots; cleanup is excluded.",
+    "Run declared validation and a distinct native current-Agent advisory review while the resolved journey remains available before any handoff. Treat connection loss, missing required review or failed required governance calls as bounded stop conditions; never claim installation, rollback or client activation without observed evidence."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-b51f3c63d577494cb8608e40118bde61 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Resume the unfinished AgentGov local runtime update using the verified recovery material from the preparation task. Prepare a reviewable foreground-only maintenance entry point, bind the exact original environment and wheel, and install only after the human has disconnected affected target connections and a fresh complete process observation proves no target process remains. Verify payloads and protocol, retain rollback material and distinguish actual client activation."
+  },
+  "risk": {
+    "items": [
+      "Replacing an in-use runtime can mix versions; a fresh zero-process boundary is mandatory.",
+      "Several MCP process chains share one Codex parent, and per-conversation ownership is not established; no process termination is included.",
+      "Disconnecting the host may end the Agent session and foreground governance journey. The prepared helper requires separate explicit foreground invocation and does not run itself later.",
+      "Installation changes an existing local isolated environment outside the repository and remains subject to host permission.",
+      "Rollback has byte-verified material but has not been exercised against the live installation.",
+      "Reviewed assumption: The human chose proceeding with foreground installation maintenance in the resolved alignment journey.",
+      "Reviewed assumption: Fresh read-only verification found recovery material, live environment, launcher, configuration and wheel unchanged.",
+      "Reviewed assumption: The original installation task remains historical; this task explicitly binds the new recovery baseline instead of changing its decision.",
+      "Reviewed unknown: Whether the human can disconnect all affected connections without disrupting unrelated work.",
+      "Reviewed unknown: Whether a complete zero-process observation and host permissions will allow installation.",
+      "Reviewed unknown: Whether the exposed launcher needs refresh after installation.",
+      "Reviewed unknown: Successful installation, rollback execution and current-client activation remain unproved."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      "%SystemDrive%",
+      "src",
+      "tests",
+      "scripts",
+      "schemas",
+      "README.md",
+      "DEVELOPMENT_PLAN.md",
+      "governance/distribution-input-manifest.json",
+      "governance/tasks/p0-installed-runtime-update-v2.json",
+      "governance/tasks/p0-runtime-recovery-materials-reprepare-v1.json",
+      "governance/tasks/p0-guided-first-comprehension-observation-v1.json",
+      "docs/experiments/runtime-recovery-materials-2026-10-19.md",
+      "docs/development-log/2026-10-19-runtime-recovery-materials.md",
+      "docs/development-log/2026-09-02-guided-first-comprehension-observation-v1.md",
+      "docs/experiments/guided-first-comprehension-observation-2026-09-02.md"
+    ],
+    "include_paths": [
+      "STATUS.md",
+      "governance/tasks/p0-runtime-foreground-install-v1.json",
+      "docs/experiments/runtime-foreground-install-2026-10-19.md",
+      "docs/development-log/2026-10-19-runtime-foreground-install.md"
+    ]
+  },
+  "task_id": "p0-runtime-foreground-install-v1",
+  "title": "Install the reviewed local runtime through verified foreground maintenance",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -B -m scripts.distribution_input_manifest check --repository . --manifest governance/distribution-input-manifest.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -B -m unittest tests.test_governance_mcp tests.test_user_documentation scripts.distribution_input_manifest.test_manifest scripts.short_build_root.test_root -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -B -m agentgov check task governance/tasks/p0-runtime-foreground-install-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -B -m agentgov check repository .",
+    "py -3.11 -B -m json.tool governance/tasks/p0-runtime-foreground-install-v1.json",
+    "git diff --check"
+  ]
+}

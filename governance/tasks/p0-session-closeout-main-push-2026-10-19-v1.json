@@ -1,0 +1,81 @@
+{
+  "acceptance_signals": [
+    "Before documentation writes, validate the exact admitted closeout record and separately take it up through read-only task context selection. Preserve the paused installation session pointer and all predecessor task decisions; do not claim a new development session was started.",
+    "The reviewed inventory contains 184 changed paths: seven included paths and 177 excluded paths, with no unclassified paths. Recheck the inventory immediately before admission and preserve all excluded work.",
+    "Update STATUS, today's installation experiment and append-only logs to state that the human stopped for the day, Adapter 1.6.0 remains installed, installation and activation have not occurred, recovery material is retained and the corrected helper has no current readiness receipt.",
+    "Record the exact repeat-review failure as a governance blocker. Do not claim the prior native review covers the encoding repair or try to renew installation readiness during this closeout.",
+    "Commit today's two recovery and maintenance task records unchanged, today's four existing evidence documents, the closeout task and dated closeout log, and only today's STATUS changes. Preserve the unrelated September guided-observation STATUS block unstaged using explicit partial staging.",
+    "Run the declared documentation and governance checks, review the complete intended diff and perform a bounded secret and private-host-path scan of every intended staged document. Preserve warnings and advisory findings.",
+    "Fetch origin before committing and require local main to be undiverged from origin main. Use one ordinary commit and explicit non-force push to origin main under the existing human Git authorization; do not introduce a pull request.",
+    "Record commit and push as pending until observed. Report the actual commit identity and remote verification in the final handoff without preclaiming them in pre-commit evidence.",
+    "Perform a distinct bounded current-Agent advisory review of this fully specified documentation closeout, without fabricating a new alignment journey or claiming native self-review completion for the blocked installation task.",
+    "Retain both task-owned temporary roots without running installation, process control, cleanup, readiness renewal or configuration changes. A new commit changes HEAD, so resumption must re-establish a valid maintenance comparison base through the applicable governed transition rather than editing old bindings.",
+    "No runtime or product source changes, task-decision edits, merge, force-push, release, deployment, cleanup or unrelated external action are included."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-67c9de79c50949d4ab3d50d362026bc8 and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Close the current day at the human's explicit request. Update current status and today's evidence to record completed recovery preparation, stopped installation, verified terminal-encoding repair, the rejected repeat self-review request, invalidated readiness and exact resumption prerequisites. Review and validate only today's durable documents and task records, then execute the separately human-authorized ordinary commit and push to origin main."
+  },
+  "risk": {
+    "items": [
+      "The paused installation is incomplete and its repeat native self-review request was rejected; documentation and Git closeout must not imply repair approval or installation success.",
+      "STATUS contains an unrelated September observation block that must remain unstaged.",
+      "Local state, configuration, caches, private temporary scripts and recovery payloads must not be committed.",
+      "Remote divergence or a failed check must stop commit or push without discarding work or using force.",
+      "Commit advances HEAD and invalidates the old maintenance helper comparison-base check; readiness must remain absent.",
+      "Reviewed assumption: The human explicitly requested stopping today's development, updating related documents, committing and pushing to GitHub main.",
+      "Reviewed assumption: Today's seven existing durable paths are the intended work; unrelated earlier observation material is preserved.",
+      "Reviewed assumption: The current branch is main and origin is the existing project remote.",
+      "Reviewed unknown: Whether origin main has advanced.",
+      "Reviewed unknown: The commit identity and remote acceptance until the authorized Git actions succeed.",
+      "Reviewed unknown: A supported renewed-review path and future installation success remain unresolved."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      "%SystemDrive%",
+      "docs/development-log/2026-09-02-guided-first-comprehension-observation-v1.md",
+      "docs/experiments/guided-first-comprehension-observation-2026-09-02.md",
+      "governance/tasks/p0-guided-first-comprehension-observation-v1.json",
+      "src",
+      "tests",
+      "scripts",
+      "schemas",
+      "README.md",
+      "DEVELOPMENT_PLAN.md",
+      "governance/distribution-input-manifest.json"
+    ],
+    "include_paths": [
+      "STATUS.md",
+      "docs/development-log/2026-10-19-runtime-recovery-materials.md",
+      "docs/development-log/2026-10-19-runtime-foreground-install.md",
+      "docs/experiments/runtime-recovery-materials-2026-10-19.md",
+      "docs/experiments/runtime-foreground-install-2026-10-19.md",
+      "governance/tasks/p0-runtime-recovery-materials-reprepare-v1.json",
+      "governance/tasks/p0-runtime-foreground-install-v1.json",
+      "governance/tasks/p0-session-closeout-main-push-2026-10-19-v1.json",
+      "docs/development-log/2026-10-19-session-closeout-main-push.md"
+    ]
+  },
+  "task_id": "p0-session-closeout-main-push-2026-10-19-v1",
+  "title": "Record the paused runtime maintenance session and push today's evidence to main",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -B -m unittest tests.test_user_documentation -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -B -m agentgov check task governance/tasks/p0-session-closeout-main-push-2026-10-19-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -B -m agentgov check repository .",
+    "py -3.11 -B -m json.tool governance/tasks/p0-session-closeout-main-push-2026-10-19-v1.json",
+    "git diff --check"
+  ]
+}
