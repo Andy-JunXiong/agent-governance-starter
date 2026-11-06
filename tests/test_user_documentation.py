@@ -342,6 +342,34 @@ class UserDocumentationTests(unittest.TestCase):
         self.assertIn("portfolio.html#boundary", landing)
         self.assertIn("blob/main/STATUS.md", landing)
 
+    def test_mcp_configuration_diagnostic_is_source_only_and_read_only(self) -> None:
+        readme = README.read_text(encoding="utf-8")
+        troubleshooting = TROUBLESHOOTING.read_text(encoding="utf-8")
+        english_web = (ROOT / "docs/troubleshooting.html").read_text(encoding="utf-8")
+        chinese_web = (ROOT / "docs/troubleshooting.zh-CN.html").read_text(encoding="utf-8")
+
+        for phrase in (
+            "development source",
+            "read-only",
+            ".codex/config.toml",
+            "enabled_tools",
+            "disabled_tools",
+            "tool_timeout_sec",
+            "1800",
+            "non-blocking",
+            "unknown",
+        ):
+            self.assertIn(phrase, troubleshooting)
+            self.assertIn(phrase, english_web)
+        self.assertIn("does not auto-enable", troubleshooting)
+        self.assertIn("does not auto-enable", english_web)
+        self.assertIn("stable `0.2.1`", readme)
+        self.assertIn("published `0.3.0rc1`", readme)
+        for phrase in ("开发源", "只读", ".codex/config.toml", "实时激活"):
+            self.assertIn(phrase, chinese_web)
+        self.assertNotIn("doctor . --format json", QUICKSTART_WEB.read_text(encoding="utf-8"))
+        self.assertNotIn("doctor . --format json", QUICKSTART_ZH_WEB.read_text(encoding="utf-8"))
+
     def test_native_proposal_changed_path_binding_is_documented(self) -> None:
         sources = (
             (ROOT / "AGENTS.md").read_text(encoding="utf-8"),

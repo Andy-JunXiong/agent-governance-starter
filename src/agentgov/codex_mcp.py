@@ -18,6 +18,7 @@ from agentgov.governance_mcp import MCP_TOOL_NAMES
 CODEX_MCP_CONFIG_PATH = Path(".codex/config.toml")
 CODEX_MCP_ADAPTER_ID = "openai.codex-mcp"
 CODEX_MCP_PROVIDER_ID = "openai.codex-current-agent"
+CODEX_MCP_TOOL_TIMEOUT_SEC = 1800
 
 
 class CodexMcpIntegrationError(RuntimeError):
@@ -54,7 +55,7 @@ def render_codex_mcp_config() -> str:
         f"enabled_tools = [{tools}]\n"
         'default_tools_approval_mode = "auto"\n'
         "startup_timeout_sec = 10\n"
-        "tool_timeout_sec = 1800\n"
+        f"tool_timeout_sec = {CODEX_MCP_TOOL_TIMEOUT_SEC}\n"
     )
 
 

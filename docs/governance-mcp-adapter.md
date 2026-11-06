@@ -494,6 +494,60 @@ policy exit without changing Git configuration. This is a user-run preflight,
 not automatic Codex UI forwarding: current App Server behavior can still
 replace an early required-server failure with a generic startup error.
 
+### Read-only local MCP configuration diagnosis (development source)
+
+Current development source extends the same `agentgov doctor .` command with
+MCP configuration findings. This extension is not part of stable `0.2.1` or
+the published `0.3.0rc1` wheel, and a source change does not update an installed
+runtime. From a source checkout, use `PYTHONPATH=src` and `python -m agentgov
+doctor .`; the existing `--format json --non-interactive` options also apply.
+
+The diagnostic reads only `.codex/config.toml` beneath the selected repository
+and observes the `mcp_servers.agentgov_governance` table. It does not discover
+user, ancestor, managed or plugin configuration. Absent local integration is
+explicitly **not applicable**, represented by a non-blocking `PASS` finding;
+it does not mean that no MCP connection exists elsewhere. Unsafe links,
+reparse points, nonregular paths, files over 256 KiB, unreadable input and
+invalid UTF-8/TOML are skipped with a normalized `WARN`. File and parent
+identity checks precede the bounded read. These are point-in-time observations,
+not a filesystem lock or effective-host configuration snapshot.
+
+The existing report shape and exit policy are preserved. New findings use:
+
+| Finding | Meaning |
+|---|---|
+| `mcp:configuration` | Local entry absent, safely inspected, or unavailable for bounded inspection. |
+| `mcp:enabled` | Whether the local entry explicitly disables the server. |
+| `mcp:base-tools` | Known base policy tools omitted by the local filters. |
+| `mcp:form-tools` | Known form-gated policy tools omitted by the local filters. |
+| `mcp:tool-timeout` | Advisory comparison with the generated AgentGov timeout recommendation. |
+| `mcp:live-state` | Effective policy, trust, loaded version, activation and native form support remain unknown. |
+
+The optional `enabled_tools` allowlist is applied before `disabled_tools`.
+Only names from the existing AgentGov tool policy are reported. For example,
+an older six-tool allowlist can omit the base completion-record tool and the
+form-gated drift-review tool even after a runtime update and reload. Intentional
+restrictions remain valid choices; a warning asks the owner to review the
+intended integration, not to enable every tool. Local filter permission does
+not imply that a disabled server runs or that the host discovers a tool.
+
+`tool_timeout_sec` must be a positive finite number for this comparison.
+AgentGov's generated configuration recommends 1,800 seconds for task-declared
+validation. A smaller value produces advisory guidance, not a prediction of
+failure. An omitted value is reported separately: the effective inherited
+setting is unknown, while the documented host default is 60 seconds. Even a
+value meeting the recommendation does not guarantee that every multi-command
+validation will finish within it. Filter order and host defaults follow the
+[official MCP configuration documentation](https://learn.chatgpt.com/docs/extend/mcp?surface=cli).
+
+All new findings are non-blocking; optional MCP integration does not become
+an adoption prerequisite. Raw configuration, unknown tool names, commands,
+environment values, credentials and parser/OS exception text are not emitted.
+No configuration is repaired, MCP server started, network request sent,
+validation command run, task selected or lifecycle event appended by this
+diagnostic. Native form rendering and the source's handling of a still-pending
+form are separate concerns; this static feature neither tests nor repairs them.
+
 ## Honest implementation limit
 
 The first live uncoached Codex session discovered all five tools and selected

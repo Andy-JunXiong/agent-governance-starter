@@ -1,0 +1,91 @@
+{
+  "acceptance_signals": [
+    "Before documentation writes, validate the exact newly admitted record and separately take it up through read-only task context selection. Preserve the already handed-off diagnostic session pointer, its immutable task decision and its validation and handoff records; do not claim a new development session was started.",
+    "Every existing changed path is classified: the reviewed full Git inventory has 14 included and 195 excluded paths and no unclassified path. The human explicitly allowed a one-time terminal-admission exception for this closeout after the native proposal transport failed. Bind a fresh normalized inventory before terminal review and recheck all pre-existing records after admission before take-up. Terminal admission does not provide native post-form inventory binding. Preserve excluded local state, configuration, caches and earlier observation and installation records.",
+    "Update STATUS current closeout and Remaining TODOs to distinguish implemented doctor, Monitor, Benefit and Learning capabilities from the unestablished automatic primary journey, unavailable first-time participant evidence and unresolved native form delivery. Record the observed diagnostic human handoff accurately. Keep the next feature unselected and retain the strategic P1, P2 and P3 sequence without editing the strategic plan.",
+    "Add an append-only dated closeout record. Preserve the earlier diagnostic log and task unchanged. Correct only an identified grammatical error in diagnostic troubleshooting text; keep all existing diagnostic source, tests, report semantics and distribution identities unchanged unless a required check reveals a directly related defect, in which case stop for scope review rather than expand this task.",
+    "Stage exactly the reviewed diagnostic files and new closeout documents. STATUS staging must be partial: build the intended index content from the committed version plus the diagnostic and current checklist changes, preserving unrelated September and October worktree sections unstaged and excluding their untracked references.",
+    "Run the declared focused documentation, distribution, task and repository checks, inspect the complete intended diff and scan intended staged contents for credentials and private host paths. Use the existing successful baseline evidence only for unchanged implementation and disclose platform skips rather than claiming a new full-suite execution.",
+    "Fetch origin before committing; verify main and the configured remote and stop on divergence rather than discard work or force-push. Under the current explicit Git authorization, create one ordinary commit and push explicitly to origin main. Do not introduce a pull request, tag, release or deployment.",
+    "Perform a distinct bounded current-Agent advisory review of this fully specified closeout without fabricating a new alignment journey. Commit and push identities remain unclaimed until observed; after push report the exact commit and remote verification.",
+    "A commit changes HEAD and the governed snapshot. Retain pre-commit diagnostic validation and handoff as historical evidence rather than claiming their prior snapshot is freshly verified against the new HEAD. No configuration repair, installed-runtime update, native-form repair, cleanup or next-feature implementation is included."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-66202af9d63a4315b69b01e3192812cd and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Refresh current execution truth after the completed MCP configuration diagnostic and its recorded human handoff, replacing obsolete current TODO claims with evidence-bounded implemented, unverified and unselected items. Preserve strategic priorities and historical records. Review and publish the existing diagnostic implementation together with this documentation closeout through one ordinary commit and non-force push to the existing origin main under the separately explicit human Git authorization."
+  },
+  "risk": {
+    "items": [
+      "A broad stage of STATUS would include unrelated historical additions and references to excluded untracked records; exact partial staging is required.",
+      "Local AgentGov evidence, configuration and caches must not be published.",
+      "Old Remaining TODO wording must not erase historical evidence or claim that automatic user experience and long-term benefit have been proven.",
+      "Remote divergence or validation failure must stop the corresponding commit or push.",
+      "The native proposal tool failed with a transport-required error. The human explicitly allowed one terminal-admission exception for this closeout only; no general operating-rule change or automatic confirmation is authorized.",
+      "Reviewed assumption: The human requested the development checklist update and explicitly authorized an ordinary commit and push to the existing GitHub main branch.",
+      "Reviewed assumption: The completed diagnostic implementation and its current documentation are the intended publication scope; earlier observation and installation records remain unrelated preserved work.",
+      "Reviewed assumption: Current execution facts belong in STATUS, while strategic priorities have not changed.",
+      "Reviewed assumption: No material product or architectural direction needs choosing for this bounded documentation and Git closeout.",
+      "Reviewed assumption: The human explicitly approved this closeout's separate one-time terminal-admission exception.",
+      "Reviewed unknown: Native proposal form delivery and recovery remain unresolved and outside this closeout.",
+      "Reviewed unknown: Whether origin main has advanced.",
+      "Reviewed unknown: Whether direct Git transport authentication and downstream checks will succeed.",
+      "Reviewed unknown: The final commit identity and remote acceptance before execution."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      "%SystemDrive%",
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "schemas",
+      "release",
+      ".github",
+      "docs/development-log/2026-09-02-guided-first-comprehension-observation-v1.md",
+      "docs/development-log/2026-10-21-runtime-foreground-install.md",
+      "docs/experiments/guided-first-comprehension-observation-2026-09-02.md",
+      "docs/experiments/runtime-foreground-install-2026-10-21.md",
+      "governance/tasks/p0-guided-first-comprehension-observation-v1.json",
+      "governance/tasks/p0-runtime-foreground-install-v2.json"
+    ],
+    "include_paths": [
+      "README.md",
+      "STATUS.md",
+      "docs/governance-mcp-adapter.md",
+      "docs/troubleshooting.html",
+      "docs/troubleshooting.md",
+      "docs/troubleshooting.zh-CN.html",
+      "governance/distribution-input-manifest.json",
+      "scripts/artifact_replay_controller/controller.py",
+      "src/agentgov/codex_mcp.py",
+      "src/agentgov/doctor.py",
+      "tests/test_doctor.py",
+      "tests/test_user_documentation.py",
+      "docs/development-log/2026-11-06-mcp-config-readonly-diagnostic-v1.md",
+      "governance/tasks/p0-mcp-config-readonly-diagnostic-v1.json",
+      "governance/tasks/p0-development-checklist-main-closeout-2026-11-06-v1.json",
+      "docs/development-log/2026-11-06-development-checklist-main-closeout.md"
+    ]
+  },
+  "task_id": "p0-development-checklist-main-closeout-2026-11-06-v1",
+  "title": "Refresh the current development checklist and publish the reviewed diagnostic to main",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -B -m unittest tests.test_user_documentation tests.test_public_documentation_freshness -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -B -m unittest scripts.distribution_input_manifest.test_manifest scripts.artifact_replay_controller.test_controller -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -B -m scripts.distribution_input_manifest check --repository . --manifest governance/distribution-input-manifest.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -B -m agentgov check task governance/tasks/p0-development-checklist-main-closeout-2026-11-06-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -B -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

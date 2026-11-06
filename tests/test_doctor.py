@@ -1,20 +1,24 @@
 import contextlib
 import io
 import json
+import os
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
+from types import SimpleNamespace
 
 from agentgov import __version__
 from agentgov.cli import EXIT_ERROR, EXIT_FAIL, EXIT_PASS, main
 from agentgov.codex_hooks import CodexHookPolicyError
 from agentgov.doctor import (
     DoctorStatus,
+    MAX_MCP_CONFIG_BYTES,
     WINDOWS_PATH_ADVISORY_THRESHOLD,
     diagnose_repository,
     render_doctor_report_json,
 )
+from agentgov.codex_mcp import render_codex_mcp_config
 from agentgov.initializer import initialize_project
 
 
@@ -30,6 +34,335 @@ def run_cli(*args: str) -> tuple[int, str, str]:
 
 
 class DoctorTests(unittest.TestCase):
+    @staticmethod
+    def _mcp_findings(report):
+        return {
+            finding.check_id: finding
+            for finding in report.findings
+            if finding.check_id.startswith("mcp:")
+        }
+
+    @staticmethod
+    def _write_config(root: Path, content: str) -> None:
+        config = root / ".codex/config.toml"
+        config.parent.mkdir(parents=True)
+        config.write_text(content, encoding="utf-8")
+
+    def _diagnose_mcp_config(self, content: str, *, binary: bool = False):
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            config = root / ".codex/config.toml"
+            config.parent.mkdir(parents=True)
+            config.write_bytes(content if binary else content.encode("utf-8"))
+            before = config.read_bytes()
+            report = diagnose_repository(root, python_version=(3, 12, 0))
+            after = config.read_bytes()
+        return self._mcp_findings(report), before, after
+
+    def test_mcp_generated_config_is_healthy_without_expanding_report_contract(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self._write_config(root, render_codex_mcp_config())
+            before = tuple(root.rglob("*"))
+            report = diagnose_repository(root, python_version=(3, 12, 0))
+            after = tuple(root.rglob("*"))
+
+        findings = self._mcp_findings(report)
+        self.assertEqual(
+            set(findings),
+            {
+                "mcp:configuration", "mcp:enabled", "mcp:base-tools",
+                "mcp:form-tools", "mcp:tool-timeout", "mcp:live-state",
+            },
+        )
+        self.assertTrue(all(item.status is not DoctorStatus.FAIL for item in findings.values()))
+        self.assertIs(findings["mcp:configuration"].status, DoctorStatus.PASS)
+        self.assertIs(findings["mcp:enabled"].status, DoctorStatus.PASS)
+        self.assertIs(findings["mcp:base-tools"].status, DoctorStatus.PASS)
+        self.assertIs(findings["mcp:form-tools"].status, DoctorStatus.PASS)
+        self.assertIs(findings["mcp:tool-timeout"].status, DoctorStatus.PASS)
+        self.assertIs(findings["mcp:live-state"].status, DoctorStatus.ADVISORY)
+        self.assertEqual(before, after)
+
+    def test_mcp_old_six_tool_allowlist_reports_missing_optional_tools_separately(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self._write_config(
+                root,
+                """
+[mcp_servers.agentgov_governance]
+enabled = true
+enabled_tools = ["agentgov_alignment_start", "agentgov_alignment_update", "agentgov_alignment_resolve", "agentgov_self_review_start", "agentgov_self_review_complete", "agentgov_task_proposal_review"]
+tool_timeout_sec = 60
+""",
+            )
+            findings = self._mcp_findings(
+                diagnose_repository(root, python_version=(3, 12, 0))
+            )
+
+        self.assertIs(findings["mcp:base-tools"].status, DoctorStatus.WARN)
+        self.assertIs(findings["mcp:form-tools"].status, DoctorStatus.WARN)
+        self.assertIn("agentgov_task_completion_record", findings["mcp:base-tools"].message)
+        self.assertIn("agentgov_drift_review_record", findings["mcp:form-tools"].message)
+        self.assertIs(findings["mcp:tool-timeout"].status, DoctorStatus.WARN)
+
+    def test_mcp_allow_then_deny_precedence_and_unknown_name_privacy(self) -> None:
+        private_name = "private_company_secret_tool"
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self._write_config(
+                root,
+                f"""
+[mcp_servers.agentgov_governance]
+enabled = true
+enabled_tools = ["agentgov_alignment_start", "agentgov_task_completion_record", "{private_name}"]
+disabled_tools = ["agentgov_alignment_start"]
+""",
+            )
+            findings = self._mcp_findings(
+                diagnose_repository(root, python_version=(3, 12, 0))
+            )
+
+        self.assertIs(findings["mcp:base-tools"].status, DoctorStatus.WARN)
+        self.assertNotIn(private_name, " ".join(item.message for item in findings.values()))
+        self.assertNotIn(private_name, findings["mcp:configuration"].message)
+        self.assertIn("agentgov_alignment_start", findings["mcp:base-tools"].message)
+
+    def test_mcp_missing_config_is_not_applicable_and_live_state_is_unknown(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            findings = self._mcp_findings(
+                diagnose_repository(Path(temp_dir), python_version=(3, 12, 0))
+            )
+
+        self.assertIs(findings["mcp:configuration"].status, DoctorStatus.PASS)
+        self.assertIn("not applicable", findings["mcp:configuration"].message)
+        self.assertIs(findings["mcp:live-state"].status, DoctorStatus.ADVISORY)
+        self.assertIn("unknown", findings["mcp:live-state"].message.lower())
+
+    def test_mcp_malformed_input_is_bounded_and_does_not_echo_config(self) -> None:
+        secret = "do-not-echo-this-private-value"
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self._write_config(
+                root,
+                f"""
+[mcp_servers.agentgov_governance]
+enabled = "yes"
+enabled_tools = "{secret}"
+tool_timeout_sec = nan
+""",
+            )
+            report = diagnose_repository(root, python_version=(3, 12, 0))
+
+        findings = self._mcp_findings(report)
+        self.assertIs(findings["mcp:configuration"].status, DoctorStatus.WARN)
+        self.assertTrue(all(item.status is not DoctorStatus.FAIL for item in findings.values()))
+        self.assertNotIn(secret, " ".join(item.message for item in findings.values()))
+        self.assertNotIn("nan", " ".join(item.message for item in findings.values()).lower())
+
+    def test_mcp_omitted_timeout_is_advisory_about_inherited_setting(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self._write_config(root, "[mcp_servers.agentgov_governance]\nenabled = true\n")
+            finding = self._mcp_findings(
+                diagnose_repository(root, python_version=(3, 12, 0))
+            )["mcp:tool-timeout"]
+
+        self.assertIs(finding.status, DoctorStatus.WARN)
+        self.assertIn("unknown", finding.message.lower())
+        self.assertIn("60", finding.message)
+
+    def test_mcp_diagnostic_does_not_add_git_or_write_side_effects(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self._write_config(root, "[mcp_servers.agentgov_governance]\nenabled = true\n")
+            calls = []
+            before = tuple(root.rglob("*"))
+
+            def resolver(path: Path) -> Path:
+                calls.append(path)
+                return path.resolve()
+
+            diagnose_repository(
+                root,
+                python_version=(3, 12, 0),
+                git_worktree_resolver=resolver,
+            )
+            after = tuple(root.rglob("*"))
+
+        self.assertEqual(calls, [])
+        self.assertEqual(before, after)
+
+    def test_mcp_invalid_fields_are_reported_independently_without_raw_values(self) -> None:
+        cases = (
+            ("enabled", 'enabled = "yes"', "enabled must be a boolean"),
+            ("enabled_tools", 'enabled_tools = "private-value"', "enabled_tools must be a list"),
+            ("disabled_tools", 'disabled_tools = [1]', "disabled_tools must be a list"),
+            ("nan", "tool_timeout_sec = nan", "tool_timeout_sec must be a positive"),
+            ("inf", "tool_timeout_sec = inf", "tool_timeout_sec must be a positive"),
+            ("negative", "tool_timeout_sec = -1", "tool_timeout_sec must be a positive"),
+            ("zero", "tool_timeout_sec = 0", "tool_timeout_sec must be a positive"),
+            ("bool", "tool_timeout_sec = true", "tool_timeout_sec must be a positive"),
+        )
+        for label, field, expected in cases:
+            with self.subTest(label=label):
+                findings, before, after = self._diagnose_mcp_config(
+                    "[mcp_servers.agentgov_governance]\n" + field + "\n"
+                )
+                self.assertIs(findings["mcp:configuration"].status, DoctorStatus.WARN)
+                self.assertIn(expected, findings["mcp:configuration"].message)
+                self.assertNotIn("private-value", findings["mcp:configuration"].message)
+                self.assertEqual(before, after)
+
+    def test_mcp_missing_server_and_empty_filters_are_nonblocking(self) -> None:
+        cases = (
+            "[mcp_servers.other]\nenabled = true\n",
+            "[mcp_servers.agentgov_governance]\nenabled_tools = []\ndisabled_tools = []\n",
+            "[mcp_servers.agentgov_governance]\n",
+        )
+        for content in cases:
+            with self.subTest(content=content):
+                findings, before, after = self._diagnose_mcp_config(content)
+                self.assertNotEqual(findings, {})
+                self.assertTrue(all(item.status is not DoctorStatus.FAIL for item in findings.values()))
+                self.assertEqual(before, after)
+
+    def test_mcp_disabled_server_is_warned_without_enable_advice(self) -> None:
+        findings, _, _ = self._diagnose_mcp_config(
+            "[mcp_servers.agentgov_governance]\nenabled = false\n"
+        )
+        self.assertIs(findings["mcp:enabled"].status, DoctorStatus.WARN)
+        self.assertIn("disabled", findings["mcp:enabled"].message)
+        self.assertIn("intentional", findings["mcp:enabled"].message)
+        self.assertNotIn("enable", findings["mcp:enabled"].message.lower())
+
+    def test_mcp_malformed_toml_and_invalid_utf8_are_normalized(self) -> None:
+        for content, binary in (("[mcp_servers.agentgov_governance\n", False), (b"\xff\xfe", True)):
+            with self.subTest(binary=binary):
+                findings, before, after = self._diagnose_mcp_config(content, binary=binary)
+                self.assertIs(findings["mcp:configuration"].status, DoctorStatus.WARN)
+                self.assertNotIn("Traceback", findings["mcp:configuration"].message)
+                self.assertEqual(before, after)
+
+    def test_mcp_unreadable_and_oversized_files_are_bounded(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            config = root / ".codex/config.toml"
+            config.parent.mkdir()
+            config.write_text("[mcp_servers.agentgov_governance]\n", encoding="utf-8")
+            before = config.read_bytes()
+            with patch("agentgov.doctor.os.open", side_effect=PermissionError("private access")):
+                findings = self._mcp_findings(diagnose_repository(root, python_version=(3, 12, 0)))
+            self.assertIs(findings["mcp:configuration"].status, DoctorStatus.WARN)
+            self.assertNotIn("private access", findings["mcp:configuration"].message)
+            self.assertEqual(before, config.read_bytes())
+
+            config.write_bytes(b"x" * (MAX_MCP_CONFIG_BYTES + 1))
+            findings = self._mcp_findings(diagnose_repository(root, python_version=(3, 12, 0)))
+            self.assertIs(findings["mcp:configuration"].status, DoctorStatus.WARN)
+            self.assertIn("256 KiB", findings["mcp:configuration"].message)
+            self.assertEqual(b"x" * (MAX_MCP_CONFIG_BYTES + 1), config.read_bytes())
+
+    def test_mcp_wrong_file_types_and_reparse_metadata_are_rejected(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            codex = root / ".codex"
+            codex.mkdir()
+            target = codex / "config.toml"
+            target.mkdir()
+            findings = self._mcp_findings(diagnose_repository(root, python_version=(3, 12, 0)))
+            self.assertIs(findings["mcp:configuration"].status, DoctorStatus.WARN)
+
+            target.rmdir()
+            target.write_text("[mcp_servers.agentgov_governance]\n", encoding="utf-8")
+            original_lstat = Path.lstat
+
+            def reparse_lstat(path):
+                info = original_lstat(path)
+                if path == target:
+                    return SimpleNamespace(
+                        st_mode=info.st_mode,
+                        st_size=info.st_size,
+                        st_dev=info.st_dev,
+                        st_ino=info.st_ino,
+                        st_file_attributes=0x400,
+                    )
+                return info
+
+            with patch("agentgov.doctor.Path.lstat", autospec=True, side_effect=reparse_lstat), \
+                    patch("agentgov.doctor.os.open", side_effect=AssertionError("unsafe target opened")):
+                findings = self._mcp_findings(diagnose_repository(root, python_version=(3, 12, 0)))
+            self.assertIs(findings["mcp:configuration"].status, DoctorStatus.WARN)
+            self.assertIn("unsafe", findings["mcp:configuration"].message)
+
+    def test_mcp_real_symlink_is_rejected_when_supported(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            codex = root / ".codex"
+            codex.mkdir()
+            real = codex / "real.toml"
+            real.write_text("[mcp_servers.agentgov_governance]\n", encoding="utf-8")
+            target = codex / "config.toml"
+            try:
+                target.symlink_to(real)
+            except (OSError, NotImplementedError) as exc:
+                self.skipTest(f"symbolic links unsupported: {exc}")
+            with patch("agentgov.doctor.os.open", side_effect=AssertionError("symlink opened")):
+                findings = self._mcp_findings(diagnose_repository(root, python_version=(3, 12, 0)))
+
+        self.assertIs(findings["mcp:configuration"].status, DoctorStatus.WARN)
+        self.assertIn("unsafe", findings["mcp:configuration"].message)
+
+    def test_mcp_path_identity_change_before_read_is_rejected(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self._write_config(root, "[mcp_servers.agentgov_governance]\n")
+            original_fstat = os.fstat
+
+            def changed_fstat(fd):
+                info = original_fstat(fd)
+                return SimpleNamespace(
+                    st_mode=info.st_mode,
+                    st_size=info.st_size,
+                    st_dev=info.st_dev,
+                    st_ino=info.st_ino + 1,
+                    st_file_attributes=getattr(info, "st_file_attributes", 0),
+                )
+
+            with patch("agentgov.doctor.os.fstat", side_effect=changed_fstat):
+                findings = self._mcp_findings(
+                    diagnose_repository(root, python_version=(3, 12, 0))
+                )
+
+        self.assertIs(findings["mcp:configuration"].status, DoctorStatus.WARN)
+        self.assertIn("identity changed", findings["mcp:configuration"].message)
+
+    def test_mcp_recursion_error_is_normalized_without_raw_exception(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self._write_config(root, "[mcp_servers.agentgov_governance]\n")
+            with patch("agentgov.doctor.tomllib.loads", side_effect=RecursionError("deep")):
+                findings = self._mcp_findings(diagnose_repository(root, python_version=(3, 12, 0)))
+
+        self.assertIs(findings["mcp:configuration"].status, DoctorStatus.WARN)
+        self.assertNotIn("deep", findings["mcp:configuration"].message)
+
+    def test_mcp_optional_config_warnings_keep_cli_nonblocking_exit(self) -> None:
+        cases = (
+            "[mcp_servers.agentgov_governance]\nenabled = false\n",
+            "[mcp_servers.agentgov_governance\n",
+        )
+        for index, content in enumerate(cases):
+            with self.subTest(content=content), TemporaryDirectory() as temp_dir:
+                self._write_config(Path(temp_dir), content)
+                exit_code, stdout, stderr = run_cli("doctor", temp_dir)
+
+            self.assertEqual(exit_code, EXIT_PASS)
+            expected = "WARN mcp:enabled:" if index == 0 else "WARN mcp:configuration:"
+            self.assertIn(expected, stdout)
+            self.assertEqual(stderr, "")
+
+
     def test_unconfigured_repository_is_non_blocking_and_read_only(self) -> None:
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)

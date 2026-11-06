@@ -1,0 +1,91 @@
+{
+  "acceptance_signals": [
+    "Separately take up this exact admitted task before implementation. Preserve the completed predecessor session and records; use only a supported human-confirmed session replacement if a new baseline is needed, with current HEAD as comparison base.",
+    "Current normalized changed-path inventory has 12 records with digest sha256:820ab87151afacd60beaebb8f0f6c2982d36977a1c4dd6366562e0bb873e3d87: STATUS.md is included with unrelated edits preserved; 11 other paths and 178 local state paths remain excluded. If a one-time human exception authorizes terminal admission, recheck inventory before terminal review and again before task take-up; stop on drift. Terminal admission does not provide native post-form inventory binding.",
+    "Keep the existing doctor command and report shape. Add bounded non-blocking PASS, WARN and ADVISORY findings; explicitly mark absent local integration as not applicable without introducing a schema state or making optional MCP integration an adoption prerequisite.",
+    "Inspect only the selected repository's .codex/config.toml and AgentGov server table through bounded regular-file reads. Skip unsafe links, reparse points, nonregular paths, oversized files and unreadable input with normalized findings. Do not read user, managed, plugin, ancestor or external configurations.",
+    "Validate only diagnostic field types needed for enabled, enabled_tools, disabled_tools and tool_timeout_sec. Apply the deny list after the optional allow list; compare only names from existing MCP tool policy, distinguish base from form-gated tools, and never echo unknown names, commands, environment values, credentials, raw config or parser exceptions.",
+    "Compare explicit tool timeout with the generated AgentGov default and explain omitted timeout separately. The comparison is guidance, not proof of timeout failure or task sufficiency. Missing or intentionally filtered tools remain non-blocking and must not be framed as an instruction to enable everything.",
+    "Every report distinguishes local configuration facts from unknown merged host configuration, trust, loaded version, actual activation and native form capability. No configuration repair, tool call, process launch or restart, validation execution, model/network request, new lifecycle event or task selection is performed by the new diagnostic.",
+    "Fixture tests cover healthy and old allowlists, deny precedence, absent integration, disabled server, omitted and invalid fields, timeouts, malformed or unreadable config, size/path safety, privacy and no-write behavior. Preserve existing doctor/onboarding exit behavior and policy catalog generation.",
+    "Update only affected current-source documentation, bilingual troubleshooting, STATUS and the dated log. Record the predecessor's observed human handoff accurately without rewriting historical evidence. Stable releases, release metadata, strategic plan, operating rules, public quickstarts and Kernel semantics remain unchanged.",
+    "After packaged-source edits, regenerate the current distribution identities using existing derivation helpers and synchronize the replay controller's pinned identity. Preserve historical manifest evidence. Run declared validation, perform distinct native current-Agent review on the resolved journey, and use supported task completion recording; human acceptance and handoff remain separate."
+  ],
+  "contract": "agentgov.development-task",
+  "decision": {
+    "decided_by": "Human product owner",
+    "rationale": "The accountable human reviewed structured proposal prp-eacf21955cd5481c96f661ff6cb3e75f and admitted that exact task through an explicit admission control.",
+    "state": "admitted"
+  },
+  "owner": "Human product owner",
+  "profile": "compact",
+  "requirement": {
+    "source_refs": [],
+    "summary": "Extend the existing doctor journey to explain repository-local AgentGov MCP tool filtering and timeout differences after runtime updates. Reuse existing Adapter tool policy and generated configuration defaults. Keep findings privacy-bounded, non-blocking for optional integration, and explicit about unverified live-host state. Preserve all configuration and lifecycle authority boundaries."
+  },
+  "risk": {
+    "items": [
+      "Configuration may contain private values; findings must emit only known field identifiers and policy tool names.",
+      "Project-local settings do not establish effective merged host state or live capability.",
+      "Optional integration restrictions can be intentional and must not become objective governance failures.",
+      "Existing uncommitted maintenance and observation evidence must remain preserved.",
+      "A fresh supported session baseline may require a separate human terminal transition before completion recording.",
+      "The terminal recovery path has no native post-form changed-path revalidation; a one-time human exception and separate fresh checks are required before use.",
+      "Reviewed assumption: The human selected the read-only MCP configuration diagnostic in the resolved foreground alignment journey.",
+      "Reviewed assumption: Existing doctor report findings and Adapter policy represent this feature without a new Kernel contract.",
+      "Reviewed assumption: The current installed runtime and project configuration remain unchanged throughout development.",
+      "Reviewed assumption: Official configuration documentation confirms optional allowlists, deny-list precedence and the separate tool timeout setting.",
+      "Reviewed unknown: Whether all supported hosts honor the same effective configuration after merges remains unverified.",
+      "Reviewed unknown: Live client activation, form support and loaded runtime identity remain outside this static diagnostic.",
+      "Reviewed unknown: Long-term user time savings and cross-project adoption benefit are unknown."
+    ],
+    "level": "low"
+  },
+  "schema_version": "1.1",
+  "scope": {
+    "exclude_paths": [
+      ".agentgov",
+      ".codex",
+      "%SystemDrive%",
+      "AGENTS.md",
+      "DEVELOPMENT_PLAN.md",
+      "schemas",
+      "release",
+      "docs/development-log/2026-09-02-guided-first-comprehension-observation-v1.md",
+      "docs/development-log/2026-10-21-runtime-foreground-install.md",
+      "docs/experiments/guided-first-comprehension-observation-2026-09-02.md",
+      "docs/experiments/runtime-foreground-install-2026-10-21.md",
+      "governance/tasks/p0-guided-first-comprehension-observation-v1.json",
+      "governance/tasks/p0-runtime-foreground-install-v2.json"
+    ],
+    "include_paths": [
+      "src/agentgov/doctor.py",
+      "src/agentgov/codex_mcp.py",
+      "tests/test_doctor.py",
+      "tests/test_onboarding.py",
+      "tests/test_governance_mcp.py",
+      "tests/test_user_documentation.py",
+      "README.md",
+      "STATUS.md",
+      "docs/governance-mcp-adapter.md",
+      "docs/troubleshooting.md",
+      "docs/troubleshooting.html",
+      "docs/troubleshooting.zh-CN.html",
+      "docs/development-log/2026-11-06-mcp-config-readonly-diagnostic-v1.md",
+      "governance/tasks/p0-mcp-config-readonly-diagnostic-v1.json",
+      "governance/distribution-input-manifest.json",
+      "scripts/artifact_replay_controller/controller.py",
+      "scripts/artifact_replay_controller/test_controller.py"
+    ]
+  },
+  "task_id": "p0-mcp-config-readonly-diagnostic-v1",
+  "title": "Add bounded read-only MCP configuration diagnostics to doctor",
+  "validation_commands": [
+    "$env:PYTHONPATH = \"src\"; py -3.11 -B -m unittest discover -s tests -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -B -m unittest scripts.distribution_input_manifest.test_manifest scripts.artifact_replay_controller.test_controller -v",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -B -m scripts.distribution_input_manifest check --repository . --manifest governance/distribution-input-manifest.json",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -B -m agentgov check task governance/tasks/p0-mcp-config-readonly-diagnostic-v1.json --repository .",
+    "$env:PYTHONPATH = \"src\"; py -3.11 -B -m agentgov check repository .",
+    "git diff --check"
+  ]
+}

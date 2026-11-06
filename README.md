@@ -49,7 +49,7 @@ AgentGov has three distinct release states:
 |---|---|---|
 | **Stable `0.2.1`** | Installable repository governance: safe inspection and adoption, deterministic checks, findings, reports, status, consumer CI, and reviewed update flows. | This is the supported first-use path. Checks do not approve semantic quality or consequential actions. |
 | **Published prerelease `0.3.0rc1`** | A review candidate for development-time governance: admitted tasks, context, Git scope, fresh completion evidence, guided routing, redacted events, a static Development Monitor, and verified handoff. | It is not stable and has not been adopted by a consumer repository. |
-| **Current development source** | Later work on automatic coding-agent journeys, native human decision surfaces, Codex adapters, replay safety, and completion recording. It also extends `doctor` with a bounded Git-worktree access preflight for required project MCP startup. | Development-source behavior may be newer than the published prerelease. It is not automatically published, released, installed, or active in consumers. |
+| **Current development source** | Later work on automatic coding-agent journeys, native human decision surfaces, Codex adapters, replay safety, and completion recording. It also extends `doctor` with bounded Git-worktree access and read-only local MCP configuration diagnostics for required project MCP startup. | Development-source behavior may be newer than the published prerelease. It is not automatically published, released, installed, or active in consumers. |
 
 See [release channels](docs/release-channels.md), the
 [`0.3.0rc1` release notes](docs/releases/0.3.0rc1.md), and
@@ -189,6 +189,11 @@ separate preview and exact-confirmation flow. Current development source adds
 the `repository:git-access` doctor finding for the same account that will
 launch a required project MCP server. That finding does not echo raw Git
 output, modify `safe.directory`, or weaken required-server startup behavior.
+Current development source also previews a read-only local MCP configuration
+diagnostic. It inspects only the selected repository's `.codex/config.toml`,
+reports optional missing or filtered tools as non-blocking guidance, and does
+not repair configuration, prove live activation, or claim that stable `0.2.1`
+or published `0.3.0rc1` contains this source-only behavior.
 
 ## Governed example
 

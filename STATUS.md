@@ -1,6 +1,6 @@
 # Agent Governance Starter Kit Status
 
-Last verified: 2026-10-19
+Last verified: 2026-11-06
 
 ## Current-status contract
 
@@ -41,6 +41,95 @@ interactive confirmation and stale-plan revalidation; it adds no automatic
 scheduling authority.
 
 ### Current closeout snapshot
+
+#### Development checklist and main closeout - validated, Git publication pending
+
+- **Active slice**: `p0-development-checklist-main-closeout-2026-11-06-v1`
+  was admitted through the supported terminal flow after a separate explicit
+  one-time human exception to the failed native proposal transport. Read-only
+  task context was separately selected. The already handed-off diagnostic
+  session and its immutable evidence are retained; no new session was started.
+- **Updated scope**: the current checklist distinguishes implemented
+  capabilities from unestablished automatic experience, participant evidence
+  and unselected integration work. The existing diagnostic implementation,
+  tests and distribution identities are unchanged. Strategic priorities and
+  older observation and installation records remain preserved.
+- **Agent-run validation**: admitted-task validation and context selection
+  passed. Fetch succeeded and local `main` matched `origin/main` before edits.
+  All 79 documentation/freshness tests passed. The 21 distribution/controller
+  tests passed with one Windows symlink-privilege skip. Manifest, task,
+  repository and whitespace checks passed with no deterministic failure.
+  A distinct bounded current-Agent advisory review found no scope or strategic
+  change; this fully specified closeout has no fabricated alignment journey
+  or native self-review claim. Final staged-content checks precede Git actions.
+- **User-reported validation**: the human authorized this checklist update,
+  commit and push, and supplied the separate terminal admission. No first-time
+  user result, product-effectiveness judgment or native-form repair is inferred.
+- **Pending / incomplete**: commit and push remain pending until observed.
+  Their resulting identities are reported separately after the
+  operations succeed. Commit advances HEAD; the diagnostic's prior validation
+  and handoff remain historical evidence for their original snapshot.
+- **Boundaries**: only reviewed diagnostic files and this closeout are intended
+  for publication. Partial STATUS staging preserves unrelated September and
+  October additions; local state, configuration and caches remain excluded.
+  No release, installation, configuration repair or next feature is included.
+- **Next product review**: the next requirement is not selected. Native form
+  delivery and pending-request recovery are observed candidates; the automatic
+  journey and first-time comprehension still require their own evidence.
+- **Evidence**: `docs/development-log/2026-11-06-development-checklist-main-closeout.md`.
+
+#### Read-only MCP configuration diagnostic v1 - implementation handed off
+
+- **Active slice**: `p0-mcp-config-readonly-diagnostic-v1` was admitted through
+  the existing human terminal flow after the product owner explicitly allowed
+  a one-time exception to the unavailable native-form admission path. The human
+  separately entered `REPLACE`; the new session started at
+  `2026-11-06T09:04:03.221Z`, with comparison base
+  `338f55e67c37e8a9b1a89abd5652484db3524578`. Task and session identities match.
+- **Delivered in development source**: `agentgov doctor .` now inspects only
+  the selected repository's local AgentGov MCP configuration. It distinguishes
+  base and form-gated tool filters, intentional server disabling, timeout
+  guidance and unknown live-host state. New findings are non-blocking; missing
+  local integration is explicitly not applicable. Bounded reads reject unsafe
+  paths and malformed input without exposing configuration values or errors.
+  No configuration repair, server start or lifecycle transition is added.
+- **Agent-run validation**: the full baseline ran 1,169 tests with no failures
+  or errors and seven skips; the distribution/controller suite ran 21 tests
+  with no failures or errors and one skip. Manifest, task, repository and diff
+  checks passed. The 188-path manifest and replay-controller content identity
+  match. Baseline-aware scope inspection returned 26 PASS findings, preserving
+  excluded existing work. Repeated source-CLI diagnosis returned zero and
+  confirmed both local tool-filter omissions and timeout guidance, with
+  unchanged configuration bytes. Distinct native current-Agent self-review
+  completed as advisory result `srv-bcdb713631d74b0ff23f1428492e3011`; it is a
+  separate review pass, not independent human acceptance. Final snapshot-bound
+  completion evidence is owned by the supported `govern finish` lifecycle
+  records under `.agentgov`, not manually authored in this document.
+- **User-reported validation**: the human reported reloading the host and
+  seeing no native admission form. The human reported entering confirmation
+  in an earlier unsuccessful terminal attempt. Later generated task and session
+  records independently establish successful terminal admission and start.
+- **Recorded handoff**: the supported terminal flow appended human event
+  `evt-a838dd4d120e505473e7900cd42aa373` at `2026-11-06T09:39:12.472Z`.
+  Read-only inspection returned `already_handed_off` and reverified all 27
+  completion findings against evidence `evd-a7e7da5a507842c5ba8ca68a3b25670e`
+  before the separate checklist closeout began. Handoff ends this session's
+  routing responsibility; it does not establish product acceptance.
+- **Pending validation / incomplete**: no source implementation item remains
+  open in this slice. A native symlink fixture cannot run on this Windows host
+  without symlink privilege; metadata and identity rejection fixtures passed. Native
+  form delivery and effective live-host state remain unverified. Installation,
+  release, consumer adoption and native-form repair are outside this slice.
+  Long-term time savings are unknown.
+- **Boundaries**: preserved changes and old evidence remain intact. The
+  terminal route does not provide native post-form inventory binding; separate
+  before/after inventory checks were performed. No general policy exception,
+  Git operation, publication or runtime/configuration update was authorized by
+  this diagnostic task. The later closeout has separate human Git authorization.
+- **Next product review**: review whether these concrete diagnostic findings
+  are useful. Native form delivery and pending-request recovery are observed
+  separate needs; the next feature is not yet decided.
+- **Evidence**: `docs/development-log/2026-11-06-mcp-config-readonly-diagnostic-v1.md`.
 
 #### 2026-10-19 end-of-day closeout - development paused by the human
 
@@ -5267,64 +5356,62 @@ Future-0.3 development-governance integration and pre-release evidence:
 
 ## Remaining TODOs
 
-- [x] Design and test a low-friction installation path that keeps AgentGov
-  independent from the adopting repository's Python environment. ADR-0004
-  selects persistent isolated tool execution through pipx for v0.1; the
-  Windows rehearsal covered Git install, inspect, dry-run, adopt, repository
-  check, upgrade, and uninstall without using the target `.venv`.
-- [ ] Complete the automatic primary product experience so a first-time user
-  can request coding work, confirm only real boundaries, and review protection
-  and benefit evidence without an AgentGov expert beside them. ADR-0005 defines
-  bounded onboarding; ADR-0013 now makes the foreground coordinator,
-  vendor-neutral adapter events, automatic Monitor refresh, and Dashboard the
-  primary direction. The current
-  `doctor`, `onboard`, and `next` interaction contracts, and the first
-  read-only `agentgov doctor .` slice is implemented.
-  `agentgov onboard . --dry-run` now combines diagnosis, exact target
-  disclosure, create/preserve preview, and strict non-interactive write denial.
-  Interactive onboarding now accepts only exact `ADOPT` from a real terminal,
-  revalidates the complete reviewed plan before writing, and creates only the
-  files shown in that plan. `agentgov next .` now selects one read-only action
-  using adoption conflict, missing scaffold, repository FAIL, then strict
-  development-session precedence. WARN and ADVISORY remain visible through
-  checks and reports without displacing the active daily route. An isolated
-  automated deep-path Windows rehearsal now covers the
-  complete installed sequence and corrected `onboard` to run the first
-  repository check automatically. These commands remain fallback and test
-  surfaces. The foreground coordinator, minimal repository-state reference
-  adapter, generic live JSONL process transport, bounded task/scope/completion
-  cards, vendor-neutral host-interaction requests, and the first packaged Codex
-  hooks Adapter are now implemented in development source. A structured
-  Coding Agent proposal and exact human task-admission fallback is also
-  implemented. Risk-based routing, clean standing low-risk delegation, active
-  task reuse, and a machine-checkable friction budget are implemented in
-  development source. Proactive digest-bound prompts/results and the reference
-  one-number human-review path and the reference host-side proposal generation
-  seam are also implemented. Codex development Adapter `1.3.0` now adds the
-  production proposal materializer/native form review path, now installed and
-  locally preflighted. Remaining work includes its external live proof, native
-  authenticated recording for other custom decisions, explicit protection
-  resolution links, Benefit/Learning views, an independent automatic
-  rehearsal, and then a fresh uncoached human pilot. Additional host adapters
-  remain optional portability work rather than a prerequisite for that gate.
-  Existing facilitator material exercises the historical
-  `doctor` → `onboard` → `next` path and must not be treated as validation of
-  the newly accepted automatic journey; a replacement automatic-journey pilot
-  record is required.
-- [x] Close the historical Taxi cross-domain adoption record with the exact
-  adoption commit, unavailable strict timing, observed assistance and friction,
-  current read-only findings, and bounded maintainer decisions. The record
-  makes no ten-minute or unassisted-pass claim. The prepared semantic-relation
-  gap analysis remains unfilled, and the later automatic development-loop
-  shadow pilot remains separate.
-- [x] Decide whether the supported one-command experience should use an
-  isolated tool installer, an ephemeral runner, or a small bootstrap command.
-  The isolated installer is selected and the primary Quickstart now pins the
-  reviewed `v0.1.0` Release wheel instead of mutable Git `main`.
-- [x] Publish the first stable software-update channel. `agentgov update .`
-  discovers the latest stable manifest, verifies the fixed-tag wheel digest,
-  upgrades the pipx environment, relaunches the updated executable, and
-  continues the bounded repository refresh.
+Current checklist reconciled on 2026-11-06. Checked items identify implemented
+capabilities or completed bounded records; they do not imply a release,
+unassisted adoption, independent assurance or product effectiveness.
+
+### Implemented foundations and development capabilities
+
+- [x] Isolated pipx installation and verified stable software-update channel,
+  without using or repairing the adopting project's Python environment.
+- [x] Bounded doctor, onboarding and next-action journeys. These remain useful
+  fallback and test surfaces alongside the automatic-experience direction.
+- [x] Development task admission, scope checks, declared-validation evidence,
+  completion reconciliation and separate human handoff. Bounded real consumer
+  journeys exist; they do not prove the automatic primary experience.
+- [x] Guided-first Active Task Monitor, Protection Event guidance and Task
+  Detail navigation, single-observation Benefit and Learning views, and
+  human-confirmed Learning review records. First-time comprehension and
+  causal benefit remain unestablished.
+- [x] Read-only repository-local MCP configuration diagnostics in development
+  source. The diagnostic task is implemented, validated and human-handed-off;
+  this source change has not installed the feature or repaired live settings.
+- [x] Historical Taxi cross-domain adoption record closed with observed
+  assistance and friction. Exact timing is unavailable; no ten-minute or
+  unassisted-pass claim is made.
+
+### Open outcomes and unselected review candidates
+
+- [ ] Establish the automatic primary product experience: a first-time user
+  requests coding work, confirms real decision boundaries and understands
+  protection and benefit evidence without an AgentGov expert beside them.
+  Existing coordinator, Adapter and Monitor components are implementation
+  foundations, not proof that this outcome has been achieved.
+- [ ] Establish an independent automatic end-to-end rehearsal. The recorded
+  v4 attempt stopped at offline build-tooling preflight before building or
+  starting an external consumer session; it established no downstream journey.
+  Later runtime maintenance does not substitute for a new successful replay.
+- [ ] Obtain genuine first-time comprehension evidence. The guided-first
+  observation stopped with `not-observable` because no participant was
+  available; no participant result or usability acceptance is inferred.
+- [ ] Review native form delivery and pending-request recovery. The current
+  closeout again encountered `task_proposal_elicitation_transport_required`.
+  Local tool-filter omissions and timeout guidance are diagnosed, while
+  effective live settings and the initial form-delivery cause remain unknown.
+  Configuration changes and form repair are unselected follow-up work.
+- [ ] Review installation and release of newer development-source capabilities,
+  then any consumer upgrade. Committing source does not publish a release or
+  update an installed runtime.
+- [ ] Evaluate multi-observation trends and denominator-aware Benefit evidence
+  against real user needs. Existing counts and attributed Learning judgments
+  do not prove resolution, prevention, time savings or ROI.
+
+Strategic sequencing remains P1 pilot/adoption experience, P2 report evolution
+and P3 multi-project learning in DEVELOPMENT_PLAN.md. Repository profiles,
+dependency-risk propagation and additional host adapters remain conditional
+or optional future work. No next feature is selected by this checklist, and
+new Kernel responsibilities remain paused without a concrete consumer
+counterexample.
 
 ## Known gaps
 
@@ -5342,9 +5429,11 @@ Future-0.3 development-governance integration and pre-release evidence:
 - The first NYC 0.2 run exposed that pip rejects a valid wheel renamed to
   `agentgov.whl`; stable 0.2.1 corrected the generated workflow. No NYC
   business or production workflow was involved.
-- Benefit evidence currently compares two downloaded report snapshots. It does
-  not yet observe project-test outcomes, PR disposition, runtime incidents,
-  human handling time, or false-positive decisions.
+- Benefit evidence includes the existing two-report comparison and the
+  development Monitor's single-observation cards. Learning can separately
+  record a human-attributed disposition, including `false_positive`, for an
+  exact current repeated-signal candidate. These do not establish handling,
+  resolution, prevention, measured time savings or causal product benefit.
 - Installation still depends on Python 3.11 or newer and pipx. GitHub Release
   is the current stable distribution channel; PyPI publication is not yet
   configured.

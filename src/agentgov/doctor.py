@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import json
+import math
 import os
+import stat
 import sys
+import tomllib
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
@@ -48,6 +51,236 @@ class DoctorReport:
 DOCTOR_REPORT_VERSION = "1.0"
 MINIMUM_PYTHON = (3, 11)
 WINDOWS_PATH_ADVISORY_THRESHOLD = 180
+MAX_MCP_CONFIG_BYTES = 256 * 1024
+
+
+class _McpConfigReadError(ValueError):
+    """A bounded local configuration observation is unavailable."""
+
+
+def _unsafe_mcp_path(info: os.stat_result, *, directory: bool = False) -> bool:
+    expected_type = stat.S_ISDIR if directory else stat.S_ISREG
+    return not expected_type(info.st_mode) or bool(
+        getattr(info, "st_file_attributes", 0)
+        & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400)
+    )
+
+
+def _mcp_path_identity(info: os.stat_result) -> tuple[int, int]:
+    return info.st_dev, info.st_ino
+
+
+def _read_local_mcp_config(root: Path) -> dict | None:
+    """Read one bounded regular file, without following configuration links."""
+
+    directory = root / ".codex"
+    target = directory / "config.toml"
+    try:
+        directory_info = directory.lstat()
+    except FileNotFoundError:
+        return None
+    if _unsafe_mcp_path(directory_info, directory=True):
+        raise _McpConfigReadError("unsafe directory type or reparse point")
+    try:
+        expected = target.lstat()
+    except FileNotFoundError:
+        return None
+    if _unsafe_mcp_path(expected):
+        raise _McpConfigReadError("unsafe file type or reparse point")
+    if expected.st_size > MAX_MCP_CONFIG_BYTES:
+        raise _McpConfigReadError("file exceeds the 256 KiB read limit")
+
+    flags = os.O_RDONLY | getattr(os, "O_BINARY", 0)
+    flags |= getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0)
+    with os.fdopen(os.open(target, flags), "rb") as stream:
+        opened = os.fstat(stream.fileno())
+        current_directory = directory.lstat()
+        if (
+            _unsafe_mcp_path(opened)
+            or _unsafe_mcp_path(current_directory, directory=True)
+            or not expected.st_ino
+            or _mcp_path_identity(opened) != _mcp_path_identity(expected)
+            or _mcp_path_identity(current_directory)
+            != _mcp_path_identity(directory_info)
+        ):
+            raise _McpConfigReadError("path identity changed before reading")
+        data = stream.read(MAX_MCP_CONFIG_BYTES + 1)
+    if len(data) > MAX_MCP_CONFIG_BYTES:
+        raise _McpConfigReadError("file exceeds the 256 KiB read limit")
+    return tomllib.loads(data.decode("utf-8"))
+
+
+def _mcp_configuration_findings(root: Path) -> tuple[DoctorFinding, ...]:
+    """Describe local filters, never effective host policy or live readiness."""
+
+    live_state = DoctorFinding(
+        DoctorStatus.ADVISORY,
+        "mcp:live-state",
+        "project-local configuration only: merged user, ancestor, managed and plugin "
+        "settings, trust, loaded version, live activation and native form support "
+        "remain unknown; no configuration edits, network requests or server starts "
+        "are performed",
+        "advisory",
+    )
+
+    def unavailable(message: str) -> tuple[DoctorFinding, ...]:
+        return (
+            DoctorFinding(
+                DoctorStatus.WARN, "mcp:configuration", message, "deterministic"
+            ),
+            live_state,
+        )
+
+    try:
+        document = _read_local_mcp_config(root)
+    except _McpConfigReadError as exc:
+        # Only this private exception contains controlled, value-free wording.
+        return unavailable(
+            f"local .codex/config.toml was not inspected: {exc}; "
+            "review the local file safely before retrying"
+        )
+    except (OSError, UnicodeError, ValueError, RecursionError):
+        return unavailable(
+            "local .codex/config.toml is unreadable or invalid UTF-8 TOML; "
+            "review its encoding, syntax and access; raw content and errors are omitted"
+        )
+
+    servers = None if document is None else document.get("mcp_servers")
+    if document is None or servers is None or (
+        isinstance(servers, dict) and "agentgov_governance" not in servers
+    ):
+        return (
+            DoctorFinding(
+                DoctorStatus.PASS,
+                "mcp:configuration",
+                "not applicable: no repository-local AgentGov MCP server entry; "
+                "MCP integration is optional and other configuration locations "
+                "were not inspected",
+                "deterministic",
+            ),
+            live_state,
+        )
+    if not isinstance(servers, dict) or not isinstance(
+        servers.get("agentgov_governance"), dict
+    ):
+        return unavailable(
+            "local mcp_servers.agentgov_governance must be a TOML table; "
+            "review its structure; raw values are omitted"
+        )
+    server = servers["agentgov_governance"]
+    if "enabled" in server and type(server["enabled"]) is not bool:
+        return unavailable("local enabled must be a boolean; raw values are omitted")
+    for field in ("enabled_tools", "disabled_tools"):
+        if field in server and (
+            not isinstance(server[field], list)
+            or any(not isinstance(item, str) for item in server[field])
+        ):
+            return unavailable(
+                f"local {field} must be a list of tool-name strings; "
+                "raw values are omitted"
+            )
+    if "tool_timeout_sec" in server:
+        timeout = server["tool_timeout_sec"]
+        try:
+            valid_timeout = (
+                type(timeout) in (int, float)
+                and math.isfinite(timeout)
+                and timeout > 0
+            )
+        except OverflowError:
+            valid_timeout = False
+        if not valid_timeout:
+            return unavailable(
+                "local tool_timeout_sec must be a positive finite number; "
+                "raw values are omitted"
+            )
+
+    # Lazy imports keep basic doctor import independent of Adapter initialization.
+    from agentgov.codex_mcp import CODEX_MCP_TOOL_TIMEOUT_SEC
+    from agentgov.governance_mcp import MCP_TOOL_POLICIES
+
+    findings = [
+        DoctorFinding(
+            DoctorStatus.PASS,
+            "mcp:configuration",
+            "bounded repository-local AgentGov MCP configuration was inspected; "
+            "only diagnostic fields and known policy tool names are reported",
+            "deterministic",
+        )
+    ]
+    enabled = server.get("enabled") is not False
+    findings.append(
+        DoctorFinding(
+            DoctorStatus.PASS if enabled else DoctorStatus.WARN,
+            "mcp:enabled",
+            (
+                "local server entry is not explicitly disabled; effective host "
+                "enablement is unverified"
+                if enabled
+                else "local server entry is disabled; this may be intentional; "
+                "review the intended integration before changing it"
+            ),
+            "deterministic",
+        )
+    )
+    allowed = set(server["enabled_tools"]) if "enabled_tools" in server else None
+    denied = set(server.get("disabled_tools", []))
+    for gate, check_id, label in (
+        ("base", "mcp:base-tools", "base"),
+        ("form_elicitation", "mcp:form-tools", "form-gated"),
+    ):
+        names = [
+            policy.name
+            for policy in MCP_TOOL_POLICIES
+            if policy.discovery_gate == gate
+        ]
+        omitted = [
+            name
+            for name in names
+            if (allowed is not None and name not in allowed) or name in denied
+        ]
+        findings.append(
+            DoctorFinding(
+                DoctorStatus.WARN if omitted else DoctorStatus.PASS,
+                check_id,
+                (
+                    f"local filters omit {label} policy tools: {', '.join(omitted)}; "
+                    "restrictions may be intentional; review them before making changes"
+                    if omitted
+                    else f"local filters permit all known {label} policy tools; "
+                    "this does not prove live discovery"
+                ),
+                "deterministic",
+            )
+        )
+    timeout = server.get("tool_timeout_sec")
+    if timeout is None:
+        timeout_message = (
+            "local tool_timeout_sec is omitted; the effective inherited setting is "
+            "unknown (the documented host default is 60 seconds); AgentGov's "
+            f"generated configuration recommends {CODEX_MCP_TOOL_TIMEOUT_SEC} seconds "
+            "for task-declared validation; review the effective setting"
+        )
+        timeout_status = DoctorStatus.WARN
+    elif timeout < CODEX_MCP_TOOL_TIMEOUT_SEC:
+        timeout_message = (
+            "local tool_timeout_sec is below AgentGov's generated recommendation "
+            f"of {CODEX_MCP_TOOL_TIMEOUT_SEC} seconds for task-declared validation; "
+            "review the intended timeout; this does not prove a call will time out"
+        )
+        timeout_status = DoctorStatus.WARN
+    else:
+        timeout_message = (
+            "local tool_timeout_sec meets AgentGov's generated recommendation "
+            f"of {CODEX_MCP_TOOL_TIMEOUT_SEC} seconds; this does not guarantee that "
+            "every multi-command validation finishes within the client timeout"
+        )
+        timeout_status = DoctorStatus.PASS
+    findings.append(
+        DoctorFinding(timeout_status, "mcp:tool-timeout", timeout_message, "advisory")
+    )
+    findings.append(live_state)
+    return tuple(findings)
 
 
 def _project_environment_finding(root: Path) -> DoctorFinding:
@@ -188,6 +421,7 @@ def diagnose_repository(
         )
 
     findings.append(_project_environment_finding(root))
+    findings.extend(_mcp_configuration_findings(resolved))
 
     if adoption.has_conflicts:
         findings.append(

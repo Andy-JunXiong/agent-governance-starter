@@ -4,6 +4,8 @@
 <p class="release-strip"><strong>版本边界：</strong>稳定版 <code>0.2.1</code> 可安装；公开预发行版 <code>0.3.0rc1</code> 与开发源继续扩展 Coding Agent 旅程。</p>
 <header class="shell"><span class="eyebrow">修改前先诊断</span><h1>故障排查</h1><p class="lead">先判断问题属于安装、仓库状态、确定性失败，还是自动化无法作出的决定。</p></header>
 <main class="shell">
+<section><h2>重新加载后仍然缺少工具（开发源）</h2><p>当前开发源提供一个只读、仅限开发源的本地 MCP 配置预览，用于选定的仓库：</p><pre><code>$env:PYTHONPATH = "src"
+python -m agentgov doctor . --format json --non-interactive</code></pre><p>它只读取 <code>.codex/config.toml</code>，分别报告基础工具和表单门控工具，先应用可选的 <code>enabled_tools</code> 再应用 <code>disabled_tools</code>，并将显式 <code>tool_timeout_sec</code> 与 AgentGov 生成配置建议的 <code>1800</code> 秒比较。省略的超时、合并后的主机配置、信任状态、加载版本、实时激活和表单能力都保持未知；文档中的主机默认 60 秒不等于实际生效值。</p><p>结果只提供非阻塞的 <code>PASS</code>、<code>WARN</code> 或 <code>ADVISORY</code> 指引。预览不会自动启用或修复配置、连接实时服务器，也不会回显密钥、未知名称、解析错误或配置中的命令、环境值。符号链接/重解析点、非普通文件、超过 256 KiB、不可读或格式错误的文件会产生规范化警告；缺少本地集成则标记为不适用。这是开发源行为，不表示稳定版 <code>0.2.1</code> 或已发布的 <code>0.3.0rc1</code> 包含它。详细诊断契约见<a href="governance-mcp-adapter.md">MCP 适配器指南</a>。</p></section>
 <section><h2>找不到 <code>agentgov</code></h2><p>通常是 pipx 的脚本目录不在 PATH 中。请安装已发布的稳定版、公开 pipx 命令路径，并在需要时重新打开终端。</p><pre><code>python --version
 pipx install "https://github.com/Andy-JunXiong/agent-governance-starter/releases/download/v0.2.1/agent_governance_starter-0.2.1-py3-none-any.whl"
 pipx ensurepath

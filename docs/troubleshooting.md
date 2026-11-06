@@ -54,6 +54,36 @@ Bash equivalent:
 PYTHONPATH=src python -m agentgov --help
 ```
 
+## Tools are still missing after a reload (development source)
+
+The current development source can perform a read-only, source-only preview of
+the selected repository's local MCP configuration:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m agentgov doctor . --format json --non-interactive
+```
+
+This diagnostic reads only `.codex/config.toml` in the selected repository. It
+separates missing or filtered base tools from form-gated tools, applies the
+optional `enabled_tools` allow list before the `disabled_tools` deny list, and compares an explicit
+`tool_timeout_sec` with AgentGov's generated `1800`-second recommendation. An
+omitted timeout remains unknown; the documented host default of 60 seconds is
+not asserted as the effective merged setting.
+
+Findings are non-blocking `PASS`, `WARN`, or `ADVISORY` guidance. An
+intentionally filtered tool may remain filtered. The command does not auto-enable
+or repair configuration, connect to a live server, prove form capability or
+activation, or echo secrets, unknown tool names, parser errors, or configured
+command and environment values from the MCP file.
+Unsafe links/reparse points, non-regular files, oversized (over 256 KiB),
+unreadable, and malformed configs produce a normalized warning; an absent
+local integration is not applicable. Global or merged host configuration,
+trust, loaded version, and live state remain unknown. This preview is not a
+claim about stable `0.2.1` or published `0.3.0rc1`.
+See the [MCP adapter guide](governance-mcp-adapter.md) for the detailed
+diagnostic contract.
+
 ## `init` says the target is not empty
 
 This is intentional. `init` only supports a new or empty target. For an existing repository, use:
